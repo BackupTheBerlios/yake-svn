@@ -139,8 +139,9 @@ namespace yake {
 		//-----------------------------------------------------
 		ICollisionGeometry* OdeWorld::createCollisionGeomMesh( const base::String & collisionMeshResourceName )
 		{
-			YAKE_ASSERT( 1==0 ).error("NOT IMPLEMENTED!");
-			return 0;
+			ICollisionGeometry* pGeom = new OdeCollisionGeomTriMesh( mOdeSpace, collisionMeshResourceName );
+			YAKE_ASSERT( pGeom ).debug("Out of memory ?");
+			return pGeom;
 		}
 
 		//-----------------------------------------------------
@@ -233,19 +234,15 @@ namespace yake {
 		//-----------------------------------------------------
 		IComplexObject* OdeWorld::createMesh(const base::String & mesh)
 		{
-			YAKE_ASSERT( 1==0 ).debug("TEMPORARILY DISABLED COMPLEX OBECT");
-			return 0;
-			/*
 			OdeComplexObject* pComplex = new OdeComplexObject( this );
 			YAKE_ASSERT( pComplex ).debug("Out of memory ?");
 
-			OdeCollisionGeomMesh* pMesh = new OdeCollisionGeomMesh( mOdeSpace, OdeCollisionGeomMesh );
+			OdeCollisionGeomTriMesh* pMesh = new OdeCollisionGeomTriMesh( mOdeSpace, mesh );
 			YAKE_ASSERT( pMesh ).debug("Out of memory ?");
 
 			pComplex->addCollisionGeometry( pMesh );
 
 			return pComplex;
-			*/
 		}
 
 		//-----------------------------------------------------

@@ -48,6 +48,7 @@ namespace yake {
 			virtual Vector3 boxGetDimensions() const;
 			virtual Vector3 rayGetOrigin() const;
 			virtual Quaternion rayGetOrientation() const;
+			virtual base::String meshGetName() const;
 
 			// Helpers
 
@@ -130,22 +131,36 @@ namespace yake {
 			virtual ~OdeCollisionGeomTriMesh();
 
 		private:
-			void _loadMesh(const base::String & meshfile);
+			void _loadMesh(const base::String & meshfile, bool bAppend = true );
 			void _build(dSpace* space);
 
 		protected:
+			dTriMeshDataID	mDataId;
+			dSpaceID		mSpaceId;
+
 			#pragma pack(1)
 			struct CMVertex
 			{
-				real x,y,z;
+				CMVertex(dReal x_=0,dReal y_=0,dReal z_=0) : x(x_), y(y_), z(z_)
+				{}
+				dReal x,y,z;
+				CMVertex& operator = (const CMVertex & rhs)
+				{
+					x = rhs.x;
+					y = rhs.y;
+					z = rhs.z;
+					return *this;
+				}
 			};
 			#pragma
 			typedef unsigned long CMIndex;
+			dReal*		mpVertices;
+			uint32*		mpIndices;
 
-			CMVertex		* mVertices;
-			CMIndex			* mIndices;
-			unsigned long	mNumVertices;
-			unsigned long	mNumIndices;
+			typedef base::templates::Vector<CMVertex> VertexList;
+			typedef base::templates::Vector<CMIndex> IndexList;
+			VertexList	mVertices;
+			IndexList	mIndices;
 		};
 
 	}

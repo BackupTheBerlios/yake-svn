@@ -28,6 +28,9 @@ namespace yake {
 		Vector3 OdeCollisionGeomBase::planeGetNormal() const
 		{ return Vector3::kZero; }
 		//-----------------------------------------------------
+		base::String OdeCollisionGeomBase::meshGetName() const
+		{ return ""; }
+		//-----------------------------------------------------
 		real OdeCollisionGeomBase::planeGetDistance() const
 		{ return 0; }
 		//-----------------------------------------------------
@@ -193,6 +196,104 @@ namespace yake {
 			mOdeGeomID = mOdeGeom->id();
 			static_cast<dGeomTransform*>(mOdeGeom)->setGeom( mWrappedGeom->_getOdeGeomID() );
 		}
+
+		//-----------------------------------------------------
+		// OdeCollisionGeomTriMesh
+		//-----------------------------------------------------
+
+		//-----------------------------------------------------
+		OdeCollisionGeomTriMesh::OdeCollisionGeomTriMesh(dSpace* space, const base::String & meshfile ) :
+			mpVertices(0),
+			mpIndices(0)
+		{
+			mType = CGT_MESH;
+			mOdeGeomID = 0;
+			YAKE_ASSERT( space );
+			mSpaceId = space->id();
+			_loadMesh( meshfile, true );
+			_build( space );
+		}
+		//-----------------------------------------------------
+		OdeCollisionGeomTriMesh::~OdeCollisionGeomTriMesh()
+		{
+			dGeomTriMeshDataDestroy( mDataId );
+			dGeomDestroy( mOdeGeomID );
+			YAKE_SAFE_DELETE( mpVertices );
+			YAKE_SAFE_DELETE( mpIndices );
+		}
+		//-----------------------------------------------------
+		void OdeCollisionGeomTriMesh::_loadMesh(const base::String & meshfile, bool bAppend )
+		{
+			if (!bAppend)
+			{
+				mVertices.clear();
+				mIndices.clear();
+			}
+			dReal dim = 100;
+
+			CMVertex v(-dim,0,-dim);
+			mVertices.push_back( v );
+			v = CMVertex( dim,0, dim);
+			mVertices.push_back( v );
+			v = CMVertex( -dim,0,dim);
+			mVertices.push_back( v );
+			mIndices.push_back( 0 );
+			mIndices.push_back( 2 );
+			mIndices.push_back( 1 );
+
+			v = CMVertex(-dim,0,-dim);
+			mVertices.push_back( v );
+			v = CMVertex( dim,0,-dim);
+			mVertices.push_back( v );
+			v = CMVertex( dim,0, dim);
+			mVertices.push_back( v );
+			mIndices.push_back( 3 );
+			mIndices.push_back( 5 );
+			mIndices.push_back( 4 );
+		}
+		//-----------------------------------------------------
+		void OdeCollisionGeomTriMesh::_build(dSpace* space)
+		{
+			YAKE_ASSERT( mVertices.size() > 0 );
+			YAKE_ASSERT( mIndices.size() > 0 );
+
+			YAKE_SAFE_DELETE( mpVertices );
+			mpVertices = new dReal[ 3*mVertices.size() ];
+			uint32 i = 0;
+			base::templates::ConstVectorIterator<VertexList> itV( mVertices.begin(), mVertices.end() );
+			while (itV.hasMoreElements())
+			{
+				CMVertex& v = itV.getNext();
+				mpVertices[i*3+0] = v.x;
+				mpVertices[i*3+1] = v.y;
+				mpVertices[i*3+2] = v.z;
+				++i;
+			}
+
+			YAKE_SAFE_DELETE( mpIndices );
+			mpIndices = new uint32[ mIndices.size() ];
+			i = 0;
+			base::templates::ConstVectorIterator<IndexList> itI( mIndices.begin(), mIndices.end() );
+			while (itI.hasMoreElements())
+			{
+				mpIndices[i++] = itI.getNext();
+			}
+
+			mDataId = dGeomTriMeshDataCreate();
+			dGeomTriMeshDataBuildDouble( mDataId,
+				mpVertices,
+				sizeof(dReal)*3,
+				mVertices.size(),
+				mpIndices,
+				mIndices.size(),
+				sizeof(uint32)*3 );
+				//0/*mpNormals*/ );
+
+			this->mOdeGeomID = dCreateTriMesh( mSpaceId, mDataId, 0, 0, 0 );
+			dGeomTriMeshEnableTC( mOdeGeomID, dSphereClass, 1 );
+			dGeomTriMeshEnableTC( mOdeGeomID, dBoxClass, 1 );
+		}
+
 
 	}
 }
