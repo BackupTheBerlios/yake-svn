@@ -24,6 +24,7 @@
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="yake/plugins/physicsODE/yakePCH.h"
 				WarningLevel="3"
@@ -37,7 +38,7 @@
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib"
-				ModuleDefinitionFile="..\..\..\..\src\yake\plugins\physicsODE\plugin.def"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
@@ -75,6 +76,7 @@
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ode/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKEPHYSICSODE_EXPORTS"
 				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="yake/plugins/physicsODE/yakePCH.h"
 				WarningLevel="3"
@@ -124,16 +126,13 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeActor.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeBallJoint.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeBody.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeCollisionGeometry.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeComplexObject.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeFixedJoint.cpp">
@@ -145,22 +144,25 @@
 				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeHingeJoint.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeJointBase.cpp">
+				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeJoint.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeWalker.cpp">
+				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeMaterial.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeShapes.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeSliderJoint.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeUniversalJoint.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeWorld.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\PhysicsSystemODE.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\plugin.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\plugin.def">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\yakePCH.cpp">
@@ -183,19 +185,19 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
+				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeActor.h">
+			</File>
+			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeBody.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeCollisionGeometry.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeComplexObject.h">
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeJoint.h">
 			</File>
 			<File
-				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeWalker.h">
+				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeMaterial.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeShapes.h">
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeWorld.h">
@@ -204,13 +206,7 @@
 				RelativePath="..\..\..\..\yake\plugins\physicsODE\PhysicsSystemODE.h">
 			</File>
 			<File
-				RelativePath="..\..\..\..\yake\plugins\physicsODE\plugin.h">
-			</File>
-			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsODE\yakePCH.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\plugins\physicsODE\yakePhysicsMovable.h">
 			</File>
 		</Filter>
 	</Files>
