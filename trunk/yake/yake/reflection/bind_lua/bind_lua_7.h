@@ -110,18 +110,26 @@ static void register_lua_class() \
 { \
 		/* class header with constructor */ \
 		get_lua_class().def( luabind::constructor<>() ); \
-		/* bind all class */ \
-		luabind::module(L)[ get_lua_class() ]; \
+		/* bind class, copied from luabind::module[] because that operator wants a copy of the class_ and that would destroy class_registration */ \
+        struct lua_pop_stack \
+        { \
+          lua_pop_stack(lua_State* L) : m_state(L) {} \
+          ~lua_pop_stack() { lua_pop(m_state, 1); } \
+          lua_State * m_state; \
+        }; \
+		lua_pushvalue(L, LUA_GLOBALSINDEX); \
+		lua_pop_stack guard(L); \
+		get_lua_class().register_(L); \
 } \
 \
 static luabind::class_<class_type> & get_lua_class() \
 { \
-	static luabind::class_<CLASS_NAME> CLASS_NAME##_lua = luabind::class_<CLASS_NAME>(#CLASS_NAME); \
+	static luabind::class_<class_type> CLASS_NAME##_lua(#CLASS_NAME); \
 	return CLASS_NAME##_lua; \
 } \
 \
 static luabind::detail::class_rep & get_lua_crep() \
-{	return *luabind::detail::class_registry::get_registry(L)->find_class(LUABIND_TYPEID(ClassType));	} \
+{	return *luabind::detail::class_registry::get_registry(L)->find_class(LUABIND_TYPEID(class_type));	} \
 \
 static void commit_lua_methods() \
 { \
@@ -130,13 +138,16 @@ static void commit_lua_methods() \
 	class_<class_type> & lua_class = get_lua_class(); \
 	detail::class_rep & lua_crep = get_lua_crep(); \
 \
-	/* set reference to crep */ \
-	for( std::list<detail::method_rep>::iterator iter( lua_class.m_registration->m_methods.begin() ); \
-		iter != lua_class.m_registration->m_methods.end(); ++iter ) \
-	{ iter->crep = &lua_crep; } \
-\
 	/* add to crep */ \
 	lua_crep.m_methods = lua_class.m_registration->m_methods; \
+\
+	/* set reference to crep and add method */ \
+	for( std::list<detail::method_rep>::iterator iter = lua_crep.m_methods.begin(); \
+		iter != lua_crep.m_methods.end(); ++iter ) \
+	{ \
+		iter->crep = &lua_crep; \
+		lua_crep.add_method(L, *iter); \
+	} \
 } \
 \
 static void commit_lua_properties() \
