@@ -140,6 +140,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesRxBasics", "samples\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "physicsNX", "plugins\physics\physicsNX.vcproj", "{5749946B-081D-4A80-8119-2BE84F571E81}"
 	ProjectSection(ProjectDependencies) = postProject
+		{1C674F1C-7DDF-4AC5-A52A-14C31248A9D4} = {1C674F1C-7DDF-4AC5-A52A-14C31248A9D4}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesPhysicsDemo", "samples\physics\samplesPhysicsDemo.vcproj", "{3DA99679-404B-44C7-9267-C97D066F3D96}"
+	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Global
@@ -252,6 +257,10 @@ Global
 		{5749946B-081D-4A80-8119-2BE84F571E81}.Debug.Build.0 = Debug|Win32
 		{5749946B-081D-4A80-8119-2BE84F571E81}.Release.ActiveCfg = Release|Win32
 		{5749946B-081D-4A80-8119-2BE84F571E81}.Release.Build.0 = Release|Win32
+		{3DA99679-404B-44C7-9267-C97D066F3D96}.Debug.ActiveCfg = Debug|Win32
+		{3DA99679-404B-44C7-9267-C97D066F3D96}.Debug.Build.0 = Debug|Win32
+		{3DA99679-404B-44C7-9267-C97D066F3D96}.Release.ActiveCfg = Release|Win32
+		{3DA99679-404B-44C7-9267-C97D066F3D96}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
