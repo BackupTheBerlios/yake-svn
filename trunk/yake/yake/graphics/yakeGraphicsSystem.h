@@ -70,7 +70,9 @@ using namespace yake::base::templates;
 		typedef Signal0<void> ShutdownSignal;
 		virtual void subscribeToShutdownSignal(const ShutdownSignal::slot_type & rSlot) = 0;
 
-		virtual const std::type_info & get_type_info() = 0;
+
+		// todo: meta: not needed, typeid(ptr) returns the concrete type info (see abstract factory sample code) 
+		//virtual const std::type_info & get_type_info() = 0;
 	};
 
 } // graphics
