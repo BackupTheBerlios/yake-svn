@@ -23,8 +23,8 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_APP_MODEL_VEHICLE_PHYSICALCOMPONENT_H
-#define YAKE_APP_MODEL_VEHICLE_PHYSICALCOMPONENT_H
+#ifndef YAKE_APP_MODEL_VEHICLE_INPUTCOMPONENT_H
+#define YAKE_APP_MODEL_VEHICLE_INPUTCOMPONENT_H
 
 #include <yapp/base/yappPrerequisites.h>
 
