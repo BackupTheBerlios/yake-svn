@@ -154,6 +154,33 @@ namespace vehicle {
 		engineTpl.rpmRedline_ = StringUtil::toReal( pNode->getAttributeValueAs<String>("redline") );
 	}
 	//------------------------------------------------------
+	void VehicleSerializer::readGearbox( const SharedPtr<dom::INode> & pNode, app::model::vehicle::VehicleTemplate::EngineTemplate& engineTpl )
+	{
+		using namespace app::model::vehicle;
+		COUTLN( "  readGearbox()" );
+		YAKE_ASSERT( pNode );
+		const dom::NodeList & nodes = pNode->getNodes();
+		templates::ConstVectorIterator< dom::NodeList > it( nodes.begin(), nodes.end() );
+		while (it.hasMoreElements())
+		{
+			const SharedPtr<dom::INode> & pGearNode = it.getNext();
+			VehicleTemplate::GearTemplate gear;
+			String mode = pGearNode->getAttributeValueAs<String>("mode");
+			if (mode == "reverse")
+				gear.mode_ = VehicleTemplate::GM_REVERSE;
+			else if (mode == "neutral")
+				gear.mode_ = VehicleTemplate::GM_NEUTRAL;
+			else
+				gear.mode_ = VehicleTemplate::GM_FORWARD;
+			if (gear.mode_ != VehicleTemplate::GM_NEUTRAL)
+				gear.ratio_ = StringUtil::toReal( pNode->getAttributeValueAs<String>("ratio") );
+			else
+				gear.ratio_ = 0.;
+
+			engineTpl.gears_.push_back( gear );
+		}
+	}
+	//------------------------------------------------------
 	void VehicleSerializer::readAxles( const SharedPtr<dom::INode> & pNodes )
 	{
 		COUTLN( "readAxles()" );

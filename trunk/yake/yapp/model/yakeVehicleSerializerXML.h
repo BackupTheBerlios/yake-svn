@@ -67,6 +67,7 @@ namespace vehicle {
 		virtual void readEngines( const SharedPtr<dom::INode> & pNodes );
 			virtual void readEngine( const SharedPtr<dom::INode> & pNode );
 				virtual void readRPM( const SharedPtr<dom::INode> & pNode, app::model::vehicle::VehicleTemplate::EngineTemplate& engineTpl );
+				virtual void readGearbox( const SharedPtr<dom::INode> & pNode, app::model::vehicle::VehicleTemplate::EngineTemplate& engineTpl );
 		virtual void readAxles( const SharedPtr<dom::INode> & pNodes );
 			virtual void readAxle( const SharedPtr<dom::INode> & pNode );
 		virtual void readWheels( const SharedPtr<dom::INode> & pNodes );
