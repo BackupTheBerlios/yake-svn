@@ -144,6 +144,8 @@ namespace graphics {
 		virtual void attachCamera( ICamera* pCamera ) = 0;
 		virtual void attachLight( ILight* pLight ) = 0;
 		virtual void removeAndDestroyAllChildren() = 0;
+		virtual void setScale( const Vector3 & scale ) = 0;
+		virtual Vector3 getScale() const = 0;
 	};
 
 	/** Viewport abstract interface.
