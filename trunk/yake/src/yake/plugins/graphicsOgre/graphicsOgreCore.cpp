@@ -44,11 +44,6 @@ namespace yake {
 namespace graphics {
 namespace ogre3d {
 
-	void updateStats(Ogre::RenderWindow* window)
-    {
-		//@todo adjust to new OGRE Overlay code
-    }
-
 	class SystemFrameListener : public Ogre::FrameListener
 	{
 	public:
@@ -58,7 +53,7 @@ namespace ogre3d {
 
 		virtual bool frameStarted(const FrameEvent & evt)
 		{
-			updateStats( mRWin );
+			// nothin' to do... getting a beer.
 			return true;
 		}
 
