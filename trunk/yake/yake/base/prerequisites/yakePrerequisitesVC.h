@@ -28,24 +28,24 @@
 // Include platform specific configuration files
 #if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
 #	if (YAKE_COMP_VER == 1310)
-#		pragma message("Yake platform/compiler config: yake.core.prerequisites.vc71")
+#		pragma message("yake platform/compiler config: yake.base.prerequisites.vc71")
 #		include "yakePrerequisitesVC71Warnings.h"
 #		include <wchar.h>
 #		include <hash_map>
 #		include <xhash>
 #		include "yakePrerequisitesVC71Types.h"
 #	elif(YAKE_COMP_VER == 1400)
-#		pragma message("Yake platform/compiler config: yake.core.prerequisites.vc8")
+#		pragma message("yake platform/compiler config: yake.base.prerequisites.vc8")
 #		include "yakePrerequisitesVC8Warnings.h"
 #		include <wchar.h>
 #		include <hash_map>
 #		include <xhash>
 #		include "yakePrerequisitesVC8Types.h"
 #   else
-#		error("Yake: No configuration file for this compiler!")
+#		error("yake platform/compiler error: no configuration file for this compiler!")
 #	endif
 #else
-#	error("Yake: No configuration file set for the selected platform/compiler!")
+#	error("yake platform/compiler error: no configuration file set for the selected platform/compiler!")
 #endif
 
 // String specialization

@@ -82,9 +82,9 @@
 #	define Function3 FUNC::function3
 	typedef SIG::signals::connection SignalConnection;
 */
-#	error("Yake Signal config: Boost as signals provider not longer supported")
+#	error("Yake signal error: Boost as signals provider not longer supported")
 #elif defined( YAKE_SIGNALS_USE_TTL )
-#	pragma message("Yake Signal config: TTL for signal-slot mechanism")
+#	pragma message("Yake signal config: TTL for signal-slot mechanism")
 
 #	if YAKE_COMPILER == COMPILER_MSVC && YAKE_COMP_VER > 1300
 #		define Bind0( METHOD, OBJECT ) boost::bind( METHOD, OBJECT, _1 )
@@ -109,7 +109,7 @@ namespace templates {
 }
 }
 #else
-#	error("Yake Signal config: No signals provider.")
+#	error("Yake signal error: No signals provider.")
 #endif
 
 namespace yake 
