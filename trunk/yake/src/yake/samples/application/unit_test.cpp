@@ -47,22 +47,22 @@ struct my_app_auto_delayed : application< delayed_auto_init<minimum_config> >
 struct my_app_semi_auto : application<semi_auto_init<my_app_semi_auto, minimum_config>, ext_lib_man>
 {
 	void load_libraries()
-	{	get_lib_man() << "ogre3d_plugin" << "cegui_plugin" << "ode_plugin";	}
+	{	get_lib_man() << "graphicsOGRE.dll"; /* << "cegui_plugin" << "ode_plugin";*/ }
 };
 
 struct my_app_manual : application< manual_init<basic_config> >
 {
    my_app_manual()
    {
-     load_library("ogre3d_plugin");
+     load_library("graphicsOGRE.dll");
      load_system<graphics_system>("yake.graphics.ogre3d");
-     load_library("cegui_plugin");
+     /*load_library("cegui_plugin");
      load_system<gui_system>("yake.gui.cegui");
      m_gui_renderer_adapter =
 			create<gui_renderer_adapter>(
 				gui_renderer_adapter::identifier(
 					get_system<graphics_system>()->get_type_info(), 
-					get_system<gui_system>()->get_type_info()));
+					get_system<gui_system>()->get_type_info()));*/
    }
 
 	 void load_library(const char * lib)

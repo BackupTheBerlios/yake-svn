@@ -36,8 +36,9 @@ struct config_libraries<basic_config>
 {
 	typedef basic_config config;
 
+	// todo
 	static std::vector<std::string> get_libraries()
-	{ return libraries() << "ogre3d_plugin" << "cegui_plugin" << "ode_plugin"; }
+	{ return libraries() << "graphicsOGRE.dll"; /*<< "cegui_plugin" << "ode_plugin"*/; }
 };
 
 // -----------------------------------------
@@ -49,8 +50,9 @@ struct config_libraries<minimum_config>
 {
 	typedef minimum_config config;
 
+	// todo: base::native::Load_Library should add YAKE_DLL_POSTFIX (".dll" and the linux equivalent) to the library name
 	static std::vector<std::string> get_libraries()
-	{ return libraries() << "ogre3d_plugin"; }
+	{ return libraries() << "graphicsOGRE.dll"; }
 };
 
 // -----------------------------------------
