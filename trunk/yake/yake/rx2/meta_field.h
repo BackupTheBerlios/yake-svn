@@ -47,13 +47,8 @@ struct meta_field
 	virtual ~meta_field() {}
 
 	virtual std::string type_as_string() = 0;
-
   virtual std::string value_as_string() = 0;
-
 	std::string as_string();
-
-	virtual void add_to_object( meta_object & object ) = 0;
-	virtual void add_clone_to_object( meta_object & object ) = 0;
 
 	meta_object & get_object()
 	{

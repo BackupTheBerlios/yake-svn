@@ -48,10 +48,12 @@ int main()
 		meta_object & test_object = test_class.create_object( "test_object" );
 
 		// set and stream some values
+		assert( test_object.field<bool>( "hello_bool" ) );
 		test_object.field<bool>( "hello_bool" ) = false;
 		assert( !test_object.field<bool>( "hello_bool" ) );
 		std::cout << "test_object::hello_bool=" << ( test_object.field<bool>( 
 			"hello_bool" ) ? "true" : "false" ) << std::endl;		
+		std::cout << test_object.field<bool>( "hello_bool" ).as_string() << std::endl;		
 
 		// append the objects field list
 		test_object.add_field<bool>( "dead", false );

@@ -11,7 +11,8 @@ meta_object & meta_class::create_object( std::string object_name )
 		for( fields_list::iterator iter = fields_.begin(); 
 			iter != fields_.end(); iter++ )
 		{ 
-			( *iter )->add_clone_to_object( *obj );
+			// call the according attach method for this field (using cloning)
+			( iter->second )( *obj, *iter->first, true );
 		}
 
 		objects_.insert( objects::value_type( object_name, obj ) ); 

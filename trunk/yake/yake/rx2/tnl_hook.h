@@ -38,13 +38,6 @@ struct tnl_extrapolation_observer : public observer
 
 struct tnl_hook : public NetObject
 {
-	enum types
-	{
-		bool_,
-		int_,
-		float_,
-		string_
-	};
 
 	// Let's assume that the approach adds int, float, string to the
 	// meta object, all we have to do in order to get the type informations
@@ -52,7 +45,7 @@ struct tnl_hook : public NetObject
 	// Whenever a value changes, we simply send the position of the field
 	// within objects' field container and we can lookup the according type
 	// in our field_types container. Finally we get the actual field and it's type
-	typedef std::vector< types > field_types;
+	typedef std::vector< type_info > field_types;
 	typedef std::vector< meta_field* > dirty_fields; 
 	typedef std::map< int, observer* > observers;
 
@@ -62,7 +55,7 @@ struct tnl_hook : public NetObject
 	void on_add_field( float_field & field )
 	{
 		// todo push_back( typeid(float) ) or more generic;
-		field_types_.push_back( float_ );
+		field_types_.push_back( typeid(float) );
 
 		if( ( field.flags_ & extrapolate ) && ( field.flags_ & server ) )
 		{
@@ -79,7 +72,7 @@ struct tnl_hook : public NetObject
 
     switch( field_types_[ position ] )
 		{
-				case float_:
+				case typeid(float):
 				{
 					float_field & field = static_cast< float_field& >( get_field( position ) );
 					float new_value = Stream->ReadFloat();

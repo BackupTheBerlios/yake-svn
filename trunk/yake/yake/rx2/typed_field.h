@@ -11,6 +11,7 @@ template< typename T >
 struct typed_field : public meta_field
 {
 	typedef typed_field< T > this_type;
+	typedef T value_type;
 
 	typed_field( int flags = none )
 		: meta_field( flags )
@@ -30,7 +31,7 @@ struct typed_field : public meta_field
 	{	
 	}
 
-	/*T & operator=( T const & value )
+	T & operator=( T const & value )
 	{
 		value_ = value;
 		// todo get_object does not work for meta classes
@@ -41,7 +42,7 @@ struct typed_field : public meta_field
 		get_object().on_change_field( *this );
 		}
 		return value_;
-	}*/
+	}
 
 	void set( T const & value )
 	{
@@ -81,25 +82,6 @@ struct typed_field : public meta_field
 		if( !( flags_ & predict ) ) throw exception();
 		predict_max_error_ = predict_max_error;    
 	}
-
-	// used when we want to add existing type_fields (from a c++ class) to an meta object
-	void add_to_object( meta_object & object )
-	{
-		// DISPATCH TRICK ( used by meta_class ) : add clone to the meta object, this way we don't loose type information
-		// and obj->add_field => hook::on_add_field can use typed_field<> instead of the abstract meta_field
-		// interface, so the replication system has concrete information about the value offset and its' size
-		object_ = &object;
-    object.add_field< this_type >( *this );
-	};
-
-	// used when the meta class instances an meta object
-	void add_clone_to_object( meta_object & object )
-	{
-		// DISPATCH TRICK ( used by meta_class ) : add clone to the meta object, this way we don't loose type information
-		// and obj->add_field => hook::on_add_field can use typed_field<> instead of the abstract meta_field
-		// interface, so the replication system has concrete information about the value offset and its' size
-    object.add_field< this_type >( * new this_type( object, name_, value_, flags_ ) );
-	};
 
 	T value_;
 
