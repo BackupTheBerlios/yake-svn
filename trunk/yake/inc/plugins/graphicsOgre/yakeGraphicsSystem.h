@@ -25,6 +25,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 //    IMPLEMENTATION HEADERS
 //============================================================================
 #include <inc/graphics/yakeGraphicsSystem.h>
+#include <inc/graphics/yakeGraphicalWorld.h>
 
 #if defined( YAKE_GRAPHICSCONCRETEAPI_EXPORTS )
 #	define YAKE_GRAPHICS_CONCRETE_API DLLEXPORT
@@ -32,35 +33,42 @@ http://www.gnu.org/copyleft/lesser.txt.
 #	define YAKE_GRAPHICS_CONCRETE_API DLLIMPORT
 #endif
 
+#include <inc/plugins/graphicsOgre/yakeGraphicsWorld.h>
+
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
 using namespace yake::base::mpl;
+using namespace yake::base::templates;
 
-namespace yake 
-{
-namespace graphics
-{
-namespace ogre3d
-{
+namespace yake {
+namespace graphics {
+namespace ogre3d {
 
-/** The graphics system interface.
-*/
-class YAKE_GRAPHICS_CONCRETE_API GraphicsSystem	
-	: public ConcreteFactory
-< 
-	IGraphicsSystem, 
-	OpNewFactoryUnit,
-	sequences::list< IGraphicalWorld > 
-> 
-{
-YAKE_DECLARE_CLASS( yake::graphics::ogre3d::GraphicsSystem )
-public:
-	// Destructor.
-	virtual ~GraphicsSystem();
+	class OgreCore;
+	/** The graphics system interface.
+	*/
+	class YAKE_GRAPHICS_CONCRETE_API GraphicsSystem	 : public IGraphicsSystem
+		/*,public ConcreteFactory
+	< 
+		IGraphicsSystem, 
+		OpNewFactoryUnit,
+		sequences::list< GraphicalWorld > 
+	>*/
+	{
+	YAKE_DECLARE_CLASS( yake::graphics::ogre3d::GraphicsSystem )
+	public:
+		GraphicsSystem();
+		// Destructor.
+		virtual ~GraphicsSystem();
 
-YAKE_DECLARE_CONCRETE( GraphicsSystem, "ogre3d" )
-};
+		virtual Pointer<IGraphicalWorld> createWorld();
+
+	YAKE_DECLARE_CONCRETE( GraphicsSystem, "ogre3d" )
+
+	private:
+		OgreCore*	mCore;
+	};
 
 } // ogre3d
 } // graphics

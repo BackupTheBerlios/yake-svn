@@ -22,25 +22,27 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define INC_YAKE_GRAPHICSOGRESKELETON_H
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
-		class OgreSkeleton : public graphics::ISkeleton
-		{
-		public:
-			OgreSkeleton( Ogre::Entity& rEntity );
-			virtual ~OgreSkeleton();
+	class OgreSkeleton : public graphics::ISkeleton
+	{
+	public:
+		OgreSkeleton( Ogre::Entity& rEntity );
+		virtual ~OgreSkeleton();
 
-			virtual void enableAnimation( const base::String& rAnimName, bool enable );
-			virtual void advanceAnimation( const base::String& rAnimName, real timeDelta );
-			virtual void advanceAllAnimations( real timeDelta );
-			virtual void setAnimationWeight( const base::String& rAnimName, real weight );
-			virtual void attachEntityToBone( const base::String& rBoneName, IEntity* pEntity );
-		
-		protected:
-			Ogre::Entity& mEntity;
-		};
+		virtual void enableAnimation( const base::String& rAnimName, bool enable );
+		virtual void advanceAnimation( const base::String& rAnimName, real timeDelta );
+		virtual void advanceAllAnimations( real timeDelta );
+		virtual void setAnimationWeight( const base::String& rAnimName, real weight );
+		virtual void attachEntityToBone( const base::String& rBoneName, IEntity* pEntity );
+	
+	protected:
+		Ogre::Entity& mEntity;
+	};
 
-	}// graphics
+}// ogre3d
+}// graphics
 }// yake
 
 #endif 

@@ -22,42 +22,44 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define INC_YAKE_GRAPHICOGRECAMERA_H
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
-		class OgreCamera : public ICamera
-		{
-			OgreCamera();
-			OgreCamera( const OgreCamera & );
-		public:
-			OgreCamera( Ogre::SceneManager * sceneMgr );
-			virtual ~OgreCamera();
+	class OgreCamera : public ICamera
+	{
+		OgreCamera();
+		OgreCamera( const OgreCamera & );
+	public:
+		OgreCamera( Ogre::SceneManager * sceneMgr );
+		virtual ~OgreCamera();
 
-			// Movable
-			virtual void setPosition( const Vector3 & position );
-			virtual Vector3 getPosition() const;
-			virtual void setOrientation( const Quaternion & orientation );
-			virtual Quaternion getOrientation() const;
+		// Movable
+		virtual void setPosition( const Vector3 & position );
+		virtual Vector3 getPosition() const;
+		virtual void setOrientation( const Quaternion & orientation );
+		virtual Quaternion getOrientation() const;
 
-			// ICamera
-			virtual void setProjectionType( const ProjectionType type );
-			virtual ProjectionType getProjectionType() const;
-			virtual void setNearClipDistance( real clipDistance );
-			virtual real getNearClipDistance() const;
-			virtual void setFarClipDistance( real clipDistance );
-			virtual real getFarClipDistance() const;
-			virtual void setFOV( real fov );
-			virtual real getFOV() const;
-			virtual void setAspectRatio( real aspectRatio );
-			virtual real getAspectRatio() const;
+		// ICamera
+		virtual void setProjectionType( const ProjectionType type );
+		virtual ProjectionType getProjectionType() const;
+		virtual void setNearClipDistance( real clipDistance );
+		virtual real getNearClipDistance() const;
+		virtual void setFarClipDistance( real clipDistance );
+		virtual real getFarClipDistance() const;
+		virtual void setFOV( real fov );
+		virtual real getFOV() const;
+		virtual void setAspectRatio( real aspectRatio );
+		virtual real getAspectRatio() const;
 
-			Ogre::Camera * getCamera_() const
-			{ return mCam; }
-		protected:
-			Ogre::SceneManager	* mSceneMgr;
-			Ogre::Camera		* mCam;
-		};
+		Ogre::Camera * getCamera_() const
+		{ return mCam; }
+	protected:
+		Ogre::SceneManager	* mSceneMgr;
+		Ogre::Camera		* mCam;
+	};
 
-	}
+}
+}
 }
 
 #endif

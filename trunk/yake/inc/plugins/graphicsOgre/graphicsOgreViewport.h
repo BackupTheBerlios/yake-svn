@@ -22,29 +22,33 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define INC_YAKE_GRAPHICOGREVIEWPORT_H
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
-		class OgreViewport : public graphics::IViewport
-		{
-		public:
-			OgreViewport( OgreCore* pCore, OgreCamera* pCamera );
+	class OgreCore;
+	class OgreCamera;
+	class OgreViewport : public graphics::IViewport
+	{
+	public:
+		OgreViewport( OgreCore* pCore, OgreCamera* pCamera );
 
-			virtual ~OgreViewport();
+		virtual ~OgreViewport();
 
-			virtual void attachCamera( ICamera* pCamera );
-			virtual ICamera* getAttachedCamera() const; 
+		virtual void attachCamera( ICamera* pCamera );
+		virtual ICamera* getAttachedCamera() const; 
 
-			virtual void setDimensions( real left, real top, real width, real height );
-			virtual void setZ( int z );
-		protected:
-			void killViewport();
-		protected:
-			OgreCore*			mCore;
-			OgreCamera*			mCamera;
-			Ogre::Viewport*		mViewport;
-		};
+		virtual void setDimensions( real left, real top, real width, real height );
+		virtual void setZ( int z );
+	protected:
+		void killViewport();
+	protected:
+		OgreCore*			mCore;
+		OgreCamera*			mCamera;
+		Ogre::Viewport*		mViewport;
+	};
 
-	}
+}
+}
 }
 
 #endif

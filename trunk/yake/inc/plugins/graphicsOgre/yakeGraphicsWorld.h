@@ -30,25 +30,35 @@ http://www.gnu.org/copyleft/lesser.txt.
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-using namespace = yake::base::mpl;
+using namespace yake::base::mpl;
 
-namespace yake 
-{
-namespace graphics
-{
-namespace ogre3d
-{
+namespace yake {
+namespace graphics {
+namespace ogre3d {
 
-/** The graphics system implementation. 
-*/
-class YAKE_GRAPHICS_CONCRETE_API GraphicalWorld	: public IGraphicalWorld
-{
-	/** Globally activates the default shadowing method, often stencil shadows.	*/
-	void setShadowsEnabled( bool enabled ) {}
+	class OgreCore;
+	/** The graphics system implementation. 
+	*/
+	class YAKE_GRAPHICS_CONCRETE_API GraphicalWorld	: public IGraphicalWorld
+	{
+	public:
+		GraphicalWorld();
+		/** Globally activates the default shadowing method, often stencil shadows.	*/
+		void setShadowsEnabled( bool enabled );
 
-	/** Render a single frame. */
-	void render( real timeElapsed ) {}
-};
+		/** Render a single frame. */
+		void render( real timeElapsed );
+
+		virtual ISceneNode* createSceneNode();
+		virtual IEntity* createEntity(const base::String & mesh);
+		virtual ILight* createLight();
+		virtual ICamera* createCamera();
+		virtual IViewport* createViewport(ICamera* pCamera);
+
+		static void setCore( OgreCore* core );
+	private:
+		static OgreCore*	msCore;
+	};
 
 } // ogre3d
 } // graphics

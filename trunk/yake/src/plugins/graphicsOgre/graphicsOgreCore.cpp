@@ -18,7 +18,7 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <plugins/yakeGraphicsOgre/inc/pch.h>
+#include <inc/plugins/graphicsOgre/yakePCH.h>
 
 #if YAKE_PLATFORM == PLATFORM_WIN32
 #	define WIN32_LEAN_AND_MEAN
@@ -31,12 +31,13 @@
 #include "../../rendersystems/direct3d9/include/OgreD3D9RenderSystem.h"
 #endif
 
-#include <plugins/yakeGraphicsOgre/inc/graphicsOgreCore.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreCore.h>
 
 using namespace Ogre;
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
 	void updateStats(Ogre::RenderWindow* window)
     {
@@ -221,10 +222,10 @@ namespace yake {
 				}
 #endif
 
-				mRoot->_fireFrameStarted( evt );
-				mRWin->update();
+				/*mRoot->_fireFrameStarted( evt );
 				mRoot->getRenderSystem()->_updateAllRenderTargets();
-				mRoot->_fireFrameEnded();
+				mRoot->_fireFrameEnded();*/
+				mRoot->renderOneFrame();
 			}
 			catch (Ogre::Exception& e)
 			{
@@ -234,5 +235,6 @@ namespace yake {
 		} // if (mReady && mRWin && mRSys){
 	}
 
-	}
+}
+}
 }

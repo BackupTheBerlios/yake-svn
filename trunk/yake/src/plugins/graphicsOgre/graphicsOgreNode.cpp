@@ -18,124 +18,126 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <plugins/yakeGraphicsOgre/inc/pch.h>
-#include <plugins/yakeGraphicsOgre/inc/graphicsOgreCamera.h>
-#include <plugins/yakeGraphicsOgre/inc/graphicsOgreEntity.h>
-#include <plugins/yakeGraphicsOgre/inc/graphicsOgreLight.h>
-#include <plugins/yakeGraphicsOgre/inc/graphicsOgreNode.h>
+#include <inc/plugins/graphicsOgre/yakePCH.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreCamera.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreEntity.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreLight.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreNode.h>
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
-		//------------------------------------------------------
-		OgreNode::OgreNode( Ogre::SceneManager * sceneMgr ) : mSceneMgr( sceneMgr ), mSceneNode( 0 )
-		{
-			YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
-			mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( base::uniqueName::create("sn_") ) );
-			YAKE_ASSERT( mSceneNode ).warning("Couldn't create a scene node!");
-			mSceneNode->setPosition( 0, 0, 0 );
-		}
-
-		//------------------------------------------------------
-		OgreNode::~OgreNode()
-		{
-			if (mSceneNode)
-			{
-				mSceneNode->removeAllChildren();
-				mSceneMgr->destroySceneNode( mSceneNode->getName() );
-			}
-		}
-
-		//------------------------------------------------------
-		void OgreNode::setPosition( const Vector3 & position )
-		{
-			YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-			mSceneNode->setPosition( VEC_YAKE2OGRE( position ) );
-		}
-
-		//------------------------------------------------------
-		Vector3 OgreNode::getPosition() const
-		{
-			YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-			return VEC_OGRE2YAKE( mSceneNode->getPosition() );
-		}
-
-		//------------------------------------------------------
-		void OgreNode::setOrientation( const Quaternion & orientation )
-		{
-			YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-			mSceneNode->setOrientation( QUAT_YAKE2OGRE( orientation ) );
-		}
-
-		//------------------------------------------------------
-		Quaternion OgreNode::getOrientation() const
-		{
-			YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-			return QUAT_OGRE2YAKE( mSceneNode->getOrientation() );
-		}
-
-		//------------------------------------------------------
-		void OgreNode::setScale( const Vector3 & scale )
-		{
-			YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-			mSceneNode->setScale( VEC_YAKE2OGRE( scale ) );
-		}
-
-		//------------------------------------------------------
-		Vector3 OgreNode::getScale() const
-		{
-			YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-			return VEC_OGRE2YAKE( mSceneNode->getScale() );
-		}
-
-		//------------------------------------------------------
-		void OgreNode::removeAndDestroyAllChildren()
-		{
-		}
-
-		//------------------------------------------------------
-		void OgreNode::attachCamera( ICamera* pCamera )
-		{
-			YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-			YAKE_ASSERT( pCamera ).warning("need a camera");
-			
-			if ( NULL == pCamera )
-				return;
-			
-			mSceneNode->attachObject( static_cast<OgreCamera*>( pCamera )->getCamera_() );
-		}
-
-		//------------------------------------------------------
-		void OgreNode::attachLight( ILight* pLight )
-		{
-			YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-			YAKE_ASSERT( pLight ).warning("need a light");
-			
-			if ( NULL == pLight )
-				return;
-			
-			mSceneNode->attachObject( static_cast<OgreLight*>( pLight )->getLight_() );
-		}
-
-		//------------------------------------------------------
-		void OgreNode::attachEntity( IEntity* pEntity )
-		{
-			YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-			YAKE_ASSERT( pEntity ).warning("need an entity");
-
-			if ( NULL == pEntity )
-				return;
-
-			mSceneNode->attachObject( static_cast<OgreEntity*>(pEntity)->getEntity_() );
-		}
-
-		//------------------------------------------------------
-		void OgreNode::addChildNode( ISceneNode* pNode )
-		{
-			YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-			mSceneNode->addChild( static_cast<OgreNode*>(pNode)->getSceneNode_() );
-			mChildren.push_back( static_cast<OgreNode*>(pNode) );
-		}
-
+	//------------------------------------------------------
+	OgreNode::OgreNode( Ogre::SceneManager * sceneMgr ) : mSceneMgr( sceneMgr ), mSceneNode( 0 )
+	{
+		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
+		mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( base::uniqueName::create("sn_") ) );
+		YAKE_ASSERT( mSceneNode ).warning("Couldn't create a scene node!");
+		mSceneNode->setPosition( 0, 0, 0 );
 	}
+
+	//------------------------------------------------------
+	OgreNode::~OgreNode()
+	{
+		if (mSceneNode)
+		{
+			mSceneNode->removeAllChildren();
+			mSceneMgr->destroySceneNode( mSceneNode->getName() );
+		}
+	}
+
+	//------------------------------------------------------
+	void OgreNode::setPosition( const Vector3 & position )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		mSceneNode->setPosition( VEC_YAKE2OGRE( position ) );
+	}
+
+	//------------------------------------------------------
+	Vector3 OgreNode::getPosition() const
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		return VEC_OGRE2YAKE( mSceneNode->getPosition() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::setOrientation( const Quaternion & orientation )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		mSceneNode->setOrientation( QUAT_YAKE2OGRE( orientation ) );
+	}
+
+	//------------------------------------------------------
+	Quaternion OgreNode::getOrientation() const
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		return QUAT_OGRE2YAKE( mSceneNode->getOrientation() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::setScale( const Vector3 & scale )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		mSceneNode->setScale( VEC_YAKE2OGRE( scale ) );
+	}
+
+	//------------------------------------------------------
+	Vector3 OgreNode::getScale() const
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		return VEC_OGRE2YAKE( mSceneNode->getScale() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::removeAndDestroyAllChildren()
+	{
+	}
+
+	//------------------------------------------------------
+	void OgreNode::attachCamera( ICamera* pCamera )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		YAKE_ASSERT( pCamera ).warning("need a camera");
+		
+		if ( NULL == pCamera )
+			return;
+		
+		mSceneNode->attachObject( static_cast<OgreCamera*>( pCamera )->getCamera_() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::attachLight( ILight* pLight )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		YAKE_ASSERT( pLight ).warning("need a light");
+		
+		if ( NULL == pLight )
+			return;
+		
+		mSceneNode->attachObject( static_cast<OgreLight*>( pLight )->getLight_() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::attachEntity( IEntity* pEntity )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		YAKE_ASSERT( pEntity ).warning("need an entity");
+
+		if ( NULL == pEntity )
+			return;
+
+		mSceneNode->attachObject( static_cast<OgreEntity*>(pEntity)->getEntity_() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::addChildNode( ISceneNode* pNode )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		mSceneNode->addChild( static_cast<OgreNode*>(pNode)->getSceneNode_() );
+		mChildren.push_back( static_cast<OgreNode*>(pNode) );
+	}
+
+}
+}
 }

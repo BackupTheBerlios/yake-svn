@@ -22,42 +22,45 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define INC_YAKE_GRAPHICOGRENODE_H
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
-		class OgreNode : public graphics::ISceneNode
-		{
-		public:
-			OgreNode( Ogre::SceneManager * sceneMgr );
-			virtual ~OgreNode();
+	class OgreEntity;
+	class OgreNode : public graphics::ISceneNode
+	{
+	public:
+		OgreNode( Ogre::SceneManager * sceneMgr );
+		virtual ~OgreNode();
 
-			virtual void setPosition( const Vector3 & position );
-			virtual Vector3 getPosition() const;
-			virtual void setOrientation( const Quaternion & orientation );
-			virtual Quaternion getOrientation() const;
+		virtual void setPosition( const Vector3 & position );
+		virtual Vector3 getPosition() const;
+		virtual void setOrientation( const Quaternion & orientation );
+		virtual Quaternion getOrientation() const;
 
-			virtual void setScale( const Vector3 & scale );
-			virtual Vector3 getScale() const;
+		virtual void setScale( const Vector3 & scale );
+		virtual Vector3 getScale() const;
 
-			virtual void addChildNode( ISceneNode* pNode );
-			virtual void attachEntity( IEntity* pEntity );
-			virtual void attachCamera( ICamera* pCamera );
-			virtual void attachLight( ILight* pLight );
-			virtual void removeAndDestroyAllChildren();
+		virtual void addChildNode( ISceneNode* pNode );
+		virtual void attachEntity( IEntity* pEntity );
+		virtual void attachCamera( ICamera* pCamera );
+		virtual void attachLight( ILight* pLight );
+		virtual void removeAndDestroyAllChildren();
 
-			Ogre::SceneNode* getSceneNode_() const
-			{ return mSceneNode; }
-		protected:
-			typedef std::vector< OgreNode* > NodeList;
-			NodeList			mChildren;
+		Ogre::SceneNode* getSceneNode_() const
+		{ return mSceneNode; }
+	protected:
+		typedef base::templates::Vector< OgreNode* > NodeList;
+		NodeList			mChildren;
 
-			typedef std::vector< OgreEntity* > EntityList;
-			EntityList			mEntities;
+		typedef base::templates::Vector< OgreEntity* > EntityList;
+		EntityList			mEntities;
 
-			Ogre::SceneNode		* mSceneNode;
-			Ogre::SceneManager	* mSceneMgr;
-		};
+		Ogre::SceneNode		* mSceneNode;
+		Ogre::SceneManager	* mSceneMgr;
+	};
 
-	}
+}
+}
 }
 
 #endif

@@ -18,72 +18,75 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <plugins/yakeGraphicsOgre/inc/pch.h>
-#include <plugins/yakeGraphicsOgre/inc/graphicsOgreSkeleton.h>
-#include <plugins/yakeGraphicsOgre/inc/graphicsOgreEntity.h>
+#include <inc/plugins/graphicsOgre/yakePCH.h>
+#include <inc/plugins/graphicsOgre/yakeGraphicsSystem.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreSkeleton.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreEntity.h>
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
-		//------------------------------------------------------
-		OgreEntity::OgreEntity( ::Ogre::SceneManager * sceneMgr, const base::String & mesh ) : mSceneMgr( sceneMgr ), mEntity( 0 )
-		{
-			YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
-			mEntity = mSceneMgr->createEntity( yake::base::uniqueName::create("en_"), mesh );
-		}
-
-		//------------------------------------------------------
-		OgreEntity::~OgreEntity()
-		{
-			if (mEntity && mSceneMgr)
-			{
-				mSceneMgr->removeEntity( mEntity );
-				mEntity = 0;
-			}
-		}
-
-		//------------------------------------------------------
-		void OgreEntity::setVisible( bool visible )
-		{
-			if (mEntity)
-				mEntity->setVisible( visible );
-		}
-
-		//------------------------------------------------------
-		void OgreEntity::setMaterial( const base::String & materialName )
-		{
-			if (mEntity)
-				mEntity->setMaterialName( materialName );
-		}
-
-		//------------------------------------------------------
-		void OgreEntity::setSubEntityMaterial( const base::String & subEntity, const base::String & materialName )
-		{
-			if (mEntity)
-			{
-				Ogre::SubEntity* pSubEntity = mEntity->getSubEntity( subEntity );
-				if (pSubEntity)
-                    pSubEntity->setMaterialName( materialName );
-			}
-		}
-
-		//------------------------------------------------------
-		ISkeleton* OgreEntity::getSkeleton() const
-		{
-			YAKE_ASSERT( mEntity ).debug( "need an entity" );
-			if ( mEntity->hasSkeleton() )
-				return new OgreSkeleton( *mEntity );
-			else
-				return NULL;
-		}
-
-		//------------------------------------------------------
-		void OgreEntity::setCastsShadow( bool castsShadow )
-		{
-			YAKE_ASSERT( mEntity ).debug( "need an entity" );
-			if (mEntity)
-				mEntity->setCastShadows( castsShadow );
-		}
-
+	//------------------------------------------------------
+	OgreEntity::OgreEntity( ::Ogre::SceneManager * sceneMgr, const base::String & mesh ) : mSceneMgr( sceneMgr ), mEntity( 0 )
+	{
+		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
+		mEntity = mSceneMgr->createEntity( yake::base::uniqueName::create("en_"), mesh );
 	}
+
+	//------------------------------------------------------
+	OgreEntity::~OgreEntity()
+	{
+		if (mEntity && mSceneMgr)
+		{
+			mSceneMgr->removeEntity( mEntity );
+			mEntity = 0;
+		}
+	}
+
+	//------------------------------------------------------
+	void OgreEntity::setVisible( bool visible )
+	{
+		if (mEntity)
+			mEntity->setVisible( visible );
+	}
+
+	//------------------------------------------------------
+	void OgreEntity::setMaterial( const base::String & materialName )
+	{
+		if (mEntity)
+			mEntity->setMaterialName( materialName );
+	}
+
+	//------------------------------------------------------
+	void OgreEntity::setSubEntityMaterial( const base::String & subEntity, const base::String & materialName )
+	{
+		if (mEntity)
+		{
+			Ogre::SubEntity* pSubEntity = mEntity->getSubEntity( subEntity );
+			if (pSubEntity)
+                pSubEntity->setMaterialName( materialName );
+		}
+	}
+
+	//------------------------------------------------------
+	ISkeleton* OgreEntity::getSkeleton() const
+	{
+		YAKE_ASSERT( mEntity ).debug( "need an entity" );
+		if ( mEntity->hasSkeleton() )
+			return new OgreSkeleton( *mEntity );
+		else
+			return NULL;
+	}
+
+	//------------------------------------------------------
+	void OgreEntity::setCastsShadow( bool castsShadow )
+	{
+		YAKE_ASSERT( mEntity ).debug( "need an entity" );
+		if (mEntity)
+			mEntity->setCastShadows( castsShadow );
+	}
+
+}
+}
 }

@@ -32,42 +32,44 @@ namespace Ogre {
 }
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
-		class SystemFrameListener;
-		class OgreCore
-		{
-		public:
-			OgreCore();
-			~OgreCore();
+	class SystemFrameListener;
+	class OgreCore
+	{
+	public:
+		OgreCore();
+		~OgreCore();
 
-			void update( real timeElapsed );
+		void update( real timeElapsed );
 
-			void _start();
+		void _start();
 
-			inline Ogre::SceneManager* getSceneMgr() const { return mSceneMgr; }
-			inline Ogre::Root* getRoot() const { return mRoot; }
-			inline Ogre::RenderWindow* getRenderWindow() const { return mRWin; }
-			//inline Ogre::Camera* getCamera() const { return mCam; }
-		protected:
-			void setupResourcesFromConfigFile();
+		inline Ogre::SceneManager* getSceneMgr() const { return mSceneMgr; }
+		inline Ogre::Root* getRoot() const { return mRoot; }
+		inline Ogre::RenderWindow* getRenderWindow() const { return mRWin; }
+		//inline Ogre::Camera* getCamera() const { return mCam; }
+	protected:
+		void setupResourcesFromConfigFile();
 
-			void _chooseSceneManager();
+		void _chooseSceneManager();
 
-		protected:
-			bool					mReady;
+	protected:
+		bool					mReady;
 
-			Ogre::Root*				mRoot;
-			Ogre::RenderSystem*		mRSys;
-			Ogre::RenderWindow*		mRWin;
-			Ogre::OgreWindowWin32*	mOWin;
+		Ogre::Root*				mRoot;
+		Ogre::RenderSystem*		mRSys;
+		Ogre::RenderWindow*		mRWin;
+		Ogre::OgreWindowWin32*	mOWin;
 
-			Ogre::SceneManager*		mSceneMgr;
+		Ogre::SceneManager*		mSceneMgr;
 
-			SystemFrameListener*	mSysFL;
-		};
+		SystemFrameListener*	mSysFL;
+	};
 
-	}
+}
+}
 }
 
 #endif

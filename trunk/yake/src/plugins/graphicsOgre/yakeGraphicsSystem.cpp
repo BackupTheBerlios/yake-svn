@@ -24,19 +24,31 @@
 #include <inc/plugins/graphicsOgre/yakePCH.h>
 #include <inc/plugins/graphicsOgre/yakeGraphicsSystem.h>
 #include <inc/plugins/graphicsOgre/yakeGraphicsRegister.h>
+#include <inc/plugins/graphicsOgre/yakeGraphicsWorld.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreCore.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake 
+namespace yake {
+namespace graphics {
+namespace ogre3d {
+
+GraphicsSystem::GraphicsSystem()
 {
-namespace graphics
-{
-namespace ogre3d
-{
+	mCore = new OgreCore();
+	YAKE_ASSERT( mCore );
+	GraphicalWorld::setCore( mCore );
+}
 
 GraphicsSystem::~GraphicsSystem()
 {
+	YAKE_SAFE_DELETE( mCore );
+}
+
+Pointer<IGraphicalWorld> GraphicsSystem::createWorld()
+{
+	return Pointer<IGraphicalWorld>( new GraphicalWorld() );
 }
 
 } // ogre3d

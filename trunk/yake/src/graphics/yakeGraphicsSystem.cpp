@@ -23,6 +23,8 @@
 //============================================================================
 #include <inc/graphics/yakePCH.h>
 #include <inc/graphics/yakeGraphicsSystem.h>
+#include <inc/graphics/yakeGraphicalWorld.h>
+#include <inc/graphics/yakeEntity.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

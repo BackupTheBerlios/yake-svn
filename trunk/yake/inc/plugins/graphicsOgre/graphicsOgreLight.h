@@ -22,48 +22,50 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define INC_YAKE_GRAPHICOGRELIGHT_H
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
-		class OgreLight : public graphics::ILight
-		{
-		public:
-			OgreLight( Ogre::SceneManager * sceneMgr );
-			virtual ~OgreLight();
+	class OgreLight : public graphics::ILight
+	{
+	public:
+		OgreLight( Ogre::SceneManager * sceneMgr );
+		virtual ~OgreLight();
 
-			virtual void setType( const LightType type );
-			virtual LightType getType() const;
+		virtual void setType( const LightType type );
+		virtual LightType getType() const;
 
-			virtual void setAttenuation( real range, real constant, real linear, real quadratic );
-			virtual real getAttenuationRange() const;
-			virtual real getAttenuationConstFactor() const;
-			virtual real getAttenuationLinearFactor() const;
-			virtual real getAttenuationQuadraticFactor() const;
+		virtual void setAttenuation( real range, real constant, real linear, real quadratic );
+		virtual real getAttenuationRange() const;
+		virtual real getAttenuationConstFactor() const;
+		virtual real getAttenuationLinearFactor() const;
+		virtual real getAttenuationQuadraticFactor() const;
 
-			virtual void setSpotlightRange( real innerAngle, real outerAngle, real falloff );
-			virtual real getSpotlightInnerAngle() const; 
-			virtual real getSpotlightOuterAngle() const;			
-			virtual real getSpotlightFalloff() const;
+		virtual void setSpotlightRange( real innerAngle, real outerAngle, real falloff );
+		virtual real getSpotlightInnerAngle() const; 
+		virtual real getSpotlightOuterAngle() const;			
+		virtual real getSpotlightFalloff() const;
 
-			virtual void setDiffuseColour( const Color& colour );
-			virtual void setSpecularColour( const Color& colour );
-			
-			virtual void setCastsShadow( bool enabled );
+		virtual void setDiffuseColour( const Color& colour );
+		virtual void setSpecularColour( const Color& colour );
+		
+		virtual void setCastsShadow( bool enabled );
 
-			virtual void setPosition( const Vector3 & position );
-			virtual Vector3 getPosition() const;
-			virtual void setOrientation( const Quaternion & orientation );
-			virtual Quaternion getOrientation() const;
-			virtual void setDirection( const Vector3& direction );
-			virtual Vector3 getDirection() const;
+		virtual void setPosition( const Vector3 & position );
+		virtual Vector3 getPosition() const;
+		virtual void setOrientation( const Quaternion & orientation );
+		virtual Quaternion getOrientation() const;
+		virtual void setDirection( const Vector3& direction );
+		virtual Vector3 getDirection() const;
 
-			Ogre::Light* getLight_() const
-			{ return mLight; }
-		protected:
-			Ogre::SceneManager* mSceneMgr;
-			Ogre::Light*		mLight;
-		};
+		Ogre::Light* getLight_() const
+		{ return mLight; }
+	protected:
+		Ogre::SceneManager* mSceneMgr;
+		Ogre::Light*		mLight;
+	};
 
-	}
+}
+}
 }
 
 #endif

@@ -24,19 +24,14 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <inc/base/yakePCH.h>
+#include <inc/graphics/yakeGraphics.h>
 #include <inc/graphics/yakeGraphicalWorld.h>
-
-#if defined( YAKE_GRAPHICSINTERFACE_EXPORTS )
-#	define YAKE_GRAPHICS_INTERFACE_API DLLEXPORT
-#else
-#	define YAKE_GRAPHICS_INTERFACE_API DLLIMPORT
-#endif
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
 using namespace yake::base::mpl;
+using namespace yake::base::templates;
 
 namespace yake 
 {
@@ -46,10 +41,12 @@ namespace graphics
 /** The graphics system interface.
 */
 struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem 
-	: public AbstractFactory< sequences::list< IGraphicalWorld > >
+	//: public AbstractFactory< sequences::list< IGraphicalWorld > >
 {
 	// Destructor.
 	virtual ~IGraphicsSystem();
+
+	virtual Pointer<IGraphicalWorld> createWorld() = 0;
 
 YAKE_DECLARE_REGISTRY_0( IGraphicsSystem, yake::base::String )
 };

@@ -124,7 +124,31 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath="..\..\..\src\plugins\graphicsOgre\graphicsOgreCamera.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\graphicsOgre\graphicsOgreCore.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\graphicsOgre\graphicsOgreEntity.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\graphicsOgre\graphicsOgreLight.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\graphicsOgre\graphicsOgreNode.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\graphicsOgre\graphicsOgreSkeleton.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\graphicsOgre\graphicsOgreViewport.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\src\plugins\graphicsOgre\yakeGraphicsSystem.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\graphicsOgre\yakeGraphicsWorld.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\src\plugins\graphicsOgre\yakePCH.cpp">
@@ -146,6 +170,27 @@
 			Name="inc"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath="..\..\..\inc\plugins\graphicsOgre\graphicsOgreCamera.h">
+			</File>
+			<File
+				RelativePath="..\..\..\inc\plugins\graphicsOgre\graphicsOgreCore.h">
+			</File>
+			<File
+				RelativePath="..\..\..\inc\plugins\graphicsOgre\graphicsOgreEntity.h">
+			</File>
+			<File
+				RelativePath="..\..\..\inc\plugins\graphicsOgre\graphicsOgreLight.h">
+			</File>
+			<File
+				RelativePath="..\..\..\inc\plugins\graphicsOgre\graphicsOgreNode.h">
+			</File>
+			<File
+				RelativePath="..\..\..\inc\plugins\graphicsOgre\graphicsOgreSkeleton.h">
+			</File>
+			<File
+				RelativePath="..\..\..\inc\plugins\graphicsOgre\graphicsOgreViewport.h">
+			</File>
 			<File
 				RelativePath="..\..\..\inc\plugins\graphicsOgre\yakeGraphicsRegister.h">
 			</File>

@@ -18,65 +18,67 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <plugins/yakeGraphicsOgre/inc/pch.h>
-#include <plugins/yakeGraphicsOgre/inc/graphicsOgreSkeleton.h>
-#include <plugins/yakeGraphicsOgre/inc/graphicsOgreEntity.h>
+#include <inc/plugins/graphicsOgre/yakePCH.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreSkeleton.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreEntity.h>
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
-		//------------------------------------------------------
-		OgreSkeleton::OgreSkeleton( Ogre::Entity& rEntity ) : mEntity( rEntity )
-		{
-		}
+	//------------------------------------------------------
+	OgreSkeleton::OgreSkeleton( Ogre::Entity& rEntity ) : mEntity( rEntity )
+	{
+	}
 
-		//------------------------------------------------------
-		OgreSkeleton::~OgreSkeleton()
-		{
-		}
+	//------------------------------------------------------
+	OgreSkeleton::~OgreSkeleton()
+	{
+	}
 
-		//------------------------------------------------------
-		void OgreSkeleton::enableAnimation( const base::String& rAnimName, bool enable )
+	//------------------------------------------------------
+	void OgreSkeleton::enableAnimation( const base::String& rAnimName, bool enable )
+	{
+		Ogre::AnimationState* pAnimState = mEntity.getAnimationState( rAnimName );
+		
+		pAnimState->setEnabled( enable );
+	}
+
+	//------------------------------------------------------
+	void OgreSkeleton::advanceAnimation( const base::String& rAnimName, real timeOffset )
+	{
+		Ogre::AnimationState* pAnimState = mEntity.getAnimationState( rAnimName );
+
+		pAnimState->addTime( timeOffset );
+	}
+
+	//------------------------------------------------------
+	void OgreSkeleton::advanceAllAnimations( real timeOffset )
+	{
+		Ogre::AnimationStateSet* pAnimStates = mEntity.getAllAnimationStates();
+
+		for ( Ogre::AnimationStateSet::iterator i = pAnimStates->begin(); i != pAnimStates->end(); ++i )
 		{
-			Ogre::AnimationState* pAnimState = mEntity.getAnimationState( rAnimName );
+			Ogre::AnimationState* pAnimState = &i->second;
 			
-			pAnimState->setEnabled( enable );
+			if ( pAnimState->getEnabled() )
+				pAnimState->addTime( timeOffset );
 		}
-
-		//------------------------------------------------------
-		void OgreSkeleton::advanceAnimation( const base::String& rAnimName, real timeOffset )
-		{
-			Ogre::AnimationState* pAnimState = mEntity.getAnimationState( rAnimName );
-
-			pAnimState->addTime( timeOffset );
-		}
-
-		//------------------------------------------------------
-		void OgreSkeleton::advanceAllAnimations( real timeOffset )
-		{
-			Ogre::AnimationStateSet* pAnimStates = mEntity.getAllAnimationStates();
-	
-			for ( Ogre::AnimationStateSet::iterator i = pAnimStates->begin(); i != pAnimStates->end(); ++i )
-			{
-				Ogre::AnimationState* pAnimState = &i->second;
-				
-				if ( pAnimState->getEnabled() )
-					pAnimState->addTime( timeOffset );
-			}
-		}
+	}
 
 
-		//------------------------------------------------------
-		void OgreSkeleton::setAnimationWeight( const base::String& rAnimName, real weight )
-		{
-			YAKE_ASSERT( false ).debug( "feature NYI" );
-		}
+	//------------------------------------------------------
+	void OgreSkeleton::setAnimationWeight( const base::String& rAnimName, real weight )
+	{
+		YAKE_ASSERT( false ).debug( "feature NYI" );
+	}
 
-		//------------------------------------------------------
-		void OgreSkeleton::attachEntityToBone( const base::String& rBoneName, IEntity* pEntity )
-		{
-			mEntity.attachObjectToBone( rBoneName, static_cast<OgreEntity*>( pEntity )->getEntity_() );
-		}
+	//------------------------------------------------------
+	void OgreSkeleton::attachEntityToBone( const base::String& rBoneName, IEntity* pEntity )
+	{
+		mEntity.attachObjectToBone( rBoneName, static_cast<OgreEntity*>( pEntity )->getEntity_() );
+	}
 
-	} // graphics
+} // ogre3d
+} // graphics
 } // yake

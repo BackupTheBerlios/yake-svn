@@ -22,31 +22,33 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define INC_YAKE_GRAPHICOGREENTITY_H
 
 namespace yake {
-	namespace graphics {
+namespace graphics {
+namespace ogre3d {
 
-		class OgreEntity : public graphics::IEntity
-		{
-			OgreEntity();
-			OgreEntity( const OgreEntity & );
-		public:
-			OgreEntity( ::Ogre::SceneManager * sceneMgr, const base::String & mesh );
-			virtual ~OgreEntity();
+	class OgreEntity : public graphics::IEntity
+	{
+		OgreEntity();
+		OgreEntity( const OgreEntity & );
+	public:
+		OgreEntity( ::Ogre::SceneManager * sceneMgr, const base::String & mesh );
+		virtual ~OgreEntity();
 
-			virtual ISkeleton* getSkeleton() const;
+		virtual ISkeleton* getSkeleton() const;
 
-			virtual void setVisible( bool visible );
-			virtual void setMaterial( const base::String & materialName );
-			virtual void setSubEntityMaterial( const base::String & subEntity, const base::String & materialName );
-			virtual void setCastsShadow( bool castsShadow );
+		virtual void setVisible( bool visible );
+		virtual void setMaterial( const base::String & materialName );
+		virtual void setSubEntityMaterial( const base::String & subEntity, const base::String & materialName );
+		virtual void setCastsShadow( bool castsShadow );
 
-			Ogre::Entity* getEntity_() const
-			{ return mEntity; }
-		protected:
-			Ogre::SceneManager* mSceneMgr;
-			Ogre::Entity*		mEntity;
-		};
+		Ogre::Entity* getEntity_() const
+		{ return mEntity; }
+	protected:
+		Ogre::SceneManager* mSceneMgr;
+		Ogre::Entity*		mEntity;
+	};
 
-	}
+}
+}
 }
 
 #endif
