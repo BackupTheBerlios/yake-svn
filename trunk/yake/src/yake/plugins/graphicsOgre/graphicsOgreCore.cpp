@@ -121,7 +121,7 @@ namespace ogre3d {
 				return;
 			}
 #endif
-			mRWin = mRoot->initialise(true);
+			mRWin = mRoot->initialise(true, "YAKE Demo");
 
 			_chooseSceneManager();
 
