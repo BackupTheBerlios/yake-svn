@@ -38,7 +38,7 @@ using namespace rx;
 int main()
 {
 	// runtime class and object defining
-	{
+	/*{
 		std::cout << "[ meta operations ]" << std::endl;	
 
 		// define class with default value
@@ -73,7 +73,7 @@ int main()
 		assert( test_object_2.field<bool>( "hello_bool" ) );
 		std::cout << "test_object_2::hello_bool=" << ( test_object_2.field<bool>( 
 			"hello_bool" ) ? "true" : "false" ) << std::endl;
-	}
+	}*/
 
 	// event and handler test
 	{
@@ -84,6 +84,9 @@ int main()
 		e.birth.attach_handler( &entity::on_birth, &e );
 		// hard soft wiring
 		e.birth.attach_handler( e.get_object().get_handler( "on_birth" ) );
+		// soft wire
+		soft_wire( "e.birth", "e.on_birth" );
+		// fire
 		e.birth( "hello e" );
 	}
 

@@ -30,12 +30,27 @@ public: // constructors
     register_object( *this );  
 	}
 
+	meta_object( const meta_object & copy )
+		: name_( copy.name_ ),
+			fields_( copy.fields_ ),
+			events_( copy.events_ ),
+			handlers_( copy.handlers_ )
+	{
+		register_object( *this );       
+	}
+
 	~meta_object()
 	{
 		// delete fields
 		for( fields_map::iterator iter = fields_.begin(); 
 			iter != fields_.end(); iter++ )
-		{ delete iter->second; }
+		  delete iter->second;
+
+		// delete handlers
+		for( handlers::iterator iter = handlers_.begin(); 
+			iter != handlers_.end(); iter++ )
+		  delete iter->second;
+
 		// unregister object
 		unregister_object( *this );
 	}
