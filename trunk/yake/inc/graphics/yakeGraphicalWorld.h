@@ -158,6 +158,8 @@ namespace graphics {
 		virtual void setZ( int z ) = 0;
 	};
 
+	class IMeshGeometryAccess;
+
 	/** A graphics world.
 	*/
 	class YAKE_GRAPHICS_INTERFACE_API IGraphicalWorld
@@ -170,7 +172,15 @@ namespace graphics {
 		virtual ICamera* createCamera() = 0;
 
 		virtual ISceneNode* createSceneNode() = 0;
+
+		/** Create an (placeable) instance of a mesh.
+			\param mesh Can either be a mesh file loaded from a resource or a procedural mesh.
+		*/
 		virtual IEntity* createEntity( const base::String & mesh ) = 0;
+
+		virtual IMeshGeometryAccess* createProceduralMesh(const base::String & name) = 0;
+		virtual void destroyProceduralMesh(const base::String & name) = 0;
+		virtual IMeshGeometryAccess* getProceduralMesh(const base::String & name) = 0;
 
 		/** Creates viewport and assigns camera *pCamera to it.
 				Viewport start offset and dimensions are in normalized window-relative coords [0..1].

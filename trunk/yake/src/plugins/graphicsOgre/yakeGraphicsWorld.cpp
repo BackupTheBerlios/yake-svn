@@ -22,6 +22,9 @@
 //    IMPLEMENTATION HEADERS
 //============================================================================
 #include <inc/plugins/graphicsOgre/yakePCH.h>
+#include <inc/graphics/yakeGeometryAccess.h>
+#include <dependencies/ogrenew/OgreMain/include/OgreMeshManager.h>
+#include <dependencies/ogrenew/OgreMain/include/OgreNoMemoryMacros.h>
 #include <inc/plugins/graphicsOgre/yakeGraphicsSystem.h>
 #include <inc/plugins/graphicsOgre/yakeGraphicsWorld.h>
 #include <inc/plugins/graphicsOgre/graphicsOgreNode.h>
@@ -30,6 +33,7 @@
 #include <inc/plugins/graphicsOgre/graphicsOgreViewport.h>
 #include <inc/plugins/graphicsOgre/graphicsOgreLight.h>
 #include <inc/plugins/graphicsOgre/graphicsOgreCore.h>
+#include <inc/plugins/graphicsOgre/graphicsOgreGeometryAccess.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -108,6 +112,40 @@ namespace ogre3d {
 		YAKE_ASSERT( msCore ).debug("need a core!");
 		msCore->update( timeElapsed );
 	}
+
+	//-----------------------------------------------------
+	IMeshGeometryAccess* GraphicalWorld::createProceduralMesh(const String & name)
+	{
+		IMeshGeometryAccess* pMGA = getProceduralMesh( name );
+		if (pMGA)
+			return 0;
+
+		Ogre::Mesh* pMesh = Ogre::Root::getSingleton().getMeshManager()->createManual( name.c_str() );
+		YAKE_ASSERT( pMesh );
+		pMesh->setManuallyDefined( true );
+		pMesh->setIndexBufferPolicy( Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false );
+		pMesh->setVertexBufferPolicy( Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false );
+
+		pMGA = new OgreMeshGeometryAccess( pMesh );
+		YAKE_ASSERT( pMGA );
+		return pMGA;
+	}
+
+	//-----------------------------------------------------
+	void GraphicalWorld::destroyProceduralMesh(const base::String & name)
+	{
+	}
+
+	//-----------------------------------------------------
+	IMeshGeometryAccess* GraphicalWorld::getProceduralMesh(const base::String & name)
+	{
+		ProcMeshMap::const_iterator itFind = mProcMeshes.find( name );
+		if (itFind == mProcMeshes.end())
+			return 0;
+		return new OgreMeshGeometryAccess(itFind->second);
+	}
+
+
 
 } // ogre3d
 } // graphics

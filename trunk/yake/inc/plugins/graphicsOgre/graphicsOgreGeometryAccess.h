@@ -29,6 +29,21 @@ namespace yake {
 namespace graphics {
 namespace ogre3d {
 
+	class OgreMeshGeometryAccess : public IMeshGeometryAccess
+	{
+	private:
+		Ogre::Mesh*			mMesh;
+		typedef base::templates::AssocVector<SubmeshId, Ogre::SubMesh*> SubMeshMap;
+		SubMeshMap			mSubmeshes;
+		SubmeshId			mLastId;
+	public:
+		OgreMeshGeometryAccess( Ogre::Mesh* mesh );
+		virtual ~OgreMeshGeometryAccess();
+
+		virtual SubmeshId createSubmesh();
+		virtual ISubmeshAccess* getSubmesh( const SubmeshId id );
+	};
+
 	const uint8 MAX_TEX_COORDS = 8;
 
 	class OgreSubmeshAccess : public ISubmeshAccess
@@ -38,16 +53,28 @@ namespace ogre3d {
 		Ogre::Mesh*			mMesh;
 		uint8				mNumTexCoordSets;
 
-		real*				mpLockedPositions;
-		real*				mpLockedTexCoords[MAX_TEX_COORDS];
+		float*				mpLockedPositions;
+		float*				mpLockedTexCoords[MAX_TEX_COORDS];
+		uint32*				mpLockedColours;
+		uint32*				mpLockedIndices;
 		Ogre::HardwareVertexBufferSharedPtr	mhwvbPositions;
+		Ogre::HardwareVertexBufferSharedPtr	mhwvbTexCoords[MAX_TEX_COORDS];
+		Ogre::HardwareVertexBufferSharedPtr	mhwvbColours;
+		Ogre::HardwareIndexBufferSharedPtr mhwibIndices;
+
+		Ogre::AxisAlignedBox	mBox;
 	public:
 		OgreSubmeshAccess( Ogre::Mesh* parentMesh, Ogre::SubMesh* subMesh = 0 );
 		virtual ~OgreSubmeshAccess();
 
 		virtual bool open();
-		virtual bool open( uint32 numVertices, uint8 numTexSets );
+		virtual bool open( uint32 numVertices, uint32 numIndices, uint8 numTexSets );
 		virtual bool close();
+
+		virtual bool setMaterial( const base::String & material );
+
+		virtual bool setRenderVertexCount( uint32 count );
+		virtual bool setRenderIndexCount( uint32 count );
 
 		virtual bool lockPositions( uint32 start, uint32 count, bool bRead = false );
 		virtual bool unlockPositions();
@@ -60,17 +87,12 @@ namespace ogre3d {
 		virtual bool lockColours( uint32 start, uint32 count, bool bRead = false );
 		virtual bool unlockColours();
 		virtual bool setColour( uint32 index, const Color & colour );
+
+		virtual bool lockIndices( uint32 start, uint32 count );
+		virtual bool setIndex( uint32 index, uint32 value );
+		virtual bool unlockIndices();
 	};
 
-	class OgreMeshGeometryAccess : public IMeshGeometryAccess
-	{
-	public:
-		OgreMeshGeometryAccess();
-		virtual ~OgreMeshGeometryAccess();
-
-		virtual SubmeshId createSubmesh();
-		virtual ISubmeshAccess* getSubmesh( const SubmeshId id );
-	};
 
 } // ogre3d
 } // graphics

@@ -31,9 +31,10 @@ http://www.gnu.org/copyleft/lesser.txt.
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
 using namespace yake::base::mpl;
-
+using namespace yake::base;
 namespace yake {
 namespace graphics {
+	class IMeshGeometryAccess;
 namespace ogre3d {
 
 	class OgreCore;
@@ -55,9 +56,15 @@ namespace ogre3d {
 		virtual ICamera* createCamera();
 		virtual IViewport* createViewport(ICamera* pCamera);
 
+		virtual IMeshGeometryAccess* createProceduralMesh(const String & name);
+		virtual void destroyProceduralMesh(const base::String & name);
+		virtual IMeshGeometryAccess* getProceduralMesh(const String & name);
+
 		static void setCore( OgreCore* core );
 	private:
 		static OgreCore*	msCore;
+		typedef base::templates::AssocVector< String, Ogre::Mesh* > ProcMeshMap;
+		ProcMeshMap			mProcMeshes;
 	};
 
 } // ogre3d
