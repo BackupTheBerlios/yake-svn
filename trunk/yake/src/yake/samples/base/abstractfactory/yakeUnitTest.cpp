@@ -13,7 +13,7 @@
 #include <string>
 // yake
 #include <yake/base/yake.h>
-#include <yake/base/mpl/yakeAbstractFactory.h>
+#include <yake/base/mpl/abstract_factory.h>
 #include <yake/base/mpl/sequences.h>
 // boost
 #include <boost/mpl/begin.hpp>
@@ -110,24 +110,24 @@ typedef InheritMultiple
 namespace abstractfactory
 {
 
-class Soldier { public: virtual ~Soldier() {} };
-class Monster { public: virtual ~Monster() {} };
-class SuperMonster { public: virtual ~SuperMonster() {} };
+struct Soldier { virtual ~Soldier() {} };
+struct Monster { virtual ~Monster() {} };
+struct SuperMonster { virtual ~SuperMonster() {} };
 
-class SillySoldier : public Soldier {};
-class SillyMonster : public Monster {};
-class SillySuperMonster : public SuperMonster {};
+struct SillySoldier : Soldier {};
+struct SillyMonster : Monster {};
+struct SillySuperMonster : SuperMonster {};
 
-class BadSoldier : public Soldier {};
-class BadMonster : public Monster {};
-class BadSuperMonster : public SuperMonster {};
+struct BadSoldier : Soldier {};
+struct BadMonster : Monster {};
+struct BadSuperMonster : SuperMonster {};
 
-typedef AbstractFactory< list< Soldier, Monster, SuperMonster > > AbstractEnemyFactory; 
+typedef abstract_factory< list< Soldier, Monster, SuperMonster > > AbstractEnemyFactory; 
 
-typedef ConcreteFactory< AbstractEnemyFactory, OpNewFactoryUnit,
+typedef concrete_factory< AbstractEnemyFactory, 
 	list< SillySoldier, SillyMonster, SillySuperMonster > > EasyLevelEnemyFactory;
 
-typedef ConcreteFactory< AbstractEnemyFactory, OpNewFactoryUnit,
+typedef concrete_factory< AbstractEnemyFactory, 
 	list< BadSoldier, BadMonster, BadSuperMonster > > HardLevelEnemyFactory;
 
 } // abstractfactory
@@ -151,7 +151,7 @@ int main()
 	{
 		using namespace yake::testsuite::inheritance;		
 		myWidgetInfo widgetInfo;
-		std::string info = ( static_cast< Holder< std::string >& >( widgetInfo ) ).value;
+		std::string info = (static_cast<Holder<std::string>&>(widgetInfo)).value;
 	}
 
 	// Abstract factory
@@ -161,8 +161,8 @@ int main()
 		std::auto_ptr<AbstractEnemyFactory> easyFactory(new EasyLevelEnemyFactory);
 		std::auto_ptr<AbstractEnemyFactory> hardFactory(new HardLevelEnemyFactory);
 
-		Soldier* s = easyFactory->create<Soldier>();   
-		bool r = !!( typeid( *s ) == typeid( SillySoldier ) ); //SGB !! eliminates bool-to-int performance warning
+		Soldier * s = easyFactory->create<Soldier>();   
+		bool r = !!(typeid(*s) == typeid(SillySoldier)); //SGB !! eliminates bool-to-int performance warning
 		delete s;
 	}
 
