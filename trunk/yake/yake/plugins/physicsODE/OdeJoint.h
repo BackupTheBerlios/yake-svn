@@ -64,8 +64,8 @@ namespace physics {
 			OdeWorld* 		mWorld;
 			dJoint*			mOdeJoint;
 			
-			real				mSpringConstant;
-			real				mDampingConstant;
+			real			mSpringConstant;
+			real			mDampingConstant;
 			JointType		mType;
 		};
 
@@ -83,8 +83,12 @@ namespace physics {
 			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
 			
 			virtual void setLimits( size_t axisIndex, real low, real high );
+		private:
+			real	mVelTarget0;
+			real	mMaxForce0;
 		};
 
 		class OdeHinge2Joint : public OdeJoint
@@ -101,8 +105,13 @@ namespace physics {
 			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
 			
 			virtual void setLimits( size_t axisIndex, real low, real high );
+
+		private:
+			real	mVelTarget[2];
+			real	mMaxForce[2];
 		};
 
 		class OdeBallJoint : public OdeJoint
@@ -119,6 +128,7 @@ namespace physics {
 			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
 			
 			virtual void setLimits( size_t axisIndex, real low, real high );
 		};
@@ -139,6 +149,7 @@ namespace physics {
 			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
 			
 			virtual void setLimits( size_t axisIndex, real low, real high );
 		};
@@ -157,8 +168,13 @@ namespace physics {
 			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
 			
 			virtual void setLimits( size_t axisIndex, real low, real high );
+
+		private:
+			real	mVelTarget0;
+			real	mMaxForce0;
 		};
 		
 		class OdeUniversalJoint : public OdeJoint
@@ -175,8 +191,13 @@ namespace physics {
 			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
 			
 			virtual void setLimits( size_t axisIndex, real low, real high );
+
+		private:
+			real	mVelTarget[2];
+			real	mMaxForce[2];
 		};
 } // physics
 } // yake

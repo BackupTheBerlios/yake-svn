@@ -49,10 +49,12 @@ namespace physics {
 		JT_FIXED,
 		JT_SLIDER,
 		JT_UNIVERSAL,
+		JT_ANGULAR_MOTOR,
 		JT_OTHER
 	};
 
 	class IDynamicActor;
+	class IAngularMotor;
 	class IJoint
 	{
 	public:
@@ -163,6 +165,7 @@ namespace physics {
 		virtual size_t getNumAnchors() const = 0;
 		virtual void setAnchor(size_t anchorIndex, const Vector3& rAnchor) = 0;
 		virtual void setMotor(size_t axisIndex, real velocityTarget, real maximumForce) = 0;
+		virtual void setMotorEnabled(size_t axisIndex, bool enabled) = 0;
 		virtual void setLimits(size_t axisIndex, real low, real high) = 0;
 		virtual void setBreakable(bool enabled) = 0;
 		virtual void setBreakableForce(real force) = 0;

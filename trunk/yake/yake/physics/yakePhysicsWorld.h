@@ -34,6 +34,9 @@
 #ifndef YAKE_PHYSICS_ACTOR_H
 #	include <yake/physics/yakePhysicsActor.h>
 #endif
+#ifndef YAKE_PHYSICS_MOTORS_H
+#	include <yake/physics/yakePhysicsMotors.h>
+#endif
 //#include <yake/base/mpl/yakeAbstractFactory.h>
 
 namespace yake {
@@ -48,12 +51,12 @@ namespace physics {
 	public:
 		virtual ~IWorld() {}
 
-		virtual WeakIJointPtr createJoint( const IJoint::DescBase & rkJointDesc ) = 0;
+		virtual WeakIJointPtr createJoint( const IJoint::DescBase& rkJointDesc ) = 0;
 		virtual WeakIStaticActorPtr createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() ) = 0;
 		virtual WeakIMovableActorPtr createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() ) = 0;
 		virtual WeakIDynamicActorPtr createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() ) = 0;
-		virtual WeakIAvatarPtr createAvatar( const IAvatar::Desc & rkAvatarDesc ) = 0;
-		virtual WeakIMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc ) = 0;
+		virtual WeakIAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc ) = 0;
+		virtual WeakIMaterialPtr createMaterial( const IMaterial::Desc& rkMatDesc ) = 0;
 		virtual void destroyJoint( WeakIJointPtr& rJoint ) = 0;
 		virtual void destroyActor( WeakIActorPtr& rActor ) = 0;
 		virtual void destroyAvatar( WeakIAvatarPtr& rAvatar ) = 0;
