@@ -44,7 +44,7 @@ namespace base
 namespace templates
 {
 
-/* Helpers */ // todo: test, functor
+/* Helpers */ // todo: test
 #define FUNCTION( number ) \
 	YAKE_TYPES_ONE_FREE( number ) \
 	templates::SharedPtr< T > create( typename T::RegistryType::Id id, YAKE_ARGUMENTS_ONE_FREE( number ) ) \
@@ -57,28 +57,27 @@ templates::SharedPtr< Interface_ > create()
 { return Interface_::getRegistry().getDefaultCreator()->create(); };
 
 /* Registry */
+
+// todo: functors instead of creators
+// todo: if we cannot simplify manager template, remove it
 template< class ConfigClass >
 class Registry : public Manager< typename ConfigClass::Id, templates::SharedPtr< typename ConfigClass::ICreator >, RegisterFunctionsNames >
 {
 YAKE_DECLARE_CLASS( yake::base::templates::Registry )
-// Types
-public:
+public: // types
   typedef ConfigClass Config;
   typedef typename Config::Base Base;
   typedef typename Config::Id Id;
   typedef typename Config::ICreator ICreator;
  
-// Class
-public:
+public: // constructors
 	Registry() : m_pDefaultCreator() {}
 
-private:
-  // No copy.
-  Registry( const Registry& );
-  Registry& operator=( const Registry& );
+private: // no copy
+  Registry( const Registry & );
+  Registry & operator=( const Registry & );
 
-// Methods
-public:
+public: // methods
 #define FUNCTION( number ) \
 	YAKE_TYPES( number ) \
 	templates::SharedPtr< Base > create( Id id, YAKE_ARGUMENTS_ONE_FREE( number ) ) \
@@ -88,16 +87,15 @@ YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 
 	templates::SharedPtr< ICreator > getDefaultCreator()
 	{
-    YAKE_ASSERT( getIdentifiers().size() > 0 ).debug( "No default creator available." );
-		if( !m_pDefaultCreator ) m_pDefaultCreator = getObject( *getIdentifiers().begin() );
+		YAKE_ASSERT( getIdentifiers().size() > 0 ).debug( "No default creator available." ); // todo: does not work in release mode, should throw exception
+		if( !m_pDefaultCreator ) m_pDefaultCreator = getObject( *getIdentifiers().begin() ); // todo: (if(!m_pDefaultCreator) m_pDefaultCreator = front();
 		return m_pDefaultCreator;
 	}
 
 	void setDefaultCreator( const templates::SharedPtr< ICreator > pCreator )
 	{	m_pDefaultCreator = pCreator; }
 
-// Data
-private:
+private: // data
 	templates::SharedPtr< ICreator > m_pDefaultCreator;
 };
 

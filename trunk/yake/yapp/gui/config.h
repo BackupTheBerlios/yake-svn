@@ -18,10 +18,18 @@ namespace gui
 using namespace yake::base::mpl;
 
 /* compile time flags */
+// dll import/export
+#if defined( YAPP_GUI_EXPORTS )
+#	define YAPP_GUI_API DLLEXPORT
+#else
+#	define YAPP_GUI_API DLLIMPORT
+#endif
+
+
 // enable/disable lua bindings
 //#define YAKE_GUI_DISABLE_LUA
 
-// todo: check whether reflection supports lua (is YAKE_RX_DISABLE_LUA defined?) or not
+// todo: check whether reflection supports lua (is YAKE_RX_DISABLE_LUA defined?) or not, if disabled we cannot enable gui lua binding support
 
 // todo: #include <bind_lua/bind_lua.h> if lua enabled
 #ifndef YAKE_GUI_DISABLE_LUA
