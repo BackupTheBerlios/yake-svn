@@ -24,13 +24,13 @@ namespace reflection
 #define YAKE_REFLECTION_LUABIND_VER YAKE_REFLECTION_LUABIND_7RC4
 
 #if(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_NO_LUABIND)
-#	pragma message("yake::reflection config: yake.reflection.config.luabind_disabled")
+#	pragma message("Yake reflection config: yake.reflection.config.luabind_disabled")
 #elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_6)
-#	pragma message("yake::reflection config: yake.reflection.config.luabind_6")
+#	pragma message("Yake reflection config: yake.reflection.config.luabind_6")
 #elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC3)
-#	pragma message("yake::reflection config: yake.reflection.config.luabind_7rc3")
+#	pragma message("Yake reflection config: yake.reflection.config.luabind_7rc3")
 #elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC4)
-#	pragma message("yake::reflection config: yake.reflection.config.luabind_7rc4")
+#	pragma message("Yake reflection config: yake.reflection.config.luabind_7rc4")
 #endif
 
 } // namespace reflection

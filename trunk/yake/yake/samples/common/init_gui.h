@@ -21,11 +21,7 @@ template <>
 struct create_help <yake::graphics::IGraphicsSystem>
 {
 	static boost::shared_ptr<yake::graphics::IGraphicsSystem> create()
-	{ 
-		boost::shared_ptr<yake::graphics::IGraphicsSystem> ptr = yake::base::templates::create<yake::graphics::IGraphicsSystem>();
-		ptr->initialise();
-		return ptr; 
-	}
+	{ return yake::base::templates::create_default<yake::graphics::IGraphicsSystem>(); }
 };
 
 using namespace yake::base;
