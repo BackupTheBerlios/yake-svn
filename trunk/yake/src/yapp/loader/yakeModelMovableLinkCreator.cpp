@@ -34,25 +34,33 @@ namespace model {
 
 	YAKE_REGISTER_CONCRETE( ModelMovableLinkCreator );
 
-	Movable* getMovableFromModel(	complex::Model & rModel,
-									const data::dom::INode& rNode )
+	Movable* getMovableFromModel(	complex::Model & rModel, const data::dom::INode& rNode )
 	{
 		// parse
 		String sourceType = StringUtil::toLowerCase(rNode.getAttributeValueAs<String>("type"));
 		String sourceModelName = (rNode.getAttributeValueAs<String>("submodel"));
 		String sourceMovableType = StringUtil::toLowerCase(rNode.getAttributeValueAs<String>("elementtype"));
 		String sourceMovableName = (rNode.getAttributeValueAs<String>("element"));
+		
+		std::cout << "Searching movable: " << std::endl; 
+		std::cout << "    type: " << sourceType << std::endl; 
+		std::cout << "    submodel: " << sourceModelName << std::endl; 
+		std::cout << "    movable type: " << sourceMovableType << std::endl; 
+		std::cout << "    movable name: " << sourceMovableName << std::endl; 
+		
 		// retrieve source movable
 		Movable* pMovable = 0;
 		if (sourceType == "graphical")
 		{
 			YAKE_ASSERT( sourceMovableType == "graphics.scenenode" );
+			std::cout << "Searching for graphical named '" << sourceModelName << "'" << std::endl;
 			Graphical* pG = rModel.getGraphicalByName( sourceModelName );
 			YAKE_ASSERT( pG );
 			pMovable = pG->getSceneNodeByName( sourceMovableName );
 		}
 		else if (sourceType == "physical")
 		{
+			std::cout << "Searching for physical named '" << sourceModelName << "'" << std::endl;
 			Physical* pP = rModel.getPhysicalByName( sourceModelName );
 			YAKE_ASSERT( pP );
 			if (sourceMovableType == "physics.body")
@@ -64,9 +72,9 @@ namespace model {
 		return pMovable;
 	}
 
-	ModelLink* ModelMovableLinkCreator::createLink(	complex::Model & rModel,
-													const data::dom::INode& rSourceNode,
-													const data::dom::INode& rTargetNode)
+	ModelLink* ModelMovableLinkCreator::createLink(	complex::Model & rModel, 
+							const data::dom::INode& rSourceNode,
+							const data::dom::INode& rTargetNode )
 	{
 		using namespace ::yake::data::dom;
 
@@ -90,7 +98,6 @@ namespace model {
 		pLink->subscribeToOrientationChanged( pTargetMovable );
 		return pLink;
 	}
-
 }
 }
 }

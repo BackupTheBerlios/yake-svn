@@ -91,16 +91,22 @@ namespace model {
 		//const String linkName = varGet<String>( rLinkNode.getId("id") );
 		const String linkName = "[not_set]";
 
+		std::cout << "Creating link of type '"<< linkType << "'" << std::endl;
+		
 		SharedPtr<ModelLinkCreator> pCreator = create< ModelLinkCreator >( linkType );
 		YAKE_ASSERT( pCreator )( linkName )( linkType );
 		if (!pCreator)
 			return;
+		
+		std::cout << "Creator acquired for link type '"<< linkType << "'" << std::endl;
 
 		// source
 		const SharedPtr<INode> pSourceNode = rLinkNode.getNodeByName("link_source");
 		YAKE_ASSERT( pSourceNode )( linkName );
 		if (!pSourceNode)
 			return;
+	
+		std::cout << "Found source for link... Searching for targets " << std::endl;
 
 		// targets
 		const NodeList targets = rLinkNode.getNodes();
@@ -112,11 +118,16 @@ namespace model {
 			if (!pTargetNode.get())
 				continue;
 
-			const String nodeName = StringUtil::toLowerCase(varGet<String>( pTargetNode->getValue("name") ));
+			const String nodeName = StringUtil::toLowerCase( pTargetNode->getValueAs<String>( "name" ) );
 			if (nodeName != "link_target")
 				continue;
+	
+			std::cout << "Found source and target. Adding controller to model..." << std::endl;
 
-			mpModel->addController( SharedPtr<IObjectController>( pCreator->createLink( *mpModel, *pSourceNode, *pTargetNode ) ) );
+			SharedPtr<IObjectController>  pController( pCreator->createLink( *mpModel, *pSourceNode, *pTargetNode ) );
+			YAKE_ASSERT( pController ).error( "Failed to create controller! " );
+			
+			mpModel->addController( pController );
 		}
 	}
 }

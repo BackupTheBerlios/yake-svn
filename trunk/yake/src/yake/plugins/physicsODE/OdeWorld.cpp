@@ -25,7 +25,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/plugins/physicsODE/OdeComplexObject.h>
 #include <yake/plugins/physicsODE/OdeCollisionGeometry.h>
 
-#define ADJUST_FPU_PRECISION
+#if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
+#	define ADJUST_FPU_PRECISION
+#endif
 
 namespace yake {
 	namespace physics {
@@ -40,7 +42,7 @@ namespace yake {
 			mOdeContactGroup = new dJointGroup( 0 );
 
 			mOdeWorld->setGravity( 0., 0., 0. );
-			mOdeWorld->setCFM( 0.05 );
+			mOdeWorld->setCFM( 0.0005 );
 			mOdeWorld->setERP( 0.99 );
 			mOdeWorld->setAutoDisableFlag( 1 );
 			mOdeWorld->setAutoDisableAngularThreshold( 0.005 ); // ODE default: 0.01
@@ -151,6 +153,14 @@ namespace yake {
 			return pGeom;
 		}
 
+		//-----------------------------------------------------
+		ICollisionGeometry* OdeWorld::createCollisionGeomPlane( real a, real b, real c, real d )
+		{
+			ICollisionGeometry* pGeom = new OdeCollisionGeomPlane( mOdeSpace, a, b, c, d );
+			YAKE_ASSERT( pGeom ).debug("Out of memory ?");
+			return pGeom;
+		}
+		
 		//-----------------------------------------------------
 		ICollisionGeometry* OdeWorld::createCollisionGeomTransform()
 		{

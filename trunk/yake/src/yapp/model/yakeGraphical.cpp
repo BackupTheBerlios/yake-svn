@@ -100,7 +100,10 @@ namespace model {
 		{
 			graphics::ISceneNode* pSN = it.getNext();
 			String name = dss.getNameForSceneNode( pSN );
-			this->addSceneNode( pSN, (name.length() > 0 ) ? name : yake::base::uniqueName::create("dotScene_sn_"), true );
+			if ( name.length() < 0 ) 
+				name = yake::base::uniqueName::create("dotScene_sn_");
+			this->addSceneNode( pSN, name, true );
+			std::cout << "Graphical: node added - '" << name << "'" << std::endl; 
 		}
 	}
 

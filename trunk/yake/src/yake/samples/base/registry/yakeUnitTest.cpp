@@ -62,7 +62,35 @@ YAKE_DECLARE_CONCRETE( NetworkDriver, "win32" )
 
 YAKE_REGISTER_CONCRETE( NetworkDriver )
 
-} // win32
+}
+namespace Linux
+{
+
+class NetworkDriver : public INetworkDriver
+{
+
+YAKE_DECLARE_CLASS( yake::testsuite::linux::NetworkDriver )
+// Class
+public:
+	// Destructor.
+	virtual ~NetworkDriver() {}
+
+// Methods
+public:
+	// Resolve host.
+	const String resolveHost() const
+	{
+		YAKE_DECLARE_FUNCTION( ResolveHost )
+		return String( YAKE_HERE + ": Hello, its me - the Linux implementation ;)" );
+	}
+
+YAKE_DECLARE_CONCRETE( NetworkDriver, "linux" )
+};
+
+YAKE_REGISTER_CONCRETE( NetworkDriver )
+
+} // linux
+
 } // testsuite
 } // yake
 
