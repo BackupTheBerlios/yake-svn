@@ -14,8 +14,6 @@
     MACROS
  *****************************************************************************/
 
-#define REMOVE_BRACES(ARG1) ARG1
-
 #define RX_EVENT(ACCESS_ATTR, EVENT_NAME, ARGS) \
 private: \
     struct __event_##EVENT_NAME##__ \

@@ -22,6 +22,7 @@ bool dostring(lua_State* L, const char* str)
 
 #define LUABIND_NO_HEADERS_ONLY
 #include <luabind/luabind.hpp>
+#include <luabind/return_reference_to_policy.hpp>
 
 
 // Lua
@@ -177,5 +178,33 @@ struct register_property_##NAME \
 	register_property_##NAME() \
 	{ static initor init; } \
 } reg_property_##NAME;
+
+
+
+#define REMOVE_BRACES(ARG1) ARG1
+
+#define LUA_EVENT(ACCESS_ATTR, EVENT_NAME, ARGS) \
+private: \
+struct register_event_##EVENT_NAME \
+{ \
+	struct initor \
+	{ \
+		initor() \
+		{ \
+			/* todo: hold list of event typeids and check whether this event is registered or not */ \
+			using namespace luabind; \
+			module(L) \
+			[ \
+				class_< reflection::event<REMOVE_BRACES##ARGS> >(#EVENT_NAME) \
+					.def(self(other<REMOVE_BRACES##ARGS>())) \
+			]; \
+			get_lua_class().def_readwrite(#EVENT_NAME, &##EVENT_NAME); \
+			commit_lua_properties(); \
+		} \
+	}; \
+\
+	register_event_##EVENT_NAME() \
+	{ static initor init; } \
+} reg_event_##EVENT_NAME;
 
 #endif // _LUA_H_

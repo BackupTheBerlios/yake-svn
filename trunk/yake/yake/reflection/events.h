@@ -11,6 +11,7 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/any.hpp>
+#include <boost/shared_ptr.hpp>
 
 // rx 
 #include "reflection.h"
@@ -143,15 +144,21 @@ struct lua_event_base
 	virtual void attach_handler(const luabind::functor<void> & lua_function) = 0;
 };
 
-	// todo move to rx
-
 template<typename arg1>
 struct event : public rx_event_base, public lua_event_base, public ::event<arg1 /*, lua::search_for_lua_handlers_1*/> 
 {
 	typedef ::event<arg1/*, lua::search_for_lua_handlers_1*/> base;
+	typedef std::vector< const luabind::functor<void> > lua_functor_list;
+
+	// todo: do we have to do the same for the handlers of the base class as well?
+	event() : m_lua_functor_list(new lua_functor_list()) {}
+	event(const event & e) : m_lua_functor_list(e.m_lua_functor_list) {}
 
 	// add base functions to scope
 	using base::attach_handler;
+
+	// -----------------------------------------
+	// rx
 
 	// attach reflected method
 	void attach_handler(void * object, const reflection::Method & this_handler)
@@ -162,26 +169,38 @@ struct event : public rx_event_base, public lua_event_base, public ::event<arg1 
 		handlers_.push_back(new handler(boost::bind(hdl, object, _1)));
 	}
 
-	typedef std::vector< const luabind::functor<void> > lua_functor_list;
+	// -----------------------------------------
+	// lua
 
 	// attach lua functor
 	void attach_handler(const luabind::functor<void> & lua_function)
 	{
-		m_lua_functor_list.push_back(lua_function);
+		m_lua_functor_list->push_back(lua_function);
 	}
 
-	// firing
+	// fires all lua functors and the functors of the base class
 	virtual fire(arg1 a1)
 	{
 		// call handlers of the base class
 		base::fire(a1);
 		// call lua handlers
-		for(lua_functor_list::const_iterator iter = m_lua_functor_list.begin();
-			iter != m_lua_functor_list.end(); iter++)
+		for(lua_functor_list::const_iterator iter = m_lua_functor_list->begin();
+			iter != m_lua_functor_list->end(); iter++)
 		{ iter->operator()(a1); }
 	}
 
-	lua_functor_list m_lua_functor_list;
+	// luabind cannot handle void as return type
+  bool operator()(arg1 a1)
+  {
+		fire(a1);
+		return true;
+  }
+
+	// we need a smart pointer to the container here, because luabind calls the copy constuctor
+	// when returning a property (get) and each object would have its' own list of functors,
+	// so attach_handler would add the functor to object A and fire would call all functors of object B.
+	// but A and B should have the same list of functors, so we are sharing this list.
+	boost::shared_ptr<lua_functor_list> m_lua_functor_list;
 };
 
 }
