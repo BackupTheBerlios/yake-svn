@@ -146,10 +146,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath="..\..\yake\graphics\yakeGeometryAccess.h">
+				RelativePath="..\..\yake\graphics\yakeEntity.h">
 			</File>
 			<File
-				RelativePath="..\..\yake\graphics\yakeGraphical.h">
+				RelativePath="..\..\yake\graphics\yakeGeometryAccess.h">
 			</File>
 			<File
 				RelativePath="..\..\yake\graphics\yakeGraphicalWorld.h">
