@@ -40,6 +40,44 @@ struct tnl_extrapolation_observer : public observer
 	field_type field_;
 };
 
+
+
+template<typename T>
+struct assign
+{
+	typedef typed_field<T> field_type;
+	static void read(field_type & field_, const tnl_hook & hook_)
+	{
+		// get incomming data
+    T new_value = T();
+		assert(Stream->read(sizeof(T), &new_value));
+
+		field_ = new_value; // hmm loopback ... would send field change back etc.
+
+    /*if(field_.flags_ & extrapolate)
+		{
+      if( is_server() )
+			{	// compare server and arrived client data
+				if( static_cast<tnl_extrapolation_observer<T>*>( 
+					hook_.m_observers[position])->is_override_needed(new_value))
+				{ // we need to override client data
+					dirty_fields_.push_back(&field_);
+				}
+			}
+			else
+			{	// override client with server data
+				static_cast<tnl_extrapolation_observer<T>*>( 
+					hook_.m_observers[position])->input_from_server(new_value);	
+      }
+		}*/
+	}
+
+	typedef event<T> event_type;
+	static void write()
+	{
+	}
+};
+
 struct tnl_hook : public NetObject
 {
 
@@ -59,11 +97,11 @@ struct tnl_hook : public NetObject
 	void on_add_field( float_field & field )
 	{
 		// todo push_back( typeid(float) ) or more generic;
-		field_types_.push_back( typeid(float) );
+		m_field_types.push_back( typeid(float) );
 
 		if( ( field.flags_ & extrapolate ) && ( field.flags_ & server ) )
 		{
-			observers_.insert( 
+			m_observers.insert( 
 				observers::value_type(
 					get_field_position( field ), new tnl_extrapolation_observer<float>( field ) ) );
 		}
@@ -133,11 +171,11 @@ struct tnl_hook : public NetObject
 		}
 		else
 		{
-      dirty_fields_.push_back( &field );
+      m_dirty_fields.push_back( &field );
 		}
 	}
 
-	dirty_fields dirty_fields_;
-	field_types field_types_;
-	observers observers_;
+	dirty_fields m_dirty_fields;
+	field_types m_field_types;
+	observers m_observers;
 };

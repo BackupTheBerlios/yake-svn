@@ -1,7 +1,6 @@
 #ifndef TYPED_FIELD_SERIALIZED_H
 #define TYPED_FIELD_SERIALIZED_H
 
-#include <boost/serialization/split_free.hpp>
 #include "meta_field_serialized.h"
 #include "concrete_fields.h"
 
