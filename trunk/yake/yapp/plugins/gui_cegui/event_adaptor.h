@@ -31,7 +31,7 @@ struct ce_event_adaptor : public reflection::event<typename Args_policy::paramet
 	}
 
 	// convert the event args and forward the event fired from cegui
-  bool on_event(const CEGUI::EventArgs & args)
+	bool on_event(const CEGUI::EventArgs & args)
 	{
 		// extract parameter and fire adapted event
 		base::fire(typename Args_policy::extract(m_parent, args));
