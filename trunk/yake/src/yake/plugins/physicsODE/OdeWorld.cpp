@@ -25,13 +25,13 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/plugins/physicsODE/OdeComplexObject.h>
 #include <yake/plugins/physicsODE/OdeCollisionGeometry.h>
 
-//#define ADJUST_FPU_PRECISION
+#define ADJUST_FPU_PRECISION
 
 namespace yake {
 	namespace physics {
 
 		//-----------------------------------------------------
-		OdeWorld::OdeWorld()
+		OdeWorld::OdeWorld() : mSimTime(0)
 		{
 			mStepSize = 1. / 100.;	// default: 50Hz
 			mOdeWorld = new dWorld();
@@ -63,6 +63,12 @@ namespace yake {
 		}
 
 		//-----------------------------------------------------
+		real OdeWorld::getSimulationTime() const
+		{
+			return mSimTime;
+		}
+
+		//-----------------------------------------------------
 		void OdeWorld::setGlobalGravity( const Vector3 & acceleration )
 		{
 			if (mOdeWorld)
@@ -74,16 +80,17 @@ namespace yake {
 		{
 			static real overflow = 0.;
 			real t = overflow + timeElapsed;
-			while ( t >= 0. )
+			while ( t > mStepSize )
 			{
 				t -= mStepSize;
+				mSimTime += mStepSize;
 		#ifdef ADJUST_FPU_PRECISION
 				_controlfp(_PC_64, _MCW_PC);
 		#endif
 				// Now collide the objects in the world
 				dSpaceCollide(mOdeSpace->id(), this, &_OdeNearCallback);
 
-				mOdeWorld->step( mStepSize );
+				//mOdeWorld->step( mStepSize );
 				//mOdeWorld->stepFast1( mStepSize, 4 );
 				dWorldQuickStep( mOdeWorld->id(), mStepSize );
 				//dWorldStepFast1( mOdeWorld->id(), mStepSize, 4 );
