@@ -36,6 +36,8 @@ extern "C"
 boost::lambda::placeholder1_type _l1;
 
 // todo move this to yake::base
+// todo we need to add slots which are returned when you connect to an event/signal
+// so that you can disconnect the handler, can we extend boost::signal?
 
 // abstract class without virtuals
 struct event_base

@@ -109,7 +109,7 @@ template <class C, class VALUE_TYPE> struct __observer_property__##PROPERTY_NAME
 #define RX_PROPERTY(TYPE, NAME, OBSERVER1, OBSERVER2)\
 private:\
 		/* observers for this property */ \
-		typedef std::vector< property_observer<TYPE>* > ObserverList##NAME;\
+		typedef std::vector<property_observer<TYPE> *> ObserverList##NAME;\
 		ObserverList##NAME __observers__##NAME;\
 		\
 		/* specialized property handler which notifies the observers */ \
@@ -133,10 +133,12 @@ private:\
         inline TYPE get() const {\
             return owner()->get_##NAME();\
         }\
-        inline void set(TYPE value) {\
+        inline void set(TYPE value)\
+				{\
+				    /* notify observers */ \
 						for(ObserverList##NAME::iterator iter = owner()->__observers__##NAME.begin();\
 								iter != owner()->__observers__##NAME.end(); iter++)\
-								(*iter)->set(value);\
+						{ (*iter)->set(value); }\
             owner()->set_##NAME(value);\
         }\
         inline operator TYPE () const {\
