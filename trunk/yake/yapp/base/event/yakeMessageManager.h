@@ -27,8 +27,8 @@
 #define YAKE_YAPP_BASE_EVENT_MESSAGEMANAGER_H
 
 #include <yake/base/yakeParamHolder.h>
-#include "yakeMessageInstance.h"
-#include "yakeMessageQ.h"
+#include <yapp/base/event/yakeMessageInstance.h>
+#include <yapp/base/event/yakeMessageQ.h>
 
 using namespace yake::base;
 using namespace yake::base::templates;

@@ -26,8 +26,8 @@
 #ifndef YAKE_YAPP_BASE_EVENT_MESSAGEINSTANCE_H
 #define YAKE_YAPP_BASE_EVENT_MESSAGEINSTANCE_H
 
-#include "yakeMessageId.h"
-#include <yake/base/yakeParamHolder.h>
+#include <yapp/base/event/yakeMessageId.h>
+#include <yapp/base/event/yakeParamHolder.h>
 
 using namespace yake::base;
 

@@ -6,6 +6,5 @@ METASOURCES = AUTO
 
 
 
-lib_LTLIBRARIES = libyakeScriptingSystemLua.la
-libyakeScriptingSystemLua_la_LIBADD = $(top_builddir)/src/yake/base/libyakeBase.la -llualib -llua
-libyakeScriptingSystemLua_la_SOURCES =  plugin.cpp ScriptingSystemLua.cpp yakePCH.cpp
+lib_LTLIBRARIES = libyakescriptingLua.la
+libyakescriptingLua_la_SOURCES = plugin.cpp ScriptingSystemLua.cpp yakePCH.cpp

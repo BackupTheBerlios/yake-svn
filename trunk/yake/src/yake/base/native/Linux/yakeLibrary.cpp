@@ -51,9 +51,12 @@ YAKE_BASE_NATIVE_API LibraryHandle library_Load( const char* pFilename )
        
 	yake::base::String name( pFilename );
         
+	// Due to Linux libraries naming we decided to add some "brand" prefix
+	yake::base::String yakeLibNamePrefix = "libyake";
+	
 	// dlopen() does not add .so to the filename, like windows does for .dll
          if ( name.substr( name.length() - 3, 3 ) != ".so" )
-	 	name += ".so";
+	 	name = yakeLibNamePrefix + name + ".so";
 
 	LibraryHandle handle = ( LibraryHandle )dlopen( name.c_str(), RTLD_LAZY );
 	

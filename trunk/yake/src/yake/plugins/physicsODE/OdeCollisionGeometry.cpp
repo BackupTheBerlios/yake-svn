@@ -321,7 +321,7 @@ namespace yake {
 			base::String name = varGet<String>(mDocNode->getValue("name"));
 			while (it.hasMoreElements())
 			{
-				SharedPtr<data::dom::INode> & pNode = it.getNext();
+				SharedPtr<data::dom::INode> const& pNode = it.getNext();
 				//if (varGet<String>(pNode->getValue("name")) == "mesh")
 					parseMesh( pNode );
 			}
@@ -334,8 +334,9 @@ namespace yake {
 			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
 			while (it.hasMoreElements())
 			{
-				SharedPtr<data::dom::INode> & pNode = it.getNext();
-				if (varGet<String>(pNode->getValue("name")) == "submeshes")
+				SharedPtr<data::dom::INode> const& pNode = it.getNext();
+				data::dom::INode::ValueType value = pNode->getValue("name");  
+				if (varGet<String>( value ) == "submeshes")
 					parseSubMeshes( pNode );
 			}
 		}
@@ -345,8 +346,9 @@ namespace yake {
 			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
 			while (it.hasMoreElements())
 			{
-				SharedPtr<data::dom::INode> & pNode = it.getNext();
-				if (varGet<String>(pNode->getValue("name")) == "submesh")
+				SharedPtr<data::dom::INode> const& pNode = it.getNext();
+				data::dom::INode::ValueType value = pNode->getValue("name"); 
+				if (varGet<String>( value ) == "submesh")
 					parseSubMesh( pNode );
 			}
 		}
@@ -357,8 +359,9 @@ namespace yake {
 			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
 			while (it.hasMoreElements())
 			{
-				SharedPtr<data::dom::INode> & pNode = it.getNext();
-				base::String name = varGet<String>(pNode->getValue("name"));
+				SharedPtr<data::dom::INode> const& pNode = it.getNext();
+				data::dom::INode::ValueType value = pNode->getValue("name"); 
+				base::String name = varGet<String>( value );
 				if (name == "faces")
 					parseFaces( pNode, indexOffset );
 				else if (name == "geometry")
@@ -371,28 +374,35 @@ namespace yake {
 			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
 			while (it.hasMoreElements())
 			{
-				SharedPtr<data::dom::INode> & pNode = it.getNext();
-				base::String name = varGet<String>(pNode->getValue("name"));
+				SharedPtr<data::dom::INode> const& pNode = it.getNext();
+				data::dom::INode::ValueType value = pNode->getValue("name"); 
+				base::String name = varGet<String>( value );
 				YAKE_ASSERT( name == "face" );
 				readFace( pNode, indexOffset );
 			}
 		}
 		void PhysicsMeshLoader::readFace( const SharedPtr<data::dom::INode> & pFaceNode, const uint32 indexOffset )
 		{
-			YAKE_ASSERT( pFaceNode->getAttributeValue("v1").which() == data::dom::INode::VTID_STRING );
-			String a = varGet<String>(pFaceNode->getAttributeValue("v1"));
+			YAKE_ASSERT( pFaceNode->getAttributeValue( "v1" ).which() == data::dom::INode::VTID_STRING );
+			data::dom::INode::ValueType v1 = pFaceNode->getAttributeValue( "v1" );  
+			String a = varGet<String>( v1 );
 			mIndices.push_back( indexOffset + atoi(a.c_str()) );
-			a = varGet<String>(pFaceNode->getAttributeValue("v2"));
+			
+			data::dom::INode::ValueType v2 = pFaceNode->getAttributeValue( "v2" );
+			a = varGet<String>( v2 );
 			mIndices.push_back( indexOffset + atoi(a.c_str()) );
-			a = varGet<String>(pFaceNode->getAttributeValue("v3"));
+			
+			data::dom::INode::ValueType v3 = pFaceNode->getAttributeValue( "v3" );
+			a = varGet<String>( v3 );
 			mIndices.push_back( indexOffset + atoi(a.c_str()) );
 
 			data::dom::NodeList nodes = pFaceNode->getNodes();
-			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
-			while (it.hasMoreElements())
+			ConstVectorIterator<data::dom::NodeList> it( nodes.begin(), nodes.end() );
+			while ( it.hasMoreElements() )
 			{
-				SharedPtr<data::dom::INode> & pNode = it.getNext();
-				base::String name = varGet<String>(pNode->getValue("name"));
+				SharedPtr<data::dom::INode> const& pNode = it.getNext();
+				data::dom::INode::ValueType value = pNode->getValue( "name" );
+				base::String name = varGet<String>( value );
 				YAKE_ASSERT( name == "normal" );
 				readNormal( pNode );
 			}
@@ -403,42 +413,53 @@ namespace yake {
 			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
 			while (it.hasMoreElements())
 			{
-				SharedPtr<data::dom::INode> & pNode = it.getNext();
-				base::String name = varGet<String>(pNode->getValue("name"));
+				SharedPtr<data::dom::INode> const& pNode = it.getNext();
+				data::dom::INode::ValueType value = pNode->getValue( "name" );
+				base::String name = varGet<String>( value );
 				YAKE_ASSERT( name == "vertex" );
 				readVertex( pNode );
 			}
 		}
 		void PhysicsMeshLoader::readVertex( const SharedPtr<data::dom::INode> & pVertexNode )
 		{
-			SharedPtr<data::dom::INode> pPositionNode = pVertexNode->getNodeByName("position");
-			YAKE_ASSERT( pPositionNode->getAttributeValue("x").which() == data::dom::INode::VTID_STRING );
+			SharedPtr<data::dom::INode> pPositionNode = pVertexNode->getNodeByName( "position" );
+			YAKE_ASSERT( pPositionNode->getAttributeValue( "x" ).which() == data::dom::INode::VTID_STRING );
 			Vector3 position;
-			String a = varGet<String>(pPositionNode->getAttributeValue("x"));
-			position.x = StringUtil::toReal(a);
-			a = varGet<String>(pPositionNode->getAttributeValue("y"));
-			position.y = StringUtil::toReal(a);
-			a = varGet<String>(pPositionNode->getAttributeValue("z"));
-			position.z = StringUtil::toReal(a);
+			data::dom::INode::ValueType x = pPositionNode->getValue( "x" );
+			String a = varGet<String>( x );
+			position.x = StringUtil::toReal( a );
+			data::dom::INode::ValueType y = pPositionNode->getValue( "y" );
+			a = varGet<String>( y );
+			position.y = StringUtil::toReal( a );
+			data::dom::INode::ValueType z = pPositionNode->getValue( "z" );
+			a = varGet<String>( z );
+			position.z = StringUtil::toReal( a );
 			mVertices.push_back( position );
 		}
-		void PhysicsMeshLoader::readNormal( const SharedPtr<data::dom::INode> & pNormalNode )
+		void PhysicsMeshLoader::readNormal( const SharedPtr<data::dom::INode>& pNormalNode )
 		{
 			Vector3 normal;
-			String a = varGet<String>(pNormalNode->getAttributeValue("x"));
-			normal.x = StringUtil::toReal(a);
-			a = varGet<String>(pNormalNode->getAttributeValue("y"));
-			normal.y = StringUtil::toReal(a);
-			a = varGet<String>(pNormalNode->getAttributeValue("z"));
-			normal.z = StringUtil::toReal(a);
+			
+			data::dom::INode::ValueType x = pNormalNode->getValue( "x" );
+			String a = varGet< String >( x );
+			normal.x = StringUtil::toReal( a );
+			
+			data::dom::INode::ValueType y = pNormalNode->getValue( "y" );
+			a = varGet< String >( y );
+			normal.y = StringUtil::toReal( a );
+			
+			data::dom::INode::ValueType z = pNormalNode->getValue( "z" );
+			a = varGet< String >( z );
+			normal.z = StringUtil::toReal( a );
+			
 			mNormals.push_back( normal );
 		}
 
 		//-----------------------------------------------------
 		OdeCollisionGeomTriMesh::OdeCollisionGeomTriMesh(dSpace* space, const base::String & meshfile ) :
-			mpVertices(0),
-			mpIndices(0),
-			mpNormals(0)
+			mpVertices( 0 ),
+			mpIndices( 0 ),
+			mpNormals( 0 )
 		{
 			mType = CGT_MESH;
 			mOdeGeomID = 0;
@@ -482,14 +503,14 @@ namespace yake {
 			ConstVectorIterator<PhysicsMeshLoader::PositionList> itP(positions.begin(),positions.end());
 			while (itP.hasMoreElements())
 			{
-				Vector3 & position = itP.getNext();
+				Vector3 const& position = itP.getNext();
 				mVertices.push_back( CMVertex(position.x, position.y, position.z) );
 			}
 
 			ConstVectorIterator<PhysicsMeshLoader::NormalList> itN(normals.begin(),normals.end());
 			while (itN.hasMoreElements())
 			{
-				Vector3 & normal = itN.getNext();
+				Vector3 const& normal = itN.getNext();
 				mNormals.push_back( normal );
 			}
 /*
@@ -528,7 +549,7 @@ namespace yake {
 			base::templates::ConstVectorIterator<VertexList> itV( mVertices.begin(), mVertices.end() );
 			while (itV.hasMoreElements())
 			{
-				CMVertex& v = itV.getNext();
+				CMVertex const& v = itV.getNext();
 				mpVertices[i*3+0] = v.x;
 				mpVertices[i*3+1] = v.y;
 				mpVertices[i*3+2] = v.z;

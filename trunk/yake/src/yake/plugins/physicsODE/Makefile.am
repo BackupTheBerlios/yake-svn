@@ -3,6 +3,8 @@ METASOURCES = AUTO
 
 
 
-lib_LTLIBRARIES = libyakePhysicsSystemODE.la
-libyakePhysicsSystemODE_la_SOURCES =  OdeBallJoint.cpp OdeBody.cpp OdeCollisionGeometry.cpp OdeComplexObject.cpp OdeFixedJoint.cpp OdeHinge2Joint.cpp OdeHingeJoint.cpp OdeJointBase.cpp OdeWorld.cpp PhysicsSystemODE.cpp plugin.cpp yakePCH.cpp
-libyakePhysicsSystemODE_la_LIBADD = $(top_builddir)/src/yake/physics/libyakePhysics.la -lode
+lib_LTLIBRARIES = libyakephysicsODE.la
+libyakephysicsODE_la_SOURCES = OdeBallJoint.cpp OdeBody.cpp\
+	OdeCollisionGeometry.cpp OdeComplexObject.cpp OdeFixedJoint.cpp\
+	OdeHinge2Joint.cpp OdeHingeJoint.cpp OdeJointBase.cpp OdeWorld.cpp\
+	PhysicsSystemODE.cpp plugin.cpp yakePCH.cpp

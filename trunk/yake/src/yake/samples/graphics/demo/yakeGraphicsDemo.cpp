@@ -88,7 +88,7 @@ public:
 		mNinja.pSN = mGWorld->createSceneNode();
 		YAKE_ASSERT( mNinja.pSN );
 
-		mNinja.pE = mGWorld->createEntity("fordboss.mesh"); //"ninja.mesh");
+		mNinja.pE = mGWorld->createEntity("ninja.mesh");
 		YAKE_ASSERT( mNinja.pE );
 		mNinja.pE->setCastsShadow( true );
 
@@ -238,8 +238,8 @@ public:
 	virtual void run()
 	{
 		// setup event input generators
-		mKeyboardEventGenerator.subscribeToKeyDown( Bind1( TheApp::onKey, this ) );
-		mMouseEventGenerator.subscribeToMouseButtonDown( Bind1( TheApp::onMB, this ) );
+		mKeyboardEventGenerator.subscribeToKeyDown( Bind1( &TheApp::onKey, this ) );
+		mMouseEventGenerator.subscribeToMouseButtonDown( Bind1( &TheApp::onMB, this ) );
 
 		// graphics
 		mGWorld = getGraphicsSystem().createWorld();
@@ -308,7 +308,7 @@ public:
 			YAKE_ASSERT( getKeyboard() );
 			if (getKeyboard())
 			{
-				static iCam = 0;
+				static  unsigned iCam = 0;
 				real distance = -200. * timeElapsed;
 				if (getKeyboard()->isKeyDown(input::KC_LEFT))
 					mVPs[iCam].second->translate( Vector3(distance, 0, 0) );

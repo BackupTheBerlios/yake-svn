@@ -4,7 +4,6 @@ METASOURCES = AUTO
 
 
 
-lib_LTLIBRARIES = libyakeScriptingBindingsLua.la
-libyakeScriptingBindingsLua_la_LIBADD = $(top_builddir)/src/yake/base/libyakeBase.la -lluabind -llualib -llua
-libyakeScriptingBindingsLua_la_SOURCES =  pch.cpp plugin.cpp yakeBinder.cpp
 
+lib_LTLIBRARIES = libyakescriptingBindingsLua.la
+libyakescriptingBindingsLua_la_SOURCES = pch.cpp plugin.cpp yakeBinder.cpp

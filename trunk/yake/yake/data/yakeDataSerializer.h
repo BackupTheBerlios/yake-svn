@@ -81,7 +81,7 @@ namespace dom {
 		virtual ValueType getAttributeValue( const String & name ) const = 0;
 		virtual void setAttributeValue( const String & name, const ValueType & value ) = 0;
 
-		template< typename T >
+		template< typename T, int Dummy >
 		T getAttributeValueAs( const String & name ) const
 		{
 			ValueType val = getAttributeValue(name);

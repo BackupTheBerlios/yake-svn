@@ -2,7 +2,7 @@
 <kdevelop>
   <general>
     <author>Yake.org</author>
-    <email>mj@mjlair</email>
+    <email>mj@mjlair_</email>
     <version>0.1</version>
     <projectmanagement>KDevAutoProject</projectmanagement>
     <primarylanguage>C++</primarylanguage>
@@ -18,14 +18,14 @@
   </general>
   <kdevautoproject>
     <general>
-      <activetarget>src/yapp/samples/base/events/EventsDemo</activetarget>
+      <activetarget>src/yapp/base/event/libyappEvents.la</activetarget>
       <useconfiguration>debug</useconfiguration>
     </general>
     <run>
-      <mainprogram>/home/mj/projects/yake_linux/debug/src/yapp/samples/base/events/EventsDemo</mainprogram>
+      <mainprogram>/home/mj/projects/yake/debug/src/yake/samples/graphics/demo/GraphicsDemo</mainprogram>
       <terminal>true</terminal>
       <directoryradio>custom</directoryradio>
-      <customdirectory>/home/mj/projects/yake_linux/common/bin/</customdirectory>
+      <customdirectory>/home/mj/projects/yake/common/bin/</customdirectory>
       <programargs/>
       <autocompile>true</autocompile>
       <envvars/>
@@ -61,17 +61,16 @@
         <f77compilerbinary/>
         <cflags/>
         <f77flags/>
+        <envvars/>
       </debug>
     </configurations>
     <make>
-      <envvars>
-        <envvar value="1" name="WANT_AUTOCONF_2_5" />
-        <envvar value="0" name="WANT_AUTOMAKE_1_6" />
-      </envvars>
+      <envvars/>
       <abortonerror>false</abortonerror>
       <numberofjobs>1</numberofjobs>
       <dontact>false</dontact>
       <makebin/>
+      <prio>0</prio>
     </make>
   </kdevautoproject>
   <kdevdoctreeview>
@@ -181,6 +180,7 @@
     <display>
       <staticmembers>false</staticmembers>
       <demanglenames>true</demanglenames>
+      <outputradix>10</outputradix>
     </display>
   </kdevdebugger>
 </kdevelop>

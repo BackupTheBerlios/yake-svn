@@ -43,7 +43,7 @@ namespace rx {
 		String getName() const;
 		RxObject* createObject();
 
-		bool operator == (const RxClass & rhs);
+		bool operator == ( const RxClass & rhs );
 
 		RXO_DECLARE_BASE( RxClass );
 	private:

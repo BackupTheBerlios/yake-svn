@@ -25,7 +25,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/plugins/physicsODE/OdeComplexObject.h>
 #include <yake/plugins/physicsODE/OdeCollisionGeometry.h>
 
-#define ADJUST_FPU_PRECISION
+//#define ADJUST_FPU_PRECISION
 
 namespace yake {
 	namespace physics {

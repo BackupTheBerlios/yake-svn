@@ -1,3 +1,4 @@
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
-SUBDIRS = graphicsOgre physicsODE scriptingLua inputOgre scriptingLuaBindings
+SUBDIRS = graphicsOgre physicsODE scriptingLua inputOgre scriptingLuaBindings \
+	audioOpenAL

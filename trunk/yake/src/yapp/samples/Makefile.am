@@ -1,3 +1,3 @@
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
-SUBDIRS =  base
+SUBDIRS = base
