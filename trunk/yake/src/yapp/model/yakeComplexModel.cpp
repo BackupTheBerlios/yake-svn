@@ -135,7 +135,7 @@ namespace complex {
 	void Model::addController(const SharedPtr<IObjectController> & pController, const String & rName)
 	{
 		YAKE_ASSERT( pController.get() );
-		YAKE_ASSERT( rName.length() == 0 ).error("tagging not implemented!");
+		YAKE_ASSERT( rName.length() == 0 ).warning("tagging not implemented!");
 		mControllers.push_back( pController );
 	}
 
@@ -143,7 +143,7 @@ namespace complex {
 	void Model::addLink( const SharedPtr<ModelLink> & pModelLink, const String & rName )
 	{
 		YAKE_ASSERT( pModelLink.get() );
-		YAKE_ASSERT( rName.length() == 0 ).error("tagging not implemented!");
+		YAKE_ASSERT( rName.length() == 0 ).warning("tagging not implemented!");
 		mControllers.push_back( pModelLink );
 	}
 

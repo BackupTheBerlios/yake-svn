@@ -314,7 +314,7 @@ namespace physics {
 				mOdeContactGroup->empty();
 			}
 			
-			mPostStepSignal( timeElapsed );
+			mPostStepSignal();
 
 			overflow = t;
 		}

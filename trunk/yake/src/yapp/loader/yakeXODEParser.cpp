@@ -439,8 +439,9 @@ namespace xode {
 		
 		physics::IShape* pShape = NULL;
 
-		if ( pParentObject )
+		if ( !pParentObject )
 		{
+			YAKE_LOG("XODE::readGeom() creating static actor...");
 			// adding shape to new IStaticActor
 			//physics::IStaticActor::Desc desc;
 			physics::WeakIStaticActorPtr pStaticActor( mPWorld->createStaticActor() );
