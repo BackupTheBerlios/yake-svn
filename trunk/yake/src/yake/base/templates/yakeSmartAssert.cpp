@@ -140,21 +140,25 @@ namespace assert
 	//-----------------------------------------------------
 	void defaultHandler( const SmartAssertContext& ctx )
 	{
+		// print all messages to "cout"
 		std::ostringstream out;
 		ctx.toStream( out );
 		std::cout << std::endl << out.str();
 
 		bool IgnoreAlways = false;
 
-		if( !native::debug_AssertFailed(
-      ctx.getMessage().c_str(),
-			ctx.getExpression().c_str(), 
-			ctx.getFile().c_str(),
-			ctx.getLine(), 
-			IgnoreAlways ) 
-			&& !IgnoreAlways )
+		if (ctx.getLevel() != AL_WARNING) // "warning" assertions are logged only.
 		{
-			abort();
+			if( !native::debug_AssertFailed(
+				ctx.getMessage().c_str(),
+				ctx.getExpression().c_str(), 
+				ctx.getFile().c_str(),
+				ctx.getLine(), 
+				IgnoreAlways ) 
+				&& !IgnoreAlways )
+			{
+				abort();
+			}
 		}
 
 		if (ctx.getLevel() == AL_ERROR || ctx.getLevel() == AL_FATAL)
