@@ -2,8 +2,6 @@
 #define YAKE_EXAMPLE_APPLICATION_H
 
 /**
-	\todo add loading of script bindings
-	\todo add subscription to shutdown request by graphics system (due to closed window)
 */
 #include <yake/graphics/yakeGraphics.h>
 #include <yake/physics/yakePhysics.h>
@@ -123,6 +121,17 @@ namespace exapp {
 		virtual void initialise()
 		{
 			
+			// scripting
+			if ( mLoadScriptingSystem )
+			{
+				scripting::ScriptingPlugin* pSP = 
+					loadPlugin<scripting::ScriptingPlugin>( "scriptingLua" );
+				YAKE_ASSERT( pSP ).debug( "Cannot load scripting plugin." );
+
+				mScriptingSystem = pSP->createSystem();
+				YAKE_ASSERT( mScriptingSystem ).error( "Cannot create scripting system." );
+			}
+
 			// scripting bindings
 			if ( mLoadScriptingBindings )
 			{
@@ -133,17 +142,6 @@ namespace exapp {
 				mScriptingBindings = pSBP->createBinder();
 				YAKE_ASSERT( mScriptingBindings ).error(
 				                              "Cannot create scripting bindings object." );
-			}
-			
-			// scripting
-			if ( mLoadScriptingSystem )
-			{
-				scripting::ScriptingPlugin* pSP = 
-					loadPlugin<scripting::ScriptingPlugin>( "scriptingLua" );
-				YAKE_ASSERT( pSP ).debug( "Cannot load scripting plugin." );
-
-				mScriptingSystem = pSP->createSystem();
-				YAKE_ASSERT( mScriptingSystem ).error( "Cannot create scripting system." );
 			}
 
 			// graphics

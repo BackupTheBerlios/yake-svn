@@ -51,18 +51,13 @@ public:
 //    IMPLEMENTATION FUNCTIONS
 //============================================================================
 
-YAKE_DECLARE_GLOBAL
 int main()
 {
 	try 
 	{
-		YAKE_DECLARE_FUNCTION( main )
-
-		{
-			TheApp theApp;
-				theApp.initialise();
-			theApp.run();
-		}
+		TheApp theApp;
+		theApp.initialise();
+		theApp.run();
 
 #if defined( YAKE_DEBUG_BUILD )
 		std::cout << std::endl << "Waiting for you...";
