@@ -1,0 +1,70 @@
+/**------------------------------------------------------------------------------------
+   This file is part of YAKE
+   Copyright © 2004 The YAKE Team
+   For the latest information visit http://www.yake.org 
+   ------------------------------------------------------------------------------------
+   This program is free software; you can redistribute it and/or modify it under
+   the terms of the GNU Lesser General Public License as published by the Free Software
+   Foundation; either version 2 of the License, or (at your option) any later
+   version.
+
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+   FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public License along with
+   this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+   Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+   http://www.gnu.org/copyleft/lesser.txt.
+   ------------------------------------------------------------------------------------
+*/
+//============================================================================
+//    IMPLEMENTATION HEADERS
+//============================================================================
+#include <yake/base/yakePCH.h>
+#include <yake/base/yakeLog.h>
+#include <yake/base/yakeDebugLogAppender.h>
+
+//============================================================================
+//    INTERFACE STRUCTURES / UTILITY CLASSES
+//============================================================================
+namespace yake
+{
+namespace base
+{
+
+Log::Log()
+{
+#ifdef YAKE_DEBUG_BUILD
+	mOnLog.connect( &DebugLogAppender::onLog );
+#endif
+}
+
+Log::~Log()
+{
+}
+
+void Log::onLog( const OnLog::slot_type& rSlot )
+{
+  mOnLog.connect( rSlot );
+}
+
+
+void Log::log( const String& rWhat, Severity severity, const String& rSource )
+{
+	mOnLog( rWhat, severity, rSource );
+}
+
+void Log::logPrintf( char * fmt, ... )
+{
+    static char szBuffer[4097];
+	memset( szBuffer, 0, 4097 );
+    va_list list;
+    va_start( list, fmt );
+    YAKE_VSNPRINTF( szBuffer, 4096, fmt, list );
+	mOnLog( szBuffer, INFORMATIONS, "" );
+    va_end( list );
+}
+
+} // base
+} // yake
