@@ -26,12 +26,9 @@
 //============================================================================
 #include <yake/plugins/graphicsOgre/yakeGraphicsSystem.h>
 
-namespace yake 
-{
-namespace graphics
-{
-namespace ogre3d
-{
+namespace yake {
+namespace graphics {
+namespace ogre3d {
 
 YAKE_REGISTER_CONCRETE( GraphicsSystem )
 
