@@ -93,7 +93,7 @@ namespace yake {
 		}
 
 		//-----------------------------------------------------------------------
-		bool KeyboardDeviceOgre::isKeyDown( KeyCode key )
+		bool KeyboardDeviceOgre::isKeyDown( KeyCode key ) const
 		{
 			if (!mInputReader)
 				return false;

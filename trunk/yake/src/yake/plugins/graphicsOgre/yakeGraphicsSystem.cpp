@@ -46,9 +46,9 @@ GraphicsSystem::~GraphicsSystem()
 	YAKE_SAFE_DELETE( mCore );
 }
 
-Pointer<IGraphicalWorld> GraphicsSystem::createWorld()
+SharedPtr<IGraphicalWorld> GraphicsSystem::createWorld()
 {
-	return Pointer<IGraphicalWorld>( new GraphicalWorld() );
+	return SharedPtr<IGraphicalWorld>( new GraphicalWorld() );
 }
 
 } // ogre3d

@@ -33,10 +33,8 @@
 using namespace yake::base::mpl;
 using namespace yake::base::templates;
 
-namespace yake 
-{
-namespace graphics
-{
+namespace yake {
+namespace graphics {
 
 /** The graphics system interface.
 */
@@ -46,7 +44,7 @@ struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem
 	// Destructor.
 	virtual ~IGraphicsSystem();
 
-	virtual Pointer<IGraphicalWorld> createWorld() = 0;
+	virtual SharedPtr<IGraphicalWorld> createWorld() = 0;
 
 YAKE_DECLARE_REGISTRY_0( IGraphicsSystem, yake::base::String )
 };

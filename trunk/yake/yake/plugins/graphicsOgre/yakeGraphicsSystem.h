@@ -62,7 +62,7 @@ namespace ogre3d {
 		// Destructor.
 		virtual ~GraphicsSystem();
 
-		virtual Pointer<IGraphicalWorld> createWorld();
+		virtual SharedPtr<IGraphicalWorld> createWorld();
 
 	YAKE_DECLARE_CONCRETE( GraphicsSystem, "ogre3d" )
 

@@ -215,7 +215,7 @@ namespace input {
 		virtual InputDeviceType getType() const
 		{ return IDT_KEYBOARD; }
 
-		virtual bool isKeyDown( KeyCode key ) = 0;
+		virtual bool isKeyDown( KeyCode key ) const = 0;
 	};
 
 	class YAKE_INPUT_API MouseDevice : public InputDevice

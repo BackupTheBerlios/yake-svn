@@ -63,7 +63,7 @@ namespace input {
 
 		virtual void poll();
 
-		virtual bool isKeyDown( KeyCode key );
+		virtual bool isKeyDown( KeyCode key ) const;
 
 	protected:
 		Ogre::InputReader	* mInputReader;
