@@ -102,8 +102,16 @@ int __object_tester__(void *p);
 #define __OFFSET__           offsetof
 //(C, M)    ((unsigned long)(&((const C *)0)->M))
 
-// calculated the offset of an interface
+// calculates the offset of an interface
 #define __CLASS_OFFSET__(class, super) ((unsigned long) static_cast<super*>((class*)8) - 8)
+
+// calculates the memory offset of a class member (which can be private as well)
+#define __ASM_OFFSET__(ADDRESS, OBJECT_PTR, MEMBER) \
+  __asm{ push eax } \
+  __asm{ mov eax, OBJECT_PTR } \
+  __asm{ add eax, [ MEMBER ] } \
+  __asm{ mov ADDRESS, eax } \
+  __asm{ pop eax }
 
 
 /*****************************************************************************

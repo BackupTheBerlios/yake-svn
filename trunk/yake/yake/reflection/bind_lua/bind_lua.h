@@ -142,14 +142,30 @@ static void commit_lua_methods() \
 	class_<class_type> & lua_class = get_lua_class(); \
 	detail::class_rep & lua_crep = get_lua_crep(); \
 \
+	/* get address of private class member of class_<> */ \
+	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
+	std::map<const char*, detail::method_rep, detail::ltstr> * class_methods = NULL; \
+	__ASM_OFFSET__(class_methods, [lua_class], asm_lua_class_type_fix::m_methods); \
+\
+	/* get address of private class member of class_rep */ \
+	std::map<const char*, detail::method_rep, detail::ltstr> * crep_methods = NULL; \
+	__ASM_OFFSET__(crep_methods, [lua_crep], detail::class_rep::m_methods); \
+\
 	/* set reference to crep */ \
-	for(std::map<const char*, detail::method_rep, detail::ltstr>::iterator iter = lua_class.m_methods.begin(); \
-		iter != lua_class.m_methods.end(); ++iter) \
+	for(std::map<const char*, detail::method_rep, detail::ltstr>::iterator iter = class_methods->begin(); \
+		iter != class_methods->end(); ++iter) \
 	{	iter->second.crep = &lua_crep; } \
 \
 	/* add to crep */ \
-	lua_crep.m_methods = lua_class.m_methods; \
+	*crep_methods = *class_methods; \
 } \
+\
+/* callback this is declared as private in crep */ \
+struct luabind_callback_fix \
+{\
+	boost::function2<int, lua_State*, int> func; \
+	int pointer_offset; \
+}; \
 \
 static void commit_lua_properties() \
 { \
@@ -158,9 +174,22 @@ static void commit_lua_properties() \
 	class_<class_type> & lua_class = get_lua_class(); \
 	detail::class_rep & lua_crep = get_lua_crep(); \
 \
+	/* get adddress of private class member of class_<> */ \
+	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
+	std::map<const char*, luabind_callback_fix, detail::ltstr> * class_getters = NULL; \
+	std::map<const char*, luabind_callback_fix, detail::ltstr> * class_setters = NULL; \
+	__ASM_OFFSET__(class_getters, [lua_class], asm_lua_class_type_fix::m_getters); \
+	__ASM_OFFSET__(class_setters, [lua_class], asm_lua_class_type_fix::m_setters); \
+\
+	/* get adddress of private class member of class_rep */ \
+	std::map<const char*, luabind_callback_fix, detail::ltstr> * crep_getters = NULL; \
+	std::map<const char*, luabind_callback_fix, detail::ltstr> * crep_setters = NULL; \
+	__ASM_OFFSET__(crep_getters, [lua_crep], detail::class_rep::m_getters); \
+	__ASM_OFFSET__(crep_setters, [lua_crep], detail::class_rep::m_setters); \
+\
 	/* copy getters and setters to crep */ \
-	lua_crep.m_getters = lua_class.m_getters; \
-	lua_crep.m_setters = lua_class.m_setters; \
+	*crep_getters = *class_getters; \
+	*crep_setters = *class_setters; \
 }
 
 // -----------------------------------------
