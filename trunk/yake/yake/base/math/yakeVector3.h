@@ -42,8 +42,6 @@ namespace base
 namespace math
 {
 
-	// todo : inline
-
 	/**	A 3d vector.
 		Based on Ogre's code ( www.ogre3d.org ).
 	*/

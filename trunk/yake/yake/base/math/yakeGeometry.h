@@ -34,7 +34,6 @@ namespace math {
 	}
 
 	/** rectangle (2D)
-		\todo move this into math?
 	*/
 	struct YAKE_BASE_API Rectangle {
 		Rectangle(const Rectangle & rect) : min(rect.min), max(rect.max)

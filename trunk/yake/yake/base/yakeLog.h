@@ -41,7 +41,7 @@ namespace yake
 namespace base
 {
 
-// todo: printf sucks
+// todo: printf sucks <= no it doesn't!
 #define YAKE_LOGPRINTF yake::base::Log::instance().logPrintf
 #define YAKE_LOG_INFORMATION( what ) yake::base::Log::instance().log( what, yake::base::Log::INFORMATIONS, YAKE_HERE );
 #define YAKE_LOG_WARNING( what )     yake::base::Log::instance().log( what, yake::base::Log::WARNINGS,     YAKE_HERE );
@@ -66,7 +66,7 @@ public:
 	void onLog( const OnLog::slot_type& rSlot );
 	void log( const String& rWhat, Severity severity );
 	void log( const String& rWhat, Severity severity, const String& rSource );
-	void logPrintf(char *fmt, ...); // todo: remove this
+	void logPrintf(char *fmt, ...); // todo: remove this <= Er.. no!
 
 // Data
 private:
