@@ -52,7 +52,7 @@ namespace physics {
 
 		//virtual void setDimensions( const Vector3 & rkDimensions ) = 0;
 
-		virtual void setInfluenceByDynamics( const real ratio ) = 0;
+		//virtual void setInfluenceByDynamics( const real ratio ) = 0;
 
 		virtual void setTargetVelocity( const Vector3 & rkTargetVelocity ) = 0;
 		virtual void jump() = 0;
