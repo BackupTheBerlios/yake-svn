@@ -24,80 +24,61 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/plugins/physicsODE/OdeBody.h>
 
 namespace yake {
-	namespace physics {
+namespace physics {
 
-		//-----------------------------------------------------
-		OdeBallJoint::OdeBallJoint(IWorld* world, IJointGroup *group) : OdeJointBase( world, JT_BALL, group )
-		{
-			mOdeJoint = new dBallJoint( mWorld->_getOdeID() );
-			YAKE_ASSERT( mOdeJoint ).debug("Out of memory ?");
-			_applySpring();
-		}
-
-		//-----------------------------------------------------
-		void OdeBallJoint::setAnchor(const Vector3 & anchor)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dJointSetBallAnchor( mOdeJoint->id(), anchor.x, anchor.y, anchor.z );
-		}
-
-		//-----------------------------------------------------
-		void OdeBallJoint::setAxis1(const Vector3 & axis)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("A ball joint doesn't have any axis!");
-		}
-
-		//-----------------------------------------------------
-		void OdeBallJoint::setAxis2(const Vector3 & axis)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("A ball joint doesn't have any axis!");
-		}
-
-		//-----------------------------------------------------
-		Vector3 OdeBallJoint::getAnchor() const
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dVector3 anchor;
-			static_cast<dBallJoint*>(mOdeJoint)->getAnchor( anchor );
-			return Vector3( anchor[0], anchor[1], anchor[2] );
-		}
-
-		//-----------------------------------------------------
-		Vector3 OdeBallJoint::getAxis1() const
-		{
-			YAKE_ASSERT( mOdeJoint ).warning("A ball joint doesn't have any axis!");
-			return Vector3::kZero;
-		}
-
-		//-----------------------------------------------------
-		Vector3 OdeBallJoint::getAxis2() const
-		{
-			YAKE_ASSERT( mOdeJoint ).warning("A ball joint doesn't have any axis!");
-			return Vector3::kZero;
-		}
-
-		//-----------------------------------------------------
-		void OdeBallJoint::setMotor2Velocity(float vel)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("A ball joint doesn't have any motors!");
-		}
-
-		//-----------------------------------------------------
-		void OdeBallJoint::setMotor2MaximumForce(float force)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("A ball joint doesn't have any motors!");
-		}
-
-		//-----------------------------------------------------
-		void OdeBallJoint::setLowStop(float stop)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Not valid for a ball joint!");
-		}
-
-		//-----------------------------------------------------
-		void OdeBallJoint::setHighStop(float stop)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Not valid for a ball joint!");
-		}
+	//-----------------------------------------------------
+	OdeBallJoint::OdeBallJoint( OdeWorld* pWorld ) : OdeJoint( pWorld, JT_BALL )
+	{
+		mOdeJoint = new dBallJoint( mWorld->_getOdeID() );
+	
+		YAKE_ASSERT( mOdeJoint ).debug( "Failed to create OdeBallJoint!" );
+		
+		_applySpring();
 	}
-}
+
+	//-----------------------------------------------------
+	JointType OdeBallJoint::getType() const
+	{
+		return JT_BALL;
+	}
+	
+	//-----------------------------------------------------
+	size_t OdeBallJoint::getNumAxis() const
+	{
+		return 0;
+	}
+	
+	//-----------------------------------------------------
+	void OdeBallJoint::setAxis( size_t axisIndex, Vector3 const& rAxis )
+	{
+		YAKE_ASSERT( false ).error( "Ball joint doesn't have any axes!" );
+	}
+	
+	//-----------------------------------------------------
+	size_t OdeBallJoint::getNumAnchors() const
+	{
+		return 1;
+	}
+	
+	//-----------------------------------------------------
+	void OdeBallJoint::setAnchor( size_t anchorIndex, Vector3 const& rAnchor )
+	{
+		YAKE_ASSERT( anchorIndex < 1 ).error( "Ball joint has only one anchor! You are trying to set more..." );
+		
+		dJointSetBallAnchor( mOdeJoint->id(), rAnchor.x, rAnchor.y, rAnchor.z );
+	}
+	
+	//-----------------------------------------------------
+	void OdeBallJoint::setMotor( size_t axisIndex, real targetVelocity, real maximumForce )
+	{
+		YAKE_ASSERT( false ).error( "Ball joint doesn't have any axes! Can't set motor..." );
+	}
+	
+	//-----------------------------------------------------
+	void OdeBallJoint::setLimits( size_t axisIndex, real low, real high )
+	{
+		YAKE_ASSERT( false ).error( "Ball joint doesn't have any axes! No axes - no limits ;)" );
+	}
+
+} // physics
+} // yake

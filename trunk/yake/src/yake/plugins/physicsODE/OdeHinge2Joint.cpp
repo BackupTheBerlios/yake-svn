@@ -24,91 +24,91 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/plugins/physicsODE/OdeBody.h>
 
 namespace yake {
-	namespace physics {
+namespace physics {
 
-		//-----------------------------------------------------
-		OdeHinge2Joint::OdeHinge2Joint(IWorld* world, IJointGroup *group) : OdeJointBase( world, JT_HINGE2, group )
-		{
-			mOdeJoint = new dHinge2Joint( mWorld->_getOdeID() );
-			YAKE_ASSERT( mOdeJoint ).debug("Out of memory ?");
-			_applySpring();
-		}
-
-		//-----------------------------------------------------
-		void OdeHinge2Joint::setAnchor(const Vector3 & anchor)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dJointSetHinge2Anchor( mOdeJoint->id(), anchor.x, anchor.y, anchor.z );
-		}
-
-		//-----------------------------------------------------
-		void OdeHinge2Joint::setAxis1(const Vector3 & axis)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dJointSetHinge2Axis1( mOdeJoint->id(), axis.x, axis.y, axis.z );
-		}
-
-		//-----------------------------------------------------
-		void OdeHinge2Joint::setAxis2(const Vector3 & axis)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dJointSetHinge2Axis2( mOdeJoint->id(), axis.x, axis.y, axis.z );
-		}
-
-		//-----------------------------------------------------
-		Vector3 OdeHinge2Joint::getAnchor() const
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dVector3 anchor;
-			static_cast<dHinge2Joint*>(mOdeJoint)->getAnchor( anchor );
-			return Vector3( anchor[0], anchor[1], anchor[2] );
-		}
-
-		//-----------------------------------------------------
-		Vector3 OdeHinge2Joint::getAxis1() const
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dVector3 axis;
-			static_cast<dHinge2Joint*>(mOdeJoint)->getAxis1( axis );
-			return Vector3( axis[0], axis[1], axis[2] );
-		}
-
-		//-----------------------------------------------------
-		Vector3 OdeHinge2Joint::getAxis2() const
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dVector3 axis;
-			static_cast<dHinge2Joint*>(mOdeJoint)->getAxis2( axis );
-			return Vector3( axis[0], axis[1], axis[2] );
-		}
-
-		//-----------------------------------------------------
-		void OdeHinge2Joint::setMotor2Velocity(float vel)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dJointSetHinge2Param( mOdeJoint->id(), dParamVel2, vel );
-		}
-
-		//-----------------------------------------------------
-		void OdeHinge2Joint::setMotor2MaximumForce(float force)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dJointSetHinge2Param( mOdeJoint->id(), dParamFMax2, force );
-		}
-
-		//-----------------------------------------------------
-		void OdeHinge2Joint::setLowStop(float stop)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dJointSetHinge2Param( mOdeJoint->id(), dParamLoStop, stop );
-		}
-
-		//-----------------------------------------------------
-		void OdeHinge2Joint::setHighStop(float stop)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
-			dJointSetHinge2Param( mOdeJoint->id(), dParamHiStop, stop );
-		}
-
+	//-----------------------------------------------------
+	OdeHinge2Joint::OdeHinge2Joint( OdeWorld* pWorld ) : OdeJoint( pWorld, JT_HINGE2 )
+	{
+		mOdeJoint = new dHinge2Joint( mWorld->_getOdeID() );
+		
+		YAKE_ASSERT( mOdeJoint ).debug( "Failed to create OdeHinge2Joint!" );
+		
+		_applySpring();
 	}
-}
+
+	//-----------------------------------------------------
+	JointType OdeHinge2Joint::getType() const
+	{
+		return JT_HINGE2;
+	}
+		
+	//-----------------------------------------------------
+	size_t OdeHinge2Joint::getNumAxis() const
+	{
+		return 2;
+	}
+	
+	//-----------------------------------------------------
+	void OdeHinge2Joint::setAxis( size_t axisIndex, Vector3 const& rAxis )
+	{
+		YAKE_ASSERT( axisIndex < 2 ).error( "Hinge2 joint has only two axes! You are trying to set more..." );
+		
+		if ( axisIndex == 0 )
+			dJointSetHinge2Axis1( mOdeJoint->id(), rAxis.x, rAxis.y, rAxis.z );
+		else if ( axisIndex == 1 )
+			dJointSetHinge2Axis2( mOdeJoint->id(), rAxis.x, rAxis.y, rAxis.z );
+	}
+	
+	//-----------------------------------------------------
+	size_t OdeHinge2Joint::getNumAnchors() const
+	{
+		return 1;
+	}
+	
+	//-----------------------------------------------------
+	void OdeHinge2Joint::setAnchor( size_t anchorIndex, Vector3 const& rAnchor )
+	{
+		YAKE_ASSERT( anchorIndex < 1 ).error( "Hinge2 joint has only one anchor! You are trying to set more..." );
+		
+		dJointSetHinge2Anchor( mOdeJoint->id(), rAnchor.x, rAnchor.y, rAnchor.z );
+	}
+	
+	//-----------------------------------------------------
+	void OdeHinge2Joint::setMotor( size_t axisIndex, real targetVelocity, real maximumForce )
+	{
+		YAKE_ASSERT( axisIndex < 2 ).error( "Hinge2 joint has only two axes! You are trying to use more..." );
+		
+		if ( axisIndex == 0 )
+		{
+			dJointSetHinge2Param( mOdeJoint->id(), dParamVel, targetVelocity );
+			dJointSetHinge2Param( mOdeJoint->id(), dParamFMax, maximumForce );
+		}
+		else if ( axisIndex == 1 )
+		{
+			dJointSetHinge2Param( mOdeJoint->id(), dParamVel2, targetVelocity );
+			dJointSetHinge2Param( mOdeJoint->id(), dParamFMax2, maximumForce );
+		}
+		
+	}
+	
+	//-----------------------------------------------------
+	void OdeHinge2Joint::setLimits( size_t axisIndex, real low, real high )
+	{
+		YAKE_ASSERT( axisIndex < 2 ).error( "Hinge2 joint has only two axes! You are trying to use more..." );
+	
+		/// TODO What about dParamBounce, dParamFudgeFactor and other stop params?
+		/// Maybe to set 'em to defaults?
+		if ( axisIndex == 0 )
+		{
+			dJointSetHinge2Param( mOdeJoint->id(), dParamLoStop, low );
+			dJointSetHinge2Param( mOdeJoint->id(), dParamHiStop, high );
+		}
+		else if ( axisIndex == 1 )
+		{
+			dJointSetHinge2Param( mOdeJoint->id(), dParamLoStop2, low );
+			dJointSetHinge2Param( mOdeJoint->id(), dParamHiStop2, high );
+		}
+	}
+
+} // physics
+} // yake

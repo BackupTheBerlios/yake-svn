@@ -21,215 +21,214 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/plugins/physicsODE/yakePCH.h>
 #include <yake/plugins/physicsODE/OdeWorld.h>
 #include <yake/plugins/physicsODE/OdeBody.h>
+#include <yake/plugins/physicsODE/OdeActor.h>
 
 namespace yake {
-	namespace physics {
+namespace physics {
 
 		//---------------------------------------------------
-		OdeBody::OdeBody( OdeWorld* world ) : mWorld( world), mOdeBody( 0 ), mValid( false )
+		OdeBody::OdeBody( OdeWorld* pOdeWorld, OdeDynamicActor& rOwner ) : 
+								mOdeWorld( pOdeWorld ),
+								mOdeBody( 0 ),
+//								mValid( false ),
+								mOwner( rOwner )
 		{
-			YAKE_ASSERT( mWorld ).debug("No body without a world, pal!");
+			YAKE_ASSERT( mOdeWorld ).debug( "No body without a world, pal!" );
 
-			mOdeBody = new dBody( mWorld->_getOdeID() );
-			YAKE_ASSERT( mOdeBody ).error("Out of memory ?");
-			if (!mOdeBody)
-				return;
+			mOdeBody = new dBody( mOdeWorld->_getOdeID() );
+			YAKE_ASSERT( mOdeBody ).error( "Failed to create ODE body!" );
+			
 			mOdeBody->setAutoDisableFlag( 0 );
-			mValid = true;
+//			mValid = true;
 			mOdeBody->enable();
 			mOdeBody->setTorque( 0, 0, 0 );
 			mOdeBody->setForce( 0, 0, 0 );
 			mOdeBody->setLinearVel( 0, 0, 0 );
 			mOdeBody->setAngularVel( 0, 0, 0 );
-			setMassSphere( 1, 1 ); // default
-			setMass( 1 );
-		}
-
-		//---------------------------------------------------
-		void OdeBody::translateMass( const Vector3 & d )
-		{
-			dMassTranslate(&mMass, d.x, d.y, d.z);
 		}
 
 		//---------------------------------------------------
 		OdeBody::~OdeBody()
 		{
-			mValid = false;
 			YAKE_SAFE_DELETE( mOdeBody );
 		}
-
-		//-----------------------------------------------------
-		void OdeBody::setPosition(const Vector3 & position)
+		
+		//---------------------------------------------------
+		IDynamicActor& OdeBody::getActor() const
 		{
-			YAKE_ASSERT( mOdeBody ).debug("Need a body!");
-			mOdeBody->setPosition( position.x, position.y, position.z );
+			return mOwner;
 		}
 
-		//-----------------------------------------------------
-		Vector3 OdeBody::getPosition() const
+		//---------------------------------------------------
+ 		void OdeBody::setMass( real mass )
 		{
-			YAKE_ASSERT( mOdeBody ).debug("Need a body!");
-			const dReal* pos = mOdeBody->getPosition();
-			return Vector3(pos[0],pos[1],pos[2]);
+ 			dMassAdjust( &mMass, mass );
+ 			
+			mOdeBody->setMass( &mMass );
 		}
-
-		//-----------------------------------------------------
-		void OdeBody::setOrientation(const Quaternion & orientation)
+		
+		//---------------------------------------------------
+		real OdeBody::getMass() const
 		{
-			YAKE_ASSERT( mOdeBody ).debug("Need a body!");
-			dQuaternion q = { orientation.w, orientation.x, orientation.y, orientation.z };
-			mOdeBody->setQuaternion( q );
+ 			return mMass.mass;
 		}
-
-		//-----------------------------------------------------
-		Quaternion OdeBody::getOrientation() const
+		
+		//---------------------------------------------------
+		void OdeBody::addForce( Vector3 const& rForce )
 		{
-			YAKE_ASSERT( mOdeBody ).debug("Need a body!");
-			const dReal* q = mOdeBody->getQuaternion();
-			return Quaternion(q[0],q[1],q[2],q[3]);
+			mOdeBody->addForce( rForce.x, rForce.y, rForce.z );
 		}
-
-		//-----------------------------------------------------
-		void OdeBody::setLinearVelocity(const Vector3 & velocity)
+		
+		//---------------------------------------------------
+		void OdeBody::addForceAtPos( Vector3 const& rForce, Vector3 const& rPos )
 		{
-			YAKE_ASSERT( mOdeBody ).debug("Need a body!");
-			mOdeBody->setLinearVel( velocity.x, velocity.y, velocity.z );
+			mOdeBody->addForceAtPos( rForce.x, rForce.y, rForce.z, rPos.x, rPos.y, rPos.z );
 		}
-
-		//-----------------------------------------------------
+		
+		//---------------------------------------------------
+		void OdeBody::addLocalForce( Vector3 const& rForce )
+		{
+			mOdeBody->addRelForce( rForce.x, rForce.y, rForce.z );
+		}
+		
+		//---------------------------------------------------
+		void OdeBody::addLocalForceAtLocalPos( Vector3 const& rForce, Vector3 const& rPos )
+		{
+			mOdeBody->addRelForceAtRelPos( rForce.x, rForce.y, rForce.z, rPos.x, rPos.y, rPos.z );
+		}
+		
+		//---------------------------------------------------
+		void OdeBody::addLocalForceAtPos( Vector3 const& rForce, Vector3 const& rPos )
+		{
+			mOdeBody->addRelForceAtPos( rForce.x, rForce.y, rForce.z, rPos.x, rPos.y, rPos.z );
+		}
+		
+		//---------------------------------------------------
+		void OdeBody::addTorque( Vector3 const& rTorque )
+		{
+			mOdeBody->addTorque( rTorque.x, rTorque.y, rTorque.z );
+		}
+		
+		//---------------------------------------------------
+		void OdeBody::addLocalTorque( Vector3 const& rTorque )
+		{
+			mOdeBody->addRelTorque( rTorque.x, rTorque.y, rTorque.z );
+		}
+		
+		//---------------------------------------------------
+		void OdeBody::setLinearVelocity( Vector3 const& rVelocity )
+		{
+			mOdeBody->setLinearVel( rVelocity.x, rVelocity.y, rVelocity.z );
+		}
+		
+		//---------------------------------------------------
 		Vector3 OdeBody::getLinearVelocity() const
 		{
-			YAKE_ASSERT( mOdeBody ).debug("Need a body!");
 			const dReal* v = mOdeBody->getLinearVel();
 			return Vector3( v[0], v[1], v[2] );
 		}
-
-		//-----------------------------------------------------
-		void OdeBody::setAngularVelocity(const Vector3 & velocity)
+		
+		//---------------------------------------------------
+		void OdeBody::setAngularVelocity( Vector3 const& rVelocity)
 		{
-			YAKE_ASSERT( mOdeBody ).debug("Need a body!");
-			mOdeBody->setAngularVel( velocity.x, velocity.y, velocity.z );
+			mOdeBody->setAngularVel( rVelocity.x, rVelocity.y, rVelocity.z );
 		}
-
-		//-----------------------------------------------------
+		
+		//---------------------------------------------------
 		Vector3 OdeBody::getAngularVelocity() const
 		{
-			YAKE_ASSERT( mOdeBody ).debug("Need a body!");
 			const dReal* v = mOdeBody->getAngularVel();
 			return Vector3( v[0], v[1], v[2] );
 		}
 
-		//-----------------------------------------------------
-		IBody::MassType OdeBody::getType() const
+		//---------------------------------------------------
+		void OdeBody::setPosition(  Vector3 const& rPosition )
 		{
-			return mMassType;
+			mOdeBody->setPosition( rPosition.x, rPosition.y, rPosition.z );
 		}
-
-		//-----------------------------------------------------
-		void OdeBody::setMassBox(real lx, real ly, real lz, real density)
+		
+		//---------------------------------------------------
+		Vector3 OdeBody::getPosition() const
 		{
-			mMassType = MT_BOX;
-			dMassSetBox( &mMass, density, lx, ly, lz );
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			mOdeBody->setMass( &mMass );
+			const dReal* pos = mOdeBody->getPosition();
+			return Vector3( pos[0], pos[1], pos[2] );
 		}
-
-		//-----------------------------------------------------
-		void OdeBody::setMassSphere(real r, real density)
+		
+		//---------------------------------------------------
+		void OdeBody::setOrientation( Quaternion const& rOrientation )
 		{
-			mMassType = MT_SPHERE;
-			dMassSetSphere( &mMass, density, r );
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			mOdeBody->setMass( &mMass );
+			dQuaternion q = { rOrientation.w, rOrientation.x, rOrientation.y, rOrientation.z };
+			mOdeBody->setQuaternion( q );
 		}
-
-		//-----------------------------------------------------
-		void OdeBody::setMass(real mass)
+		
+		//---------------------------------------------------
+		Quaternion OdeBody::getOrientation() const
 		{
-			dMassAdjust( &mMass, mass );
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			mOdeBody->setMass( &mMass );
+			const dReal* q = mOdeBody->getQuaternion();
+			return Quaternion( q[0], q[1], q[2], q[3] );
 		}
-
-		//-----------------------------------------------------
-		real OdeBody::getMass() const
-		{
-			return mMass.mass;
-		}
-
-		//-----------------------------------------------------
-		void OdeBody::addForce( const Vector3 & force )
-		{
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			mOdeBody->addForce( force.x, force.y, force.z );
-		}
-
-		//-----------------------------------------------------
-		void OdeBody::addTorque( const Vector3 & torque )
-		{
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			mOdeBody->addTorque( torque.x, torque.y, torque.z );
-		}
-
-		//-----------------------------------------------------
-		void OdeBody::addRelForce( const Vector3 & force )
-		{
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			mOdeBody->addRelForce( force.x, force.y, force.z );
-		}
-
-		//-----------------------------------------------------
-		void OdeBody::addRelTorque( const Vector3 & torque )
-		{
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			mOdeBody->addRelTorque( torque.x, torque.y, torque.z );
-		}
-
-		//-----------------------------------------------------
-		void OdeBody::addForceAtPosition( const Vector3 & force, const Vector3 & position )
-		{
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			mOdeBody->addForceAtPos( force.x, force.y, force.z, position.x, position.y, position.z );
-		}
-
-		//-----------------------------------------------------
-		void OdeBody::addRelForceAtRelPosition( const Vector3 & force, const Vector3 & position )
-		{
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			mOdeBody->addRelForceAtRelPos( force.x, force.y, force.z, position.x, position.y, position.z );
-		}
-
-		//-----------------------------------------------------
-		Vector3 OdeBody::getTorque() const
-		{
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			const dReal * torque = mOdeBody->getTorque();
-			return Vector3(torque[0], torque[1], torque[2]);
-		}
-
-		//-----------------------------------------------------
-		void OdeBody::setEnabled( bool enabled )
-		{
-			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-			if (enabled)
-				mOdeBody->enable();
-			else
-				mOdeBody->disable();
-		}
-
-		//-----------------------------------------------------
-		OdeWorld* OdeBody::_getWorld() const
-		{
-			YAKE_ASSERT( mWorld ).error("Need a world!");
-			return mWorld;
-		}
-
+		
+		
+// 		//---------------------------------------------------
+// 		void OdeBody::translateMass( const Vector3 & d )
+// 		{
+// 			dMassTranslate(&mMass, d.x, d.y, d.z);
+// 		}
+// 
+// 		//-----------------------------------------------------
+// 		IBody::MassType OdeBody::getType() const
+// 		{
+// 			return mMassType;
+// 		}
+// 
+// 		//-----------------------------------------------------
+// 		void OdeBody::setMassBox(real lx, real ly, real lz, real density)
+// 		{
+// 			mMassType = MT_BOX;
+// 			dMassSetBox( &mMass, density, lx, ly, lz );
+// 			YAKE_ASSERT( mOdeBody ).error("Need a body!");
+// 			mOdeBody->setMass( &mMass );
+// 		}
+// 
+// 		//-----------------------------------------------------
+// 		void OdeBody::setMassSphere(real r, real density)
+// 		{
+// 			mMassType = MT_SPHERE;
+// 			dMassSetSphere( &mMass, density, r );
+// 			YAKE_ASSERT( mOdeBody ).error("Need a body!");
+// 			mOdeBody->setMass( &mMass );
+// 		}
+// 
+// 		//-----------------------------------------------------
+// 		Vector3 OdeBody::getTorque() const
+// 		{
+// 			YAKE_ASSERT( mOdeBody ).error("Need a body!");
+// 			const dReal * torque = mOdeBody->getTorque();
+// 			return Vector3(torque[0], torque[1], torque[2]);
+// 		}
+// 
+// 		//-----------------------------------------------------
+// 		void OdeBody::setEnabled( bool enabled )
+// 		{
+// 			YAKE_ASSERT( mOdeBody ).error("Need a body!");
+// 			if (enabled)
+// 				mOdeBody->enable();
+// 			else
+// 				mOdeBody->disable();
+// 		}
+// 
+// 		//-----------------------------------------------------
+// 		OdeWorld* OdeBody::_getWorld() const
+// 		{
+// 			YAKE_ASSERT( mWorld ).error("Need a world!");
+// 			return mWorld;
+// 		}
+// 
 		//-----------------------------------------------------
 		dBody* OdeBody::_getOdeBody() const
 		{
-			YAKE_ASSERT( mOdeBody ).debug("Need a body!");
 			return mOdeBody;
 		}
 
-	}
-}
+} // physics
+} // yake

@@ -24,87 +24,68 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/plugins/physicsODE/OdeBody.h>
 
 namespace yake {
-	namespace physics {
+namespace physics {
 
-		//-----------------------------------------------------
-		OdeFixedJoint::OdeFixedJoint(IWorld* world, IJointGroup *group) : OdeJointBase( world, JT_FIXED, group )
-		{
-			mOdeJoint = new dFixedJoint( mWorld->_getOdeID() );
-			YAKE_ASSERT( mOdeJoint ).debug("Out of memory ?");
-			_applySpring();
-		}
-
-		//-----------------------------------------------------
-		void OdeFixedJoint::attach(IBody* body1, IBody* body2)
-		{
-			YAKE_ASSERT( body1 && body2 )(body1)(body2).debug("Need two valid bodies!");
-			if (!body1 || !body2)
-				return;
-			OdeJointBase::attach( body1, body2 );
-			dJointSetFixed( mOdeJoint->id() );
-		}
-
-		//-----------------------------------------------------
-		void OdeFixedJoint::setAnchor(const Vector3 & anchor)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Not valid for a fixed joint!");
-		}
-
-		//-----------------------------------------------------
-		void OdeFixedJoint::setAxis1(const Vector3 & axis)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Not valid for a fixed joint!");
-		}
-
-		//-----------------------------------------------------
-		void OdeFixedJoint::setAxis2(const Vector3 & axis)
-		{
-			YAKE_ASSERT( mOdeJoint ).warning("A fixed joint doesn't have any axis!");
-		}
-
-		//-----------------------------------------------------
-		Vector3 OdeFixedJoint::getAnchor() const
-		{
-			YAKE_ASSERT( mOdeJoint ).warning("A fixed joint doesn't have an anchor point!");
-			return Vector3::kZero;
-		}
-
-		//-----------------------------------------------------
-		Vector3 OdeFixedJoint::getAxis1() const
-		{
-			YAKE_ASSERT( mOdeJoint ).warning("A fixed joint doesn't have any axis!");
-			return Vector3::kZero;
-		}
-
-		//-----------------------------------------------------
-		Vector3 OdeFixedJoint::getAxis2() const
-		{
-			YAKE_ASSERT( mOdeJoint ).warning("A fixed joint doesn't have any axis!");
-			return Vector3::kZero;
-		}
-
-		//-----------------------------------------------------
-		void OdeFixedJoint::setMotor2Velocity(float vel)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Not valid for a fixed joint!");
-		}
-
-		//-----------------------------------------------------
-		void OdeFixedJoint::setMotor2MaximumForce(float force)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Not valid for a fixed joint!");
-		}
-
-		//-----------------------------------------------------
-		void OdeFixedJoint::setLowStop(float stop)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Not valid for a fixed joint!");
-		}
-
-		//-----------------------------------------------------
-		void OdeFixedJoint::setHighStop(float stop)
-		{
-			YAKE_ASSERT( mOdeJoint ).debug("Not valid for a fixed joint!");
-		}
+	//-----------------------------------------------------
+	OdeFixedJoint::OdeFixedJoint( OdeWorld* pWorld ) : OdeJoint( pWorld, JT_FIXED )
+	{
+		mOdeJoint = new dFixedJoint( mWorld->_getOdeID() );
+		
+		YAKE_ASSERT( mOdeJoint ).debug( "Failed to create OdeFixedJoint!" );
+		
+		/// TODO why's this?
+		_applySpring();
 	}
-}
+
+	//-----------------------------------------------------
+	void OdeFixedJoint::attach( IBody& rBody1, IBody& rBody2 )
+	{
+		OdeJoint::attach( rBody1, rBody2 );
+		
+		dJointSetFixed( mOdeJoint->id() );
+	}
+	
+	//-----------------------------------------------------
+	JointType OdeFixedJoint::getType() const
+	{
+		return JT_FIXED;
+	}
+			
+	//-----------------------------------------------------
+	size_t OdeFixedJoint::getNumAxis() const
+	{
+		return 0;
+	}
+	
+	//-----------------------------------------------------
+	void OdeFixedJoint::setAxis( size_t axisIndex, Vector3 const& rAxis )
+	{
+		YAKE_ASSERT( false ).error( "Fixed joint doesn't have any axes!" );
+	}
+	
+	//-----------------------------------------------------
+	size_t OdeFixedJoint::getNumAnchors() const
+	{
+		return 0;
+	}
+	
+	//-----------------------------------------------------
+	void OdeFixedJoint::setAnchor( size_t anchorIndex, Vector3 const& rAnchor )
+	{
+		YAKE_ASSERT( false ).error( "Fixed joint doesn't have any anchors!" );
+	}
+	
+	//-----------------------------------------------------
+	void OdeFixedJoint::setMotor( size_t axisIndex, real velocityTarget, real maximumForce )
+	{
+		YAKE_ASSERT( false ).error( "Motor can't be applied to fixed joint!" );
+	}
+	
+	//-----------------------------------------------------
+	void OdeFixedJoint::setLimits( size_t axisIndex, real low, real high )
+	{
+		YAKE_ASSERT( false ).error( "Fixed joint is unlimited!" );
+	}
+	
+} // physics
+} // yake

@@ -175,7 +175,7 @@ namespace physics {
  	void OdeActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
  	{
  		mEnterCollisionSignal.connect( slot );
-	}
+ 	}
 
 	//-----------------------------------------------------
  	void OdeActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
@@ -365,18 +365,6 @@ namespace physics {
 	{
 	}
 	
- 	//-----------------------------------------------------
- 	void OdeStaticActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
- 		OdeActor::subscribeToCollisionEnteredSignal( slot );
-	}
-
-	//-----------------------------------------------------
- 	void OdeStaticActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
-		OdeActor::subscribeToCollisionExitedSignal( slot );
- 	}
-
 	//-----------------------------------------------------
 	SharedPtr<IShape> OdeStaticActor::createShape( const IShape::Desc& rShapeDesc )
 	{
@@ -392,22 +380,17 @@ namespace physics {
 		return SharedPtr<IShape>( pShape );
 	}
 
-	//-----------------------------------------------------
-	void OdeStaticActor::destroyShape( SharedPtr<IShape>& rShape )
-	{
-		//@todo
-		YAKE_ASSERT( 0 );
-	}
+ 	//-----------------------------------------------------
+ 	void OdeStaticActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
+ 	{
+		OdeActor::subscribeToCollisionEnteredSignal( slot );
+ 	}
 
 	//-----------------------------------------------------
-	const IActor::ShapePtrVector OdeStaticActor::getShapes() const
-	{
-		YAKE_ASSERT( 0 );
-		//@todo
-		ShapePtrVector v;
-		//ConstVectorIterator< OdeShapesMap > it( mShapes.begin()
-		return v;
-	}
+ 	void OdeStaticActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
+ 	{
+		OdeActor::subscribeToCollisionExitedSignal( slot );
+ 	}
 
 	//-----------------------------------------------------
 	//	OdeMovableActor
@@ -424,18 +407,6 @@ namespace physics {
 	{
 	}
 	
- 	//-----------------------------------------------------
- 	void OdeMovableActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
- 		OdeActor::subscribeToCollisionEnteredSignal( slot );
-	}
-
-	//-----------------------------------------------------
- 	void OdeMovableActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
-		OdeActor::subscribeToCollisionExitedSignal( slot );
- 	}
-
 	//-----------------------------------------------------
 	SharedPtr<IShape> OdeMovableActor::createShape( const IShape::Desc& rShapeDesc )
 	{
@@ -453,24 +424,7 @@ namespace physics {
 		
 		return SharedPtr<IShape>( pShape );
 	}
-
-	//-----------------------------------------------------
-	void OdeMovableActor::destroyShape( SharedPtr<IShape>& rShape )
-	{
-		//@todo
-		YAKE_ASSERT( 0 );
-	}
-
-	//-----------------------------------------------------
-	const IActor::ShapePtrVector OdeMovableActor::getShapes() const
-	{
-		YAKE_ASSERT( 0 );
-		//@todo
-		ShapePtrVector v;
-		//ConstVectorIterator< OdeShapesMap > it( mShapes.begin()
-		return v;
-	}
-
+	
 	//-----------------------------------------------------
 	void OdeMovableActor::setPosition( const Vector3& rPosition )
 	{
@@ -509,6 +463,18 @@ namespace physics {
 		return mOrientation;
 	}
 	
+ 	//-----------------------------------------------------
+ 	void OdeMovableActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
+ 	{
+		OdeActor::subscribeToCollisionEnteredSignal( slot );
+ 	}
+
+	//-----------------------------------------------------
+ 	void OdeMovableActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
+ 	{
+		OdeActor::subscribeToCollisionExitedSignal( slot );
+ 	}
+
 	//-----------------------------------------------------
 	//	OdeDynamicActor
 	//-----------------------------------------------------
@@ -528,18 +494,6 @@ namespace physics {
 		YAKE_SAFE_DELETE( mBody );
 	}
 	
- 	//-----------------------------------------------------
- 	void OdeDynamicActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
- 		OdeActor::subscribeToCollisionEnteredSignal( slot );
-	}
-
-	//-----------------------------------------------------
- 	void OdeDynamicActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
-		OdeActor::subscribeToCollisionExitedSignal( slot );
- 	}
-
 	//-----------------------------------------------------
 	IBody& OdeDynamicActor::getBody() const
 	{
@@ -571,6 +525,7 @@ namespace physics {
 	//-----------------------------------------------------
 	Quaternion OdeDynamicActor::getOrientation() const
 	{
+		YAKE_ASSERT( mBody );
 		return mBody->getOrientation();
 	}
 	
@@ -597,50 +552,16 @@ namespace physics {
 		return SharedPtr<IShape>( pShape );
 	}
 	
-	//-----------------------------------------------------
-	void OdeDynamicActor::destroyShape( SharedPtr<IShape>& rShape )
-	{
-		//@todo
-		YAKE_ASSERT( 0 );
-	}
+ 	//-----------------------------------------------------
+ 	void OdeDynamicActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
+ 	{
+		OdeActor::subscribeToCollisionEnteredSignal( slot );
+ 	}
 
 	//-----------------------------------------------------
-	const IActor::ShapePtrVector OdeDynamicActor::getShapes() const
-	{
-		YAKE_ASSERT( 0 );
-		//@todo
-		ShapePtrVector v;
-		//ConstVectorIterator< OdeShapesMap > it( mShapes.begin()
-		return v;
-	}
-
-	//-----------------------------------------------------
-	void OdeDynamicActor::setLinearVelocity( const Vector3& rVelocity )
-	{
-		YAKE_ASSERT( mBody );
-		mBody->setLinearVelocity( rVelocity );
-	}
-
-	//-----------------------------------------------------
-	Vector3 OdeDynamicActor::getLinearVelocity() const
-	{
-		YAKE_ASSERT( mBody );
-		return mBody->getLinearVelocity();
-	}
-
-	//-----------------------------------------------------
-	void OdeDynamicActor::setAngularVelocity( const Vector3& rVelocity )
-	{
-		YAKE_ASSERT( mBody );
-		mBody->setAngularVelocity( rVelocity );
-	}
-
-	//-----------------------------------------------------
-	Vector3 OdeDynamicActor::getAngularVelocity() const
-	{
-		YAKE_ASSERT( mBody );
-		return mBody->getAngularVelocity();
-	}
-
+ 	void OdeDynamicActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
+ 	{
+		OdeActor::subscribeToCollisionExitedSignal( slot );
+ 	}
 } // physics
 } // yake

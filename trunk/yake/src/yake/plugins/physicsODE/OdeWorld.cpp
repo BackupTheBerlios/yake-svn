@@ -22,24 +22,23 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/plugins/physicsODE/OdeWorld.h>
 #include <yake/plugins/physicsODE/OdeJoint.h>
 #include <yake/plugins/physicsODE/OdeBody.h>
-#include <yake/plugins/physicsODE/OdeComplexObject.h>
-#include <yake/plugins/physicsODE/OdeCollisionGeometry.h>
-#include <yake/plugins/physicsODE/OdeWalker.h>
+#include <yake/plugins/physicsODE/OdeActor.h>
+#include <yake/plugins/physicsODE/OdeShapes.h>
 
 #if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
 #	define ADJUST_FPU_PRECISION
 #endif
 
 namespace yake {
-	namespace physics {
+namespace physics {
 
 		//-----------------------------------------------------
-		OdeWorld::OdeWorld() : mSimTime(0)
+		OdeWorld::OdeWorld() : mNextMeshId( 0 )
 		{
-			mStepSize = real(1. / 100.);	// default: 50Hz
+			mStepSize = 1. / 100.;	// default: 50Hz
 			mOdeWorld = new dWorld();
 			mOdeSpace = new dSimpleSpace( 0 );
-			//mOdeSpace = new dHashSpace( 0 );
+			
 			mOdeContactGroup = new dJointGroup( 0 );
 
 			mOdeWorld->setGravity( 0., 0., 0. );
@@ -58,40 +57,196 @@ namespace yake {
 		}
 
 		//-----------------------------------------------------
-		OdeWorld::~OdeWorld()
+ 		OdeWorld::~OdeWorld()
+ 		{
+			for ( MeshDataMap::iterator i = mMeshDataMap.begin(); i != mMeshDataMap.end(); ++i )
+			{
+				dGeomTriMeshDataDestroy( i->second );
+			}
+
+ 			YAKE_SAFE_DELETE( mOdeContactGroup );
+ 			YAKE_SAFE_DELETE( mOdeSpace );
+ 			YAKE_SAFE_DELETE( mOdeWorld );
+ 		}
+			
+		//-----------------------------------------------------
+		Deque<ShapeType> OdeWorld::getSupportedShapes( bool includeStatic, bool includeDynamic ) const
 		{
-			YAKE_SAFE_DELETE( mOdeContactGroup );
-			YAKE_SAFE_DELETE( mOdeSpace );
-			YAKE_SAFE_DELETE( mOdeWorld);
+			/// TODO Add real implementation! FIXME
+			Deque<ShapeType> supportedShapes;
+			
+			return supportedShapes;
+		}
+		
+		//-----------------------------------------------------
+		Deque<JointType> OdeWorld::getSupportedJoints() const
+		{
+			//TODO Add real implementation
+			Deque<JointType> supportedJoints;
+			
+			return supportedJoints;
+		}
+		
+		//-----------------------------------------------------
+		Deque<String> OdeWorld::getSupportedSolvers() const
+		{
+			//TODO Add real implementation
+			Deque<String> supportedSolvers;
+			
+			supportedSolvers.push_back( "quickStep" );
+			supportedSolvers.push_back( "StepFast" );
+			
+			return supportedSolvers;
+		}
+		
+		//-----------------------------------------------------
+		bool OdeWorld::useSolver( String const& rSolver )
+		{
+			//TODO add solver functor!
+			return false;
+		}
+		
+		//-----------------------------------------------------
+		String OdeWorld::getCurrentSolver() const
+		{
+			//TODO add current solver name variable
+			return "quickStep";
+		}
+			
+/*		//-----------------------------------------------------
+		const PropertyNameList& OdeWorld::getCurrentSolverParams() const
+		{
+			PropertyNameList pnl;
+			
+			return
+		}*/
+		
+		//-----------------------------------------------------
+		void OdeWorld::setCurrentSolverParam( String const& rName, boost::any const& rValue )
+		{
+			//TODO add implementation
 		}
 
 		//-----------------------------------------------------
-		real OdeWorld::getSimulationTime() const
+ 		void OdeWorld::setGlobalGravity( Vector3 const& rAcceleration )
+ 		{
+ 			mOdeWorld->setGravity( rAcceleration.x, rAcceleration.y, rAcceleration.z );
+ 		}
+
+		//-----------------------------------------------------
+		SharedPtr<IJoint> OdeWorld::createJoint( IJoint::DescBase const& rJointDesc )
 		{
-			return mSimTime;
+			IJoint::DescBase* pJointDesc = &const_cast<IJoint::DescBase&>( rJointDesc );
+
+			/// Bodies to attach
+			IBody& rBody1 = pJointDesc->actor1.getBody();
+			IBody& rBody2 = pJointDesc->actor2.getBody();
+			
+			/// Joint to return
+			OdeJoint* pJoint = NULL;
+			
+			if ( IJoint::DescFixed* pDesc = dynamic_cast<IJoint::DescFixed*>( pJointDesc ) )
+			{
+				pJoint = new OdeFixedJoint( this );
+			}
+			else if ( IJoint::DescHinge* pDesc = dynamic_cast<IJoint::DescHinge*>( pJointDesc ) )
+			{
+				pJoint = new OdeHingeJoint( this );
+				
+				pJoint->setAnchor( 0, pDesc->anchor );
+				pJoint->setAxis( 0, pDesc->axis );
+			}
+			else if ( IJoint::DescHinge2* pDesc = dynamic_cast<IJoint::DescHinge2*>( pJointDesc ) )
+			{
+				pJoint = new OdeHinge2Joint( this );
+				
+				pJoint->setAnchor( 0, pDesc->anchor );
+				pJoint->setAxis( 0, pDesc->axis0 );
+				pJoint->setAxis( 1, pDesc->axis1 );
+			}
+			else if ( IJoint::DescUniversal* pDesc = dynamic_cast<IJoint::DescUniversal*>( pJointDesc ) )
+			{
+				pJoint = new OdeUniversalJoint( this );
+				
+				pJoint->setAnchor( 0, pDesc->anchor );
+				pJoint->setAxis( 0, pDesc->axis0 );
+				pJoint->setAxis( 1, pDesc->axis1 );
+			}
+			else if ( IJoint::DescBall* pDesc = dynamic_cast<IJoint::DescBall*>( pJointDesc ) )
+			{
+				pJoint = new OdeBallJoint( this );
+				
+				pJoint->setAnchor( 0, pDesc->anchor );
+			}
+			else if ( IJoint::DescSlider* pDesc = dynamic_cast<IJoint::DescSlider*>( pJointDesc ) )
+			{
+				pJoint = new OdeSliderJoint( this );
+				
+				pJoint->setAxis( 0, pDesc->axis );
+			}
+
+			YAKE_ASSERT( pJoint != NULL ).error( "Unknown type of joint or ... some other error :(" );
+			
+			pJoint->attach( rBody1, rBody2 );
+			
+			return SharedPtr<IJoint>( pJoint );
+		}
+		
+		//-----------------------------------------------------
+		SharedPtr<IActor> OdeWorld::createActor( const IActor::Desc& rActorDesc )
+		{
+			IActor::Desc* pDesc = &const_cast<IActor::Desc&>( rActorDesc );
+			
+			SharedPtr<IActor> pActor;
+			
+			if ( IStaticActor::Desc* pActorDesc = dynamic_cast<IStaticActor::Desc*>( pDesc ) )
+			{
+				pActor = SharedPtr<IActor>( new OdeStaticActor( this ) );
+			}
+			else if ( IMovableActor::Desc* pActorDesc = dynamic_cast<IMovableActor::Desc*>( pDesc ) )
+			{
+				pActor = SharedPtr<IActor>( new OdeMovableActor( this ) );
+			}
+			else if ( IDynamicActor::Desc* pActorDesc = dynamic_cast<IDynamicActor::Desc*>( pDesc ) )
+			{
+				pActor = SharedPtr<IActor>( new OdeDynamicActor( this ) );
+			}
+			
+			typedef Deque< SharedPtr<IShape::Desc> > ActorShapesCollection;
+			const ActorShapesCollection& shapes = rActorDesc.shapes;
+			
+			for ( ActorShapesCollection::const_iterator i = shapes.begin(); i != shapes.end(); ++i )
+			{
+				SharedPtr<IShape::Desc> pShapeDesc = *i;
+				pActor->createShape(  *pShapeDesc );
+			}  
+			
+			return pActor;
 		}
 
 		//-----------------------------------------------------
-		void OdeWorld::setGlobalGravity( const Vector3 & acceleration )
+		SharedPtr<IMaterial> OdeWorld::createMaterial( IMaterial::Desc const& rMatDesc )
 		{
-			if (mOdeWorld)
-				mOdeWorld->setGravity( acceleration.x, acceleration.y, acceleration.z );
+			OdeMaterial* pMat = new OdeMaterial;
+			
+			return SharedPtr<IMaterial>( pMat );
 		}
 
 		//-----------------------------------------------------
-		void OdeWorld::update( const real timeElapsed )
+		void OdeWorld::step( const real timeElapsed )
 		{
 			static real overflow = 0.;
 			real t = overflow + timeElapsed;
 			while ( t > mStepSize )
 			{
 				t -= mStepSize;
-				mSimTime += mStepSize;
+		
 		#ifdef ADJUST_FPU_PRECISION
 				_controlfp(_PC_64, _MCW_PC);
 		#endif
+				
 				// Now collide the objects in the world
-				dSpaceCollide(mOdeSpace->id(), this, &_OdeNearCallback);
+				dSpaceCollide( mOdeSpace->id(), this, &_OdeNearCallback );
 
 				//mOdeWorld->step( mStepSize );
 				//mOdeWorld->stepFast1( mStepSize, 4 );
@@ -104,304 +259,78 @@ namespace yake {
 
 				// Clear contacts
 				mOdeContactGroup->empty();
-
-				//mPostStepSignal( mStepSize );
 			}
+			
 			mPostStepSignal( timeElapsed );
 
 			overflow = t;
 		}
-
-		//-----------------------------------------------------
-		IWalkerSharedPtr OdeWorld::createWalker()
-		{
-			OdeWalker* pWalker = new OdeWalker(*this);
-			YAKE_ASSERT( pWalker ).debug("Out of memory ?");
-			return IWalkerSharedPtr(pWalker);
-		}
-
-		//-----------------------------------------------------
-		IBody* OdeWorld::createBody()
-		{
-			OdeBody* pBody = new OdeBody( this );
-			YAKE_ASSERT( pBody ).debug("Out of memory ?");
-			if (!pBody)
-				return 0;
-
-			YAKE_ASSERT( pBody ).debug("Body couldn't be initialised!");
-			if (!pBody->_isValid())
-			{
-				delete pBody;
-				return 0;
-			}
-			mBodies.push_back( pBody );
-			return pBody;
-		}
-
-		//-----------------------------------------------------
-		ICollisionGeometry* OdeWorld::createCollisionGeomSphere(real radius)
-		{
-			ICollisionGeometry* pGeom = new OdeCollisionGeomSphere( mOdeSpace, radius );
-			YAKE_ASSERT( pGeom ).debug("Out of memory ?");
-			return pGeom;
-		}
-
-		//-----------------------------------------------------
-		ICollisionGeometry* OdeWorld::createCollisionGeomBox(real lx, real ly, real lz)
-		{
-			ICollisionGeometry* pGeom = new OdeCollisionGeomBox( mOdeSpace, lx, ly, lz );
-			YAKE_ASSERT( pGeom ).debug("Out of memory ?");
-			return pGeom;
-		}
-
-		//-----------------------------------------------------
-		ICollisionGeometry* OdeWorld::createCollisionGeomMesh( const base::String & collisionMeshResourceName )
-		{
-			ICollisionGeometry* pGeom = new OdeCollisionGeomTriMesh( mOdeSpace, collisionMeshResourceName );
-			YAKE_ASSERT( pGeom ).debug("Out of memory ?");
-			return pGeom;
-		}
-
-		//-----------------------------------------------------
-		ICollisionGeometry* OdeWorld::createCollisionGeomPlane( real a, real b, real c, real d )
-		{
-			ICollisionGeometry* pGeom = new OdeCollisionGeomPlane( mOdeSpace, a, b, c, d );
-			YAKE_ASSERT( pGeom ).debug("Out of memory ?");
-			return pGeom;
-		}
 		
 		//-----------------------------------------------------
-		ICollisionGeometry* OdeWorld::createCollisionGeomTransform()
+		TriangleMeshId OdeWorld::createTriangleMesh( TriangleMeshDesc const& rTriMeshDesc )
 		{
-			ICollisionGeometry* pGeom = new OdeCollisionGeomTransform( mOdeSpace );
-			YAKE_ASSERT( pGeom ).debug("Out of memory ?");
-			return pGeom;
+			dTriMeshDataID dataId = OdeTriMesh::buildMeshData(	rTriMeshDesc.vertices,
+																rTriMeshDesc.indices,
+																rTriMeshDesc.normals );
+
+			mMeshDataMap.insert( MeshDataMap::value_type( mNextMeshId, dataId ) );
+			
+			return mNextMeshId++;
+		}
+		//-----------------------------------------------------
+		dTriMeshDataID OdeWorld::getMeshDataById(  TriangleMeshId id ) const
+		{
+			MeshDataMap::const_iterator i = mMeshDataMap.find( id );
+			
+			YAKE_ASSERT( i != mMeshDataMap.end() ).error( "No mesh data matches supplied mesh id!" );
+				
+			return i->second;
 		}
 
 		//-----------------------------------------------------
 		dWorldID OdeWorld::_getOdeID() const
 		{
-			YAKE_ASSERT( mOdeWorld ).debug("Need a world!");
 			return mOdeWorld->id();
 		}
-
+		
 		//-----------------------------------------------------
-		IJoint* OdeWorld::createJoint(IJoint::JointType type, IJointGroup* group)
+		void OdeWorld::_OdeNearCallback ( void* data, dGeomID o1, dGeomID o2 )
 		{
-			IJoint* pJoint = 0;
-			if (type == IJoint::JT_BALL)
-				pJoint = new OdeBallJoint( this, 0 );
-			else if (type == IJoint::JT_HINGE)
-				pJoint = new OdeHingeJoint( this, 0 );
-			else if (type == IJoint::JT_HINGE2)
-				pJoint = new OdeHinge2Joint( this, 0 );
-			else if (type == IJoint::JT_FIXED)
-				pJoint = new OdeFixedJoint( this, 0 );
-			else
-			{
-				YAKE_ASSERT( 1==0 ).error("Unhandled joint type!");
-				return 0;
-			}
-			YAKE_ASSERT( pJoint ).debug("Out of memory ?");
-			return pJoint;
-		}
-
-		//-----------------------------------------------------
-		IComplexObject* OdeWorld::createEmptyPhysicsObject()
-		{
-			// create the collidable object, but no body and no collision geometry!
-			OdeComplexObject* pComplex = new OdeComplexObject( this );
-			YAKE_ASSERT( pComplex ).debug("Out of memory ?");
-			return pComplex;
-		}
-
-		//-----------------------------------------------------
-		IComplexObject* OdeWorld::createPlane(const Vector3 & n, real d)
-		{
-			OdeComplexObject* pComplex = new OdeComplexObject( this );
-			YAKE_ASSERT( pComplex ).debug("Out of memory ?");
-
-			OdeCollisionGeomPlane* pPlane = new OdeCollisionGeomPlane( mOdeSpace, n.x, n.y, n.z, d );
-			YAKE_ASSERT( pPlane ).debug("Out of memory ?");
-
-			pComplex->addCollisionGeometry( pPlane );
-
-			return pComplex;
-		}
-
-		//-----------------------------------------------------
-		IComplexObject* OdeWorld::createSphere(real radius)
-		{
-			OdeComplexObject* pComplex = new OdeComplexObject( this );
-			YAKE_ASSERT( pComplex ).debug("Out of memory ?");
-
-			OdeCollisionGeomSphere* pShere = new OdeCollisionGeomSphere( mOdeSpace, radius );
-			YAKE_ASSERT( pShere ).debug("Out of memory ?");
-
-			OdeBody* pBody = new OdeBody( this );
-			YAKE_ASSERT( pBody ).debug("Out of memory ?");
-
-			pComplex->setBody( pBody );
-			pComplex->addCollisionGeometry( pShere );
-
-			return pComplex;
-		}
-
-		//-----------------------------------------------------
-		IComplexObject* OdeWorld::createBox(real lx, real ly, real lz)
-		{
-			OdeComplexObject* pComplex = new OdeComplexObject( this );
-			YAKE_ASSERT( pComplex ).debug("Out of memory ?");
-
-			OdeCollisionGeomBox* pBox = new OdeCollisionGeomBox( mOdeSpace, lx, ly, lz );
-			YAKE_ASSERT( pBox ).debug("Out of memory ?");
-
-			OdeBody* pBody = new OdeBody( this );
-			YAKE_ASSERT( pBody ).debug("Out of memory ?");
-
-			pComplex->setBody( pBody );
-			pComplex->addCollisionGeometry( pBox );
-
-			return pComplex;
-		}
-
-		//-----------------------------------------------------
-		IComplexObject* OdeWorld::createMesh(const base::String & mesh)
-		{
-			OdeComplexObject* pComplex = new OdeComplexObject( this );
-			YAKE_ASSERT( pComplex ).debug("Out of memory ?");
-
-			OdeCollisionGeomTriMesh* pMesh = new OdeCollisionGeomTriMesh( mOdeSpace, mesh );
-			YAKE_ASSERT( pMesh ).debug("Out of memory ?");
-
-			pComplex->addCollisionGeometry( pMesh );
-
-			return pComplex;
-		}
-
-		//-----------------------------------------------------
-		IComplexObject* OdeWorld::createRay(const Vector3 & origin, const Quaternion & orientation)
-		{
-			YAKE_ASSERT( 1==0 ).debug("UNSUPPORT COMPLEX OBECT");
-			return 0;
-		}
-
-		//-----------------------------------------------------
-		void OdeWorld::_OdeNearCallback (void *data, dGeomID o1, dGeomID o2)
-		{
-			YAKE_ASSERT( data );
-			if (!data)
-				return;
-			OdeWorld& rWorld = *static_cast<OdeWorld*>(data);
-
 			// make sure we traverse through all spaces and sub-spaces
-			if (dGeomIsSpace (o1) || dGeomIsSpace (o2))
+			if ( dGeomIsSpace (o1) || dGeomIsSpace (o2) )
 			{
 				// colliding a space with something
-				dSpaceCollide2 (o1,o2,data,&_OdeNearCallback);
+				dSpaceCollide2 ( o1, o2, data, &_OdeNearCallback );
 
 				// collide all geoms internal to the space(s)
-				if (dGeomIsSpace (o1)) dSpaceCollide (dSpaceID(o1),data,&_OdeNearCallback);
-				if (dGeomIsSpace (o2)) dSpaceCollide (dSpaceID(o2),data,&_OdeNearCallback);
+				if ( dGeomIsSpace(o1) ) dSpaceCollide( dSpaceID(o1), data, &_OdeNearCallback );
+				if ( dGeomIsSpace(o2) ) dSpaceCollide( dSpaceID(o2), data, &_OdeNearCallback );
 			}
 
 			// colliding two non-space geoms, so generate contact joints
-			////
-			dJointGroup* odeContactGroup = rWorld._getOdeContactJointGroup();
-			dWorldID odeWorldID = rWorld._getOdeID();
+			dJointGroup* odeContactGroup = ( static_cast<OdeWorld*>(data) )->_getOdeContactJointGroup();
+			dWorldID odeWorldID = ( static_cast<OdeWorld*>(data) )->_getOdeID();
 
 			// exit without doing anything if the two bodies are connected by a joint
 			dBodyID b1 = dGeomGetBody(o1);
 			dBodyID b2 = dGeomGetBody(o2);
-			if (b1 && b2 && dAreConnected (b1,b2))
+			
+			if ( b1 && b2 && dAreConnected( b1, b2 ) )
 				return;
 
-			int t1 = dGeomGetClass(o1);
-			int t2 = dGeomGetClass(o2);
+			int t1 = dGeomGetClass( o1 );
+			int t2 = dGeomGetClass( o2 );
 
-			// special case for "walker" rays
-			if (t1 == dRayClass || t2 == dRayClass)
-			{
-				dGeomID walkerId = (t1 == dRayClass) ? o1 : o2;
-				dGeomID otherId = (t1 != dRayClass) ? o1 : o2;
-				WalkerMap::iterator itFind = rWorld._getWalkers().find( walkerId );
-				if (itFind != rWorld._getWalkers().end())
-				{
-					OdeWalker* pWalker = itFind->second;
-					YAKE_ASSERT( pWalker );
-
-					// collide ray
-					const int N = 1;
-					dContact contact[N];
-					int n = dCollide (walkerId,otherId,N,&contact[0].geom,sizeof(dContact));
-					if (n > 0)
-					{
-						const base::math::Vector3 pos( contact[0].geom.pos[0], contact[0].geom.pos[1], contact[0].geom.pos[2] );
-						const base::math::Vector3 normal( contact[0].geom.normal[0], contact[0].geom.normal[1], contact[0].geom.normal[2] );
-						const real depth = contact[0].geom.depth;
-						pWalker->_handleRayContact( pos, normal, depth );
-					}
-					return;
-				}
-			}
-
-			// ...
-			OdeComplexObject* pA = static_cast<OdeComplexObject*>(dGeomGetData(o1));
-			OdeComplexObject* pB = static_cast<OdeComplexObject*>(dGeomGetData(o2));
+			OdeActor* pA = static_cast<OdeActor*>( dGeomGetData( o1 ) );
+			OdeActor* pB = static_cast<OdeActor*>( dGeomGetData( o2 ) );
 			
-			if (pA && pB)
+			if ( pA && pB )
 			{
 				// collide
 				pA->_collide( pB, o1, o2, odeContactGroup );
 				return;
 			}
-
-			//FALLBACK
-			/*
-
-			const int N = 40;
-			dContact contact[N];
-
-			int n = dCollide (o1,o2,N,&contact[0].geom,sizeof(dContact));
-
-			if (n > 0)
-			{
-				for (int i=0; i<n; i++) 
-				{
-					contact[i].surface.mode = dContactSlip1
-											|dContactSlip2
-											//|dContactSoftERP
-											//|dContactSoftCFM
-											//|dContactBounce
-											//|dContactApprox1
-											;
-					contact[i].surface.mu = 20; // 60
-					contact[i].surface.mu2 = 0; // 0 or 10
-					contact[i].surface.slip1 = 0.1;
-					contact[i].surface.slip2 = 0.1;
-					//contact[i].surface.soft_erp = 0.8; // 0.8
-					//contact[i].surface.soft_cfm = 0.01; // 0.01
-					//contact[i].surface.bounce = 0.05; //0.3
-					//contact[i].surface.bounce_vel = 0.025; //0.1
-					dJointID c = dJointCreateContact (odeWorldID,odeContactGroup->id(),contact+i);
-					dJointAttach (c,dGeomGetBody(o1),dGeomGetBody(o2));
-				}
-			}
-			*/
 		}
 
-		void OdeWorld::_regWalker( const dGeomID rayId, OdeWalker & rWalker )
-		{
-			mWalkers[ rayId ] = &rWalker;
-		}
-		void OdeWorld::_unregWalker( const dGeomID rayId )
-		{
-			WalkerMap::iterator itFind = mWalkers.find( rayId );
-			YAKE_ASSERT( itFind != mWalkers.end() );
-			if (itFind != mWalkers.end())
-				mWalkers.erase( itFind );
-		}
-
-
-	}
-}
+} // physics
+} // yake

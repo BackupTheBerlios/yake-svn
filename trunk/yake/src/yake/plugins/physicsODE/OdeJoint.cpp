@@ -139,26 +139,5 @@ namespace physics {
 		}
 	}
 
-	//-----------------------------------------------------
-	/*JointType OdeJoint::getType() const
-	{}
-	size_t OdeJoint::getNumAxis() const
-	{
-		return 0;
-	}
-	void OdeJoint::setAxis( size_t axisIndex, Vector3 const& rAxis )
-	{}
-	size_t OdeJoint::getNumAnchors() const
-	{
-		return 0;
-	}
-	void OdeJoint::setAnchor( size_t anchorIndex, Vector3 const& rAnchor )
-	{}
-	void OdeJoint::setMotor( size_t axisIndex, real velocityTarget, real maximumForce )
-	{}
-	*/
-	void OdeJoint::setLimits( size_t axisIndex, real low, real high )
-	{}
-
 } // physics
 } // yake

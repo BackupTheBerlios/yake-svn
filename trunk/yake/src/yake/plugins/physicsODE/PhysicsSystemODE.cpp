@@ -26,7 +26,7 @@ namespace yake {
 namespace physics {
 
 	//------------------------------------------------------
-	PhysicsSystemODE::PhysicsSystemODE() : IPhysicsSystem()
+	PhysicsSystemODE::PhysicsSystemODE()
 	{
 	}
 
@@ -37,12 +37,14 @@ namespace physics {
 	}
 
 	//------------------------------------------------------
-	physics::IWorld* PhysicsSystemODE::createWorld()
+	SharedPtr<IWorld> PhysicsSystemODE::createWorld()
 	{
-		physics::OdeWorld* pWorld = new physics::OdeWorld();
-		YAKE_ASSERT( pWorld ).debug("Out of memory ?");
+		SharedPtr<IWorld> pWorld ( new OdeWorld );
+		
+		YAKE_ASSERT( pWorld ).debug( "Failed to create world!" );
+		
 		return pWorld;
 	}
 
-}
-}
+} // physics
+} // yake
