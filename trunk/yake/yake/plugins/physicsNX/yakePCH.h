@@ -18,13 +18,45 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <yake/physics/yakePCH.h>
+#ifndef __INC_PCH_H__
+#define __INC_PCH_H__
+
+#include "NxPhysics.h"
+
+//YAKE:
+
+#include <yake/base/yake.h>
 #include <yake/physics/yakePhysicsSystem.h>
+
+#ifdef YAKE_PHYSICS_NX_EXPORTS
+#	define YAKE_PHYSICSNX_API DLLEXPORT
+#else
+#	define YAKE_PHYSICSNX_API DLLIMPORT
+#endif
 
 namespace yake {
 namespace physics {
-
-	YAKE_IMPLEMENT_REGISTRY( IPhysicsSystem );
-
+	NxPhysicsSDK* getNxSDK();
 }
 }
+
+inline NxReal toNx( const ::yake::real v )
+{ return NxReal(v); }
+inline NxReal fromNx( const NxReal v )
+{ return ::yake::real(v); }
+
+inline NxVec3 toNx( const ::yake::base::Vector3 & v )
+{ return NxVec3( v.x, v.y, v.z ); }
+inline ::yake::base::Vector3 fromNx( const NxVec3 & v )
+{ return ::yake::base::Vector3( v.x, v.y, v.z ); }
+
+inline NxQuat toNx( const ::yake::base::Quaternion & v )
+{ 
+	NxQuat q;
+	q.setWXYZ( v.w, v.x, v.y, v.z );
+	return q;
+}
+inline ::yake::base::Quaternion fromNx( const NxQuat & v )
+{ return ::yake::base::Quaternion( v.w, v.x, v.y, v.z ); }
+
+#endif

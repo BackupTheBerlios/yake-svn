@@ -18,13 +18,19 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <yake/physics/yakePCH.h>
-#include <yake/physics/yakePhysicsSystem.h>
+// The following ifdef block is the standard way of creating macros which make exporting 
+// from a DLL simpler. All files within this DLL are compiled with the SCRIPTINGLUA_EXPORTS
+// symbol defined on the command line. this symbol should not be defined on any project
+// that uses this DLL. This way any other project whose source files include this file see 
+// SCRIPTINGLUA_API functions as being imported from a DLL, whereas this DLL sees symbols
+// defined with this macro as being exported.
+#ifdef YAKE_PHYSICS_NX_EXPORTS
+#	define PHYSICSODE_API DLLEXPORT
+#else
+#	define PHYSICSODE_API DLLIMPORT
+#endif
 
-namespace yake {
-namespace physics {
+#include <yake/plugins/physicsODE/PhysicsSystemODE.h>
 
-	YAKE_IMPLEMENT_REGISTRY( IPhysicsSystem );
+extern "C" yake::base::Plugin* dynlibStartPlugin(void);
 
-}
-}

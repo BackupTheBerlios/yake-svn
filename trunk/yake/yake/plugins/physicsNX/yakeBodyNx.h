@@ -18,13 +18,32 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <yake/physics/yakePCH.h>
-#include <yake/physics/yakePhysicsSystem.h>
+#ifndef YAKE_PHYSICS_BODYNX_H
+#define YAKE_PHYSICS_BODYNX_H
 
 namespace yake {
 namespace physics {
 
-	YAKE_IMPLEMENT_REGISTRY( IPhysicsSystem );
+	class BodyNx : public IBody
+	{
+	public:
+		BodyNx( NxActor & rActor );
+		virtual ~BodyNx();
+
+		virtual void setMass(const real mass);
+		virtual real getMass() const;
+		virtual void setLinearVelocity(const Vector3 & rkVelocity);
+		virtual Vector3 getLinearVelocity() const;
+		virtual void setAngularVelocity(const Vector3 & rkVelocity);
+		virtual Vector3 getAngularVelocity() const;
+
+		// helpers
+	private:
+		NxActor&	mNxActor;
+		NxBodyDesc	mNxDesc;
+	};
 
 }
 }
+
+#endif

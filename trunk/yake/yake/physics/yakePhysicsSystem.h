@@ -21,336 +21,359 @@
 #ifndef YAKE_PHYSICSSYSTEM_H
 #define YAKE_PHYSICSSYSTEM_H
 
-#include <yake/physics/yakePhysics.h>
+#include <yake/physics/yakePhysicsPrerequisites.h>
+
+	/** The description structs are used for creating elements.
+
+		Why is this necessary?
+			Physics engines differ in the way they define and create physics objects.
+			Often the order of setting parameters is crucial, e.g. in ODE as soon as a fixed joint
+			is attached to two objects, the anchor point cannot be set again (workaround is destroying
+			the joint, recreating it, setting the new anchor point and reattaching the objects).
+
+			Furthermore we give the concrete implementation of yake::physics the freedom to
+			use certain optimizations and at least avoid sub-optimal creation paths.
+
+			Normally, most objects won't be massively modified once created, therefore this approach
+			should work fine. Nevertheless modification is still possible. Depending on the restrictions
+			of the underlying physics system modifications may be sub-optimal in certain situations (see
+			the example of fixed joints in ODE above).
+	*/
 
 namespace yake {
-
+	using namespace base;
+	using namespace base::templates;
 	using namespace base::math;
+namespace physics {
 
-	namespace physics {
-		class IBody;
-		class IJointGroup;
-		class IWorld;
-		class PhysicsSystem;
+	/** @todo
+			+ BodyGroup:
+				+ operator + (pBody)
+				+ operator - (pBody)
+	*/
 
-		/**
-		*/
-		class YAKE_PHYSICS_API PhysicsPlugin : public ::yake::base::Plugin
+	/* not used (yet?)
+	enum PhysicsErrorCode
+	{
+		kPEC_NONE = 10000,
+		kPEC_ERROR = 10001,
+		kPEC_INVALID_AXIS = 10002,
+		kPEC_INVALID_PARAMETER = 10003,
+		kPEC_ALREADY_EXISTS = 10004
+	};
+	*/
+
+	class IMaterial;
+
+	enum JointType
+	{
+		JT_BALL,
+		JT_HINGE,
+		JT_HINGE2,
+		JT_FIXED,
+		JT_OTHER
+		//@todo add more common ones
+	};
+
+	enum ShapeType
+	{
+		ST_PLANE,
+		ST_BOX,
+		ST_SPHERE,
+		ST_CAPSULE,
+		ST_CYLINDER,
+		ST_CCYLINDER,
+		ST_TRIANGLE_MESH,
+		ST_VOXEL_SET,
+		ST_TRANSFORM_CONTAINER,
+		ST_OTHER
+	};
+
+	struct Property
+	{
+		Property();
+		Property( const String & n, const boost::any & v );
+
+		String		name;
+		boost::any	value;
+	};
+	typedef Deque<String> PropertyNameList;
+
+	class YAKE_PHYSICS_API IPropertyQueryHandler
+	{
+	public:
+		virtual ~IPropertyQueryHandler() {}
+		virtual const PropertyNameList& getPropertyNames() const = 0;
+		virtual void setProperty( const String & rkName, const boost::any & rkValue ) = 0;
+	};
+
+	/** A shape is what we formerly called "collision geom" in yake::physics. */
+	class IShape //: public IPropertyQueryHandler
+	{
+	public:
+		struct Desc
 		{
-		public:
-			virtual PhysicsSystem* createSystem() = 0;
+			Desc(	const ShapeType type_,
+					bool bMovable_ = true,
+					const Vector3 & rkPosition = Vector3::kZero, 
+					const Quaternion & rkOrientation = Quaternion::kIdentity,
+					IMaterial* material_ = 0) :
+				type( type_ ),
+				position( rkPosition ),
+				orientation( rkOrientation ),
+				bMovable( bMovable_ ),
+				pMaterial( material_ )
+			{}
+			ShapeType	type; // superfluous as shape type is determined by dynamic_cast on Desc struct...
+			Vector3		position;
+			Quaternion	orientation;
+			bool		bMovable;
+			IMaterial*	pMaterial;
 		};
-
-		//-----------------------------------------------------
-		// General physics objects
-		//-----------------------------------------------------
-
-		/** A group of bodies. Can be used for various purposes, e.g. for grouping
-			bodies which are affected by BodyAffectors.
-			\see BodyAffector
-			\see IBody
-		*/
-		class BodyGroup
+		struct SphereDesc : Desc
 		{
-		public:
-			typedef std::list< IBody* > BodyList;
-		protected:
-			BodyList		mBodies;
-		public:
-			BodyGroup();
-			~BodyGroup();
+			SphereDesc(	real radius_ = real(1.),
+						// base class:
+						bool bMovable_ = true,
+						const Vector3 & rkPosition = Vector3::kZero, 
+						const Quaternion & rkOrientation = Quaternion::kIdentity
+						 ) :
+				Desc( ST_SPHERE, bMovable_, rkPosition, rkOrientation ),
+				radius( radius_ )
+			{}
+			real		radius;
+		};
+		struct BoxDesc : Desc
+		{
+			BoxDesc(	const Vector3 & rkDimensions = Vector3(1,1,1),
+						// base class:
+						bool bMovable_ = true,
+						const Vector3 & rkPosition = Vector3::kZero, 
+						const Quaternion & rkOrientation = Quaternion::kIdentity
+						 ) :
+				Desc( ST_BOX, bMovable_, rkPosition, rkOrientation ),
+				dimensions( rkDimensions )
+			{}
+			Vector3		dimensions;
+		};
+		struct PlaneDesc : Desc
+		{
+			PlaneDesc(	const Vector3 & rkNormal = Vector3(0,1,0),
+						const real d_ = real(1.),
+						// base class:
+						bool bMovable_ = true,
+						const Vector3 & rkPosition = Vector3::kZero, 
+						const Quaternion & rkOrientation = Quaternion::kIdentity
+						 ) :
+				Desc( ST_PLANE, bMovable_, rkPosition, rkOrientation ),
+				normal( rkNormal ),
+				d( d_ )
+			{}
+			Vector3		normal;
+			real		d;
+		};
+		struct CapsuleDesc : Desc
+		{
+			CapsuleDesc(const real height_ = real(2.),
+						const real radius_ = real(1.),
+						// base class:
+						bool bMovable_ = true,
+						const Vector3 & rkPosition = Vector3::kZero, 
+						const Quaternion & rkOrientation = Quaternion::kIdentity
+						 ) :
+				Desc( ST_CAPSULE, bMovable_, rkPosition, rkOrientation ),
+				height( height_ ),
+				radius( radius_ )
+			{}
+			real		height;
+			real		radius;
+		};
+		struct TriMeshDesc : Desc
+		{
+			TriMeshDesc(	const String & rkMeshFilename,
+							// base class:
+							bool bMovable_ = true,
+							const Vector3 & rkPosition = Vector3::kZero, 
+							const Quaternion & rkOrientation = Quaternion::kIdentity
+						 ) :
+				Desc( ST_TRIANGLE_MESH, bMovable_, rkPosition, rkOrientation ),
+				meshFilename( rkMeshFilename )
+			{}
+			String		meshFilename;
+		};
+	public:
+		virtual ~IShape() {}
 
-			/** Add a body to the group. */
-			void add( IBody * pBody )
+		virtual ShapeType getType() const = 0;
+	};
+
+	/** "Static" shapes (IShape) can be positioned and rotated at creation time only.
+		Movable shapes on the other hand can be moved and rotated at any time.
+
+		If they are attached to an Actor, position and orientation are relative to their parent
+		(usually the Actor or a special Transform Shape (ST_TRANSFORM_CONTAINER)).
+	*/
+	class IMovableShape : public IShape, public base::Movable
+	{
+	};
+
+	class IBody
+	{
+	public:
+		struct Desc
+		{
+			Desc()
 			{
-				if (pBody)
-					mBodies.push_back( pBody );
+				reset();
 			}
-
-			/** Remove a body from this group. */
-			void remove( IBody * pBody )
+			void reset()
 			{
-				BodyList::iterator itFind = std::find( mBodies.begin(), mBodies.end(), pBody );
-				if (itFind != mBodies.end())
-					mBodies.erase( itFind );
+				linVelocity = Vector3::kZero;
+				angVelocity = Vector3::kZero;
+				massOffset = Vector3::kZero;
+				totalMass = real(1.);
 			}
-
-			/** Return a const reference to the internal list of bodies. */
-			const BodyList & getBodyList() const
-			{ return mBodies; }
+			Vector3		linVelocity;
+			Vector3		angVelocity;
+			real		totalMass;
+			Vector3		massOffset;
 		};
+	public:
+		virtual ~IBody() {}
 
+		virtual void setMass(const real mass) = 0;
+		virtual real getMass() const = 0;
 
-		//-----------------------------------------------------
-		// System interfaces
-		//-----------------------------------------------------
+		//@todo could move this into IActor... maybe more appropriate there?
+		virtual void setLinearVelocity(const Vector3 & rkVelocity) = 0;
+		virtual Vector3 getLinearVelocity() const = 0;
+		virtual void setAngularVelocity(const Vector3 & rkVelocity) = 0;
+		virtual Vector3 getAngularVelocity() const = 0;
 
-		/** One IJoint interface to rule them all.
-			Interface is remarkably similar to ODE's, isn't it ?
-		*/
-		class YAKE_PHYSICS_API IJoint
+		//@todo addForce, addTorque, addForceAtRel, addRelForceAtRel ...
+	};
+
+	class IActor : public Movable
+	{
+	public:
+		struct Desc
 		{
-		protected:
-			IJoint() {}
-			IJoint( const IJoint & );
-		public:
-			/** Type of joint.
-			*/
-			enum JointType {
-				JT_BALL,
-				JT_HINGE2,
-				JT_HINGE,
-				JT_FIXED
-			};
-
-			virtual ~IJoint() {}
-
-			virtual JointType getType() const = 0;
-
-			virtual void attach(IBody* body1, IBody* body2) = 0;
-
-			virtual void setAnchor(const Vector3 & anchorPoint) = 0;
-			virtual Vector3 getAnchor() const = 0;
-
-/*			virtual void setAxis(int axis, const Vector3 & axisDirection) = 0;
-			virtual Vector3 getAxis(int axis) const = 0;
-			virtual int getAxisCount() const = 0;
-
-			virtual void setMotorVelocity(int motor, real vel) = 0;
-			virtual void setMotorMaximumForce(int motor, real force) = 0;
-			virtual int getMotorCount() const = 0;*/
-
-			virtual void setAxis1(const Vector3 & axis) = 0;
-			virtual void setAxis2(const Vector3 & axis) = 0;
-			virtual Vector3 getAxis1() const = 0;
-			virtual Vector3 getAxis2() const = 0;
-
-			virtual void setMotor1Velocity(real vel) = 0;
-			virtual void setMotor1MaximumForce(real force) = 0;
-
-			virtual void setMotor2Velocity(real vel) = 0;
-			virtual void setMotor2MaximumForce(real force) = 0;
-
-			virtual void setLowStop(real stop) = 0;
-			virtual void setHighStop(real stop) = 0;
-
-			virtual void setSpring(real spring) = 0;
-			virtual void setDamping(real damping) = 0;
-			virtual real getSpring() const = 0;
-			virtual real getDamping() const = 0;
+			Deque< SharedPtr<IShape::Desc> >	shapes;
 		};
-		//-----------------------------------------------------
+	public:
+		virtual ~IActor() {}
 
-		/** IBody
-			\remarks THE PHYSICS INTERFACES ARE TO BE OVERHAULED.
-		*/
-		class YAKE_PHYSICS_API IBody : public base::Movable
+		virtual bool hasBody() const = 0;
+		virtual bool createBody() = 0;
+		virtual IBody* getBody() const = 0;
+
+		virtual SharedPtr<IShape> createShape( const IShape::Desc & rkShapeDesc ) = 0;
+		virtual void destroyShape( SharedPtr<IShape> & rShape ) = 0;
+		virtual const Deque<IShape*> getShapes() const = 0;
+
+		//virtual void updateMassFromShapes() = 0;
+
+		typedef Signal0<void> SignalCollisionEntered;
+		virtual void subscribeToCollisionEnteredSignal( const SignalCollisionEntered::slot_type & rkSlot ) = 0;
+		virtual void subscribeToCollisionExitedSignal( const SignalCollisionEntered::slot_type & rkSlot ) = 0;
+	};
+
+	class IJoint
+	{
+	public:
+		struct DescBase
 		{
-		public:
-			/** Type of mass of a body.*/
-			enum MassType {
-				MT_BOX,
-				MT_SPHERE
-			};
-
-			virtual ~IBody() {}
-
-			virtual void setLinearVelocity(const Vector3 & velocity) = 0;
-			virtual Vector3 getLinearVelocity() const = 0;
-			virtual void setAngularVelocity(const Vector3 & velocity) = 0;
-			virtual Vector3 getAngularVelocity() const = 0;
-			
-			virtual void setMassBox(real lx, real ly, real lz, real density = 1.) = 0;
-			virtual void setMassSphere(real r, real density = 1.) = 0;
-			virtual void setMass(real mass) = 0;
-			virtual real getMass() const = 0;
-			virtual IBody::MassType getType() const = 0;
-			virtual void translateMass( const Vector3 & d ) = 0;
-
-			virtual void addForce( const Vector3 & force ) = 0;
-			virtual void addRelForce( const Vector3 & force ) = 0;
-			virtual void addTorque( const Vector3 & torque ) = 0;
-			virtual void addRelTorque( const Vector3 & torque ) = 0;
-			virtual void addForceAtPosition( const Vector3 & force, const Vector3 & position = Vector3(0,0,0) ) = 0;
-			virtual void addRelForceAtRelPosition( const Vector3 & force, const Vector3 & relPosition = Vector3(0,0,0) ) = 0;
-
-			virtual Vector3 getTorque() const = 0;
-
-			virtual void setEnabled( bool enabled ) = 0;
-		protected:
+			DescBase(	const JointType type_, 
+						SharedPtr<IActor> & pFirst,
+						SharedPtr<IActor> & pSecond ) :
+				type(type_)
+			{}
+			JointType type; // not really needed...
 		};
-
-		//-----------------------------------------------------
-		class IAffector;
-		class IComplexObject;
-		class ICollisionGeometry;
-
-		/** IWorld represents a physically simulated world.
-			It is possible to have any number of worlds.
-			\remarks THE PHYSICS INTERFACES ARE TO BE OVERHAULED.
-		*/
-		class YAKE_PHYSICS_API IWorld
+		struct DescFixed : DescBase
 		{
-		protected:
-			IWorld() {}
-		public:
-			virtual ~IWorld() {}
-
-			virtual void update( const real timeElapsed ) = 0;
-			virtual real getSimulationTime() const = 0;
-
-			/// Sets the global directional gravity acceleration. Every body
-			/// in this world is affected by it!
-			virtual void setGlobalGravity( const Vector3 & acceleration ) = 0;
-
-			virtual IBody* createBody() = 0;
-			virtual IJoint* createJoint(IJoint::JointType type, IJointGroup* group = 0) = 0;
-
-			// dynamics objects
-			virtual IComplexObject* createPlane(const Vector3 & n, real d) = 0;
-			virtual IComplexObject* createSphere(real radius) = 0;
-			virtual IComplexObject* createBox(real lx, real ly, real lz) = 0;
-			virtual IComplexObject* createMesh(const base::String & mesh) = 0;
-			virtual IComplexObject* createRay(const Vector3 & origin, const Quaternion & orientation) = 0;
-			virtual IComplexObject* createEmptyPhysicsObject() = 0;
-
-			// collision geometry
-			virtual ICollisionGeometry* createCollisionGeomSphere(real radius) = 0;
-			virtual ICollisionGeometry* createCollisionGeomBox(real lx, real ly, real lz) = 0;
-			virtual ICollisionGeometry* createCollisionGeomMesh( const base::String & collisionMeshResourceName ) = 0;
-			virtual ICollisionGeometry* createCollisionGeomPlane( real a, real b, real c, real d ) = 0;
-			virtual ICollisionGeometry* createCollisionGeomTransform() = 0;
+			DescFixed(	SharedPtr<IActor> & pFirst,
+						SharedPtr<IActor> & pSecond ) :
+				DescBase(JT_FIXED,pFirst,pSecond)
+			{}
 		};
-
-		/** Represents a collision geometry object which can be attached to
-			a body.
-			\remarks THE PHYSICS INTERFACES ARE TO BE OVERHAULED.
-		*/
-		class YAKE_PHYSICS_API ICollisionGeometry : public base::Movable
+		struct DescHinge : DescBase
 		{
-		protected:
-			ICollisionGeometry() {}
-			ICollisionGeometry( const ICollisionGeometry & );
-		public:
-			/** Type of collision geometry. */
-			enum CollisonGeomType {
-				CGT_PLANE,
-				CGT_SPHERE,
-				CGT_BOX,
-				CGT_CYLINDER,
-				CGT_CCYLINDER,
-				CGT_MESH,
-				CGT_TRANSFORM
-			};
-
-			virtual ~ICollisionGeometry() {}
-			
-			virtual ICollisionGeometry::CollisonGeomType getType() const = 0;
-
-			virtual Vector3 planeGetNormal() const = 0;
-			virtual real planeGetDistance() const = 0;
-			virtual real sphereGetRadius() const = 0;
-			virtual void sphereSetRadius(const real radius) = 0;
-			virtual Vector3 boxGetDimensions() const = 0;
-			virtual base::String meshGetName() const = 0;
-			virtual Vector3 rayGetOrigin() const = 0;
-			virtual Quaternion rayGetOrientation() const = 0;
-			virtual void tfAttachGeom( ICollisionGeometry* pGeom ) = 0;
-			virtual ICollisionGeometry* tfGetAttachedGeom() const = 0;
+			DescHinge(	SharedPtr<IActor> & pFirst,
+						SharedPtr<IActor> & pSecond,
+						const Vector3 & rkAxis0) :
+				DescBase(JT_HINGE,pFirst,pSecond),
+				axis0(rkAxis0)
+			{}
+			Vector3		axis0;
 		};
-
-		//-----------------------------------------------------
-		class YAKE_PHYSICS_API DynamicsObjectListener
+		struct DescHinge2 : DescBase
 		{
-		private:
-			DynamicsObjectListener(const DynamicsObjectListener &);
-		public:
-			DynamicsObjectListener();
-
-			virtual void prePhysics(real fTimeElapsed) = 0;
-			virtual void postPhysics() = 0;
+			DescHinge2(	SharedPtr<IActor> & pFirst,
+						SharedPtr<IActor> & pSecond,
+						const Vector3 & rkAxis0, 
+						const Vector3 & rkAxis1) :
+				DescBase(JT_HINGE2,pFirst,pSecond),
+				axis0(rkAxis0),
+				axis1(rkAxis1)
+			{}
+			Vector3		axis0;
+			Vector3		axis1;
 		};
+	public:
+		virtual ~IJoint() {}
 
-		/** Represents a complex physics object.
-			It can have a body (if it is dynamic) and collision
-			geometry can be attached to it.
-			Additionally one can control certain physical properties
-			of the underlying body directly through this interface.
-			\remarks THE PHYSICS INTERFACES ARE TO BE OVERHAULED.
-		*/
-		class YAKE_PHYSICS_API IComplexObject : public base::Movable
-		{
-		public:
-			class YAKE_PHYSICS_API ISlipNormalSource
-			{
-			protected:
-				ISlipNormalSource() {}
-			public:
-				virtual ~ISlipNormalSource() {}
-				virtual Vector3 getLateralSlipNormal() const = 0;
-			};
-			virtual ~IComplexObject() {}
+		virtual void attach(IBody & rBody1, IBody & rBody2) = 0;
 
-			virtual IBody* getBody() const = 0;
-			virtual void setBody(IBody* body) = 0;
+		virtual JointType getType() const = 0;
+		virtual size_t getNumAxis() const = 0;
+		virtual void setAxis(size_t axisIndex, const Vector3 & rkAxis) = 0;
+		virtual size_t getNumAnchors() const = 0;
+		virtual void setAnchor(size_t anchorIndex, const Vector3 & rkAnchor) = 0;
+		virtual void setMotor(size_t axisIndex, real velocityTarget, real maximumForce) = 0;
+		virtual void setLimits(size_t axisIndex, real low, real high) = 0;
+		virtual void setBreakable(bool enabled) = 0;
+		virtual void setBreakableForce(real force) = 0;
+		virtual void setBreakableTorque(real torque) = 0;
+		virtual void setConnectedBodiesCollide(bool enabled) = 0;
+		///setLow/HiStop
+		//setSpring/Damper
+	};
 
-			virtual void addCollisionGeometry(ICollisionGeometry* geom) = 0;
-			virtual base::templates::Vector<ICollisionGeometry*> getCollisionGeometryVector() const = 0;
+	class IAvatar;
 
-			//virtual void addListener(CollidableListener* listener) = 0;
+	class IWorld// : public IPropertyQueryHandler
+	{
+	public:
+		virtual ~IWorld() {}
 
-			// part of collidable or body and geom,too ?
-			virtual void setFriction(real f) = 0;
-			virtual void setFriction2(real f) = 0;
-			virtual void setSoftness(real s) = 0;
-			virtual real getFriction() const = 0;
-			virtual real getFriction2() const = 0;
-			virtual real getSoftness() const = 0;
-
-			virtual void setLateralSlipEnabled( bool enabled ) = 0;
-			//virtual void setSlipNormal( const Vector3 & slipNormal ) = 0;
-			virtual void setSlipNormalSource( ISlipNormalSource* pSource ) = 0;
-			virtual void setSlipCoefficients( const real linear, const real angular ) = 0;
-
-		protected:
-			typedef Signal1< void ( IComplexObject*, IComplexObject* ) > EnterCollisionSignal;
-			typedef Signal1< void ( IComplexObject*, IComplexObject* ) > LeaveCollisionSignal;
-		public:
-			virtual void subscribeToEnterCollision( const EnterCollisionSignal::slot_type & slot ) = 0;
-			virtual void subscribeToLeaveCollision( const LeaveCollisionSignal::slot_type & slot ) = 0;
-		};
-
-		/** PhysicsSystem.
-			Manages creation of physical worlds and other administrative tasks.
-		*/
-		class YAKE_PHYSICS_API PhysicsSystem// : public System
-		{
-		public:
-			virtual ~PhysicsSystem() {}
-
-			virtual IWorld* createWorld() = 0;
-		};
-
-		//-----------------------------------------------------
+		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase & rkJointDesc ) = 0;
+		virtual SharedPtr<IActor> createActor( const IActor::Desc & rkActorDesc = IActor::Desc() ) = 0;
 		/*
-		class ICollisionMesh
-		{
-		public:
-			virtual ~ICollisionMesh();
-
-			virtual base::String getName() = 0;
-		};
+		virtual SharedPtr<IMaterial> createMaterial( cosnt IMaterial::Desc & rkMatDesc ) = 0;
+		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc & rkAvatarDesc ) = 0;
 		*/
 
-		/**
-		*/
-		class YAKE_PHYSICS_API ICollisionTriMeshManager
-		{
-		public:
-			virtual ICollisionGeometry* getByName(const base::String & name) = 0;
-		};
+		virtual Deque<ShapeType> getSupportedShapes(bool bStatic = true, bool bDynamic = true) const = 0;
+		virtual Deque<JointType> getSupportedJoints() const = 0;
+		virtual Deque<String> getSupportedSolvers() const = 0;
+		virtual bool useSolver( const String & rkSolver ) = 0;
+		virtual String getCurrentSolver() const = 0;
+		virtual const PropertyNameList& getCurrentSolverParams() const = 0;
+		virtual void setCurrentSolverParam( const String & rkName, const boost::any & rkValue ) = 0;
 
-	}
+		virtual void step(const real timeElapsed) = 0;
+	};
+
+	class YAKE_PHYSICS_API IPhysicsSystem
+	{
+		YAKE_DECLARE_REGISTRY_0( IPhysicsSystem, base::String );
+	public:
+		virtual ~IPhysicsSystem() {}
+		virtual SharedPtr<IWorld> createWorld() = 0;
+	};
+
+}
 }
 
 #endif

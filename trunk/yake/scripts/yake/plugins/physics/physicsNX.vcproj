@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="physics"
-	ProjectGUID="{1C674F1C-7DDF-4AC5-A52A-14C31248A9D4}"
+	Name="physicsNX"
+	ProjectGUID="{5749946B-081D-4A80-8119-2BE84F571E81}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -12,20 +12,20 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../../common/bin/debug"
-			IntermediateDirectory="../../common/obj/debug/$(ProjectName)"
+			OutputDirectory="../../../../common/bin/debug"
+			IntermediateDirectory="../../../../common/obj/debug/$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..;../../;../../dependencies/boost/;../../dependencies/ttl/"
-				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_PHYSICS_EXPORTS"
+				AdditionalIncludeDirectories="$(NXSDK_DIR)/Physics/Include;$(NXSDK_DIR)/Foundation/include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ode/include"
+				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_PHYSICS_NX_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yake/physics/yakePCH.h"
+				PrecompiledHeaderThrough="yake/plugins/physicsNX/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -33,13 +33,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="oded.lib physics.lib NxPhysics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../common/lib/debug"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib;&quot;$(NXSDK_DIR)/Physics/lib/win32/release&quot;"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
-				ImportLibrary="../../common/lib/debug/$(TargetName).lib"
+				ImportLibrary="../../../../common/lib/debug/$(TargetName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -64,17 +66,17 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../../common/bin/release"
-			IntermediateDirectory="../../common/obj/release/$(ProjectName)"
+			OutputDirectory="../../../../common/bin/release"
+			IntermediateDirectory="../../../../common/obj/release/$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../;../../dependencies/boost/;../../dependencies/ttl/"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_PHYSICS_EXPORTS"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ode/include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKEPHYSICSODE_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yake/physics/yakePCH.h"
+				PrecompiledHeaderThrough="yake/plugins/physicsNX/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -82,14 +84,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="ode.lib physics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../common/lib/release"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="../../common/lib/release/$(TargetName).lib"
+				ImportLibrary="../../../../common/lib/release/$(TargetName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -119,9 +122,18 @@
 		<Filter
 			Name="src"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{D98C3EC0-57EF-43b5-9AA8-19A456D4679B}">
+			UniqueIdentifier="{C2459723-40C3-4aa5-86C1-F7EEC117A0C2}">
 			<File
-				RelativePath="..\..\src\yake\physics\yakePCH.cpp">
+				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\NxPhysicsSystem.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeActorNx.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeBodyNx.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -136,48 +148,33 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\yake\physics\yakePhysical.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
+				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeShapeNx.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\yake\physics\yakePhysicsSystem.cpp">
+				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeWorldNx.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="inc"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{931F508C-E413-4f0f-8658-E107F95EA8B8}">
+			UniqueIdentifier="{BE88200B-6C81-44ef-AD21-397DB4F46B38}">
 			<File
-				RelativePath="..\..\yake\physics\yakeForceSpace.h">
+				RelativePath="..\..\..\..\yake\plugins\physicsNX\NxPhysicsSystem.h">
 			</File>
 			<File
-				RelativePath="..\..\yake\physics\yakePCH.h">
+				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeActorNx.h">
 			</File>
 			<File
-				RelativePath="..\..\yake\physics\yakePhysical.h">
+				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeBodyNx.h">
 			</File>
 			<File
-				RelativePath="..\..\yake\physics\yakePhysics.h">
+				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakePCH.h">
 			</File>
 			<File
-				RelativePath="..\..\yake\physics\yakePhysicsAffectors.h">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
+				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeShapeNx.h">
 			</File>
 			<File
-				RelativePath="..\..\yake\physics\yakePhysicsPrerequisites.h">
-			</File>
-			<File
-				RelativePath="..\..\yake\physics\yakePhysicsSystem.h">
+				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeWorldNx.h">
 			</File>
 		</Filter>
 	</Files>

@@ -18,13 +18,46 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <yake/physics/yakePCH.h>
-#include <yake/physics/yakePhysicsSystem.h>
+#ifndef YAKE_PHYSICS_SHAPENX_H
+#define YAKE_PHYSICS_SHAPENX_H
 
 namespace yake {
 namespace physics {
 
-	YAKE_IMPLEMENT_REGISTRY( IPhysicsSystem );
+	class ActorNx;
+	class ShapeNx : public IMovableShape
+	{
+	public:
+		ShapeNx( NxActor & rActor, ActorNx & rActorNx );
+		virtual ~ShapeNx();
+
+		virtual ShapeType getType() const;
+
+		virtual void setPosition( const Vector3 & rkPosition );
+		virtual Vector3 getPosition() const;
+		virtual void setOrientation( const Quaternion & rkOrientation );
+		virtual Quaternion getOrientation() const;
+
+		// helpers
+
+		void createAsSphere_( const real radius = real(1.) );
+		void createAsBox_( const Vector3 & rkDimensions );
+		void createAsPlane_( const Vector3 & rkNormal, const real d );
+		void createAsCapsule_( const real height, const real radius );
+
+	private:
+		void attachAndCreate_(const NxShapeDesc & rkDesc);
+		void detachAndDestroy_();
+	private:
+		ShapeType		mType;
+
+		NxShape*		mpNxShape;
+
+		NxActor&		mNxActor;
+		ActorNx&		mActor;
+	};
 
 }
 }
+
+#endif
