@@ -23,7 +23,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace yake {
 
-	using namespace base::math;
+	using namespace math;
 
 namespace physics {
 

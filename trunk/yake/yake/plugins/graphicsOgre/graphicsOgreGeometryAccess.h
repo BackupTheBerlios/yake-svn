@@ -23,7 +23,7 @@
 
 using namespace yake::base::mpl;
 using namespace yake::base::templates;
-using namespace yake::base::math;
+using namespace yake::math;
 
 namespace yake {
 namespace graphics {

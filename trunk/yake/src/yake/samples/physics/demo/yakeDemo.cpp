@@ -4,7 +4,7 @@
 
 using namespace yake;
 using namespace yake::base::templates;
-using namespace yake::base::math;
+using namespace yake::math;
 
 class MiniApp
 {

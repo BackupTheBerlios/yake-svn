@@ -66,7 +66,7 @@ namespace base
 //#if _DEFINE_DEPRECATED_HASH_CLASSES
 //		typedef std::hash< YAKE_BASE_STRING, std::less< YAKE_BASE_STRING > > _StringHash;
 //#else
-	typedef std::hash_compare< YAKE_BASE_STRING, std::less< YAKE_BASE_STRING > > _StringHash;
+	typedef stdext::hash_compare< YAKE_BASE_STRING, std::less< YAKE_BASE_STRING > > _StringHash;
 //#endif
 
 //#undef YAKE_BASE_STRING

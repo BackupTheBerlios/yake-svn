@@ -26,7 +26,7 @@ namespace Ogre {
 };
 
 namespace yake {
-using namespace base::math;
+	using namespace math;
 namespace input {
 
 	//-----------------------------------------------------------------------
@@ -38,10 +38,10 @@ namespace input {
 
 		virtual int getNumButtons() const;
 		virtual bool isButtonDown( int button ) const;
-		virtual base::math::Vector3 getPosition() const;
-		virtual void setClip( const base::math::Rectangle & rect )
+		virtual math::Vector3 getPosition() const;
+		virtual void setClip( const math::Rectangle & rect )
 		{ mClip = rect; }
-		virtual void setScale( const base::math::Vector3 & scale )
+		virtual void setScale( const math::Vector3 & scale )
 		{ mScale = scale; }
 
 		virtual void poll();
