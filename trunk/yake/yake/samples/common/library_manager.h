@@ -19,7 +19,7 @@ namespace common
 /* library manager */
 struct library_manager
 {
-	typedef vector<base::Library*> library_list;
+	typedef std::vector<base::Library *> library_list;
 
   void load_library(const char * lib_name)
   {}

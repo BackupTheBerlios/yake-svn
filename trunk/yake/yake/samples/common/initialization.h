@@ -6,9 +6,8 @@
 #include <string>
 // boost
 #include <boost/shared_ptr.hpp>
-#include <boost/mpl/push_front.hpp>
 // yake
-#include <yake/base/mpl/yakeInheritLinear.h>
+#include <yake/base/mpl/inherit_linear.h>
 #include <yake/base/mpl/yakeSequences.h>
 // local
 #include "load_libraries.h"
@@ -24,6 +23,11 @@ namespace samples
 namespace common
 {
 
+// todo: use yake registry
+template <class System>
+boost::shared_ptr<System> create()
+{ return boost::shared_ptr<System>(new System()); }
+
 // -----------------------------------------
 /* automatic initialization */
 namespace // unnamed
@@ -32,7 +36,7 @@ namespace // unnamed
 	template <class System>
 	struct auto_init_system_holder
 	{
-		auto_initialization_system_holder()
+		auto_init_system_holder()
 			: m_system(create<System>())
 		{}
 
@@ -43,8 +47,9 @@ namespace // unnamed
 	};
 
 
+	// todo: put this somewhere else?
 	// note: you cannot use gui without a renderer (todo: for win32 gui fake renderer needed?)
-	template <>
+	/*template <>
 	struct auto_init_system_holder<gui_system>
 	{
 		// the user can add an adapter for a gui/renderer combination without changing the code
@@ -62,22 +67,19 @@ namespace // unnamed
 
 		boost::shared_ptr<gui_system> m_system;
 		boost::shared_ptr<gui_renderer_adapter> m_gui_renderer_adapter;
-	};
+	};*/
 } // namespace unnamed
 
 // loads the libraries, initializes the systems and makes them accessable
 template <class Config = default_config>
 struct auto_init : 
 	load_libraries<Config>, 
-	typename inherit_linear<typename Config::systems, lambda< auto_init_system_holder<_> >::type >::type
+	inherit_linear<Config, typename lambda< auto_init_system_holder<_> >::type >::type
 {
-public: // types
-	typedef auto_init_system_holder holder;
-
 public: // methods
   template <class System>
   System & get_system()
-  { static_cast<holder<System>&>(*this)->get_system(); }
+  { static_cast<auto_init_system_holder<System>&>(*this)->get_system(); }
 };
 
 // -----------------------------------------
@@ -87,11 +89,10 @@ template <class Config = default_config>
 struct delayed_auto_init
 {
 public: // types
-	typedef auto_init_system_holder holder;
 	typedef typename inherit_linear
 	<
-		typename Config::systems, 
-		lambda< holder<_> >::type
+		Config, 
+		typename lambda< auto_init_system_holder<_> >::type
 	>::type Systems;
 
 public: // methods
@@ -103,7 +104,7 @@ public: // methods
 
 	template <class System>
 	System & get_system()
-	{ static_cast<holder<System>*>(m_systems.get())->get_system(); }
+	{ static_cast<auto_init_system_holder<System>*>(m_systems.get())->get_system(); }
 
 private: // data
 	boost::shared_ptr<Config> m_config;
@@ -114,13 +115,14 @@ private: // data
 /* semi automatic initialization */
 namespace // unnamed
 {
-	struct head
+	template <class System>
+	struct semi_init_system_holder_head
 	{
 		virtual void load_systems() {}
 	};
 
-	template <class Base>
-	struct semi_init_system_holder : Base
+	template <class System>
+	struct semi_init_system_holder
 	{
 		virtual void load_system() 
 		{ m_system = create<System>(); Base::load_system(); }
@@ -137,13 +139,11 @@ template <class Config = default_config>
 struct semi_auto_init : 
 	private typename inherit_linear
 	<
-		typename push_front<Config, head>::type, 
-		typename lambda< semi_init_system_holder<_> >::type 
+		Config, 
+		typename lambda< semi_init_system_holder<_> >::type,
+		semi_init_system_holder_head
 	>::type
 {
-public: // types
-	typedef semi_init_system_holder holder;
-
 public: // methods
 		semi_auto_init()
 		{
@@ -155,7 +155,7 @@ public: // methods
 
 		template <class System>
 		System & get_system()
-    static_cast<holder<System>&>(*this)->get_system(); }
+    static_cast<semi_init_system_holder<System>&>(*this)->get_system(); }
 };
 
 // -----------------------------------------
@@ -178,13 +178,10 @@ namespace // unnamed
 template <class Systems>
 struct manual_init : inherit_linear<Systems, lambda< manual_init_system_holder<_> >::type
 {
-public: // types
-	typedef manual_init_system_holder holder;
-
 public: // methods
   template <class System>
   System & get_system()
-  { static_cast<holder<System>&>(*this)->get_system(); }
+  { static_cast<manual_init_system_holder<System>&>(*this)->get_system(); }
 
   template <class System>
   void load_system(const char * id)

@@ -18,7 +18,7 @@ namespace common
 template <class Config>
 struct load_libraries
 {
-  void load_libraries()
+  load_libraries()
   {
 		std::vector<std::string> libs = config_libraries<Config>::get_libraries();
 		for(std::vector<std::string>::const_iterator iter = libs.begin();

@@ -15,6 +15,15 @@ namespace samples
 namespace common
 {
 
+// -----------------------------------------
+// system forward declares
+struct graphics_system;
+struct gui_system;
+struct input_system;
+struct physics_system;
+
+// -----------------------------------------
+// libraries for a specific config
 template <class Config>
 struct config_libraries;
 
