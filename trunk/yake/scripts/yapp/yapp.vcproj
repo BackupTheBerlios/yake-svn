@@ -408,6 +408,28 @@
 				RelativePath="..\..\yapp\base\event\yakeMessageQ.h">
 			</File>
 		</Filter>
+		<Filter
+			Name="loader"
+			Filter="">
+			<File
+				RelativePath="..\..\yapp\loader\yakeDotLinkLoader.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\loader\yakeDotScene.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\loader\yakeModelLinkCreator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\loader\yakeModelLinkCreator.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\loader\yakeModelMovableLinkCreator.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\loader\yakeModelMovableLinkCreator.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
