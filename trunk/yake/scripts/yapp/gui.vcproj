@@ -139,6 +139,9 @@
 				RelativePath="..\..\yapp\gui\precompiled.h">
 			</File>
 			<File
+				RelativePath="..\..\yapp\gui\renderer_adapter_base.h">
+			</File>
+			<File
 				RelativePath="..\..\yapp\gui\static_text_base.h">
 			</File>
 			<File

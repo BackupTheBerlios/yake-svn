@@ -4,8 +4,9 @@
 #include <yake/base/mpl/dispatch_arbitrary_types.h>
 #include <yake/base/mpl/get_type_or_null.h>
 
+#include <yake/base/type_info.h>
+
 #include "static_init.h"
-#include "type_info.h"
 #include "events.h"
 
 extern "C"

@@ -194,9 +194,6 @@
 				RelativePath="..\..\yake\reflection\staticmethod.h">
 			</File>
 			<File
-				RelativePath="..\..\yake\reflection\type_info.h">
-			</File>
-			<File
 				RelativePath="..\..\yake\reflection\utility.h">
 			</File>
 			<Filter
