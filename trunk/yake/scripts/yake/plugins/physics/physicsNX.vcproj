@@ -141,6 +141,9 @@
 				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeJointNx.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeMaterialNx.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -183,6 +186,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeJointNx.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeMaterialNx.h">
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakePCH.h">
