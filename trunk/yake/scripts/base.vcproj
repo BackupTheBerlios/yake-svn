@@ -485,13 +485,10 @@
 					RelativePath="..\inc\base\prerequisites\yakePrerequisitesVC.h">
 				</File>
 				<File
-					RelativePath="..\inc\base\prerequisites\yakePrerequisitesVC6.h">
+					RelativePath="..\inc\base\prerequisites\yakePrerequisitesVC71Types.h">
 				</File>
 				<File
-					RelativePath="..\inc\base\prerequisites\yakePrerequisitesVC7.h">
-				</File>
-				<File
-					RelativePath="..\inc\base\prerequisites\yakePrerequisitesVC71.h">
+					RelativePath="..\inc\base\prerequisites\yakePrerequisitesVC71Warnings.h">
 				</File>
 				<File
 					RelativePath="..\inc\base\prerequisites\yakeStringGCC.h">
