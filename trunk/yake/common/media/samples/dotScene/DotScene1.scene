@@ -1,4 +1,4 @@
-<scene formatversion=0.0 >
+<scene formatVersion=0.0 >
 	<nodes>
 		<node name="Dummy01" id="1" >
 			<position x="-2.09218" y="-0.891768" z="77.0367" />
@@ -15,8 +15,8 @@
 					<entity
 						name="Sphere02"
 						id="4"
-						meshfile ="Sphere02.mesh"
-						materialfile="DotScene.material"
+						meshFile ="Sphere02.mesh"
+						materialFile="DotScene.material"
 					/>
 				</node>
 				<node name="Sphere01" id="5" >
@@ -26,15 +26,15 @@
 					<entity
 						name="Sphere01"
 						id="6"
-						meshfile ="Sphere01.mesh"
-						materialfile="DotScene.material"
+						meshFile ="Sphere01.mesh"
+						materialFile="DotScene.material"
 					/>
 				</node>
 				<entity
 					name="Box01"
 					id="7"
-					meshfile ="Box01.mesh"
-					materialfile="DotScene.material"
+					meshFile ="Box01.mesh"
+					materialFile="DotScene.material"
 				/>
 			</node>
 			<node name="Fspot01" id="8" >
@@ -48,14 +48,14 @@
 					visible="true" >
 					<position x="0.0" y="0.0" z="0.0" />
 					<normal x="0.0" y="0.0" z="1.0" />
-					<colour_diffuse r="0.412941" g="0.346235" b="0.81" />
-					<colour_specular r="0.412941" g="0.346235" b="0.81" />
-					<light_range
+					<colourDiffuse r="0.412941" g="0.346235" b="0.81" />
+					<colourSpecular r="0.412941" g="0.346235" b="0.81" />
+					<lightRange
 						inner="23.0"
 						outer="63.6"
 						falloff="1.0"
 					/>
-					<light_attenuation
+					<lightAttenuation
 						range="103.039"
 						constant="1.0"
 						linear="0.0"
@@ -73,9 +73,9 @@
 					type="point"
 					visible="true" >
 					<position x="0.0" y="0.0" z="0.0" />
-					<colour_diffuse r="0.81" g="0.81" b="0.0" />
-					<colour_specular r="0.81" g="0.81" b="0.0" />
-					<light_attenuation
+					<colourDiffuse r="0.81" g="0.81" b="0.0" />
+					<colourSpecular r="0.81" g="0.81" b="0.0" />
+					<lightAttenuation
 						range="103.039"
 						constant="1.0"
 						linear="0.0"
