@@ -17,6 +17,11 @@
    Place - Suite 330, Boston, MA 02111-1307, USA, or go to
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
+   If you are interested in another license model contact the Yake Team via
+   E-Mail: team@yake.org.
+   For more information see the LICENSE file in the root directory of the
+   source code distribution.
+   ------------------------------------------------------------------------------------
 */
 // The following ifdef block is the standard way of creating macros which make exporting 
 // from a DLL simpler. All files within this DLL are compiled with the SCRIPTINGLUA_EXPORTS
@@ -32,16 +37,19 @@
 
 SCRIPTINGBINDINGSLUA_API yake::base::Plugin* dynlibStartPlugin(void);
 
+using namespace yake::base;
+using namespace yake::base::templates;
+
 class LuaBindingsPlugin : public yake::scripting::ScriptingBindingsPlugin
 {
 public:
 	LuaBindingsPlugin();
 	virtual ~LuaBindingsPlugin();
 
-	virtual yake::base::String getName() const;
+	virtual String getName() const;
 	//virtual yake::version getVersion() const;
 	virtual bool initialise();
 	virtual bool shutdown();
 
-	virtual void bind( yake::scripting::IVM * pVM );
+	virtual SharedPtr<yake::scripting::IBinder> createBinder();
 };

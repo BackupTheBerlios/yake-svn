@@ -17,11 +17,19 @@
    Place - Suite 330, Boston, MA 02111-1307, USA, or go to
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
+   If you are interested in another license model contact the Yake Team via
+   E-Mail: team@yake.org.
+   For more information see the LICENSE file in the root directory of the
+   source code distribution.
+   ------------------------------------------------------------------------------------
 */
-// scriptingLua.cpp : Defines the entry point for the DLL application.
-//
 
-#include <plugins/yakeScriptingLuaBindings/inc/pch.h>
+#include <inc/plugins/scriptingLuaBindings/pch.h>
+#include <inc/plugins/scriptingLuaBindings/yakeBinder.h>
+
+using namespace yake;
+using namespace yake::base;
+using namespace yake::base::templates;
 
 //---------------------------------------------------------
 // This is an example of an exported function.
@@ -65,7 +73,7 @@ bool LuaBindingsPlugin::shutdown()
 }
 
 //---------------------------------------------------------
-void LuaBindingsPlugin::bind( yake::scripting::IVM * pVM )
+SharedPtr<scripting::IBinder> LuaBindingsPlugin::createBinder()
 {
-	YAKE_ASSERT( pVM ).debug("Cannot bind to VM. Need a valid ptr.");
+	return SharedPtr<scripting::IBinder>( new scripting::binder::lua::Binder() );
 }
