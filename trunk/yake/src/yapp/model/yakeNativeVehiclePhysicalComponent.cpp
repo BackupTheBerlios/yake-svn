@@ -131,8 +131,13 @@ namespace vehicle {
 		//mpChassis = mpPWorld->createBox(1,1,1);
 		mpChassis = mpPWorld->createEmptyPhysicsObject();
 		mpChassis->setBody( mpPWorld->createBody() );
-		mpChassis->getBody()->setMass( tpl.chassisTpl_.mass_ );
 		mpChassis->setPosition( tpl.chassisTpl_.position_ );
+		mpChassis->getBody()->setMassBox( tpl.chassisTpl_.dimensions_.x, tpl.chassisTpl_.dimensions_.y, tpl.chassisTpl_.dimensions_.y, 1. );
+		mpChassis->getBody()->setMass( tpl.chassisTpl_.mass_ );
+		mpChassis->getBody()->translateMass( Vector3(0,-1,0) );
+		mpChassis->setSoftness( 0.01 );
+		mpChassis->setFriction( 5 ); // 100
+		mpChassis->setFriction2( 0.1 ); // 2
 
 		ConstVectorIterator< VehicleTemplate::GeomTemplateList > geomIt( tpl.chassisTpl_.geoms_.begin(), tpl.chassisTpl_.geoms_.end() );
 		while (geomIt.hasMoreElements())
