@@ -73,6 +73,9 @@ namespace physics {
 		virtual void setCurrentSolverParam( const String& rName, const boost::any& rValue ) = 0;
 
 		virtual void step(const real timeElapsed) = 0;
+
+		typedef Signal0<void> PostStepSignal;
+		virtual void subscribeToPostStep(const PostStepSignal::slot_type& slot) = 0;
 	};
 
 }

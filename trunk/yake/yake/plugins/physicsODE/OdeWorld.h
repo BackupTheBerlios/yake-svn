@@ -85,11 +85,11 @@ namespace physics {
 			real _getStepSize() const
 			{ return mStepSize; }
 
-			typedef Signal1< void(real) > PostStepSignal;
-			base::templates::SignalConnection connectToPostStep( const PostStepSignal::slot_type & slot )
+			virtual void subscribeToPostStep(const PostStepSignal::slot_type& slot)
 			{
-				return mPostStepSignal.connect( slot );
+				mPostStepSignal.connect( slot );
 			}
+
 			
 			dTriMeshDataID getMeshDataById(  TriangleMeshId id ) const;
 		

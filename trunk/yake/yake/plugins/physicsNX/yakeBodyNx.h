@@ -35,9 +35,9 @@ namespace physics {
 		virtual void setMass(const real mass);
 		virtual real getMass() const;
 		virtual void setMass( const MassDesc& rDesc )
-		{ YAKE_ASSERT( 0 && "NOT IMPLEMENTED" ).warning("NOT IMPLEMENTED!"); }
+		{ YAKE_ASSERT( 0 && "BodyNx::setMass() NOT IMPLEMENTED" ).warning("NOT IMPLEMENTED!"); }
 		virtual void addMass( const MassDesc& rDesc )
-		{ YAKE_ASSERT( 0 && "NOT IMPLEMENTED" ).warning("NOT IMPLEMENTED!"); }
+		{ YAKE_ASSERT( 0 && "BodyNx::addMass() NOT IMPLEMENTED" ).warning("NOT IMPLEMENTED!"); }
 
 		virtual void setLinearVelocity(const Vector3 & rkVelocity);
 		virtual Vector3 getLinearVelocity() const;

@@ -78,6 +78,10 @@ namespace physics {
 
 		virtual void step(const real timeElapsed);
 
+		PostStepSignal postStepSignal_;
+		virtual void subscribeToPostStep(const PostStepSignal::slot_type& slot)
+		{ postStepSignal_.connect( slot ); }
+
 		//-- NxUserContactReport interface
 		virtual NxU32 onPairCreated(NxActor& s1, NxActor& s2);
 		virtual void onContactNotify (NxContactPair &pair, NxU32 events);
