@@ -78,7 +78,7 @@ namespace app {
 
 	void createDebugGeometryForComplexPhysical(
 				const physics::IComplexObject* pComplex,
-				graphics::IGraphicalWorld* pWorld,
+				graphics::IWorld* pWorld,
 				Vector<graphics::ISceneNode*> & nodes,
 				SharedMUCList & ctrlrs,
 				const String & overrideMesh = "",
@@ -139,7 +139,7 @@ namespace app {
 
 	void createDebugGeometryForComplexPhysical(
 				const physics::IComplexObject* pComplex,
-				graphics::IGraphicalWorld* pWorld,
+				graphics::IWorld* pWorld,
 				SharedSceneNodeList & nodes,
 				SharedMUCList & ctrlrs,
 				const String & overrideMesh = "",

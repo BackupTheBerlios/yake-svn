@@ -47,7 +47,7 @@ namespace model {
 		void addSceneNode( graphics::ISceneNode* pSceneNode, const String & rName, bool bTransferOwnership = true );
 		SceneNodeList getRootSceneNodes() const;
 		graphics::ISceneNode* getSceneNodeByName( const String & rName );
-		void fromDotScene(const String & fn, graphics::IGraphicalWorld* pGWorld);
+		void fromDotScene(const String & fn, graphics::IWorld* pGWorld);
 	private:
 		struct SceneNodeEntry
 		{

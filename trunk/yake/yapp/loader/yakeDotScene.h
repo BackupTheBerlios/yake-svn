@@ -55,7 +55,7 @@ namespace dotscene {
 			\return 
 		*/
 		virtual bool load(	const SharedPtr<dom::INode> & docNode,
-							graphics::IGraphicalWorld* pGWorld);
+							graphics::IWorld* pGWorld);
 
 		SceneNodeList getRootLevelSceneNodes() const;
 		String getNameForSceneNode( graphics::ISceneNode* pSceneNode ) const
@@ -91,7 +91,7 @@ namespace dotscene {
 
 	private:
 		SharedPtr<dom::INode>					mDocNode;
-		graphics::IGraphicalWorld*				mGWorld;
+		graphics::IWorld*				mGWorld;
 		SceneNodeList							mRootNodes;
 
 		typedef templates::AssocVector<graphics::ISceneNode*, String> SceneNodeNameMap;
@@ -112,7 +112,7 @@ namespace dotscene {
 	//------------------------------------------------------
 	bool DotSceneSerializer::load(
 							const SharedPtr<dom::INode> & docNode,
-							graphics::IGraphicalWorld* pGWorld)
+							graphics::IWorld* pGWorld)
 	{
 		std::cout << "load()" << std::endl;
 		YAKE_ASSERT( docNode.get() );

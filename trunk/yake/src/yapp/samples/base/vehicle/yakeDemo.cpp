@@ -215,9 +215,9 @@ public:
 	class RenderTask : public task::DefTask
 	{
 	private:
-		IGraphicalWorld*	mWorld;
+		IWorld*	mWorld;
 	public:
-		RenderTask( IGraphicalWorld* pWorld );
+		RenderTask( IWorld* pWorld );
 		virtual void execute(real timeElapsed);
 	};
 	RenderTask*							mRenderTask;
@@ -247,7 +247,7 @@ public:
 	//@}
 
 	//@{ name worlds
-	SharedPtr< IGraphicalWorld >			mGWorld;
+	SharedPtr< IWorld >			mGWorld;
 	physics::IWorld*						mPWorld;
 	audio::IWorld*							mpAWorld;
 	//@}
@@ -575,7 +575,7 @@ public:
 	}
 };
 
-	TheApp::RenderTask::RenderTask(IGraphicalWorld* pWorld) :
+	TheApp::RenderTask::RenderTask(IWorld* pWorld) :
 		DefTask( -1, task::TASKPRIO_HIGH ),
 		mWorld(pWorld)
 	{

@@ -74,7 +74,7 @@ namespace model {
 		return itFind->second.pSN;
 	}
 	//-----------------------------------------------------
-	void Graphical::fromDotScene(const String & fn, graphics::IGraphicalWorld* pGWorld)
+	void Graphical::fromDotScene(const String & fn, graphics::IWorld* pGWorld)
 	{
 		YAKE_ASSERT( pGWorld );
 	
