@@ -21,6 +21,8 @@
 namespace yake {
 namespace graphics {
 
+	class IEffect;
+
 	/**
 	*/
 	class IParticleSystem

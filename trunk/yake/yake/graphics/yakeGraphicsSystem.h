@@ -46,6 +46,8 @@ namespace graphics {
 struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem 
 	//: public AbstractFactory< sequences::list< IWorld > >
 {
+	YAKE_DECLARE_REGISTRY_0( IGraphicsSystem, yake::base::String )
+	
 	// Destructor.
 	virtual ~IGraphicsSystem();
 
@@ -53,8 +55,6 @@ struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem
 
 	typedef Signal0<void> ShutdownSignal;
 	virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot ) = 0;
-
-YAKE_DECLARE_REGISTRY_0( IGraphicsSystem, yake::base::String )
 };
 
 } // graphics
