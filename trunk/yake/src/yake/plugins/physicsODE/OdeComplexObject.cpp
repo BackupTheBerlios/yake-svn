@@ -263,6 +263,7 @@ namespace physics {
 
 		if (n > 0)
 		{
+			// fire collision events
 			CollisionList::iterator itFind = mCollisions.find( pOther );
 			if (itFind == mCollisions.end())
 			{
