@@ -28,7 +28,7 @@ struct convert_any
 {
 	static void convert(lua_State* L, const boost::any& a)
 	{
-		typename luabind::detail::default_policy::template generate_converter<T, luabind::detail::cpp_to_lua>::type conv;
+		typename luabind::detail::default_policy::template generate_converter<T/*, lua*/bind::detail::cpp_to_lua>::type conv;
 
 		conv.apply(L, *boost::any_cast<T>(&a));
 	}
@@ -65,14 +65,14 @@ namespace luabind
 		{
 			using namespace rx::lua;
 			detail::default_policy::generate_converter<bool, detail::lua_to_cpp>::type converter;
-			return converter.apply(L, LUABIND_DECORATE_TYPE(bool), index);
+			return converter.apply(L/*, lua*/BIND_DECORATE_TYPE(bool), index);
 		}
 
 		int match_lua_to_cpp(lua_State * L, boost::any, int index)
 		{
 			using namespace rx::lua;
 			typedef detail::default_policy::generate_converter<bool, detail::lua_to_cpp>::type converter_t;
-			return converter_t::match(L, LUABIND_DECORATE_TYPE(bool), index);
+			return converter_t::match(L/*, lua*/BIND_DECORATE_TYPE(bool), index);
 		}
 
 	}

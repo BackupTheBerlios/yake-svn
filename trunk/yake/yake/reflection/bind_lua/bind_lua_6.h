@@ -2,8 +2,6 @@
 #define _BIND_LUA_H_
 
 #include <yake/base/mpl/dispatch_arbitrary_types.h>
-#include <yake/base/mpl/get_type_or_null.h>
-
 #include <yake/base/type_info.h>
 
 #include "static_init.h"
@@ -167,7 +165,7 @@ static void commit_lua_methods() \
 /* callback this is declared as private in crep */ \
 struct luabind_callback_fix \
 {\
-	boost::function2<int, lua_State*, int> func; \
+	boost::function2<int/*, lua*/_State*, int> func; \
 	int pointer_offset; \
 }; \
 \
@@ -180,14 +178,14 @@ static void commit_lua_properties() \
 \
 	/* get adddress of private class member of class_<> */ \
 	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
-	std::map<const char*, luabind_callback_fix, detail::ltstr> * class_getters = NULL; \
-	std::map<const char*, luabind_callback_fix, detail::ltstr> * class_setters = NULL; \
+	std::map<const char*/*, lua*/bind_callback_fix, detail::ltstr> * class_getters = NULL; \
+	std::map<const char*/*, lua*/bind_callback_fix, detail::ltstr> * class_setters = NULL; \
 	__ASM_OFFSET__(class_getters, [lua_class], asm_lua_class_type_fix::m_getters); \
 	__ASM_OFFSET__(class_setters, [lua_class], asm_lua_class_type_fix::m_setters); \
 \
 	/* get adddress of private class member of class_rep */ \
-	std::map<const char*, luabind_callback_fix, detail::ltstr> * crep_getters = NULL; \
-	std::map<const char*, luabind_callback_fix, detail::ltstr> * crep_setters = NULL; \
+	std::map<const char*/*, lua*/bind_callback_fix, detail::ltstr> * crep_getters = NULL; \
+	std::map<const char*/*, lua*/bind_callback_fix, detail::ltstr> * crep_setters = NULL; \
 	__ASM_OFFSET__(crep_getters, [lua_crep], detail::class_rep::m_getters); \
 	__ASM_OFFSET__(crep_setters, [lua_crep], detail::class_rep::m_setters); \
 \

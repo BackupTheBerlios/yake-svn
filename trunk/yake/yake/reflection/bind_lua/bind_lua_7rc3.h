@@ -1,10 +1,13 @@
 #ifndef _LUA_H_
 #define _LUA_H_
 
+#include <iostream>
+
+#include <yake/base/mpl/dispatch_arbitrary_types.h>
+#include <yake/base/type_info.h>
+
 #include "static_init.h"
-#include "type_info.h"
-#include "construct_type_from_arbitrary_types.h"
-#include "get_type_or_null.h"
+#include "events.h"
 
 extern "C"
 {
@@ -66,25 +69,41 @@ Step 7: _now_ we can use the properties and methods within lua => "o.a=5; o:foo(
 
 // -----------------------------------------
 // lua state
-struct global_lua_state
+static struct global_lua_state
 {
-	global_lua_state() : m_L(lua_open())
-	{	// open lua
-		lua_baselibopen(m_L);
-		luabind::open(m_L);
-	}
+	struct holder
+	{
+		holder() : m_L(lua_open())
+		{	// open lua
+			lua_baselibopen(m_L);
+			luabind::open(m_L);
+		}
+
+		~holder()
+		{ lua_close(m_L); }
+
+		lua_State * m_L;
+	};
+	static holder * m_holder;
 
 	~global_lua_state()
-	{ lua_close(m_L); }
+	{	
+		if(m_holder)
+		{ 
+			delete m_holder;
+			m_holder = NULL;
+		}
+	}
 
 	lua_State * get()
-	{	return m_L;	}
+	{	
+		if(!m_holder) m_holder = new holder();
+		return m_holder->m_L;	
+	}
 
 	operator lua_State*()
-	{	return m_L;	}
-
-	lua_State * m_L;
-} L;
+	{	return get();	}
+} L; 
 
 // -----------------------------------------
 // lua class bindings
@@ -230,7 +249,7 @@ struct signature_holder {};
 template <bool Constant, typename T1, typename T2, typename T3>
 struct signature_holder<0, Constant, T1, T2, T3> 
 {
-  static luabind::detail::application_operator
+	static luabind::detail::application_operator
 	< 
 		luabind::constructor<>, 
 		Constant
