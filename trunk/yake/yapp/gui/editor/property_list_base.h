@@ -1,7 +1,7 @@
-#ifndef _YAPP_GUI_PROPERTY_LIST_BASE_H_
-#define _YAPP_GUI_PROPERTY_LIST_BASE_H_
+#ifndef _YAPP_GUI_EDITOR_PROPERTY_LIST_BASE_H_
+#define _YAPP_GUI_EDITOR_PROPERTY_LIST_BASE_H_
 
-#include "plugin/property_list.h" // todo remove
+#include <yapp/plugins/guiCEGUI/editor/property_list.h> // todo remove
 
 namespace yake
 {
@@ -46,4 +46,4 @@ typedef property_list_base::info property_list;
 } // namespace gui
 } // namespace yake
 
-#endif // _YAPP_GUI_PROPERTY_LIST_BASE_H_
+#endif // _YAPP_GUI_EDITOR_PROPERTY_LIST_BASE_H_

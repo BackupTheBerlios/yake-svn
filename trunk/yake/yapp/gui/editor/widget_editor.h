@@ -5,8 +5,7 @@
 #include <CEGUI.h>
 
 #include "edit_window_visitor.h"
-
-#include "../property_list_base.h"
+#include "property_list_base.h"
 
 namespace yake
 {

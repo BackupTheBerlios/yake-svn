@@ -1,4 +1,5 @@
-#include <yapp/gui/multi_line_edit_box_base.h>
+#include "multi_line_edit_box_base.h"
+#include <typeinfo>
 
 namespace yake
 {

@@ -6,10 +6,9 @@
 #include <CEGUI.h>
 #include <reflection.h>
 
-#include "../control_base.h"
-#include "../point.h"
-#include "../config.h"
-#include "../compare_sequences.h"
+#include <yapp/gui/control_base.h>
+#include <yapp/gui/point.h>
+#include <yapp/gui/config.h>
 
 namespace yake
 {

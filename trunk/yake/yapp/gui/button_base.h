@@ -15,8 +15,8 @@
 #include "control_base.h"
 #include "point.h"
 
-#include "cegui_event_adaptor.h"
-#include "cegui_util.h"
+#include <yapp/plugins/guiCEGUI/event_adaptor.h> // todo remove
+#include <yapp/plugins/guiCEGUI/util.h>
 
 namespace yake
 {

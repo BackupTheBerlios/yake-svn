@@ -1,5 +1,5 @@
-#include <yapp/gui/editor/edit_window_visitor.h>
-#include <yapp/gui/editor/widget_editor.h>
+#include "editor/edit_window_visitor.h"
+#include "editor/widget_editor.h"
 
 namespace yake
 {

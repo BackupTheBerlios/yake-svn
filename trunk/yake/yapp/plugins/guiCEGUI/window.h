@@ -1,10 +1,10 @@
-#ifndef _WINDOW_H_
-#define _WINDOW_H_
+#ifndef _YAPP_PLUGINS_CEGUI_WINDOW_H_
+#define _YAPP_PLUGINS_CEGUI_WINDOW_H_
 
 #include <boost/lexical_cast.hpp>
 
-#include "window_base.h"
-#include "cegui_util.h"
+#include <yapp/gui/window_base.h>
+#include "util.h"
 
 #define YAKE_DEFINE_CEGUI_WIDGET_INFO(CONCRETE_WIDGET, URL_PREFIX, CLASS_NAME) \
 public: \
@@ -160,4 +160,4 @@ private: // data
 } // namespace gui
 } // namespace yake
 
-#endif // _WINDOW_H_
+#endif // _YAPP_PLUGINS_CEGUI_WINDOW_H_

@@ -1,12 +1,17 @@
 #ifndef _YAPP_GUI_CONFIG_H_
 #define _YAPP_GUI_CONFIG_H_
 
-#include <yake/base/mpl/sequences>
+#include <yake/base/mpl/sequences.h>
+#include <yake/base/mpl/compare_sequences.h>
+#include <yake/base/mpl/get_type_or_null.h>
+#include <yake/base/mpl/dispatch_arbitrary_types.h>
 
 namespace yake
 {
 namespace gui
 {
+
+using namespace yake::base::mpl;
 
 /* compile time flags */
 // enable/disable lua bindings
@@ -30,7 +35,7 @@ namespace gui
 /* implemented types */
 // properties
 struct point;
-typedef yake::base::mpl::sequences::list
+typedef sequences::list
 	<
 		bool,
 		float,
@@ -42,7 +47,7 @@ typedef yake::base::mpl::sequences::list
 class button_base;
 class static_text_base;
 class multi_line_edit_box_base;
-typedef yake::base::mpl::sequences::list
+typedef sequences::list
 	<
 		button_base,
 		static_text_base,
@@ -63,26 +68,26 @@ struct list_holder<0,  T1, T2, T3>; // throw compile time error
 template <typename T1, typename T2, typename T3>
 struct list_holder<1,  T1, T2, T3>
 { 
-	typedef yake::base::mpl::sequences::list<T1> type; 
+	typedef sequences::list<T1> type; 
 };
 
 template <typename T1, typename T2, typename T3>
 struct list_holder<2,  T1, T2, T3>
 { 
-	typedef yake::base::mpl::sequences::list<T1, T2> type; 
+	typedef sequences::list<T1, T2> type; 
 };
 
 template <typename T1, typename T2, typename T3>
 struct list_holder<3,  T1, T2, T3>
 { 
-	typedef yake::base::mpl::sequences::list<T1, T2, T3> type; 
+	typedef sequences::list<T1, T2, T3> type; 
 };
 
 template<typename T1 = null_type, typename T2 = null_type, typename T3 = null_type>
 struct get_type_list : dispatch_arbitrary_types<list_holder, T1, T2, T3> {};
 
 #define YAKE_STATIC_ASSERT_WIDGETS(WIDGET1, WIDGET2, WIDGET3, WIDGET4) \
-YAKE_STATIC_ASSERT( \ 
+YAKE_STATIC_ASSERT( \
    (compare_sequences \
 	 < \
 	    implemented_widgets, /* conditional types */ \
@@ -92,7 +97,7 @@ YAKE_STATIC_ASSERT( \
         typename yake::base::mpl::get_type_or_null<WIDGET2>::type, \
         typename yake::base::mpl::get_type_or_null<WIDGET3>::type \
       >::type \
-   >::type::value), 
+   >::type::value), \
    conditional_and_implemented_widget_lists_do_not_match);
 
 

@@ -2,7 +2,7 @@
 #define _YAPP_GUI_DEFAULT_WINDOW_H_
 
 #include "window_base.h"
-#include "cegui_window.h"
+#include <yapp/plugins/guiCEGUI/window.h>
 
 namespace yake
 {

@@ -2,7 +2,7 @@
 #define _YAPP_GUI_EDITOR_EDIT_WIDGET_H_
 
 #include "control_base.h"
-#include "plugin/edit_widget.h" // todo remove
+#include <yapp/plugins/guiCEGUI/editor/edit_widget.h> // todo remove
 
 namespace yake
 {

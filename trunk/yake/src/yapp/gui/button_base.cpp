@@ -1,4 +1,5 @@
-#include <yapp/gui/button_base.h>
+#include "button_base.h"
+#include <typeinfo>
 
 namespace yake
 {

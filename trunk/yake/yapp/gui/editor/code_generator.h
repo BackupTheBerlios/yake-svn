@@ -1,8 +1,7 @@
 #ifndef _YAPP_GUI_EDITOR_CODE_GENERATOR_H_
 #define _YAPP_GUI_EDITOR_CODE_GENERATOR_H_
 
-#include "../config.h"
-#include "../compare_sequences.h"
+#include "config.h"
 
 /*
 class 'chat_window' (default_window)

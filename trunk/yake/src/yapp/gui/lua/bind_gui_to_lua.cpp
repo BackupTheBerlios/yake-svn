@@ -1,8 +1,8 @@
-#include <yapp/gui/lua/bind_gui_to_lua.h>
+#include "lua/bind_gui_to_lua.h"
 
-#include <yapp/gui/default_window.h>
-#include <yapp/gui/button_base.h>
-#include <yapp/gui/static_text_base.h>
+#include "default_window.h"
+#include "button_base.h"
+#include "static_text_base.h"
 
 #include <luabind/return_reference_to_policy.hpp>
 #include <luabind/iterator_policy.hpp>

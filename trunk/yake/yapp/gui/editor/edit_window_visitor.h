@@ -3,8 +3,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "../edit_widget.h"
-#include "../container_control_base.h"
+#include "edit_widget.h"
+#include "container_control_base.h"
 
 namespace yake
 {
