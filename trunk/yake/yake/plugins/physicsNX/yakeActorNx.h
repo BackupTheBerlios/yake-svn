@@ -26,10 +26,11 @@ namespace physics {
 
 	class BodyNx;
 	class ShapeNx;
+	class WorldNx;
 	class ActorNx : public IActor
 	{
 	public:
-		ActorNx( NxScene & rScene );
+		ActorNx( NxScene & rScene, WorldNx & rWorld );
 		virtual ~ActorNx();
 
 		virtual bool hasBody() const;
@@ -56,9 +57,11 @@ namespace physics {
 			YAKE_ASSERT( mpNxActor );
 			return mpNxActor; 
 		}
+		SignalCollisionEntered	fireCollisionEntered;
 	private:
 		NxActor*	mpNxActor;
 		NxScene&	mNxScene;
+		WorldNx&	mWorld;
 
 		typedef Deque< SharedPtr<ShapeNx> > Shapes;
 		Shapes		mShapes;

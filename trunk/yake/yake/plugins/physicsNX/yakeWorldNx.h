@@ -24,8 +24,9 @@
 namespace yake {
 namespace physics {
 
+	class ActorNx;
 	class MaterialNx;
-	class WorldNx : public IWorld
+	class WorldNx : public IWorld, public NxUserContactReport
 	{
 	public:
 		WorldNx();
@@ -48,8 +49,13 @@ namespace physics {
 
 		virtual void step(const real timeElapsed);
 
+		//-- NxUserContactReport interface
+		virtual void onContactNotify (NxContactPair &pair, NxU32 events);
+
 		//-- helpers
 		bool init_();
+		void regActor_(NxActor* pNxActor, ActorNx* pActor);
+		void unregActor_(NxActor* pNxActor);
 
 		typedef Signal1<void(const real)> StepSignal;
 		StepSignal	stepSignal;
@@ -57,6 +63,9 @@ namespace physics {
 	private:
 		String					mCurrentSolver;
 		NxScene*				mpScene;
+
+		typedef AssocVector< NxActor*, ActorNx* > ContactActorMap;
+		ContactActorMap			mContactActors;
 	};
 
 }

@@ -45,12 +45,16 @@ namespace physics {
 		virtual void update_(const real timeElapsed);
 	private:
 		bool		mJumping;
+		bool		mJumpInitiated;
 		bool		mDucking;
 		Vector3		mPosition;
 		Vector3		mTargetVelocity;
 		NxScene&	mNxScene;
 		real		mTargetHeightAboveGround;
 		SignalConnection mStepSigConn;
+		real		mRadius;
+
+		SharedPtr<IActor> mBall;
 	};
 
 }
