@@ -19,6 +19,11 @@ namespace virtualfs
 struct YAKE_VIRTUALFS_API seekable_ressource 
 {
 private:
+	// workaround: we need this small file handle holder for 
+	// reference counting using the shared pointer,
+	// because boost::io is using the copy constructor
+	// several times and we can't just put the close_file
+	// call into the deconstructor.
 	struct file_object
 	{
 		file_object( const handle this_file );
