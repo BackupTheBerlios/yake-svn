@@ -8,16 +8,14 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-// Std
+// std
 #include <memory>
 #include <string>
-// Yake
+// yake
 #include <yake/base/yake.h>
 #include <yake/base/mpl/yakeAbstractFactory.h>
 #include <yake/base/mpl/sequences.h>
-
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/ice.hpp>
+// boost
 #include <boost/mpl/begin.hpp>
 #include <boost/mpl/iterator_range.hpp>
 #include <boost/mpl/find.hpp>

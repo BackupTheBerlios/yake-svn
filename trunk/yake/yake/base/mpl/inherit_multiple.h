@@ -29,6 +29,7 @@
 #include <boost/mpl/lambda.hpp>
 
 #include "yakeNullType.h"
+#include "yakeFunctions.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
