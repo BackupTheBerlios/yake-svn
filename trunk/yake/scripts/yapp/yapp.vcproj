@@ -42,7 +42,7 @@
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
-				ImportLibrary="../../common/lib/debug/$(ProjectName).lib"
+				ImportLibrary="../../common/lib/$(ConfigurationName)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -74,7 +74,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../../;../../dependencies;../../dependencies/boost;../../dependencies/ttl"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;YAPP_BASE_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;YAPP_BASE_EXPORTS;YAPP_GUI_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
@@ -95,7 +95,7 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="../common/lib/$(ConfigurationName)/$(ProjectName).lib"
+				ImportLibrary="../../common/lib/$(ConfigurationName)/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
