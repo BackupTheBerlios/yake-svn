@@ -33,6 +33,7 @@
 #include <yapp/model/yakeVehicle.h>
 #include <yapp/base/event/yakeEvent.h>
 #include <yapp/statemachine/yakeFiniteStateMachine.h>
+#include <yapp/base/yakeTask.h>
 /*
 #include <yapp/gui/yappGUIVisual.h>
 #include <yapp/gui/yappButton.h>
