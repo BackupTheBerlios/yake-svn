@@ -250,10 +250,11 @@ namespace physics {
 		{
 			SphereDesc(	real radius_ = real(1.),
 						// base class:
+						IMaterial* material_ = 0,
 						const Vector3 & rkPosition = Vector3::kZero, 
 						const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_SPHERE, rkPosition, rkOrientation ),
+				Desc( ST_SPHERE, rkPosition, rkOrientation, material_ ),
 				radius( radius_ )
 			{}
 			real		radius;
@@ -262,10 +263,11 @@ namespace physics {
 		{
 			BoxDesc(	const Vector3 & rkDimensions = Vector3(1,1,1),
 						// base class:
+						IMaterial* material_ = 0,
 						const Vector3 & rkPosition = Vector3::kZero, 
 						const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_BOX, rkPosition, rkOrientation ),
+				Desc( ST_BOX, rkPosition, rkOrientation, material_ ),
 				dimensions( rkDimensions )
 			{}
 			Vector3		dimensions;
@@ -275,10 +277,11 @@ namespace physics {
 			PlaneDesc(	const Vector3 & rkNormal = Vector3(0,1,0),
 						const real d_ = real(1.),
 						// base class:
+						IMaterial* material_ = 0,
 						const Vector3 & rkPosition = Vector3::kZero, 
 						const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_PLANE, rkPosition, rkOrientation ),
+				Desc( ST_PLANE, rkPosition, rkOrientation, material_ ),
 				normal( rkNormal ),
 				d( d_ )
 			{}
@@ -290,10 +293,11 @@ namespace physics {
 			CapsuleDesc(const real height_ = real(2.),
 						const real radius_ = real(1.),
 						// base class:
+						IMaterial* material_ = 0,
 						const Vector3 & rkPosition = Vector3::kZero, 
 						const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_CAPSULE, rkPosition, rkOrientation ),
+				Desc( ST_CAPSULE, rkPosition, rkOrientation, material_ ),
 				height( height_ ),
 				radius( radius_ )
 			{}
@@ -305,10 +309,11 @@ namespace physics {
 		{
 			TriMeshDesc(	const TriangleMeshId meshId_,
 							// base class:
+							IMaterial* material_ = 0,
 							const Vector3 & rkPosition = Vector3::kZero, 
 							const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_TRIANGLE_MESH, rkPosition, rkOrientation ),
+				Desc( ST_TRIANGLE_MESH, rkPosition, rkOrientation, material_ ),
 				meshId( meshId_ )
 			{}
 			TriangleMeshId	meshId;
