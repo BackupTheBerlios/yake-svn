@@ -51,6 +51,11 @@ namespace physics {
 
 		// helpers
 		void onLastShapeIsAboutToDestroy();
+		NxActor* getNxActorPtr_() const
+		{ 
+			YAKE_ASSERT( mpNxActor );
+			return mpNxActor; 
+		}
 	private:
 		NxActor*	mpNxActor;
 		NxScene&	mNxScene;
