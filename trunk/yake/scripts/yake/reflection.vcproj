@@ -235,10 +235,6 @@
 					RelativePath="..\..\yake\reflection\bind_serialization\bind_serialization.h">
 				</File>
 			</Filter>
-			<Filter
-				Name="yake"
-				Filter="">
-			</Filter>
 		</Filter>
 		<Filter
 			Name="src"

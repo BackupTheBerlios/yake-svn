@@ -33,12 +33,6 @@ extern "C"
 # include <luabind/functor.hpp>
 #endif
 
-namespace // unnamed
-{
-	// using boost::lambda placeholders
-	boost::lambda::placeholder1_type _l1;
-}
-
 using namespace yake::base::mpl;
 
 // todo move this to yake::base
@@ -122,8 +116,7 @@ struct event : public event_base
 	// firing
 	virtual void fire(arg1 a1, arg2 a2)
 	{
-    using namespace boost::lambda;
-		std::for_each(handlers_.begin(), handlers_.end(), bind<void>(*_l1, a1, a2));
+		std::for_each(handlers_.begin(), handlers_.end(), boost::lambda::bind<void>(*boost::lambda::_1, a1, a2));
 	}
 
   void operator()(arg1 a1, arg2 a2)
@@ -232,8 +225,8 @@ struct event :
 	typedef std::vector< luabind::functor<void> > lua_functor_list;
 
 	// todo: do we have to do the same for the handlers of the base class as well?
-	event() /*: m_lua_functor_list(new lua_functor_list())*/ {}
-	event(const event & e) /*: m_lua_functor_list(e.m_lua_functor_list)*/ {}
+	event() : m_lua_functor_list(new lua_functor_list()) {}
+	event(const event & e) : m_lua_functor_list(e.m_lua_functor_list) {}
 
 	// add base functions to scope
 	using base::attach_handler;
@@ -252,7 +245,6 @@ struct event :
 
 	// -----------------------------------------
 	// lua
-	// todo: make lua bindings optional with define (see gui wrapper)
 
 #if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
 	// attach lua functor
@@ -292,6 +284,9 @@ struct event :
 };
 
 
+
+// luabind has problems with references to abstract classes (boxing)
+// so we simply convert the reference to a pointer (if the given type is a reference)
 namespace
 {
 	template <bool IsAbstractAndRef, typename T1>
@@ -309,8 +304,6 @@ namespace
 	};
 }
 
-
-
 template <typename T1>
 struct remove_ref_if_abstract_and_ref : 
 	remove_ref_if_abstract_and_ref_helper
@@ -318,7 +311,7 @@ struct remove_ref_if_abstract_and_ref :
 		boost::type_traits::ice_and
 		<
 			boost::is_reference<T1>::value, 
-			boost::is_polymorphic<typename boost::remove_reference<T1>::type>::value //boost::abstract<T1>::value todo: should be is_abstract, but is_abstract is not working?!
+			boost::is_abstract<typename boost::remove_reference<T1>::type>::value
 		>::value,
 		T1
 	>
@@ -341,8 +334,8 @@ struct event<arg1, null_type> :
 	typedef std::vector< luabind::functor<void> > lua_functor_list;
 
 	// todo: do we have to do the same for the handlers of the base class as well?
-	event() /*: m_lua_functor_list(new lua_functor_list())*/ {}
-	event(const event & e) /*: m_lua_functor_list(e.m_lua_functor_list)*/ {}
+	event() : m_lua_functor_list(new lua_functor_list()) {}
+	event(const event & e) : m_lua_functor_list(e.m_lua_functor_list) {}
 
 	// add base functions to scope
 	using base::attach_handler;

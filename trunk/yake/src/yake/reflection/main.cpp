@@ -150,13 +150,13 @@ public:
 
 // -----------------------------------------
 // event
-struct boo
+struct mi
 {
-	virtual ~boo() {}
+	virtual ~mi() {}
 };
 
 // rx class has to be the first subclass when using mi
-struct EventTest : public Registered, public boo
+struct EventTest : public Registered, public mi
 {
 	EventTest() {}
 	CLASS(EventTest, Registered, reg);
@@ -176,23 +176,26 @@ void handler(int fara)
 { std::cout << "handler(" << fara << ")\n"; }
 
 
+
 // -----------------------------------------
 // main
 int main()
 {
-	//todo: is_abstract not working?
-	//assert(boost::is_abstract<abstract_class>::value);
+	// test type traits for reflection::event
+	{
+		assert(boost::is_abstract<abstract_class>::value);
 
-	typedef const abstract_class & T1;
-	bool b =
-		boost::type_traits::ice_and
-		<
-			boost::is_reference<T1>::value, 
-			boost::is_polymorphic<typename boost::remove_reference<T1>::type>::value //todo: is_abstract?
-		>::value;
-	assert(b);
+		typedef const abstract_class & T1;
+		bool b =
+			boost::type_traits::ice_and
+			<
+				boost::is_reference<T1>::value, 
+				boost::is_abstract<typename boost::remove_reference<T1>::type>::value
+			>::value;
+		assert(b);
 
-	reflection::event<const abstract_class &> h;
+		reflection::event<const abstract_class &> h;
+	}
 	
 
 	// events

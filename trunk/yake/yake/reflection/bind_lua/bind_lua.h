@@ -205,7 +205,7 @@ static void commit_lua_properties() \
 	*crep_setters = *class_setters; \
 }
 
-#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUBAIND_7RC3)
+#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC3)
 
 #define DEFINE_LUA_CLASS(CLASS_NAME, SUPER_CLASS_NAME) \
 protected: \
@@ -300,9 +300,7 @@ static void commit_lua_properties() \
 	*crep_setters = registration->m_setters; \
 }
 
-// todo
-//#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUBAIND_7RC4)
-#else
+#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC4)
 
 #define DEFINE_LUA_CLASS(CLASS_NAME, SUPER_CLASS_NAME) \
 protected: \
@@ -503,9 +501,8 @@ struct signature_holder<3, Constant, T1, T2, T3>
 	{ return 0; }
 };
 
-// todo
-//#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND7_RC4)
-#else
+#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC4)
+
 /* operator template type
 self() returns: class_::def(self(int())); where self::operator() returns call_operatorN
 return type: call_operator<self_type, class A1, class A2, ..., class AN> where self_type = self_type || const_self_type
