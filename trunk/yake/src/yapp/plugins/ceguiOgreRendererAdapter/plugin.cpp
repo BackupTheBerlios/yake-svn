@@ -22,7 +22,7 @@
 #include "OgreNoMemoryMacros.h"
 #include "CEGUI.h"
 #include <dependencies/ogrenew/OgreMain/include/Ogre.h>
-#include "renderers/OgreGUIRenderer/ogrerenderer.h"
+#include "OgreCEGUIRenderer.h"
 #include <yapp/common/yakeCEGUIRendererAdapter.h>
 #include <yapp/plugins/ceguiOgreRendererAdapter/plugin.h>
 
@@ -61,7 +61,7 @@ bool ThePlugin::initialise()
 {
 	Ogre::RenderWindow* pWin = Ogre::Root::getSingleton().getAutoCreatedWindow();
 	YAKE_ASSERT( pWin ).error("Need a valid render window!");
-	mGUIRenderer = new CEGUI::OgreRenderer(
+	mGUIRenderer = new CEGUI::OgreCEGUIRenderer(
 		pWin, 
 		Ogre::RENDER_QUEUE_OVERLAY, 
 		true, 
