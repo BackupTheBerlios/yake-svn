@@ -42,25 +42,35 @@ namespace model {
 	public:
 		Physical()
 		{}
-		virtual ~Physical()
-		{
-			mComplexObjects.clear();
-			mJoints.clear();
-		}
-		void addComplex( SharedPtr<physics::IActor> & pComplex, const String & rName );
-		SharedPtr<physics::IActor> getComplexByName( const String & rName ) const;
+		virtual ~Physical();
+
+		/** Adds a physical actor and registers it with a name for easy lookup.
+		*/
+		void addActor( SharedPtr<physics::IActor> & pActor, const String & rName );
+
+		/** Retrieve a physical actor by the name it was registered within this model::Physical object.
+		*/
+		SharedPtr<physics::IActor> getActorByName( const String & rName ) const;
+
+		/** Adds a body affector. */
 		void addAffector( SharedPtr<physics::IBodyAffector> & pAffector );
+
+		/** Adds a joint. */
 		void addJoint( SharedPtr<physics::IJoint> & pJoint );
 		//void addJointGroup( SharedPtr<physics::IJointGroup> & pJointGroup );
-		void addActor( SharedPtr<physics::IBody> & pBody, const String & rName );
-		SharedPtr<physics::IActor> getActorByName( const String & rName ) const;
+
+		/** Adds a body. */
+		void addBody( SharedPtr<physics::IBody> & pBody, const String & rName );
+
+		/** Translates this model::Physical object by translating all contained actors. */
 		void translate( const Vector3 & d );
 
 		typedef Vector< SharedPtr<physics::IActor> > ComplexList;
+		/** @todo optimize! */
 		ComplexList getComplexObjects() const;
 	private:
-		typedef AssocVector< String, SharedPtr<physics::IActor> > ComplexMap;
-		ComplexMap		mComplexObjects;
+		typedef AssocVector< String, SharedPtr<physics::IActor> > ActorMap;
+		ActorMap		mActors;
 
 		typedef Vector< SharedPtr<physics::IJoint> > JointList;
 		JointList		mJoints;

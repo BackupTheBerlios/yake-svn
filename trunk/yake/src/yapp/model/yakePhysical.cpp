@@ -31,33 +31,39 @@ namespace app {
 namespace model {
 
 	//-----------------------------------------------------
+	Physical::~Physical()
+	{
+		mActors.clear();
+		mJoints.clear();
+	}
+	//-----------------------------------------------------
 	Physical::ComplexList Physical::getComplexObjects() const
 	{
 		Physical::ComplexList c;
-		ConstVectorIterator<Physical::ComplexMap> it( mComplexObjects.begin(), mComplexObjects.end() );
-		while (it.hasMoreElements())
+		ConstVectorIterator<Physical::ActorMap> itActor( mActors.begin(), mActors.end() );
+		while (itActor.hasMoreElements())
 		{
-			c.push_back( it.getNext().second );
+			c.push_back( itActor.getNext().second );
 		}
 		return c;
 	}
 	//-----------------------------------------------------
 	void Physical::translate( const Vector3 & d )
 	{
-		VectorIterator< ComplexMap > itComplex( mComplexObjects.begin(), mComplexObjects.end() );
-		while (itComplex.hasMoreElements())
+		VectorIterator< ActorMap > itActor( mActors.begin(), mActors.end() );
+		while (itActor.hasMoreElements())
 		{
-			itComplex.getNext().second->translate( d );
+			itActor.getNext().second->translate( d );
 		}
 	}
 	//-----------------------------------------------------
-	void Physical::addComplex( SharedPtr<physics::IActor> & pComplex, const String & rName )
+	void Physical::addActor( SharedPtr<physics::IActor> & pActor, const String & rName )
 	{
-		YAKE_ASSERT( pComplex.get() );
-		if (!pComplex.get())
+		YAKE_ASSERT( pActor.get() );
+		if (!pActor.get())
 			return;
-		String name = (rName.length() > 0) ? rName : (base::uniqueName::create("physical_complex_"));
-		mComplexObjects.insert( std::make_pair(name,pComplex) );
+		String name = (rName.length() > 0) ? rName : (base::uniqueName::create("physical_actor_"));
+		mActors.insert( std::make_pair(name,pActor) );
 	}
 	//-----------------------------------------------------
 	void Physical::addJoint( SharedPtr<physics::IJoint> & pJoint )
@@ -70,15 +76,9 @@ namespace model {
 	//-----------------------------------------------------
 	SharedPtr<physics::IActor> Physical::getActorByName( const String & rName ) const
 	{
-		YAKE_ASSERT( 1==0 && "not implemented!" );
-		return SharedPtr<physics::IActor>();
-	}
-	//-----------------------------------------------------
-	SharedPtr<physics::IActor> Physical::getComplexByName( const String & rName ) const
-	{
-		ComplexMap::const_iterator itFind = mComplexObjects.find( rName );
-		YAKE_ASSERT( itFind != mComplexObjects.end() )( rName ).warning("couldn't find the object!");
-		if (itFind == mComplexObjects.end())
+		ActorMap::const_iterator itFind = mActors.find( rName );
+		YAKE_ASSERT( itFind != mActors.end() )( rName ).warning("couldn't find the object!");
+		if (itFind == mActors.end())
 			return SharedPtr<physics::IActor>();
 		else
 			return itFind->second;

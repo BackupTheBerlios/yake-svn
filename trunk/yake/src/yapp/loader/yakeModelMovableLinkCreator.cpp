@@ -65,8 +65,8 @@ namespace model {
 			YAKE_ASSERT( pP );
 			if (sourceMovableType == "physics.actor")
 				pMovable = pP->getActorByName( sourceMovableName ).get();
-			else if (sourceMovableType == "physics.complex")
-				pMovable = pP->getComplexByName( sourceMovableName ).get();
+			//else if (sourceMovableType == "physics.complex")
+			//	pMovable = pP->getActorByName( sourceMovableName ).get();
 		}
 		YAKE_ASSERT( pMovable );
 		return pMovable;
