@@ -34,7 +34,7 @@ namespace yake {
 namespace graphics {
 namespace ogre3d {
 
-	GraphicsSystem::GraphicsSystem() : mCore(0)
+GraphicsSystem::GraphicsSystem() : mCore(0)
 {
 }
 
@@ -47,6 +47,8 @@ bool strMapContains( const GraphicsSystem::ParamMap& container, const String& va
 {
 	return (container.end() != container.find(value));
 }
+
+// todo: put this into the constructor => yake.base.templates.registry creator function could need some more parameters ...
 void GraphicsSystem::initialise(const ParamMap& rParams) throw(GraphicsException)
 {
 	YAKE_ASSERT( !mCore );
