@@ -124,7 +124,7 @@ namespace physics {
 
 		NxRaycastHit hit;
 
-		const Vector3 rayOffset(0,-mRadius*1.5,0);
+		const Vector3 rayOffset(0,-mRadius*real(1.5),0);
 
 		mPosition = mpBall.lock()->getPosition();
 
@@ -216,7 +216,7 @@ namespace physics {
 					velocityDifference += Vector3(0,mTargetHeightAboveGround-distanceToImpact,0) * 8;
 				else if (distanceToImpact > mTargetHeightAboveGround)
 				{
-					velocityDifference += Vector3(0,-9.81,0);
+					velocityDifference += Vector3(0,real(-9.81),0);
 				}
 			}
 

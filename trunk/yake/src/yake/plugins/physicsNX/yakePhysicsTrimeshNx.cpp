@@ -70,8 +70,8 @@ namespace physics {
 
 		// create NX mesh desc and mesh
 		NxTriangleMeshDesc meshDesc;
-		meshDesc.numVertices				= numVerts;
-		meshDesc.numTriangles				= numIndices / 3;
+		meshDesc.numVertices				= NxU32(numVerts);
+		meshDesc.numTriangles				= NxU32(numIndices / 3);
 		meshDesc.pointStrideBytes			= sizeof(NxVec3);
 		meshDesc.triangleStrideBytes		= 3*sizeof(NxU32);
 		meshDesc.points						= pVerts;
