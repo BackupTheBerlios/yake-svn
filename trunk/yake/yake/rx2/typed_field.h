@@ -44,6 +44,7 @@ struct typed_field : public meta_field
 		return value_;
 	}
 
+	// used by script
 	void set( T const & value )
 	{
 		operator=( value );
@@ -60,9 +61,9 @@ struct typed_field : public meta_field
 		return value_;
 	}
 
-	std::string type_as_string()
+	const TypeInfo type()
 	{
-		return typeid( value_ ).name();
+		return typeid( value_ );
 	}
 
 	std::string value_as_string()

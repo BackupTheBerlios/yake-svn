@@ -45,7 +45,7 @@ int main()
 		test_class.add_field<std::string>( "hello_string" );
 	
 		// create an instance of that just defined class
-		meta_object & test_object = test_class.create_object( "test_object" );
+		meta_object & test_object = new_( test_class,  "test_object" );
 
 		// set and stream some values
 		assert( test_object.field<bool>( "hello_bool" ) );
@@ -64,7 +64,7 @@ int main()
 			"dead" ) << std::endl;
 
 		// try another object
-		meta_object & test_object_2 = test_class.create_object( "test_object_2" );
+		meta_object & test_object_2 = new_( test_class, "test_object_2" );
 		assert( test_object_2.field<bool>( "hello_bool" ) );
 		std::cout << "test_object_2::hello_bool=" << ( test_object_2.field<bool>( 
 			"hello_bool" ) ? "true" : "false" ) << std::endl;
@@ -149,7 +149,7 @@ int main()
 				"simple_class", *new typed_field<std::string>( 
 					"hello_string", "hello_string_", save | load ) );
 			// create an instance of that just defined class
-			meta_object & simple_object = simple_class.create_object( "simple_object" );    
+			meta_object & simple_object = new_( simple_class, "simple_object" );    
 			// write class instance to archive
 			oa << simple_object;
 			// close archive
@@ -173,7 +173,7 @@ int main()
 	}
 
 	// script bindings
-	{
+	/*{
 		std::cout << std::endl << "[ binding mop to lua ]" << std::endl;	
 
 		using namespace luabind;
@@ -213,7 +213,7 @@ int main()
 				.def(constructor<std::string>()),
 			class_<meta_class>("meta_class") 	
 				.def(constructor<std::string>())
-				.def("create_object", &meta_class::create_object )
+				.def("new_", &meta_class::new_ )
 				.def("add_field_int", (void(meta_class::*)(std::string, int)) &meta_class::add_field<int>)
 				.def("add_field_int", (void(meta_class::*)(std::string, int, int)) &meta_class::add_field<int>)
 				.def("field_int",	(int_field&(meta_class::*)(std::string)) &meta_class::field<int> )
@@ -222,7 +222,7 @@ int main()
 		lua_dostring(	L, "meta_cl = meta_class('hello_class')" );
 		lua_dostring(	L, "meta_cl:add_field_int( 'hello_int', meta_field.none )" );
 		lua_dostring(	L, "meta_cl:field_int( 'hello_int' ):set( 12345 )" );
-		lua_dostring(	L, "meta_obj = meta_cl:create_object('hello_object')" );
+		lua_dostring(	L, "meta_obj = meta_cl:new_('hello_object')" );
 		lua_dostring(	L, "meta_obj:field_int( 'hello_int' ):set( 1234 )" );
 
 		std::cout << get_class( "hello_class" ).get_object( 
@@ -265,7 +265,7 @@ int main()
 		replica_class.add_field<bool, replicate | server>( "hello_bool", false );
 	
 		// create an instance of that just defined class
-		meta_object & replica_object = replica_class.create_object( "replica_object" );
+		meta_object & replica_object = replica_class.new_( "replica_object" );
 
 		// main loop
 		bool old_value = replica_object.field<bool>( "hello_bool" );
@@ -293,7 +293,7 @@ int main()
 		// destroy raknet
 		RakNetworkFactory::DestroyRakClientInterface(rakClient);
 		RakNetworkFactory::DestroyRakServerInterface(rakServer);
-	}
+	}*/
 
 	std::cin.get();
 

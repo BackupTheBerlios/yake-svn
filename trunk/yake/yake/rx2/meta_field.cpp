@@ -8,7 +8,7 @@ std::string meta_field::as_string()
 {
 		return std::string( 
 			get_object().get_name() + "::" + get_name() + 
-				"[" + type_as_string() + "]=" + value_as_string() );
+				"[" + type().name() + "]=" + value_as_string() );
 }
 
 } // namespace rx

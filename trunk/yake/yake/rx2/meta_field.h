@@ -1,6 +1,8 @@
 #ifndef meta_field_h
 #define meta_field_h
 
+#include "type_info.h"
+
 #include <typeinfo>
 #include <string>
 
@@ -35,24 +37,26 @@ struct meta_field
 
 	meta_field( meta_object & object, 
 		std::string name, int flags = none )
-		: object_( &object ), name_( name ),
+		: object_( &object ), 
+			name_( name ),
 			flags_(flags)
 	{}
 
 	meta_field( std::string name,	int flags = none )
 		: name_( name ), 
-		object_(0), flags_(flags)
+			object_(0), 
+			flags_(flags)
 	{}
 
 	virtual ~meta_field() {}
 
-	virtual std::string type_as_string() = 0;
+	virtual const TypeInfo type() = 0;
   virtual std::string value_as_string() = 0;
 	std::string as_string();
 
 	meta_object & get_object()
 	{
-		if( !object_ ) throw exception(); // todo
+		if( !object_ ) throw exception();
 		return *object_;
 	}
 

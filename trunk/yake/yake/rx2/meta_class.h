@@ -108,13 +108,12 @@ public:
 	}
 
 	// used by regular meta object instancing
-	meta_object & create_object( std::string object_name );
+	friend meta_object & new_( const meta_class & meta_class_, std::string object_name );
 
 	// used by c++ classes
 	// todo use free function stuff
 	template< typename T1, typename T2, typename T3 >
-	meta_object & create_object( std::string object_name, T1 & f1,
-		T2 & f2, T3 & f3 )
+	meta_object & new_( std::string object_name, T1 & f1, T2 & f2, T3 & f3 )
 	{
 		meta_object * obj = new meta_object( object_name );
 
@@ -147,6 +146,8 @@ private:
 	fields_list fields_;
 	objects objects_;	
 };
+
+meta_object & new_( const meta_class & meta_class_, std::string object_name );
 
 } // namespace rx
 

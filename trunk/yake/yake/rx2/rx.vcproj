@@ -168,7 +168,13 @@
 				RelativePath=".\object_creators.h">
 			</File>
 			<File
+				RelativePath=".\object_registry.h">
+			</File>
+			<File
 				RelativePath=".\tnl_hook.h">
+			</File>
+			<File
+				RelativePath=".\type_info.h">
 			</File>
 			<File
 				RelativePath=".\typed_field.h">
