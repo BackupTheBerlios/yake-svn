@@ -25,7 +25,7 @@
 */
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
-#include <yake/samples/data/demo/yakeDotScene.h>
+#include <yapp/loader/yakeDotScene.h>
 
 namespace yake {
 namespace app {
