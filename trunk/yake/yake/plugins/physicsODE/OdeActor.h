@@ -44,7 +44,7 @@ namespace physics
 		CollisionCache							mCollisions;
 	};
 	
-	class OdeStaticActor : public OdeActor, public IActor//IStaticActor
+	class OdeStaticActor : public OdeActor, public IStaticActor
 	{
 	public:
 		OdeStaticActor( OdeWorld* pOdeWorld );

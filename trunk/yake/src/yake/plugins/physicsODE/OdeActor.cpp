@@ -73,7 +73,7 @@ namespace physics {
 	{
 		IShape::Desc* pShapeDesc = &const_cast<IShape::Desc&>( rShapeDesc );
 		
-		IMaterial* pMaterial = pShapeDesc->pMaterial;
+		IMaterial* pMaterial = pShapeDesc->pMaterial.lock().get();
 		OdeMaterial* pOdeMaterial = 0;
 		
 		if (pMaterial)

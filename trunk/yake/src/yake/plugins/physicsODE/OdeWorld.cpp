@@ -136,7 +136,7 @@ namespace physics {
  		}
 
 		//-----------------------------------------------------
-		IJoint* OdeWorld::createJoint( IJoint::DescBase const& rJointDesc )
+		WeakIJointPtr OdeWorld::createJoint( IJoint::DescBase const& rJointDesc )
 		{
 			IJoint::DescBase* pJointDesc = &const_cast<IJoint::DescBase&>( rJointDesc );
 
@@ -190,14 +190,31 @@ namespace physics {
 			YAKE_ASSERT( pJoint != NULL ).error( "Unknown type of joint or ... some other error :(" );
 			
 			pJoint->attach( rBody1, rBody2 );
+			mJoints.push_back( SharedPtr<OdeJoint>(pJoint) );
 			
-			return pJoint;
+			return mJoints.back();
 		}
 		
 		//-----------------------------------------------------
-		IActor* OdeWorld::createStaticActor( const IActor::Desc& rActorDesc )
+		WeakIStaticActorPtr OdeWorld::createStaticActor( const IActor::Desc& rActorDesc )
 		{
-			IActor* pActor = new OdeStaticActor( this );
+			OdeStaticActor* pActor = new OdeStaticActor( this );
+			YAKE_ASSERT( pActor );
+			
+			typedef Deque< SharedPtr<IShape::Desc> > ActorShapesCollection;
+			const ActorShapesCollection& shapes = rActorDesc.shapes;
+			
+			for ( ActorShapesCollection::const_iterator i = shapes.begin(); i != shapes.end(); ++i )
+			{
+				SharedPtr<IShape::Desc> pShapeDesc = *i;
+				pActor->createShape(  *pShapeDesc );
+			}
+			mActors.push_back( SharedPtr<OdeActor>( pActor ) );
+			return boost::dynamic_pointer_cast<OdeStaticActor>( mActors.back() );
+		}
+		WeakIMovableActorPtr OdeWorld::createMovableActor( const IMovableActor::Desc& rActorDesc )
+		{
+			OdeMovableActor* pActor = new OdeMovableActor( this );
 			YAKE_ASSERT( pActor );
 			
 			typedef Deque< SharedPtr<IShape::Desc> > ActorShapesCollection;
@@ -208,12 +225,12 @@ namespace physics {
 				SharedPtr<IShape::Desc> pShapeDesc = *i;
 				pActor->createShape(  *pShapeDesc );
 			}  
-			
-			return pActor;
+			mActors.push_back( SharedPtr<OdeActor>( pActor ) );
+			return boost::dynamic_pointer_cast<OdeMovableActor>( mActors.back() );
 		}
-		IMovableActor* OdeWorld::createMovableActor( const IMovableActor::Desc& rActorDesc )
+		WeakIDynamicActorPtr OdeWorld::createDynamicActor( const IDynamicActor::Desc& rActorDesc )
 		{
-			IMovableActor* pActor = new OdeMovableActor( this );
+			OdeDynamicActor* pActor = new OdeDynamicActor( this );
 			YAKE_ASSERT( pActor );
 			
 			typedef Deque< SharedPtr<IShape::Desc> > ActorShapesCollection;
@@ -224,51 +241,47 @@ namespace physics {
 				SharedPtr<IShape::Desc> pShapeDesc = *i;
 				pActor->createShape(  *pShapeDesc );
 			}  
-			
-			return pActor;
+			mActors.push_back( SharedPtr<OdeActor>( pActor ) );
+			return boost::dynamic_pointer_cast<OdeDynamicActor>( mActors.back() );
 		}
-		IDynamicActor* OdeWorld::createDynamicActor( const IDynamicActor::Desc& rActorDesc )
+		bool operator==(const SharedPtr<OdeJoint>& lhs, const OdeJoint* rhs)
 		{
-			IDynamicActor* pActor = new OdeDynamicActor( this );
-			YAKE_ASSERT( pActor );
-			
-			typedef Deque< SharedPtr<IShape::Desc> > ActorShapesCollection;
-			const ActorShapesCollection& shapes = rActorDesc.shapes;
-			
-			for ( ActorShapesCollection::const_iterator i = shapes.begin(); i != shapes.end(); ++i )
-			{
-				SharedPtr<IShape::Desc> pShapeDesc = *i;
-				pActor->createShape(  *pShapeDesc );
-			}  
-			
-			return pActor;
+			return (lhs.get() == rhs);
 		}
-		void OdeWorld::destroyJoint( IJoint* rJoint )
+		void OdeWorld::destroyJoint( WeakIJointPtr& pJoint )
 		{
-			YAKE_ASSERT( rJoint );
-			delete rJoint;
+			YAKE_ASSERT( !pJoint.expired() );
+			mJoints.erase( std::find(mJoints.begin(), mJoints.end(), dynamic_cast<OdeJoint*>(pJoint.lock().get()) ) );
 		}
-		void OdeWorld::destroyActor( IActor* rActor )
+		bool operator==(const SharedPtr<OdeActor>& lhs, const OdeActor* rhs)
 		{
-			YAKE_ASSERT( rActor );
-			delete rActor;
+			return (lhs.get() == rhs);
 		}
-		void OdeWorld::destroyAvatar( IAvatar* rAvatar )
+		void OdeWorld::destroyActor( WeakIActorPtr& pActor )
 		{
-			YAKE_ASSERT( rAvatar );
-			delete rAvatar;
+			YAKE_ASSERT( !pActor.expired() );
+			mActors.erase( std::find(mActors.begin(), mActors.end(), dynamic_cast<OdeActor*>(pActor.lock().get()) ) );
 		}
-		void OdeWorld::destroyMaterial( IMaterial* rMaterial )
+		void OdeWorld::destroyAvatar( WeakIAvatarPtr& pAvatar )
 		{
-			YAKE_ASSERT( rMaterial );
-			delete rMaterial;
+			//YAKE_ASSERT( !pAvatar.expired() );
+			//mAvatars.erase( std::find(mAvatars.begin(), mAvatars.end(), dynamic_cast<OdeAvatar*>(pAvatar .lock().get()) ) );
+		}
+		bool operator==(const SharedPtr<OdeMaterial>& lhs, const OdeMaterial* rhs)
+		{
+			return (lhs.get() == rhs);
+		}
+		void OdeWorld::destroyMaterial( WeakIMaterialPtr& pMaterial )
+		{
+			YAKE_ASSERT( !pMaterial.expired() );
+			mMaterials.erase( std::find(mMaterials.begin(), mMaterials.end(), dynamic_cast<OdeMaterial*>(pMaterial.lock().get()) ) );
 		}
 
 		//-----------------------------------------------------
-		IMaterial* OdeWorld::createMaterial( IMaterial::Desc const& rMatDesc )
+		WeakIMaterialPtr OdeWorld::createMaterial( IMaterial::Desc const& rMatDesc )
 		{
-			OdeMaterial* pMat = new OdeMaterial;
-			
+			SharedPtr<OdeMaterial> pMat( new OdeMaterial );
+			mMaterials.push_back( pMat );
 			return pMat;
 		}
 

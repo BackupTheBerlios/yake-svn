@@ -29,6 +29,10 @@ namespace physics {
 
 		class OdeBody;
 		class OdeTriMesh;
+		class OdeActor;
+		class OdeJoint;
+		class OdeAvatar;
+		class OdeMaterial;
 		
 		class OdeWorld : public IWorld
 		{
@@ -36,20 +40,20 @@ namespace physics {
 			OdeWorld();
 			virtual ~OdeWorld();
 
-			virtual IJoint* createJoint( IJoint::DescBase const& rJointDesc );
-			virtual IActor* createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() );
-			virtual IMovableActor* createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() );
-			virtual IDynamicActor* createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() );
-			virtual IMaterial* createMaterial( IMaterial::Desc const& rMatDesc );
-			virtual IAvatar* createAvatar( IAvatar::Desc const& rAvatarDesc ) 
+			virtual WeakIJointPtr createJoint( const IJoint::DescBase & rkJointDesc );
+			virtual WeakIStaticActorPtr createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() ) ;
+			virtual WeakIMovableActorPtr createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() );
+			virtual WeakIDynamicActorPtr createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() );
+			virtual WeakIAvatarPtr createAvatar( const IAvatar::Desc & rkAvatarDesc )
 			{
 				YAKE_ASSERT( 0 ).warning("not supported.");
-				return 0;
+				return WeakIAvatarPtr();
 			}
-			virtual void destroyJoint( IJoint* rJoint );
-			virtual void destroyActor( IActor* rActor );
-			virtual void destroyAvatar( IAvatar* rAvatar );
-			virtual void destroyMaterial( IMaterial* rMaterial );
+			virtual WeakIMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc );
+			virtual void destroyJoint( WeakIJointPtr& rJoint );
+			virtual void destroyActor( WeakIActorPtr& rActor );
+			virtual void destroyAvatar( WeakIAvatarPtr& rAvatar );
+			virtual void destroyMaterial( WeakIMaterialPtr& rMaterial );
 			
 			virtual TriangleMeshId createTriangleMesh( TriangleMeshDesc const& rTrimeshDesc );
 
@@ -104,6 +108,18 @@ namespace physics {
 
 			PostStepSignal		mPostStepSignal;
 			PropertyNameList	mCurrentSolverParams;
+
+			typedef Deque<SharedPtr<OdeActor> > OdeActorVector;
+			OdeActorVector			mActors;
+
+			typedef Deque<SharedPtr<OdeJoint> > OdeJointVector;
+			OdeJointVector			mJoints;
+
+			typedef Deque<SharedPtr<OdeMaterial> > OdeMaterialVector;
+			OdeMaterialVector		mMaterials;
+
+			typedef Deque<SharedPtr<OdeAvatar> > OdeAvatarVector;
+			OdeAvatarVector			mAvatars;
 		};
 	}
 }
