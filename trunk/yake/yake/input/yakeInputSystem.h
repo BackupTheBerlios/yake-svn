@@ -295,7 +295,7 @@ namespace input {
 		{
 		}*/
 	public:
-		~InputSystem() {}
+		virtual ~InputSystem() {}
 		/** Used for enumerating devices. */
 		struct DeviceListEntry
 		{
