@@ -55,7 +55,7 @@ namespace dotscene {
 			\return 
 		*/
 		virtual bool load(	const SharedPtr<dom::INode> & docNode,
-							graphics::IWorld* pGWorld);
+							graphics::IWorld& rGWorld);
 
 		SceneNodeList getRootLevelSceneNodes() const;
 		String getNameForSceneNode( graphics::ISceneNode* pSceneNode ) const
