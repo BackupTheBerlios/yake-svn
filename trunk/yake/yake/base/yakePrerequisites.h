@@ -92,7 +92,7 @@
 
 #define YAKE_DECLARE_CLASS( name )           static const char* yake_private_currentClass() { return #name;}
 #define YAKE_DECLARE_GLOBAL		     YAKE_DECLARE_CLASS( global )
-#define YAKE_DECLARE_FUNCTION( name )        static const char* yake_private_currentFunction = "#name()";
+#define YAKE_DECLARE_FUNCTION( name )        static const char* yake_private_currentFunction = ## #name ## "()";
 
 #define YAKE_THIS_CLASS                      yake_private_currentClass()
 #define YAKE_THIS_FUNCTION                   yake_private_currentFunction
