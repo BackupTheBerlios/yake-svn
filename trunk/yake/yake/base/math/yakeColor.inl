@@ -235,12 +235,13 @@ inline float Color::getSquaredLength() const
 	return ( r * r ) + ( g  * g ) + ( b  * b ) + ( a  * a );
 }
 
-inline void Color::serializeOut( IOutputStream& rStream ) const
+inline IOutputStream& Color::operator << (IOutputStream& rStream) const
 {
 	rStream << r;
 	rStream << g;
 	rStream << b;
 	rStream << a;
+	return rStream;
 }
 
 } // math

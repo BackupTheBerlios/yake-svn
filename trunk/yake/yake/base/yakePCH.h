@@ -39,7 +39,6 @@
 #include "yakeException.h"
 #include "yakeLog.h"
 #include "yakeOutputStream.h"
-#include "yakeSerializable.h"
 #include "yakeUniqueName.h"
 #include "yakePlugin.h"
 #include "yakeDebugOutputStream.h"
@@ -56,7 +55,6 @@
 #include "math/yakePlane.h"
 #include "math/yakeRay.h"
 
-#include "yakeState.h"
 #include "yakeParamHolder.h"
 #include "yakeMovable.h"
 #include "yakeCommandInterface.h"

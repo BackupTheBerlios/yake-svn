@@ -41,7 +41,7 @@ namespace base
 namespace math
 {
 
-class YAKE_BASE_API Color : public yake::base::ISerializable
+class YAKE_BASE_API Color
 {
 public:
 	// Constructor.
@@ -95,7 +95,7 @@ public:
 	float getSquaredLength() const;
 
 	// The Serialization Function.
-	void serializeOut( IOutputStream& rStream ) const;
+	IOutputStream& operator << (IOutputStream& rStream) const;
 
 	// The Data.
 	union
