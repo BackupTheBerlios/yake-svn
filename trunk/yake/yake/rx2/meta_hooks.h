@@ -71,6 +71,7 @@ struct raknet_hook : public DistributedNetworkObject
 	template< typename T >
 	inline void on_add_field( T & field )
 	{
+		// todo check for typed_field internal usage of a reference instead of the value
 		if( field.flags_ & replicate )
 			SynchronizeMemory( 
 				field_number_++, reinterpret_cast<char*>( 

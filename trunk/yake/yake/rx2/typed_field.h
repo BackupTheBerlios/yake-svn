@@ -135,6 +135,14 @@ bool operator==( typed_field<T> & field, T value )
 	return field.get() == value;    
 }
 
+// special case: typed_field<std::string> == "hello"
+// the compiler should create a temporary string object, but it does not?
+template< typename T >
+bool operator==( typed_field<T> & field, const char * value )
+{
+	return field.get() == value;    
+}
+
 /*template< typename T >
 bool operator==( typed_field< ref<T> > & field, T value )
 {

@@ -1,9 +1,8 @@
 #ifndef META_FIELD_SERIALIZED_H
 #define META_FIELD_SERIALIZED_H
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
 #include <boost/serialization/export.hpp>
+#include <boost/serialization/is_abstract.hpp>
 
 #include "meta_field.h"
 

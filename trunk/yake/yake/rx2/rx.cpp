@@ -4,20 +4,27 @@
 #pragma warning(disable: 4267) // site_t to unsigned int
 #pragma warning(disable: 4800) // bits AND => bool
 
+// serialization
+#include <boost/archive/text_oarchive.hpp> // you have to include the archives _before_ using BOOST_CLASS_EXPORT
+#include <boost/archive/text_iarchive.hpp>
+#include "typed_field_serialized.h"
+#include "meta_object_serialized.h"
+
 // stl
 #include <cassert>
 #include <iostream>
 #include <fstream>
+
 // mop
 #include "meta_class.h"
 #include "class_registry.h"
+
 // events
 #include "event_test.h"
+
 // c++ class
 #include "cpp_class.h"
-// serialization
-//#include "typed_field_serialized.h"
-//#include "meta_object_serialized.h"
+
 // scripting
 extern "C"
 {
@@ -26,14 +33,14 @@ extern "C"
 #include "lualib.h"
 }
 #include <luabind/luabind.hpp>
+
 // repl
-/*
 #include "Multiplayer.h"
 #include "DistributedNetworkObjectHeader.h"
 #include "RakServerInterface.h"
 #include "RakClientInterface.h"
 #include "RakNetworkFactory.h"
-#include "BitStream.h"*/
+#include "BitStream.h"
 
 
 using namespace rx;
@@ -155,20 +162,20 @@ int main()
 	}
 
 	// serialize meta objects
-/*	{
+	{
 		std::cout << std::endl << "[ serialization ]" << std::endl;	
 
 		// serialize
 		{
 			// create and open a character archive for output
-			std::ofstream ofs("filename");
-			boost::archive::text_oarchive oa(ofs);
+			std::ofstream ofs( "filename" );
+			boost::archive::text_oarchive oa( ofs );
 			// define class with default value
-			meta_class simple_class( 
-				"simple_class", *new typed_field<std::string>( 
-					"hello_string", "hello_string_", save | load ) );
+			meta_class simple_class = 
+				define<meta_class>( "simple_class" )
+					.add_field<std::string>( "hello_string", "hello_string_", save | load );
 			// create an instance of that just defined class
-			meta_object & simple_object = new_( simple_class, "simple_object" );    
+			meta_object & simple_object = instance( simple_class, "simple_object" );    
 			// write class instance to archive
 			oa << simple_object;
 			// close archive
@@ -179,17 +186,17 @@ int main()
 		{
 			// ... some time later restore the class instance to its orginal state
 			// create and open an archive for input
-			std::ifstream ifs("filename", std::ios::binary);
-			boost::archive::text_iarchive ia(ifs);
+			std::ifstream ifs( "filename", std::ios::binary );
+			boost::archive::text_iarchive ia( ifs );
 			// read class state from archive
 			meta_object simple_object;
 			ia >> simple_object;
 			std::cout << simple_object.field<std::string>( "hello_string" ).as_string() << std::endl;
-			assert( simple_object.field<std::string>( "hello_string" ).get() == "hello_string_" ); // todo
+			assert( simple_object.field<std::string>( "hello_string" ) == "hello_string_" );
 			// close archive
 			ifs.close();
 		}
-	}*/
+	}
 
 	// script bindings
 	{
@@ -246,14 +253,14 @@ int main()
 
 		lua_close(L);
 	}
-/*
+
 	// field flags and replication
 	{
 		std::cout << std::endl << "[ field flags and replication ]" << std::endl;	
 
 		// init raknet
-		RakClientInterface *rakClient=RakNetworkFactory::GetRakClientInterface();
-		RakServerInterface *rakServer=RakNetworkFactory::GetRakServerInterface();
+		RakClientInterface * rakClient = RakNetworkFactory::GetRakClientInterface();
+		RakServerInterface * rakServer = RakNetworkFactory::GetRakServerInterface();
 		Multiplayer<RakClientInterface> rakClientMultiplayer;
 		Multiplayer<RakServerInterface> rakServerMultiplayer;
 
@@ -279,7 +286,7 @@ int main()
 		replica_class.add_field<bool, replicate | server>( "hello_bool", false );
 	
 		// create an instance of that just defined class
-		meta_object & replica_object = replica_class.new_( "replica_object" );
+		meta_object & replica_object = instance( replica_class, "replica_object" );
 
 		// main loop
 		bool old_value = replica_object.field<bool>( "hello_bool" );
@@ -307,7 +314,7 @@ int main()
 		// destroy raknet
 		RakNetworkFactory::DestroyRakClientInterface(rakClient);
 		RakNetworkFactory::DestroyRakServerInterface(rakServer);
-	}*/
+	}
 
 	std::cin.get();
 
