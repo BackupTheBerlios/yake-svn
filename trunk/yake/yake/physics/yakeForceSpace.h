@@ -18,76 +18,80 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef INC_YAKE_PHYSICS_FORCESPACE_H
-#define INC_YAKE_PHYSICS_FORCESPACE_H
+#ifndef INC_YAKE_PHYSICS_AFFECTORZONE_H
+#define INC_YAKE_PHYSICS_AFFECTORZONE_H
 
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
 
 namespace yake {
-	namespace physics {
+namespace physics {
 
-		/*
-		class ForceSpace
+	/**@todo move to base::math
+	*/
+	class BoundingVolume
+	{
+	public:
+		virtual ~BoundingVolume() {}
+	};
+
+	class AffectorZone
+	{
+	protected:
+		typedef Vector< SharedPtr<math::BoundingVolume> > VolumeList;
+		VolumeList				mVolumes;
+
+		typedef Vector< SharedPtr<physics::BodyAffector> > AffectorList;
+		AffectorList			mAffectors;
+
+		SharedPtr<IWorld>		mWorld;
+		BodyGroup				mAffectedBodies;
+		bool					mNeedsUpdate;
+
+	public:
+		void addVolume( SharedPtr<BoundingVolume> & pVolume );
+
+		void addAffector( SharedPtr<IBodyAffector> & pAffector );
+
+		void setWorld( SharedPtr<IWorld> & pWorld );
+
+		void setEnabled( bool enabled );
+		bool isEnabled() const;
+
+		virtual void update( const real timeElapsed );
 		{
-		protected:
-			typedef std::vector< RefPtr<math::BoundingVolume> > VolumeList;
-			VolumeList				mVolumes;
-
-			typedef std::vector< physics::BodyAffector* > AffectorList;
-			AffectorList			mAffectors;
-
-			typedef std::vector< physics::IWorld* > WorldList;
-			WorldList				mWorlds;
-
-			physics::BodyGroup	mAffectedBodies;
-
-			bool						mNeedsUpdate;
-
-		public:
-			void addVolume( math::BoundingVolume * pVolume )
-			{ if (pVolume) mVolumes.insert( pVolume ); }
-			
-			void addAffector( BodyAffector * pAffector )
-			{ if (pAffector) mAffectors.insert( pAffector ); }
-
-			void addWorld( physics::IWorld * pWorld )
-			{ if (pWorld) mWorlds.insert( pWorld ); }
-
-			void setEnabled( bool enabled );
-			bool isEnabled() const;
-
-			virtual void update( const FrameUpdate & upd );
+			/**@todo
+			if (mNeedsUpdate)
 			{
-				if (mNeedsUpdate)
-				{
-					foreach world
-						_determineAffectedBodies( *it );
-				}
-				foreach affector
-					(*it)->apply( mAffectedBodies, upd.timeElapsed );
+				foreach world
+					_determineAffectedBodies( *it );
 			}
+			foreach affector
+				(*it)->apply( mAffectedBodies, upd.timeElapsed );
+			*/
+		}
 
-		protected:
-			void _determineAffectedBodies( const physics::IWorld * pWorld );
-		};
+	protected:
+		void _determineAffectedBodies( const SharedPtr<IWorld> & pWorld );
+	};
 
-		class ForceSpaceManager
+	class AffectorZoneManager
+	{
+	public:
+		void addAffectorZone( SharedPtr<AffectorZone> & pSpace );
+
+		virtual void update( const real timeElapsed )
 		{
-		public:
-			void addForceSpace( ForceSpace * space );
+			/**@todo
+			foreach forceSpace
+				if ((*it)->isEnabled())
+					(*it)->update( upd );
+			*/
+		}
+	};
 
-			virtual void update( const FrameUpdate & upd )
-			{
-				foreach forceSpace
-					if ((*it)->isEnabled())
-						(*it)->update( upd );
-			}
-		};
-		*/
-
-	}
+}
 }
 
 #endif
