@@ -321,7 +321,7 @@ namespace physics {
 		/** Returns a reference to the actor this body belongs to. A body always belongs to exactly
 			one actor.
 		*/
-		virtual IActor& getActor() const = 0;
+		//virtual IActor& getActor() const = 0;
 
 		/** Sets the mass of the body. The unit can be freely chosen by the application
 			but should be consistent within the simulation, of course.
