@@ -101,7 +101,7 @@ int main()
 {
 	using namespace yake::testsuite;
 
-	SharedPtr< INetworkDriver > pNetDriver = create< INetworkDriver >();
+	SharedPtr< INetworkDriver > pNetDriver = create_default< INetworkDriver >();
 
 	DebugOutputStream::instance() << pNetDriver->resolveHost();
 
