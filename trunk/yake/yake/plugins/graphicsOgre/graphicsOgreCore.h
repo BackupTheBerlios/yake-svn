@@ -49,13 +49,13 @@ namespace ogre3d {
 
 		void _start();
 
-		inline Ogre::SceneManager* getSceneMgr() const { return mSceneMgr; }
-		inline Ogre::Root* getRoot() const { return mRoot; }
-		inline Ogre::RenderWindow* getRenderWindow() const { return mRWin; }
-		inline Ogre::ParticleSystemManager* getParticleSysMgr() const 
+		inline Ogre::SceneManager * getSceneMgr() const { return mSceneMgr; }
+		inline Ogre::Root * getRoot() const { return mRoot; }
+		inline Ogre::RenderWindow * getRenderWindow() const { return mRWin; }
+		inline Ogre::ParticleSystemManager * getParticleSysMgr() const 
 		{ return Ogre::ParticleSystemManager::getSingletonPtr(); }
 
-		void subscribeToShutdownSignal( const IGraphicsSystem::ShutdownSignal::slot_type & rSlot );
+		void subscribeToShutdownSignal(const IGraphicsSystem::ShutdownSignal::slot_type & rSlot);
 
 	protected:
 		void setupResourcesFromConfigFile();
@@ -68,19 +68,19 @@ namespace ogre3d {
 		bool					mReady;
 		bool					mShutdownOgre;
 
-		Ogre::Root*				mRoot;
-		Ogre::RenderSystem*		mRSys;
-		Ogre::RenderWindow*		mRWin;
-		Ogre::OgreWindowWin32*	mOWin;
+		Ogre::Root * mRoot;
+		Ogre::RenderSystem * mRSys;
+		Ogre::RenderWindow * mRWin;
+		Ogre::OgreWindowWin32 * mOWin;
 
-		Ogre::SceneManager*		mSceneMgr;
+		Ogre::SceneManager * mSceneMgr;
 
-		SystemFrameListener*	mSysFL;
+		SystemFrameListener *	mSysFL;
 
 		typedef AssocVector<base::String,base::String> StringMap;
-		StringMap				mConfig;
+		StringMap	mConfig;
 
-		Ogre::SceneType			mSceneType;
+		Ogre::SceneType	mSceneType;
 
 		IGraphicsSystem::ShutdownSignal mShutdownSignal;
 	};

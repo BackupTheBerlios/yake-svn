@@ -55,14 +55,17 @@ namespace ogre3d {
 		sequences::list< GraphicalWorld > 
 	>*/
 	{
-	YAKE_DECLARE_CLASS( yake::graphics::ogre3d::GraphicsSystem )
-	public:
-		YAKE_DECLARE_CONCRETE( GraphicsSystem, "ogre3d" )
+		YAKE_DECLARE_CLASS( yake::graphics::ogre3d::GraphicsSystem )
+		YAKE_DECLARE_CONCRETE(GraphicsSystem, "ogre3d")
+
+	public: // class
 		GraphicsSystem();
-		// Destructor.
+		GraphicsSystem(const ParamMap & params);
 		virtual ~GraphicsSystem();
 
-		virtual void initialise(const ParamMap& rParams) throw(GraphicsException);
+	public: // methods
+		// done via constructor (meta)
+		// virtual void initialise(const ParamMap& rParams) throw(GraphicsException);
 		virtual void shutdown() throw(GraphicsException);
 
 		virtual SharedPtr<IWorld> createWorld();
@@ -72,8 +75,8 @@ namespace ogre3d {
 		virtual const std::type_info & get_type_info()
 		{ return typeid(GraphicsSystem); }
 
-	private:
-		OgreCore*		mCore;
+	private: // data
+		OgreCore * mCore;
 	};
 
 } // ogre3d

@@ -34,8 +34,42 @@ namespace yake {
 namespace graphics {
 namespace ogre3d {
 
-GraphicsSystem::GraphicsSystem() : mCore(0)
+GraphicsSystem::GraphicsSystem()
 {
+	mCore = new OgreCore();
+	YAKE_ASSERT(mCore);
+	GraphicalWorld::setCore(mCore);
+}
+
+inline bool strMapContains(const GraphicsSystem::ParamMap & container, const String & value)
+{ return (container.end() != container.find(value)); }
+
+GraphicsSystem::GraphicsSystem(const ParamMap & params)
+{
+	bool bWindowAlreadyCreated = false;
+	bool bShutdownOgre = true;
+	bool bParseDefaultResourceFile = true;
+	Ogre::RenderWindow * pRenderWindow = 0;
+
+	// todo: lexical_cast, polish strMapContains
+	if(strMapContains(params, "windowAlreadyCreated"))
+	{
+		bWindowAlreadyCreated = base::StringUtil::parseBool(params.find("windowAlreadyCreated")->second);
+		const base::String window_ptr = params.find("renderWindowPtr")->second;
+		pRenderWindow = reinterpret_cast<Ogre::RenderWindow*>(base::StringUtil::parseInt(window_ptr));
+	}
+	if(strMapContains(params, "shutdownOgre"))
+	{
+		bShutdownOgre = base::StringUtil::parseBool(params.find("shutdownOgre")->second);
+	}
+	if(strMapContains(params, "parseDefaultResourceFile"))
+	{
+		bParseDefaultResourceFile = base::StringUtil::parseBool(params.find("parseDefaultResourceFile")->second);
+	}
+
+	mCore = new OgreCore(bWindowAlreadyCreated, bShutdownOgre, bParseDefaultResourceFile, pRenderWindow);
+	YAKE_ASSERT(mCore);
+	GraphicalWorld::setCore(mCore);
 }
 
 GraphicsSystem::~GraphicsSystem()
@@ -43,12 +77,8 @@ GraphicsSystem::~GraphicsSystem()
 	YAKE_SAFE_DELETE( mCore );
 }
 
-bool strMapContains( const GraphicsSystem::ParamMap& container, const String& value )
-{
-	return (container.end() != container.find(value));
-}
-
 // todo: put this into the constructor => yake.base.templates.registry creator function could need some more parameters ...
+/* done via constructor (meta)
 void GraphicsSystem::initialise(const ParamMap& rParams) throw(GraphicsException)
 {
 	YAKE_ASSERT( !mCore );
@@ -79,7 +109,8 @@ void GraphicsSystem::initialise(const ParamMap& rParams) throw(GraphicsException
 	mCore = new OgreCore(bWindowAlreadyCreated,bShutdownOgre,bParseDefaultResourceFile,pRenderWindow);
 	YAKE_ASSERT( mCore );
 	GraphicalWorld::setCore( mCore );
-}
+}*/
+
 void GraphicsSystem::shutdown() throw(GraphicsException)
 {
 	YAKE_SAFE_DELETE( mCore );

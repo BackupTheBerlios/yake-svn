@@ -53,22 +53,22 @@ using namespace yake::base::templates;
 	struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem 
 		//: public AbstractFactory< sequences::list< IWorld > >
 	{
-		YAKE_DECLARE_REGISTRY_0( IGraphicsSystem, base::String )
-		
-		// Destructor.
-		virtual ~IGraphicsSystem();
+		typedef base::templates::AssocVector<base::String, base::String> ParamMap;
 
-		typedef base::templates::AssocVector<base::String,base::String> ParamMap;
+		YAKE_DECLARE_REGISTRY_01(IGraphicsSystem, base::String, ParamMap)		
+	
+		virtual ~IGraphicsSystem();
 
 		// todo: remove => managed by constructor/destructor and actually we don't need the paramap at all => config file
 		// todo: this breakes our data driven approach ... plugin specific config data needs to be stored externally!
-		virtual void initialise(const ParamMap& rParams) throw(GraphicsException) = 0;
+		// done via constructor (meta)
+		//virtual void initialise(const ParamMap & rParams) throw(GraphicsException) = 0;
 		virtual void shutdown() throw(GraphicsException) = 0;
 
 		virtual SharedPtr<IWorld> createWorld() = 0;
 
 		typedef Signal0<void> ShutdownSignal;
-		virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot ) = 0;
+		virtual void subscribeToShutdownSignal(const ShutdownSignal::slot_type & rSlot) = 0;
 
 		virtual const std::type_info & get_type_info() = 0;
 	};
