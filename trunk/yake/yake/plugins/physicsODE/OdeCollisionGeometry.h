@@ -45,6 +45,7 @@ namespace yake {
 			virtual Vector3 planeGetNormal() const;
 			virtual real planeGetDistance() const;
 			virtual real sphereGetRadius() const;
+			virtual void sphereSetRadius(const real radius);
 			virtual Vector3 boxGetDimensions() const;
 			virtual Vector3 rayGetOrigin() const;
 			virtual Quaternion rayGetOrientation() const;
@@ -117,6 +118,7 @@ namespace yake {
 		public:
 			OdeCollisionGeomSphere(dSpace* space, real radius);
 			virtual real sphereGetRadius() const;
+			virtual void sphereSetRadius(const real radius);
 		};
 
 		//-----------------------------------------------------

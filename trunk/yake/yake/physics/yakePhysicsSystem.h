@@ -249,6 +249,7 @@ namespace yake {
 			virtual Vector3 planeGetNormal() const = 0;
 			virtual real planeGetDistance() const = 0;
 			virtual real sphereGetRadius() const = 0;
+			virtual void sphereSetRadius(const real radius) = 0;
 			virtual Vector3 boxGetDimensions() const = 0;
 			virtual base::String meshGetName() const = 0;
 			virtual Vector3 rayGetOrigin() const = 0;
