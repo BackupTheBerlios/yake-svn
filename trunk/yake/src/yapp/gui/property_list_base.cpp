@@ -1,4 +1,4 @@
-#include "property_list_base.h"
+#include <yapp/gui/property_list_base.h>
 
 namespace yake
 {

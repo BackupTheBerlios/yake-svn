@@ -1,4 +1,4 @@
-#include "static_text_base.h"
+#include <yapp/gui/static_text_base.h>
 
 namespace yake
 {

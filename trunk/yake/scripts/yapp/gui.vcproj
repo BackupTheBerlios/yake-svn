@@ -12,20 +12,20 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../../common/bin/debug"
-			IntermediateDirectory="../../common/obj/debug/$(ProjectName)"
+			OutputDirectory="../../../common/bin/debug"
+			IntermediateDirectory="../../../common/obj/debug/$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./../;../../yake/reflection;../../dependencies/lua/include;../../dependencies/luabind;../../dependencies/boost/;../../dependencies/tnl/tnl"
+				AdditionalIncludeDirectories="./../../;../../yake/reflection;../../dependencies/lua/include;../../dependencies/luabind;../../dependencies/boost/;../../dependencies/tnl/tnl"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
+				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="yapp/gui/precompiled.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"

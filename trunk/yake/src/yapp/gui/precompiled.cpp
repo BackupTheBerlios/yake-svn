@@ -18,5 +18,4 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <yapp/plugins/guiCEGUI/precompiled.h>
-
+#include <yapp/gui/precompiled.h>

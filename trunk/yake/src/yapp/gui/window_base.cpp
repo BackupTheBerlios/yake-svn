@@ -1,4 +1,4 @@
-#include "window_base.h"
+#include <yapp/gui/window_base.h>
 
 namespace yake
 {
