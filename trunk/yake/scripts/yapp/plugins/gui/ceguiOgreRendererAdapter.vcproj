@@ -72,7 +72,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/;../../../../dependencies/ogrenew/OgreMain/include;../../../../dependencies/cegui_mk2/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_GRAPHICSCONCRETEAPI_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"
@@ -84,10 +84,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain.lib"
+				AdditionalDependencies="OgreMain.lib yapp.lib CEGUIBase.lib OgreGUIRenderer.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ogrenew/OgreMain/lib/Release"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ogrenew/OgreMain/lib/Release;../../../../dependencies/cegui_mk2/lib/"
+				ModuleDefinitionFile="../../../../src/yapp/plugins/ceguiOgreRendererAdapter/plugin.def"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
