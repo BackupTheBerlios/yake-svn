@@ -26,7 +26,9 @@ extern "C" {
 }
 #define LUABIND_NO_HEADERS_ONLY
 #include <dependencies/luabind/luabind/luabind.hpp>
+
 #include <inc/plugins/scriptingLua/ScriptingSystemLua.h>
+#include <fstream>
 
 namespace yake {
 namespace scripting {
@@ -65,10 +67,24 @@ namespace scripting {
 	}
 
 	//------------------------------------------------------
-	void LuaVM::execute( const String & data )
+	void LuaVM::execute( const String & rData )
 	{
 		if (mLuaState)
-			lua_dostring( mLuaState, data.c_str() );
+			lua_dostring( mLuaState, rData.c_str() );
+	}
+
+	//------------------------------------------------------
+	void LuaVM::execute( scripting::IScript* pScript )
+	{
+		if ( ( pScript->getCreator()->getLanguage() != scripting::ScriptingSystem::L_LUA ) || 
+			( 0 == mLuaState ) )
+			return;
+
+		LuaScript* pLuaScript = static_cast< LuaScript* > ( pScript );
+
+		const base::String& rFileName = pLuaScript->getData();
+
+		lua_dofile( mLuaState, rFileName.c_str() ); 
 	}
 
 	//------------------------------------------------------
@@ -92,10 +108,48 @@ namespace scripting {
 	}
 
 	//------------------------------------------------------
-	scripting::IScript* ScriptingSystemLua::createScriptFromFile( const String & file )
+	scripting::IScript* ScriptingSystemLua::createScriptFromFile( const String & rFile )
 	{
-		return 0;
+		LuaScript* pLuaScript = new LuaScript( this );
+
+		pLuaScript->setData( rFile );
+
+		return pLuaScript;
 	}
 
+	//------------------------------------------------------
+	LuaScript::LuaScript( scripting::ScriptingSystem* pCreator ) : mCreator( pCreator )
+	{
+		YAKE_ASSERT( mCreator ).debug( "creator scripting system undefined!" );
+	}
+
+	//------------------------------------------------------
+	LuaScript::~LuaScript()
+	{
+	}
+
+	//------------------------------------------------------
+	const ScriptingSystem* LuaScript::getCreator() const 
+	{
+		return mCreator;
+	}
+
+	//------------------------------------------------------
+	bool LuaScript::isLoaded() 
+	{
+		return mFileName.size() != 0;
+	}
+		
+	//------------------------------------------------------
+	void LuaScript::setData( const base::String& rData )
+	{
+		mFileName = rData;
+	}
+
+	//------------------------------------------------------
+	const base::String& LuaScript::getData() const 
+	{
+		return mFileName;
+	}
 }
 }

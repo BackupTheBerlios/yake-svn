@@ -56,7 +56,7 @@ namespace scripting {
 		by a virtual machine.
 		\see IVM
 		*/
-		virtual scripting::IScript* createScriptFromFile( const String & file );
+		virtual scripting::IScript* createScriptFromFile( const String & rFile );
 
 	protected:
 		typedef std::vector< scripting::IVM* > VMList;
@@ -83,10 +83,9 @@ namespace scripting {
 		virtual const scripting::ScriptingSystem* getCreator() const
 		{ return mCreator; }
 
-		virtual void execute( const String & data );
+		virtual void execute( const String & rData );
 
-		virtual void execute( scripting::IScript * pScript )
-		{ }
+		virtual void execute( scripting::IScript * pScript );
 
 		lua_State* getLuaState() const { return mLuaState; }
 	protected:
@@ -125,6 +124,26 @@ namespace scripting {
 		{
 			return &mPropInterface;
 		}*/
+	};
+
+	class LuaScript : public scripting::IScript
+	{
+	public:
+		LuaScript( ScriptingSystem* pCreator );
+		virtual ~LuaScript();
+		/** Get a pointer to the scripting system that
+			created this IScript object.
+		*/
+		virtual const ScriptingSystem* getCreator() const;
+
+		virtual bool isLoaded();
+		virtual void setData( const base::String& rData );
+
+		const base::String& getData() const;
+
+	private:
+		base::String			mFileName;
+		const ScriptingSystem*	mCreator;
 	};
 
 } // scripting
