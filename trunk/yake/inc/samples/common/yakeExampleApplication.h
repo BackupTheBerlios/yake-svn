@@ -1,4 +1,7 @@
-
+/**
+	\todo add loading of script bindings
+	\todo add subscription to shutdown request by graphics system (due to closed window)
+*/
 #include <inc/graphics/yakeGraphicsSystem.h>
 #include <inc/physics/yakePhysicsSystem.h>
 #include <inc/scripting/yakeScriptingSystem.h>

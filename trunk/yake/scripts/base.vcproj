@@ -37,6 +37,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
+				GenerateDebugInformation="TRUE"
 				ImportLibrary="../common/lib/debug/$(ProjectName).lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
