@@ -131,7 +131,7 @@ std::ostream& operator<<( std::ostream & stream, typed_field<T> & field )
 }
 
 template< typename T >
-bool operator==( typed_field<T> & field, T value )
+bool operator==( typed_field<T> & field, const T & value )
 {
 	return field.get() == value;    
 }
