@@ -7,6 +7,7 @@
 #include <yake/scripting/yakeScriptingSystem.h>
 #include <yake/input/yakeInputSystem.h>
 #include <yake/input/yakeInputEventGenerator.h>
+#include <yake/audio/yakeAudio.h>
 
 namespace yake {
 	using namespace base::templates;
@@ -24,6 +25,7 @@ namespace exapp {
 		scripting::ScriptingSystem				* mScriptingSystem;
 		SharedPtr<scripting::IBinder>			mScriptingBindings;
 		input::InputSystem						* mInputSystem;
+		Pointer<audio::IAudioSystem>			mAudioSystem;
 		bool									mShutdownRequested;
 	protected:
 		input::KeyboardEventGenerator			mKeyboardEventGenerator;
@@ -38,11 +40,19 @@ namespace exapp {
 		bool									mLoadScriptingSystem;
 		bool									mLoadInputSystem;
 		bool									mLoadScriptingBindings;
+		bool									mLoadAudioSystem;
 	public:
-		ExampleApplication(bool loadGraphics, bool loadPhysics, bool loadScripting, bool loadInput, bool loadScriptingBindings ) :
+		ExampleApplication(bool loadGraphics, bool loadPhysics, bool loadScripting, bool loadInput, bool loadScriptingBindings, bool loadAudio ) :
 				mShutdownRequested(false), 
-				mLoadGraphicsSystem( loadGraphics ), mLoadPhysicsSystem( loadPhysics ), mLoadScriptingSystem( loadScripting ), mLoadInputSystem( loadInput ), mLoadScriptingBindings(loadScriptingBindings),
-				mScriptingSystem(0), mPhysicsSystem(0), mInputSystem(0)//, mScriptingBindings(0)
+				mLoadGraphicsSystem( loadGraphics ),
+				mLoadPhysicsSystem( loadPhysics ), 
+				mLoadScriptingSystem( loadScripting ), 
+				mLoadInputSystem( loadInput ), 
+				mLoadScriptingBindings( loadScriptingBindings ),
+				mLoadAudioSystem( loadAudio ),
+				mScriptingSystem(0),
+				mPhysicsSystem(0),
+				mInputSystem(0)//, mScriptingBindings(0)
 		{
 		}
 
@@ -99,6 +109,12 @@ namespace exapp {
 		input::InputSystem& getInputSystem() const
 		{ return *mInputSystem; }
 
+		audio::IAudioSystem* getAudioSystem() const
+		{
+			YAKE_ASSERT( mAudioSystem.get() );
+			return mAudioSystem.get();
+		}
+
 		virtual void initialise()
 		{
 			// scripting
@@ -154,6 +170,16 @@ namespace exapp {
 				YAKE_ASSERT( mInputSystem ).error("Cannot create input system.");
 
 				setupInput();
+			}
+
+			// audio
+			if (mLoadAudioSystem)
+			{
+				Pointer<base::Library> pLib = loadLib( "audioOpenAL.dll" );
+				YAKE_ASSERT( pLib ).debug("Cannot load audio plugin.");
+
+				mAudioSystem = create< audio::IAudioSystem >();
+				//OR: mAudioSystem.reset( create< audio::IAudioSystem >("openalpp") );
 			}
 		}
 
@@ -237,6 +263,7 @@ namespace exapp {
 			YAKE_SAFE_DELETE( mInputSystem );
 			//YAKE_SAFE_DELETE( mScriptingBindings );
 			mGraphicsSystem.reset();
+			mAudioSystem.reset();
 			YAKE_SAFE_DELETE( mPhysicsSystem );
 			YAKE_SAFE_DELETE( mScriptingSystem );
 		}
