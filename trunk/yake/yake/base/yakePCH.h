@@ -32,8 +32,8 @@
 #include "templates/yakePointer.h"
 #include <yake/base/templates/yakeDeque.h>
 
-#include "mpl/yakeAbstractFactory.h"
-#include "mpl/sequences.h"
+#include <yake/base/mpl/yakeAbstractFactory.h>
+#include <yake/base/mpl/sequences.h>
 
 #include "yakePrerequisites.h"
 #include "yakeVersion.h"

@@ -24,18 +24,16 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
+namespace yake {
+namespace testsuite {
+
 using namespace yake::base;
 using namespace yake::samples::common;
-
-namespace yake
-{
-namespace testsuite
-{
 
 class my_app_auto : application< auto_init<> >
 {};
 
-struct my_app_auto_mini : application< auto_init<minimum_config> >
+struct my_app_auto_mini : application< auto_init<minimum_config> > 
 {};
 
 struct my_app_auto_delayed : application< delayed_auto_init<minimum_config> >
@@ -55,7 +53,7 @@ struct my_app_manual : application< manual_init<basic_config> >
    my_app_manual()
    {
      load_library("graphicsOGRE.dll");
-     load_system<graphics_system>("yake.graphics.ogre3d");
+     load_system<yake::graphics::IGraphicsSystem>("yake.graphics.ogre3d");
      /*load_library("cegui_plugin");
      load_system<gui_system>("yake.gui.cegui");
      m_gui_renderer_adapter =

@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -121,6 +121,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\samples\common\configs.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\samples\common\ext_lib_man.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\samples\common\init_gui.h">
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\samples\common\initialization.h">

@@ -18,31 +18,28 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_YAKE_H
-#define YAKE_BASE_YAKE_H
+#ifndef YAKE_BASE_MPL_LAMBDA_H
+#define YAKE_BASE_MPL_LAMBDA_H
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-// Yake
-#include "yakePrerequisites.h"
-#include "yakePCH.h"
+#include <boost/mpl/lambda.hpp>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-
-#pragma comment(lib, "base.lib")
-
 namespace yake
 {
 namespace base
 {
+namespace mpl
+{
 
-extern YAKE_BASE_API Version linktime;
-const Version compiletime ( 0, 0, 1 );
+namespace lambda = boost::mpl;
 
+} // mpl
 } // base
 } // yake
 
-#endif // YAKE_BASE_YAKE_H
+#endif // YAKE_BASE_MPL_LAMBDA_H
