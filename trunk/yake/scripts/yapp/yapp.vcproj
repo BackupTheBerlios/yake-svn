@@ -67,8 +67,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../common/bin/$(ConfigurationName)"
-			IntermediateDirectory="../common/obj/$(ConfigurationName)"
+			OutputDirectory="../../common/bin/$(ConfigurationName)"
+			IntermediateDirectory="../../common/obj/$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
