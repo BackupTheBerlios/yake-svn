@@ -23,7 +23,7 @@ namespace base {
 namespace math {
 
 
-inline Color operator*( float fScalar, const Color& rColor )
+inline Color operator*( real fScalar, const Color& rColor )
 {
 	return Color( rColor.r * fScalar, rColor.g  * fScalar, rColor.b  * fScalar, rColor.a  * fScalar );
 }
@@ -35,7 +35,7 @@ inline Color::Color()
 }
 
 
-inline Color::Color( float fRed, float fGreen, float fBlue, float fAlpha )
+inline Color::Color( real fRed, real fGreen, real fBlue, real fAlpha )
 {
 	r = fRed;
 	g = fGreen;
@@ -43,8 +43,7 @@ inline Color::Color( float fRed, float fGreen, float fBlue, float fAlpha )
 	a = fAlpha;
 }
 
-
-inline Color::Color( float Coordinates[ 4 ] )
+inline Color::Color( real Coordinates[ 4 ] )
 {
 	r = Coordinates[ 0 ];
 	g = Coordinates[ 1 ];
@@ -86,25 +85,25 @@ inline bool Color::operator!=( const Color& rIn ) const
 }
 
 
-inline float& Color::operator()( uint8 bIndex )
+inline real& Color::operator()( uint8 bIndex )
 {
 	return V[ bIndex ];
 }
 
 
-inline const float& Color::operator()( uint8 bIndex ) const
+inline const real& Color::operator()( uint8 bIndex ) const
 {
 	return V[ bIndex ];
 }
 
 
-inline Color::operator float*()
+inline Color::operator real*()
 {
 	return V;
 }
 
 
-inline Color::operator const float*() const
+inline Color::operator const real*() const
 {
 	return V;
 }
@@ -140,12 +139,12 @@ inline Color& Color::operator-=( const Color& rIn )
 	return *this;
 }
 
-inline Color Color::operator*( float fScalar ) const
+inline Color Color::operator*( real fScalar ) const
 {
 	return Color( r * fScalar, g * fScalar, b * fScalar, a * fScalar );
 }
 
-inline Color& Color::operator*=( float fScalar )
+inline Color& Color::operator*=( real fScalar )
 {
 	r *= fScalar;
 	g *= fScalar;
@@ -155,16 +154,16 @@ inline Color& Color::operator*=( float fScalar )
 	return *this;
 }
 
-inline Color Color::operator/( float fScalar ) const
+inline Color Color::operator/( real fScalar ) const
 {
-	float fInverseScalar = 1.0f / fScalar;
+	real fInverseScalar = 1.0f / fScalar;
 
 	return Color( r * fInverseScalar, g * fInverseScalar, b * fInverseScalar, a * fInverseScalar );
 }
 
-inline Color& Color::operator/=( float fScalar )
+inline Color& Color::operator/=( real fScalar )
 {
-	float fInverseScalar = 1.0f / fScalar;
+	real fInverseScalar = 1.0f / fScalar;
 
 	r *= fInverseScalar;
 	g *= fInverseScalar;
@@ -187,19 +186,19 @@ inline void Color::negate()
 	a = -a ;
 }
 
-inline float Color::operator*( const Color& rIn ) const
+inline real Color::operator*( const Color& rIn ) const
 {
 	return ( r * rIn.r ) + ( g * rIn.g ) + ( b * rIn.b ) + ( a * rIn.a );
 }
 
-inline void Color::normalize( float fTolerance )
+inline void Color::normalize( real fTolerance )
 {
-	float fSquaredLength = ( r * r ) + ( g  * g ) + ( b  * b ) + ( a  * a );
+	real fSquaredLength = ( r * r ) + ( g  * g ) + ( b  * b ) + ( a  * a );
 
 	// Beg ond tolerance?
 	if( fSquaredLength > ( fTolerance * fTolerance ) )
 	{
-		float fInverseLength = 1.0f / ( float ) sqrt( fSquaredLength );
+		real fInverseLength = 1.0f / ( real ) sqrt( fSquaredLength );
 
 		// Normalib e.
 		r *= fInverseLength;
@@ -209,14 +208,14 @@ inline void Color::normalize( float fTolerance )
 	}
 }
 
-inline Color Color::getNormalized( float fTolerance ) const
+inline Color Color::getNormalized( real fTolerance ) const
 {
-	float fSquaredLength = ( r * r ) + ( g  * g ) + ( b  * b ) + ( a  * a );
+	real fSquaredLength = ( r * r ) + ( g  * g ) + ( b  * b ) + ( a  * a );
 
 	// Beg ond tolerance?
 	if( fSquaredLength > ( fTolerance * fTolerance ) )
 	{
-		float fInverseLength = 1.0f / ( float ) sqrt( fSquaredLength );
+		real fInverseLength = 1.0f / ( real ) sqrt( fSquaredLength );
 
 		// Return the normalib ed vector.
 		return Color( r * fInverseLength, g * fInverseLength, b * fInverseLength, a * fInverseLength );
@@ -225,12 +224,12 @@ inline Color Color::getNormalized( float fTolerance ) const
 	return Color( r, g, b, a );
 }
 
-inline float Color::getLength() const
+inline real Color::getLength() const
 {
-	return ( float ) sqrt( ( r * r ) + ( g  * g ) + ( b  * b ) + ( a  * a ) );
+	return ( real ) sqrt( ( r * r ) + ( g  * g ) + ( b  * b ) + ( a  * a ) );
 }
 
-inline float Color::getSquaredLength() const
+inline real Color::getSquaredLength() const
 {
 	return ( r * r ) + ( g  * g ) + ( b  * b ) + ( a  * a );
 }

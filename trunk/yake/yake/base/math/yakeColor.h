@@ -46,8 +46,8 @@ class YAKE_BASE_API Color
 public:
 	// Constructor.
 	Color();
-	Color( float fRed, float fGreen, float fBlue, float fAlpha = 1.0f );
-	Color( float Coordinates[ 4 ] );
+	Color( real fRed, real fGreen, real fBlue, real fAlpha = 1.0f );
+	Color( real Coordinates[ 4 ] );
 	Color( const Color& rIn );
 
 	// Assignment Operator.
@@ -58,10 +58,10 @@ public:
 	bool operator!=( const Color& rIn ) const;
 
 	// Access Operators.
-	float& operator()( uint8 bIndex );
-	const float& operator()( uint8 bIndex ) const;
-	operator float*();
-	operator const float*() const;
+	real& operator()( uint8 bIndex );
+	const real& operator()( uint8 bIndex ) const;
+	operator real*();
+	operator const real*() const;
 
 	// Addition.
 	Color operator+( const Color& rIn ) const;
@@ -72,27 +72,27 @@ public:
 	Color& operator-=( const Color& rIn );
 
 	// Scalar Multiplication.
-	Color operator*( float fScalar ) const;
-	Color& operator*=( float fScalar );
+	Color operator*( real fScalar ) const;
+	Color& operator*=( real fScalar );
 
 	// Scalar Division.
-	Color operator/( float fScalar ) const;
-	Color& operator/=( float fScalar );
+	Color operator/( real fScalar ) const;
+	Color& operator/=( real fScalar );
 
 	// Negation.
 	Color operator-() const;
 	void negate();
 
 	// Dot Product.
-	float operator*( const Color& rIn ) const;
+	real operator*( const Color& rIn ) const;
 
 	// Normalization.
-	void normalize( float fTolerance = 1E-06 );
-	Color getNormalized( float fTolerance = 1E-06 ) const;
+	void normalize( real fTolerance = 1E-06 );
+	Color getNormalized( real fTolerance = 1E-06 ) const;
 
 	// Miscellaneous Operations.
-	float getLength() const;
-	float getSquaredLength() const;
+	real getLength() const;
+	real getSquaredLength() const;
 
 	// The Serialization Function.
 	IOutputStream& operator << (IOutputStream& rStream) const;
@@ -103,23 +103,23 @@ public:
 		// Either access by short name.
 		struct
 		{
-			float r;
-			float g;
-			float b;
-			float a;
+			real r;
+			real g;
+			real b;
+			real a;
 		};
 
 		// Or access by long name.
 		struct
 		{
-			float m_fRed;
-			float m_fGreen;
-			float m_fBlue;
-			float m_fAlpha;
+			real m_fRed;
+			real m_fGreen;
+			real m_fBlue;
+			real m_fAlpha;
 		};
 
 		// Or access like a vector.
-		float V[ 4 ];
+		real V[ 4 ];
 	};
 
 	// Predefined Vectors.
@@ -131,7 +131,7 @@ public:
 };
 
 // Scalar Multiplication.
-Color operator*( float fScalar, const Color& rColor );
+Color operator*( real fScalar, const Color& rColor );
 
 } // math
 } // base
