@@ -35,14 +35,17 @@ namespace state {
 	//---------------------------------------------------------
 	void State::enter()
 	{
+		event_enter();
 		onEnter();
 	}
 	void State::step()
 	{
+		event_step();
 		onStep();
 	}
 	void State::exit()
 	{
+		event_exit();
 		onExit();
 	}
 

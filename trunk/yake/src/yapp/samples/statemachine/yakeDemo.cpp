@@ -59,7 +59,7 @@ public:
 	//
 	void step()
 	{
-		CHECK_EC_OK( getCharacterMachine().step() );
+		CHECK_EC_OK( getCharacterMachine().executeState() );
 	}
 	// events:
 	void event_birth()
@@ -73,12 +73,6 @@ public:
 	void event_die()
 	{
 		CHECK_EC_OK( getCharacterMachine().changeTo( "dead" ) );
-		event_afterLife();
-	}
-	void event_afterLife()
-	{
-		std::cout << "(event_afterLife: right before changing to 'afterlife')\n";
-		std::cout << getCharacterMachine();
 		CHECK_EC_OK( getCharacterMachine().changeTo( "afterlife" ) );
 	}
 
@@ -86,27 +80,17 @@ public:
 	class StateAlive : public state::State
 	{
 	public:
-		StateAlive( Hero& rHero ) : mHero( rHero ), mTtl(3)
-		{}
-		virtual void onEnter()
-		{
-		}
 		virtual void onStep()
 		{
-			COUTLN( "  STATE: stateAlive() (member function) time before walking = " << mTtl-- );
-			if (mTtl < 0)
-				mHero.event_die();
+			COUTLN( "  STATE: stateAlive() (member function)" );
 		}
-	private:
-		Hero&	mHero;
-		int		mTtl;
 	};
 	class StateDead : public state::State
 	{
 	public:
 		virtual void onStep()
 		{
-			COUTLN( "  STATE: stateDead() (member function)" );
+			COUTLN( "  STATE: stateAlive() (member function)" );
 		}
 	};
 	class StateAfterLife : public state::State
@@ -114,7 +98,7 @@ public:
 	public:
 		virtual void onStep()
 		{
-			COUTLN( "  STATE: stateAfterAlive() (member function)" );
+			COUTLN( "  STATE: stateAlive() (member function)" );
 		}
 	};
 
@@ -151,13 +135,20 @@ void transDying()
 	COUTLN( "  TRANS: dying()" );
 }
 
+template<typename StateIdType>
+std::ostream& operator << (std::ostream& lhs, const state::Machine<StateIdType> & m)
+{
+	m.dump( lhs );
+	return lhs;
+}
+
 void test_fsm()
 {
 	COUTLN("\nDemonstrating a FSM with sets of free and member functions as transitions:\n");
 	Hero theHero;
 
 	// register states
-	theHero.getCharacterMachine().addState( "alive", new Hero::StateAlive(theHero) );
+	theHero.getCharacterMachine().addState( "alive", new Hero::StateAlive() );
 	theHero.getCharacterMachine().addState( "dead", new Hero::StateDead() );
 	theHero.getCharacterMachine().addState( "afterlife", new Hero::StateAfterLife() );
 
@@ -198,17 +189,10 @@ void test_fsm()
 	COUTLN( std::endl << "event: birth! (transition from 'alive' to 'alive' again (really!))" );
 	theHero.event_birth();
 	theHero.step();
-	theHero.step();
-	theHero.step();
-	theHero.step();
-	theHero.step();
-	theHero.step();
-	theHero.step();
-	theHero.step();
-/*
+
 	COUTLN( std::endl << "event: die! (transition from 'alive' to 'dead' and then on to 'afterlife')" );
 	theHero.event_die();
-	theHero.step();*/
+	theHero.step();
 }
 
 int main()
