@@ -77,7 +77,7 @@ namespace app {
 	typedef Vector<physics::ICollisionGeometry*> CollisionGeomList;
 
 	void createDebugGeometryForComplexPhysical(
-				const physics::IComplexObject* pComplex,
+				const physics::IActor* pComplex,
 				graphics::IWorld* pWorld,
 				Vector<graphics::ISceneNode*> & nodes,
 				SharedMUCList & ctrlrs,
@@ -138,7 +138,7 @@ namespace app {
 	}
 
 	void createDebugGeometryForComplexPhysical(
-				const physics::IComplexObject* pComplex,
+				const physics::IActor* pComplex,
 				graphics::IWorld* pWorld,
 				SharedSceneNodeList & nodes,
 				SharedMUCList & ctrlrs,
