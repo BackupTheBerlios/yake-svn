@@ -48,7 +48,8 @@ namespace base {
 			kUint32=1,
 			kReal=2,
 			kString=3,
-			kPointer=4
+			kPointer=4,
+			kBool=5
 		};
 		typedef uint8 ParamTypeNone;
 
@@ -70,7 +71,7 @@ namespace base {
 			void*	p_;
 		};
 		/** Parameter value */
-		typedef Variant<ParamTypeNone,uint32,real,String,Pointer> Param;
+		typedef Variant<ParamTypeNone,uint32,real,String,Pointer,bool> Param;
 
 		/** A vector of strings */
 		typedef templates::Vector<String> StringVector;
@@ -95,6 +96,8 @@ namespace base {
 
 		/** Sets the value of a given parameter identified by a key (id) to a Pointer wrapper object. */
 		bool set( const String & id, Pointer & value );
+
+		bool has( const String & id ) const;
 	private:
 		typedef templates::AssocVector< String, Param > ParamMap;
 		ParamMap	mParams;

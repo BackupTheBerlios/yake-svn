@@ -36,6 +36,10 @@ namespace base {
 	{
 		mParams.clear();
 	}
+	bool ParamHolder::has( const String & id ) const
+	{
+		return (mParams.end() != mParams.find( id ));
+	}
 	ParamHolder::StringVector ParamHolder::getKeys() const
 	{
 		StringVector keys;
