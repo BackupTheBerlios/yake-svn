@@ -24,7 +24,7 @@
 //============================================================================
 #include <yapp/samples/model/yakePCH.h>
 #include <yapp/model/yakePhysical.h>
-#include <yapp/loader/yakeXODE.h>
+#include <yapp/loader/yakeXODEParser.h>
 
 using namespace yake;
 using namespace yake::base::templates;
@@ -34,7 +34,7 @@ using namespace yake::data;
 class TheApp : public yake::exapp::ExampleApplication
 {
 private:
-	physics::IWorld*				mPWorld;
+	SharedPtr<physics::IWorld>			mPWorld;
 
 	app::model::Physical* 				mPhysical;
 	
@@ -53,7 +53,7 @@ public:
 	void setupWorld()
 	{
 		mPhysical = new app::model::Physical();
-		YAKE_ASSERT( pPhysical );
+		YAKE_ASSERT( mPhysical );
 		
 		yake::data::dom::xml::XmlSerializer ser;
 		ser.parse( mWorldFilename, false );
@@ -61,7 +61,7 @@ public:
 
 		
 		parser::xode::XODEParserV1 parser( *mPhysical );
-		parser.load( ser.getDocumentNode() , mPWorld );
+		parser.load( ser.getDocumentNode() , mPWorld.get() );
 	}
 
 	virtual void run()
@@ -84,12 +84,12 @@ public:
 
 			// step simulation
 			if ( !shutdownRequested() )
-				mPWorld->update( timeElapsed );
+				mPWorld->step( timeElapsed );
 		}
 
 		YAKE_SAFE_DELETE( mPhysical );
 
-		YAKE_SAFE_DELETE( mPWorld );
+		mPWorld.reset();
 	}
 };
 
