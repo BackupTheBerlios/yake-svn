@@ -388,7 +388,7 @@ namespace math
             q.x = c.x * invs;
             q.y = c.y * invs;
             q.z = c.z * invs;
-            q.w = s * 0.5;
+            q.w = s * real(0.5);
             return q;
         }
 
