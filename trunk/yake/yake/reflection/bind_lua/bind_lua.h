@@ -116,12 +116,12 @@ static void register_lua_class() \
 \
 static luabind::class_<class_type> & get_lua_class() \
 { \
-	static luabind::class_<CLASS_NAME> CLASS_NAME##_lua = luabind::class_<CLASS_NAME>(#CLASS_NAME); \
+	static luabind::class_<class_type> CLASS_NAME##_lua(#CLASS_NAME); \
 	return CLASS_NAME##_lua; \
 } \
 \
 static luabind::detail::class_rep & get_lua_crep() \
-{	return *luabind::detail::class_registry::get_registry(L)->find_class(LUABIND_TYPEID(ClassType));	} \
+{	return *luabind::detail::class_registry::get_registry(L)->find_class(LUABIND_TYPEID(class_type));	} \
 \
 static void commit_lua_methods() \
 { \
@@ -131,8 +131,8 @@ static void commit_lua_methods() \
 	detail::class_rep & lua_crep = get_lua_crep(); \
 \
 	/* set reference to crep */ \
-	for( std::map<const char*, detail::method_rep, detail::ltstr>::iterator iter( lua_class.m_methods.begin() ); \
-		iter != lua_class.m_methods.end(); ++iter ) \
+	for(std::map<const char*, detail::method_rep, detail::ltstr>::iterator iter = lua_class.m_methods.begin(); \
+		iter != lua_class.m_methods.end(); ++iter) \
 	{	iter->second.crep = &lua_crep; } \
 \
 	/* add to crep */ \
