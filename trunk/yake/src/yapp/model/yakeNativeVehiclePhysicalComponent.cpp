@@ -128,9 +128,43 @@ namespace vehicle {
 		YAKE_ASSERT( mpChassis == 0 );
 		if (mpChassis)
 			return false;
-		mpChassis = mpPWorld->createBox(1,1,1);
+		//mpChassis = mpPWorld->createBox(1,1,1);
+		mpChassis = mpPWorld->createEmptyPhysicsObject();
+		mpChassis->setBody( mpPWorld->createBody() );
 		mpChassis->getBody()->setMass( tpl.chassisTpl_.mass_ );
 		mpChassis->setPosition( tpl.chassisTpl_.position_ );
+
+		ConstVectorIterator< VehicleTemplate::GeomTemplateList > geomIt( tpl.chassisTpl_.geoms_.begin(), tpl.chassisTpl_.geoms_.end() );
+		while (geomIt.hasMoreElements())
+		{
+			const VehicleTemplate::GeomTemplate & geomTpl = geomIt.getNext();
+			COUTLN(	"  geom type=" << geomTpl.type_ <<
+					" pos=" << geomTpl.position_.x << ", " << geomTpl.position_.y << ", " << geomTpl.position_.z <<
+					" dim=" << geomTpl.dimensions_.x << ", " << geomTpl.dimensions_.y << ", " << geomTpl.dimensions_.z );
+			physics::ICollisionGeometry* pGeom = 0;
+			if (geomTpl.type_ == physics::ICollisionGeometry::CGT_BOX)
+			{
+				const Vector3 & dim = geomTpl.dimensions_;
+				pGeom = mpPWorld->createCollisionGeomBox( dim.x, dim.y, dim.z );
+				YAKE_ASSERT( pGeom );
+			}
+			else if (geomTpl.type_ == physics::ICollisionGeometry::CGT_BOX)
+			{
+				const Vector3 & dim = geomTpl.dimensions_;
+				pGeom = mpPWorld->createCollisionGeomBox( dim.x, dim.y, dim.z );
+				YAKE_ASSERT( pGeom );
+			}
+			else
+			{
+				YAKE_ASSERT( 1==0 ).warning("unsupported geom type!");
+			}
+			if (!pGeom)
+				continue;
+			physics::ICollisionGeometry* pTransformGeom = mpPWorld->createCollisionGeomTransform();
+			YAKE_ASSERT( pTransformGeom );
+			pTransformGeom->tfAttachGeom( pGeom );
+			mpChassis->addCollisionGeometry( pTransformGeom );
+		}
 
 		YAKE_ASSERT( mpPhysical == 0 );
 		mpPhysical = new Physical();
@@ -213,6 +247,8 @@ namespace vehicle {
 			//
 			pW->setJoint( pJ );
 			mpPhysical->addJoint( pJ );
+			//
+			pW->setSuspension( wheelTpl.suspensionSpring_, wheelTpl.suspensionDamping_ );
 		}
 
 		return true;

@@ -38,6 +38,15 @@ namespace vehicle {
 	public:
 		VehicleTemplate();
 		~VehicleTemplate();
+
+		struct GeomTemplate
+		{
+			Vector3											position_;
+			Vector3											dimensions_;
+			physics::ICollisionGeometry::CollisonGeomType	type_;
+		};
+		typedef Deque<GeomTemplate> GeomTemplateList;
+
 		enum GearMode
 		{
 			GM_FORWARD,
@@ -88,6 +97,8 @@ namespace vehicle {
 			String		gfxDescriptor_;
 			String		gfxDescriptorType_;
 			Vector3		position_;
+			real		suspensionSpring_;
+			real		suspensionDamping_;
 		};
 		size_t getNumWheels() const;
 		const WheelTemplate& getWheel(const size_t index) const;
@@ -95,10 +106,12 @@ namespace vehicle {
 
 		struct ChassisTemplate
 		{
-			String		name_;
-			real		mass_;
-			String		gfxDescriptor_;
-			Vector3		position_;
+			String				name_;
+			real				mass_;
+			String				gfxDescriptor_;
+			Vector3				position_;
+			Vector3				dimensions_;
+			GeomTemplateList	geoms_;
 		};
 		ChassisTemplate	chassisTpl_;
 	private:
