@@ -67,7 +67,7 @@ namespace base
 			typedef std::hash_compare< YAKE_BASE_STRING, std::less< YAKE_BASE_STRING > > _StringHash;
 //#endif
 
-#undef YAKE_BASE_STRING
+//#undef YAKE_BASE_STRING
 
 } // base
 } // yake

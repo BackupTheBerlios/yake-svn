@@ -33,7 +33,7 @@ struct typed_field : public meta_field
 	T & operator=( T const & value )
 	{
 		value_ = value;   
-		std::cout << get_object().get_name() << "::" << field_name_ 
+		std::cout << get_object().get_name() << "::" << name_ 
 			<< "=" << value << std::endl; 
 		get_object().on_change_field( *this );
 		return value_;
@@ -65,6 +65,19 @@ struct typed_field : public meta_field
 		return boost::lexical_cast<std::string>( value_ );
 	}
 
+	// todo via constr, clone
+	void set_min_error( float predict_min_error )
+	{
+		if( !( flags_ & predict ) ) throw exception();
+		predict_min_error_ = predict_min_error;    
+	}
+
+	void set_max_error( float predict_max_error )
+	{
+		if( !( flags_ & predict ) ) throw exception();
+		predict_max_error_ = predict_max_error;    
+	}
+
 	void add_to_object( meta_object & object )
 	{
 		// DISPATCH TRICK ( used by meta_class) : add clone to the meta object, this way we don't loose type information
@@ -79,10 +92,12 @@ struct typed_field : public meta_field
 		// DISPATCH TRICK ( used by meta_class) : add clone to the meta object, this way we don't loose type information
 		// and obj->add_field => hook::on_add_field can use typed_field<> instead of the abstract meta_field
 		// interface, so the replication system has concrete information about the value offset and its' size
-    object.add_field< this_type >( * new this_type( object, field_name_, value_, flags_ ) );
+    object.add_field< this_type >( * new this_type( object, name_, value_, flags_ ) );
 	};
 
-	T value_;	
+	T value_;
+	float predict_min_error_;
+	float predict_max_error_;
 };
 
 template< typename T >

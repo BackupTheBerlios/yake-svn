@@ -143,6 +143,9 @@
 				RelativePath=".\concrete_fields.h">
 			</File>
 			<File
+				RelativePath=".\cpp_class.h">
+			</File>
+			<File
 				RelativePath=".\meta_class.h">
 			</File>
 			<File
@@ -162,6 +165,9 @@
 			</File>
 			<File
 				RelativePath=".\object_creators.h">
+			</File>
+			<File
+				RelativePath=".\tnl_hook.h">
 			</File>
 			<File
 				RelativePath=".\typed_field.h">

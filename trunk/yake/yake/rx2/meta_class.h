@@ -9,6 +9,8 @@
 namespace rx
 {
 
+// todo inheritance
+
 class meta_class  : public meta_class_hooks
 {
 public:
@@ -78,7 +80,7 @@ public:
 		for( fields_list::iterator iter = fields_.begin();
 			iter != fields_.end(); iter++ )
 		{
-      if( ( *iter )->field_name_ == name )
+      if( ( *iter )->name_ == name )
 				return *static_cast< typed_field<T>* >( *iter );
 		}
 		throw exception(); // todo

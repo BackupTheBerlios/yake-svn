@@ -26,6 +26,8 @@ void serialize(Archive & ar, rx::typed_field<T> & field, const unsigned int vers
 			(	field.flags_ & rx::save ) ) )
 		{
 			ar & field.value_;
+			ar & field.predict_min_error;
+			ar & field.predict_max_error;
 		}
 }
 

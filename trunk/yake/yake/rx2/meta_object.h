@@ -54,7 +54,7 @@ public:
 	template< typename T >
 	void add_field( T & field )
 	{
-		fields_.insert( fields_map::value_type( field.field_name_, &field ) );
+		fields_.insert( fields_map::value_type( field.name_, &field ) );
 		on_add_field( field );
 	}
 

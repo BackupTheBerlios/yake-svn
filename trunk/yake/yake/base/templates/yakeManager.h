@@ -42,6 +42,9 @@ namespace base
 namespace templates
 {
 
+// todo cleanup
+	// this is too complex
+
 /* Error policy */
 template< typename Identifier_, class Value_ >
 struct DefaultManagerError
@@ -146,10 +149,11 @@ struct RegisterFunctionsNames
 		// Methods
 		bool doRegister( const Identifier_&, Value_ );
 		Value_ getObject( const Identifier_& ) const;
-		std::vector< Identifier_ > getIdentifiers() const;
+		std::vector< Identifier_ > /*const &*/ getIdentifiers() const; // todo
 
 		// Data
-		protected:
+		// todo protected:
+	public:
 			Container mContainer;
 	};
 
@@ -187,6 +191,15 @@ class Manager : public ManagerNamingPolicy_::Map< Identifier_, Value_, ManagerCo
 public:
 	Manager() {}
 	virtual ~Manager() {}
+
+	typedef typename ManagerContainerPolicy_< Identifier_, Value_ >::Type Container;
+	typedef typename Container::iterator iterator;
+
+	iterator begin() 
+	{ return mContainer.begin(); }
+
+	iterator end() 
+	{ return mContainer.end(); }
 };
 
 // Todo: nifty container, function parameters

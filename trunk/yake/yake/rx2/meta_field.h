@@ -9,12 +9,21 @@ namespace rx
 
 class meta_object;
 
-enum flags
+// todo, different flags, use hex
+enum field_flags
 {
-	none			= 1,
-	save			= 2,
-	load			= 4,
-	replicate	= 8
+	none					= 1,
+	save					= 2,
+	load					= 4,
+	replicate			= 8,
+	server				= 16,
+	client				= 32,
+	uncompressed	= 64,
+	compressed		= 128,
+	copy					= 256,
+	interpolate		= 512,
+	extrapolate		= 1024,
+	predict				= 2048
 };
 
 struct meta_field
@@ -25,13 +34,13 @@ struct meta_field
 	{}
 
 	meta_field( meta_object & object, 
-		std::string field_name, int flags = none )
-		: object_( &object ), field_name_( field_name ),
+		std::string name, int flags = none )
+		: object_( &object ), name_( name ),
 			flags_(flags)
 	{}
 
-	meta_field( std::string field_name,	int flags = none )
-		: field_name_( field_name ), 
+	meta_field( std::string name,	int flags = none )
+		: name_( name ), 
 		object_(0), flags_(flags)
 	{}
 
@@ -54,11 +63,11 @@ struct meta_field
 
 	std::string & get_name()
 	{
-		return field_name_;
+		return name_;
 	}
 
 	meta_object * object_;
-	std::string field_name_;
+	std::string name_;
 	int flags_;
 };
 

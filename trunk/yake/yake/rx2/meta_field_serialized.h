@@ -19,7 +19,7 @@ void serialize(Archive & ar, rx::meta_field & field, const unsigned int version)
 {
   ar & field.flags_;
 	ar & field.object_;
-	ar & field.field_name_;
+	ar & field.name_;
 }
 
 }

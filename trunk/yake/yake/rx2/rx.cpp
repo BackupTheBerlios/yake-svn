@@ -2,6 +2,7 @@
 #pragma warning(disable: 4309) // contraction const value
 #pragma warning(disable: 4244) // __w64 int to int
 #pragma warning(disable: 4267) // site_t to unsigned int
+#pragma warning(disable: 4800) // bits AND => bool
 
 // stl
 #include <cassert>
@@ -31,65 +32,7 @@ extern "C"
 #include "BitStream.h"
 
 using namespace rx;
-/*
-struct cpp_class
-{
-public:
-	cpp_class( std::string object_name ) 
-		: meta_object_( meta_class_.create_object( 
-			object_name, test_int, test_string, test_float ) )
-	{
-	}
 
-	typed_field<int> test_int;
-	typed_field<std::string> test_string;
-	typed_field<float> test_float;
-	
-public:
-	static void build_meta_class()
-	{
-		// register fields
-		meta_class_.add_field<int>( "test_int" );
-		meta_class_.add_field<std::string>( "test_string" );
-		meta_class_.add_field<float>( "test_float" );      
-	}	
-
-	static meta_class & get_class()
-	{
-		return meta_class_;
-	}
-
-
-	meta_object & get_object()
-	{
-		return meta_object_;
-	}
-
-private:
-	static meta_class meta_class_;
-	meta_object & meta_object_;
-};
-
- todo
-the static class calls the meta_class constructor which calls
-the register_class function of the class registry and this is
-not initialised at this time, so we need a singleton class
-registry/yake registry 
-//meta_class cpp_class::meta_class_( "cpp_class" );
-
-namespace
-{
-	static struct cpp_class_initor
-	{
-		cpp_class_initor()
-		{
-			static int counter = 0;
-			if( counter++ > 0 ) return;
-			cpp_class::build_meta_class();
-		} \
-	} g_cpp_class_initor;
-} // nameless
-*/
 int main()
 {
 	// runtime class and object defining
@@ -124,6 +67,27 @@ int main()
 		std::cout << "test_object_2::hello_bool=" << ( test_object_2.field<bool>( 
 			"hello_bool" ) ? "true" : "false" ) << std::endl;
 	}
+
+
+	/* todo
+
+<psy|code> if i want to replicate a position, do i _have_ to use typed_field<Vector3> or sth like that?
+<psy|code> and now i have to tie this to the actual Movable...
+
+<metaX> I think there are two possibilities : 
+<metaX> 1. a simply class-to-member-ptr wrapper
+<metaX> 2. used typed_field<vector> ;P
+<metaX> -d
+* FuSiON has joined #yake
+<metaX> how would you do it with rx1?
+<metaX> well, would be possible to do this:
+<metaX> struct player : public movable, rxobject {}; and then add a class-member-ptr to movable::position ...
+<metaX> but there would be no sychronization
+==><metaX> perhaps it's possible to do typed_field<vector&>( "blah", this->myvector );?
+
+
+
+	*/
 
 	// reflect a c++ object
 	/*{
@@ -218,15 +182,22 @@ int main()
 
 		// todo register function
 		// todo use concrete fields inside lua and write converter between lua<>cpp?
+		// todo lua supports meta-mechanisms?
 		module(L)
 		[ 
 			class_<meta_field>("meta_field")
 				.enum_("flags")
 				[
-					value("none", 1),
-					value("save", 2),
-					value("load", 4),
-					value("replicate", 8)
+					value("none",					1),
+					value("save",					2),
+					value("load",					4),
+					value("replicate",		8),
+					value("uncompressed", 16),
+					value("compressed",		32),
+					value("copy",					64),
+					value("interpolate",	128),
+					value("server",				256),
+					value("client",				512)
 				],
 			class_<int_field>("int_field")
 				.def("get", &int_field::get )
@@ -290,7 +261,7 @@ int main()
 
 		// define class with default value
 		meta_class replica_class;
-		replica_class.add_field<bool, replicate>( "hello_bool", false );
+		replica_class.add_field<bool, replicate | server>( "hello_bool", false );
 	
 		// create an instance of that just defined class
 		meta_object & replica_object = replica_class.create_object( "replica_object" );

@@ -32,6 +32,7 @@
 #include <yake/base/yakeException.h>
 #include <yake/base/templates/yakePointer.h>
 #include <yake/base/templates/yakeManager.h>
+#include <yake/base/templates/yakeSmartAssert.h>
 #include <yake/base/mpl/yakeBuildArguments.h>
 
 //============================================================================
@@ -86,6 +87,7 @@ public:
 YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 #undef FUNCTION
 
+// todo policy
 	Pointer< ICreator > getDefaultCreator()
 	{
     YAKE_ASSERT( getIdentifiers().size() > 0 ).debug( "No default creator available." );
