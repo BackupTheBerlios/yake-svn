@@ -36,7 +36,7 @@
 				AdditionalDependencies="oded.lib physics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib/debug/"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib"
 				ModuleDefinitionFile="..\..\..\..\src\yake\plugins\physicsODE\plugin.def"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
