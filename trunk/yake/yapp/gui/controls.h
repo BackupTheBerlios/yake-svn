@@ -61,7 +61,7 @@ struct get_type_list
 			 implemented_widgets, /* conditional types */ \
 			 get_type_list /* implemented types */ \
 			 < \
-					typename yake::base::mpl::get_type_or_null<WIDGET1>::type, \
+				  typename yake::base::mpl::get_type_or_null<WIDGET1>::type, \
 				  typename yake::base::mpl::get_type_or_null<WIDGET2>::type, \
 				  typename yake::base::mpl::get_type_or_null<WIDGET3>::type \
 			 >::type \
