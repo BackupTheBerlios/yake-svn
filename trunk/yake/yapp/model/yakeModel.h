@@ -99,11 +99,11 @@ namespace model {
 
 		SignalConnection subscribeToPositionChanged( Movable* pMovable )
 		{
-			return mPositionSignal.connect( Bind1( Movable::setPosition, pMovable ) );
+			return mPositionSignal.connect( Bind1( &Movable::setPosition, pMovable ) );
 		}
 		SignalConnection subscribeToOrientationChanged( Movable* pMovable )
 		{
-			return mOrientationSignal.connect( Bind1( Movable::setOrientation, pMovable ) );
+			return mOrientationSignal.connect( Bind1( &Movable::setOrientation, pMovable ) );
 		}
 
 

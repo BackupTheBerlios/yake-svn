@@ -48,8 +48,9 @@ namespace yapp {
 			YAKE_ASSERT( mCamMovable );
 			YAKE_ASSERT( mTarget );
 
-			Vector3 targetDir = mTarget->getOrientation() * Vector3::kUnitZ;
-			mCamMovable->setPosition( mTarget->getPosition() + Vector3(0,7,14) );
+			Vector3 targetDir = mTarget->getOrientation() * (Vector3::kUnitZ);
+			//mCamMovable->setPosition( mTarget->getPosition() + Vector3(0,7,14) );
+			mCamMovable->setPosition( mTarget->getPosition() + Vector3(0,1.7,7) );
 			//mCamMovable->setOrientation( mTarget->getOrientation() );
 		}
 	};
@@ -102,7 +103,7 @@ namespace yapp {
 			case physics::ICollisionGeometry::CGT_BOX:
 				{
 				pE = pWorld->createEntity( (overrideMesh == "") ? "box_1x1x1.mesh" : overrideMesh );
-				pE->setCastsShadow( false );
+				pE->setCastsShadow( true );
 				Vector3 dim = pGeom->boxGetDimensions();
 				pSN->setScale( dim );
 				}
@@ -110,7 +111,7 @@ namespace yapp {
 			case physics::ICollisionGeometry::CGT_SPHERE:
 				{
 				pE = pWorld->createEntity( (overrideMesh == "") ? "sphere_d1.mesh": overrideMesh);
-				pE->setCastsShadow( false  );
+				pE->setCastsShadow( true  );
 				real scale = overrideMeshScaleFactor * 2 /* x2 because diameter is 1, therefore radius is 0.5 by default*/ * pGeom->sphereGetRadius();
 				if (scale < 0.0001)
 					scale = 1.;
