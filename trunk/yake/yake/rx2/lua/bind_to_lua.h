@@ -57,7 +57,7 @@ namespace
 				.def("get_event", &meta_object::get_event ),
 			class_<meta_class>("meta_class") 	
 				.def(constructor<std::string>())
-				.def("add_field_int", (meta_class& (meta_class::*)(std::string, int)) &meta_class::add_field<int>, return_reference_to(self))
+				.def("add_field_int", (meta_class& (meta_class::*)(std::string, int)) &meta_class::add_field<int>, return_reference_to(self)) // todo: lua_test linker error
 				.def("add_field_int", (meta_class& (meta_class::*)(std::string, int, int)) &meta_class::add_field<int>, return_reference_to(self))
 				.def("field_int",	(int_field& (meta_class::*)(std::string) const) &meta_class::field<int> ),
 			def("instance", &instance),
