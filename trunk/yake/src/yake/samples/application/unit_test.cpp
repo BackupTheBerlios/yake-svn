@@ -48,7 +48,7 @@ struct my_app_semi_auto : application<semi_auto_init<my_app_semi_auto, minimum_c
 	{	get_lib_man() << "graphicsOGRE.dll"; /* << "cegui_plugin" << "ode_plugin";*/ }
 };
 
-struct my_app_manual : application< manual_init<basic_config> >
+struct my_app_manual : application<manual_init<basic_config>, ext_lib_man>
 {
    my_app_manual()
    {
@@ -64,9 +64,8 @@ struct my_app_manual : application< manual_init<basic_config> >
    }
 
 	 void load_library(const char * lib)
-	 { m_lib_man.load_library(lib); }
+	 { get_lib_man() << lib; }
 
-	 library_manager m_lib_man;
 	 boost::shared_ptr<gui_renderer_adapter> m_gui_renderer_adapter;
 };
 
@@ -84,8 +83,14 @@ int main()
 	{ // automatic
 		std::cout << "- automatic -\n";
 		my_app_auto app_auto;
+	}
+
+	{ // mini automatic
 		std::cout << "\n- automatic mini -\n";
 		my_app_auto_mini app_auto_mini;
+	}
+
+	{ // delayed automatic
 		std::cout << "\n- automatic delayed -\n";
 		my_app_auto_delayed app_auto_delayed;
 	}
@@ -107,7 +112,3 @@ int main()
 
 	return 0;
 }
-
-
-
-

@@ -90,6 +90,7 @@ template <class Config = default_config>
 struct delayed_auto_init
 {
 public: // types
+	typedef load_libraries<Config> Libraries;
 	typedef typename inherit_multiple
 	<
 		typename boost::mpl::reverse<Config>::type, // note: correcting initialization order, otherwise graphics system would be initialized after gui
@@ -99,7 +100,7 @@ public: // types
 public: // methods
 	void initialize()
 	{
-		m_config.reset(new Config());
+		m_libraries.reset(new Libraries());
 		m_systems.reset(new Systems());
 	}
 
@@ -108,7 +109,7 @@ public: // methods
 	{ return static_cast<auto_init_system_holder<System, delayed_auto_init>*>(m_systems.get())->get_system(); }
 
 private: // data
-	boost::shared_ptr<Config> m_config;
+	boost::shared_ptr<Libraries> m_libraries;
 	boost::shared_ptr<Systems> m_systems;
 };
 
@@ -185,7 +186,12 @@ namespace // unnamed
 } // namspace unnamed
 
 template <class Systems>
-struct manual_init : private inherit_multiple<Systems, typename boost::mpl::lambda< manual_init_system_holder<boost::mpl::_> >::type >::type
+struct manual_init : 
+	private inherit_multiple
+	<	
+		Systems, 
+		typename boost::mpl::lambda< manual_init_system_holder<boost::mpl::_> >::type 
+	>::type
 {
   template <class System>
   boost::shared_ptr<System> get_system()
