@@ -27,6 +27,9 @@
 #include <yake/plugins/scriptingLuaBindings/yakeBinder.h>
 #include <yake/plugins/scriptingLua/ScriptingSystemLua.h>
 
+// headers with entities to bind
+#include <yake/base/yakeTimer.h>
+
 namespace luabind {
 namespace converters {
 
@@ -84,6 +87,10 @@ namespace lua {
 	};
 
 
+	/**
+	 *        Bind classes to script engine
+	 * @param pVM - pointer to script engine Virtual Machine
+	 */
 	void Binder::bind(scripting::IVM* pVM)
 	{
 		YAKE_ASSERT( pVM );
@@ -93,23 +100,142 @@ namespace lua {
 		LuaVM* pLuaVM = static_cast<LuaVM*>(pVM);
 		YAKE_ASSERT( pLuaVM );
 
+		lua_State* engineState = pLuaVM->getLuaState();
+		YAKE_ASSERT( engineState );
+		
 		using namespace luabind;
 
-		luabind::open( pLuaVM->getLuaState() );
-		module(pLuaVM->getLuaState())
+		#define YAKE_MODULE engineState, "yake"
+		
+		luabind::open( engineState );
+		module( YAKE_MODULE )
 		[
-			class_<Version>("Version")
+			class_< Version >( "Version" )
 				.def(constructor<uint16,uint16,uint16>())
 //				.def("major", &yake::base::Version::major)
 		];
 
-		module(pLuaVM->getLuaState(), "yake")
+		// yake::base bindings
+		
+		// Library
+		module( YAKE_MODULE )
+		[
+			class_< Library >( "Library" )
+				.def( constructor< String const& >() )
+				.def( "getSymbol", &yake::base::Library::getSymbol )
+		];
+		
+		// Timer
+		module( YAKE_MODULE )
+		[
+			class_< Timer >( "Timer" )
+				.def( "reset", &yake::base::Timer::reset )
+				.def( "getMilliseconds", &yake::base::Timer::getMilliseconds )
+				.def( "getSeconds", &yake::base::Timer::getSeconds ) 
+		];
+		
+		module( YAKE_MODULE )
+		[
+			def( "createTimer", &yake::base::timer::createTimer )
+		];
+		
+		// Log
+		module( YAKE_MODULE )
+		[
+			class_< Log >( "Log" )
+				.enum_( "Severity" )
+				[
+					value( "INFORMATIONS", 0 ),
+					value( "WARNINGS", 1 ),
+					value( "ERRORS", 2 )
+				]
+				.def( constructor<>() ) 
+				.def( "onLog", &yake::base::Log::onLog )
+				.def( "log", &yake::base::Log::log )
+				//.def( "logPrintf", &yake::base::Log::logPrintf ) // not typesafe
+		];
+		////TODO	define logging shortcuts like YAKE_LOG_ERROR etc.
+		////TODO	log singleton interface
+		
+		// Plugin
+		module( YAKE_MODULE )
+		[
+			class_< Plugin >( "Plugin" )
+				.def( "getName", &yake::base::Plugin::getName )
+				.def( "initialise", &yake::base::Plugin::initialise )
+				.def( "shutdown", &yake::base::Plugin::shutdown )
+		];
+		
+		// Math
+		module( YAKE_MODULE )
+		[
+			class_< Math >( "Math" )
+				.enum_( "AngleUnit" )
+				[
+					value( "AU_DEGREE", 0 ),
+					value( "AU_RADIAN", 1 )
+				]
+				.def( constructor< unsigned int >() )
+				//,def( "IAbs", &yake::base::math::Math::IAbs )
+		];
+		
+		// Vector3
+		module( YAKE_MODULE )
+		[
+			class_< Vector3 >( "Vector3" )
+				.def_readwrite( "x", &yake::base::math::Vector3::x )
+				.def_readwrite( "y", &yake::base::math::Vector3::y )
+				.def_readwrite( "z", &yake::base::math::Vector3::z )
+				.def( constructor< real, real, real >() )
+				.def( constructor< const real* const >() )
+				.def( constructor< Vector3 const& >() )
+		];
+		
+		// Vector4
+		module( YAKE_MODULE )
+		[
+			class_< Vector4 >( "Vector4" )
+				.def( constructor<>() )
+				.def( constructor< real, real, real, real >() )
+				.def( constructor< const real* const >() )
+				.def( constructor< Vector4 const& >() )
+		];
+		
+		// Matrix3
+		module( YAKE_MODULE )
+		[
+			class_< Matrix3 >( "Matrix3" )
+				.def( constructor<>() )
+				.def( constructor< Matrix3 const& >() )
+				.def( "getColumn", &yake::base::math::Matrix3::GetColumn ) 
+		];
+		
+		// Quaternion
+		module( YAKE_MODULE )
+		[
+			class_< Quaternion >( "Quaternion" )
+				.def_readwrite( "x", &yake::base::math::Quaternion::x )
+				.def_readwrite( "y", &yake::base::math::Quaternion::y )
+				.def_readwrite( "z", &yake::base::math::Quaternion::z )
+				.def_readwrite( "w", &yake::base::math::Quaternion::w )
+				.def( constructor< real, real, real, real >() )
+				.def( constructor< Quaternion const& >() )
+		];
+		
+		// RandomNumberGenerator
+		module( YAKE_MODULE )
+		[
+			class_< RandomNumberGeneratorMT >( "RandomNumberGeneratorMT" )
+				.def( constructor<>() )
+		];
+		
+/*		module(pLuaVM->getLuaState(), "yake")
 		[
 			class_<Player>("Player")
 				.def(constructor<>())
 				.def("getName", &Player::getName)
 				.def("setName", &Player::setName)
-		];
+		];*/
 	}
 
 

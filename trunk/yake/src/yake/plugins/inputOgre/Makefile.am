@@ -8,6 +8,13 @@ libyakeinputOgre_la_SOURCES = inputPlugin.cpp InputSystemOgre.cpp yakePCH.cpp
 libyakeinputOgre_la_LIBADD = $(top_builddir)/src/yake/base/libyakeBase.la\
 	-lOgreMain
 =======
+<<<<<<< Makefile.am
+lib_LTLIBRARIES = libyakeinputOgre.la
+libyakeinputOgre_la_SOURCES = inputPlugin.cpp InputSystemOgre.cpp yakePCH.cpp
+libyakeinputOgre_la_LIBADD = $(top_builddir)/src/yake/base/libyakeBase.la\
+	-lOgreMain
+=======
 lib_LTLIBRARIES = libyakeinputOgre.la
 libyakeinputOgre_la_SOURCES = inputPlugin.cpp InputSystemOgre.cpp yakePCH.cpp
 >>>>>>> 1.2
+>>>>>>> 1.3
