@@ -31,11 +31,13 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-using namespace yake::base::mpl;
+
 
 namespace yake {
-	using namespace base::math;
 namespace graphics {
+
+using namespace yake::base::math;
+//using namespace yake::base::mpl;
 
 	/**
 	*/

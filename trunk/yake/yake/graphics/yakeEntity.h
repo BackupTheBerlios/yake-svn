@@ -24,8 +24,9 @@
 #include <yake/graphics/yakeGraphics.h>
 
 namespace yake {
-	using namespace base::math;
 namespace graphics {
+
+using namespace yake::base::math;
 
 	/** Represents a concrete instance of some kind of graphical entity,
 		e.g. an instance of a mesh, a scene node, ...

@@ -18,6 +18,10 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
+
+#ifndef YAKE_GRAPHICSENVIRONMENT_H
+#define YAKE_GRAPHICSENVIRONMENT_H
+
 namespace yake {
 namespace graphics {
 
@@ -132,3 +136,5 @@ namespace graphics {
 
 }
 }
+
+#endif
