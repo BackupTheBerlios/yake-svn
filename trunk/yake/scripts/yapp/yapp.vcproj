@@ -399,6 +399,12 @@
 			<File
 				RelativePath="..\..\yapp\loader\yakeModelMovableLinkCreator.h">
 			</File>
+			<File
+				RelativePath="..\..\src\yapp\loader\yakeXODEParser.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\loader\yakeXODEParser.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="statemachine"
