@@ -395,7 +395,7 @@ namespace math
 		/** Guess what... taken from OGRE again... */
 		inline Vector3 perpendicular(void) const
 		{
-			static const real fSquareZero = 1e-06 * 1e-06;
+			static const real fSquareZero = real( 1e-06 * 1e-06 );
 			Vector3 perp = this->crossProduct( Vector3::kUnitX );
 
 			// Check length
