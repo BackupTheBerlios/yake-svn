@@ -23,7 +23,7 @@
 
 #include <boost/mpl/if.hpp>
 
-#include "null_type.h"
+#include "yakeNullType.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

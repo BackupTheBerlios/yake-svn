@@ -24,7 +24,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include "null_type.h"
+#include "yakeNullType.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
