@@ -45,6 +45,7 @@
 #include "yakePlugin.h"
 #include "yakeDebugOutputStream.h"
 #include "yakeLibrary.h"
+#include <yake/base/type_info.h>
 
 #include "math/yakeQuaternion.h"
 #include "math/yakeVector3.h"
