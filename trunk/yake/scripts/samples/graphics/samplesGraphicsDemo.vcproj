@@ -115,9 +115,6 @@
 		<Filter
 			Name="inc"
 			Filter="">
-			<File
-				RelativePath="..\..\..\inc\samples\common\yakeExampleApplication.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="src"
