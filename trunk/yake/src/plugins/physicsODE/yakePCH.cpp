@@ -18,5 +18,5 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <plugins/yakePhysicsODE/inc/pch.h>
+#include <inc/plugins/physicsODE/yakePCH.h>
 
