@@ -3,7 +3,7 @@
 
 #include "static_init.h"
 #include "type_info.h"
-#include "construct_type_from_arbitrary_args.h"
+#include "construct_type_from_arbitrary_types.h"
 #include "get_type_or_null.h"
 
 extern "C"
@@ -121,7 +121,7 @@ static luabind::class_<class_type> & get_lua_class() \
 } \
 \
 static luabind::detail::class_rep & get_lua_crep() \
-{	return *luabind::detail::class_registry::get_registry(L)->find_class( get_lua_class().m_type );	} \
+{	return *luabind::detail::class_registry::get_registry(L)->find_class(LUABIND_TYPEID(ClassType));	} \
 \
 static void commit_lua_methods() \
 { \
@@ -283,10 +283,10 @@ struct get_signature_holder
 };
 
 template<typename T1 = null, typename T2 = null, typename T3 = null>
-struct get_const_signature : construct_type_from_arbitrary_args<get_const_signature_holder, T1, T2, T3>::type {};
+struct get_const_signature : construct_type_from_arbitrary_types<get_const_signature_holder, T1, T2, T3>::type {};
 
 template<typename T1 = null, typename T2 = null, typename T3 = null>
-struct get_signature : construct_type_from_arbitrary_args<get_signature_holder, T1, T2, T3>::type {};
+struct get_signature : construct_type_from_arbitrary_types<get_signature_holder, T1, T2, T3>::type {};
 
 
 template <typename class_> 

@@ -12,6 +12,7 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/type_traits.hpp>
 
 // rx 
 #include "reflection.h"
@@ -111,7 +112,7 @@ struct event : public event_base
   }
 
 	// firing
-	virtual fire(arg1 a1, arg2 a2)
+	virtual void fire(arg1 a1, arg2 a2)
 	{
     using namespace boost::lambda;
 		std::for_each(handlers_.begin(), handlers_.end(), bind<void>(*_l1, a1, a2));
@@ -167,10 +168,15 @@ struct event<arg1, null/*, handler_cast_policy*/> : public event_base
   }
 
 	// firing
-	virtual fire(arg1 a1)
+	virtual void fire(arg1 a1)
 	{
-    using namespace boost::lambda;
-		std::for_each(handlers_.begin(), handlers_.end(), bind<void>(*_l1, a1));
+		//todo:
+    //using namespace boost::lambda;
+		//std::for_each(handlers_.begin(), handlers_.end(), bind<void>(*_l1, a1));
+
+		for(handlers::const_iterator iter = handlers_.begin();
+			iter != handlers_.end(); iter++)
+		{ (*iter)->operator()(a1); }
 	}
 
   void operator()(arg1 a1)
@@ -239,7 +245,7 @@ struct event : public rx_event_base, public lua_event_base, public ::event<arg1,
 	}
 
 	// fires all lua functors and the functors of the base class
-	virtual fire(arg1 a1, arg2 a2)
+	virtual void fire(arg1 a1, arg2 a2)
 	{
 		// call handlers of the base class
 		base::fire(a1, a2);
@@ -262,6 +268,39 @@ struct event : public rx_event_base, public lua_event_base, public ::event<arg1,
 	// but A and B should have the same list of functors, so we are sharing this list.
 	boost::shared_ptr<lua_functor_list> m_lua_functor_list;
 };
+
+
+namespace
+{
+	template <bool IsAbstractAndRef, typename T1>
+	struct remove_ref_if_abstract_and_ref_helper
+	{
+		static T1 remove(T1 t1)
+		{	return t1; }
+	};
+
+	template <typename T1>
+	struct remove_ref_if_abstract_and_ref_helper<true, T1>
+	{
+		static typename boost::remove_reference<T1>::type * remove(T1 t1)
+		{	return &t1;	}
+	};
+}
+
+template <typename T1>
+struct remove_ref_if_abstract_and_ref : 
+	remove_ref_if_abstract_and_ref_helper
+	<
+		boost::type_traits::ice_and
+		<
+			boost::is_reference<T1>::value,
+			boost::is_polymorphic<T1>::value //boost::abstract<T1>::value todo: should be is_abstract, but is_abstract is not working?!
+		>::value,
+		T1
+	>
+{};
+
+
 
 template
 < 
@@ -301,14 +340,19 @@ struct event<arg1, null> : public rx_event_base, public lua_event_base, public :
 	}
 
 	// fires all lua functors and the functors of the base class
-	virtual fire(arg1 a1)
+	virtual void fire(arg1 a1)
 	{
 		// call handlers of the base class
 		base::fire(a1);
 		// call lua handlers
 		for(lua_functor_list::const_iterator iter = m_lua_functor_list->begin();
 			iter != m_lua_functor_list->end(); iter++)
-		{ iter->operator()(a1); }
+		{
+      // luabind tries to remove the reference to an abstract classes and 
+			// instantiate it, so we have to replace the reference with a pointer,
+			// if the given type is an abstract class
+			/*iter->operator()(remove_ref_if_abstract_and_ref<arg1>::remove(a1));*/
+		}
 	}
 
 	// luabind cannot handle void as return type

@@ -10,6 +10,8 @@
     MACROS
  *****************************************************************************/
 
+//todo: add reflection:: to __instance_creator etc.
+
 /** the CLASS macro is used to declare reflection support in a class. It must
     be placed on the public part of the class.
     @param CLASS_NAME fully qualified name of this class.
