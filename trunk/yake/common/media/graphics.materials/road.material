@@ -1,0 +1,13 @@
+material road
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture road_free.jpg
+			}
+		}
+	}
+}
