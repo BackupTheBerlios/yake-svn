@@ -171,6 +171,7 @@ namespace physics {
 		///setLow/HiStop
 		//setSpring/Damper
 	};
+	YAKE_PHYSICS_COMMON_POINTERS( IJoint );
 
 }
 }

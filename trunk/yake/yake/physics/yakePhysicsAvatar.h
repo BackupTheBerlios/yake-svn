@@ -58,6 +58,8 @@ namespace physics {
 		virtual void jump() = 0;
 		virtual void duck() = 0;
 	};
+	YAKE_PHYSICS_COMMON_POINTERS( IAvatar );
+
 }
 }
 

@@ -33,6 +33,10 @@
 
 #include <boost/any.hpp>
 
+#define YAKE_PHYSICS_COMMON_POINTERS( CLASS ) \
+	typedef WeakPtr<CLASS> Weak##CLASS##Ptr; \
+	typedef SharedPtr<CLASS> Shared##CLASS##Ptr;
+
 namespace yake {
 	using namespace base;
 	using namespace base::templates;

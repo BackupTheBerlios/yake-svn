@@ -54,6 +54,7 @@ namespace physics {
 		virtual void subscribeToCollisionEnteredSignal( const SignalCollision::slot_type& rSlot ) = 0;
 		virtual void subscribeToCollisionExitedSignal( const SignalCollision::slot_type& rSlot ) = 0;
 	};
+	YAKE_PHYSICS_COMMON_POINTERS( IActor );
 
 	class IStaticActor : public IActor
 	{
@@ -63,8 +64,9 @@ namespace physics {
 			explicit Desc(const Desc& desc);
 		};
 	};
+	YAKE_PHYSICS_COMMON_POINTERS( IStaticActor );
 
-	class IMovableActor : public IActor, public Movable
+	class IMovableActor : public IStaticActor, public Movable
 	{
 	public:
 		struct Desc : IActor::Desc
@@ -73,7 +75,8 @@ namespace physics {
 			explicit Desc(const Desc& desc) {}
 		};
 	};
-	
+	YAKE_PHYSICS_COMMON_POINTERS( IMovableActor );
+
 	class IDynamicActor : public IMovableActor
 	{
 	public:
@@ -86,6 +89,7 @@ namespace physics {
 		virtual IBody& getBody() const = 0;
 		//virtual void updateMassFromShapes() = 0;
 	};
+	YAKE_PHYSICS_COMMON_POINTERS( IDynamicActor );
 }
 }
 #endif

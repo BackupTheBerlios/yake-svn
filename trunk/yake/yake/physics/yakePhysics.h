@@ -27,6 +27,7 @@
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
+#include <yake/physics/yakePhysicsMaterial.h>
 #include <yake/physics/yakePhysicsShape.h>
 #include <yake/physics/yakePhysicsJoint.h>
 #include <yake/physics/yakePhysicsBody.h>
@@ -34,7 +35,6 @@
 #include <yake/physics/yakePhysicsBodyGroup.h>
 #include <yake/physics/yakePhysicsAffectors.h>
 //#include <yake/physics/yakeAffectorZone.h>
-#include <yake/physics/yakePhysicsMaterial.h>
 #include <yake/physics/yakePhysicsWorld.h>
 #include <yake/physics/yakePhysicsSystem.h>
 

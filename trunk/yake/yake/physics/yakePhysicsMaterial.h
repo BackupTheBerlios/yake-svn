@@ -61,6 +61,7 @@ namespace physics {
 
 		//@todo add more properties that can quite easily be generalised...
 	};
+	YAKE_PHYSICS_COMMON_POINTERS( IMaterial );
 
 }
 }

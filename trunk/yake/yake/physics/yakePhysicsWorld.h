@@ -48,17 +48,16 @@ namespace physics {
 	public:
 		virtual ~IWorld() {}
 
-		///@todo return WeakPtr<>
-		virtual IJoint* createJoint( const IJoint::DescBase& rJointDesc ) = 0;
-		virtual IActor* createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() ) = 0;
-		virtual IMovableActor* createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() ) = 0;
-		virtual IDynamicActor* createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() ) = 0;
-		virtual IAvatar* createAvatar( const IAvatar::Desc& rAvatarDesc ) = 0;
-		virtual IMaterial* createMaterial( const IMaterial::Desc& rMatDesc ) = 0;
-		virtual void destroyJoint( IJoint* rJoint ) = 0;
-		virtual void destroyActor( IActor* rActor ) = 0;
-		virtual void destroyAvatar( IAvatar* rAvatar ) = 0;
-		virtual void destroyMaterial( IMaterial* rMaterial ) = 0;
+		virtual WeakIJointPtr createJoint( const IJoint::DescBase & rkJointDesc ) = 0;
+		virtual WeakIStaticActorPtr createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() ) = 0;
+		virtual WeakIMovableActorPtr createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() ) = 0;
+		virtual WeakIDynamicActorPtr createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() ) = 0;
+		virtual WeakIAvatarPtr createAvatar( const IAvatar::Desc & rkAvatarDesc ) = 0;
+		virtual WeakIMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc ) = 0;
+		virtual void destroyJoint( WeakIJointPtr& rJoint ) = 0;
+		virtual void destroyActor( WeakIActorPtr& rActor ) = 0;
+		virtual void destroyAvatar( WeakIAvatarPtr& rAvatar ) = 0;
+		virtual void destroyMaterial( WeakIMaterialPtr& rMaterial ) = 0;
 
 		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc& rTrimeshDesc ) = 0;
 
