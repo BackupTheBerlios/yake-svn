@@ -64,6 +64,10 @@ using namespace ::yake::base::templates;
 		//-----------------------------------------------------
 		typedef Deque<real> RealVector;
 
+		/** An interpolator that uses a cache.
+			The size of the cache and the weights of each entry can be specified.
+			@todo merge with ValueInterpolator etc from YAKE.
+		*/
 		template< class T >
 		class CachedInterpolator
 		{
@@ -106,6 +110,11 @@ using namespace ::yake::base::templates;
 			uint8			mSize;
 		};
 
+		/** Base class for controllers. Controllers are a very general concept. Nothing
+			much to say about them. Everything that needs to be updated regularly and
+			has some kind of job of updating or controlling objects may be an
+			object controller.
+		*/
 		class YAPP_BASE_API IObjectController
 		{
 		public:
@@ -113,6 +122,10 @@ using namespace ::yake::base::templates;
 			virtual void update( real timeElapsed ) = 0;
 		};
 
+		/** A controller that updates objects. The source object type and the
+			instance can be specified.
+			@see MovableUpdateController
+		*/
 		template< class SourceType >
 		class ObjectUpdateController : public IObjectController
 		{
@@ -127,6 +140,12 @@ using namespace ::yake::base::templates;
 			{ return mSource; }
 		};
 
+		/** A MovableUpdateController is a controller that forwards position and/or orientation
+			to other objects. Simplified methods for other Movable objects are provided.
+			Forwarding is achieved using signals.
+			@Remarks This concept is used in the 'dotLink' concept. See ModelLinks and MovableLinkCreators
+				and similar classes for more details.
+		*/
 		class YAPP_BASE_API MovableUpdateController : public ObjectUpdateController< Movable >
 		{
 		protected:
