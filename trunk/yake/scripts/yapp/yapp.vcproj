@@ -73,7 +73,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..;../..;../dependencies;../yake/dependencies/boost"
+				AdditionalIncludeDirectories="../../;../../dependencies;../../dependencies/boost;../../dependencies/ttl"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;YAPP_BASE_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
