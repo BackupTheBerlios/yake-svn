@@ -296,6 +296,40 @@
 				RelativePath="..\..\yapp\model\yakeVehicle.h">
 			</File>
 		</Filter>
+		<Filter
+			Name="messaging"
+			Filter="">
+			<File
+				RelativePath="..\..\yapp\base\event\yakeEvent.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\base\event\yakeMessageId.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\base\event\yakeMessageId.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\base\event\yakeMessageInstance.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\base\event\yakeMessageInstance.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\base\event\yakeMessageListener.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\base\event\yakeMessageManager.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\base\event\yakeMessageManager.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\base\event\yakeParamHolder.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\base\event\yakeParamHolder.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
