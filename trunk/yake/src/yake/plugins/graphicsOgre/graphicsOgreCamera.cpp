@@ -157,14 +157,14 @@ namespace ogre3d {
 	void OgreCamera::setFOV( real cameraFOV )
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
-		mCam->setFOVy( cameraFOV );
+		mCam->setFOVy( Ogre::Radian(cameraFOV) );
 	}
 
 	//------------------------------------------------------
 	real OgreCamera::getFOV() const
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
-		return mCam->getFOVy();
+		return mCam->getFOVy().valueRadians();
 	}
 
 	//------------------------------------------------------

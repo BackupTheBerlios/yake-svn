@@ -153,21 +153,21 @@ namespace ogre3d {
 	void OgreLight::setSpotlightRange( real innerAngle, real outerAngle, real falloff )
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
-		return mLight->setSpotlightRange( innerAngle, outerAngle, falloff );
+		return mLight->setSpotlightRange( Ogre::Radian(innerAngle), Ogre::Radian(outerAngle), falloff );
 	}
 
 	//------------------------------------------------------
 	real OgreLight::getSpotlightInnerAngle() const
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
-		return mLight->getSpotlightInnerAngle();
+		return mLight->getSpotlightInnerAngle().valueRadians();
 	}
 
 	//------------------------------------------------------
 	real OgreLight::getSpotlightOuterAngle() const
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
-		return mLight->getSpotlightOuterAngle();
+		return mLight->getSpotlightOuterAngle().valueRadians();
 	}
 	
 	//------------------------------------------------------
