@@ -3,6 +3,7 @@
                "http://www.altova.com/schemas/docbook/docbookx.dtd" [
                <!ENTITY introduction SYSTEM "YakeManual-Introduction.xml">
                <!ENTITY quickstartguide SYSTEM "YakeManual-QuickStartGuide.xml">
+               <!ENTITY components SYSTEM "YakeManual-Components.xml">
 ]>
 <?xml-stylesheet type="text/xsl" href="http://www.altova.com/stylesheets/docbook/xhtml/docbook.xsl"?>
 <book>
@@ -12,4 +13,5 @@
 	</bookinfo>
 	&introduction;
 	&quickstartguide;
+	&components;
 </book>
