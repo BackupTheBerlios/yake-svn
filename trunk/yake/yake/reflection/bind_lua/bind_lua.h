@@ -319,6 +319,7 @@ friend struct static_initor##CLASS_NAME;\
 \
 typedef CLASS_NAME class_type; \
 \
+/* todo: try to put this into register_lua_class */
 /* bind class, copied from luabind::module[] because that operator wants a copy of the class_ and that would destroy class_registration */ \
 struct lua_pop_stack \
 { \

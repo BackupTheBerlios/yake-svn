@@ -48,7 +48,7 @@ namespace ogre3d {
 	class OgreCore;
 	/** The graphics system interface.
 	*/
-	class YAKE_GRAPHICS_CONCRETE_API GraphicsSystem	 : public IGraphicsSystem
+	class YAKE_GRAPHICS_CONCRETE_API GraphicsSystem	: public IGraphicsSystem
 		/*,public ConcreteFactory
 	< 
 		IGraphicsSystem, 
@@ -65,6 +65,9 @@ namespace ogre3d {
 		virtual SharedPtr<IWorld> createWorld();
 		
 		virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot );
+
+		virtual const std::type_info & get_type_info()
+		{ return typeid(GraphicsSystem); }
 
 	YAKE_DECLARE_CONCRETE( GraphicsSystem, "ogre3d" )
 

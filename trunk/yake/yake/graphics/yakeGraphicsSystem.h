@@ -55,6 +55,8 @@ struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem
 
 	typedef Signal0<void> ShutdownSignal;
 	virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot ) = 0;
+
+	virtual const std::type_info & get_type_info() = 0;
 };
 
 } // graphics

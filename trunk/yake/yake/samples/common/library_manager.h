@@ -19,10 +19,10 @@ namespace common
 /* library manager */
 struct library_manager
 {
-	typedef std::vector<base::Library *> library_list;
+	typedef std::vector< boost::shared_ptr<base::Library> > library_list;
 
   void load_library(const char * lib_name)
-  {}
+	{ m_library_list.push_back(boost::shared_ptr<base::Library>(new base::Library(lib_name))); }
 
   library_list m_library_list;
 };

@@ -11,6 +11,7 @@
 // std
 #include <memory>
 #include <string>
+#include <typeinfo>
 // yake
 #include <yake/samples/common/application.h>
 #include <yake/samples/common/initialization.h>
@@ -18,25 +19,13 @@
 #include <yake/samples/common/library_manager.h>
 #include <yake/samples/common/ext_lib_man.h>
 
+#include <yake/samples/common/init_gui.h>
+
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
 using namespace yake::base;
 using namespace yake::samples::common;
-
-namespace yake 
-{
-namespace samples
-{
-namespace common
-{
-	struct graphics_system {};
-	struct gui_system {};
-	struct input_system {};
-	struct physics_system {};
-} // namespace common
-} // namespace samples
-} // namespace yake
 
 namespace yake
 {
@@ -68,19 +57,19 @@ struct my_app_manual : application< manual_init<basic_config> >
      load_library("ogre3d_plugin");
      load_system<graphics_system>("yake.graphics.ogre3d");
      load_library("cegui_plugin");
-     load_system<graphics_system>("yake.gui.cegui");
-     /*m_gui_renderer_adapter.reset(
+     load_system<gui_system>("yake.gui.cegui");
+     m_gui_renderer_adapter =
 			create<gui_renderer_adapter>(
 				gui_renderer_adapter::identifier(
 					get_system<graphics_system>()->get_type_info(), 
-					get_system<gui_system>()->get_type_info())));*/
+					get_system<gui_system>()->get_type_info()));
    }
 
 	 void load_library(const char * lib)
 	 { m_lib_man.load_library(lib); }
 
 	 library_manager m_lib_man;
-	 //boost::shared_ptr<gui_renderer_adapter> m_gui_renderer_adapter;
+	 boost::shared_ptr<gui_renderer_adapter> m_gui_renderer_adapter;
 };
 
 
@@ -93,14 +82,25 @@ struct my_app_manual : application< manual_init<basic_config> >
 int main()
 {
 	using namespace yake::testsuite;
-	// automatic
-	my_app_auto app_auto;
-	my_app_auto_mini app_auto_mini;
-	my_app_auto_delayed app_auto_delayed;
-	// semi automatic
-	my_app_semi_auto app_semi_auto;
-	// manual
-	my_app_manual app_manual;
+
+	{ // automatic
+		std::cout << "- automatic -\n";
+		my_app_auto app_auto;
+		std::cout << "\n- automatic mini -\n";
+		my_app_auto_mini app_auto_mini;
+		std::cout << "\n- automatic delayed -\n";
+		my_app_auto_delayed app_auto_delayed;
+	}
+
+	{ // semi automatic
+		std::cout << "\n- semi automatic -\n";
+		my_app_semi_auto app_semi_auto;
+	}
+
+	{ // manual
+		std::cout << "\n- manual -\n";
+		my_app_manual app_manual;
+	}
 
 #if defined( YAKE_DEBUG_BUILD )
 	std::cout << std::endl << "Waiting for you...";
