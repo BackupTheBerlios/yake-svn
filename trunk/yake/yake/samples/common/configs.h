@@ -2,7 +2,7 @@
 #define _YAKE_SAMPLES_COMMON_CONFIGS_H_
 
 // yake
-#include <yake/base/mpl/yakeSequences.h>
+#include <yake/base/mpl/sequences.h>
 // local
 #include "libraries.h"
 

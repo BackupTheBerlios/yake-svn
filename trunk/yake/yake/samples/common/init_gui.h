@@ -20,20 +20,22 @@ namespace samples
 {
 namespace common
 {
+	// system needs a pure virtual function get_type_info and concrete impl (plugin) needs to use return_type_info
+	// HOWEVER this is not really useful ... just define the pure virtual function within the interface and the impl
+	// within the plugin ... or?
+	template <class Parent>
+	struct return_type_info
+	{
+		virtual const std::type_info & get_type_info()
+		{ return typeid(Parent); }
+	};
+
 	// todo: del
 	struct input_system {};
 	struct physics_system {};
 
-	struct graphics_system 
-	{
-		virtual const std::type_info & get_type_info()
-		{ return typeid(graphics_system); }
-	};
-	struct gui_system
-	{
-		virtual const std::type_info & get_type_info()
-		{ return typeid(gui_system); }
-	};
+	struct graphics_system : return_type_info<graphics_system> {};
+	struct gui_system : return_type_info<gui_system>	{};
 
 	struct gui_renderer_adapter 
 	{ 

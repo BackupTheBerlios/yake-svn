@@ -16,7 +16,7 @@
 // yake
 #include <yake/base/mpl/inherit_linear.h>
 #include <yake/base/mpl/inherit_multiple.h>
-#include <yake/base/mpl/yakeSequences.h>
+#include <yake/base/mpl/sequences.h>
 // local
 #include "load_libraries.h"
 
