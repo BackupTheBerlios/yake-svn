@@ -30,7 +30,9 @@ namespace yake {
 	namespace input {
 
 		//-----------------------------------------------------------------------
-		MouseDeviceOgre::MouseDeviceOgre(Ogre::InputReader * inputReader) : mInputReader(inputReader), mPosition(Vector3::kZero)
+		MouseDeviceOgre::MouseDeviceOgre(Ogre::InputReader * inputReader) :
+					mInputReader(inputReader),
+					mPosition(Vector3::kZero)
 		{
 			mButtons[0] = mButtons[1] = mButtons[2] = false;
 		}
@@ -67,9 +69,12 @@ namespace yake {
 			{
 				mButtons[btn] = mInputReader->getMouseButton( btn );
 			}
-			mPosition.x = mInputReader->getMouseAbsX();
+			mPosition.x += mInputReader->getMouseRelativeX();
+			mPosition.y += mInputReader->getMouseRelativeY();
+			mPosition.z += mInputReader->getMouseRelativeZ();
+			/*mPosition.x = mInputReader->getMouseAbsX();
 			mPosition.y = mInputReader->getMouseAbsY();
-			mPosition.z = mInputReader->getMouseAbsZ();
+			mPosition.z = mInputReader->getMouseAbsZ();*/
 		}
 
 		//-----------------------------------------------------------------------
