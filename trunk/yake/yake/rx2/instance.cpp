@@ -17,7 +17,7 @@ meta_object & instance( const meta_class & meta_class_, std::string object_name 
 			iter++ )
 		{ 
 			// call the according attach method for this field (using cloning)
-			( iter->second )( *obj, *iter->first );
+			( iter->get<0>() )( *obj, *iter->get<1>().get() );
 		}
 
 		// add cloned events to the meta object
@@ -26,7 +26,7 @@ meta_object & instance( const meta_class & meta_class_, std::string object_name 
 			iter++ )
 		{ 
 			// call the according attach method for this field (using cloning)
-			( iter->second.first )( *obj, *iter->first, iter->second.second );
+			( iter->get<0>() )( *obj, *iter->get<1>().get(), iter->get<2>() );
 		}
 
 		return *obj;

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <boost/type_traits/remove_reference.hpp>
+#include <boost/tuple/tuple.hpp>
 
 #include <yake/base/templates/yakePointer.h>
 
@@ -50,24 +51,20 @@ public: // types
 	// objects without counting references within other meta_class copies)
 	typedef std::vector
 	< 
-		std::pair
+		boost::tuples::tuple
 		<
-			yake::base::templates::SharedPtr< meta_field >, 
-			void(*)(meta_object&, meta_field&) 
+			void(*)(meta_object&, meta_field&),
+			yake::base::templates::SharedPtr< meta_field >			 
 		> 
 	> fields_list;
 
-	// todo: cleanup with triar<> make_triar or struct
 	typedef std::vector
 	< 
-		std::pair
+		boost::tuples::tuple
 		<
+			void(*)(meta_object&, event_base&, std::string&),
 			yake::base::templates::SharedPtr< event_base >,
-			std::pair
-			<
-				void(*)(meta_object&, event_base&, std::string&),
-				std::string
-			>
+			std::string
 		> 
 	> events_list;
 
@@ -126,10 +123,10 @@ public: // field management
 		// add field to container with typed attach method
 		fields_.push_back
 		( 
-			std::make_pair
-			(
-				new typed_field<T>( field_name, default_value, flags ),
-				attach<T>::clone_field 
+			boost::tuples::make_tuple
+			(			
+				&typename attach<T>::clone_field,
+				new typed_field<T>( field_name, default_value, flags )
 			) 
 		);
 		//  return reference to this
@@ -142,10 +139,10 @@ public: // field management
 		// add field to container with typed attach method
 		fields_.push_back
 		( 
-			std::make_pair
+			boost::tuples::make_tuple
 			(
-				&field,
-				attach<T::value_type>::clone_field 
+				&typename attach<T::value_type>::clone_field,
+				&field				
 			) 
 		);
 		//  return reference to this
@@ -158,8 +155,8 @@ public: // field management
 		for( fields_list::const_iterator iter = fields_.begin();
 			iter != fields_.end(); iter++ )
 		{
-      if( iter->first->name_ == name )
-				return static_cast< typed_field<T>& >( *iter->first.get() );
+      if( iter->get<1>()->name_ == name )
+				return static_cast< typed_field<T>& >( *iter->get<1>().get() );
 		}
 		throw exception();
 	}
@@ -184,16 +181,13 @@ public: // events and handlers
 		event_traits_.push_back( std::make_pair( name, args ) );
 		// create event object
 		events_.push_back
-		( 
-			std::make_pair
+		(
+			boost::tuples::make_tuple
 			(
+				&typename attach<T1>::clone_event,
 				new event<T1>(),
-				std::make_pair< void(*)(meta_object&, event_base&, std::string&) >
-				(
-					typename attach<T1>::clone_event,
-					name
-				)
-			) 
+				name
+			)
 		);
 		return *this;
   }

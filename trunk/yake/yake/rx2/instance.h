@@ -35,7 +35,7 @@ public: // wrapped meta object functions
 	template< typename T >
 	meta_object_holder & add_field( T & field )
 	{
-		field.name_ = class_.fields_[ field_pos_++ ].first->get_name();		
+		field.name_ = class_.fields_[ field_pos_++ ].get<1>()->get_name();		
 		object_->add_field( field );
 		return *this;
 	}

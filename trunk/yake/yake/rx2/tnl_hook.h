@@ -115,7 +115,7 @@ struct tnl_hook : public NetObject
 			// write actual value
       switch( field_types_[ position ] )
 			{
-				case float_:
+				case typeid(float):
 					stream->writeFloat( 
 						static_cast< float_field* >( 
 							iter )->value_ );
