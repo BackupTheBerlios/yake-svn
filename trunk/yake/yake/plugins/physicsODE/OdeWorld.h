@@ -36,14 +36,20 @@ namespace physics {
 			OdeWorld();
 			virtual ~OdeWorld();
 
-			virtual SharedPtr<IJoint> createJoint( IJoint::DescBase const& rJointDesc );
-			virtual SharedPtr<IActor> createActor( IActor::Desc const& rActorDesc = IActor::Desc() );
-			virtual SharedPtr<IMaterial> createMaterial( IMaterial::Desc const& rMatDesc );
-			virtual SharedPtr<IAvatar> createAvatar( IAvatar::Desc const& rAvatarDesc ) 
+			virtual IJoint* createJoint( IJoint::DescBase const& rJointDesc );
+			virtual IActor* createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() );
+			virtual IMovableActor* createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() );
+			virtual IDynamicActor* createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() );
+			virtual IMaterial* createMaterial( IMaterial::Desc const& rMatDesc );
+			virtual IAvatar* createAvatar( IAvatar::Desc const& rAvatarDesc ) 
 			{
 				YAKE_ASSERT( 0 ).warning("not supported.");
-				return SharedPtr<IAvatar>();
+				return 0;
 			}
+			virtual void destroyJoint( IJoint* rJoint );
+			virtual void destroyActor( IActor* rActor );
+			virtual void destroyAvatar( IAvatar* rAvatar );
+			virtual void destroyMaterial( IMaterial* rMaterial );
 			
 			virtual TriangleMeshId createTriangleMesh( TriangleMeshDesc const& rTrimeshDesc );
 
@@ -52,7 +58,7 @@ namespace physics {
 			virtual Deque<String> getSupportedSolvers() const;
 			virtual bool useSolver( String const& rSolver );
 			virtual String getCurrentSolver() const;
-			virtual const PropertyNameList& getCurrentSolverParams() const;
+			virtual const PropertyNameList getCurrentSolverParams() const;
 			virtual void setCurrentSolverParam( String const& rName, boost::any const& rValue );
 
 			virtual void step( const real timeElapsed );

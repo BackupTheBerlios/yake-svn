@@ -113,13 +113,13 @@ namespace physics {
 			return "quickStep";
 		}
 			
-/*		//-----------------------------------------------------
-		const PropertyNameList& OdeWorld::getCurrentSolverParams() const
+		//-----------------------------------------------------
+		const PropertyNameList OdeWorld::getCurrentSolverParams() const
 		{
 			PropertyNameList pnl;
 			
-			return
-		}*/
+			return pnl;
+		}
 		
 		//-----------------------------------------------------
 		void OdeWorld::setCurrentSolverParam( String const& rName, boost::any const& rValue )
@@ -134,7 +134,7 @@ namespace physics {
  		}
 
 		//-----------------------------------------------------
-		SharedPtr<IJoint> OdeWorld::createJoint( IJoint::DescBase const& rJointDesc )
+		IJoint* OdeWorld::createJoint( IJoint::DescBase const& rJointDesc )
 		{
 			IJoint::DescBase* pJointDesc = &const_cast<IJoint::DescBase&>( rJointDesc );
 
@@ -189,28 +189,14 @@ namespace physics {
 			
 			pJoint->attach( rBody1, rBody2 );
 			
-			return SharedPtr<IJoint>( pJoint );
+			return pJoint;
 		}
 		
 		//-----------------------------------------------------
-		SharedPtr<IActor> OdeWorld::createActor( const IActor::Desc& rActorDesc )
+		IActor* OdeWorld::createStaticActor( const IActor::Desc& rActorDesc )
 		{
-			IActor::Desc* pDesc = &const_cast<IActor::Desc&>( rActorDesc );
-			
-			SharedPtr<IActor> pActor;
-			
-			if ( IStaticActor::Desc* pActorDesc = dynamic_cast<IStaticActor::Desc*>( pDesc ) )
-			{
-				pActor = SharedPtr<IActor>( new OdeStaticActor( this ) );
-			}
-			else if ( IMovableActor::Desc* pActorDesc = dynamic_cast<IMovableActor::Desc*>( pDesc ) )
-			{
-				pActor = SharedPtr<IActor>( new OdeMovableActor( this ) );
-			}
-			else if ( IDynamicActor::Desc* pActorDesc = dynamic_cast<IDynamicActor::Desc*>( pDesc ) )
-			{
-				pActor = SharedPtr<IActor>( new OdeDynamicActor( this ) );
-			}
+			IActor* pActor = new OdeStaticActor( this );
+			YAKE_ASSERT( pActor );
 			
 			typedef Deque< SharedPtr<IShape::Desc> > ActorShapesCollection;
 			const ActorShapesCollection& shapes = rActorDesc.shapes;
@@ -223,13 +209,65 @@ namespace physics {
 			
 			return pActor;
 		}
+		IMovableActor* OdeWorld::createMovableActor( const IMovableActor::Desc& rActorDesc )
+		{
+			IMovableActor* pActor = new OdeMovableActor( this );
+			YAKE_ASSERT( pActor );
+			
+			typedef Deque< SharedPtr<IShape::Desc> > ActorShapesCollection;
+			const ActorShapesCollection& shapes = rActorDesc.shapes;
+			
+			for ( ActorShapesCollection::const_iterator i = shapes.begin(); i != shapes.end(); ++i )
+			{
+				SharedPtr<IShape::Desc> pShapeDesc = *i;
+				pActor->createShape(  *pShapeDesc );
+			}  
+			
+			return pActor;
+		}
+		IDynamicActor* OdeWorld::createDynamicActor( const IDynamicActor::Desc& rActorDesc )
+		{
+			IDynamicActor* pActor = new OdeDynamicActor( this );
+			YAKE_ASSERT( pActor );
+			
+			typedef Deque< SharedPtr<IShape::Desc> > ActorShapesCollection;
+			const ActorShapesCollection& shapes = rActorDesc.shapes;
+			
+			for ( ActorShapesCollection::const_iterator i = shapes.begin(); i != shapes.end(); ++i )
+			{
+				SharedPtr<IShape::Desc> pShapeDesc = *i;
+				pActor->createShape(  *pShapeDesc );
+			}  
+			
+			return pActor;
+		}
+		void OdeWorld::destroyJoint( IJoint* rJoint )
+		{
+			YAKE_ASSERT( rJoint );
+			delete rJoint;
+		}
+		void OdeWorld::destroyActor( IActor* rActor )
+		{
+			YAKE_ASSERT( rActor );
+			delete rActor;
+		}
+		void OdeWorld::destroyAvatar( IAvatar* rAvatar )
+		{
+			YAKE_ASSERT( rAvatar );
+			delete rAvatar;
+		}
+		void OdeWorld::destroyMaterial( IMaterial* rMaterial )
+		{
+			YAKE_ASSERT( rMaterial );
+			delete rMaterial;
+		}
 
 		//-----------------------------------------------------
-		SharedPtr<IMaterial> OdeWorld::createMaterial( IMaterial::Desc const& rMatDesc )
+		IMaterial* OdeWorld::createMaterial( IMaterial::Desc const& rMatDesc )
 		{
 			OdeMaterial* pMat = new OdeMaterial;
 			
-			return SharedPtr<IMaterial>( pMat );
+			return pMat;
 		}
 
 		//-----------------------------------------------------

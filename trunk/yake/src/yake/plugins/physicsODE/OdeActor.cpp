@@ -74,14 +74,12 @@ namespace physics {
 		IShape::Desc* pShapeDesc = &const_cast<IShape::Desc&>( rShapeDesc );
 		
 		IMaterial* pMaterial = pShapeDesc->pMaterial;
-		OdeMaterial* pOdeMaterial = NULL;
+		OdeMaterial* pOdeMaterial = 0;
 		
-		if ( pMaterial != NULL )
-		{
+		if (pMaterial)
 			pOdeMaterial = dynamic_cast<OdeMaterial*>( pMaterial );
-		}
 	
-		OdeGeom* result = NULL;
+		OdeGeom* result = 0;
 		
 		if ( IShape::SphereDesc* pSphereDesc = dynamic_cast<IShape::SphereDesc*>( pShapeDesc ) )
 		{
@@ -132,17 +130,17 @@ namespace physics {
  			result = createTransformGeomIfNeeded( pMesh, rShapeDesc.position, rShapeDesc.orientation );
  		}
 
-		YAKE_ASSERT( result != NULL ).error( "Unsupported shape type!" );
+		YAKE_ASSERT( result != 0 ).error( "Unsupported shape type!" );
 	
 		/// setting material if any
-		if ( pOdeMaterial != NULL )
+		if ( pOdeMaterial != 0 )
 			result->setMaterial( *pOdeMaterial );
 	
 		return dynamic_cast<IShape*>( result );
 	}
 
 	//-----------------------------------------------------
-/*	SharedPtr<IShape> OdeActor::createShape( IShape::Desc const& rShapeDesc )
+	/*SharedPtr<IShape> OdeActor::createShape( IShape::Desc const& rShapeDesc )
 	{
 		IShape* pShape = createShapeFromDesc( rShapeDesc );
 		// TODO Check if it works with OdeGeom
@@ -152,21 +150,21 @@ namespace physics {
 		mOdeShapes.insert( OdeShapesMap::value_type( pGeom->_getOdeGeomID(), pGeom ) ); 
 		
 		return SharedPtr<IShape>( pShape );
-	}
+	}*/
 	
 	//-----------------------------------------------------
-	void OdeActor::destroyShape( SharedPtr<IShape>& rShape )
+	void OdeActor::destroyShape_( SharedPtr<IShape>& rShape )
 	{
-		ShapePtrVector<IShape*>::iterator victim = std::find( mShapes.begin(), mShapes.end(), rShape.get() );
+		IActor::ShapePtrVector::iterator victim = std::find( mShapes.begin(), mShapes.end(), rShape.get() );
 		
 		//TODO is this correct?
 		YAKE_SAFE_DELETE( *victim );
 		
 		mShapes.erase( victim );
 	}
-*/
+
 	//-----------------------------------------------------
-	const IActor::ShapePtrVector OdeActor::getShapes() const
+	const IActor::ShapePtrVector OdeActor::getShapes_() const
 	{
 		return mShapes;
 	}

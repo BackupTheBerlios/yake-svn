@@ -14,7 +14,9 @@ namespace physics
 		OdeActor( OdeWorld* pOdeWorld );
 		virtual ~OdeActor();
 
- 		virtual const IActor::ShapePtrVector getShapes() const;
+		//virtual SharedPtr<IShape> createShape( const IShape::Desc& rShapeDesc );
+		virtual void destroyShape_( SharedPtr<IShape>& rShape );
+ 		virtual const IActor::ShapePtrVector getShapes_() const;
 
 		virtual void subscribeToCollisionEnteredSignal( IActor::SignalCollision::slot_type const& rSlot );
 		virtual void subscribeToCollisionExitedSignal( IActor::SignalCollision::slot_type const& rSlot );
@@ -42,15 +44,17 @@ namespace physics
 		CollisionCache							mCollisions;
 	};
 	
-	class OdeStaticActor : public OdeActor, public IStaticActor
+	class OdeStaticActor : public OdeActor, public IActor//IStaticActor
 	{
 	public:
 		OdeStaticActor( OdeWorld* pOdeWorld );
 		virtual ~OdeStaticActor();
 		
 		virtual SharedPtr<IShape> createShape( const IShape::Desc& rShapeDesc );
-		virtual void destroyShape( SharedPtr<IShape>& rShape );
-		virtual const ShapePtrVector getShapes() const;
+		virtual void destroyShape( SharedPtr<IShape>& rShape )
+		{ return OdeActor::destroyShape_( rShape ); }
+		virtual const ShapePtrVector getShapes() const
+		{ return OdeActor::getShapes_(); }
 
 		virtual void subscribeToCollisionEnteredSignal( IActor::SignalCollision::slot_type const& rSlot );
 		virtual void subscribeToCollisionExitedSignal( IActor::SignalCollision::slot_type const& rSlot );
@@ -68,8 +72,10 @@ namespace physics
 		virtual Quaternion getOrientation() const;
 		
 		virtual SharedPtr<IShape> createShape( const IShape::Desc& rShapeDesc );
-		virtual void destroyShape( SharedPtr<IShape>& rShape );
-		virtual const ShapePtrVector getShapes() const;
+		virtual void destroyShape( SharedPtr<IShape>& rShape )
+		{ return OdeActor::destroyShape_( rShape ); }
+		virtual const ShapePtrVector getShapes() const
+		{ return OdeActor::getShapes_(); }
 
 		virtual void subscribeToCollisionEnteredSignal( IActor::SignalCollision::slot_type const& rSlot );
 		virtual void subscribeToCollisionExitedSignal( IActor::SignalCollision::slot_type const& rSlot );
@@ -87,19 +93,16 @@ namespace physics
 	
 		IBody& getBody() const;
 		
-		virtual void setLinearVelocity( const Vector3& rVelocity );
-		virtual Vector3 getLinearVelocity() const;
-		virtual void setAngularVelocity( const Vector3& rVelocity );
-		virtual Vector3 getAngularVelocity() const;
-		
 		virtual void setPosition( const Vector3& rPosition );
 		virtual void setOrientation( const Quaternion& rOrientation );
 		virtual Vector3 getPosition() const;
 		virtual Quaternion getOrientation() const;
 		
 		virtual SharedPtr<IShape> createShape( IShape::Desc const& rShapeDesc );
-		virtual void destroyShape( SharedPtr<IShape>& rShape );
-		virtual const ShapePtrVector getShapes() const;
+		virtual void destroyShape( SharedPtr<IShape>& rShape )
+		{ return OdeActor::destroyShape_( rShape ); }
+		virtual const ShapePtrVector getShapes() const
+		{ return OdeActor::getShapes_(); }
 
 		virtual void subscribeToCollisionEnteredSignal( IActor::SignalCollision::slot_type const& rSlot );
 		virtual void subscribeToCollisionExitedSignal( IActor::SignalCollision::slot_type const& rSlot );

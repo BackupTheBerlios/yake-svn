@@ -25,6 +25,8 @@
 namespace yake {
 namespace physics {
 
+	YAKE_REGISTER_CONCRETE( PhysicsSystemODE );
+
 	//------------------------------------------------------
 	PhysicsSystemODE::PhysicsSystemODE()
 	{

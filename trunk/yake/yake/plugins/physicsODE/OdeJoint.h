@@ -48,7 +48,7 @@ namespace physics {
 			
 			//virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
 			
-			virtual void setLimits( size_t axisIndex, real low, real high );
+			//virtual void setLimits( size_t axisIndex, real low, real high );
 			
 			virtual void setBreakable( bool enabled );
 			virtual void setBreakableForce( real force );

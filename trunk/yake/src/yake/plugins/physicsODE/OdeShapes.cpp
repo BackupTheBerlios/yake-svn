@@ -163,9 +163,9 @@ namespace physics {
 			YAKE_ASSERT( !rIndices.empty() ).error( "Vertices without indices are meaningless!" );
 
 			// Performing conversion to ODE internal format
-			dReal*		pVertices;
- 			uint32*		pIndices;
- 			dReal*		pNormals;
+			dReal*		pVertices = 0;
+ 			uint32*		pIndices = 0;
+ 			dReal*		pNormals = 0;
  			
 			// stuffing vertices
  			pVertices = new dReal[ 3*rVertices.size() ];

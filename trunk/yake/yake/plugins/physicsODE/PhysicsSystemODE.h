@@ -26,9 +26,9 @@ namespace physics {
 
 	class PhysicsSystemODE : public IPhysicsSystem
 	{
+		YAKE_DECLARE_CLASS( PhysicsSystemODE )
+		YAKE_DECLARE_CONCRETE( PhysicsSystemODE, "ode" );
 	public:
-		YAKE_DECLARE_CONCRETE( PhysicsSystemODE, "ODE" );
-		
 		PhysicsSystemODE();
 		virtual ~PhysicsSystemODE();
 
