@@ -18,7 +18,8 @@
     @param TYPE type of the property
     @param NAME name of the property
  */
-#define RX_PROPERTY(TYPE, NAME)\
+// todo: currently defined in bind_network with observer addons etc.
+/*#define RX_PROPERTY(TYPE, NAME)\
 private:\
     template <class T> class __property__##NAME {\
     public:\
@@ -134,7 +135,7 @@ private:\
     };\
     friend class __property__##NAME< TYPE >;\
 public:\
-    __property__##NAME< TYPE > NAME
+    __property__##NAME< TYPE > NAME*/
 
 
 /** The DEFAULT_PROPERTY macro defines a property that has a stock implementation
@@ -142,7 +143,7 @@ public:\
     @param TYPE type of the property
     @param NAME name of the property
  */
-#define RX_DEFAULT_PROPERTY(TYPE, NAME)\
+/*#define RX_DEFAULT_PROPERTY(TYPE, NAME)\
 private:\
     FIELD(private, TYPE, m_##NAME);\
     TYPE get_##NAME() const {\
@@ -152,7 +153,7 @@ private:\
         m_##NAME = value;\
     }\
 public:\
-    RX_PROPERTY(TYPE, NAME)
+    RX_PROPERTY(TYPE, NAME)*/
 
 /*****************************************************************************
     CLASSES

@@ -51,9 +51,16 @@ struct A
 
 // -----------------------------------------
 // lua event bindings
+
+struct abstract_class
+{	
+	virtual void do_pure_virtual() = 0; 
+};
+
 struct rx_A
 {
 	CLASS(rx_A, NullClass, lua);
+	EVENT(public, f, (const abstract_class &), lua);
 	EVENT(public, e, (int, int), lua);
 };
 IMPLEMENT_CLASS(rx_A, lua)
@@ -157,14 +164,29 @@ struct Handler
 void handler(int fara)
 { std::cout << "handler(" << fara << ")\n"; }
 
-
 // -----------------------------------------
 // main
 int main()
 {
+	//todo: is_abstract not working?
+	//assert(boost::is_abstract<abstract_class>::value);
+
+	typedef const abstract_class & T1;
+	bool b =
+		boost::type_traits::ice_and
+		<
+			boost::is_reference<T1>::value, 
+			boost::is_polymorphic<typename boost::remove_reference<T1>::type>::value //todo: is_abstract?
+		>::value;
+	assert(b);
+
+	reflection::event<const abstract_class &> h;
+	
+
 	// events
 	{
-		// todo ClassRegistry::createInstance( "EventTest" ); ?
+		// todo: what happens with ClassRegistry::createInstance(); for serialization etc. ?
+		// should be ClassRegistry::createInstance( "EventTest" );
 		EventTest create_reg(test); // test("test");
 
 		// attach handler using test object

@@ -90,7 +90,7 @@ struct event : public event_base
 
 	// hard wiring
   template<typename class_function_ptr, typename class_this>
-  void attach_handler(class_function_ptr ptr, class_this cls) const
+  void attach_handler(class_function_ptr ptr, class_this cls)
   { 
 		// create new handler
     handlers_.push_back(new handler(boost::bind(ptr, cls, _1)));
@@ -134,7 +134,7 @@ struct event<arg1, null/*, handler_cast_policy*/> : public event_base
 {
 	// handlers
   typedef boost::function<void (arg1)> handler;
-	typedef std::list<const handler*> handlers;
+	typedef std::list<const handler *> handlers;
 
   ~event()
   {
@@ -145,7 +145,7 @@ struct event<arg1, null/*, handler_cast_policy*/> : public event_base
 
 	// hard wiring
   template<typename class_function_ptr, typename class_this>
-  void attach_handler(class_function_ptr ptr, class_this cls) const
+  void attach_handler(class_function_ptr ptr, class_this cls)
   { 
 		// create new handler
     handlers_.push_back(new handler(boost::bind(ptr, cls, _1)));
@@ -287,14 +287,16 @@ namespace
 	};
 }
 
+
+
 template <typename T1>
 struct remove_ref_if_abstract_and_ref : 
 	remove_ref_if_abstract_and_ref_helper
 	<
 		boost::type_traits::ice_and
 		<
-			boost::is_reference<T1>::value,
-			boost::is_polymorphic<T1>::value //boost::abstract<T1>::value todo: should be is_abstract, but is_abstract is not working?!
+			boost::is_reference<T1>::value, 
+			boost::is_polymorphic<typename boost::remove_reference<T1>::type>::value //boost::abstract<T1>::value todo: should be is_abstract, but is_abstract is not working?!
 		>::value,
 		T1
 	>
@@ -351,8 +353,8 @@ struct event<arg1, null> : public rx_event_base, public lua_event_base, public :
       // luabind tries to remove the reference to an abstract classes and 
 			// instantiate it, so we have to replace the reference with a pointer,
 			// if the given type is an abstract class
-			/*iter->operator()(remove_ref_if_abstract_and_ref<arg1>::remove(a1));*/
-		}
+			iter->operator()(remove_ref_if_abstract_and_ref<arg1>::remove(a1));
+    }
 	}
 
 	// luabind cannot handle void as return type

@@ -42,7 +42,7 @@ private:\
 BINDING_OR_OBSERVER1##_BINDING_PROPERTY_DEFAULT(TYPE, NAME)\
 BINDING_OR_OBSERVER2##_BINDING_PROPERTY_DEFAULT(TYPE, NAME)\
 /* observers */\
-PROPERTY(TYPE, NAME, BINDING_OR_OBSERVER1##_OBSERVER_PROPERTY_DEFAULT(TYPE, NAME, PARMS1), BINDING_OR_OBSERVER2##_OBSERVER_PROPERTY_DEFAULT(TYPE, NAME))
+RX_PROPERTY(TYPE, NAME, BINDING_OR_OBSERVER1##_OBSERVER_PROPERTY_DEFAULT(TYPE, NAME, PARMS1), BINDING_OR_OBSERVER2##_OBSERVER_PROPERTY_DEFAULT(TYPE, NAME))
 
 // bindings switch/spezialiation: we want bindings for lua
 #define _BINDING_PROPERTY_DEFAULT(TYPE, NAME) // nothing
@@ -100,13 +100,13 @@ template <class C, class VALUE_TYPE> struct __observer_property__##PROPERTY_NAME
       base::set(object, value); \
 			for(ObserverList::const_iterator iter(reinterpret_cast<C*>(object)->__observers__##PROPERTY_NAME.begin()); \
 				iter != reinterpret_cast<C*>(object)->__observers__##PROPERTY_NAME.end(); iter++) \
-				(*iter)->set(value); \
+			{ (*iter)->set(value); } \
     } \
 };
 
 // -----------------------------------------
 // the actual property
-#define PROPERTY(TYPE, NAME, OBSERVER1, OBSERVER2)\
+#define RX_PROPERTY(TYPE, NAME, OBSERVER1, OBSERVER2)\
 private:\
 		/* observers for this property */ \
 		typedef std::vector< property_observer<TYPE>* > ObserverList##NAME;\

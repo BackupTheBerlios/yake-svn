@@ -329,4 +329,31 @@ private: \
 		register_event_##EVENT_NAME() { static initor init; } \
 	} reg_event_##EVENT_NAME;
 
+#define LUA_CUSTOM_EVENT(ACCESS_ATTR, EVENT_CLASS, EVENT_NAME) \
+public: \
+	const EVENT_CLASS & get_##EVENT_NAME() const \
+	{ return EVENT_NAME; } \
+private: \
+	struct register_event_##EVENT_NAME \
+	{ \
+		struct initor \
+		{ \
+			initor() \
+			{ \
+				/* register the event class to lua if it is not registered yet */ \
+				if(!lua_is_class_registered<EVENT_CLASS>()) \
+				{ \
+					luabind::module(L) \
+					[ \
+						luabind::class_<EVENT_CLASS, reflection::lua_event_base>(#EVENT_NAME) \
+					]; \
+				} \
+				/* bind the event as read-only property */ \
+				get_lua_class().property(#EVENT_NAME, &get_##EVENT_NAME); \
+				commit_lua_properties(); \
+			} \
+		}; \
+		register_event_##EVENT_NAME() { static initor init; } \
+	} reg_event_##EVENT_NAME;
+
 #endif // _LUA_H_
