@@ -38,18 +38,36 @@
 
 class YAKE_REGISTRY_PLUGIN_CONCRETE_API NetworkDriver : public INetworkDriver
 {		
-YAKE_DECLARE_CLASS( NetworkDriver )
-// Class
-public:
+	YAKE_DECLARE_CLASS( NetworkDriver )
+
+public: // class
 	// Destructor.
 	virtual ~NetworkDriver();
 
-// Methods
-public:
+public: // methods
 	// Resolve host.
 	const yake::base::String sayHelloMyFriend() const;
 
-YAKE_DECLARE_CONCRETE( NetworkDriver, "winsock" )
+	YAKE_DECLARE_CONCRETE( NetworkDriver, "winsock" )
+};
+
+class YAKE_REGISTRY_PLUGIN_CONCRETE_API NetworkDriver2 : public INetworkDriver2
+{		
+	YAKE_DECLARE_CLASS( NetworkDriver2 )
+
+public: // class
+	// Constructor.
+	NetworkDriver2();
+	NetworkDriver2(int);
+
+	// Destructor.
+	virtual ~NetworkDriver2();
+
+public: // methods
+	// Resolve host.
+	const yake::base::String sayHelloMyFriend() const;
+
+	YAKE_DECLARE_CONCRETE( NetworkDriver2, "winsock2" )
 };
 
 #endif // CONCRETE_H

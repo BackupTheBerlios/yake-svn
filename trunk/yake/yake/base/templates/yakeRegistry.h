@@ -45,22 +45,25 @@ namespace templates
 {
 
 /* Helpers */ // todo: test
-#define FUNCTION( number ) \
-	YAKE_TYPES_ONE_FREE( number ) \
-	templates::SharedPtr< T > create( typename T::RegistryType::Id id, YAKE_ARGUMENTS_ONE_FREE( number ) ) \
-	{ return T::getRegistry().getObject( id )->create( YAKE_USE_ARGUMENTS( number ) ); }
-YAKE_IMPLEMENT_FUNCTION( FUNCTION )
+#define FUNCTION(number) \
+	YAKE_TYPES_ONE_FREE(number) \
+	templates::SharedPtr<T> create(typename T::RegistryType::Id id, YAKE_ARGUMENTS_ONE_FREE(number)) \
+	{ return T::getRegistry().getObject(id)->create(YAKE_USE_ARGUMENTS(number)); }
+YAKE_IMPLEMENT_FUNCTION(FUNCTION)
 #undef FUNCTION
 
-template< typename Interface_ >
-templates::SharedPtr< Interface_ > create()
-{ return Interface_::getRegistry().getDefaultCreator()->create(); };
+#define FUNCTION(number) \
+		YAKE_TYPES_ONE_FREE(number) \
+		templates::SharedPtr<T> create_default(YAKE_ARGUMENTS_ONE_FREE(number)) \
+		{ return T::getRegistry().getDefaultCreator()->create(YAKE_USE_ARGUMENTS(number)); }
+YAKE_IMPLEMENT_FUNCTION(FUNCTION)
+#undef FUNCTION
 
 /* Registry */
 
 // todo: functors instead of creators
 // todo: if we cannot simplify manager template, remove it
-template< class ConfigClass >
+template <class ConfigClass>
 class Registry : public Manager< typename ConfigClass::Id, templates::SharedPtr< typename ConfigClass::ICreator >, RegisterFunctionsNames >
 {
 YAKE_DECLARE_CLASS( yake::base::templates::Registry )
@@ -144,7 +147,7 @@ private: // data
 			typedef Concrete ConcreteT; \
 			ConcreteT::Register(); \
 		} \
-	} g_Concrete##Initor; \
+	} g_##Concrete##Initor; \
 	} // nameless
 
 } // templates
@@ -152,7 +155,7 @@ private: // data
 } // yake
 
 // Declares a registry for types with an empty constructor.
-#define YAKE_DECLARE_REGISTRY_0( BaseClass, IdClass ) \
+#define YAKE_DECLARE_REGISTRY_0(BaseClass, IdClass) \
   public: \
 	  struct RegistryConfig \
 	  { \
@@ -162,13 +165,11 @@ private: // data
 	    { \
 	      virtual yake::base::templates::SharedPtr< Base > create() = 0; \
 	    }; \
-	    template< typename T > \
+	    template <typename T> \
 	    struct ConcreteCreator : public ICreator \
 	    { \
-	      yake::base::templates::SharedPtr< Base > create() \
-	      { \
-	          return yake::base::templates::SharedPtr< T >( new T ); \
-	      } \
+	      yake::base::templates::SharedPtr<Base> create() \
+	      { return yake::base::templates::SharedPtr<T>(new T); } \
 	    }; \
 	  }; \
   YAKE_DECLARE_REGISTRY()
@@ -177,7 +178,7 @@ private: // data
 
 
 // Declares a registry for types with a constructor that takes one parameter.
-#define YAKE_DECLARE_REGISTRY_1( BaseClass, IdClass, Param1 ) \
+#define YAKE_DECLARE_REGISTRY_1(BaseClass, IdClass, Param1) \
   public: \
 	  struct RegistryConfig \
 	  { \
@@ -185,15 +186,37 @@ private: // data
 	    typedef IdClass Id; \
 	    struct ICreator \
 	    { \
-			virtual yake::base::templates::SharedPtr< Base > create( Param1 p1 ) = 0; \
+				virtual yake::base::templates::SharedPtr<Base> create(Param1 p1) = 0; \
 	    }; \
-	    template< typename T > \
+	    template <typename T> \
 	    struct ConcreteCreator : public ICreator \
 	    { \
-	      yake::base::templates::SharedPtr< Base > create( Param1 p1 ) \
-	      { \
-	          return yake::base::templates::SharedPtr< T >( new T(p1) ); \
-	      } \
+	      yake::base::templates::SharedPtr<Base> create(Param1 p1) \
+	      { return yake::base::templates::SharedPtr<T>(new T(p1)); } \
+	    }; \
+	  }; \
+  YAKE_DECLARE_REGISTRY()
+
+// Declares a registry for types with a constructor that takes one parameter.
+#define YAKE_DECLARE_REGISTRY_01(BaseClass, IdClass, Param1) \
+  public: \
+	  struct RegistryConfig \
+	  { \
+	    typedef BaseClass Base; \
+	    typedef IdClass Id; \
+	    struct ICreator \
+	    { \
+				virtual yake::base::templates::SharedPtr<Base> create() = 0; \
+				virtual yake::base::templates::SharedPtr<Base> create(Param1 p1) = 0; \
+	    }; \
+	    template <typename T> \
+	    struct ConcreteCreator : public ICreator \
+	    { \
+	      yake::base::templates::SharedPtr<Base> create() \
+	      { return yake::base::templates::SharedPtr<T>(new T()); } \
+				\
+	      yake::base::templates::SharedPtr<Base> create(Param1 p1) \
+	      { return yake::base::templates::SharedPtr<T>(new T(p1)); } \
 	    }; \
 	  }; \
   YAKE_DECLARE_REGISTRY()

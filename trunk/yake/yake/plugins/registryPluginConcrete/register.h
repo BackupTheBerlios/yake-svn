@@ -26,6 +26,7 @@
 //============================================================================
 #include "concrete.h"
 
-YAKE_REGISTER_CONCRETE( NetworkDriver )
+YAKE_REGISTER_CONCRETE(NetworkDriver)
+YAKE_REGISTER_CONCRETE(NetworkDriver2)
 
 #endif // REGISTER_H

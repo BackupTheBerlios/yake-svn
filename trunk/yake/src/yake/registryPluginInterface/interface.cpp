@@ -24,4 +24,5 @@
 //============================================================================
 #include <yake/registryPluginInterface/interface.h>
 
-YAKE_IMPLEMENT_REGISTRY( INetworkDriver )
+YAKE_IMPLEMENT_REGISTRY(INetworkDriver)
+YAKE_IMPLEMENT_REGISTRY(INetworkDriver2)

@@ -34,3 +34,22 @@ const yake::base::String NetworkDriver::sayHelloMyFriend() const
 	YAKE_DECLARE_FUNCTION( sayHelloMyFriend )
 	return yake::base::String( YAKE_HERE + ": Hello, its me - the winsock implementation :)" );
 }
+
+
+NetworkDriver2::NetworkDriver2()
+{
+}
+
+NetworkDriver2::NetworkDriver2(int)
+{
+}
+
+NetworkDriver2::~NetworkDriver2()
+{
+}
+
+const yake::base::String NetworkDriver2::sayHelloMyFriend() const
+{
+	YAKE_DECLARE_FUNCTION( sayHelloMyFriend )
+	return yake::base::String( YAKE_HERE + ": Hello, its me - the winsock implementation :)" );
+}

@@ -18,20 +18,25 @@
 YAKE_DECLARE_GLOBAL
 int main()
 {
-	YAKE_DECLARE_FUNCTION( main )
+	YAKE_DECLARE_FUNCTION(main)
 	using namespace yake::base;
 	using namespace yake::base::templates;
 
 	// Just load it - automagically!
-	YAKE_LOG_INFORMATION( "Loading dll..." )
-	YAKE_USE_LIB( registryPluginConcrete );
+	YAKE_LOG_INFORMATION("Loading dll...")
+	YAKE_USE_LIB(registryPluginConcrete);
 		
 	// Get the concrete implementation
-	YAKE_LOG_INFORMATION( "Creating concrete implementation..." )
-	SharedPtr< INetworkDriver > pNetDriver = create< INetworkDriver >();
-
+	YAKE_LOG_INFORMATION("Creating concrete implementation...")
+	SharedPtr<INetworkDriver> pNetDriver = create_default<INetworkDriver>();
 	// Huhu my new friend
 	DebugOutputStream::instance() << pNetDriver->sayHelloMyFriend();
+
+	// Get the concrete implementation
+	YAKE_LOG_INFORMATION("Creating second concrete implementation...")
+	SharedPtr<INetworkDriver2> pNetDriver2 = create_default<INetworkDriver2>(12345);
+	// Huhu my new friend
+	DebugOutputStream::instance() << pNetDriver2->sayHelloMyFriend();
 
 	// Wait for a keystroke (in debug builds only).
 #if defined( YAKE_DEBUG_BUILD )
