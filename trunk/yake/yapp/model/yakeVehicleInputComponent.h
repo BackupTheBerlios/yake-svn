@@ -41,6 +41,10 @@ namespace vehicle {
 
 	/** Draft for a vehicle input component. The interface is in parts similar to that of the
 		physical interface. Naturally.
+		@Remarks Merge this functionality into physics rep where it belongs. Input components
+			are for retrieving and setting input states. Applying these to the physics component
+			is to be done by control components. This here is just an interface for the physics
+			component.
 	*/
 	class YAPP_BASE_API IInputVehicleComponent : public InputComponent
 	{
