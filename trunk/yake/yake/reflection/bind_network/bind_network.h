@@ -2,6 +2,7 @@
 #define _BIND_NETWORK_H_
 
 #include <algorithm>
+#include <vector>
 
 #include "tnl.h"
 #include "tnlNetObject.h"

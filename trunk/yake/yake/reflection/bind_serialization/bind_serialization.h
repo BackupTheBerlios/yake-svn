@@ -14,67 +14,35 @@ using namespace reflection;
 BOOST_CLASS_EXPORT(CLASS_NAME) \
 namespace boost { namespace serialization { \
 template<class Archive> \
-void serialize(Archive & ar_, CLASS_NAME & obj_, const unsigned int) \
-{	ar_ & boost::serialization::base_object<Object>(obj_); } } } \
+inline void serialize(Archive & ar, CLASS_NAME & obj, const BOOST_PFTO unsigned int file_version) \
+{	ar & boost::serialization::base_object<reflection::Object>(obj); } } } \
 \
 namespace { \
 static void register_##CLASS_NAME##() \
 { ClassRegistry::registerClass(CLASS_NAME##::getClassStatic()); } }
 //STATIC_INIT( register_##CLASS_NAME ) todo need singleton, yake class::registry => class registry?
 
-BOOST_CLASS_EXPORT(Object)
+BOOST_CLASS_EXPORT(reflection::Object)
 
-namespace boost 
+namespace boost
 { 
 namespace serialization 
 {
 
-template<typename ValueType_>
-ValueType_ getPropertyValue(const Property & prop_, const Object & obj_)
+template<typename ValueType>
+ValueType getPropertyValue(const Property & prop, const reflection::Object & obj)
 {
-	ValueType_ value;
-	prop_.get(value, &obj_);
+	ValueType value;
+	prop.get(value, &obj);
 	return value;
 }
 
-template<typename ValueType_, class Archive_>
-bool selectiveSave(Archive_ & ar_, const Object & obj_, const Property & prop_)
+template<typename ValueType, class Archive>
+bool selectiveSave(Archive & ar, const reflection::Object & obj, const Property & prop)
 {
-  if(prop_.getTypeInfo() == typeid(ValueType_))
+  if(prop.getTypeInfo() == typeid(ValueType))
 	{
-		ar_ << getPropertyValue<ValueType_>(prop_, obj_);
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-template<class Archive_>
-void save(Archive_ & ar_, const Object & obj_, unsigned int)
-{
-	// properties
-  for(Class::PropertyList::const_iterator iter(obj_.getClass().getProperties().begin());
-		iter != obj_.getClass().getProperties().end();
-		++iter)
-	{
-		const Property & prop = *iter;
-		selectiveSave<bool> (ar_, obj_, prop) || 
-		selectiveSave<int>  (ar_, obj_, prop) ||
-		selectiveSave<float>(ar_, obj_, prop) ||
-		selectiveSave<long> (ar_, obj_, prop);
-	}
-}
-
-template<typename ValueType_, class Archive_>
-bool selectiveLoad(Archive_ & ar_, const Object & obj_, const Property & prop_)
-{
-  if(prop_.getTypeInfo() == typeid(ValueType_))
-	{
-		ValueType_ value;
-		ar_ >> value;
-		prop_.set( &obj_, value );
+		ar << getPropertyValue<ValueType>(prop, obj);
 		return true;
 	}
 	else
@@ -84,24 +52,65 @@ bool selectiveLoad(Archive_ & ar_, const Object & obj_, const Property & prop_)
 }
 
 template<class Archive>
-void load(Archive & ar_, Object & obj_, unsigned int)
+void save(Archive & ar, const reflection::Object & obj, const BOOST_PFTO unsigned int file_version)
 {
 	// properties
-  for(Class::PropertyList::const_iterator iter(obj_.getClass().getProperties().begin());
-		iter != obj_.getClass().getProperties().end();
+  for(Class::PropertyList::const_iterator iter(obj.getClass().getProperties().begin());
+		iter != obj.getClass().getProperties().end();
 		++iter)
 	{
 		const Property & prop = *iter;
-		selectiveLoad<bool> (ar_, obj_, prop) || 
-		selectiveLoad<int>  (ar_, obj_, prop) ||
-		selectiveLoad<float>(ar_, obj_, prop) ||
-		selectiveLoad<long> (ar_, obj_, prop);
+		selectiveSave<bool> (ar, obj, prop) || 
+		selectiveSave<int>  (ar, obj, prop) ||
+		selectiveSave<float>(ar, obj, prop) ||
+		selectiveSave<long> (ar, obj, prop);
+	}
+}
+
+template<typename ValueType, class Archive>
+bool selectiveLoad(Archive & ar, const reflection::Object & obj, const Property & prop)
+{
+  if(prop.getTypeInfo() == typeid(ValueType))
+	{
+		ValueType value;
+		ar >> value;
+		prop.set( &obj, value );
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+template<class Archive>
+void load(Archive & ar, reflection::Object & obj, const BOOST_PFTO unsigned int file_version)
+{
+	// properties
+  for(Class::PropertyList::const_iterator iter(obj.getClass().getProperties().begin());
+		iter != obj.getClass().getProperties().end();
+		++iter)
+	{
+		const Property & prop = *iter;
+		selectiveLoad<bool> (ar, obj, prop) || 
+		selectiveLoad<int>  (ar, obj, prop) ||
+		selectiveLoad<float>(ar, obj, prop) ||
+		selectiveLoad<long> (ar, obj, prop);
 	}
 }
 
 } // serialization
 } // boost
 
-BOOST_SERIALIZATION_SPLIT_FREE(Object)
+// todo: hmm ... does not work with boost 1.32?
+//BOOST_SERIALIZATION_SPLIT_FREE(reflection::Object)
+namespace boost { namespace serialization {
+template<class Archive>
+inline void serialize(
+    Archive & ar,
+    Object & obj,
+    const unsigned int file_version)
+{ split_free(ar, obj, file_version); }
+}}
 
 #endif // _SERIALIZE_H_

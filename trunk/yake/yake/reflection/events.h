@@ -21,6 +21,8 @@
 #include "reflection.h"
 
 // lua
+/*
+adapt to boost 1.32 and luabind7
 extern "C"
 {
 	#include "lua.h"
@@ -30,10 +32,13 @@ extern "C"
 
 #define LUABIND_NO_HEADERS_ONLY
 #include <luabind/luabind.hpp>
-#include <luabind/functor.hpp>
+#include <luabind/functor.hpp>*/
 
-// using boost::lambda placeholders
-boost::lambda::placeholder1_type _l1;
+namespace // unnamed
+{
+	// using boost::lambda placeholders
+	boost::lambda::placeholder1_type _l1;
+}
 
 using namespace yake::base::mpl;
 
@@ -193,7 +198,7 @@ protected:
 
 // todo split files and place event into yake::base
 // todo lua_handler_to_cpp_1 simpliy => add attach policy with event::attach_handler( lua::functor ) and bind to lua
-#include "bind_lua/lua_handler_to_cpp.h"
+//#include "bind_lua/lua_handler_to_cpp.h"
 
 namespace reflection
 {
@@ -204,25 +209,26 @@ struct rx_event_base
 	virtual void attach_handler(void * object, const reflection::Method & this_handler) = 0;
 };
 
+/* todo: adapt to luabind7
 struct lua_event_base
 {
 	virtual ~lua_event_base() {}
 	virtual void attach_handler(const luabind::functor<void> & lua_function) = 0;
-};
+};*/
 
 template
 < 
 	typename arg1 = null_type,
 	typename arg2 = null_type
 >
-struct event : public rx_event_base, public lua_event_base, public ::event<arg1, arg2 /*, lua::search_for_lua_handlers_1*/> 
+struct event : public rx_event_base, /*public lua_event_base,*/ public ::event<arg1, arg2 /*, lua::search_for_lua_handlers_1*/> 
 {
 	typedef ::event<arg1, arg2/*, lua::search_for_lua_handlers_1*/> base;
-	typedef std::vector< luabind::functor<void> > lua_functor_list;
+	//typedef std::vector< luabind::functor<void> > lua_functor_list;
 
 	// todo: do we have to do the same for the handlers of the base class as well?
-	event() : m_lua_functor_list(new lua_functor_list()) {}
-	event(const event & e) : m_lua_functor_list(e.m_lua_functor_list) {}
+	event() /*: m_lua_functor_list(new lua_functor_list())*/ {}
+	event(const event & e) /*: m_lua_functor_list(e.m_lua_functor_list)*/ {}
 
 	// add base functions to scope
 	using base::attach_handler;
@@ -243,11 +249,13 @@ struct event : public rx_event_base, public lua_event_base, public ::event<arg1,
 	// lua
 	// todo: make lua bindings optional with define (see gui wrapper)
 
+	// todo: adapt to luabind7
+
 	// attach lua functor
-	void attach_handler(const luabind::functor<void> & lua_function)
+	/*void attach_handler(const luabind::functor<void> & lua_function)
 	{
 		m_lua_functor_list->push_back(lua_function);
-	}
+	}*/
 
 	// fires all lua functors and the functors of the base class
 	virtual void fire(arg1 a1, arg2 a2)
@@ -255,9 +263,10 @@ struct event : public rx_event_base, public lua_event_base, public ::event<arg1,
 		// call handlers of the base class
 		base::fire(a1, a2);
 		// call lua handlers
-		for(lua_functor_list::const_iterator iter = m_lua_functor_list->begin();
+		// todo: adapt to luabind7
+		/*for(lua_functor_list::const_iterator iter = m_lua_functor_list->begin();
 			iter != m_lua_functor_list->end(); iter++)
-		{ iter->operator()(a1, a2); }
+		{ iter->operator()(a1, a2); }*/
 	}
 
 	// luabind cannot handle void as return type
@@ -271,7 +280,7 @@ struct event : public rx_event_base, public lua_event_base, public ::event<arg1,
 	// when returning a property (get) and each object would have its' own list of functors,
 	// so attach_handler would add the functor to object A and fire would call all functors of object B.
 	// but A and B should have the same list of functors, so we are sharing this list.
-	boost::shared_ptr<lua_functor_list> m_lua_functor_list;
+	//boost::shared_ptr<lua_functor_list> m_lua_functor_list;
 };
 
 
@@ -313,14 +322,14 @@ template
 < 
 	typename arg1
 >
-struct event<arg1, null_type> : public rx_event_base, public lua_event_base, public ::event<arg1 /*, lua::search_for_lua_handlers_1*/> 
+struct event<arg1, null_type> : public rx_event_base, /*public lua_event_base,*/ public ::event<arg1 /*, lua::search_for_lua_handlers_1*/> 
 {
 	typedef ::event<arg1/*, lua::search_for_lua_handlers_1*/> base;
-	typedef std::vector< luabind::functor<void> > lua_functor_list;
+	//typedef std::vector< luabind::functor<void> > lua_functor_list;
 
 	// todo: do we have to do the same for the handlers of the base class as well?
-	event() : m_lua_functor_list(new lua_functor_list()) {}
-	event(const event & e) : m_lua_functor_list(e.m_lua_functor_list) {}
+	event() /*: m_lua_functor_list(new lua_functor_list())*/ {}
+	event(const event & e) /*: m_lua_functor_list(e.m_lua_functor_list)*/ {}
 
 	// add base functions to scope
 	using base::attach_handler;
@@ -341,10 +350,10 @@ struct event<arg1, null_type> : public rx_event_base, public lua_event_base, pub
 	// lua
 
 	// attach lua functor
-	void attach_handler(const luabind::functor<void> & lua_function)
+	/*void attach_handler(const luabind::functor<void> & lua_function)
 	{
 		m_lua_functor_list->push_back(lua_function);
-	}
+	}*/
 
 	// fires all lua functors and the functors of the base class
 	virtual void fire(arg1 a1)
@@ -352,14 +361,15 @@ struct event<arg1, null_type> : public rx_event_base, public lua_event_base, pub
 		// call handlers of the base class
 		base::fire(a1);
 		// call lua handlers
-		for(lua_functor_list::const_iterator iter = m_lua_functor_list->begin();
+		// todo: adapt to luabind7
+		/*for(lua_functor_list::const_iterator iter = m_lua_functor_list->begin();
 			iter != m_lua_functor_list->end(); iter++)
 		{
       // luabind tries to remove the reference to an abstract classes and 
 			// instantiate it, so we have to replace the reference with a pointer,
 			// if the given type is an abstract class
 			iter->operator()(remove_ref_if_abstract_and_ref<arg1>::remove(a1));
-    }
+    }*/
 	}
 
 	// luabind cannot handle void as return type
@@ -373,7 +383,7 @@ struct event<arg1, null_type> : public rx_event_base, public lua_event_base, pub
 	// when returning a property (get) and each object would have its' own list of functors,
 	// so attach_handler would add the functor to object A and fire would call all functors of object B.
 	// but A and B should have the same list of functors, so we are sharing this list.
-	boost::shared_ptr<lua_functor_list> m_lua_functor_list;
+	//boost::shared_ptr<lua_functor_list> m_lua_functor_list;
 };
 
 }
