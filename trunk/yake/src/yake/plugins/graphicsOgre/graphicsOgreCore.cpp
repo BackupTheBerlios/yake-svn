@@ -87,6 +87,7 @@ namespace ogre3d {
 				if (bParseDefaultResourceFile)
 					setupResourcesFromConfigFile();
 
+// todo: we don't want to choose this at compilation time
 #if defined( YAKE_OGREPLUGIN_NO_CONFIG_DIALOG )
 				RenderSystemList *rl = Root::getSingleton().getAvailableRenderers();
 				RenderSystemList::const_iterator it = rl->begin();
