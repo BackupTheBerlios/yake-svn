@@ -102,6 +102,11 @@ public:
 	 bool empty() const 
 	 { return _MyBase::empty(); }
 
+	 void reserve(size_t n)
+	 {
+		 _MyBase::reserve(n);
+	 }
+
 
    // Insert/Delete
 	 void push_back( const _Value& Value )
