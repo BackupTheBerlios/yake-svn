@@ -26,7 +26,7 @@
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
 #include <yapp/loader/yakeModelMovableLinkCreator.h>
-#include <yapp/loader/yakeModelMovableLink.h>
+#include <yapp/model/yakeModelMovableLink.h>
 
 namespace yake {
 namespace app {
@@ -39,47 +39,45 @@ namespace model {
 	{
 		// parse
 		String sourceType = StringUtil::toLowerCase(rNode.getAttributeValueAs<String>("type"));
-		String sourceModelName = StringUtil::toLowerCase(rNode.getAttributeValueAs<String>("submodel"));
+		String sourceModelName = (rNode.getAttributeValueAs<String>("submodel"));
 		String sourceMovableType = StringUtil::toLowerCase(rNode.getAttributeValueAs<String>("elementtype"));
-		String sourceMovableName = StringUtil::toLowerCase(rNode.getAttributeValueAs<String>("element"));
+		String sourceMovableName = (rNode.getAttributeValueAs<String>("element"));
 		// retrieve source movable
 		Movable* pMovable = 0;
 		if (sourceType == "graphical")
 		{
-			YAKE_ASSERT( sourceMovableType == "scenenode" );
+			YAKE_ASSERT( sourceMovableType == "graphics.scenenode" );
 			Graphical* pG = rModel.getGraphicalByName( sourceModelName );
 			YAKE_ASSERT( pG );
-			pMovable = pG->getSceneNodeByName( sourceModelName );
+			pMovable = pG->getSceneNodeByName( sourceMovableName );
 		}
 		else if (sourceType == "physical")
 		{
 			Physical* pP = rModel.getPhysicalByName( sourceModelName );
 			YAKE_ASSERT( pP );
-			if (sourceMovableType == "body")
+			if (sourceMovableType == "physics.body")
 				pMovable = pP->getBodyByName( sourceMovableName ).get();
-			else if (sourceMovableType == "complex")
+			else if (sourceMovableType == "physics.complex")
 				pMovable = pP->getComplexByName( sourceMovableName ).get();
 		}
 		YAKE_ASSERT( pMovable );
 		return pMovable;
 	}
 
-	ModelLink* ModelMovableLinkCreator::createLink( complex::Model & rModel, const data::dom::INode& rDOMNode )
+	ModelLink* ModelMovableLinkCreator::createLink(	complex::Model & rModel,
+													const data::dom::INode& rSourceNode,
+													const data::dom::INode& rTargetNode)
 	{
 		using namespace ::yake::data::dom;
 
 		// retrieve source movable
-		SharedPtr<INode> pNode = rDOMNode.getNodeByName("link_source");
-		YAKE_ASSERT( pNode );
-		Movable* pSourceMovable = getMovableFromModel( rModel, (*pNode) );
+		Movable* pSourceMovable = getMovableFromModel( rModel, rSourceNode );
 		YAKE_ASSERT( pSourceMovable );
 		if (!pSourceMovable)
 			return 0;
 
 		// retrieve target movable
-		pNode = rDOMNode.getNodeByName("link_target");
-		YAKE_ASSERT( pNode );
-		Movable* pTargetMovable = getMovableFromModel( rModel, (*pNode) );
+		Movable* pTargetMovable = getMovableFromModel( rModel, rTargetNode );
 		YAKE_ASSERT( pTargetMovable );
 		if (!pTargetMovable)
 			return 0;

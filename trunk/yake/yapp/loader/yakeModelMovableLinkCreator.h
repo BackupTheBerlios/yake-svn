@@ -36,9 +36,11 @@ namespace model {
 	class ModelMovableLinkCreator : public ModelLinkCreator
 	{
 	public:
-		YAKE_DECLARE_CONCRETE( ModelMovableLinkCreator, "linkcreator.yake.movable");
+		YAKE_DECLARE_CONCRETE( ModelMovableLinkCreator, "yake.movable");
 
-		virtual ModelLink* createLink( complex::Model & rModel, const data::dom::INode& rDOMNode );
+		virtual ModelLink* createLink(	complex::Model & rModel,
+										const data::dom::INode& rSourceNode,
+										const data::dom::INode& rTargetNode);
 	};
 
 }

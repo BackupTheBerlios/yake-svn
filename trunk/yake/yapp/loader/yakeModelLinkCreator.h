@@ -27,7 +27,7 @@
 #define YAPP_MODELLINKCREATOR_H
 
 #include <yapp/base/yappPrerequisites.h>
-#include <yapp/loader/yakeModelLink.h>
+#include <yapp/model/yakeModelLink.h>
 
 namespace yake {
 namespace app {
@@ -38,7 +38,9 @@ namespace model {
 	public:
 		YAKE_DECLARE_REGISTRY_0( ModelLinkCreator, ::yake::base::String );
 
-		virtual ModelLink* createLink( complex::Model & rModel, const data::dom::INode& rDOMNode ) = 0;
+		virtual ModelLink* createLink(	complex::Model & rModel,
+										const data::dom::INode& rSourceNode,
+										const data::dom::INode& rTargetNode) = 0;
 	};
 
 }

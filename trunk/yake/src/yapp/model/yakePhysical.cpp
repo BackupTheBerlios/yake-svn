@@ -76,8 +76,12 @@ namespace model {
 	//-----------------------------------------------------
 	SharedPtr<physics::IComplexObject> Physical::getComplexByName( const String & rName ) const
 	{
-		YAKE_ASSERT( 1==0 && "not implemented!" );
-		return SharedPtr<physics::IComplexObject>();
+		ComplexMap::const_iterator itFind = mComplexObjects.find( rName );
+		YAKE_ASSERT( itFind != mComplexObjects.end() )( rName ).warning("couldn't find the object!");
+		if (itFind == mComplexObjects.end())
+			return SharedPtr<physics::IComplexObject>();
+		else
+			return itFind->second;
 	}
 
 }

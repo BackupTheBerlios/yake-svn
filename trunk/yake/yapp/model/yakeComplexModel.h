@@ -45,6 +45,8 @@ namespace model {
 	public:
 	};*/
 
+	class ModelLink;
+
 namespace complex {
 
 	/** Represents a complex high-level model.
@@ -97,6 +99,7 @@ namespace complex {
 		void addGraphical( SharedPtr<Graphical> & pGraphical, const String & rName = "" );
 
 		void addController( SharedPtr<IObjectController> & pController, const String & rName = "" );
+		void addLink( SharedPtr<ModelLink> & pModelLink, const String & rName = "" );
 
 		void updatePhysics( real timeElapsed );
 		void updateControllers( real timeElapsed );

@@ -25,6 +25,7 @@
 */
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
+#include <yapp/model/yakeModelLink.h>
 
 namespace yake {
 namespace app {
@@ -90,8 +91,7 @@ namespace complex {
 		if (name != "")
 		{
 			PhysicalMap::const_iterator itFind = mPhysicals.find( name );
-			if (itFind == mPhysicals.end())
-				name = yake::base::uniqueName::create("auto_","_"+rName);
+			YAKE_ASSERT( itFind == mPhysicals.end() ).debug("submodel needs a unique name! name already taken!");
 		}
 		else
 			name = yake::base::uniqueName::create("auto_");
@@ -106,8 +106,7 @@ namespace complex {
 		if (name != "")
 		{
 			GraphicalMap::const_iterator itFind = mGraphicals.find( name );
-			if (itFind == mGraphicals.end())
-				name = yake::base::uniqueName::create("auto_","_"+rName);
+			YAKE_ASSERT( itFind == mGraphicals.end() ).debug("submodel needs a unique name! name already taken!");
 		}
 		else
 			name = yake::base::uniqueName::create("auto_");
@@ -136,7 +135,16 @@ namespace complex {
 	void Model::addController(SharedPtr<IObjectController> & pController, const String & rName)
 	{
 		YAKE_ASSERT( pController.get() );
+		YAKE_ASSERT( rName.length() == 0 ).error("tagging not implemented!");
 		mControllers.push_back( pController );
+	}
+
+	//-----------------------------------------------------
+	void Model::addLink( SharedPtr<ModelLink> & pModelLink, const String & rName )
+	{
+		YAKE_ASSERT( pModelLink.get() );
+		YAKE_ASSERT( rName.length() == 0 ).error("tagging not implemented!");
+		mControllers.push_back( pModelLink );
 	}
 
 	//-----------------------------------------------------

@@ -23,16 +23,32 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#include <yapp/base/yappPCH.h>
-#include <yapp/base/yapp.h>
-#include <yapp/model/yakeModelLink.h>
+#ifndef YAKE_APP_MODEL_NATIVE_VEHICLE_INPUTCOMPONENT_H
+#define YAKE_APP_MODEL_NATIVE_VEHICLE_INPUTCOMPONENT_H
+
+#include <yapp/base/yappPrerequisites.h>
 
 namespace yake {
 namespace app {
 namespace model {
+namespace vehicle {
 
-	YAKE_IMPLEMENT_REGISTRY( ModelLink );
+	class YAPP_BASE_API IInputVehicleComponent : public InputComponent
+	{
+	public:
+		YAKE_DECLARE_CLASS( IInputVehicleComponent );
+		YAKE_DECLARE_REGISTRY( IInputVehicleComponent );
+
+		virtual void steerAnalog( const String & rSteerGroup, const real targetSteer ) = 0;
+		virtual void brakeAnalog( const String & rBrake, const real ratio ) = 0;
+		virtual void throttleAnalog( const String & rEngine, const real ratio ) = 0;
+		//virtual void handbrake( const bool activate ) = 0;
+	};
 
 }
 }
 }
+}
+
+
+#endif

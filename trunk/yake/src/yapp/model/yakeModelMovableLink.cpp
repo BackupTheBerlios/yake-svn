@@ -25,7 +25,7 @@
 */
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
-#include <yapp/loader/yakeModelMovableLink.h>
+#include <yapp/model/yakeModelMovableLink.h>
 
 namespace yake {
 namespace app {

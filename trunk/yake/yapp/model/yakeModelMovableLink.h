@@ -27,7 +27,7 @@
 #define YAPP_MODELMOVABLELINK_H
 
 #include <yapp/base/yappPrerequisites.h>
-#include <yapp/loader/yakeModelLink.h>
+#include <yapp/model/yakeModelLink.h>
 
 namespace yake {
 namespace app {
