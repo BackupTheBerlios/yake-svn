@@ -472,19 +472,26 @@ bool test_ftp_vfs_mixing()
 // main ---------------------------------------------------------//
 int main()
 {	
-	YAKE_LOG(  "## filesystem test" );
-	//try
-	//{
+
+	using namespace filesystem;
+	path ph( "ftp://test/sdfdsfsd", no_check );
+	std::cout << ph.string();
+
+
+
+	/*YAKE_LOG(  "## filesystem test" );
+	try
+	{
 		// common
-		//YAKE_CHECK( test_exceptions() );
-		//YAKE_CHECK( test_path_normalize() );
+		YAKE_CHECK( test_exceptions() );
+		YAKE_CHECK( test_path_normalize() );
 
 		// native
 		YAKE_USE_LIB( native_file_system )
-		/*YAKE_CHECK( test_native_operations() );
+		YAKE_CHECK( test_native_operations() );
 		YAKE_CHECK( test_native_streams() );
 		YAKE_CHECK( test_native_iterator() );
-		YAKE_CHECK( test_native_seek() );*/
+		YAKE_CHECK( test_native_seek() );
 
 		// virtual
 		YAKE_USE_LIB( virtual_file_system )
@@ -492,18 +499,18 @@ int main()
 		YAKE_CHECK( test_root_remove_path() );
 		YAKE_CHECK( test_create_archive() );
 		YAKE_CHECK( test_virtual_file() );
-		/*YAKE_CHECK( test_virtual_streams() );
+		YAKE_CHECK( test_virtual_streams() );
 		YAKE_CHECK( test_virtual_nfs_iterator() );
 		YAKE_CHECK( test_virtual_vfs_iterator() );
-		YAKE_CHECK( test_virtual_seek() );*/
+		YAKE_CHECK( test_virtual_seek() );
 
 		// ftp
-		/*YAKE_USE_LIB( ftp_file_system )
+		YAKE_USE_LIB( ftp_file_system )
 		YAKE_CHECK( test_ftp_exists() );
 		YAKE_CHECK( test_ftp_file() );
 		YAKE_CHECK( test_ftp_iterator() );
-		YAKE_CHECK( test_ftp_vfs_mixing() );*/
-	/*}
+		YAKE_CHECK( test_ftp_vfs_mixing() );
+	}
 	catch( const filesystem::filesystem_error & err )
 	{
 		std::cout << err.who() << err.what();

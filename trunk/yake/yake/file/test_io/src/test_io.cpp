@@ -25,7 +25,7 @@ struct seekable_ressource
       int bytes_to_read, bytes_to_read_return;
       bytes_to_read = bytes_to_read_return =
         ( data_.size() - position_  > n ?
-          n : data_.size() - position_ );
+        n : data_.size() - position_ );
 
       for( ; bytes_to_read-- > 0; position_++ )
         s[position_] = data_[position_];
@@ -88,11 +88,11 @@ void seekable_file_test()
 
     {
       // set position back to bof
-      std::string hello;
+      ins.clear(); // clear eof state
       ins.seekg( 0, std::ios_base::beg );
       assert( static_cast<int>( ins.tellg() ) == 0 );
-      // clear eof, get data
-      ins.clear();
+      // get data
+	    std::string hello;
       std::getline( ins, hello );
       std::cout << hello << std::endl;
       assert( hello == h );

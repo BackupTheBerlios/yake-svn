@@ -156,13 +156,10 @@ virtual_archive & virtual_file_system::get_or_open_archive( const path & absolut
 		// todo clean up, we need the clear, otherwise nfs would be exluded because we are still in the resolve_fs_for loop
 		resolve::instance().clear_exlusion();
 
-	virtualfs::filebuf & buf = *new virtualfs::filebuf();
-	buf.open(	absolute_archive_path, std::ios_base::in ); 
-	std::istream * in = new nativefs::ifstream();
-	in->rdbuf(&buf);
-
-		//virtualfs::istream * in = new virtualfs::ifstream( absolute_archive_path );
-		in_archive * ia = new in_archive( *in ); // todo crash here because we are using virtual filebuf?!?!
+	virtualfs::istream * in = new virtualfs::ifstream( absolute_archive_path );
+	// todo: if we don't use no_codecvt, boost's archive will throw an exception while
+	// trying to imbue the stream with a new locale respectively with a facet
+	in_archive * ia = new in_archive( *in, boost::archive::no_codecvt );
 
 		virtual_archive * archive = new virtual_archive( ia, archive_string );
 		ia->operator >> ( *archive );

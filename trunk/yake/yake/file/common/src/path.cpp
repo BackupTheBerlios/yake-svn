@@ -311,10 +311,13 @@ namespace filesystem
           {
             std::string name;
             do
-              { name += *itr; }
+              { 
+								name += *itr;
+								if( *itr == ':' && *boost::next( itr ) == '/' ) name += '/';	// added for "protocol://" support						
+							}
             while ( ++itr != src.end() && *itr != '/'
 #             ifdef BOOST_WINDOWS
-              && (*itr != '\\' || checker != native)
+							&& (*itr != '\\' || checker != native)
 #             endif
               );
 

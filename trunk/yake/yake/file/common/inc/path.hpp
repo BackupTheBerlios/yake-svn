@@ -3,6 +3,7 @@
 
 #include "config.hpp"
 #include <boost/iterator/iterator_facade.hpp>
+#include <boost/next_prior.hpp>
 #include <string>
 #include <cassert>
 
