@@ -30,50 +30,93 @@ namespace physics {
 
 	/**@todo move to base::math
 	*/
+
 	class BoundingVolume
 	{
 	public:
 		virtual ~BoundingVolume() {}
+
+		//static bool intersectsWith( BoundingSphere& rSphere, BoundingSphere& rSphere );
 	};
+	/*
+	class BoundingSphere
+	{
+	public:
+		BoundingSphere(const BoundingSphere& rOther);
+		BoundingSphere(const real radius = 1, const Vector3& rPosition = Vector3::kZero );
+		BoundingSphere& operator=(const BoundingSphere& rOther);
+
+		void setRadius(const real radius)
+		{ mRadius = radius; mRadiusSquared = radius*radius; }
+		inline real getRadius() const
+		{ return mRadius; }
+		void setPosition(const Vector3& rPosition)
+		{ mPosition = rPosition; }
+		inline Vector3 getPosition() const
+		{ return mPosition; }
+
+		bool intersectsWith( const BoundingSphere& rSphere )
+		{
+			real distanceSquared = (rSphere.getPosition() - mPosition()).squaredLength();
+			return (distanceSquared <= (mRadiusSquared + rSphere.mRadiusSquared));
+		}
+	private:
+		real		mRadius;
+		real		mRadiusSquared;
+		Vector3		mPosition;
+	};
+	BoundingSphere::BoundingSphere(const BoundingSphere& rOther) :
+		mRadius( rOther.mRadius ),
+		mRadiusSquared( rOther.mRadiusSquared ),
+		mPosition( rOther.mPosition )
+	{
+	}
+	BoundingSphere::BoundingSphere(const real radius = 1, const Vector3& rPosition = Vector3::kZero ) :
+		mRadius( radius ),
+		mRadiusSquared( radius*radius ),
+		mPosition( rPosition )
+	{
+	}
+	BoundingSphere& BoundingSphere::operator=(const BoundingSphere& rOther)
+	{
+		mRadius = rOther.mRadius;
+		mRadiusSquared = rOther.mRadiusSquared;
+		mPosition = rOther.mPosition;
+	}
+
+	class SpatialManager
+	{
+		typedef Deque<BoundingVolume> BoundingVolumeList;
+	};
+	*/
 
 	class AffectorZone
 	{
 	protected:
-		typedef Vector< SharedPtr<math::BoundingVolume> > VolumeList;
+		typedef Vector< SharedPtr<BoundingVolume> > VolumeList;
 		VolumeList				mVolumes;
 
-		typedef Vector< SharedPtr<physics::BodyAffector> > AffectorList;
+		typedef Vector< SharedPtr<physics::IBodyAffector> > AffectorList;
 		AffectorList			mAffectors;
 
 		SharedPtr<IWorld>		mWorld;
 		BodyGroup				mAffectedBodies;
-		bool					mNeedsUpdate;
-
 	public:
-		void addVolume( SharedPtr<BoundingVolume> & pVolume );
-
-		void addAffector( SharedPtr<IBodyAffector> & pAffector );
-
-		void setWorld( SharedPtr<IWorld> & pWorld );
+		AffectorZone();
+		void addVolume( SharedPtr<BoundingVolume>& pVolume );
+		void addAffector( SharedPtr<IBodyAffector>& pAffector );
+		void setWorld( SharedPtr<IWorld>& pWorld );
 
 		void setEnabled( bool enabled );
 		bool isEnabled() const;
 
 		virtual void update( const real timeElapsed );
-		{
-			/**@todo
-			if (mNeedsUpdate)
-			{
-				foreach world
-					_determineAffectedBodies( *it );
-			}
-			foreach affector
-				(*it)->apply( mAffectedBodies, upd.timeElapsed );
-			*/
-		}
 
 	protected:
 		void _determineAffectedBodies( const SharedPtr<IWorld> & pWorld );
+	private:
+		bool		mEnabled;
+		bool		mNeedsUpdate;
 	};
 
 	class AffectorZoneManager

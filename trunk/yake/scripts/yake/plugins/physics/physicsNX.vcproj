@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(NXSDK_DIR)/Physics/Include;$(NXSDK_DIR)/Foundation/include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ode/include"
+				AdditionalIncludeDirectories="$(NXSDK_DIR)/Physics/Include;$(NXSDK_DIR)/Foundation/include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/"
 				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_PHYSICS_NX_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -37,7 +37,7 @@
 				AdditionalDependencies="physics.lib NxPhysics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib;&quot;$(NXSDK_DIR)/Physics/lib/win32/release&quot;"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;&quot;$(NXSDK_DIR)/Physics/lib/win32/release&quot;"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
@@ -73,7 +73,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ode/include"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKEPHYSICSODE_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
@@ -89,7 +89,7 @@
 				AdditionalDependencies="physics.lib NxPhysics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/debug"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
