@@ -153,6 +153,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reflection", "reflection.vc
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "thread", "thread.vcproj", "{AA46155A-CCE2-4B9F-BBA2-84E827CF6222}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesThread1", "samples\thread\samplesThread1.vcproj", "{2E9B8C5F-AC44-478B-AE7F-8C6DC3EA3654}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -267,6 +275,14 @@ Global
 		{215FEC33-87C9-47E1-80EF-2FC735508B57}.Debug.Build.0 = Debug|Win32
 		{215FEC33-87C9-47E1-80EF-2FC735508B57}.Release.ActiveCfg = Release|Win32
 		{215FEC33-87C9-47E1-80EF-2FC735508B57}.Release.Build.0 = Release|Win32
+		{AA46155A-CCE2-4B9F-BBA2-84E827CF6222}.Debug.ActiveCfg = Debug|Win32
+		{AA46155A-CCE2-4B9F-BBA2-84E827CF6222}.Debug.Build.0 = Debug|Win32
+		{AA46155A-CCE2-4B9F-BBA2-84E827CF6222}.Release.ActiveCfg = Release|Win32
+		{AA46155A-CCE2-4B9F-BBA2-84E827CF6222}.Release.Build.0 = Release|Win32
+		{2E9B8C5F-AC44-478B-AE7F-8C6DC3EA3654}.Debug.ActiveCfg = Debug|Win32
+		{2E9B8C5F-AC44-478B-AE7F-8C6DC3EA3654}.Debug.Build.0 = Debug|Win32
+		{2E9B8C5F-AC44-478B-AE7F-8C6DC3EA3654}.Release.ActiveCfg = Release|Win32
+		{2E9B8C5F-AC44-478B-AE7F-8C6DC3EA3654}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
