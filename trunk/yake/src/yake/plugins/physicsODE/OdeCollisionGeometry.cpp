@@ -415,22 +415,22 @@ namespace yake {
 			YAKE_ASSERT( pPositionNode->getAttributeValue("x").which() == data::dom::INode::VTID_STRING );
 			Vector3 position;
 			String a = varGet<String>(pPositionNode->getAttributeValue("x"));
-			position.x = a.toReal();
+			position.x = StringUtil::toReal(a);
 			a = varGet<String>(pPositionNode->getAttributeValue("y"));
-			position.y = a.toReal();
+			position.y = StringUtil::toReal(a);
 			a = varGet<String>(pPositionNode->getAttributeValue("z"));
-			position.z = a.toReal();
+			position.z = StringUtil::toReal(a);
 			mVertices.push_back( position );
 		}
 		void PhysicsMeshLoader::readNormal( const SharedPtr<data::dom::INode> & pNormalNode )
 		{
 			Vector3 normal;
 			String a = varGet<String>(pNormalNode->getAttributeValue("x"));
-			normal.x = a.toReal();
+			normal.x = StringUtil::toReal(a);
 			a = varGet<String>(pNormalNode->getAttributeValue("y"));
-			normal.y = a.toReal();
+			normal.y = StringUtil::toReal(a);
 			a = varGet<String>(pNormalNode->getAttributeValue("z"));
-			normal.z = a.toReal();
+			normal.z = StringUtil::toReal(a);
 			mNormals.push_back( normal );
 		}
 
