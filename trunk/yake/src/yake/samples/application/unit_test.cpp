@@ -16,6 +16,7 @@
 #include <yake/samples/common/initialization.h>
 #include <yake/samples/common/configs.h>
 #include <yake/samples/common/library_manager.h>
+#include <yake/samples/common/ext_lib_man.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -45,26 +46,22 @@ namespace testsuite
 class my_app_auto : application< auto_init<> >
 {};
 
-class my_app_auto_mini : application< auto_init<minimum_config> >
+struct my_app_auto_mini : application< auto_init<minimum_config> >
 {};
 
-class my_app_auto_delayed : application< delayed_auto_init<minimum_config> >
+struct my_app_auto_delayed : application< delayed_auto_init<minimum_config> >
 {
 	my_app_auto_delayed()
-	{
-		initialize();
-	}
+	{	initialize();	}
 };
 
-class my_app_semi_auto : application< semi_auto_init<minimum_config> >
+struct my_app_semi_auto : application<semi_auto_init<my_app_semi_auto, minimum_config>, ext_lib_man>
 {
-	virtual void load_libraries()
-	{	m_lib_man << "ogre3d_plugin" << "cegui_plugin" << "ode_plugin";	}
-
-	library_manager m_lib_man;
+	void load_libraries()
+	{	get_lib_man() << "ogre3d_plugin" << "cegui_plugin" << "ode_plugin";	}
 };
 
-class my_app_manual : application< manual_init<basic_config> >
+struct my_app_manual : application< manual_init<basic_config> >
 {
    my_app_manual()
    {
@@ -95,6 +92,15 @@ class my_app_manual : application< manual_init<basic_config> >
 //============================================================================
 int main()
 {
+	using namespace yake::testsuite;
+	// automatic
+	my_app_auto app_auto;
+	my_app_auto_mini app_auto_mini;
+	my_app_auto_delayed app_auto_delayed;
+	// semi automatic
+	my_app_semi_auto app_semi_auto;
+	// manual
+	my_app_manual app_manual;
 
 #if defined( YAKE_DEBUG_BUILD )
 	std::cout << std::endl << "Waiting for you...";

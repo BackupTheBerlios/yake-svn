@@ -4,6 +4,7 @@
 // stl
 #include <vector>
 #include <string>
+#include <iostream>
 // boost
 #include <boost/shared_ptr.hpp>
 #include <boost/mpl/begin.hpp>
@@ -86,7 +87,6 @@ struct auto_init :
 	private load_libraries<Config>, 
 	private inherit_multiple<Config, typename lambda< auto_init_system_holder<_> >::type >::type
 {
-public: // methods
   template <class System>
   boost::shared_ptr<System> get_system()
   { static_cast<auto_init_system_holder<System>&>(*this)->get_system(); }
@@ -143,7 +143,7 @@ namespace // unnamed
 	};
 } // namespace unnamed
 
-template <class Config = default_config>
+template <class Parent, class Config = default_config>
 struct semi_auto_init : 
 	private inherit_linear
 	<
@@ -152,14 +152,11 @@ struct semi_auto_init :
 		semi_init_system_holder_root
 	>::type
 {
-public: // methods
 		semi_auto_init()
 		{
-			load_libraries();
+			static_cast<Parent*>(this)->load_libraries();
 			load_systems();
 		}
-
-		virtual void load_libraries() = 0;
 
 		template <class System>
 		boost::shared_ptr<System> get_system()
@@ -199,7 +196,6 @@ namespace // unnamed
 template <class Systems>
 struct manual_init : private inherit_multiple<Systems, typename lambda< manual_init_system_holder<_> >::type >::type
 {
-public: // methods
   template <class System>
   boost::shared_ptr<System> get_system()
   { static_cast<manual_init_system_holder<System>&>(*this).get_system(); }

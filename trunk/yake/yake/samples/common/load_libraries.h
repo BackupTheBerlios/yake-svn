@@ -23,13 +23,12 @@ struct load_libraries
 		std::vector<std::string> libs = config_libraries<Config>::get_libraries();
 		for(std::vector<std::string>::const_iterator iter = libs.begin();
 			iter != libs.end(); iter++)
-		{ m_lib_man.load_library(*iter); }
+		{ m_lib_man.load_library(iter->c_str()); }
 	}
 
 private:
 	library_manager m_lib_man;
 };
-
 
 } // namespace common
 } // namespace samples
