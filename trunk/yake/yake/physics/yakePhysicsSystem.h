@@ -391,7 +391,7 @@ namespace physics {
 							const Vector3& rOffset = Vector3::kZero  ) :
 								MassDesc( shapeDensity, rOffset ),
 								sizeX( boxSizeX ),
-+								sizeY( boxSizeY ),
+								sizeY( boxSizeY ),
 								sizeZ( boxSizeZ )
 			{}
 			
@@ -668,7 +668,7 @@ namespace physics {
 		virtual Deque<ShapeType> getSupportedShapes( bool bStatic = true, bool bDynamic = true ) const = 0;
 		virtual Deque<JointType> getSupportedJoints() const = 0;
 		virtual Deque<String> getSupportedSolvers() const = 0;
-		virtual bool useSolver( const String & rSolver ) = 0;
+		virtual bool useSolver( const String& rSolver ) = 0;
 		virtual String getCurrentSolver() const = 0;
 		virtual const PropertyNameList& getCurrentSolverParams() const = 0;
 		virtual void setCurrentSolverParam( const String& rName, const boost::any& rValue ) = 0;
