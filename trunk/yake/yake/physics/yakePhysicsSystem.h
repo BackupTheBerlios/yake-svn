@@ -169,6 +169,43 @@ namespace physics {
 		virtual void setProperty( const String & rkName, const boost::any & rkValue ) = 0;
 	};
 
+	typedef uint32 TriangleMeshId;
+	const TriangleMeshId kTriangleMeshIdNone = 0xFFFFFFFF;
+	struct TriangleMeshDesc
+	{
+		/** Important Notice: Vector3Vector, VertexVector, NormalVector and IndexVector HAVE to
+			be vectors because they may be accessed like C arrays ( e.g. &arr[0] ).
+			Is this OK? Today, it's practically OK and tomorrow it'll be even more as it's part
+			of the first Technical Corrigendum.
+		*/
+		typedef Vector<Vector3> Vector3Vector;
+		typedef Vector3Vector VertexVector;
+		typedef Vector3Vector NormalVector;
+		typedef uint32 IndexType;
+		typedef Vector<IndexType> IndexVector;
+
+		TriangleMeshDesc()
+		{
+		}
+		TriangleMeshDesc(	const VertexVector & rkVertices,
+							const IndexVector & rkIndices ) :
+				vertices( rkVertices ),
+				indices( rkIndices )
+		{
+		}
+		TriangleMeshDesc(	const VertexVector & rkVertices,
+							const IndexVector & rkIndices,
+							const NormalVector & rkNormals ) :
+				vertices( rkVertices ),
+				indices( rkIndices ),
+				normals( rkNormals )
+		{
+		}
+		VertexVector	vertices;
+		NormalVector	normals;
+		IndexVector		indices;
+	};
+
 	/** A shape is what we formerly called "collision geom" in yake::physics. */
 	class IShape //: public IPropertyQueryHandler
 	{
@@ -243,40 +280,18 @@ namespace physics {
 			real		height;
 			real		radius;
 		};
-		typedef Vector<Vector3> Vector3Vector;
-		typedef Vector3Vector VertexVector;
-		typedef Vector3Vector NormalVector;
-		typedef uint32 IndexType;
-		typedef Vector<IndexType> IndexVector;
 
 		struct TriMeshDesc : Desc
 		{
-			TriMeshDesc(	const String & rkMeshFilename,
+			TriMeshDesc(	const TriangleMeshId meshId_,
 							// base class:
 							const Vector3 & rkPosition = Vector3::kZero, 
 							const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
 				Desc( ST_TRIANGLE_MESH, rkPosition, rkOrientation ),
-				meshFilename( rkMeshFilename )
+				meshId( meshId_ )
 			{}
-			TriMeshDesc(	const VertexVector & rkVertices,
-							const IndexVector & rkIndices,
-							const NormalVector & rkNormals = NormalVector(),
-							// base class:
-							const Vector3 & rkPosition = Vector3::kZero, 
-							const Quaternion & rkOrientation = Quaternion::kIdentity
-						) :
-				Desc( ST_TRIANGLE_MESH, rkPosition, rkOrientation ),
-				vertices( rkVertices ),
-				indices( rkIndices ),
-				normals( rkNormals )
-			{
-			}
-			String			meshFilename;
-			// or alternatively:
-			VertexVector	vertices;
-			NormalVector	normals;
-			IndexVector		indices;
+			TriangleMeshId	meshId;
 		};
 	public:
 		virtual ~IShape() {}
@@ -491,6 +506,8 @@ namespace physics {
 		/*
 		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc & rkMatDesc ) = 0;
 		*/
+
+		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc & rkTrimeshDesc ) = 0;
 
 		virtual Deque<ShapeType> getSupportedShapes(bool bStatic = true, bool bDynamic = true) const = 0;
 		virtual Deque<JointType> getSupportedJoints() const = 0;
