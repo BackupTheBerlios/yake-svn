@@ -7,19 +7,23 @@
     MACROS
  *****************************************************************************/
 
-//access synonyms used in reflection
+// removes the braces of (int, float, bool) and returns int, float, bool, null, null ...
+// [used by EVENT( ..., (int, float, bool), ... ) etc.]
+#define REMOVE_BRACES(arg1, arg2, arg3) get_type_or_null<arg1>::type/*todo:, get_type_or_null<arg2>::type, get_type_or_null<arg3>::type*/
+
+// access synonyms used in reflection
 #define ACCESS_public        ACCESS_PUBLIC
 #define ACCESS_protected     ACCESS_PROTECTED
 #define ACCESS_private       ACCESS_PRIVATE
 
 
-//comma
+// comma
 #define __COMMA_IF0
 #define __COMMA_IF1   ,
 #define __COMMA_IF(S) __COMMA_IF##S
 
 
-//repeaters
+// repeaters
 #define __REPEAT0(M, S)
 #define __REPEAT1(M, S)         __COMMA_IF(S) M(1)
 #define __REPEAT2(M, S)         __REPEAT1(M, S)  , M(2)
@@ -43,7 +47,7 @@
 #define __REPEAT20(M, S)        __REPEAT19(M, S) , M(20)
 #define __REPEAT(N, M, S)       __REPEAT##N(M, S)
 
-//placeholders
+// placeholders
 #define __PLACEHOLDERS0()      _1
 #define __PLACEHOLDERS1()      __PLACEHOLDERS0()  ,_2
 #define __PLACEHOLDERS2()      __PLACEHOLDERS1()  ,_3
@@ -67,7 +71,7 @@
 #define __PLACEHOLDERS20()     __PLACEHOLDERS19() ,_21
 #define __PLACEHOLDERS(N)			 __PLACEHOLDERS##N()
 
-//various defs needed for parameters
+// various defs needed for parameters
 #define __MAX_PARAMS__       20
 #define __NOTHING__          0
 #define __COMMA__            1
@@ -79,10 +83,9 @@
 #define __PLACEHOLDER__(N)   _##N
 
 
-//type traits
+// type traits
 #define __IS_CONST__(T)       (sizeof(__const_tester__(T)) == 1)
 #define __IS_OBJECT__(T)      (sizeof(__object_tester__((T *)0)) == 1)
-
 
 namespace reflection 
 {
@@ -95,9 +98,12 @@ int __object_tester__(void *p);
 
 } // namespace reflection
 
-//calculates the offset of a field
+// calculates the offset of a field
 #define __OFFSET__           offsetof
 //(C, M)    ((unsigned long)(&((const C *)0)->M))
+
+// calculated the offset of an interface
+#define __CLASS_OFFSET__(class, super) ((unsigned long) static_cast<super*>((class*)8) - 8)
 
 
 /*****************************************************************************

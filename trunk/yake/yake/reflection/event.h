@@ -8,13 +8,9 @@
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 
-#define classoffset(class, super) ((unsigned long) static_cast<super*>((class*)8) - 8)
-
 /*****************************************************************************
     MACROS
 *****************************************************************************/
-
-#define REMOVE_BRACES(ARG1) ARG1
 
 // todo: use construct_type_from_arbitry_args to construct an event class for typeid()
 #define RX_EVENT(ACCESS_ATTR, EVENT_NAME, ARGS) \
@@ -23,7 +19,7 @@ private: \
 		{ \
         __event_##EVENT_NAME##__() \
 				{ \
-					static __register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(reflection::event< REMOVE_BRACES##ARGS >), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
+					static __register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(reflection::event<REMOVE_BRACES##ARGS>), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
         } \
     } __event_##EVENT_NAME##__; \
     friend struct __event_##EVENT_NAME##__; \
@@ -51,6 +47,7 @@ ACCESS_ATTR: \
 namespace reflection
 {
 
+// todo: use yake empty class
 namespace { struct Null {}; }
 
 /** The Event class represents an object's event. */
@@ -80,7 +77,7 @@ public:
       if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
 			
 			// this pointer + member offset + interface offset => ptr to the base interface
-			event_base * this_event = reinterpret_cast<event_base*>(((char*)object) + m_offset + classoffset(event<Null>, event_base));
+			event_base * this_event = reinterpret_cast<event_base*>(((char*)object) + m_offset + __CLASS_OFFSET__(event<Null>, event_base));
 			this_event->attach_handler(this_handler);
 		}
 
@@ -92,7 +89,7 @@ public:
       if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
 
 			// this pointer + member offset + interface offset => ptr to the base interface
-			rx_event_base * this_event = reinterpret_cast<rx_event_base*>(((char*)object) + m_offset + classoffset(event<Null>, rx_event_base));
+			rx_event_base * this_event = reinterpret_cast<rx_event_base*>(((char*)object) + m_offset + __CLASS_OFFSET__(event<Null>, rx_event_base));
 			this_event->attach_handler(object_handler, this_handler);
 		}
 
