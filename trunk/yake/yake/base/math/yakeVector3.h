@@ -392,6 +392,24 @@ namespace math
             return q;
         }
 
+		/** Guess what... taken from OGRE again... */
+		inline Vector3 perpendicular(void) const
+		{
+			static const real fSquareZero = 1e-06 * 1e-06;
+			Vector3 perp = this->crossProduct( Vector3::kUnitX );
+
+			// Check length
+			if( perp.squaredLength() < fSquareZero )
+			{
+				/* This vector is the Y axis multiplied by a scalar, so we have 
+				to use another axis.
+				*/
+				perp = this->crossProduct( Vector3::kUnitY );
+			}
+
+			return perp;
+		}
+
 		// special vectors
         static const Vector3 kZero;
         static const Vector3 kUnitX;

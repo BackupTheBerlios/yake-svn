@@ -58,6 +58,10 @@ namespace base
 		{
 			return (real) atof( rString.c_str() );
 		}
+		static int32 parseInt( const String& rString )
+		{
+			return int32( atoi( rString.c_str() ) );
+		}
 		static void trim(String& rString, bool left = true, bool right = true);
 		static std::vector< String > split( const String& rString, const String& delims = "\t\n", unsigned int maxSplits = 0);
 		static String toLowerCase( const String& rString );
