@@ -25,6 +25,4 @@ public:
 		float, test_float )
 };
 
-RX_DEFINE( cpp_class )
-
 #endif // _CPP_CLASS_H_

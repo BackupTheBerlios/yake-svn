@@ -4,10 +4,10 @@
 // 3 fields, 1 ref
 #define RX_DEFINE_ONE_REF_THREE_FIELDS( type1, name1, ref1, type2, name2, type3, name3, type4, name4 )\
 public:\
-typed_field<type1> name1;\
-typed_field<type2> name2;\
-typed_field<type3> name3;\
-typed_field<type4> name4;\
+rx::typed_field<type1> name1;\
+rx::typed_field<type2> name2;\
+rx::typed_field<type3> name3;\
+rx::typed_field<type4> name4;\
 \
 static void rx_construct_meta_class()\
 {\
@@ -21,7 +21,7 @@ static void rx_construct_meta_class()\
 void rx_init( const std::string & object_name )\
 {\
   meta_object_ =\
-	  instance<meta_object>( meta_class_, object_name )\
+	  rx::instance<rx::meta_object>( meta_class_, object_name )\
 			.add_field( set_ref( name1, ref1 ) )\
 			.add_field( name2 )\
 			.add_field( name3 )\
@@ -44,7 +44,7 @@ static void rx_construct_meta_class()\
 void rx_init( const std::string & object_name )\
 {\
   meta_object_ =\
-	  instance<meta_object>( meta_class_, object_name )\
+	 rx::instance<rx::meta_object>( meta_class_, object_name )\
 			.add_event( &name1 )\
 			.add_handler<type2>( name2, this );\
 }\
@@ -53,19 +53,19 @@ RX_DEFINE_CLASS_OBJECT()
 // meta class and object
 #define RX_DEFINE_CLASS_OBJECT()\
 public:\
-static meta_class & get_class(){ return meta_class_; }\
-meta_object & get_object(){ return *meta_object_.get(); }\
+static rx::meta_class & get_class(){ return meta_class_; }\
+rx::meta_object & get_object(){ return *meta_object_.get(); }\
 \
 private:\
-	static meta_class meta_class_;\
-	meta_object_ptr meta_object_;
+	static rx::meta_class meta_class_;\
+	rx::meta_object_ptr meta_object_;
 
 // construct meta object
 #define RX_INIT( object_name ) rx_init( object_name );
 
 // static initor for meta class
 #define RX_DEFINE( class_name )\
-meta_class class_name::meta_class_( #class_name );\
+rx::meta_class class_name::meta_class_( #class_name );\
 \
 namespace\
 {\

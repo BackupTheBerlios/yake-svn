@@ -7,9 +7,6 @@
 #include "meta_class.h"
 #include "cpp_to_meta_helpers.h"
 
-using namespace rx;
-
-/* --------------------------------------  sample -------------------------------------- */
 struct entity
 {
 	entity( const std::string & object_name )
@@ -24,9 +21,7 @@ struct entity
 
 	RX_DEFINE_ONE_EVENT_ONE_HANDLER(
 		const std::string &, birth,
-		const std::string &, on_birth );
+		const std::string &, on_birth )
 };
 
-RX_DEFINE( entity )
-
-#endif _EVENTS_H_
+#endif // _EVENTS_H_
