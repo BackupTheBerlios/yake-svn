@@ -1,0 +1,18 @@
+<links>
+	<link id="1" type="yake.movable">
+		<link_source submodel="basePhysical" type="physical" elementtype="physics.complex" element="Sphere02-dyn">
+			<link_options />
+		</link_source>
+		<link_target submodel="baseGraphical" type="graphical" elementtype="graphics.scenenode" element="Sphere01-vis">
+			<link_options />
+		</link_target>
+	</link>
+	<link id="2" type="yake.movable">
+		<link_source submodel="basePhysical" type="physical" elementtype="physics.complex" element="Sphere01-dyn">
+			<link_options />
+		</link_source>
+		<link_target submodel="baseGraphical" type="graphical" elementtype="graphics.scenenode" element="Sphere02-vis">
+			<link_options />
+		</link_target>
+	</link>
+</links>
