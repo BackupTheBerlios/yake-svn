@@ -28,3 +28,6 @@
 #ifndef YAKE_BASE_PREREQUISITES_H
 #include <yake/base/yakePrerequisites.h>
 #endif
+#include <yake/graphics/yakeGraphicsSystem.h>
+#include <yake/graphics/yakeGraphicalWorld.h>
+//#include <yake/graphics/yakeGraphicsEnvironment.h>
