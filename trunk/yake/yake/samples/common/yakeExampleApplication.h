@@ -43,17 +43,22 @@ namespace exapp {
 		bool									mLoadScriptingBindings;
 		bool									mLoadAudioSystem;
 	public:
-		ExampleApplication(bool loadGraphics, bool loadPhysics, bool loadScripting, bool loadInput, bool loadScriptingBindings, bool loadAudio ) :
-				mShutdownRequested(false), 
-				mLoadGraphicsSystem( loadGraphics ),
-				mLoadPhysicsSystem( loadPhysics ), 
-				mLoadScriptingSystem( loadScripting ), 
-				mLoadInputSystem( loadInput ), 
-				mLoadScriptingBindings( loadScriptingBindings ),
-				mLoadAudioSystem( loadAudio ),
-				mScriptingSystem(0),
-				mPhysicsSystem(0),
-				mInputSystem(0)//, mScriptingBindings(0)
+		ExampleApplication( bool loadGraphics, 
+				    bool loadPhysics,
+				    bool loadScripting,
+				    bool loadInput,
+				    bool loadScriptingBindings,
+				    bool loadAudio ) :
+					mShutdownRequested(false), 
+					mLoadGraphicsSystem( loadGraphics ),
+					mLoadPhysicsSystem( loadPhysics ), 
+					mLoadScriptingSystem( loadScripting ), 
+					mLoadInputSystem( loadInput ), 
+					mLoadScriptingBindings( loadScriptingBindings ),
+					mLoadAudioSystem( loadAudio ),
+					mScriptingSystem(0),
+					mPhysicsSystem(0),
+					mInputSystem(0)//, mScriptingBindings(0)
 		{
 		}
 
@@ -123,8 +128,7 @@ namespace exapp {
 			if ( mLoadScriptingBindings )
 			{
 				scripting::ScriptingBindingsPlugin* pSBP = 
-				  loadPlugin<scripting::ScriptingBindingsPlugin>( 
-				  				"scriptingBindingsLua" );
+				  loadPlugin<scripting::ScriptingBindingsPlugin>( "scriptingBindingsLua" );
 				YAKE_ASSERT( pSBP ).debug("Cannot load scripting bindings plugin.");
  
 				mScriptingBindings = pSBP->createBinder();
@@ -136,8 +140,7 @@ namespace exapp {
 			if ( mLoadScriptingSystem )
 			{
 				scripting::ScriptingPlugin* pSP = 
-					loadPlugin<scripting::ScriptingPlugin>( 
-									"scriptingLua" );
+					loadPlugin<scripting::ScriptingPlugin>( "scriptingLua" );
 				YAKE_ASSERT( pSP ).debug( "Cannot load scripting plugin." );
 
 				mScriptingSystem = pSP->createSystem();
@@ -145,11 +148,10 @@ namespace exapp {
 			}
 
 			// graphics
-			if (mLoadGraphicsSystem)
+			if ( mLoadGraphicsSystem)
 			{
-				Pointer<base::Library> pLib = loadLib( 
-								"graphicsOgre" );
-				YAKE_ASSERT( pLib ).debug("Cannot load graphics plugin.");
+				Pointer<base::Library> pLibrary = loadLib( "graphicsOgre" );
+				YAKE_ASSERT( pLibrary ).debug("Cannot load graphics plugin.");
 
 				mGraphicsSystem = create< graphics::IGraphicsSystem >();
 				// ... or alternatively we can create a graphics system by name:
@@ -171,8 +173,7 @@ namespace exapp {
 			// input
 			if (mLoadInputSystem)
 			{
-				input::InputPlugin* pIP = loadPlugin<input::InputPlugin>( 
-									"inputOgre" );
+				input::InputPlugin* pIP = loadPlugin<input::InputPlugin>( "inputOgre" );
 				YAKE_ASSERT( pIP ).debug("Cannot load input plugin.");
 
 				mInputSystem = pIP->createSystem();
@@ -261,7 +262,7 @@ namespace exapp {
 
 		Pointer<base::Library> loadLib( const base::String & file )
 		{
-            Pointer<base::Library> pDynLib( new base::Library( file ) );
+			Pointer<base::Library> pDynLib( new base::Library( file ) );
 			YAKE_ASSERT( pDynLib ).debug( "Out of memory." );
 			mLibs.push_back( pDynLib );
 			return pDynLib;

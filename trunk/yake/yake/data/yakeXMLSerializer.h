@@ -51,29 +51,32 @@ namespace xml {
 		// yake::data::parser::INode overrides
 
 		virtual void addNode( SharedPtr<INode> pNode );
-		virtual SharedPtr<INode> getNodeByName( const String & name ) const;
-		virtual SharedPtr<INode> getNodeById( const String & id ) const;
+		virtual SharedPtr<INode> getNodeByName( String const& rName ) const;
+		virtual SharedPtr<INode> getNodeById( String const& rId ) const;
 		virtual const NodeList& getNodes() const;
 
 		// node values
-		virtual ValueType getValue( const String & name ) const;
-		virtual void setValue( const String & name, const ValueType & value );
+		virtual ValueType getValue( String const& rName ) const;
+		virtual void setValue( String const& rName, ValueType const& rValue );
 
 		virtual const AttributeMap& getAttributes() const;
-		virtual ValueType getAttributeValue( const String & name ) const;
-		virtual void setAttributeValue( const String & name, const ValueType & value );
+		virtual ValueType getAttributeValue( String const& rName ) const;
+		virtual void setAttributeValue( String const& rName, ValueType const& rValue );
 
 	protected:
 		// XmlNode specific
 
 		TiXmlElement* getXmlElem() const
-		{ return mElem; }
+		{ 
+			return mElem; 
+		}
+		
 		void parse( TiXmlElement* pElem );
 
 	private:
 		TiXmlElement*			mElem;
-		NodeList				mNodes;
-		ValueType				mValue;
+		NodeList			mNodes;
+		ValueType			mValue;
 		INode::AttributeMap		mAttributes;
 	};
 
@@ -86,13 +89,18 @@ namespace xml {
 		// yake::data::parser::IParser overrides
 
 		virtual String getName() const
-		{ return "yake.data.dom.xml.tinyxml"; }
+		{ 
+			return "yake.data.dom.xml.tinyxml";
+		}
+		
 		virtual Version getVersion() const
-		{ return Version(0,1,0); }
+		{ 
+			return Version( 0, 1, 0 ); 
+		}
 
-		/** \todo adjust to DataChunk loading, -> yake::data::parser::IParser
+		/** // \ToDo adjust to DataChunk loading, -> yake::data::parser::IParser
 		*/
-		virtual void parse( const String & file, bool bFireSignals );
+		virtual void parse( String const& rFile, bool fireSignals );
 
 		virtual void reset();
 
@@ -105,7 +113,7 @@ namespace xml {
 		SharedPtr<XmlNode>	mRootNode; // only a single node for XML files, generally yake allows for more than one.
 		TiXmlElement*	mRootElem;
 		TiXmlDocument*	mXmlDoc;
-		bool			mFireSignals;
+		bool		mFireSignals;
 	};
 
 } // xml

@@ -43,11 +43,11 @@ private:
 	SimpleSpline						mCamPath;
 public:
 	TheApp() : ExampleApplication( true /*graphics*/,
-									false /*physics*/,
-									false /*scripting*/,
-									true /*input*/,
-									false /*script bindings*/,
-									false /*audio*/),
+					false /*physics*/,
+					false /*scripting*/,
+					true /*input*/,
+					false /*script bindings*/,
+					false /*audio*/),
 				mLightOneNode(0),
 				mLightTwoNode(0)
 	{

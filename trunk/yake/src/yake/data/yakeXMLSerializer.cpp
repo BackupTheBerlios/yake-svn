@@ -36,90 +36,111 @@ namespace xml {
 	{
 		parse( pElem );
 	}
+	
 	XmlNode::~XmlNode()
 	{
 		mNodes.clear();
 	}
+	
 	const NodeList& XmlNode::getNodes() const
 	{
 		return mNodes;
 	}
+	
 	const INode::AttributeMap& XmlNode::getAttributes() const
 	{
 		return mAttributes;
 	}
+	
 	void XmlNode::addNode( SharedPtr<INode> pNode )
 	{
 		if (pNode)
 			mNodes.push_back( pNode );
 	}
-	INode::ValueType XmlNode::getValue( const String & id ) const
+	
+	INode::ValueType XmlNode::getValue( String const& rId ) const
 	{
-		if (id == "name")
+		if ( rId == "name")
 			return mValue;
 		else
 			return 0;
 	}
-	INode::ValueType XmlNode::getAttributeValue( const String & name ) const
+	
+	INode::ValueType XmlNode::getAttributeValue( String const& rName ) const
 	{
 		// iterate over node's attributes
-		const char* val = mElem->Attribute( name.c_str() );
+		const char* val = mElem->Attribute( rName.c_str() );
+		
 		if (!val)
 			return String("");
+		
 		return String( val );
 	}
-	void XmlNode::setAttributeValue( const String & name, const ValueType & value )
+	
+	void XmlNode::setAttributeValue( String const& rName, ValueType const& rValue )
 	{
-		YAKE_ASSERT( 1==0 );
+		YAKE_ASSERT( 1 == 0 );
 	}
-	void XmlNode::setValue( const String & name, const ValueType & value )
+	
+	void XmlNode::setValue( String const& rName, ValueType const& rValue )
 	{
-		YAKE_ASSERT( 1==0 );
+		YAKE_ASSERT( 1 == 0 );
 	}
-	SharedPtr<INode> XmlNode::getNodeByName( const String & name ) const
+	
+	SharedPtr<INode> XmlNode::getNodeByName( String const& rName ) const
 	{
-		for (NodeList::const_iterator it = mNodes.begin(); it != mNodes.end(); ++it)
+		for ( NodeList::const_iterator it = mNodes.begin(); it != mNodes.end(); ++it )
 		{
-			if ( varGet<String>((*it)->getValue("name")) == name )
-				return (*it);
+			data::dom::INode::ValueType value = (*it)->getValue( "name" );
+			
+			if ( varGet<String>( value ) == rName )
+				return ( *it );
 		}
+		
 		return SharedPtr<INode>();
 	}
-	SharedPtr<INode> XmlNode::getNodeById( const String & id ) const
+	
+	SharedPtr<INode> XmlNode::getNodeById( String const& rId ) const
 	{
+		// still NYI?
 		return SharedPtr<INode>();
 	}
+	
 	void XmlNode::parse( TiXmlElement* pElem )
 	{
 		YAKE_ASSERT( pElem );
-		mValue = String(pElem->Value());
-		for (TiXmlAttribute* pAttr = mElem->FirstAttribute(); 
+		
+		mValue = String( pElem->Value() );
+		for ( TiXmlAttribute* pAttr = mElem->FirstAttribute(); 
 			pAttr != 0; 
-			pAttr = pAttr->Next())
+			pAttr = pAttr->Next() )
 		{
-			mAttributes.insert( std::make_pair( pAttr->Name(), String(pAttr->Value()) ) );
+			mAttributes.insert( std::make_pair( pAttr->Name(), String( pAttr->Value() ) ) );
 		}
 	}
 
 	XmlSerializer::XmlSerializer() : mXmlDoc(0), mRootNode(), mRootElem(0)
 	{
 	}
+	
 	XmlSerializer::~XmlSerializer()
 	{
 		reset();
 	}
+	
 	SharedPtr<INode> XmlSerializer::getDocumentNode() const
 	{
 		return mRootNode;
 	}
-	void XmlSerializer::parse( const String & file, bool bFireSignals )
+	
+	void XmlSerializer::parse( String const& rFile, bool fireSignals )
 	{
-		if (mXmlDoc)
+		if ( mXmlDoc )
 			reset();
 
-		mFireSignals = bFireSignals;
+		mFireSignals = fireSignals;
 
-		mXmlDoc = new TiXmlDocument( file.c_str() );
+		mXmlDoc = new TiXmlDocument( rFile.c_str() );
 		mXmlDoc->LoadFile();
 
 		// read contents
@@ -129,12 +150,15 @@ namespace xml {
 		// recursively traverse xml tree and fire events as needed
 		parseNode( mRootNode );
 	}
+	
 	void XmlSerializer::reset()
 	{
 		YAKE_SAFE_DELETE( mXmlDoc );
+		
 		mRootElem = 0;
 		mRootNode.reset();
 	}
+	
 	void XmlSerializer::parseNode( SharedPtr<XmlNode> pNode )
 	{
 		YAKE_ASSERT( pNode );
@@ -145,15 +169,15 @@ namespace xml {
 		// we only need to iterate over the attributes when firing signals,
 		// there's no need for it when using the 'interrogating' approach
 		// (no pre-processing need).
-		if (mFireSignals)
+		if ( mFireSignals )
 		{
 			// fire "new node" signal
 			mNewNodeSignal( pNode );
 
 			// iterate over node's attributes & fire signals
-			for (TiXmlAttribute* pAttr = pNodeElem->FirstAttribute(); 
+			for ( TiXmlAttribute* pAttr = pNodeElem->FirstAttribute(); 
 				pAttr != 0; 
-				pAttr = pAttr->Next())
+				pAttr = pAttr->Next() )
 			{
 				// fire "new attribute"
 				mNewAttributeSignal( pAttr->Name() );
@@ -162,8 +186,9 @@ namespace xml {
 
 		// iterate over child xml elements, creating new nodes as we go
 		// and recursively parsing them.
-		for (TiXmlElement* pElem = pNodeElem->FirstChildElement();
-			pElem != 0; pElem = pElem->NextSiblingElement() )
+		for ( TiXmlElement* pElem = pNodeElem->FirstChildElement();
+			pElem != 0; 
+			pElem = pElem->NextSiblingElement() )
 		{
 			SharedPtr<XmlNode> pNewNode( new XmlNode( pElem ) );
 			parseNode( pNewNode );

@@ -65,34 +65,34 @@ namespace dom {
 
 		// nodes
 		virtual void addNode( SharedPtr<INode> pNode ) = 0;
-		virtual SharedPtr<INode> getNodeByName( const String & name ) const = 0;
-		virtual SharedPtr<INode> getNodeById( const String & id ) const = 0;
+		virtual SharedPtr<INode> getNodeByName( String const& rName ) const = 0;
+		virtual SharedPtr<INode> getNodeById( String const& rID ) const = 0;
 		virtual const NodeList& getNodes() const = 0;
 
 		//virtual NodeList::Iterator getFirstNode() const = 0;
 		//virtual NodeList::Iterator getNodeIterator() const = 0;
 
 		// node values
-		virtual ValueType getValue( const String & name ) const = 0;
-		virtual void setValue( const String & name, const ValueType & value ) = 0;
+		virtual ValueType getValue( String const& rName ) const = 0;
+		virtual void setValue( String const& rName, ValueType const& rValue ) = 0;
 
 		// attributes
 		virtual const AttributeMap& getAttributes() const = 0;
-		virtual ValueType getAttributeValue( const String & name ) const = 0;
-		virtual void setAttributeValue( const String & name, const ValueType & value ) = 0;
+		virtual ValueType getAttributeValue( String const& rName ) const = 0;
+		virtual void setAttributeValue( String const& rName, ValueType const& rValue ) = 0;
 
 		template< typename T, int Dummy >
-		T getAttributeValueAs( const String & name ) const
+		T getAttributeValueAs( String const& rName ) const
 		{
-			ValueType val = getAttributeValue(name);
-			return varGet<T>( val );
+			ValueType val = getAttributeValue( rName );
+			return varGet< T >( val );
 		}
 
 		template< int Dummy >
-		real getAttributeValueAs( const String & name ) const
+		real getAttributeValueAs( String const& rName ) const
 		{
-			ValueType val = getAttributeValue(name);
-			return varGet<real>( val );
+			ValueType val = getAttributeValue( rName );
+			return varGet< real >( val );
 		}
 	};
 
@@ -124,18 +124,18 @@ namespace dom {
 		virtual String getName() const = 0;
 		virtual Version getVersion() const = 0;
 
-		/** Parse a data chunk. Several calls to parser() can be made in order to
+		/** Parse a data chunk. Several calls to parse() can be made in order to
 			fully parse a document. This may prove useful when streaming data, for example.
 			The caller has to make sure the given data chunk contains valid data and can
 			be read by the serializer!
-			\todo make it virtual void parse( const DataChunk & datachunk ) = 0;
+			\todo make it virtual void parse( DataChunk const& rDatachunk ) = 0;
 		*/
-		virtual void parse( const String & file, bool bFireSignals ) = 0;
+		virtual void parse( String const& rFile, bool bFireSignals ) = 0;
 
 		/** Serializes the document and all the data stored in the DOM tree into the
 			target DataChunk object.
 		*/
-		//\todo:virtual void store( DataChunk & datachunk ) = 0;
+		//\todo:virtual void store( DataChunk& rDatachunk ) = 0;
 
 		/** Prepare for a new load/parse run. */
 		virtual void reset() = 0;
@@ -146,14 +146,15 @@ namespace dom {
 		virtual SharedPtr<INode> getDocumentNode() const = 0;
 
 	protected:
-		typedef Signal1<void(SharedPtr<INode>)>				NewNodeSignal;
-		NewNodeSignal									mNewNodeSignal;
-		typedef Signal1<void(const String&)>	NewAttributeSignal;
-		NewAttributeSignal							mNewAttributeSignal;
+		typedef Signal1< void( SharedPtr<INode> ) >		NewNodeSignal;
+		typedef Signal1< void( String const& ) >		NewAttributeSignal;
+		
+		NewNodeSignal						mNewNodeSignal;
+		NewAttributeSignal					mNewAttributeSignal;
 
 	public:
-		void subscribeToNewNodeSignal( const NewNodeSignal::slot_type & slot );
-		void subscribeToNewAttributeSignal( const NewAttributeSignal::slot_type & slot );
+		void subscribeToNewNodeSignal( NewNodeSignal::slot_type const& rSlot );
+		void subscribeToNewAttributeSignal( NewAttributeSignal::slot_type const& rSlot );
 
 	};
 

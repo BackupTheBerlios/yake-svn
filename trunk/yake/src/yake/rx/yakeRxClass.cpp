@@ -58,7 +58,7 @@ namespace rx {
 					mName(name), mFnCreate(fnCreate)
 	{
 		YAKE_ASSERT( mFnCreate );
-		static sIds = 0;
+		static int sIds = 0;
 		mId = sIds++;
 	}
 	RxClass::~RxClass()

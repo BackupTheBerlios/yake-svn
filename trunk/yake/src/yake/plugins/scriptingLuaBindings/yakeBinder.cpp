@@ -100,7 +100,7 @@ namespace lua {
 		[
 			class_<Version>("Version")
 				.def(constructor<uint16,uint16,uint16>())
-				.def("major", &yake::base::Version::major)
+//				.def("major", &yake::base::Version::major)
 		];
 
 		module(pLuaVM->getLuaState(), "yake")
