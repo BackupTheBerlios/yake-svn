@@ -1,6 +1,8 @@
 #ifndef meta_object_hooks_h
 #define meta_object_hooks_h
 
+// todo split this file: replication, sql, script and add serialization
+
 #include "DistributedNetworkObjectHeader.h"
 #include <string>
 #include "concrete_fields.h"
