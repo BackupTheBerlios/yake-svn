@@ -23,32 +23,32 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAPP_MODEL_VEHICLE_H
-#define YAPP_MODEL_VEHICLE_H
+#ifndef YAKE_APP_MODEL_VEHICLE_PHYSICALCOMPONENT_H
+#define YAKE_APP_MODEL_VEHICLE_PHYSICALCOMPONENT_H
 
 #include <yapp/base/yappPrerequisites.h>
-#include <yapp/model/yakeActor.h>
 
 namespace yake {
 namespace app {
 namespace model {
 namespace vehicle {
 
-	class YAPP_BASE_API Vehicle : public Actor
+	class YAPP_BASE_API IInputVehicleComponent : public InputComponent
 	{
 	public:
-		Vehicle();
-		virtual ~Vehicle();
-		void setModel( complex::Model* pComplex );
-		virtual void onAct();
-	private:
-		complex::Model*	mComplex;
+		YAKE_DECLARE_CLASS( IInputVehicleComponent );
+		YAKE_DECLARE_REGISTRY( IInputVehicleComponent );
+
+		virtual void steerAnalog( const String & rSteerGroup, const real targetSteer ) = 0;
+		virtual void brakeAnalog( const String & rBrake, const real ratio ) = 0;
+		virtual void throttleAnalog( const String & rEngine, const real ratio ) = 0;
+		//virtual void handbrake( const bool activate ) = 0;
 	};
 
-} // vehicle
+}
+}
+}
+}
 
-} // model
-} // app
-} // yake
 
 #endif

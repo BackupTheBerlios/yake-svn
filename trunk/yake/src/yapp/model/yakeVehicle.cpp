@@ -25,16 +25,45 @@
 */
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
+#include <yapp/model/yakeVehiclePhysicalComponent.h>
+//#include <yake/samples/common/yakeTrailGeometryCreator.h>
 
-namespace yapp {
+namespace yake {
+namespace app {
 namespace model {
-namespace complex {
-
 namespace vehicle {
+
+	//-----------------------------------------------------
+	Vehicle::Vehicle() : mComplex(0)
+	{
+	}
+	//-----------------------------------------------------
+	Vehicle::~Vehicle()
+	{
+		YAKE_SAFE_DELETE( mComplex );
+	}
+	//-----------------------------------------------------
+	void Vehicle::onAct()
+	{
+		IPhysicalVehicleComponent* pPC = 
+			static_cast<IPhysicalVehicleComponent*>(getComponent("core"));
+		if (!pPC)
+			return;
+		pPC->update(0.01);
+
+		YAKE_ASSERT( mComplex );
+		mComplex->updatePhysics( 0.01 );
+		mComplex->updateControllers( 0.01 );
+	}
+	//-----------------------------------------------------
+	void Vehicle::setModel( complex::Model* pComplex )
+	{
+		YAKE_ASSERT( mComplex );
+		mComplex = pComplex;
+	}
 
 
 }
-
 }
 }
 }

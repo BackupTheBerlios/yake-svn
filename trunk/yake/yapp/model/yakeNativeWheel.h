@@ -23,32 +23,62 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAPP_MODEL_VEHICLE_H
-#define YAPP_MODEL_VEHICLE_H
+#ifndef YAKE_APP_MODEL_VEHICLE_NATIVEWHEEL_H
+#define YAKE_APP_MODEL_VEHICLE_NATIVEWHEEL_H
 
 #include <yapp/base/yappPrerequisites.h>
-#include <yapp/model/yakeActor.h>
+#include <yapp/model/yakeModel.h>
 
 namespace yake {
 namespace app {
 namespace model {
 namespace vehicle {
 
-	class YAPP_BASE_API Vehicle : public Actor
+	/** Utilized by the "yake.native" vehicle implementation.
+	*/
+	class NativeWheel : public physics::IComplexObject::ISlipNormalSource, public Movable
 	{
 	public:
-		Vehicle();
-		virtual ~Vehicle();
-		void setModel( complex::Model* pComplex );
-		virtual void onAct();
+		NativeWheel(physics::IWorld* pPWorld);
+		virtual ~NativeWheel();
+		physics::IComplexObject* getPhysicsComplex() const;
+
+		void setJoint( SharedPtr<physics::IJoint> & jt );
+		physics::IJoint* getJoint() const;
+		void setSuspension( const real spring, const real damping );
+		real getSuspensionSpring() const;
+		real getSuspensionDamping() const;
+		void applySteer( real steer );
+
+		void apply( real velocity, real fmax );
+		void applyTq( const Vector3 & torque );
+		void applyBrakeTq( const Vector3 & torque );
+
+		void update();
+
+		void setRadius( const real radius );
+		void setMass( const real mass );
+
+		Vector3 getLateralSlipNormal() const;
+
+		virtual void setPosition(const Vector3 & rPosition);
+		virtual void setOrientation(const Quaternion& rOrientation);
+		virtual Vector3 getPosition() const;
+		virtual Quaternion getOrientation() const;
+
+		SharedPtr<CachedInterpolator<real> > _getLinSkidCache();
+		SharedPtr<CachedInterpolator<real> > _getAngSkidCache();
 	private:
-		complex::Model*	mComplex;
+		SharedPtr<physics::IJoint>	mJoint;
+		physics::IComplexObject*	mCO;
+		SharedPtr<CachedInterpolator<real> >	mLinSkidCache;
+		SharedPtr<CachedInterpolator<real> >	mAngSkidCache;
 	};
 
-} // vehicle
+}
+}
+}
+}
 
-} // model
-} // app
-} // yake
 
 #endif
