@@ -26,7 +26,6 @@
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
 #include <yapp/model/yakeNativeWheel.h>
-#include <yake/samples/common/yakeTrailGeometryCreator.h>
 
 namespace yake {
 namespace app {
