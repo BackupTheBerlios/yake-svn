@@ -275,7 +275,8 @@ public:
         @param value value of the object
         @exception TypeMismatchError thrown if there is a type mismatch
      */
-    template <class Object, class Value> void set(Object *object, const Value &value) const 
+    template <class Object, class Value> 
+		void set(Object *object, const Value &value) const 
 		{
         if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
         typedef const __property_handler__<Value> PropertyType;

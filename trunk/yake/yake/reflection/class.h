@@ -25,6 +25,7 @@ protected: \
 		{ \
         static reflection::Class _class( \
             #CLASS_NAME, \
+						typeid(CLASS_NAME), \
 						SUPER_CLASS_NAME::getClassStaticPtr(), \
             __instance_creator_factory__<ClassType, __IS_OBJECT__(ClassType)>::create()); \
         return &_class; \
@@ -139,8 +140,9 @@ public:
     typedef std::list<Event> EventList;
 
     //the default constructor
-    Class(const char* name, const Class* super, __instance_creator_base__* creator) 
+    Class(const char* name, const std::type_info & typeinfo, const Class* super, __instance_creator_base__* creator) 
 			: m_name(name),
+				m_typeinfo(&typeinfo),
         m_super(super),
         m_creator(creator) 
 		{}
@@ -156,6 +158,15 @@ public:
      */
     const char *getName() const 
 		{ return m_name; }
+
+    /** returns the field's type.
+        @return the field's type.
+     */
+    const std::type_info & get_type_info() const 
+		{ 
+			if (!m_typeinfo) throw exception(); // todo, specialised exception
+			return *m_typeinfo; 
+		}
 
     /** checks if the class has a superclass
         @return true if the class has a superclass
@@ -340,6 +351,7 @@ private:
     typedef std::map<std::string, Event *> _EventMap;
 
     const char *m_name;
+		const std::type_info * m_typeinfo;
     const Class *m_super;
     FieldList m_fields;
     _FieldMap m_fieldMap;
@@ -358,7 +370,6 @@ private:
 
     EventList m_events;
 		_EventMap m_eventMap;
-
 
     __instance_creator_base__* m_creator;
 
