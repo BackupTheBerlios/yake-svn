@@ -9,6 +9,7 @@
 //============================================================================
 #include <yapp/samples/base/statemachine/yakePCH.h>
 #include <yapp/base/yapp.h>
+#include <yapp/statemachine/yakeFiniteStateMachine.h>
 
 using namespace yake;
 using namespace app;
@@ -31,7 +32,7 @@ using namespace app;
 //---------------------------------------------------------
 // Types / Classes
 
-typedef state::StateMachine<String> EntityStateMachine;
+typedef ::yake::app::state::Machine<String> EntityStateMachine;
 
 //---------------------------------------------------------
 // Sample entity base class providing a state machine
@@ -52,29 +53,61 @@ EntityStateMachine& Entity::getCharacterMachine()
 class Hero : /*protected*/public Entity
 {
 public:
+	Hero()
+	{
+	}
+	//
+	void step()
+	{
+		CHECK_EC_OK( getCharacterMachine().executeState() );
+	}
 	// events:
-
 	void event_birth()
 	{
-		CHECK_EC_OK( getCharacterMachine().changeStateTo( "alive" ) );
+		CHECK_EC_OK( getCharacterMachine().changeTo( "alive" ) );
 	}
 	void event_walk()
 	{
-		CHECK_EC_OK( getCharacterMachine().changeStateTo( "walking" ) );
+		CHECK_EC_OK( getCharacterMachine().changeTo( "walking" ) );
 	}
 	void event_die()
 	{
-		CHECK_EC_OK( getCharacterMachine().changeStateTo( "dead" ) );
-		CHECK_EC_OK( getCharacterMachine().changeStateTo( "afterlife" ) );
+		CHECK_EC_OK( getCharacterMachine().changeTo( "dead" ) );
+		CHECK_EC_OK( getCharacterMachine().changeTo( "afterlife" ) );
 	}
 
 	// states: (some of them)
-	void stateAlive()
+	class StateAlive : public state::State
 	{
-		COUTLN( "  STATE: stateAlive() (member function)" );
-	}
+	public:
+		virtual void onStep()
+		{
+			COUTLN( "  STATE: stateAlive() (member function)" );
+		}
+	};
+	class StateDead : public state::State
+	{
+	public:
+		virtual void onStep()
+		{
+			COUTLN( "  STATE: stateAlive() (member function)" );
+		}
+	};
+	class StateAfterLife : public state::State
+	{
+	public:
+		virtual void onStep()
+		{
+			COUTLN( "  STATE: stateAlive() (member function)" );
+		}
+	};
 
 	// behaviours:
+	// transition functions:
+	void transToAfterLife()
+	{
+		COUTLN( "  TRANS: Hero::transToAfterLife()" );
+	}
 };
 
 void stateDead()
@@ -84,10 +117,6 @@ void stateDead()
 void stateAfterLife()
 {
 	COUTLN( "  STATE: stateAfterLife()" );
-}
-void transToAfterLife()
-{
-	COUTLN( "  TRANS: transToAfterLife()" );
 }
 void transAliveReset()
 {
@@ -107,7 +136,7 @@ void transDying()
 }
 
 template<typename StateIdType>
-std::ostream& operator << (std::ostream& lhs, const state::StateMachine<StateIdType> & m)
+std::ostream& operator << (std::ostream& lhs, const state::Machine<StateIdType> & m)
 {
 	m.dump( lhs );
 	return lhs;
@@ -115,52 +144,55 @@ std::ostream& operator << (std::ostream& lhs, const state::StateMachine<StateIdT
 
 void test_fsm()
 {
+	COUTLN("\nDemonstrating a FSM with sets of free and member functions as transitions:\n");
 	Hero theHero;
 
 	// register states
-	theHero.getCharacterMachine().regState( "alive", boost::bind( &Hero::stateAlive, &theHero ) );
-	theHero.getCharacterMachine().regState( "dead", boost::bind( &stateDead ) );
-	theHero.getCharacterMachine().regState( "afterlife", boost::bind( &stateAfterLife ) );
+	theHero.getCharacterMachine().addState( "alive", new Hero::StateAlive() );
+	theHero.getCharacterMachine().addState( "dead", new Hero::StateDead() );
+	theHero.getCharacterMachine().addState( "afterlife", new Hero::StateAfterLife() );
 
 	// register transitions
 
 	// transition kStateNone -> "alive" (entry transition)
-	theHero.getCharacterMachine().regTransition( EntityStateMachine::kStateNone, "alive" );
+	theHero.getCharacterMachine().addTransition( EntityStateMachine::kStateNone, "alive", new state::Transition() );
 
-	// transition "alive" -> "dead"
-	EntityStateMachine::TransitionFnList fns;
-	fns.push_back( boost::bind(&transFlashLife) );
-	fns.push_back( boost::bind(&transExitAlive) );
-	fns.push_back( boost::bind(&transDying) );
-	theHero.getCharacterMachine().regTransition( "alive", "dead", fns );
-	fns.clear();
+	// transition "alive" -> "dead" [ Note: using "free" functions! ]
+	theHero.getCharacterMachine().addTransition( "alive", "dead",
+		new state::Transition(
+							boost::bind(&transFlashLife),
+							boost::bind(&transExitAlive),
+							boost::bind(&transDying)
+						));
 
-	// transition "dead" -> "afterlife"
-	theHero.getCharacterMachine().regTransition( "dead", "afterlife", boost::bind(&transToAfterLife) );
+	// transition "dead" -> "afterlife" [ Note: using member functions! ]
+	theHero.getCharacterMachine().addTransition( "dead", "afterlife", new state::Transition(boost::bind(Hero::transToAfterLife,&theHero)) );
 
 	// transition "alive" -> "alive"
-	theHero.getCharacterMachine().regTransition( "alive", "alive", boost::bind(&transAliveReset) );
-
-	// debug dump
-	std::cout << theHero.getCharacterMachine();
+	theHero.getCharacterMachine().addTransition( "alive", "alive", new state::Transition(boost::bind(&transAliveReset)) );
 
 	// go
 	COUTLN( std::endl << "Running..." << std::endl );
 
 	// States can be changed like this:
-	//    theHero.getCharacterMachine().changeStateTo( "alive" );
+	//    theHero.getCharacterMachine().changeTo( "alive" );
 	// Here we use events which will initiate the state changes as appropriattheHero.
 	// As we don't yet use yake/rx events we simulate firing them like this:
 	//    theHero.event_NAME();   // fire event NAME
 
 	COUTLN( std::endl << "event: birth! (transition from kStateNone to 'alive')" );
 	theHero.event_birth(); // has to be the first event! only kStateNone -> "alive" is a registered initial transition!
+	theHero.step();
+
+	std::cout << theHero.getCharacterMachine(); // debug dump
 
 	COUTLN( std::endl << "event: birth! (transition from 'alive' to 'alive' again (really!))" );
 	theHero.event_birth();
+	theHero.step();
 
 	COUTLN( std::endl << "event: die! (transition from 'alive' to 'dead' and then on to 'afterlife')" );
 	theHero.event_die();
+	theHero.step();
 }
 
 int main()
