@@ -11,28 +11,6 @@ using namespace yake::base::templates;
 using namespace yake::data;
 using namespace std;
 
-namespace yake {
-namespace data {
-namespace parser {
-namespace gui {
-
-	class GuiParser
-	{
-	private:
-		SharedPtr<dom::INode>	mDocNode;
-	public:
-		GuiParser();
-		~GuiParser();
-
-	protected:
-	};
-
-}
-}
-}
-} // yake
-
-
 int main()
 {
 	try
@@ -57,7 +35,6 @@ int main()
 			}
 			cout << endl;
 		}
-
 	}
 	catch (const yake::base::Exception & e)
 	{
