@@ -22,7 +22,7 @@ namespace exapp {
 		Pointer< graphics::IGraphicsSystem >	mGraphicsSystem;
 		physics::PhysicsSystem					* mPhysicsSystem;
 		scripting::ScriptingSystem				* mScriptingSystem;
-		//scripting::ScriptingBindings			* mScriptingBindings;
+		SharedPtr<scripting::IBinder>			mScriptingBindings;
 		input::InputSystem						* mInputSystem;
 		bool									mShutdownRequested;
 	protected:
@@ -37,10 +37,11 @@ namespace exapp {
 		bool									mLoadPhysicsSystem;
 		bool									mLoadScriptingSystem;
 		bool									mLoadInputSystem;
+		bool									mLoadScriptingBindings;
 	public:
-		ExampleApplication(bool loadGraphics, bool loadPhysics, bool loadScripting, bool loadInput ) :
+		ExampleApplication(bool loadGraphics, bool loadPhysics, bool loadScripting, bool loadInput, bool loadScriptingBindings ) :
 				mShutdownRequested(false), 
-				mLoadGraphicsSystem( loadGraphics ), mLoadPhysicsSystem( loadPhysics ), mLoadScriptingSystem( loadScripting ), mLoadInputSystem( loadInput ),
+				mLoadGraphicsSystem( loadGraphics ), mLoadPhysicsSystem( loadPhysics ), mLoadScriptingSystem( loadScripting ), mLoadInputSystem( loadInput ), mLoadScriptingBindings(loadScriptingBindings),
 				mScriptingSystem(0), mPhysicsSystem(0), mInputSystem(0)//, mScriptingBindings(0)
 		{
 		}
@@ -70,7 +71,7 @@ namespace exapp {
 
 		scripting::ScriptingSystem& getScriptingSystem() const
 		{
-			if (!mGraphicsSystem)
+			if (!mScriptingSystem)
 				YAKE_EXCEPT( "Don't have a scripting system!", "getScriptingSystem()" );
 			return *mScriptingSystem;
 		}
@@ -78,12 +79,12 @@ namespace exapp {
 		physics::PhysicsSystem& getPhysicsSystem() const
 		{ return *mPhysicsSystem; }
 
-		/*scripting::ScriptingBindings& getScriptingBindings() const
+		scripting::IBinder& getScriptingBindings() const
 		{
 			if (!mScriptingBindings)
 				YAKE_EXCEPT( "Don't have scripting bindings!", "getScriptingBindings()" );
 			return *mScriptingBindings;
-		}*/
+		}
 
 		input::InputSystem& getInputSystem() const
 		{ return *mInputSystem; }
@@ -101,11 +102,14 @@ namespace exapp {
 			}
 
 			// scripting bindings
-			/*scripting::ScriptingBindingsPlugin* pSBP = loadPlugin<scripting::ScriptingBindingsPlugin>( "yakeScriptingLuaBindings.dll" );
-			YAKE_ASSERT( pSBP ).debug("Cannot load scripting bindings plugin.");
+			if (mLoadScriptingBindings)
+			{
+				scripting::ScriptingBindingsPlugin* pSBP = loadPlugin<scripting::ScriptingBindingsPlugin>( "scriptingLuaBindings.dll" );
+				YAKE_ASSERT( pSBP ).debug("Cannot load scripting bindings plugin.");
 
-			mScriptingBindings = pSBP->createSystem();
-			YAKE_ASSERT( mScriptingBindings ).error("Cannot create scripting bindings object.");*/
+				mScriptingBindings = pSBP->createBinder();
+				YAKE_ASSERT( mScriptingBindings ).error("Cannot create scripting bindings object.");
+			}
 
 			// graphics
 			if (mLoadGraphicsSystem)
