@@ -20,9 +20,9 @@
 */
 #include <yake/plugins/scriptingLua/yakePCH.h>
 extern "C" {
-#include <dependencies/lua/include/lua.h>
-#include <dependencies/lua/include/lualib.h>
-#include <dependencies/lua/include/lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 }
 
 // #define LUABIND_NO_HEADERS_ONLY
