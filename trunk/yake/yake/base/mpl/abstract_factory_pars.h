@@ -24,13 +24,14 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
+// yake
 #include "yakeFunctions.h"
 #include "yakeLambda.h"
 #include <yake/base/mpl/sequences.h>
 #include <yake/base/mpl/inherit_linear.h>
 #include <yake/base/mpl/inherit_multiple.h>
 #include <yake/base/mpl/null_type.h>
-
+// boost
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/find.hpp>
 #include <boost/mpl/at.hpp>
@@ -38,6 +39,7 @@
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/distance.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/static_assert.hpp>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
