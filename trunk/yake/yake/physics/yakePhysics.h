@@ -24,3 +24,4 @@
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
+#include <yake/physics/yakePhysicsSystem.h>

@@ -18,8 +18,8 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_PHYSICSSYSTEM_H
-#define YAKE_PHYSICSSYSTEM_H
+#ifndef YAKE_PHYSICS_PHYSICSSYSTEM_H
+#define YAKE_PHYSICS_PHYSICSSYSTEM_H
 
 #include <yake/physics/yakePhysicsPrerequisites.h>
 
@@ -50,6 +50,7 @@ namespace physics {
 			+ BodyGroup:
 				+ operator + (pBody)
 				+ operator - (pBody)
+			+ GravityZone/AffectorZone/Affectors
 	*/
 
 	/* not used (yet?)
@@ -63,7 +64,14 @@ namespace physics {
 	};
 	*/
 
-	class IMaterial;
+	class IMaterial
+	{
+	public:
+		virtual ~IMaterial() {}
+
+		virtual void setRollingFriction(const real friction) = 0;
+		//@todo virtual void setRestitution(const real ...) = 0;
+	};
 
 	enum JointType
 	{
@@ -276,36 +284,41 @@ namespace physics {
 		struct DescBase
 		{
 			DescBase(	const JointType type_, 
-						SharedPtr<IActor> & pFirst,
-						SharedPtr<IActor> & pSecond ) :
-				type(type_)
-			{}
+						IActor & rFirst,
+						IActor & rSecond ) :
+				type(type_),
+				actor1(rFirst),
+				actor2(rSecond)
+			{
+			}
 			JointType type; // not really needed...
+			IActor& actor1;
+			IActor& actor2;
 		};
 		struct DescFixed : DescBase
 		{
-			DescFixed(	SharedPtr<IActor> & pFirst,
-						SharedPtr<IActor> & pSecond ) :
-				DescBase(JT_FIXED,pFirst,pSecond)
+			DescFixed(	IActor & rFirst,
+						IActor & rSecond ) :
+				DescBase(JT_FIXED,rFirst,rSecond)
 			{}
 		};
 		struct DescHinge : DescBase
 		{
-			DescHinge(	SharedPtr<IActor> & pFirst,
-						SharedPtr<IActor> & pSecond,
+			DescHinge(	IActor & rFirst,
+						IActor & rSecond,
 						const Vector3 & rkAxis0) :
-				DescBase(JT_HINGE,pFirst,pSecond),
+				DescBase(JT_HINGE,rFirst,rSecond),
 				axis0(rkAxis0)
 			{}
 			Vector3		axis0;
 		};
 		struct DescHinge2 : DescBase
 		{
-			DescHinge2(	SharedPtr<IActor> & pFirst,
-						SharedPtr<IActor> & pSecond,
+			DescHinge2(	IActor & rFirst,
+						IActor & rSecond,
 						const Vector3 & rkAxis0, 
 						const Vector3 & rkAxis1) :
-				DescBase(JT_HINGE2,pFirst,pSecond),
+				DescBase(JT_HINGE2,rFirst,rSecond),
 				axis0(rkAxis0),
 				axis1(rkAxis1)
 			{}
@@ -315,7 +328,7 @@ namespace physics {
 	public:
 		virtual ~IJoint() {}
 
-		virtual void attach(IBody & rBody1, IBody & rBody2) = 0;
+		virtual IActor& getAttachedActor(bool bFirst) = 0;
 
 		virtual JointType getType() const = 0;
 		virtual size_t getNumAxis() const = 0;
