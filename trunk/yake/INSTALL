@@ -1,18 +1,4 @@
-Basic Installation
-==================
+Basic Installation & Building
+=============================
 
-Compiling on Windows platform
------------------------------
-
-Using Visual C++ 2003:
-
-  1. Open [yake]/scripts/yake/yake.sln and do a "Build All"
-  2. Do the same for [yake]/scripts/yapp/yapp.sln
-  
-  This will build all the libraries and samples.
-
-Compiling Linux platform
-------------------------
-
-Please see the file [yake]/scripts/linux/INSTALL for details.
-
+For build instructions see BUILD.
