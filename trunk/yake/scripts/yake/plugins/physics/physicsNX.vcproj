@@ -73,8 +73,8 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKEPHYSICSODE_EXPORTS"
+				AdditionalIncludeDirectories="$(NXSDK_DIR)/Physics/Include;$(NXSDK_DIR)/Foundation/include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_PHYSICS_NX_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
