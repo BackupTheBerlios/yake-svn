@@ -208,20 +208,22 @@ namespace vehicle {
 								IPhysicalVehicleComponent* pPC
 								)
 	{
+		using namespace data;
 		YAKE_ASSERT( pPWorld );
 		YAKE_ASSERT( pGWorld );
 		YAKE_ASSERT( pModel );
 
 		// 1. read DOM
 
-		SharedPtr<yake::data::dom::ISerializer> ser( new yake::data::dom::xml::XmlSerializer() );
-		ser->parse(rFN, false);
+		dom::xml::XmlSerializer ser;
+		ser.parse(rFN, false);
 
 		// 2. parse DOM - load vehicle template
 
 		VehicleTemplate tpl;
-		data::serializer::vehicle::VehicleSerializerV1 vs1;
-		vs1.load( ser->getDocumentNode(), tpl );
+		serializer::vehicle::VehicleSerializerV1 vs1;
+		YAKE_ASSERT( ser.getDocumentNode().get() );
+		vs1.load( ser.getDocumentNode(), tpl );
 
 		VehicleCreatorHelperV1 vc( tpl, static_cast<NativePhysicalVehicleComponent*>(pPC), pModel, pGWorld );
 		bool bRet = vc.create();
