@@ -18,49 +18,33 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_NX_WORLD_H
-#define YAKE_NX_WORLD_H
+#ifndef YAKE_NX_MATERIAL_H
+#define YAKE_NX_MATERIAL_H
 
 namespace yake {
 namespace physics {
 
-	class MaterialNx;
-	class WorldNx : public IWorld
+	class MaterialNx : public IMaterial
 	{
 	public:
-		WorldNx();
-		virtual ~WorldNx();
+		MaterialNx( const NxMaterialIndex index );
+		MaterialNx();
+		~MaterialNx();
 
-		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase & rkJointDesc );
-		virtual SharedPtr<IActor> createActor( const IActor::Desc & rkActorDesc );
-		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc & rkAvatarDesc );
-		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc & rkMatDesc );
-
-		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc & rkTrimeshDesc );
-
-		virtual Deque<ShapeType> getSupportedShapes(bool bStatic = true, bool bDynamic = true) const;
-		virtual Deque<JointType> getSupportedJoints() const;
-		virtual Deque<String> getSupportedSolvers() const;
-		virtual bool useSolver( const String & rkSolver );
-		virtual String getCurrentSolver() const;
-		virtual const PropertyNameList& getCurrentSolverParams() const;
-		virtual void setCurrentSolverParam( const String & rkName, const boost::any & rkValue );
-
-		virtual void step(const real timeElapsed);
+		virtual void setRollingFriction(const real friction);
+		virtual void setRestitution(const real restitution);
+		virtual void setStaticFriction(const real friction);
+		virtual void setStaticFrictionV(const real friction);
+		virtual void setStaticFrictionVEnabled(bool enabled);
 
 		//-- helpers
-		bool init_();
-
-		typedef Signal1<void(const real)> StepSignal;
-		StepSignal	stepSignal;
-
+		void _createFromDesc( const IMaterial::Desc & rDesc );
+		inline NxMaterialIndex _getNxMatIndex() const
+		{ return mNxMatIndex; }
 	private:
-		String					mCurrentSolver;
-		NxScene*				mpScene;
+		NxMaterialIndex	mNxMatIndex;
 	};
 
 }
 }
-
-
 #endif

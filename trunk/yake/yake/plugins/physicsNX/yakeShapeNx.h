@@ -25,10 +25,11 @@ namespace yake {
 namespace physics {
 
 	class ActorNx;
+	class MaterialNx;
 	class ShapeNx : public IMovableShape
 	{
 	public:
-		ShapeNx( NxActor & rActor, ActorNx & rActorNx );
+		ShapeNx( NxActor & rActor, ActorNx & rActorNx, MaterialNx* pMaterial );
 		virtual ~ShapeNx();
 
 		virtual ShapeType getType() const;
@@ -44,6 +45,7 @@ namespace physics {
 		void createAsBox_( const Vector3 & rkDimensions );
 		void createAsPlane_( const Vector3 & rkNormal, const real d );
 		void createAsCapsule_( const real height, const real radius );
+		void createAsMesh_( const TriangleMeshId id );
 
 	private:
 		void attachAndCreate_(const NxShapeDesc & rkDesc);
@@ -55,6 +57,10 @@ namespace physics {
 
 		NxActor&		mNxActor;
 		ActorNx&		mActor;
+
+		TriangleMeshId	mTrimeshId;
+
+		MaterialNx*		mMaterial;
 	};
 
 }

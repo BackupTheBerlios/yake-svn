@@ -18,49 +18,32 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_NX_WORLD_H
-#define YAKE_NX_WORLD_H
+#ifndef YAKE_PHYSICS_TRIMESHNX_WRAPPER_H
+#define YAKE_PHYSICS_TRIMESHNX_WRAPPER_H
 
 namespace yake {
 namespace physics {
 
-	class MaterialNx;
-	class WorldNx : public IWorld
+	/** Manager class for referenced tri meshes. ALL triangle mesh shapes ARE TO BE
+		managed by this manager!
+	*/
+	class TrimeshNxManager
 	{
+		friend class WorldNx;
 	public:
-		WorldNx();
-		virtual ~WorldNx();
-
-		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase & rkJointDesc );
-		virtual SharedPtr<IActor> createActor( const IActor::Desc & rkActorDesc );
-		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc & rkAvatarDesc );
-		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc & rkMatDesc );
-
-		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc & rkTrimeshDesc );
-
-		virtual Deque<ShapeType> getSupportedShapes(bool bStatic = true, bool bDynamic = true) const;
-		virtual Deque<JointType> getSupportedJoints() const;
-		virtual Deque<String> getSupportedSolvers() const;
-		virtual bool useSolver( const String & rkSolver );
-		virtual String getCurrentSolver() const;
-		virtual const PropertyNameList& getCurrentSolverParams() const;
-		virtual void setCurrentSolverParam( const String & rkName, const boost::any & rkValue );
-
-		virtual void step(const real timeElapsed);
-
-		//-- helpers
-		bool init_();
-
-		typedef Signal1<void(const real)> StepSignal;
-		StepSignal	stepSignal;
-
+		static NxTriangleMesh* getById(const TriangleMeshId id);
+		static NxTriangleMesh* createMesh(const TriangleMeshDesc & rkDesc, TriangleMeshId & retId);
+		static void releaseMesh(const TriangleMeshId id);
+	protected:
+		static void destroyAll();
 	private:
-		String					mCurrentSolver;
-		NxScene*				mpScene;
+		typedef std::pair<NxTriangleMesh*, uint32> MeshCountPair;
+		typedef AssocVector< TriangleMeshId, MeshCountPair > TriRefMap;
+		static TriRefMap msTriRefs;
+		static uint32 msLastId;
 	};
 
+
 }
 }
-
-
 #endif
