@@ -44,7 +44,7 @@ namespace base
 namespace templates
 {
 
-/* Helpers */ // todo: test
+/* Helpers */
 #define FUNCTION(number) \
 	YAKE_TYPES_ONE_FREE(number) \
 	templates::SharedPtr<T> create(typename T::RegistryType::Id id, YAKE_ARGUMENTS_ONE_FREE(number)) \
@@ -60,7 +60,6 @@ YAKE_IMPLEMENT_FUNCTION(FUNCTION)
 #undef FUNCTION
 
 /* Registry */
-
 // todo: functors instead of creators
 // todo: if we cannot simplify manager template, remove it
 template <class ConfigClass>
