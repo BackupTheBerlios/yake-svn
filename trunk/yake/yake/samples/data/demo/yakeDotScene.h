@@ -140,7 +140,7 @@ namespace dotscene {
 		String meshName = varGet<String>(pNode->getAttributeValue("meshfile"));
 		graphics::IEntity* pEnt = mGWorld->createEntity( meshName );
 		YAKE_ASSERT( pEnt );
-		pEnt->setCastsShadow( true );
+		pEnt->setCastsShadow( false );
 		pParentSN->attachEntity( pEnt );
 	}
 
