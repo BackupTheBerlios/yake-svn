@@ -141,7 +141,8 @@ namespace xml {
 		mFireSignals = fireSignals;
 
 		mXmlDoc = new TiXmlDocument( rFile.c_str() );
-		mXmlDoc->LoadFile();
+		bool ret = mXmlDoc->LoadFile();
+		YAKE_ASSERT( ret && "Could not load xml file.")( rFile );
 
 		// read contents
 		mRootElem = mXmlDoc->RootElement();
