@@ -25,6 +25,10 @@
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
 
+#ifndef YAKE_PHYSICS_AVATAR_H
+#	include <yake/physics/yakePhysicsAvatar.h>
+#endif
+
 	/** The description structs are used for creating elements.
 
 		Why is this necessary?
@@ -94,7 +98,12 @@ namespace physics {
 		virtual ~IMaterial() {}
 
 		virtual void setRollingFriction(const real friction) = 0;
-		//@todo virtual void setRestitution(const real ...) = 0;
+		virtual void setRestitution(const real restitution) = 0;
+		virtual void setStaticFriction(const real friction) = 0;
+		virtual void setStaticFrictionV(const real friction) = 0;
+		virtual void setStaticFrictionVEnabled(bool enabled) = 0;
+
+		//@todo add more properties that can quite easily be generalised...
 	};
 
 	/**
@@ -471,8 +480,6 @@ namespace physics {
 		//setSpring/Damper
 	};
 
-	class IAvatar;
-
 	class IWorld// : public IPropertyQueryHandler
 	{
 	public:
@@ -480,9 +487,9 @@ namespace physics {
 
 		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase & rkJointDesc ) = 0;
 		virtual SharedPtr<IActor> createActor( const IActor::Desc & rkActorDesc = IActor::Desc() ) = 0;
-		/*
-		virtual SharedPtr<IMaterial> createMaterial( cosnt IMaterial::Desc & rkMatDesc ) = 0;
 		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc & rkAvatarDesc ) = 0;
+		/*
+		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc & rkMatDesc ) = 0;
 		*/
 
 		virtual Deque<ShapeType> getSupportedShapes(bool bStatic = true, bool bDynamic = true) const = 0;
