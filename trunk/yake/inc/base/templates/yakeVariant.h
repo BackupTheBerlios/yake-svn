@@ -26,12 +26,9 @@
 #define Variant ttl::var::variant
 #define VariantGet boost::get
 
-namespace yake
-{
-namespace base
-{
-namespace templates
-{
+namespace yake {
+namespace base {
+namespace templates {
 
 
 } // templates

@@ -52,34 +52,50 @@ namespace base
 namespace templates
 {
 
-template< typename T >
-class Pointer : public boost::shared_ptr< T >
-{
-// Class
-public:
-	Pointer(): boost::shared_ptr< T >()  {}
+	template< typename T >
+	class SharedPtr : public boost::shared_ptr< T >
+	{
+	// Class
+	public:
+		SharedPtr(): boost::shared_ptr< T >()  {}
 
-	template< class Y >
-  Pointer( Pointer<Y> const& r ): boost::shared_ptr< T >( r )  {}
+		template< class Y >
+		SharedPtr( SharedPtr<Y> const& r ): boost::shared_ptr< T >( r )  {}
 
-  template< class Y >
-  explicit Pointer( Y* p ): boost::shared_ptr< T >( p ) {}
+		template< class Y >
+		explicit SharedPtr( Y* p ): boost::shared_ptr< T >( p ) {}
 
-	~Pointer() {}
+		~SharedPtr() {}
+	};
 
-// Methods
-/*public: Todo
-	#define FUNCTION( number ) \
-  YAKE_TYPES( number ) \
-  static Pointer< T > create( YAKE_ARGUMENTS( number ) ) \
-  { \
-    YAKE_DECLARE_FUNCTION( create ) \
-		return Pointer< T >( new T( YAKE_USE_ARGUMENTS( number ) ) ); \
-  }
-YAKE_IMPLEMENT_FUNCTION( FUNCTION )
-#undef FUNCTION*/
+	template< typename T >
+	class Pointer : public boost::shared_ptr< T >
+	{
+	// Class
+	public:
+		Pointer(): boost::shared_ptr< T >()  {}
 
-};
+		template< class Y >
+		Pointer( Pointer<Y> const& r ): boost::shared_ptr< T >( r )  {}
+
+		template< class Y >
+		explicit Pointer( Y* p ): boost::shared_ptr< T >( p ) {}
+
+		~Pointer() {}
+
+	// Methods
+		/*public: Todo
+		#define FUNCTION( number ) \
+		YAKE_TYPES( number ) \
+		static Pointer< T > create( YAKE_ARGUMENTS( number ) ) \
+		{ \
+			YAKE_DECLARE_FUNCTION( create ) \
+				return Pointer< T >( new T( YAKE_USE_ARGUMENTS( number ) ) ); \
+		}
+		YAKE_IMPLEMENT_FUNCTION( FUNCTION )
+		#undef FUNCTION*/
+
+	};
 
 /*namespace PointerConfigs
 {

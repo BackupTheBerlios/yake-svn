@@ -28,6 +28,7 @@
 #include "templates/yakeDangling.h"
 #include "templates/yakeRegistry.h"
 #include "templates/yakeVector.h"
+#include "templates/yakePointer.h"
 
 #include "mpl/yakeAbstractFactory.h"
 #include "mpl/yakeSequences.h"
