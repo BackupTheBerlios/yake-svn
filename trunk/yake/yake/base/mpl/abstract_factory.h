@@ -55,7 +55,7 @@ template
 struct abstract_factory : 
 	inherit_multiple
 	< 
-		Types_, 
+		Types, 
 		typename lambda::lambda< FactoryUnit<lambda::_> >::type
 	>::type
 {     
@@ -98,7 +98,7 @@ template
 struct concrete_factory
 	: inherit_linear
 	< 
-		Types_, //typename boost::mpl::reverse< Types_ >::type, // Using fold does not require abstract and concrete product list adjustment
+		Types, //typename boost::mpl::reverse< Types_ >::type, // Using fold does not require abstract and concrete product list adjustment
 		typename lambda::lambda< Creator<lambda::_, lambda::_> >::type, 
 		AbstractFactory
 	>::type
