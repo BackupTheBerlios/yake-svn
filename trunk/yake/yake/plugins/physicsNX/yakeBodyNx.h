@@ -27,18 +27,30 @@ namespace physics {
 	class BodyNx : public IBody
 	{
 	public:
-		BodyNx( NxActor & rActor );
+		BodyNx( NxActor & rActor, ActorNx & rActorNx );
 		virtual ~BodyNx();
+
+		virtual IActor& getActor() const;
 
 		virtual void setMass(const real mass);
 		virtual real getMass() const;
+
 		virtual void setLinearVelocity(const Vector3 & rkVelocity);
 		virtual Vector3 getLinearVelocity() const;
 		virtual void setAngularVelocity(const Vector3 & rkVelocity);
 		virtual Vector3 getAngularVelocity() const;
 
+		virtual void addForce( const Vector3 & rkForce );
+		virtual void addForceAtPos( const Vector3 & rkForce, const Vector3 & rkPos );
+		virtual void addLocalForce( const Vector3 & rkForce );
+		virtual void addLocalForceAtLocalPos( const Vector3 & rkForce, const Vector3 & rkPos );
+		virtual void addLocalForceAtPos( const Vector3 & rkForce, const Vector3 & rkPos );
+		virtual void addTorque( const Vector3 & rkTorque );
+		virtual void addLocalTorque( const Vector3 & rkTorque );
+
 		// helpers
 	private:
+		ActorNx&	mActor;
 		NxActor&	mNxActor;
 		NxBodyDesc	mNxDesc;
 	};

@@ -38,7 +38,7 @@ namespace physics {
 
 		virtual SharedPtr<IShape> createShape( const IShape::Desc & rkShapeDesc );
 		virtual void destroyShape( SharedPtr<IShape> & rShape );
-		virtual const Deque<IShape*> getShapes() const;
+		virtual const ShapePtrVector getShapes() const;
 
 		typedef Signal0<void> SignalCollisionEntered;
 		virtual void subscribeToCollisionEnteredSignal( const SignalCollisionEntered::slot_type & rkSlot );
