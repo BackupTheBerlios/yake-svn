@@ -53,6 +53,21 @@ namespace templates
 {
 
 	template< typename T >
+	class AutoPtr : public std::auto_ptr< T >
+	{
+	public:
+		AutoPtr(): std::auto_ptr< T >()  {}
+
+		template< class Y >
+		AutoPtr( AutoPtr<Y> const& r ): std::auto_ptr< T >( r )  {}
+
+		template< class Y >
+		explicit AutoPtr( Y* p ): std::auto_ptr< T >( p ) {}
+
+		~AutoPtr() {}
+	};
+
+	template< typename T >
 	class SharedPtr : public boost::shared_ptr< T >
 	{
 	// Class
