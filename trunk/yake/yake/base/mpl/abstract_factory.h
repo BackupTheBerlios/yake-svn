@@ -52,14 +52,13 @@ template
 	class Types,
 	template <class> class FactoryUnit = abstract_factory_unit
 >
-class abstract_factory : 
-	public inherit_multiple
+struct abstract_factory : 
+	inherit_multiple
 	< 
 		Types_, 
 		typename lambda::lambda< FactoryUnit<lambda::_> >::type
 	>::type
 {     
-public:
 	typedef Types_ ProductList;
         
 	// todo: free parameters
@@ -73,8 +72,9 @@ public:
 };
 
 template <class Base, class ConcreteProduct>
-class op_new_factory_unit : public Base
+struct op_new_factory_unit : public Base
 {
+private:
 	typedef typename Base::ProductList BaseProductList;
     
 protected:
@@ -95,15 +95,14 @@ template
 	template <class, class> class Creator = op_new_factory_unit,
 	class Types = typename AbstractFactory::ProductList
 >
-class concrete_factory
-	: public inherit_linear
+struct concrete_factory
+	: inherit_linear
 	< 
 		Types_, //typename boost::mpl::reverse< Types_ >::type, // Using fold does not require abstract and concrete product list adjustment
 		typename lambda::lambda< Creator<lambda::_, lambda::_> >::type, 
 		AbstractFactory
 	>::type
 {
-public:
 	typedef typename AbstractFactory::ProductList ProductList;
 	typedef Types ConcreteProductList;
 };
