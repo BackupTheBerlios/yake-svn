@@ -58,7 +58,7 @@ namespace vehicle {
 	//-----------------------------------------------------
 	void Vehicle::setModel( complex::Model* pComplex )
 	{
-		YAKE_ASSERT( mComplex );
+		YAKE_ASSERT( pComplex );
 		mComplex = pComplex;
 	}
 
