@@ -38,17 +38,17 @@ namespace rx {
 	template<>
 		String rxConvertToString<float>(const float & t)
 	{
-		char buf[512];
-		_snprintf( buf, 512, "(float)%f", t);
-		return String(buf);
+		::std::stringstream ss;
+		ss << "(float)" << t;
+		return String(ss.str().c_str());
 	}
 
 	template<>
 		String rxConvertToString<int>(const int & t)
 	{
-		char buf[512];
-		_snprintf( buf, 512, "(int)%d", t);
-		return String(buf);
+		::std::stringstream ss;
+		ss << "(int)" << t;
+		return String(ss.str().c_str());
 	}
 
 	//RXO_DEFINE_NOFACTORY( ValueBase, RxObject );
