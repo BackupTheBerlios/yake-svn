@@ -3,6 +3,7 @@
 
 #include "meta_field.h"
 #include <boost/lexical_cast.hpp>
+#include "ref.h"
 
 namespace rx
 {
@@ -36,12 +37,11 @@ public: // value access operations
 	T & operator=( T const & value )
 	{
 		value_ = value;
-		// todo get_object does not work for meta classes
 		if( object_ )
 		{
-		std::cout << get_object().get_name() << "::" << name_ 
-			<< "=" << value << std::endl; 
-		get_object().on_change_field( *this );
+			std::cout << get_object().get_name() << "::" << name_ 
+				<< "=" << value << std::endl; 
+			get_object().on_change_field( *this );
 		}
 		return value_;
 	}
@@ -104,6 +104,12 @@ std::ostream& operator<<( std::ostream & stream, typed_field<T> & field )
 
 template< typename T >
 bool operator==( typed_field<T> & field, T value )
+{
+	return field.value_ == value;    
+}
+
+template< typename T >
+bool operator==( typed_field< ref<T> > & field, T value )
 {
 	return field.value_ == value;    
 }

@@ -30,15 +30,17 @@
 #include "RakClientInterface.h"
 #include "RakNetworkFactory.h"
 #include "BitStream.h"*/
-
+// events
 #include "event_test.h"
+// c++ class
+#include "cpp_class.h"
 
 using namespace rx;
 
 int main()
 {
 	// runtime class and object defining
-	/*{
+	{
 		std::cout << "[ meta operations ]" << std::endl;	
 
 		// define class with default value
@@ -73,13 +75,17 @@ int main()
 		assert( test_object_2.field<bool>( "hello_bool" ) );
 		std::cout << "test_object_2::hello_bool=" << ( test_object_2.field<bool>( 
 			"hello_bool" ) ? "true" : "false" ) << std::endl;
-	}*/
+	}
 
 	// event and handler test
 	{
-		std::cout << "[ events ]" << std::endl;	
+		std::cout << std::endl << "[ events ]" << std::endl;	
 
     entity e( "e" );
+
+		// event signature/traits validation
+		assert( validate( "entity::birth", "entity::on_birth" ) );
+
 		// hard wiring
 		e.birth.attach_handler( &entity::on_birth, &e );
 		// hard soft wiring
@@ -90,29 +96,8 @@ int main()
 		e.birth( "hello e" );
 	}
 
-
-	/* todo
-
-<psy|code> if i want to replicate a position, do i _have_ to use typed_field<Vector3> or sth like that?
-<psy|code> and now i have to tie this to the actual Movable...
-
-<metaX> I think there are two possibilities : 
-<metaX> 1. a simply class-to-member-ptr wrapper
-<metaX> 2. used typed_field<vector> ;P
-<metaX> -d
-* FuSiON has joined #yake
-<metaX> how would you do it with rx1?
-<metaX> well, would be possible to do this:
-<metaX> struct player : public movable, rxobject {}; and then add a class-member-ptr to movable::position ...
-<metaX> but there would be no sychronization
-==><metaX> perhaps it's possible to do typed_field<vector&>( "blah", this->myvector );?
-
-
-
-	*/
-
 	// reflect a c++ object
-	/*{
+	{
 		std::cout << std::endl << "[ c++/meta cooperation ]" << std::endl;	
 
 		// create the c++ object	
@@ -121,8 +106,7 @@ int main()
 		obj.test_string = "test_string_";
 
 		// create the meta object this or that way
-		//object_ & meta_obj = get_object( "cpp_class", "cpp_object");  
-		//meta_object & meta_obj = get_object<cpp_class>( "cpp_object" ); 
+		//meta_object & meta_obj = get_object( "cpp_object" ); 
 		meta_object & meta_obj = obj.get_object(); 
 
 		// set field using c++ interface and check for meta reflection
@@ -147,13 +131,24 @@ int main()
 		assert( meta_obj.field<int>( "test_int" ) == 123456 );
 		assert( obj.test_int == 123456 );
 
+		// pure ref test
+		int hello = 123;
+		ref<int> iref( hello );
+		assert( iref == hello );
+
+		// test wrapped values
+		obj.position_ = 1234321;
+		std::cout << meta_obj.field<int>( "position_wrapped" ).as_string() << std::endl;
+		std::cout << meta_obj.field< ref<int> >( "position_wrapped" ) << std::endl;
+		assert( meta_obj.field< ref<int> >( "position_wrapped" ) == obj.position_ );
+
 		// output fields
 		for( meta_object::fields_map::const_iterator iter = meta_obj.begin(); 
 			iter != meta_obj.end(); iter++ )
 		{
 			std::cout << iter->second->as_string() << std::endl;
 		}
-	}*/
+	}
 
 	// serialize meta objects
 /*	{

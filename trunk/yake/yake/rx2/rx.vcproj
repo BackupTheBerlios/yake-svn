@@ -180,6 +180,9 @@
 				RelativePath=".\object_registry.h">
 			</File>
 			<File
+				RelativePath=".\ref.h">
+			</File>
+			<File
 				RelativePath=".\tnl_hook.h">
 			</File>
 			<File

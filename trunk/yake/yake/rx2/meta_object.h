@@ -3,6 +3,8 @@
 
 #include <map>
 
+#include <yake/base/templates/yakePointer.h>
+
 #include "typed_field.h"
 #include "meta_hooks.h"
 #include "object_registry.h"
@@ -42,9 +44,9 @@ public: // constructors
 	~meta_object()
 	{
 		// delete fields
-		for( fields_map::iterator iter = fields_.begin(); 
+		/*for( fields_map::iterator iter = fields_.begin(); 
 			iter != fields_.end(); iter++ )
-		  delete iter->second;
+		  delete iter->second;*/ // todo they can be c++ object member fields
 
 		// delete handlers
 		for( handlers::iterator iter = handlers_.begin(); 
@@ -125,7 +127,16 @@ public: // event and handlers
 
 	boost::function_base & get_handler( const std::string & name )
 	{
-    return *handlers_[ name ];
+    handlers::iterator iter( handlers_.find( name ) );
+		if( iter == handlers_.end() ) throw exception();
+    return *iter->second;
+	}
+
+	event_base & get_event( const std::string & name )
+	{
+    events::iterator iter( events_.find( name ) );
+		if( iter == events_.end() ) throw exception();
+    return *iter->second;
 	}
 
 public: // info
@@ -140,6 +151,8 @@ public: // data
 	events events_;
 	handlers handlers_;
 };
+
+typedef yake::base::templates::SharedPtr<meta_object> meta_object_ptr;
 
 } // namespace rx
 

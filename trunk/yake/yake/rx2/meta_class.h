@@ -156,7 +156,7 @@ public: // info
 		return name_;
 	}
 
-private:
+public:
 	mutable std::string name_;
 	fields_list fields_;
   traits handler_traits_;
