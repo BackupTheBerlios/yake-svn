@@ -8,6 +8,8 @@
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 
+#define classoffset(class, super) ((unsigned long) static_cast<super*>((class*)8) - 8)
+
 /*****************************************************************************
     MACROS
  *****************************************************************************/
@@ -48,6 +50,8 @@ ACCESS_ATTR: \
 namespace reflection
 {
 
+namespace { struct Null {}; }
+
 /** The Event class represents an object's event. */
 class Event 
 {
@@ -70,19 +74,25 @@ public:
     template<class Object>
 		void attach_handler(Object * object, const boost::function_base & this_handler) const
 		{
-        if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
-        if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
-				event_base * this_event = reinterpret_cast<event_base*>(((char *)object) + m_offset);
-				this_event->attach_handler(this_handler);
+			// check
+      if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
+      if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
+			
+			// this pointer + member offset + interface offset => ptr to the base interface
+			event_base * this_event = reinterpret_cast<event_base*>(((char*)object) + m_offset + classoffset(event<Null>, event_base));
+			this_event->attach_handler(this_handler);
 		}
 
     template<class Object, class ObjectHandler>
 		void attach_handler(Object * object, const Method & this_handler, ObjectHandler * object_handler) const
 		{
-        if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
-        if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
-				event_base * this_event = reinterpret_cast<event_base*>(((char *)object) + m_offset);
-				this_event->attach_handler(object_handler, this_handler);
+			// check
+      if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
+      if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
+
+			// this pointer + member offset + interface offset => ptr to the base interface
+			rx_event_base * this_event = reinterpret_cast<rx_event_base*>(((char*)object) + m_offset + classoffset(event<Null>, rx_event_base));
+			this_event->attach_handler(object_handler, this_handler);
 		}
 
     template<class Object, class Arg1> 
@@ -91,7 +101,7 @@ public:
         if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
         if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
 				if (typeid(reflection::event<Arg1>) != m_typeinfo) throw TypeMismatchError("event");
-				reflection::event<Arg1> * this_event = reinterpret_cast<reflection::event<Arg1>*>(((char *)object) + m_offset);
+				reflection::event<Arg1> * this_event = reinterpret_cast<reflection::event<Arg1>*>(((char*)object) + m_offset);
 				this_event->operator()(arg1);
     }
 
@@ -100,7 +110,7 @@ public:
 		{
         if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
         if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
-				if (typeid(rx::event<Arg1>) != m_typeinfo) throw TypeMismatchError("event");
+				if (typeid(reflection::event<Arg1>) != m_typeinfo) throw TypeMismatchError("event");
 				reflection::event<Arg1, Arg2> * this_event = reinterpret_cast<reflection::event<Arg1, Arg2>*>(((char *)object) + m_offset);
 				this_event->operator()(arg1, arg2);
     }

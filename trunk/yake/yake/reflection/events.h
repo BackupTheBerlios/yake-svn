@@ -15,6 +15,18 @@
 // rx 
 #include "reflection.h"
 
+// lua
+extern "C"
+{
+	#include "lua.h"
+	#include "lauxlib.h"
+	#include "lualib.h"
+}
+
+#define LUABIND_NO_HEADERS_ONLY
+#include <luabind/luabind.hpp>
+#include <luabind/functor.hpp>
+
 // using std and boost::lambda placeholders
 boost::lambda::placeholder1_type _l1;
 
@@ -23,9 +35,8 @@ boost::lambda::placeholder1_type _l1;
 // abstract class without virtuals
 struct event_base
 {
-  virtual ~event_base() = 0;
+	virtual ~event_base() {}
   virtual void attach_handler( const boost::function_base & this_handler ) = 0;
-	virtual void attach_handler( void * object, const reflection::Method & this_handler ) = 0;
 };
 
 
@@ -97,10 +108,15 @@ struct event : public event_base
   }
 
 	// firing
-  void operator()(arg1 a1)
-  {
+	virtual fire(arg1 a1)
+	{
     using namespace boost::lambda;
 		std::for_each(handlers_.begin(), handlers_.end(), bind<void>(*_l1, a1));
+	}
+
+  void operator()(arg1 a1)
+  {
+		fire(a1);
   }
 
 protected:
@@ -115,10 +131,22 @@ protected:
 namespace reflection
 {
 
+struct rx_event_base
+{
+	virtual ~rx_event_base() {}
+	virtual void attach_handler(void * object, const reflection::Method & this_handler) = 0;
+};
+
+struct lua_event_base
+{
+	virtual ~lua_event_base() {}
+	virtual void attach_handler(const luabind::functor<void> & lua_function) = 0;
+};
+
 	// todo move to rx
 
 template<typename arg1>
-struct event : public ::event<arg1 /*, lua::search_for_lua_handlers_1*/> 
+struct event : public rx_event_base, public lua_event_base, public ::event<arg1 /*, lua::search_for_lua_handlers_1*/> 
 {
 	typedef ::event<arg1/*, lua::search_for_lua_handlers_1*/> base;
 
@@ -133,6 +161,27 @@ struct event : public ::event<arg1 /*, lua::search_for_lua_handlers_1*/>
 			= static_cast<boost::function<void (void*, arg1)>&>(this_handler.get_function_base());
 		handlers_.push_back(new handler(boost::bind(hdl, object, _1)));
 	}
+
+	typedef std::vector< const luabind::functor<void> > lua_functor_list;
+
+	// attach lua functor
+	void attach_handler(const luabind::functor<void> & lua_function)
+	{
+		m_lua_functor_list.push_back(lua_function);
+	}
+
+	// firing
+	virtual fire(arg1 a1)
+	{
+		// call handlers of the base class
+		base::fire(a1);
+		// call lua handlers
+		for(lua_functor_list::const_iterator iter = m_lua_functor_list.begin();
+			iter != m_lua_functor_list.end(); iter++)
+		{ iter->operator()(a1); }
+	}
+
+	lua_functor_list m_lua_functor_list;
 };
 
 }
