@@ -33,15 +33,25 @@ namespace yake {
 		//-----------------------------------------------------
 		OdeWorld::OdeWorld()
 		{
-			mStepSize = 1. / 50.;	// default: 50Hz
+			mStepSize = 1. / 100.;	// default: 50Hz
 			mOdeWorld = new dWorld();
 			mOdeSpace = new dSimpleSpace( 0 );
 			//mOdeSpace = new dHashSpace( 0 );
 			mOdeContactGroup = new dJointGroup( 0 );
 
 			mOdeWorld->setGravity( 0., 0., 0. );
-			mOdeWorld->setCFM( 0.001 );
-			mOdeWorld->setERP( 0.9999 );
+			mOdeWorld->setCFM( 0.025 );
+			mOdeWorld->setERP( 0.99 );
+			mOdeWorld->setAutoDisableFlag( 1 );
+			mOdeWorld->setAutoDisableAngularThreshold( 0.005 ); // ODE default: 0.01
+			mOdeWorld->setAutoDisableLinearThreshold( 0.005 ); // ODE default: 0.01
+			mOdeWorld->setAutoDisableSteps( 10 ); // ODE default: 10
+			mOdeWorld->setAutoDisableTime( 0 ); // ODE default: 0. (= ignore time)
+
+			dWorldSetQuickStepNumIterations( mOdeWorld->id(), 20 );
+
+			dWorldSetContactMaxCorrectingVel( mOdeWorld->id(), 2. );
+			dWorldSetContactSurfaceLayer( mOdeWorld->id(), 0.0075 );
 		}
 
 		//-----------------------------------------------------
@@ -74,7 +84,8 @@ namespace yake {
 				dSpaceCollide(mOdeSpace->id(), this, &_OdeNearCallback);
 
 				mOdeWorld->step( mStepSize );
-				mOdeWorld->stepFast1( mStepSize, 4 );
+				//mOdeWorld->stepFast1( mStepSize, 4 );
+				dWorldQuickStep( mOdeWorld->id(), mStepSize );
 				//dWorldStepFast1( mOdeWorld->id(), mStepSize, 4 );
 
 		#ifdef ADJUST_FPU_PRECISION
