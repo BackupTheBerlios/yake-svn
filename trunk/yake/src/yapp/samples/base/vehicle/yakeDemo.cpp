@@ -185,7 +185,7 @@ namespace yake {
 		PawnControl( PawnLocalHumanInput* pLHI ) : mLHI(pLHI)
 		{
 		}
-		void setControlledMovable( physics::IComplexObject* pMovable )
+		void setControlledMovable( physics::IActor* pMovable )
 		{
 			mMovable = pMovable;
 		}
@@ -200,8 +200,8 @@ namespace yake {
 			}
 		}
 	private:
-		physics::IComplexObject*		mMovable;
-		PawnLocalHumanInput*			mLHI;
+		physics::IActor*		mMovable;
+		PawnLocalHumanInput*	mLHI;
 	};
 }
 
@@ -267,7 +267,7 @@ public:
 	struct SimpleOne {
 		graphics::ISceneNode*			pSN;
 		graphics::IEntity*				pE;
-		physics::IComplexObject*		pCO;
+		physics::IActor*		pCO;
 		model::MovableUpdateController	updCtrl;
 	};
 	SimpleOne								mGround;
@@ -402,11 +402,11 @@ public:
 		model::Physical* pPhysical = new model::Physical();
 		pComplex->addPhysical( SharedPtr<model::Physical>( pPhysical ), "basePhysical" );
 
-		physics::IComplexObject* pCO = mPWorld->createSphere( 2 );
+		physics::IActor* pCO = mPWorld->createSphere( 2 );
 		YAKE_ASSERT( pCO );
 		pCO->setPosition( Vector3(0,15,-10) );
 		pCO->getBody()->setMass( 1 );
-		pPhysical->addComplex( SharedPtr<physics::IComplexObject>( pCO ), "base" );
+		pPhysical->addComplex( SharedPtr<physics::IActor>( pCO ), "base" );
 
 		// - add graphical representation
 		model::Graphical* pGraphical = new model::Graphical();
