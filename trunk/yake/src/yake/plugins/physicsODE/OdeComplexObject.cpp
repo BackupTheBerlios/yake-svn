@@ -233,9 +233,9 @@ namespace yake {
 			{
 				for (int i=0; i<n; i++) 
 				{
-					contact[i].surface.mode = //dContactSlip1
-											//|dContactSlip2
-											dContactSoftERP
+					contact[i].surface.mode = dContactSlip1
+											|dContactSlip2
+											|dContactSoftERP
 											//|dContactSoftCFM
 											//|dContactBounce
 											|dContactApprox1
@@ -254,8 +254,8 @@ namespace yake {
 						contact[i].surface.mode |= dContactMu2;
 						contact[i].surface.mu2 = friction2; // 0 or 10
 					}
-					//contact[i].surface.slip1 = 0.1;
-					//contact[i].surface.slip2 = 0.1;
+					contact[i].surface.slip1 = 0.1;
+					contact[i].surface.slip2 = 0.1;
 					contact[i].surface.soft_erp = 0.8; // 0.8
 					//contact[i].surface.bounce = 0.05; //0.05
 					//contact[i].surface.bounce_vel = 0.025; //0.025

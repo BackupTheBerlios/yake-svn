@@ -165,6 +165,7 @@ namespace yake {
 			virtual void setMass(real mass) = 0;
 			virtual real getMass() const = 0;
 			virtual IBody::MassType getType() const = 0;
+			virtual void translateMass( const Vector3 & d ) = 0;
 
 			virtual void addForce( const Vector3 & force ) = 0;
 			virtual void addRelForce( const Vector3 & force ) = 0;

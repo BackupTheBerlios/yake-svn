@@ -74,6 +74,7 @@ namespace yake {
 				dSpaceCollide(mOdeSpace->id(), this, &_OdeNearCallback);
 
 				mOdeWorld->step( mStepSize );
+				mOdeWorld->stepFast1( mStepSize, 4 );
 				//dWorldStepFast1( mOdeWorld->id(), mStepSize, 4 );
 
 		#ifdef ADJUST_FPU_PRECISION

@@ -45,6 +45,12 @@ namespace yake {
 		}
 
 		//---------------------------------------------------
+		void OdeBody::translateMass( const Vector3 & d )
+		{
+			dMassTranslate(&mMass, d.x, d.y, d.z);
+		}
+
+		//---------------------------------------------------
 		OdeBody::~OdeBody()
 		{
 			mValid = false;

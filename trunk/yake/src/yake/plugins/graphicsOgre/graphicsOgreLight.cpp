@@ -110,7 +110,8 @@ namespace ogre3d {
 	//------------------------------------------------------
 	void OgreLight::setCastsShadow( bool enabled )
 	{
-		YAKE_ASSERT( false ).debug( "feature NYI!" );
+		YAKE_ASSERT( mLight ).debug( "need actual light!" );
+		mLight->setCastShadows( true );
 	}
 
 	//------------------------------------------------------
