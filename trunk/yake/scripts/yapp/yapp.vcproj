@@ -21,7 +21,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../;../../dependencies;../../dependencies/boost;../../dependencies/ttl"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;YAPP_BASE_EXPORTS;YAPP_GUI_EXPORTS"
+				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_CONSOLE;YAPP_BASE_EXPORTS;YAPP_GUI_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -34,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib physics.lib"
+				AdditionalDependencies="base.lib physics.lib data.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../common/lib/$(ConfigurationName)"
@@ -272,28 +272,106 @@
 			Name="model"
 			Filter="">
 			<File
+				RelativePath="..\..\src\yapp\model\yakeActor.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeActor.h">
+			</File>
+			<File
 				RelativePath="..\..\src\yapp\model\yakeComplexModel.cpp">
 			</File>
 			<File
 				RelativePath="..\..\yapp\model\yakeComplexModel.h">
 			</File>
 			<File
+				RelativePath="..\..\yapp\model\yakeEngine.h">
+			</File>
+			<File
 				RelativePath="..\..\src\yapp\model\yakeGraphical.cpp">
 			</File>
 			<File
-				RelativePath="..\..\src\yapp\model\yakeLandVehicle.cpp">
+				RelativePath="..\..\yapp\model\yakeGraphical.h">
 			</File>
 			<File
 				RelativePath="..\..\yapp\model\yakeModel.h">
 			</File>
 			<File
+				RelativePath="..\..\src\yapp\model\yakeModelLink.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeModelLink.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeModelMovableLink.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeModelMovableLink.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeMountable.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeNativeEngine.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeNativeEngine.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeNativeVehicleInputComponent.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeNativeVehiclePhysicalComponent.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeNativeVehiclePhysicalComponent.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeNativeWheel.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeNativeWheel.h">
+			</File>
+			<File
 				RelativePath="..\..\src\yapp\model\yakePhysical.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakePhysical.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeUpdaters.h">
 			</File>
 			<File
 				RelativePath="..\..\src\yapp\model\yakeVehicle.cpp">
 			</File>
 			<File
 				RelativePath="..\..\yapp\model\yakeVehicle.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeVehicleInputComponent.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeVehiclePhysicalComponent.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeVehiclePhysicalComponent.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeVehicleSerializerXML.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeVehicleSerializerXML.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeVehicleSystem.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeVehicleSystem.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeVehicleTpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeVehicleTpl.h">
 			</File>
 		</Filter>
 		<Filter
@@ -324,10 +402,10 @@
 				RelativePath="..\..\yapp\base\event\yakeMessageManager.h">
 			</File>
 			<File
-				RelativePath="..\..\src\yapp\base\event\yakeParamHolder.cpp">
+				RelativePath="..\..\src\yapp\base\event\yakeMessageQ.cpp">
 			</File>
 			<File
-				RelativePath="..\..\yapp\base\event\yakeParamHolder.h">
+				RelativePath="..\..\yapp\base\event\yakeMessageQ.h">
 			</File>
 		</Filter>
 	</Files>
