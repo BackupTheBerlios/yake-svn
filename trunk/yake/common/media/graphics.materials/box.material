@@ -1,0 +1,28 @@
+material box
+{
+	technique
+	{
+		pass
+		{
+			scene_blend modulate
+			texture_unit
+			{
+				diffuse 1 1 1
+			}
+		}
+	}
+}
+material sphere
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				diffuse 1 1 1
+				texture RustedMetal.jpg
+			}
+		}
+	}
+}
