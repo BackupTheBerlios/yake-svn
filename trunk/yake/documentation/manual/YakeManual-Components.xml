@@ -1,0 +1,44 @@
+<article>
+	<title>yake::base</title>
+	<articleinfo>
+		<title>yake::base</title>
+	</articleinfo>
+</article>
+<article>
+	<title>Components /todo</title>
+	<articleinfo>
+		<title>Components /todo</title>
+	</articleinfo>
+	<sect1>
+		<title>Introduction and Design</title>
+		<subtitle>What are components? And what part do they play in the whole?</subtitle>
+		<para>Components are the core elements of Yake. Component loosely defines a collection of functionality.
+		The concrete implementation can be very different. Many components are abstract components, i.e.
+		they (additionally) provide abstract interfaces so that they are independent of underlying APIs.
+		</para>
+		<para>For example, the graphics component provides interfaces which have to be implemented for a specific
+		API in order to be usable. Often these implementations reside in dynamic link libraries (i.e. a DLL on windows,
+		.so on Linux). For example, the graphicsOGRE plugin is an implementation of the graphics interfaces
+		using OGRE (Object-oriented Graphics Rendering Engine, http://www.ogre3d.org).
+		</para>
+	</sect1>
+	<sect1>
+		<title>yake::graphics /todo</title>
+		<subtitle>Get seen!</subtitle>
+	</sect1>
+	<sect1>
+		<title>yake::physics /todo</title>
+	</sect1>
+	<sect1>
+		<title>yake::vfs /todo</title>
+		<subtitle>Virtual File System</subtitle>
+	</sect1>
+	<sect1>
+		<title>yake::scripting /todo</title>
+		<subtitle>Customization/Modding without recompiling your application!</subtitle>
+	</sect1>
+	<sect1>
+		<title>yake::audio /todo</title>
+		<subtitle>Get heard!</subtitle>
+	</sect1>
+</article>
