@@ -1,3 +1,6 @@
+#ifndef YAKE_EXAMPLE_APPLICATION_H
+#define YAKE_EXAMPLE_APPLICATION_H
+
 /**
 	\todo add loading of script bindings
 	\todo add subscription to shutdown request by graphics system (due to closed window)
@@ -125,8 +128,7 @@ namespace exapp {
 			if ( mLoadScriptingBindings )
 			{
 				scripting::ScriptingBindingsPlugin* pSBP = 
-				  loadPlugin<scripting::ScriptingBindingsPlugin>( 
-				  				"scriptingBindingsLua" );
+				  loadPlugin<scripting::ScriptingBindingsPlugin>( "scriptingBindingsLua" );
 				YAKE_ASSERT( pSBP ).debug("Cannot load scripting bindings plugin.");
  
 				mScriptingBindings = pSBP->createBinder();
@@ -138,8 +140,7 @@ namespace exapp {
 			if ( mLoadScriptingSystem )
 			{
 				scripting::ScriptingPlugin* pSP = 
-					loadPlugin<scripting::ScriptingPlugin>( 
-									"scriptingLua" );
+					loadPlugin<scripting::ScriptingPlugin>( "scriptingLua" );
 				YAKE_ASSERT( pSP ).debug( "Cannot load scripting plugin." );
 
 				mScriptingSystem = pSP->createSystem();
@@ -149,8 +150,7 @@ namespace exapp {
 			// graphics
 			if (mLoadGraphicsSystem)
 			{
-				SharedPtr<base::Library> pLib = loadLib( 
-								"graphicsOgre" );
+				SharedPtr<base::Library> pLib = loadLib("graphicsOgre" );
 				YAKE_ASSERT( pLib ).debug("Cannot load graphics plugin.");
 
 				mGraphicsSystem = create< graphics::IGraphicsSystem >();
@@ -173,8 +173,7 @@ namespace exapp {
 			// input
 			if (mLoadInputSystem)
 			{
-				input::InputPlugin* pIP = loadPlugin<input::InputPlugin>( 
-									"inputOgre" );
+				input::InputPlugin* pIP = loadPlugin<input::InputPlugin>( "inputOgre" );
 				YAKE_ASSERT( pIP ).debug("Cannot load input plugin.");
 
 				mInputSystem = pIP->createSystem();
@@ -224,6 +223,7 @@ namespace exapp {
 			yake::base::Library* pDynLib = new yake::base::Library( file );
 			YAKE_ASSERT( pDynLib ).debug("Out of memory.");
 
+			std::cout << "Loading plugin " << file << std::endl;
 			yake::base::YakeDynLibStartPluginFn pfnStartPlugin = (yake::base::YakeDynLibStartPluginFn)pDynLib->getSymbol("dynlibStartPlugin");
 			YAKE_ASSERT( pfnStartPlugin ).debug("Cannot find export in dynamic library.");
 
@@ -263,7 +263,7 @@ namespace exapp {
 
 		SharedPtr<base::Library> loadLib( const base::String & file )
 		{
-            SharedPtr<base::Library> pDynLib( new base::Library( file ) );
+			SharedPtr<base::Library> pDynLib( new base::Library( file ) );
 			YAKE_ASSERT( pDynLib ).debug( "Out of memory." );
 			mLibs.push_back( pDynLib );
 			return pDynLib;
@@ -282,3 +282,5 @@ namespace exapp {
 
 }
 }
+
+#endif 

@@ -5,5 +5,5 @@
 #endif
 
 #ifndef YAKE_BASE_PREREQUISITES_H
-#include <yakeBase/yake/yakePrerequisites.h>
+#include <yake/base/yakePrerequisites.h>
 #endif

@@ -44,7 +44,7 @@ namespace task {
 		virtual ~ITask() {}
 		virtual void execute(real timeElapsed) = 0;
 
-		virtual getPriority() const = 0;
+		virtual TaskPriority getPriority() const = 0;
 
 		/** Return the frequency this task gets executed (in Hz). */
 		virtual real getExecutionFrequency() const = 0;
@@ -58,7 +58,7 @@ namespace task {
 				mPrio(prio)
 		{}
 	public:
-		virtual getPriority() const
+		virtual TaskPriority getPriority() const
 		{ return mPrio; }
 
 		virtual real getExecutionFrequency() const
@@ -104,7 +104,7 @@ namespace task {
 			//operator > 
 
 			//@}
-			static sortDescending( const TaskEntry & rStart, const TaskEntry & rEnd)
+			static bool sortDescending( const TaskEntry & rStart, const TaskEntry & rEnd)
 			{
 				YAKE_ASSERT( rStart.pTask );
 				YAKE_ASSERT( rEnd.pTask );

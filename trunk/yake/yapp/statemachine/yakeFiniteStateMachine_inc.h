@@ -38,7 +38,7 @@ bool StateMachine<StateIdType>::_stateExists( const StateId & id ) const
 template<typename StateIdType>
 bool StateMachine<StateIdType>::_executeState( const StateId & id )
 {
-	StateFnMap::const_iterator it = mStates.find( id );
+	typename StateFnMap::const_iterator it = mStates.find( id );
 	if (it == mStates.end())
 		return false;
 	it->second();
@@ -62,7 +62,7 @@ void StateMachine<StateIdType>::unregState( const StateId & id )
 	// @todo handle mCurrentStateId == id
 
 	// remove state
-	StateFnMap::iterator it = mStates.find( id );
+	typename StateFnMap::iterator it = mStates.find( id );
 	if (it != mStates.end())
 		mStates.erase( it );
 
@@ -77,7 +77,7 @@ void StateMachine<StateIdType>::regTransition( const StateId & idFrom, const Sta
 	if (!_stateExists(idTo))
 		return; // @todo report error
 	StateIdPair pair = std::make_pair(idFrom,idTo);
-	TransitionMap::const_iterator itFind = mTransitions.find( pair );
+	typename TransitionMap::const_iterator itFind = mTransitions.find( pair );
 	if (itFind != mTransitions.end())
 		mTransitions[ pair ] = fns;
 	else
@@ -102,7 +102,7 @@ void StateMachine<StateIdType>::addTransitionFn( const StateId & idFrom, const S
 	if (!_stateExists(idFrom) || !_stateExists(idTo))
 		return; // @todo report error
 	StateIdPair pair = std::make_pair(idFrom,idTo);
-	TransitionMap::iterator itFind = mTransitions.find( pair );
+	typename TransitionMap::iterator itFind = mTransitions.find( pair );
 	if (itFind == mTransitions.end())
 		return; // @todo report error
 	itFind->second.push_back( fn );
@@ -110,7 +110,7 @@ void StateMachine<StateIdType>::addTransitionFn( const StateId & idFrom, const S
 template<typename StateIdType>
 bool StateMachine<StateIdType>::_getTransition( const StateIdPair & idpair, TransitionFnList & fns ) const
 {
-	TransitionMap::const_iterator itFind = mTransitions.find( idpair );
+	typename TransitionMap::const_iterator itFind = mTransitions.find( idpair );
 	if (itFind == mTransitions.end())
 		return false; // @todo report error?
 	fns = itFind->second;

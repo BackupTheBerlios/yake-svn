@@ -38,12 +38,12 @@ namespace dotscene {
 	typedef ::yake::base::templates::Vector< graphics::ISceneNode* > SceneNodeList;
 
 	/** DotSceneReader base class providing default implementation for DOM parsing.
-	* \todo read lights, environment, external references ..
+	* \todo read environment, external references ..
 	*/
 	class DotSceneSerializer
 	{
 	public:
-		~DotSceneSerializer() {}
+		virtual ~DotSceneSerializer() {}
 
 		String getName() const
 		{ return "yake.data.dotScene"; }
@@ -72,12 +72,16 @@ namespace dotscene {
 	protected:
 		/// Default implementations for common functions.
 
-		virtual void readScene( const SharedPtr<dom::INode> & pNode, graphics::ISceneNode* pParentSN );
+		//virtual void readWorld( const SharedPtr<dom::INode>& pNode, graphics::ISceneNode* pParen );
+		virtual void readScene( const SharedPtr<dom::INode>& pNode, graphics::ISceneNode* pParentSN);
+		
 		virtual void readNodes( const SharedPtr<dom::INode> & pNodes, graphics::ISceneNode* pParentSN );
 		virtual void readNode( const SharedPtr<dom::INode> & pNode, graphics::ISceneNode* pParentSN );
 		virtual void readEntity( const SharedPtr<dom::INode> & pNode, graphics::ISceneNode* pParentSN );
-		virtual void readOrientation( const SharedPtr<dom::INode> & pNode, Quaternion & orientation );
+		virtual void readRotation( const SharedPtr<dom::INode> & pNode, Quaternion & rotation );
 		virtual void readPosition( const SharedPtr<dom::INode> & pNode, Vector3 & position );
+		virtual void readScale( const SharedPtr<dom::INode> & pNode, Vector3& rScale );
+		virtual void readVector( const SharedPtr<dom::INode> & pNode, Vector3& rVec );
 		
 		/// Lights (! :P )
 		virtual void readLight( const SharedPtr<dom::INode>& pNode, graphics::ISceneNode* pParentSN );
@@ -178,11 +182,17 @@ namespace dotscene {
 				readPosition( pChild, position );
 				pChildSN->setPosition( position );
 			}
-			else if (childNodeName == "orientation")
+			else if (childNodeName == "rotation")
 			{
-				Quaternion orientation;
-				readOrientation( pChild, orientation );
-				pChildSN->setOrientation( orientation );
+				Quaternion rotation;
+				readRotation( pChild, rotation );
+				pChildSN->setOrientation( rotation );
+			}
+			else if (childNodeName == "scale")
+			{
+				Vector3 scale;
+				readScale( pChild, scale );
+				pChildSN->setScale( scale );
 			}
 			else if (childNodeName == "node" )
 				readNode( pChild, pChildSN );
@@ -205,26 +215,38 @@ namespace dotscene {
 		pEnt->setCastsShadow( (castsShadow == "yes") );
 		pParentSN->attachEntity( pEnt );
 	}
+	
+	//------------------------------------------------------
+	void DotSceneSerializer::readVector( const SharedPtr<dom::INode>& pNode, Vector3& rVec )
+	{
+		YAKE_ASSERT( pNode );
+		rVec.x = atof( pNode->getAttributeValueAs<String>("x").c_str() );
+		rVec.y = atof( pNode->getAttributeValueAs<String>("y").c_str() );
+		rVec.z = atof( pNode->getAttributeValueAs<String>("z").c_str() );
+	}
 
 	//------------------------------------------------------
 	void DotSceneSerializer::readPosition( const SharedPtr<dom::INode> & pNode, Vector3 & position )
 	{
-		YAKE_ASSERT( pNode );
-		position.x = atof( pNode->getAttributeValueAs<String>("x").c_str() );
-		position.y = atof( pNode->getAttributeValueAs<String>("y").c_str() );
-		position.z = atof( pNode->getAttributeValueAs<String>("z").c_str() );
+		readVector( pNode, position );
 	}
 
 	//------------------------------------------------------
-	void DotSceneSerializer::readOrientation( const SharedPtr<dom::INode> & pNode, Quaternion & orientation )
+	void DotSceneSerializer::readScale( const SharedPtr<dom::INode>& pNode, Vector3& rScale )
+	{
+		readVector( pNode, rScale );
+	}
+	
+	//------------------------------------------------------
+	void DotSceneSerializer::readRotation( const SharedPtr<dom::INode> & pNode, Quaternion & rotation )
 	{
 		YAKE_ASSERT( pNode );
 		if (pNode->getAttributeValueAs<String>("qx") != "")
 		{
-			orientation.x = atof( pNode->getAttributeValueAs<String>("qx").c_str() );
-			orientation.y = atof( pNode->getAttributeValueAs<String>("qy").c_str() );
-			orientation.z = atof( pNode->getAttributeValueAs<String>("qz").c_str() );
-			orientation.w = atof( pNode->getAttributeValueAs<String>("qw").c_str() );
+			rotation.x = atof( pNode->getAttributeValueAs<String>("qx").c_str() );
+			rotation.y = atof( pNode->getAttributeValueAs<String>("qy").c_str() );
+			rotation.z = atof( pNode->getAttributeValueAs<String>("qz").c_str() );
+			rotation.w = atof( pNode->getAttributeValueAs<String>("qw").c_str() );
 		}
 		if (pNode->getAttributeValueAs<String>("axisx") != "")
 		{
@@ -232,7 +254,7 @@ namespace dotscene {
 			axis.x = atof( pNode->getAttributeValueAs<String>("axisx").c_str() );
 			axis.y = atof( pNode->getAttributeValueAs<String>("axisy").c_str() );
 			axis.z = atof( pNode->getAttributeValueAs<String>("axisz").c_str() );
-			orientation.FromAxes( &axis );
+			rotation.FromAxes( &axis );
 		}
 		if (pNode->getAttributeValueAs<String>("anglex") != "")
 		{
@@ -241,7 +263,7 @@ namespace dotscene {
 			axis.y = atof( pNode->getAttributeValueAs<String>("anglex").c_str() );
 			axis.z = atof( pNode->getAttributeValueAs<String>("anglex").c_str() );
 			real angle = atof( pNode->getAttributeValueAs<String>("angle").c_str() );;
-			orientation.FromAngleAxis( angle, axis );
+			rotation.FromAngleAxis( angle, axis );
 		}
 	}
 	//------------------------------------------------------
@@ -287,7 +309,7 @@ namespace dotscene {
 	{
 		String name = pNode->getAttributeValueAs<String>( "name" );
 
-		std::cout << "readEntity() [name=" << name << "]" << std::endl;
+		std::cout << "readLight() [name=" << name << "]" << std::endl;
 		YAKE_ASSERT( pNode );
 		YAKE_ASSERT( pParentSN );
 		
@@ -308,7 +330,7 @@ namespace dotscene {
 		pParentSN->attachLight( pLight );
 
 		const dom::NodeList& nodes = pNode->getNodes();
-		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); it)
+		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String childNodeName = (*it)->getValueAs<String>( "name" );
 			

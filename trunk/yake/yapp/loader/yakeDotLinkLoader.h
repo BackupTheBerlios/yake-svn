@@ -45,7 +45,7 @@ namespace model {
 		typedef base::templates::Deque< SharedModelLinkPtr > SharedModelLinkList;
 	private:
 		void parseLink( const data::dom::INode & rLinkNode );
-		complex::Model*			mpModel;
+		complex::Model*		mpModel;
 	};
 
 }

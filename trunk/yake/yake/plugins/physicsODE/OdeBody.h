@@ -43,6 +43,8 @@ namespace yake {
 			virtual void setMassBox(real lx, real ly, real lz, real density = 1.);
 			virtual void setMassSphere(real r, real density = 1.);
 			virtual void setMass(real mass);
+			/// TODO Implement mass addition
+			/// void dMassAdd (dMass *a, const dMass *b);
 			virtual real getMass() const;
 			virtual IBody::MassType getType() const;
 			virtual void translateMass( const Vector3 & d );
