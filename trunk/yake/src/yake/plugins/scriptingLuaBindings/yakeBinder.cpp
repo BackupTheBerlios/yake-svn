@@ -136,7 +136,8 @@ namespace lua {
 		
 		module( YAKE_MODULE )
 		[
-			def( "createTimer", &yake::base::timer::createTimer )
+			//def( "createTimer", &yake::base::timer::createTimer )
+			def( "getTime", &yake::base::native::getTime )
 		];
 		
 		// Log

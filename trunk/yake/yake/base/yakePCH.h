@@ -59,6 +59,8 @@
 #include "yakeMovable.h"
 #include "yakeCommandInterface.h"
 
+#include "yakeTimer.h"
+
 
 
 #endif // YAKE_BASE_PCH_H

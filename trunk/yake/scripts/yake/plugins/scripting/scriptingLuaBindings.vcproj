@@ -33,10 +33,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lua.lib luabind.lib"
+				AdditionalDependencies="luad.lib luabindd.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies\lua\lib\debug;../../../../dependencies\luabind\lib\debug"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies\lua\lib;../../../../dependencies\luabind\lib"
 				ModuleDefinitionFile="..\..\..\..\src\yake\plugins\scriptingLua\plugin.def"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"

@@ -42,7 +42,7 @@ class Timer;
 
 namespace timer 
 {
-	Timer* createTimer();
+	YAKE_BASE_API Timer* createTimer();
 }
 
 /** Timer interface.
