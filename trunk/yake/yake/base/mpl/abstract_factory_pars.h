@@ -63,7 +63,7 @@ struct abstract_factory_unit_any
 // factory unit with a predefined set of constructor arguments
 namespace // unnamed
 {
-	template <class AbstractProduct, class Parameters, int Size = boost::mpl::size<Parameters>::value>
+	template <class AbstractProduct, class Parameters, int ParametersSize = boost::mpl::size<Parameters>::value>
 	struct do_create_function; // throw compile-time error
 
 	template <class AbstractProduct, class Parameters>
