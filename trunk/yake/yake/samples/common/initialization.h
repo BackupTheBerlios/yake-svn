@@ -126,6 +126,8 @@ namespace // unnamed
 	{
 		virtual void load_system() 
 		{ m_system = create<System>(); Base::load_system(); }
+		// ############################################################### work on here tomorrow
+		// WE NEED BASE HERE => LINEAR INHERITANCE ... SOLVED THIS, SEE ABSTRACT FACTORY SAMPLE
 
 		boost::shared_ptr<System> get_system()
 		{ return m_system; }
