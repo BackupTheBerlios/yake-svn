@@ -183,7 +183,7 @@ namespace physics {
 	public:
 		virtual ~IPropertyQueryHandler() {}
 		virtual const PropertyNameList& getPropertyNames() const = 0;
-		virtual void setProperty( const String & rName, const boost::any & rValue ) = 0;
+		virtual void setProperty( const String& rName, const boost::any& rValue ) = 0;
 	};
 
 	typedef uint32 TriangleMeshId;
@@ -204,15 +204,15 @@ namespace physics {
 		TriangleMeshDesc()
 		{
 		}
-		TriangleMeshDesc(	const VertexVector & rVertices,
-							const IndexVector & rIndices ) :
+		TriangleMeshDesc(	const VertexVector& rVertices,
+							const IndexVector& rIndices ) :
 				vertices( rVertices ),
 				indices( rIndices )
 		{
 		}
-		TriangleMeshDesc(	const VertexVector & rVertices,
-							const IndexVector & rIndices,
-							const NormalVector & rNormals ) :
+		TriangleMeshDesc(	const VertexVector& rVertices,
+							const IndexVector& rIndices,
+							const NormalVector& rNormals ) :
 				vertices( rVertices ),
 				indices( rIndices ),
 				normals( rNormals )
@@ -230,8 +230,8 @@ namespace physics {
 		struct Desc
 		{
 			Desc(	const ShapeType type_,
-					const Vector3 & rPosition = Vector3::kZero, 
-					const Quaternion & rOrientation = Quaternion::kIdentity,
+					const Vector3& rPosition = Vector3::kZero, 
+					const Quaternion& rOrientation = Quaternion::kIdentity,
 					IMaterial* material_ = 0 ) :
 				type( type_ ),
 				position( rPosition ),
@@ -251,8 +251,8 @@ namespace physics {
 			SphereDesc(	real radius_ = real(1.),
 						// base class:
 						IMaterial* material_ = 0,
-						const Vector3 & rPosition = Vector3::kZero, 
-						const Quaternion & rOrientation = Quaternion::kIdentity
+						const Vector3& rPosition = Vector3::kZero, 
+						const Quaternion& rOrientation = Quaternion::kIdentity
 						 ) :
 				Desc( ST_SPHERE, rPosition, rOrientation, material_ ),
 				radius( radius_ )
@@ -261,11 +261,11 @@ namespace physics {
 		};
 		struct BoxDesc : Desc
 		{
-			BoxDesc(	const Vector3 & rDimensions = Vector3(1,1,1),
+			BoxDesc(	const Vector3& rDimensions = Vector3(1,1,1),
 						// base class:
 						IMaterial* material_ = 0,
-						const Vector3 & rPosition = Vector3::kZero, 
-						const Quaternion & rOrientation = Quaternion::kIdentity
+						const Vector3& rPosition = Vector3::kZero, 
+						const Quaternion& rOrientation = Quaternion::kIdentity
 						 ) :
 				Desc( ST_BOX, rPosition, rOrientation, material_ ),
 				dimensions( rDimensions )
@@ -274,12 +274,12 @@ namespace physics {
 		};
 		struct PlaneDesc : Desc
 		{
-			PlaneDesc(	const Vector3 & rNormal = Vector3(0,1,0),
+			PlaneDesc(	const Vector3& rNormal = Vector3(0,1,0),
 						const real d_ = real(1.),
 						// base class:
 						IMaterial* material_ = 0,
-						const Vector3 & rPosition = Vector3::kZero, 
-						const Quaternion & rOrientation = Quaternion::kIdentity
+						const Vector3& rPosition = Vector3::kZero, 
+						const Quaternion& rOrientation = Quaternion::kIdentity
 						 ) :
 				Desc( ST_PLANE, rPosition, rOrientation, material_ ),
 				normal( rNormal ),
@@ -294,8 +294,8 @@ namespace physics {
 						const real radius_ = real(1.),
 						// base class:
 						IMaterial* material_ = 0,
-						const Vector3 & rPosition = Vector3::kZero, 
-						const Quaternion & rOrientation = Quaternion::kIdentity
+						const Vector3& rPosition = Vector3::kZero, 
+						const Quaternion& rOrientation = Quaternion::kIdentity
 						 ) :
 				Desc( ST_CAPSULE, rPosition, rOrientation, material_ ),
 				height( height_ ),
@@ -310,8 +310,8 @@ namespace physics {
 			TriMeshDesc(	const TriangleMeshId meshId_,
 							// base class:
 							IMaterial* material_ = 0,
-							const Vector3 & rPosition = Vector3::kZero, 
-							const Quaternion & rOrientation = Quaternion::kIdentity
+							const Vector3& rPosition = Vector3::kZero, 
+							const Quaternion& rOrientation = Quaternion::kIdentity
 						 ) :
 				Desc( ST_TRIANGLE_MESH, rPosition, rOrientation, material_ ),
 				meshId( meshId_ )
@@ -356,6 +356,80 @@ namespace physics {
 			real		totalMass;
 			Vector3		massOffset;
 		};
+
+		struct MassDesc
+		{
+			MassDesc( real shapeDensity, const Vector3& rOffset = Vector3::kZero ) : 
+					density( shapeDensity ), 
+					offset( rOffset )
+			{}
+			
+			virtual ~MassDesc() {}
+			
+			real 			density; /// For all of them. You can set total mass via setMass
+			Vector3		offset; /// Mass can be offseted. TODO Add rotation "offset"?
+		};
+		
+		struct SphereMassDesc : public MassDesc
+		{
+			SphereMassDesc(	real radiusValue,
+								real shapeDensity, 
+								const Vector3& rOffset = Vector3::kZero ) :
+									MassDesc( shapeDensity, rOffset ),
+							 		radius( radiusValue )
+			{}
+			
+			real radius;
+		};
+		
+		struct BoxMassDesc : public MassDesc
+		{
+			BoxMassDesc(	real boxSizeX,
+							real boxSizeY,
+							real boxSizeZ,
+							real shapeDensity,
+							const Vector3& rOffset = Vector3::kZero  ) :
+								MassDesc( shapeDensity, rOffset ),
+								sizeX( boxSizeX ),
++								sizeY( boxSizeY ),
+								sizeZ( boxSizeZ )
+			{}
+			
+			real	sizeX;
+			real sizeY;
+			real sizeZ;
+		};
+		
+		struct CapsuleMassDesc : public MassDesc /// Corresponds to ODE CappedCylinder
+		{
+			CapsuleMassDesc(	real capRadius,
+								real capLength,
+								real shapeDensity,
+								const Vector3& rOffset = Vector3::kZero ) :
+									MassDesc( shapeDensity, rOffset ),
+									radius( capRadius ),
+									length( capLength )
+			{}
+			
+			real radius;
+			real length;
+		};
+		
+		struct CylinderMassDesc : public MassDesc
+		{
+			CylinderMassDesc(	real cylRadius,
+								real cylLength,
+								real shapeDensity,
+								const Vector3& rOffset = Vector3::kZero ) :
+									MassDesc( shapeDensity, rOffset ),
+									radius( cylRadius ),
+									length( cylLength )
+			{}
+			
+			real radius;
+			real length;
+		};
+
 	public:
 		virtual ~IBody() {}
 
@@ -369,7 +443,15 @@ namespace physics {
 			@Remarks It may be that certain physics engine implementations restrict the freedom to choose a
 			unit but up to now we have no knowledge of that.
 		*/
-		virtual void setMass(const real mass) = 0;
+		virtual void setMass( const real mass ) = 0;
+		
+		/** Sets the mass of the body based on appropriate MassDesc. 
+		*/
+		virtual void setMass( const MassDesc& rDesc ) = 0;
+		
+		/** Adds the mass to the body based on appropriate MassDesc. 
+		*/
+		virtual void addMass( const MassDesc& rDesc ) = 0;
 
 		/** Return the mass of the body. The unit can be freely chosen by the application
 			but should be consistent within the simulation, of course.
@@ -380,7 +462,7 @@ namespace physics {
 
 		/** Sets the linear velocity of the body/actor directly, i.e. with immediate effect. 
 		*/
-		virtual void setLinearVelocity(const Vector3 & rVelocity) = 0;
+		virtual void setLinearVelocity( const Vector3& rVelocity ) = 0;
 
 		/** Returns the current velocity of the body.
 		*/
@@ -388,7 +470,7 @@ namespace physics {
 
 		/** Sets the angular velocity [rad/s] of the body/actor directly, i.e. with immediate effect. 
 		*/
-		virtual void setAngularVelocity(const Vector3 & rVelocity) = 0;
+		virtual void setAngularVelocity( const Vector3& rVelocity ) = 0;
 
 		/** Returns the angular velocity of the body in [rad/s].
 		*/
@@ -396,34 +478,34 @@ namespace physics {
 
 		/** Adds a force defined in the global reference frame. 
 		*/
-		virtual void addForce( const Vector3 & rForce ) = 0;
+		virtual void addForce( const Vector3& rForce ) = 0;
 
 		/** Adds a force defined in the global reference frame, acting at a position defined
 			in the global reference frame. 
 		*/
-		virtual void addForceAtPos( const Vector3 & rForce, const Vector3 & rPos ) = 0;
+		virtual void addForceAtPos( const Vector3& rForce, const Vector3& rPos ) = 0;
 
 		/** Adds a force defined in the local reference frame.
 		*/
-		virtual void addLocalForce( const Vector3 & rForce ) = 0;
+		virtual void addLocalForce( const Vector3& rForce ) = 0;
 
 		/** Adds a force defined in the local reference frame, acting at a position defined
 			in the local reference frame (relative to the actor the body object belongs to).
 		*/
-		virtual void addLocalForceAtLocalPos( const Vector3 & rForce, const Vector3 & rPos ) = 0;
+		virtual void addLocalForceAtLocalPos( const Vector3& rForce, const Vector3& rPos ) = 0;
 
 		/** Adds a force defined in the local reference frame, acting at a position defined
 			in the global reference frame. 
 		*/
-		virtual void addLocalForceAtPos( const Vector3 & rForce, const Vector3 & rPos ) = 0;
+		virtual void addLocalForceAtPos( const Vector3& rForce, const Vector3& rPos ) = 0;
 
 		/** Adds a torque defined in the global reference frame. 
 		*/
-		virtual void addTorque( const Vector3 & rTorque ) = 0;
+		virtual void addTorque( const Vector3& rTorque ) = 0;
 
 		/** Adds a torque defined in the local reference frame. 
 		*/
-		virtual void addLocalTorque( const Vector3 & rTorque ) = 0;
+		virtual void addLocalTorque( const Vector3& rTorque ) = 0;
 	};
 
 	class IActor : public Movable
@@ -442,15 +524,15 @@ namespace physics {
 		virtual bool createBody() = 0;
 		virtual IBody* getBody() const = 0;
 
-		virtual SharedPtr<IShape> createShape( const IShape::Desc & rShapeDesc ) = 0;
-		virtual void destroyShape( SharedPtr<IShape> & rShape ) = 0;
+		virtual SharedPtr<IShape> createShape( const IShape::Desc& rShapeDesc ) = 0;
+		virtual void destroyShape( SharedPtr<IShape>& rShape ) = 0;
 		virtual const ShapePtrVector getShapes() const = 0;
 
 		//virtual void updateMassFromShapes() = 0;
 
 		typedef Signal0<void> SignalCollisionEntered;
-		virtual void subscribeToCollisionEnteredSignal( const SignalCollisionEntered::slot_type & rSlot ) = 0;
-		virtual void subscribeToCollisionExitedSignal( const SignalCollisionEntered::slot_type & rSlot ) = 0;
+		virtual void subscribeToCollisionEnteredSignal( const SignalCollisionEntered::slot_type& rSlot ) = 0;
+		virtual void subscribeToCollisionExitedSignal( const SignalCollisionEntered::slot_type& rSlot ) = 0;
 	};
 
 	class IJoint
@@ -459,8 +541,8 @@ namespace physics {
 		struct DescBase
 		{
 			DescBase(	const JointType type_, 
-						IActor & rFirst,
-						IActor & rSecond ) :
+						IActor& rFirst,
+						IActor& rSecond ) :
 				type( type_ ),
 				actor1( rFirst ),
 				actor2( rSecond )
@@ -476,18 +558,18 @@ namespace physics {
 
 		struct DescFixed : DescBase
 		{
-			DescFixed(	IActor & rFirst,
-						IActor & rSecond ) :
+			DescFixed(	IActor& rFirst,
+						IActor& rSecond ) :
 				DescBase( JT_FIXED,rFirst,rSecond )
 			{}
 		};
 
 		struct DescHinge : DescBase
 		{
-			DescHinge(	IActor & rFirst,
-						IActor & rSecond,
-						const Vector3 & rAxis0,
-						const Vector3 & rAnchor ) :
+			DescHinge(	IActor& rFirst,
+						IActor& rSecond,
+						const Vector3& rAxis0,
+						const Vector3& rAnchor ) :
 				DescBase( JT_HINGE,rFirst,rSecond ),
 				axis0( rAxis0 ),
 				anchor( rAnchor )
@@ -498,11 +580,11 @@ namespace physics {
 
 		struct DescHinge2 : DescBase
 		{
-			DescHinge2(	IActor & rFirst,
-						IActor & rSecond,
-						const Vector3 & rAxis0, 
-						const Vector3 & rAxis1,
-						const Vector3 & rAnchor ) :
+			DescHinge2(	IActor& rFirst,
+						IActor& rSecond,
+						const Vector3& rAxis0, 
+						const Vector3& rAxis1,
+						const Vector3& rAnchor ) :
 				DescBase( JT_HINGE2,rFirst,rSecond ),
 				axis0( rAxis0 ),
 				axis1( rAxis1 ),
@@ -517,7 +599,7 @@ namespace physics {
 		{
 			DescBall(	IActor& rFirst,
 						IActor& rSecond,
-						Vector3 const& rAnchor ) :
+						const Vector3& rAnchor ) :
 				DescBase( JT_BALL, rFirst, rSecond ),
 				anchor( rAnchor )
 			{}
@@ -528,7 +610,7 @@ namespace physics {
 		{
 			DescSlider(	IActor& rFirst,
 						IActor& rSecond,
-						Vector3 const& rAxis ) :
+						const Vector3& rAxis ) :
 				DescBase( JT_SLIDER, rFirst, rSecond ),
 				axis( rAxis )
 			{}
@@ -539,9 +621,9 @@ namespace physics {
 		{
 			DescUniversal(	IActor& rFirst,
 							IActor& rSecond,
-							Vector3 const& rAxis0, 
-							Vector3 const& rAxis1,
-							Vector3 const& rAnchor ) :
+							const Vector3& rAxis0, 
+							const Vector3& rAxis1,
+							const Vector3& rAnchor ) :
 				DescBase( JT_UNIVERSAL, rFirst, rSecond ),
 				axis0( rAxis0 ),
 				axis1( rAxis1 ),
@@ -558,9 +640,9 @@ namespace physics {
 
 		virtual JointType getType() const = 0;
 		virtual size_t getNumAxis() const = 0;
-		virtual void setAxis(size_t axisIndex, const Vector3 & rAxis) = 0;
+		virtual void setAxis(size_t axisIndex, const Vector3& rAxis) = 0;
 		virtual size_t getNumAnchors() const = 0;
-		virtual void setAnchor(size_t anchorIndex, const Vector3 & rAnchor) = 0;
+		virtual void setAnchor(size_t anchorIndex, const Vector3& rAnchor) = 0;
 		virtual void setMotor(size_t axisIndex, real velocityTarget, real maximumForce) = 0;
 		virtual void setLimits(size_t axisIndex, real low, real high) = 0;
 		virtual void setBreakable(bool enabled) = 0;
@@ -576,20 +658,20 @@ namespace physics {
 	public:
 		virtual ~IWorld() {}
 
-		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase & rJointDesc ) = 0;
-		virtual SharedPtr<IActor> createActor( const IActor::Desc & rActorDesc = IActor::Desc() ) = 0;
-		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc & rAvatarDesc ) = 0;
-		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc & rMatDesc ) = 0;
+		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase& rJointDesc ) = 0;
+		virtual SharedPtr<IActor> createActor( const IActor::Desc& rActorDesc = IActor::Desc() ) = 0;
+		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc& rAvatarDesc ) = 0;
+		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc& rMatDesc ) = 0;
 
-		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc & rTrimeshDesc ) = 0;
+		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc& rTrimeshDesc ) = 0;
 
-		virtual Deque<ShapeType> getSupportedShapes(bool bStatic = true, bool bDynamic = true) const = 0;
+		virtual Deque<ShapeType> getSupportedShapes( bool bStatic = true, bool bDynamic = true ) const = 0;
 		virtual Deque<JointType> getSupportedJoints() const = 0;
 		virtual Deque<String> getSupportedSolvers() const = 0;
 		virtual bool useSolver( const String & rSolver ) = 0;
 		virtual String getCurrentSolver() const = 0;
 		virtual const PropertyNameList& getCurrentSolverParams() const = 0;
-		virtual void setCurrentSolverParam( const String & rName, const boost::any & rValue ) = 0;
+		virtual void setCurrentSolverParam( const String& rName, const boost::any& rValue ) = 0;
 
 		virtual void step(const real timeElapsed) = 0;
 	};
