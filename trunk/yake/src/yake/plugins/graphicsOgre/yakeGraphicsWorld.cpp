@@ -33,6 +33,7 @@
 #include <yake/plugins/graphicsOgre/graphicsOgreViewport.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreLight.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreCore.h>
+#include <yake/plugins/graphicsOgre/graphicsOgreParticleSystem.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreGeometryAccess.h>
 
 //============================================================================
@@ -77,6 +78,13 @@ namespace ogre3d {
 		YAKE_ASSERT( msCore ).debug("need a core!");
 		return new OgreLight( msCore->getSceneMgr() );
  	}
+
+	//-----------------------------------------------------
+	IParticleSystem* GraphicalWorld::createParticleSystem( const base::String& rPSTemplateName )
+	{
+		YAKE_ASSERT( msCore ).debug("need a core!");
+		return new OgreParticleSystem( *msCore->getParticleSysMgr(), rPSTemplateName );
+	}
 
 	//-----------------------------------------------------
 	ICamera* GraphicalWorld::createCamera()

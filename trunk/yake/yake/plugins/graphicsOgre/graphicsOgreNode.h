@@ -44,6 +44,7 @@ namespace ogre3d {
 		virtual void attachEntity( IEntity* pEntity );
 		virtual void attachCamera( ICamera* pCamera );
 		virtual void attachLight( ILight* pLight );
+		virtual void attachParticleSystem( IParticleSystem* pParticleSys );
 		virtual void removeAndDestroyAllChildren();
 
 		Ogre::SceneNode* getSceneNode_() const

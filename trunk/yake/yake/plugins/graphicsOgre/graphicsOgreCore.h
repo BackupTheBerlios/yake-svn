@@ -49,7 +49,8 @@ namespace ogre3d {
 		inline Ogre::SceneManager* getSceneMgr() const { return mSceneMgr; }
 		inline Ogre::Root* getRoot() const { return mRoot; }
 		inline Ogre::RenderWindow* getRenderWindow() const { return mRWin; }
-		//inline Ogre::Camera* getCamera() const { return mCam; }
+		inline Ogre::ParticleSystemManager* getParticleSysMgr() const 
+		{ return Ogre::ParticleSystemManager::getSingletonPtr(); }
 	protected:
 		void setupResourcesFromConfigFile();
 

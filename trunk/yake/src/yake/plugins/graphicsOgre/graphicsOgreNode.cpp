@@ -23,6 +23,7 @@
 #include <yake/plugins/graphicsOgre/graphicsOgreEntity.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreLight.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreNode.h>
+#include <yake/plugins/graphicsOgre/graphicsOgreParticleSystem.h>
 
 namespace yake {
 namespace graphics {
@@ -128,6 +129,18 @@ namespace ogre3d {
 			return;
 
 		mSceneNode->attachObject( static_cast<OgreEntity*>(pEntity)->getEntity_() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::attachParticleSystem( IParticleSystem* pParticleSys )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		YAKE_ASSERT( pParticleSys ).warning("need a particle system!");
+		
+		if ( NULL == pParticleSys )
+			return;
+
+		mSceneNode->attachObject( static_cast<OgreParticleSystem*>( pParticleSys )->getParticleSystem_() );
 	}
 
 	//------------------------------------------------------

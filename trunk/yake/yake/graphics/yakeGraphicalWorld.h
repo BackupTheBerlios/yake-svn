@@ -168,6 +168,7 @@ namespace graphics {
 		virtual void attachEntity( IEntity* pEntity ) = 0;
 		virtual void attachCamera( ICamera* pCamera ) = 0;
 		virtual void attachLight( ILight* pLight ) = 0;
+		virtual void attachParticleSystem( IParticleSystem* pParticleSys ) = 0;
 		virtual void removeAndDestroyAllChildren() = 0;
 		virtual void setScale( const Vector3 & scale ) = 0;
 		virtual Vector3 getScale() const = 0;
@@ -199,6 +200,8 @@ namespace graphics {
 		virtual ICamera* createCamera() = 0;
 
 		virtual ISceneNode* createSceneNode() = 0;
+
+		virtual IParticleSystem* createParticleSystem( const base::String& rPSTemplateName ) = 0;
 
 		/** Create an (placeable) instance of a mesh.
 			\param mesh Can either be a mesh file loaded from a resource or a procedural mesh.

@@ -53,6 +53,7 @@ namespace ogre3d {
 		virtual ISceneNode* createSceneNode();
 		virtual IEntity* createEntity(const base::String & mesh);
 		virtual ILight* createLight();
+		virtual IParticleSystem* createParticleSystem( const base::String& rPSTemplateName );
 		virtual ICamera* createCamera();
 		virtual IViewport* createViewport(ICamera* pCamera);
 
