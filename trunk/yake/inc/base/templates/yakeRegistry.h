@@ -44,19 +44,17 @@ namespace base
 namespace templates
 {
 
-/* Helpers */
-template< typename Interface_ >
-templates::Pointer< Interface_ > create( yake::base::String sImplementation )
-{
-	return Interface_::getRegistry().create( sImplementation );
-};
+/* Helpers */ // todo: test
+#define FUNCTION( number ) \
+	YAKE_TYPES_ONE_FREE( number ) \
+	templates::Pointer< T > create( typename T::RegistryType::Id id, YAKE_ARGUMENTS_ONE_FREE( number ) ) \
+	{ return T::getRegistry().getObject( id ).create( YAKE_USE_ARGUMENTS( number ) ); }
+YAKE_IMPLEMENT_FUNCTION( FUNCTION )
+#undef FUNCTION
 
 template< typename Interface_ >
 templates::Pointer< Interface_ > create()
-{
-	YAKE_ASSERT( Interface_::getRegistry().getIdentifiers().size() > 0 ).debug( "No default implementation available." );
-	return Interface_::getRegistry().create( *Interface_::getRegistry().getIdentifiers().begin() );
-};
+{ return Interface_::getDefaultCreator().create(); };
 
 /* Registry */
 template< class ConfigClass >
@@ -72,7 +70,7 @@ public:
  
 // Class
 public:
-	Registry() {}
+	Registry() : m_pDefaultCreator( 0 ) {}
 
 private:
   // No copy.
@@ -83,10 +81,24 @@ private:
 public:
 #define FUNCTION( number ) \
 	YAKE_TYPES( number ) \
-	yake::base::templates::Pointer< Base > create( Id id, YAKE_ARGUMENTS_ONE_FREE( number ) ) \
+	templates::Pointer< Base > create( Id id, YAKE_ARGUMENTS_ONE_FREE( number ) ) \
 	{ return getObject( id )->create( YAKE_USE_ARGUMENTS( number ) ); }
 YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 #undef FUNCTION
+
+	ICreator& getDefaultCreator()
+	{
+    YAKE_ASSERT( getIdentifiers().size() > 0 ).debug( "No default creator available." );
+		if( !m_pDefaultCreator ) m_pDefaultCreator = getObject( *getIdentifiers().begin() );
+		return m_pDefaultCreator;
+	}
+
+	void setDefaultCreator( const ICreator& rCreator )
+	{	m_pDefaultCreator = &rCreator; }
+
+// Data
+private:
+	ICreator* m_pDefaultCreator;
 };
 
 
