@@ -208,7 +208,7 @@ namespace dotscene {
 		YAKE_ASSERT( pNode );
 		YAKE_ASSERT( pParentSN );
 		String name = (pNode->getAttributeValueAs<String>("name"));
-		String meshName = (pNode->getAttributeValueAs<String>("meshfile"));
+		String meshName = (pNode->getAttributeValueAs<String>("meshFile"));
 		String castsShadow = ::yake::base::StringUtil::toLowerCase(pNode->getAttributeValueAs<String>("castsShadow"));
 		graphics::IEntity* pEnt = mGWorld->createEntity( meshName );
 		YAKE_ASSERT( pEnt );
