@@ -22,7 +22,7 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <yake/samples/graphics/pch.h>
+#include <yapp/samples/graphics/dotScene/yakePCH.h>
 #include <yapp/model/yakeGraphical.h>
 
 using namespace yake;
@@ -84,7 +84,7 @@ public:
 	void setupScene()
 	{
 		mGraphical = new app::model::Graphical();
-		YAKE_ASSERT( pGraphical );
+		YAKE_ASSERT( mGraphical );
 		mGraphical->fromDotScene( mSceneFilename, mGWorld.get() );
 	}
 
@@ -183,7 +183,7 @@ int main( int argc, char** argv )
 	{
 		std::cout << std::endl << "A simple demo (viewing tool) ;) provided for YAKE by Nikita Buida" << std::endl;
 		std::cout << std::endl << "(Some code borrowed from GraphicsDemo)";
-		std::cout << std::endl << "Intended for use as debug tool by Simba";
+		std::cout << std::endl << "Intended to be used as a debug tool by Simba";
 		std::cout << std::endl << "Use arrow keys and Z, X to move camera around" << std::endl;
 		std::cout << std::endl;
 		
