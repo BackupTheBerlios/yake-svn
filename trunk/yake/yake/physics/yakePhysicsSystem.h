@@ -65,8 +65,8 @@ namespace physics {
 		typedef BodyVector::const_iterator const_iterator;
 		typedef BodyVector::value_type value_type;
 
-		BodyGroup( const BodyGroup & rkBodyGroup );
-		BodyGroup( const BodyVector & rkBodies );
+		BodyGroup( const BodyGroup & rBodyGroup );
+		BodyGroup( const BodyVector & rBodies );
 		BodyGroup();
 		~BodyGroup();
 
@@ -183,7 +183,7 @@ namespace physics {
 	public:
 		virtual ~IPropertyQueryHandler() {}
 		virtual const PropertyNameList& getPropertyNames() const = 0;
-		virtual void setProperty( const String & rkName, const boost::any & rkValue ) = 0;
+		virtual void setProperty( const String & rName, const boost::any & rValue ) = 0;
 	};
 
 	typedef uint32 TriangleMeshId;
@@ -204,18 +204,18 @@ namespace physics {
 		TriangleMeshDesc()
 		{
 		}
-		TriangleMeshDesc(	const VertexVector & rkVertices,
-							const IndexVector & rkIndices ) :
-				vertices( rkVertices ),
-				indices( rkIndices )
+		TriangleMeshDesc(	const VertexVector & rVertices,
+							const IndexVector & rIndices ) :
+				vertices( rVertices ),
+				indices( rIndices )
 		{
 		}
-		TriangleMeshDesc(	const VertexVector & rkVertices,
-							const IndexVector & rkIndices,
-							const NormalVector & rkNormals ) :
-				vertices( rkVertices ),
-				indices( rkIndices ),
-				normals( rkNormals )
+		TriangleMeshDesc(	const VertexVector & rVertices,
+							const IndexVector & rIndices,
+							const NormalVector & rNormals ) :
+				vertices( rVertices ),
+				indices( rIndices ),
+				normals( rNormals )
 		{
 		}
 		VertexVector	vertices;
@@ -230,12 +230,12 @@ namespace physics {
 		struct Desc
 		{
 			Desc(	const ShapeType type_,
-					const Vector3 & rkPosition = Vector3::kZero, 
-					const Quaternion & rkOrientation = Quaternion::kIdentity,
+					const Vector3 & rPosition = Vector3::kZero, 
+					const Quaternion & rOrientation = Quaternion::kIdentity,
 					IMaterial* material_ = 0 ) :
 				type( type_ ),
-				position( rkPosition ),
-				orientation( rkOrientation ),
+				position( rPosition ),
+				orientation( rOrientation ),
 				pMaterial( material_ )
 			{}
 
@@ -251,38 +251,38 @@ namespace physics {
 			SphereDesc(	real radius_ = real(1.),
 						// base class:
 						IMaterial* material_ = 0,
-						const Vector3 & rkPosition = Vector3::kZero, 
-						const Quaternion & rkOrientation = Quaternion::kIdentity
+						const Vector3 & rPosition = Vector3::kZero, 
+						const Quaternion & rOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_SPHERE, rkPosition, rkOrientation, material_ ),
+				Desc( ST_SPHERE, rPosition, rOrientation, material_ ),
 				radius( radius_ )
 			{}
 			real		radius;
 		};
 		struct BoxDesc : Desc
 		{
-			BoxDesc(	const Vector3 & rkDimensions = Vector3(1,1,1),
+			BoxDesc(	const Vector3 & rDimensions = Vector3(1,1,1),
 						// base class:
 						IMaterial* material_ = 0,
-						const Vector3 & rkPosition = Vector3::kZero, 
-						const Quaternion & rkOrientation = Quaternion::kIdentity
+						const Vector3 & rPosition = Vector3::kZero, 
+						const Quaternion & rOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_BOX, rkPosition, rkOrientation, material_ ),
-				dimensions( rkDimensions )
+				Desc( ST_BOX, rPosition, rOrientation, material_ ),
+				dimensions( rDimensions )
 			{}
 			Vector3		dimensions;
 		};
 		struct PlaneDesc : Desc
 		{
-			PlaneDesc(	const Vector3 & rkNormal = Vector3(0,1,0),
+			PlaneDesc(	const Vector3 & rNormal = Vector3(0,1,0),
 						const real d_ = real(1.),
 						// base class:
 						IMaterial* material_ = 0,
-						const Vector3 & rkPosition = Vector3::kZero, 
-						const Quaternion & rkOrientation = Quaternion::kIdentity
+						const Vector3 & rPosition = Vector3::kZero, 
+						const Quaternion & rOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_PLANE, rkPosition, rkOrientation, material_ ),
-				normal( rkNormal ),
+				Desc( ST_PLANE, rPosition, rOrientation, material_ ),
+				normal( rNormal ),
 				d( d_ )
 			{}
 			Vector3		normal;
@@ -294,10 +294,10 @@ namespace physics {
 						const real radius_ = real(1.),
 						// base class:
 						IMaterial* material_ = 0,
-						const Vector3 & rkPosition = Vector3::kZero, 
-						const Quaternion & rkOrientation = Quaternion::kIdentity
+						const Vector3 & rPosition = Vector3::kZero, 
+						const Quaternion & rOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_CAPSULE, rkPosition, rkOrientation, material_ ),
+				Desc( ST_CAPSULE, rPosition, rOrientation, material_ ),
 				height( height_ ),
 				radius( radius_ )
 			{}
@@ -310,10 +310,10 @@ namespace physics {
 			TriMeshDesc(	const TriangleMeshId meshId_,
 							// base class:
 							IMaterial* material_ = 0,
-							const Vector3 & rkPosition = Vector3::kZero, 
-							const Quaternion & rkOrientation = Quaternion::kIdentity
+							const Vector3 & rPosition = Vector3::kZero, 
+							const Quaternion & rOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_TRIANGLE_MESH, rkPosition, rkOrientation, material_ ),
+				Desc( ST_TRIANGLE_MESH, rPosition, rOrientation, material_ ),
 				meshId( meshId_ )
 			{}
 			TriangleMeshId	meshId;
@@ -380,7 +380,7 @@ namespace physics {
 
 		/** Sets the linear velocity of the body/actor directly, i.e. with immediate effect. 
 		*/
-		virtual void setLinearVelocity(const Vector3 & rkVelocity) = 0;
+		virtual void setLinearVelocity(const Vector3 & rVelocity) = 0;
 
 		/** Returns the current velocity of the body.
 		*/
@@ -388,7 +388,7 @@ namespace physics {
 
 		/** Sets the angular velocity [rad/s] of the body/actor directly, i.e. with immediate effect. 
 		*/
-		virtual void setAngularVelocity(const Vector3 & rkVelocity) = 0;
+		virtual void setAngularVelocity(const Vector3 & rVelocity) = 0;
 
 		/** Returns the angular velocity of the body in [rad/s].
 		*/
@@ -396,34 +396,34 @@ namespace physics {
 
 		/** Adds a force defined in the global reference frame. 
 		*/
-		virtual void addForce( const Vector3 & rkForce ) = 0;
+		virtual void addForce( const Vector3 & rForce ) = 0;
 
 		/** Adds a force defined in the global reference frame, acting at a position defined
 			in the global reference frame. 
 		*/
-		virtual void addForceAtPos( const Vector3 & rkForce, const Vector3 & rkPos ) = 0;
+		virtual void addForceAtPos( const Vector3 & rForce, const Vector3 & rPos ) = 0;
 
 		/** Adds a force defined in the local reference frame.
 		*/
-		virtual void addLocalForce( const Vector3 & rkForce ) = 0;
+		virtual void addLocalForce( const Vector3 & rForce ) = 0;
 
 		/** Adds a force defined in the local reference frame, acting at a position defined
 			in the local reference frame (relative to the actor the body object belongs to).
 		*/
-		virtual void addLocalForceAtLocalPos( const Vector3 & rkForce, const Vector3 & rkPos ) = 0;
+		virtual void addLocalForceAtLocalPos( const Vector3 & rForce, const Vector3 & rPos ) = 0;
 
 		/** Adds a force defined in the local reference frame, acting at a position defined
 			in the global reference frame. 
 		*/
-		virtual void addLocalForceAtPos( const Vector3 & rkForce, const Vector3 & rkPos ) = 0;
+		virtual void addLocalForceAtPos( const Vector3 & rForce, const Vector3 & rPos ) = 0;
 
 		/** Adds a torque defined in the global reference frame. 
 		*/
-		virtual void addTorque( const Vector3 & rkTorque ) = 0;
+		virtual void addTorque( const Vector3 & rTorque ) = 0;
 
 		/** Adds a torque defined in the local reference frame. 
 		*/
-		virtual void addLocalTorque( const Vector3 & rkTorque ) = 0;
+		virtual void addLocalTorque( const Vector3 & rTorque ) = 0;
 	};
 
 	class IActor : public Movable
@@ -442,15 +442,15 @@ namespace physics {
 		virtual bool createBody() = 0;
 		virtual IBody* getBody() const = 0;
 
-		virtual SharedPtr<IShape> createShape( const IShape::Desc & rkShapeDesc ) = 0;
+		virtual SharedPtr<IShape> createShape( const IShape::Desc & rShapeDesc ) = 0;
 		virtual void destroyShape( SharedPtr<IShape> & rShape ) = 0;
 		virtual const ShapePtrVector getShapes() const = 0;
 
 		//virtual void updateMassFromShapes() = 0;
 
 		typedef Signal0<void> SignalCollisionEntered;
-		virtual void subscribeToCollisionEnteredSignal( const SignalCollisionEntered::slot_type & rkSlot ) = 0;
-		virtual void subscribeToCollisionExitedSignal( const SignalCollisionEntered::slot_type & rkSlot ) = 0;
+		virtual void subscribeToCollisionEnteredSignal( const SignalCollisionEntered::slot_type & rSlot ) = 0;
+		virtual void subscribeToCollisionExitedSignal( const SignalCollisionEntered::slot_type & rSlot ) = 0;
 	};
 
 	class IJoint
@@ -558,9 +558,9 @@ namespace physics {
 
 		virtual JointType getType() const = 0;
 		virtual size_t getNumAxis() const = 0;
-		virtual void setAxis(size_t axisIndex, const Vector3 & rkAxis) = 0;
+		virtual void setAxis(size_t axisIndex, const Vector3 & rAxis) = 0;
 		virtual size_t getNumAnchors() const = 0;
-		virtual void setAnchor(size_t anchorIndex, const Vector3 & rkAnchor) = 0;
+		virtual void setAnchor(size_t anchorIndex, const Vector3 & rAnchor) = 0;
 		virtual void setMotor(size_t axisIndex, real velocityTarget, real maximumForce) = 0;
 		virtual void setLimits(size_t axisIndex, real low, real high) = 0;
 		virtual void setBreakable(bool enabled) = 0;
@@ -576,20 +576,20 @@ namespace physics {
 	public:
 		virtual ~IWorld() {}
 
-		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase & rkJointDesc ) = 0;
-		virtual SharedPtr<IActor> createActor( const IActor::Desc & rkActorDesc = IActor::Desc() ) = 0;
-		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc & rkAvatarDesc ) = 0;
-		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc & rkMatDesc ) = 0;
+		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase & rJointDesc ) = 0;
+		virtual SharedPtr<IActor> createActor( const IActor::Desc & rActorDesc = IActor::Desc() ) = 0;
+		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc & rAvatarDesc ) = 0;
+		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc & rMatDesc ) = 0;
 
-		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc & rkTrimeshDesc ) = 0;
+		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc & rTrimeshDesc ) = 0;
 
 		virtual Deque<ShapeType> getSupportedShapes(bool bStatic = true, bool bDynamic = true) const = 0;
 		virtual Deque<JointType> getSupportedJoints() const = 0;
 		virtual Deque<String> getSupportedSolvers() const = 0;
-		virtual bool useSolver( const String & rkSolver ) = 0;
+		virtual bool useSolver( const String & rSolver ) = 0;
 		virtual String getCurrentSolver() const = 0;
 		virtual const PropertyNameList& getCurrentSolverParams() const = 0;
-		virtual void setCurrentSolverParam( const String & rkName, const boost::any & rkValue ) = 0;
+		virtual void setCurrentSolverParam( const String & rName, const boost::any & rValue ) = 0;
 
 		virtual void step(const real timeElapsed) = 0;
 	};
