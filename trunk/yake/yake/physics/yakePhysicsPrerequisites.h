@@ -21,6 +21,10 @@
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #define YAKE_PHYSICS_PREQREQUISITES_H
 
+#ifndef YAKE_BASE_PREREQUISITES_H
+#	include <yake/base/yakePrerequisites.h>
+#endif
+
 #if defined( YAKE_PHYSICS_EXPORTS )
 #	define YAKE_PHYSICS_API DLLEXPORT
 #else

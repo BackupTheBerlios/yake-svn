@@ -21,7 +21,9 @@
 #ifndef YAKE_PHYSICS_PHYSICSSYSTEM_H
 #define YAKE_PHYSICS_PHYSICSSYSTEM_H
 
-#include <yake/physics/yakePhysicsPrerequisites.h>
+#ifndef YAKE_PHYSICS_PREQREQUISITES_H
+#	include <yake/physics/yakePhysicsPrerequisites.h>
+#endif
 
 	/** The description structs are used for creating elements.
 
