@@ -1,3 +1,3 @@
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
-SUBDIRS = base input physics graphics plugins samples audio rx data
+SUBDIRS = base input audio physics rx graphics data plugins samples

@@ -1,3 +1,3 @@
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
-SUBDIRS = base model samples
+SUBDIRS = base model samples loader

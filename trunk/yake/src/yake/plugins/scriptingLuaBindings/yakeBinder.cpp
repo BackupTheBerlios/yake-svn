@@ -151,7 +151,7 @@ namespace lua {
 				]
 				.def( constructor<>() ) 
 				.def( "onLog", &yake::base::Log::onLog )
-				.def( "log", &yake::base::Log::log )
+//				.def( "log", &yake::base::Log::log )
 				//.def( "logPrintf", &yake::base::Log::logPrintf ) // not typesafe
 		];
 		////TODO	define logging shortcuts like YAKE_LOG_ERROR etc.
@@ -229,13 +229,14 @@ namespace lua {
 				.def( constructor<>() )
 		];
 		
-/*		module(pLuaVM->getLuaState(), "yake")
+		// just for demo purposes ... TODO eliminate from this file
+		module(pLuaVM->getLuaState(), "yake")
 		[
 			class_<Player>("Player")
 				.def(constructor<>())
 				.def("getName", &Player::getName)
 				.def("setName", &Player::setName)
-		];*/
+		];
 	}
 
 

@@ -34,6 +34,7 @@ extern "C"
 // Yake
 #include <yake/base/yakePCH.h>
 #include <yake/base/templates/yakeSmartAssert.h>
+#include <yake/base/yakeException.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
