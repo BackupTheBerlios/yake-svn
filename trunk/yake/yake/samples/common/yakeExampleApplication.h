@@ -155,7 +155,7 @@ namespace exapp {
 				// ... or alternatively we can create a graphics system by name:
 				//mGraphicsSystem = create< graphics::IGraphicsSystem >("ogre3d");
 
-				//mGraphicsSystem->subscribeToShutdownRequest( Bind0( ExampleApplication::requestShutdown, this ) );
+				mGraphicsSystem->subscribeToShutdownSignal( boost::bind( &ExampleApplication::requestShutdown, this ) );
 			}
 
 			// physics
