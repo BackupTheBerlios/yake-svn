@@ -63,7 +63,7 @@ int main()
 	{
 		// load a XML file into a DOM tree
 		SharedPtr<dom::ISerializer> ser( new dom::xml::XmlSerializer() );
-		ser->parse("../../media/gui0.xml", true);
+		ser->parse("../../media/dotlink_test.link", true);
 
 		// get some data from the DOM tree
 		SharedPtr<dom::INode> pNode = ser->getDocumentNode();
@@ -78,9 +78,9 @@ int main()
 	{
 		std::cout << std::endl << e.what() << std::endl;
 	}
-#if defined( YAKE_DEBUG_BUILD )
+
 	std::cout << std::endl << "Waiting for you...";
 	std::cin.get();
-#endif
+
 	return 0;
 }
