@@ -378,7 +378,7 @@
 			Name="loader"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\yake\src\yapp\loader\yakeDotLinkLoader.cpp">
+				RelativePath="..\..\src\yapp\loader\yakeDotLinkLoader.cpp">
 			</File>
 			<File
 				RelativePath="..\..\yapp\loader\yakeDotLinkLoader.h">
