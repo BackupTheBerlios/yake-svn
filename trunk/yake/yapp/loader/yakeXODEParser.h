@@ -139,8 +139,8 @@ using namespace yake::app; // model::Physical
 		
 	private:
 		SharedPtr<dom::INode>			mDocNode;
-		physics::IWorld*				mPWorld;
-		model::Physical&				mBaseModel;
+		physics::IWorld*					mPWorld;
+		model::Physical&					mBaseModel;
 	};
 	
 	class XODEParserV1 : public XODEParser
