@@ -6,9 +6,9 @@ material arena0default
 	{
 		pass
 		{
+			diffuse 1 1 1
 			texture_unit
 			{
-				diffuse 1 1 1
 				texture RustedMetal.jpg
 			}
 		}
