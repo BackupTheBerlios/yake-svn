@@ -4,7 +4,7 @@
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <CEGUI.h>
-#include <reflection.h>
+#include <yake/reflection/reflection.h>
 
 #include <yapp/gui/control_base.h>
 #include <yapp/gui/point.h>

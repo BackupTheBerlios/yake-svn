@@ -1,7 +1,7 @@
 #ifndef _YAPP_GUI_EDITOR_EDIT_WIDGET_H_
 #define _YAPP_GUI_EDITOR_EDIT_WIDGET_H_
 
-#include "control_base.h"
+#include <yapp/gui/control_base.h>
 #include <yapp/plugins/guiCEGUI/editor/edit_widget.h> // todo remove
 
 namespace yake

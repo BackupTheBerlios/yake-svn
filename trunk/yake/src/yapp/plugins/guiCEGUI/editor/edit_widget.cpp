@@ -1,6 +1,6 @@
-#include "edit_widget.h"
-#include "../editor/widget_editor.h"
-#include "../edit_widget.h"
+#include <yapp/gui/editor/edit_widget.h>
+#include <yapp/gui/editor/widget_editor.h>
+#include <yapp/plugins/guiCEGUI/editor/edit_widget.h>
 
 namespace plugin
 {

@@ -1,4 +1,4 @@
-#include "property_list.h"
+#include <yapp/plugins/guiCEGUI/editor/property_list.h>
 
 namespace yake
 {
