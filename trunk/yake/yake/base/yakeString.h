@@ -63,6 +63,8 @@ namespace base
 		static String toLowerCase( const String& rString );
 		static String toUpperCase( const String& rString );
 		static real toReal( const String& rString );
+		static size_t toSizeT( const String& rString );
+		static int32 toInt32( const String& rString );
 	};
 
 #undef YAKE_BASE_STRING

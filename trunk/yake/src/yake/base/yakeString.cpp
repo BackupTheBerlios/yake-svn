@@ -130,6 +130,18 @@ namespace base
 	{
 		return static_cast<real>(atof( rString.c_str() ));
 	}
-	
+
+	//-----------------------------------------------------------------------
+	size_t StringUtil::toSizeT( const String& rString )
+	{
+		return static_cast<size_t>(atoi( rString.c_str() ));
+	}
+
+	//-----------------------------------------------------------------------
+	int32 StringUtil::toInt32( const String& rString )
+	{
+		return static_cast<int32>(atoi( rString.c_str() ));
+	}
+
 } // base
 } // yake
