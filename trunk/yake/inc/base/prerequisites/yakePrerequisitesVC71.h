@@ -25,6 +25,7 @@
 //    IMPLEMENTATION HEADERS
 //============================================================================
 // Preprocessor check
+#pragma message("Platform/Compiler config: Yake.Core.Prerequisites.Vc71")
 #if (YAKE_PLATFORM != PLATFORM_WIN32) || ( YAKE_COMP_VER < 1310 )
 #	error "Yake.Core.Prerequisites.Vc71: This file should only be included when building using Microsoft Visual C++ 7.1 on the Win32 Platform."
 #endif
