@@ -46,30 +46,7 @@ namespace ogre3d {
 
 	void updateStats(Ogre::RenderWindow* window)
     {
-        static String currFps = "Current FPS: ";
-        static String avgFps = "Average FPS: ";
-        static String bestFps = "Best FPS: ";
-        static String worstFps = "Worst FPS: ";
-        static String tris = "Triangle Count: ";
-
-        // update stats when necessary
-        GuiElement* guiAvg = GuiManager::getSingleton().getGuiElement("Core/AverageFps");
-        GuiElement* guiCurr = GuiManager::getSingleton().getGuiElement("Core/CurrFps");
-        GuiElement* guiBest = GuiManager::getSingleton().getGuiElement("Core/BestFps");
-        GuiElement* guiWorst = GuiManager::getSingleton().getGuiElement("Core/WorstFps");
-
-		guiAvg->setCaption(avgFps + Ogre::StringConverter::toString(window->getAverageFPS()));
-        guiCurr->setCaption(currFps + Ogre::StringConverter::toString(window->getLastFPS()));
-        guiBest->setCaption(bestFps + Ogre::StringConverter::toString(window->getBestFPS())
-            +" "+Ogre::StringConverter::toString(window->getBestFrameTime())+" ms");
-        guiWorst->setCaption(worstFps + Ogre::StringConverter::toString(window->getWorstFPS())
-            +" "+Ogre::StringConverter::toString(window->getWorstFrameTime())+" ms");
-
-        GuiElement* guiTris = GuiManager::getSingleton().getGuiElement("Core/NumTris");
-        guiTris->setCaption(tris + Ogre::StringConverter::toString(window->getTriangleCount()));
-
-        GuiElement* guiDbg = GuiManager::getSingleton().getGuiElement("Core/DebugText");
-        guiDbg->setCaption(window->getDebugText());
+		//@todo adjust to new OGRE Overlay code
     }
 
 	class SystemFrameListener : public Ogre::FrameListener
@@ -151,9 +128,10 @@ namespace ogre3d {
 			TextureManager::getSingleton().setDefaultNumMipMaps( 0 );
 			Animation::setDefaultInterpolationMode(Animation::IM_SPLINE);
 
-			Overlay* o = (Overlay*)OverlayManager::getSingleton().getByName("Core/DebugOverlay");
+			/*Overlay* o = (Overlay*)OverlayManager::getSingleton().getByName("Core/DebugOverlay");
 			if (o)
 				o->show();
+			*/
 	
 			//...
 
@@ -275,24 +253,18 @@ namespace ogre3d {
 
 		//if (mReady && mRWin && mRSys)
 		{
-			Ogre::FrameEvent evt;
-			evt.timeSinceLastFrame = timeElapsed;
-
 			try {
-
 #if YAKE_PLATFORM == PLATFORM_WIN32
 				// Pump events on Win32
     			MSG  msg;
 				while( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
+				//if( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
 				{
 					TranslateMessage( &msg );
 					DispatchMessage( &msg );
 				}
 #endif
 
-				/*mRoot->_fireFrameStarted( evt );
-				mRoot->getRenderSystem()->_updateAllRenderTargets();
-				mRoot->_fireFrameEnded();*/
 				if (!mRoot->renderOneFrame())
 					mShutdownSignal();
 				if ( mRWin->isClosed() )
