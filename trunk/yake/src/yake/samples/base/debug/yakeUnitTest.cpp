@@ -59,9 +59,10 @@ int main()
 	{
 		Dilemma myDilemma;
 	}
-	catch( Exception ex )
+	catch( const Exception & ex )
 	{
 		YAKE_LOG_ERROR( "Yet another dilemma!" )
+		DebugOutputStream::instance() << ex.what();
 	}
 
 	// Print some stuff
