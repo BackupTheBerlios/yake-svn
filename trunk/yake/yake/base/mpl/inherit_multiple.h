@@ -76,7 +76,7 @@ struct inherit_transformed
 
 // Now we can define GenScatterHierarchy
 template <class Sequence, class Transformation> 
-struct InheritMultiple 
+struct inherit_multiple 
 	: algorithms::fold
 	< 
 			Sequence, 
