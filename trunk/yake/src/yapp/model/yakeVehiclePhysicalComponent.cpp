@@ -23,10 +23,22 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAPP_MODEL_H
-#define YAPP_MODEL_H
+#include <yapp/base/yappPCH.h>
+#include <yapp/base/yapp.h>
+#include <yapp/model/yakeActor.h>
+#include <yapp/model/yakeVehicleSystem.h>
+#include <yapp/model/yakeVehiclePhysicalComponent.h>
 
-#include <yapp/base/yappPrerequisites.h>
-#include <yapp/model/yakeUpdaters.h>
+namespace yake {
+namespace app {
+namespace model {
+namespace vehicle {
 
-#endif
+	//-----------------------------------------------------
+	YAKE_IMPLEMENT_REGISTRY( IPhysicalVehicleComponent );
+
+} // ns vehicle
+} // ns model
+} // ns app
+} // ns yake
+

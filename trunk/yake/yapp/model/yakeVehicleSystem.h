@@ -23,10 +23,53 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAPP_MODEL_H
-#define YAPP_MODEL_H
+#ifndef YAKE_APP_MODEL_VEHICLE_SYSTEM_H
+#define YAKE_APP_MODEL_VEHICLE_SYSTEM_H
 
 #include <yapp/base/yappPrerequisites.h>
-#include <yapp/model/yakeUpdaters.h>
+
+namespace yake {
+namespace app {
+namespace model {
+namespace vehicle {
+
+	class Vehicle;
+	class IPhysicalVehicleComponent;
+
+	class YAPP_BASE_API IVehicleSystem
+	{
+	public:
+		YAKE_DECLARE_CLASS( IVehicleSystem );
+		YAKE_DECLARE_REGISTRY_0( IVehicleSystem, ::yake::base::String );
+
+		virtual Vehicle* createVehicle( const ::yake::base::String & rTemplate,
+										physics::IWorld* pPWorld, 
+										graphics::IGraphicalWorld* pGWorld ) = 0;
+	};
+
+	class YAPP_BASE_API NativeVehicleSystem : public IVehicleSystem
+	{
+	public:
+		YAKE_DECLARE_CLASS( NativeVehicleSystem );
+		YAKE_DECLARE_CONCRETE( NativeVehicleSystem, "yake.native" );
+
+		virtual Vehicle* createVehicle( const ::yake::base::String & rTemplate, 
+										physics::IWorld* pWorld, 
+										graphics::IGraphicalWorld* pGWorld );
+	private:
+		bool _loadModelFromDotVehicle(::yake::app::model::complex::Model* pModel,
+									const ::yake::base::String & rFN, 
+									physics::IWorld* pPWorld,
+									graphics::IGraphicalWorld* pGWorld,
+									IPhysicalVehicleComponent* pPC
+									);
+	};
+
+
+}
+}
+}
+}
+
 
 #endif

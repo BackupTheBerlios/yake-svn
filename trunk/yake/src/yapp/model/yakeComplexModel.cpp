@@ -26,7 +26,8 @@
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
 
-namespace yapp {
+namespace yake {
+namespace app {
 namespace model {
 namespace complex {
 
@@ -121,7 +122,7 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
-	void Model::update( real timeElapsed )
+	void Model::updatePhysics( real timeElapsed )
 	{
 		for (PhysicalMap::iterator it = mPhysicals.begin();
 			it != mPhysicals.end(); ++it)
@@ -134,7 +135,7 @@ namespace complex {
 				SharedPtr<physics::IComplexObject> pCO = itCO.getNext();
 				physics::IBody* pBody = pCO->getBody();
 
-				real kVel = -0.01;
+				real kVel = -.2 * timeElapsed;
 				real kTorque = kVel;
 
 				Vector3 vel = pBody->getLinearVelocity();
@@ -147,12 +148,17 @@ namespace complex {
 
 			}
 		}
+	}
+	//-----------------------------------------------------
+	void Model::updateControllers( real timeElapsed )
+	{
 		for (CtrlrList::const_iterator it = mControllers.begin(); it != mControllers.end(); ++it)
 		{
 			(*it)->update( timeElapsed );
 		}
 	}
 
+}
 }
 }
 }

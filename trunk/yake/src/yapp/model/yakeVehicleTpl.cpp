@@ -23,10 +23,70 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAPP_MODEL_H
-#define YAPP_MODEL_H
+#include <yapp/base/yappPCH.h>
+#include <yapp/base/yapp.h>
+#include <yapp/model/yakeVehicleTpl.h>
 
-#include <yapp/base/yappPrerequisites.h>
-#include <yapp/model/yakeUpdaters.h>
+namespace yake {
+namespace app {
+namespace model {
+namespace vehicle {
 
-#endif
+	VehicleTemplate::VehicleTemplate() : mNumSteerGroups(1)
+	{
+	}
+	VehicleTemplate::~VehicleTemplate()
+	{
+	}
+	size_t VehicleTemplate::getNumEngines() const
+	{
+		return mEngines.size();
+	}
+	const VehicleTemplate::EngineTemplate& VehicleTemplate::getEngine(const size_t index) const
+	{
+		YAKE_ASSERT( index < mEngines.size() );
+		return mEngines[ index ];
+	}
+	void VehicleTemplate::addEngine( const EngineTemplate & tpl)
+	{
+		mEngines.push_back( tpl );
+	}
+	size_t VehicleTemplate::getNumAxles() const
+	{
+		return mAxles.size();
+	}
+	const VehicleTemplate::AxleTemplate& VehicleTemplate::getAxle(const size_t index) const
+	{
+		YAKE_ASSERT( index < mAxles.size() );
+		return mAxles[ index ];
+	}
+	void VehicleTemplate::addAxle( const AxleTemplate & tpl)
+	{
+		mAxles.push_back( tpl );
+	}
+	size_t VehicleTemplate::getNumSteeringGroups() const
+	{
+		return mNumSteerGroups;
+	}
+	void VehicleTemplate::addSteeringGroup()
+	{
+		mNumSteerGroups++;
+	}
+	size_t VehicleTemplate::getNumWheels() const
+	{
+		return mWheels.size();
+	}
+	const VehicleTemplate::WheelTemplate& VehicleTemplate::getWheel(const size_t index) const
+	{
+		YAKE_ASSERT( index < mWheels.size() );
+		return mWheels[ index ];
+	}
+	void VehicleTemplate::addWheel( const WheelTemplate & tpl)
+	{
+		mWheels.push_back( tpl );
+	}
+
+}
+}
+}
+}

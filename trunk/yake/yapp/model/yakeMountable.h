@@ -23,5 +23,65 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#include <yapp/base/yappPCH.h>
-#include <yapp/base/yapp.h>
+#ifndef YAPP_MODEL_MOUNTABLE_H
+#define YAPP_MODEL_MOUNTABLE_H
+
+#include <yapp/base/yappPrerequisites.h>
+
+namespace yake {
+namespace app {
+namespace model {
+
+	class MountPoint;
+	class YAPP_BASE_API Mountable
+	{
+	public:
+		MountPoint* getMountPoint() const;
+	};
+
+	class YAPP_BASE_API MountPoint : public yake::base::Movable
+	{
+	protected:
+		MountPoint() {}
+	public:
+		virtual ~MountPoint() {}
+		bool isSuitableFor( const Mountable & mountable ) const;
+		void attach( SharedPtr<Mountable> & mountable );
+		void detach( const SharedPtr<Mountable> & mountable );
+	};
+
+	class YAPP_BASE_API Turret //: public Entity
+	{
+	public:
+	};
+
+	class YAPP_BASE_API MountedTurrent : public Turret, public Mountable
+	{
+	public:
+	};
+
+	class YAPP_BASE_API WeaponMountPoint : public MountPoint
+	{
+	public:
+	};
+
+	class YAPP_BASE_API Thruster
+	{
+	public:
+		void setForce( real force );
+		void setMinimumForce( real force );
+		void setMaximumForce( real force );
+		void setThrust( real thrust ); //!< range [0,1]
+		real getForce() const;
+	};
+
+	class YAPP_BASE_API MountedThruster :  public Mountable
+	{
+	public:
+	};
+
+} // model
+} // app
+} // yake
+
+#endif
