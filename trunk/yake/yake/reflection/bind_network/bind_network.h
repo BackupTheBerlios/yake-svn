@@ -11,7 +11,7 @@
 namespace yake { namespace net = TNL; }
 
 #include "reflection.h"
-using namespace reflection;
+using namespace yake::reflection;
 
 // todo use network wrapper, add yake rpc
 // todo net_parm for extrapolation etc.
@@ -89,7 +89,7 @@ struct network_observer : property_observer<VALUE_TYPE>
 
 // -----------------------------------------
 // specialised property handler class which notifies the according observers
-// this hooks into the reflected properties (access to the field by means of reflection::property)
+// this hooks into the reflected properties (access to the field by means of yake::reflection::property)
 #define __OBSERVER_PROPERTY__(PROPERTY_NAME) \
 template <class C, class VALUE_TYPE> struct __observer_property__##PROPERTY_NAME : public __property__<C, VALUE_TYPE> \
 { \
@@ -130,9 +130,9 @@ private:\
 						OBSERVER2\
 						/* register this property to the static reflected class using the optimal method */ \
 						if(owner()->__observers__##NAME.empty())\
-							static reflection::__register_property__ reg(new __property__<ClassType, T>(&get_##NAME, &set_##NAME), getClassStaticPtr(), typeid(TYPE), #TYPE, #NAME);\
+							static yake::reflection::__register_property__ reg(new __property__<ClassType, T>(&get_##NAME, &set_##NAME), getClassStaticPtr(), typeid(TYPE), #TYPE, #NAME);\
 						else\
-							static reflection::__register_property__ reg(new __observer_property__##NAME<ClassType, T>(&get_##NAME, &set_##NAME), getClassStaticPtr(), typeid(TYPE), #TYPE, #NAME);\
+							static yake::reflection::__register_property__ reg(new __observer_property__##NAME<ClassType, T>(&get_##NAME, &set_##NAME), getClassStaticPtr(), typeid(TYPE), #TYPE, #NAME);\
         }\
         inline TYPE get() const {\
             return owner()->get_##NAME();\

@@ -1,9 +1,12 @@
 #include "bind_lua/lua_handler_to_cpp.h"
 
-namespace rx
+namespace yake
+{
+namespace reflection 
 {
 namespace lua
 {
 
-} // rx
-} // lua
+} // namespace lua
+} // namespace reflection
+} // namespace yake

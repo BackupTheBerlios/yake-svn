@@ -192,13 +192,15 @@ protected:
 // todo lua_handler_to_cpp_1 simpliy => add attach policy with event::attach_handler( lua::functor ) and bind to lua
 //#include "bind_lua/lua_handler_to_cpp.h"
 
-namespace reflection
+namespace yake
+{
+namespace reflection 
 {
 
 struct rx_event_base
 {
 	virtual ~rx_event_base() {}
-	virtual void attach_handler(void * object, const reflection::Method & this_handler) = 0;
+	virtual void attach_handler(void * object, const yake::reflection::Method & this_handler) = 0;
 };
 
 #if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
@@ -235,7 +237,7 @@ struct event :
 	// rx
 
 	// attach reflected method
-	void attach_handler(void * object, const reflection::Method & this_handler)
+	void attach_handler(void * object, const yake::reflection::Method & this_handler)
 	{
 		// rebind functor with 'this pointer' of the parent object as first argument and clone
 		boost::function<void (void*, arg1, arg2)> & hdl 
@@ -344,7 +346,7 @@ struct event<arg1, null_type> :
 	// rx
 
 	// attach reflected method
-	void attach_handler(void * object, const reflection::Method & this_handler)
+	void attach_handler(void * object, const yake::reflection::Method & this_handler)
 	{
 		// rebind functor with 'this pointer' of the parent object as first argument and clone
 		boost::function<void (void*, arg1)> & hdl 
@@ -397,6 +399,7 @@ struct event<arg1, null_type> :
 #endif
 };
 
-}
+} // namespace reflection
+} // namespace yake
 
 #endif _EVENTS_H_

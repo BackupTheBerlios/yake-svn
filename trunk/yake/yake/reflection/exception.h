@@ -3,6 +3,8 @@
 
 #include "reflection.h"
 
+namespace yake
+{
 namespace reflection 
 {
 
@@ -121,5 +123,6 @@ public:
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif // _PROPERTY_H_

@@ -3,7 +3,9 @@
 
 #include "reflection.h"
 
-namespace reflection
+namespace yake
+{
+namespace reflection 
 {
 
 /** Static class that represents a repository of class objects that can
@@ -42,12 +44,12 @@ public:
     static void unregisterClass(const Class &class_);
 
     /** creates an instance of a class. The class must be derived from
-        reflection::Object.
+        yake::reflection::Object.
         @param name name of the class to create an instance from
         @return pointer to created object; if NULL, the class does not exist
-                or does not inherit from reflection::Object
+                or does not inherit from yake::reflection::Object
      */
-    static reflection::Object *createInstance(const char *name);
+    static yake::reflection::Object *createInstance(const char *name);
 
 private:
     typedef std::map<std::string, const Class *> ClassMap;
@@ -56,5 +58,6 @@ private:
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif _CLASSREGISTRY_H_

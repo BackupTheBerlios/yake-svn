@@ -18,7 +18,9 @@ extern "C"
 #include <boost/any.hpp>
 #include <boost/function.hpp>
 
-namespace rx
+namespace yake
+{
+namespace reflection 
 {
 namespace lua
 {
@@ -140,6 +142,7 @@ struct search_for_lua_handlers_2
 };
 
 } // namespace lua
-} // namespace rx
+} // namespace reflection
+} // namespace yake
 
 #endif // _LUA_HANDLER_TO_CPP_H_

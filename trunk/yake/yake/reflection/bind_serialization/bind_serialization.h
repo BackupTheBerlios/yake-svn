@@ -8,21 +8,21 @@
 
 #include "static_init.h"
 #include "reflection.h"
-using namespace reflection;
+using namespace yake::reflection;
 
 #define IMPLEMENT_SERIALIZATION_CLASS(CLASS_NAME) \
 BOOST_CLASS_EXPORT(CLASS_NAME) \
 namespace boost { namespace serialization { \
 template<class Archive> \
 inline void serialize(Archive & ar, CLASS_NAME & obj, const BOOST_PFTO unsigned int file_version) \
-{	ar & boost::serialization::base_object<reflection::Object>(obj); } } } \
+{	ar & boost::serialization::base_object<yake::reflection::Object>(obj); } } } \
 \
 namespace { \
 static void register_##CLASS_NAME##() \
 { ClassRegistry::registerClass(CLASS_NAME##::getClassStatic()); } }
 //STATIC_INIT( register_##CLASS_NAME ) todo need singleton, yake class::registry => class registry?
 
-BOOST_CLASS_EXPORT(reflection::Object)
+BOOST_CLASS_EXPORT(yake::reflection::Object)
 
 namespace boost
 { 
@@ -30,7 +30,7 @@ namespace serialization
 {
 
 template<typename ValueType>
-ValueType getPropertyValue(const Property & prop, const reflection::Object & obj)
+ValueType getPropertyValue(const Property & prop, const yake::reflection::Object & obj)
 {
 	ValueType value;
 	prop.get(value, &obj);
@@ -38,7 +38,7 @@ ValueType getPropertyValue(const Property & prop, const reflection::Object & obj
 }
 
 template<typename ValueType, class Archive>
-bool selectiveSave(Archive & ar, const reflection::Object & obj, const Property & prop)
+bool selectiveSave(Archive & ar, const yake::reflection::Object & obj, const Property & prop)
 {
   if(prop.getTypeInfo() == typeid(ValueType))
 	{
@@ -52,7 +52,7 @@ bool selectiveSave(Archive & ar, const reflection::Object & obj, const Property 
 }
 
 template<class Archive>
-void save(Archive & ar, const reflection::Object & obj, const BOOST_PFTO unsigned int file_version)
+void save(Archive & ar, const yake::reflection::Object & obj, const BOOST_PFTO unsigned int file_version)
 {
 	// properties
   for(Class::PropertyList::const_iterator iter(obj.getClass().getProperties().begin());
@@ -68,7 +68,7 @@ void save(Archive & ar, const reflection::Object & obj, const BOOST_PFTO unsigne
 }
 
 template<typename ValueType, class Archive>
-bool selectiveLoad(Archive & ar, const reflection::Object & obj, const Property & prop)
+bool selectiveLoad(Archive & ar, const yake::reflection::Object & obj, const Property & prop)
 {
   if(prop.getTypeInfo() == typeid(ValueType))
 	{
@@ -84,7 +84,7 @@ bool selectiveLoad(Archive & ar, const reflection::Object & obj, const Property 
 }
 
 template<class Archive>
-void load(Archive & ar, reflection::Object & obj, const BOOST_PFTO unsigned int file_version)
+void load(Archive & ar, yake::reflection::Object & obj, const BOOST_PFTO unsigned int file_version)
 {
 	// properties
   for(Class::PropertyList::const_iterator iter(obj.getClass().getProperties().begin());

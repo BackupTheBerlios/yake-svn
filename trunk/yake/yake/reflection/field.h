@@ -18,7 +18,7 @@ private: \
 		{ \
         __field_##FIELD_NAME##__() \
 				{ \
-            static reflection::__register_field__ reg(__OFFSET__(ClassType, FIELD_NAME), typeid(FIELD_TYPE), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #FIELD_TYPE, #FIELD_NAME); \
+            static yake::reflection::__register_field__ reg(__OFFSET__(ClassType, FIELD_NAME), typeid(FIELD_TYPE), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #FIELD_TYPE, #FIELD_NAME); \
         } \
     } __field_##FIELD_NAME##__; \
     friend struct __field_##FIELD_NAME##__; \
@@ -29,6 +29,8 @@ ACCESS_ATTR: \
     CLASSES
  *****************************************************************************/
 
+namespace yake
+{
 namespace reflection 
 {
 
@@ -123,5 +125,6 @@ struct __register_field__
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif // _FIELD_H_

@@ -16,7 +16,7 @@
 			Name="Debug|Win32"
 			OutputDirectory=".\Debug"
 			IntermediateDirectory=".\Debug"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
 			CharacterSet="2">
@@ -28,8 +28,8 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/agm_reflection.pch"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=""
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -40,18 +40,7 @@
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="../../dependencies/lua/lib/$(ConfigurationName)/lua.lib ../../dependencies/lua/lib/$(ConfigurationName)/lualib.lib ../../dependencies/luabind/lib/$(ConfigurationName)/luabind.lib ../../dependencies/boost/bin/boost/libs/serialization/build/libboost_serialization.lib/vc-7_1/$(ConfigurationName)/runtime-link-static/threading-multi/libboost_serialization.lib Iphlpapi.lib libtomcryptd.lib tnld.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib"
-				OutputFile=".\Debug/agm_reflection.exe"
-				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="../../dependencies/tnl/lib"
-				IgnoreAllDefaultLibraries="FALSE"
-				IgnoreDefaultLibraryNames="libcmt; libcd"
-				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/agm_reflection.pdb"
-				SubSystem="1"
-				TargetMachine="1"/>
+				Name="VCLibrarianTool"/>
 			<Tool
 				Name="VCMIDLTool"
 				TypeLibraryName=".\Debug/agm_reflection.tlb"
@@ -70,8 +59,6 @@
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
 			<Tool
 				Name="VCManagedWrapperGeneratorTool"/>
 			<Tool
@@ -173,9 +160,6 @@
 				RelativePath="..\..\yake\reflection\method.h">
 			</File>
 			<File
-				RelativePath="..\..\yake\reflection\null.h">
-			</File>
-			<File
 				RelativePath="..\..\yake\reflection\object.h">
 			</File>
 			<File
@@ -257,9 +241,6 @@
 				Filter="">
 				<File
 					RelativePath="..\..\src\yake\reflection\events.cpp">
-				</File>
-				<File
-					RelativePath="..\..\src\yake\reflection\main.cpp">
 				</File>
 			</Filter>
 			<Filter

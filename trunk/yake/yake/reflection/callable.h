@@ -1,6 +1,8 @@
 #ifndef _CALLABLE_H_
 #define _CALLABLE_H_
 
+namespace yake
+{
 namespace reflection 
 {
 
@@ -10,6 +12,7 @@ struct __callable__
     virtual ~__callable__() {}
 };
 
-} // reflection
+} // namespace reflection
+} // namespace yake
 
 #endif // _CALLABLE_H_

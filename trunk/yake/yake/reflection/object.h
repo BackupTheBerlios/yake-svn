@@ -3,7 +3,9 @@
 
 #include "reflection.h"
 
-namespace reflection
+namespace yake
+{
+namespace reflection 
 {
 
 class NullClass;
@@ -14,7 +16,7 @@ class NullClass;
 class Object 
 {
 public:
-    CLASS(reflection::Object, reflection::NullClass);
+		CLASS(yake::reflection::Object, yake::reflection::NullClass);
 
     ///the default constructor
     Object() 
@@ -26,5 +28,6 @@ public:
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif // _OBJECT_H_

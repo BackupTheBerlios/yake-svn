@@ -13,7 +13,9 @@
     CLASSES
  *****************************************************************************/
 
-namespace reflection
+namespace yake
+{
+namespace reflection 
 {
 
 struct Registered : Object
@@ -39,5 +41,6 @@ struct Registered : Object
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif // _REGISTERED_H_

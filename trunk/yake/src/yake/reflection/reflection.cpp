@@ -1,7 +1,11 @@
 #include "reflection.h"
 #include <algorithm>
-using namespace reflection;
 using namespace std;
+
+namespace yake
+{
+namespace reflection 
+{
 
 
 /*****************************************************************************
@@ -214,10 +218,10 @@ void ClassRegistry::unregisterClass(const Class &class_)
 
 
 /** creates an instance of a class. The class must be derived from
-    reflection::Object.
+    yake::reflection::Object.
     @param name name of the class to create an instance from
     @return pointer to created object; if NULL, the class does not exist
-            or does not inherit from reflection::Object
+            or does not inherit from yake::reflection::Object
  */
 Object *ClassRegistry::createInstance(const char *name)
 {
@@ -238,3 +242,6 @@ ClassRegistry::ClassMap ClassRegistry::m_classMap;
 
 Registered::InstanceList Registered::instances_list;
 Registered::InstanceMap Registered::instances_map;
+
+} // namespace reflection
+} // namespace yake

@@ -1,6 +1,8 @@
 #ifndef _REFLECTION_H_
 #define _REFLECTION_H_
 
+// todo: _YAKE_REFLECTION_REFLECTION_H_ etc.
+
 #pragma warning (disable: 4786)
 #pragma warning (disable: 4003)
 #pragma warning (disable: 4002)

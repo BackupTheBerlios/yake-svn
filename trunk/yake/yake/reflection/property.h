@@ -25,7 +25,7 @@ private:\
     public:\
         typedef __property__##NAME<T> Type;\
         __property__##NAME<T>() {\
-				static reflection::__register_property__ reg(new __property__<ClassType, T>(&get_##NAME, &set_##NAME), getClassStaticPtr(), typeid(TYPE), #TYPE, #NAME);\
+				static yake::reflection::__register_property__ reg(new __property__<ClassType, T>(&get_##NAME, &set_##NAME), getClassStaticPtr(), typeid(TYPE), #TYPE, #NAME);\
         }\
         inline TYPE get() const {\
             return owner()->get_##NAME();\
@@ -159,7 +159,8 @@ public:\
     CLASSES
  *****************************************************************************/
 
-
+namespace yake
+{
 namespace reflection 
 {
 
@@ -349,5 +350,6 @@ struct __register_property__
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif // _PROPERTY_H_

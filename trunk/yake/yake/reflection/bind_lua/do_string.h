@@ -3,7 +3,9 @@
 
 #include <iostream>
 
-namespace rx
+namespace yake
+{
+namespace reflection 
 {
 namespace lua
 {
@@ -28,6 +30,7 @@ bool do_string(lua_State* L, const char* str)
 }
 
 } // namespace lua
-} // namespace rx
+} // namespace reflection
+} // namespace yake
 
 #endif // _DO_STRING_H

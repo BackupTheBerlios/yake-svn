@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 
-using namespace reflection;
+using namespace yake::reflection;
 using namespace std;
 
 // -----------------------------------------
@@ -181,7 +181,7 @@ void handler(int fara)
 // main
 int main()
 {
-	// test type traits for reflection::event
+	// test type traits for yake::reflection::event
 	{
 		assert(boost::is_abstract<abstract_class>::value);
 
@@ -194,7 +194,7 @@ int main()
 			>::value;
 		assert(b);
 
-		reflection::event<const abstract_class &> h;
+		yake::reflection::event<const abstract_class &> h;
 	}
 	
 

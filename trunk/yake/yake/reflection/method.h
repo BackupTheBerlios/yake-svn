@@ -155,7 +155,7 @@ private: \
 		{ \
         __method_##METHOD_NAME##__() \
 				{ \
-            static reflection::__register_method__ reg(__create_callable__(&METHOD_NAME), __create_function_base__(&METHOD_NAME), getClassStaticPtr(), reflection::ACCESS_##ACCESS_ATTR, #RETURN_TYPE, #METHOD_NAME, #METHOD_ARGS, #VIRTUAL); \
+            static yake::reflection::__register_method__ reg(__create_callable__(&METHOD_NAME), __create_function_base__(&METHOD_NAME), getClassStaticPtr(), yake::reflection::ACCESS_##ACCESS_ATTR, #RETURN_TYPE, #METHOD_NAME, #METHOD_ARGS, #VIRTUAL); \
         } \
     } __method_##METHOD_NAME##__; \
     friend struct __method_##METHOD_NAME##__; \
@@ -229,6 +229,8 @@ ACCESS_ATTR: \
     CLASSES
  *****************************************************************************/
 
+namespace yake
+{
 namespace reflection 
 {
 
@@ -772,5 +774,6 @@ struct __register_method__
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif // _METHOD_H_

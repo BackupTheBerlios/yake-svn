@@ -18,12 +18,12 @@ private: \
 		{ \
         __event_##EVENT_NAME##__() \
 				{ \
-					static reflection::__register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(reflection::event<YAKE_REMOVE_BRACES##ARGS>), getClassStaticPtr(), reflection::ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
+					static yake::reflection::__register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(yake::reflection::event<YAKE_REMOVE_BRACES##ARGS>), getClassStaticPtr(), yake::reflection::ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
         } \
     } __event_##EVENT_NAME##__; \
     friend struct __event_##EVENT_NAME##__; \
 ACCESS_ATTR: \
-    reflection::event<YAKE_REMOVE_BRACES##ARGS> EVENT_NAME
+    yake::reflection::event<YAKE_REMOVE_BRACES##ARGS> EVENT_NAME
 
 #define RX_CUSTOM_EVENT(ACCESS_ATTR, EVENT_CLASS, EVENT_NAME) \
 private: \
@@ -31,7 +31,7 @@ private: \
 		{ \
         __event_##EVENT_NAME##__() \
 				{ \
-					static reflection::__register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(EVENT_CLASS), getClassStaticPtr(), reflection::ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
+					static yake::reflection::__register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(EVENT_CLASS), getClassStaticPtr(), yake::reflection::ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
         } \
     } __event_##EVENT_NAME##__; \
     friend struct __event_##EVENT_NAME##__; \
@@ -42,7 +42,9 @@ ACCESS_ATTR: \
     CLASSES
  *****************************************************************************/
 
-namespace reflection
+namespace yake
+{
+namespace reflection 
 {
 
 // todo: use yake empty class
@@ -97,8 +99,8 @@ public:
 		{
         if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
         if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
-				if (typeid(reflection::event<Arg1>) != m_typeinfo) throw TypeMismatchError("event");
-				reflection::event<Arg1> * this_event = reinterpret_cast<reflection::event<Arg1>*>(((char*)object) + m_offset);
+				if (typeid(yake::reflection::event<Arg1>) != m_typeinfo) throw TypeMismatchError("event");
+				yake::reflection::event<Arg1> * this_event = reinterpret_cast<yake::reflection::event<Arg1>*>(((char*)object) + m_offset);
 				this_event->operator()(arg1);
     }
 
@@ -107,8 +109,8 @@ public:
 		{
         if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
         if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
-				if (typeid(reflection::event<Arg1>) != m_typeinfo) throw TypeMismatchError("event");
-				reflection::event<Arg1, Arg2> * this_event = reinterpret_cast<reflection::event<Arg1, Arg2>*>(((char *)object) + m_offset);
+				if (typeid(yake::reflection::event<Arg1>) != m_typeinfo) throw TypeMismatchError("event");
+				yake::reflection::event<Arg1, Arg2> * this_event = reinterpret_cast<yake::reflection::event<Arg1, Arg2>*>(((char *)object) + m_offset);
 				this_event->operator()(arg1, arg2);
     }
 
@@ -143,5 +145,6 @@ struct __register_event__
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif // _EVENT_H_

@@ -5,6 +5,7 @@
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <yake/base/mpl/dispatch_arbitrary_types.h>
 #include <yake/base/type_info.h>
@@ -67,6 +68,10 @@ Step 4-6: c++ object is created => adding properties and methods to lua
 Step 7: _now_ we can use the properties and methods within lua => "o.a=5; o:foo()"
 */
 
+/* todo: instead of static class registration (with luabind) we could use small structs or functors and register 
+(using static initialization) those to a static manager, which accepts a lua_state and binds all registered classes 
+to this state. This should allow the user to bind the reflected classes to more than one L. */
+
 // -----------------------------------------
 // lua state
 static struct global_lua_state
@@ -84,7 +89,9 @@ static struct global_lua_state
 
 		lua_State * m_L;
 	};
-	static holder * m_holder;
+
+	// todo: gui linker errors ... normally this should work, because gui is statically linked to rx?
+	/*static holder * m_holder;
 
 	~global_lua_state()
 	{	
@@ -93,12 +100,14 @@ static struct global_lua_state
 			delete m_holder;
 			m_holder = NULL;
 		}
-	}
+	}*/
 
 	lua_State * get()
-	{	
-		if(!m_holder) m_holder = new holder();
-		return m_holder->m_L;	
+	{
+		// todo: check whether this works just fine or not ... there can be multiple L instances
+		static boost::shared_ptr<holder> local_holder(new holder());
+		//if(!m_holder) m_holder = new holder();
+		return /*m_*/local_holder->m_L;	
 	}
 
 	operator lua_State*()
@@ -213,17 +222,19 @@ friend struct static_initor##CLASS_NAME;\
 \
 typedef CLASS_NAME class_type; \
 \
+/* bind class, copied from luabind::module[] because that operator wants a copy of the class_ and that would destroy class_registration */ \
+struct lua_pop_stack \
+{ \
+  lua_pop_stack(lua_State * L) : m_state(L) {} \
+  ~lua_pop_stack() { lua_pop(m_state, 1); } \
+  lua_State * m_state; \
+}; \
+\
 static void register_lua_class() \
 { \
 		/* class header with constructor */ \
 		get_lua_class().def( luabind::constructor<>() ); \
-		/* bind class, copied from luabind::module[] because that operator wants a copy of the class_ and that would destroy class_registration */ \
-    struct lua_pop_stack \
-    { \
-      lua_pop_stack(lua_State * L) : m_state(L) {} \
-      ~lua_pop_stack() { lua_pop(m_state, 1); } \
-      lua_State * m_state; \
-    }; \
+		/* register class */ \
 		lua_pushvalue(L, LUA_GLOBALSINDEX); \
 		lua_pop_stack guard(L); \
 		get_lua_class().register_(L); \
@@ -308,17 +319,18 @@ friend struct static_initor##CLASS_NAME;\
 \
 typedef CLASS_NAME class_type; \
 \
+/* bind class, copied from luabind::module[] because that operator wants a copy of the class_ and that would destroy class_registration */ \
+struct lua_pop_stack \
+{ \
+  lua_pop_stack(lua_State * L) : m_state(L) {} \
+  ~lua_pop_stack() { lua_pop(m_state, 1); } \
+  lua_State * m_state; \
+}; \
 static void register_lua_class() \
 { \
 		/* class header with constructor */ \
 		get_lua_class().def( luabind::constructor<>() ); \
-		/* bind class, copied from luabind::module[] because that operator wants a copy of the class_ and that would destroy class_registration */ \
-    struct lua_pop_stack \
-    { \
-      lua_pop_stack(lua_State * L) : m_state(L) {} \
-      ~lua_pop_stack() { lua_pop(m_state, 1); } \
-      lua_State * m_state; \
-    }; \
+		/* register class */ \
 		lua_pushvalue(L, LUA_GLOBALSINDEX); \
 		lua_pop_stack guard(L); \
 		get_lua_class().register_(L); \
@@ -576,7 +588,7 @@ bool lua_is_class_registered()
 
 #define LUA_EVENT(ACCESS_ATTR, EVENT_NAME, ARGS) \
 public: \
-	const reflection::event<YAKE_REMOVE_BRACES##ARGS> & get_##EVENT_NAME() const \
+	const yake::reflection::event<YAKE_REMOVE_BRACES##ARGS> & get_##EVENT_NAME() const \
 	{ return EVENT_NAME; } \
 private: \
 	struct register_event_##EVENT_NAME \
@@ -586,11 +598,11 @@ private: \
 			initor() \
 			{ \
 				/* register the event class to lua if it is not registered yet */ \
-				if(!lua_is_class_registered< reflection::event<YAKE_REMOVE_BRACES##ARGS> >()) \
+				if(!lua_is_class_registered< yake::reflection::event<YAKE_REMOVE_BRACES##ARGS> >()) \
 				{ \
 					luabind::module(L) \
 					[ \
-						luabind::class_<reflection::event<YAKE_REMOVE_BRACES##ARGS>, reflection::lua_event_base>(#EVENT_NAME) \
+					luabind::class_<yake::reflection::event<YAKE_REMOVE_BRACES##ARGS>, yake::reflection::lua_event_base>(#EVENT_NAME) \
 							.def(get_signature<YAKE_REMOVE_BRACES##ARGS>::signature()) \
 					]; \
 				} \
@@ -618,7 +630,7 @@ private: \
 				{ \
 					luabind::module(L) \
 					[ \
-						luabind::class_<EVENT_CLASS, reflection::lua_event_base>(#EVENT_NAME) \
+						luabind::class_<EVENT_CLASS, yake::reflection::lua_event_base>(#EVENT_NAME) \
 					]; \
 				} \
 				/* bind the event as read-only property */ \

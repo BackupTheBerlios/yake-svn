@@ -10,7 +10,7 @@
     MACROS
  *****************************************************************************/
 
-//todo: add reflection:: to __instance_creator etc.
+//todo: add yake::reflection:: to __instance_creator etc.
 
 /** the CLASS macro is used to declare reflection support in a class. It must
     be placed on the public part of the class.
@@ -21,21 +21,21 @@
 #define RX_CLASS(CLASS_NAME, SUPER_CLASS_NAME) \
 protected: \
     typedef CLASS_NAME ClassType; \
-    static const reflection::Class * getClassStaticPtr() \
+    static const yake::reflection::Class * getClassStaticPtr() \
 		{ \
-				static reflection::Class _class( \
+				static yake::reflection::Class _class( \
             #CLASS_NAME, \
 						typeid(CLASS_NAME), \
 						SUPER_CLASS_NAME::getClassStaticPtr(), \
-						reflection::__instance_creator_factory__<ClassType, __IS_OBJECT__(ClassType)>::create()); \
+						yake::reflection::__instance_creator_factory__<ClassType, __IS_OBJECT__(ClassType)>::create()); \
         return &_class; \
     } \
 public: \
-    static const reflection::Class & getClassStatic() \
+    static const yake::reflection::Class & getClassStatic() \
 		{ \
         return *CLASS_NAME::getClassStaticPtr(); \
     } \
-    virtual const reflection::Class & getClass() const \
+    virtual const yake::reflection::Class & getClass() const \
 		{ \
         return *CLASS_NAME::getClassStaticPtr(); \
     }
@@ -44,6 +44,8 @@ public: \
     CLASSES
  *****************************************************************************/
 
+namespace yake
+{
 namespace reflection 
 {
 
@@ -413,5 +415,6 @@ private:
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif // _CLASS_H_

@@ -16,7 +16,7 @@
 private:\
     struct __static_field_##FIELD_NAME##__ {\
         __static_field_##FIELD_NAME##__() {\
-            static reflection::__register_static_field__ reg((void *)&FIELD_NAME, typeid(FIELD_TYPE), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #FIELD_TYPE, #FIELD_NAME);\
+            static yake::reflection::__register_static_field__ reg((void *)&FIELD_NAME, typeid(FIELD_TYPE), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #FIELD_TYPE, #FIELD_NAME);\
         }\
     } __static_field_##FIELD_NAME##__;\
     friend struct __static_field_##FIELD_NAME##__;\
@@ -27,7 +27,9 @@ ACCESS_ATTR :\
     CLASSES
  *****************************************************************************/
 
-namespace reflection
+namespace yake
+{
+namespace reflection 
 {
 
 /** The StaticField class represents an object's static field.
@@ -118,5 +120,6 @@ struct __register_static_field__
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif // _STATICFIELD_H_

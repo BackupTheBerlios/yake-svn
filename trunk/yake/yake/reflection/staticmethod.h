@@ -127,7 +127,7 @@ template <__REPEAT(N, __TEMPLATE_ARG__, __NOTHING__)> struct __static_callable_v
 private:\
     struct __static_method_##METHOD_NAME##__ {\
         __static_method_##METHOD_NAME##__() {\
-            static reflection::__register_static_method__ reg(__create_static_callable__(&METHOD_NAME), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #RETURN_TYPE, #METHOD_NAME, #METHOD_ARGS);\
+            static yake::reflection::__register_static_method__ reg(__create_static_callable__(&METHOD_NAME), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #RETURN_TYPE, #METHOD_NAME, #METHOD_ARGS);\
         }\
     } __static_method_##METHOD_NAME##__;\
     friend struct __static_method_##METHOD_NAME##__;\
@@ -140,6 +140,8 @@ ACCESS_ATTR :\
     CLASSES
  *****************************************************************************/
 
+namespace yake
+{
 namespace reflection
 {
 
@@ -412,5 +414,6 @@ struct __register_static_method__
 };
 
 } // namespace reflection
+} // namespace yake
 
 #endif // _STATICMETHOD_H_

@@ -16,7 +16,7 @@ bool dostring(lua_State * L, const char * str)
 
 // -----------------------------------------
 // lua state
-global_lua_state::holder * global_lua_state::m_holder = NULL;
+/*global_lua_state::holder * global_lua_state::m_holder = NULL;*/
 
 // -----------------------------------------
 // lua event bindings
@@ -28,8 +28,8 @@ namespace
 		module(L)
 		[ 
 			class_<boost::function_base>("function_base"),
-			class_<reflection::lua_event_base>("lua_event_base")
-				.def("attach_handler", &reflection::lua_event_base::attach_handler)
+			class_<yake::reflection::lua_event_base>("lua_event_base")
+			.def("attach_handler", &yake::reflection::lua_event_base::attach_handler)
 		];
 	}
 	STATIC_INIT(register_lua_event_base)
