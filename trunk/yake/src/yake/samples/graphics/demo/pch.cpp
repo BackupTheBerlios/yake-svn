@@ -1,1 +1,1 @@
-#include <samples/graphics/yake/pch.h>
+#include <yake/samples/graphics/pch.h>
