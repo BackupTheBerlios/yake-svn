@@ -5,11 +5,9 @@ material box
 	{
 		pass
 		{
+			diffuse 1.0 1.0 1.0
+
 			scene_blend modulate
-			texture_unit
-			{
-				diffuse 1 1 1
-			}
 		}
 	}
 }
@@ -20,9 +18,10 @@ material sphere
 	{
 		pass
 		{
+			diffuse 1.0 1.0 1.0
+
 			texture_unit
 			{
-				diffuse 1 1 1
 				texture RustedMetal.jpg
 			}
 		}
