@@ -18,6 +18,9 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
+#ifndef YAKE_PHYSICS_H
+#define YAKE_PHYSICS_H
+
 #ifndef YAKE_BASE_PREREQUISITES_H
 #	include <yake/base/yakePrerequisites.h>
 #endif
@@ -26,3 +29,5 @@
 #endif
 #include <yake/physics/yakePhysicsSystem.h>
 #include <yake/physics/yakePhysicsAffectors.h>
+
+#endif
