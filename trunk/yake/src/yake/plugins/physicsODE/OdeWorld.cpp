@@ -37,11 +37,13 @@ namespace physics {
 		{
 			mStepSize = 1. / 100.;	// default: 50Hz
 			mOdeWorld = new dWorld();
+			YAKE_ASSERT( mOdeWorld );
 			mOdeSpace = new dSimpleSpace( 0 );
+			YAKE_ASSERT( mOdeSpace );
 			
 			mOdeContactGroup = new dJointGroup( 0 );
 
-			mOdeWorld->setGravity( 0., 0., 0. );
+			mOdeWorld->setGravity( 0., -9.81, 0. );
 			mOdeWorld->setCFM( 0.0005 );
 			mOdeWorld->setERP( 0.99 );
 			mOdeWorld->setAutoDisableFlag( 1 );

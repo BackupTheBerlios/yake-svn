@@ -47,7 +47,7 @@ namespace physics {
 		// destroy all shapes
 		for( IActor::ShapePtrVector::iterator victim = mShapes.begin(); victim != mShapes.end(); ++victim )
 		{
-			YAKE_SAFE_DELETE( *victim );
+			//YAKE_SAFE_DELETE( *victim );
 		}
 	}
 	
@@ -100,7 +100,6 @@ namespace physics {
 			/// We are not making transform geom here.
 			/// Calculating absolute coordinates instead...
 			Vector3 normal( pPlaneDesc->orientation*pPlaneDesc->normal );
-			
 			normal.normalise();
 			
  			real d = pPlaneDesc->d + normal.dotProduct( pPlaneDesc->position ); 

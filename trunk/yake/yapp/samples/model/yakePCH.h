@@ -28,7 +28,7 @@
 #include <yake/base/yakeDebugOutputStream.h>
 #include <yake/base/yakeLog.h>
 #include <yake/base/yakeLibrary.h>
-#include <yake/physics/yakePhysicsSystem.h>
+#include <yake/physics/yakePhysics.h>
 
 #include <yake/samples/common/yakeExampleApplication.h>
 #include <yake/data/yakeData.h>

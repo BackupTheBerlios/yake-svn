@@ -14,7 +14,7 @@ using namespace yake::app; // model::Physical
 	/** XODEParser base class providing default implementation for DOM parsing.
 	* \todo read lights, environment, external references ..
 	*/
-	class XODEParser
+	class YAPP_BASE_API XODEParser
 	{
 	public:
 		XODEParser( model::Physical& rBaseModel );
@@ -104,9 +104,9 @@ using namespace yake::app; // model::Physical
 		virtual void readRotation( const SharedPtr<dom::INode> pRotNode, Quaternion& rRot );
 		virtual void readScale( const SharedPtr<dom::INode> pScaleNode, Vector3& rScale );  
 		virtual void readAxisAngleRot( const SharedPtr<dom::INode> pRotNode, Quaternion& rRot );
-		virtual void readMass( const SharedPtr<dom::INode> pMassNode, physics::IBody* pBody, const Transform& rParentTransform ); 
-		virtual void readMassShape( const SharedPtr<dom::INode> pMShapeNode, physics::IBody* pBody, const Transform& rParentTransform ); 
-		virtual void readMassAdjust( const SharedPtr<dom::INode> pMAdjustNode, physics::IBody* pBody ); 
+		virtual void readMass( const SharedPtr<dom::INode> pMassNode, physics::IBody& rBody, const Transform& rParentTransform ); 
+		virtual void readMassShape( const SharedPtr<dom::INode> pMShapeNode, physics::IBody& rBody, const Transform& rParentTransform ); 
+		virtual void readMassAdjust( const SharedPtr<dom::INode> pMAdjustNode, physics::IBody& rBody ); 
 		virtual void readJoint( const SharedPtr<dom::INode> pJointNode, const String& rBodyName, Transform& rParentTransform );
 		
 		virtual void readBall( const SharedPtr<dom::INode> pJointNode, physics::IDynamicActor* pActor1, physics::IDynamicActor* pActor2, Transform& rJointTransform );
@@ -143,7 +143,7 @@ using namespace yake::app; // model::Physical
 		model::Physical&					mBaseModel;
 	};
 	
-	class XODEParserV1 : public XODEParser
+	class YAPP_BASE_API XODEParserV1 : public XODEParser
 	{
 	public:
 		XODEParserV1( model::Physical& rBaseModel ):XODEParser( rBaseModel ) {}

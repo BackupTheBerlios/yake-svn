@@ -248,12 +248,12 @@ namespace physics {
 		OdeSphere::OdeSphere( dSpace* pSpace, real radius )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
-			
+
 			mOdeSpace = pSpace;
 			YAKE_ASSERT( radius > 0 ).warning( "Radius may be invalid!" );
-			
-			mOdeGeom = new dSphere( (*mOdeSpace).id(), static_cast<dReal>( radius ) );
-			
+
+			mOdeGeom = new dSphere( mOdeSpace->id(), static_cast<dReal>( radius ) );
+			YAKE_ASSERT( mOdeGeom );
 			mOdeGeomID = mOdeGeom->id();
 		}
 		
@@ -277,7 +277,7 @@ namespace physics {
 			YAKE_ASSERT( radius > 0 ).error( "Radius should be invalid!" );
 			YAKE_ASSERT( length > 0 ).error( "Length should be positive!" );
 
-			mOdeGeom = new dCCylinder( *mOdeSpace, static_cast<dReal>( radius ), static_cast<dReal>( length ) );
+			mOdeGeom = new dCCylinder( mOdeSpace->id(), static_cast<dReal>( radius ), static_cast<dReal>( length ) );
 			
 			mOdeGeomID = mOdeGeom->id();
 		}
@@ -299,7 +299,7 @@ namespace physics {
 			
 			mOdeSpace = pSpace;
 			
-			mOdeGeom = new dBox( *mOdeSpace, sizex, sizey, sizez );
+			mOdeGeom = new dBox( mOdeSpace->id(), sizex, sizey, sizez );
 			
 			mOdeGeomID = mOdeGeom->id();
 		}
@@ -321,16 +321,17 @@ namespace physics {
 			
 			mOdeSpace = pSpace;
 
-			YAKE_ASSERT( a != 0. && b != 0. && c != 0. ).error( "Invalid plane equation!" );
+			YAKE_ASSERT( a != 0. || b != 0. || c != 0. ).error( "Invalid plane equation!" );
 			
 			Vector3 normal = Vector3( a, b, c );
 			
-			if ( normal.squaredLength() == 0 )
+			if ( normal.squaredLength() < 0.02 )
 				normal = Vector3( 0, 1, 0 );
 			else
 				normal.normalise();
 
-			mOdeGeom = new dPlane( *pSpace, normal.x, normal.y, normal.z, d );
+			mOdeGeom = new dPlane( mOdeSpace->id(), normal.x, normal.y, normal.z, d );
+			YAKE_ASSERT( mOdeGeom );
 			mOdeGeomID = mOdeGeom->id();
 		}
 		
@@ -351,7 +352,8 @@ namespace physics {
 			
 			mOdeSpace = pSpace;
 			
-			mOdeGeom = new dGeomTransform( (*mOdeSpace).id() );
+			mOdeGeom = new dGeomTransform( mOdeSpace->id() );
+			YAKE_ASSERT( mOdeGeom );
 			mOdeGeomID = mOdeGeom->id();
 			
 			dGeomTransformSetCleanup( mOdeGeomID, 1 );
