@@ -18,33 +18,22 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_PHYSICS_PHYSICSSYSTEM_H
-#define YAKE_PHYSICS_PHYSICSSYSTEM_H
+#ifndef YAKE_PHYSICS_WORLD_H
+#define YAKE_PHYSICS_WORLD_H
 
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
 
-#ifndef YAKE_PHYSICS_WORLD_H
-#	include <yake/physics/yakePhysicsWorld.h>
+#ifndef YAKE_PHYSICS_AVATAR_H
+#	include <yake/physics/yakePhysicsAvatar.h>
 #endif
-
-	/** The description structs are used for creating elements.
-
-		Why is this necessary?
-			Physics engines differ in the way they define and create physics objects.
-			Often the order of setting parameters is crucial, e.g. in ODE as soon as a fixed joint
-			is attached to two objects, the anchor point cannot be set again (workaround is destroying
-			the joint, recreating it, setting the new anchor point and reattaching the objects).
-
-			Furthermore we give the concrete implementation of yake::physics the freedom to
-			use certain optimizations and at least avoid sub-optimal creation paths.
-
-			Normally, most objects won't be massively modified once created, therefore this approach
-			should work fine. Nevertheless modification is still possible. Depending on the restrictions
-			of the underlying physics system modifications may be sub-optimal in certain situations (see
-			the example of fixed joints in ODE above).
-	*/
+#ifndef YAKE_PHYSICS_JOINT_H
+#	include <yake/physics/yakePhysicsJoint.h>
+#endif
+#ifndef YAKE_PHYSICS_ACTOR_H
+#	include <yake/physics/yakePhysicsActor.h>
+#endif
 
 namespace yake {
 	using namespace base;
@@ -52,16 +41,29 @@ namespace yake {
 	using namespace base::math;
 namespace physics {
 
-	class YAKE_PHYSICS_API IPhysicsSystem
+	class IWorld// : public IPropertyQueryHandler
 	{
-		YAKE_DECLARE_REGISTRY_0( IPhysicsSystem, base::String );
 	public:
-		virtual ~IPhysicsSystem() {}
-		virtual SharedPtr<IWorld> createWorld() = 0;
+		virtual ~IWorld() {}
+
+		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase& rJointDesc ) = 0;
+		virtual SharedPtr<IActor> createActor( const IActor::Desc& rActorDesc = IActor::Desc() ) = 0;
+		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc& rAvatarDesc ) = 0;
+		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc& rMatDesc ) = 0;
+
+		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc& rTrimeshDesc ) = 0;
+
+		virtual Deque<ShapeType> getSupportedShapes( bool bStatic = true, bool bDynamic = true ) const = 0;
+		virtual Deque<JointType> getSupportedJoints() const = 0;
+		virtual Deque<String> getSupportedSolvers() const = 0;
+		virtual bool useSolver( const String& rSolver ) = 0;
+		virtual String getCurrentSolver() const = 0;
+		virtual const PropertyNameList& getCurrentSolverParams() const = 0;
+		virtual void setCurrentSolverParam( const String& rName, const boost::any& rValue ) = 0;
+
+		virtual void step(const real timeElapsed) = 0;
 	};
 
 }
 }
-
 #endif
-

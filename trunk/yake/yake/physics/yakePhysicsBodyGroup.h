@@ -18,24 +18,45 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_PHYSICS_H
-#define YAKE_PHYSICS_H
+#ifndef YAKE_PHYSICS_BODYGROUP_H
+#define YAKE_PHYSICS_BODYGROUP_H
 
-#ifndef YAKE_BASE_PREREQUISITES_H
-#	include <yake/base/yakePrerequisites.h>
-#endif
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
-#include <yake/physics/yakePhysicsShape.h>
-#include <yake/physics/yakePhysicsJoint.h>
-#include <yake/physics/yakePhysicsBody.h>
-#include <yake/physics/yakePhysicsActor.h>
-#include <yake/physics/yakePhysicsBodyGroup.h>
-#include <yake/physics/yakePhysicsAffectors.h>
-//#include <yake/physics/yakeAffectorZone.h>
-#include <yake/physics/yakePhysicsMaterial.h>
-#include <yake/physics/yakePhysicsWorld.h>
-#include <yake/physics/yakePhysicsSystem.h>
 
+namespace yake {
+	using namespace base;
+	using namespace base::templates;
+	using namespace base::math;
+namespace physics {
+
+	class IBody;
+
+	class BodyGroup
+	{
+	public:
+        typedef Vector<SharedPtr<IBody> > BodyVector;
+		typedef BodyVector::iterator iterator;
+		typedef BodyVector::const_iterator const_iterator;
+		typedef BodyVector::value_type value_type;
+
+		BodyGroup( const BodyGroup & rBodyGroup );
+		BodyGroup( const BodyVector & rBodies );
+		BodyGroup();
+		~BodyGroup();
+
+		BodyGroup& operator += (SharedPtr<IBody> & rBody);
+		BodyGroup& operator -= (SharedPtr<IBody> & rBody);
+
+		iterator begin();
+		const_iterator begin() const;
+		iterator end();
+		const_iterator end() const;
+	private:
+		BodyVector	mBodies;
+	};
+
+}
+}
 #endif

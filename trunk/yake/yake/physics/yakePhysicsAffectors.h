@@ -18,14 +18,15 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef INC_YAKE_PHYSICS_AFFECTORS_H
-#define INC_YAKE_PHYSICS_AFFECTORS_H
+#ifndef YAKE_PHYSICS_AFFECTORS_H
+#define YAKE_PHYSICS_AFFECTORS_H
 
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
 
 namespace yake {
+	using namespace base;
 namespace physics {
 
 	/** A generic body affector. Basically defines the interface, factory and implements

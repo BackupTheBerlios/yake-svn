@@ -18,24 +18,46 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_PHYSICS_H
-#define YAKE_PHYSICS_H
+#ifndef YAKE_PHYSICS_ACTOR_H
+#define YAKE_PHYSICS_ACTOR_H
 
-#ifndef YAKE_BASE_PREREQUISITES_H
-#	include <yake/base/yakePrerequisites.h>
-#endif
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
-#include <yake/physics/yakePhysicsShape.h>
-#include <yake/physics/yakePhysicsJoint.h>
-#include <yake/physics/yakePhysicsBody.h>
-#include <yake/physics/yakePhysicsActor.h>
-#include <yake/physics/yakePhysicsBodyGroup.h>
-#include <yake/physics/yakePhysicsAffectors.h>
-//#include <yake/physics/yakeAffectorZone.h>
-#include <yake/physics/yakePhysicsMaterial.h>
-#include <yake/physics/yakePhysicsWorld.h>
-#include <yake/physics/yakePhysicsSystem.h>
 
+namespace yake {
+	using namespace base;
+	using namespace base::templates;
+	using namespace base::math;
+namespace physics {
+
+	class IActor : public Movable
+	{
+	public:
+		struct Desc
+		{
+			Deque< SharedPtr<IShape::Desc> >	shapes;
+		};
+	public:
+		virtual ~IActor() {}
+
+		typedef Vector<IShape*> ShapePtrVector;
+
+		virtual bool hasBody() const = 0;
+		virtual bool createBody() = 0;
+		virtual IBody* getBody() const = 0;
+
+		virtual SharedPtr<IShape> createShape( const IShape::Desc& rShapeDesc ) = 0;
+		virtual void destroyShape( SharedPtr<IShape>& rShape ) = 0;
+		virtual const ShapePtrVector getShapes() const = 0;
+
+		//virtual void updateMassFromShapes() = 0;
+
+		typedef Signal0<void> SignalCollisionEntered;
+		virtual void subscribeToCollisionEnteredSignal( const SignalCollisionEntered::slot_type& rSlot ) = 0;
+		virtual void subscribeToCollisionExitedSignal( const SignalCollisionEntered::slot_type& rSlot ) = 0;
+	};
+
+}
+}
 #endif

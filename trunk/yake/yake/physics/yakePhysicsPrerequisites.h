@@ -33,4 +33,78 @@
 
 #include <boost/any.hpp>
 
+namespace yake {
+	using namespace base;
+	using namespace base::templates;
+	using namespace base::math;
+namespace physics {
+	typedef ::yake::uint32 TriangleMeshId;
+	const TriangleMeshId kTriangleMeshIdNone = 0xFFFFFFFF;
+
+	/* not used (yet?)
+	enum PhysicsErrorCode
+	{
+		kPEC_NONE = 10000,
+		kPEC_ERROR = 10001,
+		kPEC_INVALID_AXIS = 10002,
+		kPEC_INVALID_PARAMETER = 10003,
+		kPEC_ALREADY_EXISTS = 10004
+	};
+	*/
+
+	struct Property
+	{
+		Property();
+		Property( const String& n, const boost::any& v );
+
+		String		name;
+		boost::any	value;
+	};
+	typedef Deque<String> PropertyNameList;
+
+	class YAKE_PHYSICS_API IPropertyQueryHandler
+	{
+	public:
+		virtual ~IPropertyQueryHandler() {}
+		virtual const PropertyNameList& getPropertyNames() const = 0;
+		virtual void setProperty( const String& rName, const boost::any& rValue ) = 0;
+	};
+
+	struct TriangleMeshDesc
+	{
+		/** Important Notice: Vector3Vector, VertexVector, NormalVector and IndexVector HAVE to
+			be vectors because they may be accessed like C arrays ( e.g. &arr[0] ).
+			Is this OK? Today, it's practically OK and tomorrow it'll be even more as it's part
+			of the first Technical Corrigendum.
+		*/
+		typedef Vector<Vector3> Vector3Vector;
+		typedef Vector3Vector VertexVector;
+		typedef Vector3Vector NormalVector;
+		typedef uint32 IndexType;
+		typedef Vector<IndexType> IndexVector;
+
+		TriangleMeshDesc()
+		{
+		}
+		TriangleMeshDesc(	const VertexVector& rVertices,
+							const IndexVector& rIndices ) :
+				vertices( rVertices ),
+				indices( rIndices )
+		{
+		}
+		TriangleMeshDesc(	const VertexVector& rVertices,
+							const IndexVector& rIndices,
+							const NormalVector& rNormals ) :
+				vertices( rVertices ),
+				indices( rIndices ),
+				normals( rNormals )
+		{
+		}
+		VertexVector	vertices;
+		NormalVector	normals;
+		IndexVector		indices;
+	};
+}
+}
+
 #endif

@@ -18,24 +18,50 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_PHYSICS_H
-#define YAKE_PHYSICS_H
+#ifndef YAKE_PHYSICS_MATERIAL_H
+#define YAKE_PHYSICS_MATERIAL_H
 
-#ifndef YAKE_BASE_PREREQUISITES_H
-#	include <yake/base/yakePrerequisites.h>
-#endif
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
-#include <yake/physics/yakePhysicsShape.h>
-#include <yake/physics/yakePhysicsJoint.h>
-#include <yake/physics/yakePhysicsBody.h>
-#include <yake/physics/yakePhysicsActor.h>
-#include <yake/physics/yakePhysicsBodyGroup.h>
-#include <yake/physics/yakePhysicsAffectors.h>
-//#include <yake/physics/yakeAffectorZone.h>
-#include <yake/physics/yakePhysicsMaterial.h>
-#include <yake/physics/yakePhysicsWorld.h>
-#include <yake/physics/yakePhysicsSystem.h>
 
+namespace yake {
+	using namespace base;
+	using namespace base::templates;
+	using namespace base::math;
+namespace physics {
+
+	class IMaterial
+	{
+	public:
+		struct Desc
+		{
+			Desc( real friction = 0.1, real restitution = 0.5, real staticFriction = 0.3, real rollingFriction = 0.2 ) :
+				mFriction( friction ),
+				mRestitution( restitution ),
+				mStaticFriction( staticFriction ),
+				mRollingFriction( rollingFriction )
+			{}
+			
+			virtual ~Desc() {}
+			
+			real mFriction;
+			real mRestitution;
+			real mStaticFriction;
+			real mRollingFriction;
+		};
+
+		virtual ~IMaterial() {}
+
+		virtual void setRollingFriction(const real friction) = 0;
+		virtual void setRestitution(const real restitution) = 0;
+		virtual void setStaticFriction(const real friction) = 0;
+		virtual void setStaticFrictionV(const real friction) = 0;
+		virtual void setStaticFrictionVEnabled(bool enabled) = 0;
+
+		//@todo add more properties that can quite easily be generalised...
+	};
+
+}
+}
 #endif
