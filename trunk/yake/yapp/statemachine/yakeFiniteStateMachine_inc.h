@@ -57,7 +57,8 @@
 		ErrorCode Machine<StateIdType>::addTransition( const StateId & rkFrom, const StateId & rkTo, TransitionPtr rTransition )
 		{
 			const StateIdPair idPair( rkFrom, rkTo );
-			if (_getTransition( idPair ).get())
+			SharedTransitionPtr transPtr;
+			if (_getTransition( idPair, transPtr ))
 				return eAlreadyRegistered; // already registered.
 			mTransitions[ idPair ] = SharedTransitionPtr(rTransition);
 			return eOk;
