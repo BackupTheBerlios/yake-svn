@@ -72,8 +72,10 @@ private:
 	static std::string dispatch_widget_type(const std::type_info & type_info)
 	{
 		// check whether all widget types are handled or not at compile time
+		YAKE_STATIC_ASSERT_WIDGETS(button_base, static_text_base, multi_line_edit_box_base);
+		
 		// todo: use macro, see config.h
-		BOOST_STATIC_ASSERT((
+		/*BOOST_STATIC_ASSERT((
 			compare_sequences
 			< 
 				implemented_widgets, // conditional types
@@ -83,7 +85,7 @@ private:
 					static_text_base,
 					multi_line_edit_box_base
 				>
-			>::type::value));
+			>::type::value));*/
 
     // returning the name of the widget info type
 		if(type_info == typeid(button_base)) return "button";
