@@ -23,7 +23,7 @@ struct create_help <yake::graphics::IGraphicsSystem>
 	static boost::shared_ptr<yake::graphics::IGraphicsSystem> create()
 	{ 
 		boost::shared_ptr<yake::graphics::IGraphicsSystem> ptr = yake::base::templates::create<yake::graphics::IGraphicsSystem>();
-		ptr->initialize();
+		ptr->initialise();
 		return ptr; 
 	}
 };
