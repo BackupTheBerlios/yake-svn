@@ -45,6 +45,10 @@
 #include <iostream>
 #include <sstream>
 
+#ifdef __SGI_STL
+#	include <iterator>
+#endif
+
 // Include platform specific configuration files
 #if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
 #	include <yake/base/prerequisites/yakePrerequisitesVC.h>
