@@ -54,12 +54,14 @@ namespace ogre3d {
 		uint8				mNumTexCoordSets;
 
 		float*				mpLockedPositions;
+		float*				mpLockedNormals;
 		float*				mpLockedTexCoords[MAX_TEX_COORDS];
 		uint32*				mpLockedColours;
 		uint32*				mpLockedIndices;
 		Ogre::HardwareVertexBufferSharedPtr	mhwvbPositions;
 		Ogre::HardwareVertexBufferSharedPtr	mhwvbTexCoords[MAX_TEX_COORDS];
 		Ogre::HardwareVertexBufferSharedPtr	mhwvbColours;
+		Ogre::HardwareVertexBufferSharedPtr mhwvbNormals;
 		Ogre::HardwareIndexBufferSharedPtr mhwibIndices;
 
 		Ogre::AxisAlignedBox	mBox;
@@ -79,6 +81,10 @@ namespace ogre3d {
 		virtual bool lockPositions( uint32 start, uint32 count, bool bRead = false );
 		virtual bool unlockPositions();
 		virtual bool setPosition( uint32 index, const Vector3 & position );
+
+		virtual bool lockNormals( uint32 start, uint32 count, bool bRead = false );
+		virtual bool unlockNormals();
+		virtual bool setNormal( uint32 index, const Vector3 & normal );
 
 		virtual bool lockTexCoords( uint16 set, uint32 start, uint32 count, bool bRead = false );
 		virtual bool unlockTexCoords( uint16 set );

@@ -72,7 +72,8 @@ namespace ogre3d {
 				mSubmesh( subMesh ),
 				mpLockedPositions(0),
 				mpLockedColours(0),
-				mpLockedIndices(0)
+				mpLockedIndices(0),
+				mpLockedNormals(0)
 	{
 		YAKE_ASSERT( mMesh );
 		for (int i=0; i<MAX_TEX_COORDS; ++i)
@@ -132,10 +133,10 @@ namespace ogre3d {
 		mNumTexCoordSets = numTexSets;
 
 		mSubmesh->useSharedVertices = false;
-		mSubmesh->setMaterialName("box");
+		mSubmesh->setMaterialName("sphere");
 		mSubmesh->operationType = Ogre::RenderOperation::OT_TRIANGLE_LIST;
 		YAKE_ASSERT(mSubmesh->parent);
-		mSubmesh->parent->_setBoundingSphereRadius( 40 ); // FIXME
+		mSubmesh->parent->_setBoundingSphereRadius( 200 ); // FIXME
 		mBox = mSubmesh->parent->getBounds();
 
 		// index data
@@ -169,16 +170,21 @@ namespace ogre3d {
 		// vertex decl
 		YAKE_ASSERT( vertexData.vertexDeclaration );
 		uint16 source = 0;
-		vertexData.vertexDeclaration->addElement( source, 0,
+		vertexData.vertexDeclaration->addElement( source++, 0,
 				Ogre::VET_FLOAT3,
 				Ogre::VES_POSITION
 			);
-		source++;
 
 		vertexData.vertexDeclaration->addElement( source++, 0,
 				Ogre::VET_COLOUR,
 				Ogre::VES_DIFFUSE
 			);
+
+		vertexData.vertexDeclaration->addElement( source++, 0,
+				Ogre::VET_FLOAT3,
+				Ogre::VES_NORMAL
+			);
+
 		for (int i=0; i<mNumTexCoordSets; ++i)
 			vertexData.vertexDeclaration->addElement( source++, 0,
 					Ogre::VET_FLOAT2,
@@ -207,6 +213,15 @@ namespace ogre3d {
 			);
 		vertexData.vertexBufferBinding->setBinding(source++, mhwvbColours );
 
+		// normals
+		mhwvbNormals = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
+				vertexData.vertexDeclaration->getVertexSize( source ),
+				vertexData.vertexCount,
+				mMesh->getVertexBufferUsage(),
+				mMesh->isVertexBufferShadowed()
+				);
+		vertexData.vertexBufferBinding->setBinding(source++, mhwvbNormals );
+
 		// tex coord sets
 		for (int i=0; i<mNumTexCoordSets; ++i)
 		{
@@ -231,6 +246,7 @@ namespace ogre3d {
 		YAKE_ASSERT( mSubmesh );
 
 		unlockPositions();
+		unlockNormals();
 		for (int i=0; i<mNumTexCoordSets; ++i)
 			unlockTexCoords( i );
 		unlockColours();
@@ -265,7 +281,12 @@ namespace ogre3d {
 		Ogre::VertexData& vertexData = *mSubmesh->vertexData;
 
 		YAKE_ASSERT( vertexData.vertexBufferBinding );
-		mhwvbPositions = vertexData.vertexBufferBinding->getBuffer( 0 ); // 0 = positions, 1= colours, 1+set = tex coords
+
+		const Ogre::VertexElement* e = mSubmesh->vertexData->vertexDeclaration->findElementBySemantic( Ogre::VES_POSITION );
+		YAKE_ASSERT( e );
+		uint16 source = e->getSource();
+		mhwvbPositions = vertexData.vertexBufferBinding->getBuffer( source );
+		//mhwvbPositions = vertexData.vertexBufferBinding->getBuffer( 0 ); // 0 = positions, 1= colours, 1+set = tex coords
 		YAKE_ASSERT( false == mhwvbPositions.isNull() );
 
 		mpLockedPositions = static_cast<real*>(mhwvbPositions->lock( Ogre::HardwareBuffer::HBL_DISCARD ));
@@ -318,7 +339,7 @@ namespace ogre3d {
 		Ogre::VertexData& vertexData = *mSubmesh->vertexData;
 
 		YAKE_ASSERT( vertexData.vertexBufferBinding );
-		mhwvbTexCoords[set] = vertexData.vertexBufferBinding->getBuffer( 2+set ); // 0 = positions, 1= colours, 2+set = tex coords
+		mhwvbTexCoords[set] = vertexData.vertexBufferBinding->getBuffer( 3+set ); // 0 = positions, 1= colours, 2= normals, 3+set = tex coords
 		YAKE_ASSERT( false == mhwvbTexCoords[set].isNull() );
 
 		mpLockedTexCoords[set] = static_cast<real*>(mhwvbTexCoords[set]->lock( Ogre::HardwareBuffer::HBL_DISCARD ));
@@ -334,7 +355,9 @@ namespace ogre3d {
 		//YAKE_ASSERT( mhwvbTexCoords[set].isNull() == false ).warning("need a hwvb!");
 		if (mpLockedTexCoords[set])
 		{
-			mhwvbTexCoords[set]->unlock();
+			if (mhwvbTexCoords[set].get())
+				if (mhwvbTexCoords[set]->isLocked())
+					mhwvbTexCoords[set]->unlock();
 			mpLockedTexCoords[set] = 0;
 		}
 
@@ -370,7 +393,11 @@ namespace ogre3d {
 		Ogre::VertexData& vertexData = *mSubmesh->vertexData;
 
 		YAKE_ASSERT( vertexData.vertexBufferBinding );
-		mhwvbColours = vertexData.vertexBufferBinding->getBuffer( 1 ); 
+
+		const Ogre::VertexElement* e = mSubmesh->vertexData->vertexDeclaration->findElementBySemantic( Ogre::VES_DIFFUSE );
+		YAKE_ASSERT( e );
+		uint16 source = e->getSource();
+		mhwvbColours = vertexData.vertexBufferBinding->getBuffer( source ); // 1
 		YAKE_ASSERT( false == mhwvbColours.isNull() );
 
 		mpLockedColours = static_cast<uint32*>(mhwvbColours->lock( Ogre::HardwareBuffer::HBL_DISCARD ));
@@ -406,10 +433,10 @@ namespace ogre3d {
 			return false;
 		//RGBA
 		mpLockedColours[ index ] =
-					static_cast<uint8>(colour.r * 255.0) & 0xFF << 24 |
-					static_cast<uint8>(colour.g * 255.0) & 0xFF << 16 |
-					static_cast<uint8>(colour.b * 255.0) & 0xFF << 8 |
-					static_cast<uint8>(colour.a * 255.0) & 0xFF;
+					((static_cast<uint8>(colour.r * 255.0) & 0xFF) << 24) |
+					((static_cast<uint8>(colour.g * 255.0) & 0xFF) << 16) |
+					((static_cast<uint8>(colour.b * 255.0) & 0xFF) << 8) |
+					(static_cast<uint8>(colour.a * 255.0) & 0xFF);
 		//*pColour = colour.asRGBA();
 		return true;
 	}
@@ -465,6 +492,61 @@ namespace ogre3d {
 	}
 
 
+	//-----------------------------------------------------
+	bool OgreSubmeshAccess::lockNormals(uint32 start, uint32 count, bool bRead /* = false  */)
+	{
+		YAKE_ASSERT( mpLockedNormals == 0 ).warning("should be unlocked!");
+		if (mpLockedNormals)
+		{
+			if (!unlockNormals())
+				return false;
+		}
+		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( mSubmesh );
+
+		YAKE_ASSERT( mSubmesh->vertexData );
+		Ogre::VertexData& vertexData = *mSubmesh->vertexData;
+
+		YAKE_ASSERT( vertexData.vertexBufferBinding );
+
+		const Ogre::VertexElement* e = mSubmesh->vertexData->vertexDeclaration->findElementBySemantic( Ogre::VES_NORMAL );
+		YAKE_ASSERT( e );
+		uint16 source = e->getSource();
+		mhwvbNormals = vertexData.vertexBufferBinding->getBuffer( source );
+		YAKE_ASSERT( false == mhwvbNormals.isNull() );
+
+		mpLockedNormals = static_cast<real*>(mhwvbNormals->lock( Ogre::HardwareBuffer::HBL_DISCARD ));
+		YAKE_ASSERT( mpLockedNormals );
+
+		return (mpLockedNormals!=0);
+	}
+
+	//-----------------------------------------------------
+	bool OgreSubmeshAccess::unlockNormals()
+	{
+		//YAKE_ASSERT( mpLockedNormals != 0 ).warning("should be locked!");
+		YAKE_ASSERT( mhwvbNormals.isNull() == false ).warning("need a hwvb!");
+		if (mpLockedNormals)
+			mhwvbNormals->unlock();
+		mpLockedNormals = 0;
+
+		return true;
+	}
+
+	//-----------------------------------------------------
+	bool OgreSubmeshAccess::setNormal( uint32 index, const Vector3 & normal )
+	{
+		YAKE_ASSERT( mpLockedNormals != 0 ).warning("should be locked!");
+		YAKE_ASSERT( mhwvbNormals.isNull() == false ).warning("need a hwvb!");
+		if (mhwvbNormals.isNull() || mpLockedNormals == 0)
+			return false;
+		float* pN = &mpLockedNormals[ index * 3 ];
+		*pN = normal.x; pN++;
+		*pN = normal.y; pN++;
+		*pN = normal.z;
+
+		return true;
+	}
 }
 }
 }
