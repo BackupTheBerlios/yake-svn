@@ -4,25 +4,26 @@
 #include "meta_field.h"
 #include <boost/lexical_cast.hpp>
 
-template< typename T, int bit_flags = none >
+template< typename T >
 struct typed_field : public meta_field
 {
-	typedef typed_field< T, bit_flags > this_type;
+	typedef typed_field< T > this_type;
 
-	typed_field()
-		: meta_field( typeid( value_ ).name() ), bit_flags_( bit_flags )
+	typed_field( int flags = none )
+		: meta_field( flags )
 	{}
 
-	typed_field( std::string field_name, T value = T() ) 
-		: meta_field( field_name, typeid( value ).name() ), 
-		  value_( value ), bit_flags_( bit_flags )
+	typed_field( std::string field_name, T value = T(), 
+		int flags = none ) 
+		: meta_field( field_name, flags ), 
+		  value_( value )
 	{	
 	}
 
-	typed_field( meta_object & object, 
-		std::string field_name, T value ) 
-		: meta_field( object, field_name, typeid( value ).name() ), 
-		  value_( value ), bit_flags_( bit_flags )
+	typed_field( meta_object & object, std::string field_name, 
+		T value, int flags = none ) 
+		: meta_field( object, field_name, flags ),
+		  value_( value )
 	{	
 	}
 
@@ -51,6 +52,11 @@ struct typed_field : public meta_field
 		return value_;
 	}
 
+	std::string type_as_string()
+	{
+		return typeid( value_ ).name();
+	}
+
 	std::string value_as_string()
 	{
 		return boost::lexical_cast<std::string>( value_ );
@@ -70,11 +76,10 @@ struct typed_field : public meta_field
 		// DISPATCH TRICK ( used by meta_class) : add clone to the meta object, this way we don't loose type information
 		// and obj->add_field => hook::on_add_field can use typed_field<> instead of the abstract meta_field
 		// interface, so the replication system has concrete information about the value offset and its' size
-    object.add_field< this_type >( * new this_type( object, field_name_, value_ ) );
+    object.add_field< this_type >( * new this_type( object, field_name_, value_, flags_ ) );
 	};
 
 	T value_;	
-	int bit_flags_;
 };
 
 template< typename T >

@@ -9,28 +9,33 @@ class meta_object;
 enum flags
 {
 	none			= 1,
-  save			= 2,
+	save			= 2,
 	load			= 4,
-	replicate = 8
+	replicate	= 8
 };
+
 
 struct meta_field
 {	
-	meta_field( std::string type_name )
-		: type_name_( type_name ), object_(0)
+	meta_field( int flags = none )
+		: object_(0), 
+			flags_(flags)
 	{}
 
 	meta_field( meta_object & object, 
-		std::string field_name, std::string type_name )
+		std::string field_name, int flags = none )
 		: object_( &object ), field_name_( field_name ),
-			type_name_( type_name )
+			flags_(flags)
 	{}
 
-	meta_field( std::string field_name,	std::string type_name )
-		: field_name_( field_name ), type_name_( type_name ), object_(0)
+	meta_field( std::string field_name,	int flags = none )
+		: field_name_( field_name ), 
+		object_(0), flags_(flags)
 	{}
 
 	virtual ~meta_field() {}
+
+	virtual std::string type_as_string() = 0;
 
   virtual std::string value_as_string() = 0;
 
@@ -50,9 +55,9 @@ struct meta_field
 		return field_name_;
 	}
 
-	std::string type_name_;
 	meta_object * object_;
-	std::string field_name_;	
+	std::string field_name_;
+	int flags_;
 };
 
 #endif

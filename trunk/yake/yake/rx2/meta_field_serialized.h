@@ -17,7 +17,7 @@ namespace serialization
 template<class Archive>
 void serialize(Archive & ar, meta_field & field, const unsigned int version)
 {
-	ar & field.type_name_;
+  ar & field.flags_;
 	ar & field.object_;
 	ar & field.field_name_;
 }

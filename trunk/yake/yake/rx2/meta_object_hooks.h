@@ -79,7 +79,7 @@ struct raknet_hook : public DistributedNetworkObject
 	template< typename T >
 	inline void on_add_field( T & field )
 	{
-		if( field.bit_flags_ & replicate )
+		if( field.flags_ & replicate )
 			SynchronizeMemory( 
 				field_number_++, reinterpret_cast<char*>( 
 					&field.value_ ), 
@@ -89,14 +89,14 @@ struct raknet_hook : public DistributedNetworkObject
 	template< typename T >
 	inline void on_change_field( T & field )
 	{
-		if( field.bit_flags_ & replicate )
+		if( field.flags_ & replicate )
 			UpdateDistributedObject(
 				const_cast<char*>( 
 					field.get_object().get_name().c_str() ) ); // todo check
 					
 
 		// todo del
-		if( field.bit_flags_ & replicate )
+		if( field.flags_ & replicate )
 			std::cout << "replication: " << field.get_name() << "=" << field.value_ << std::endl;
       
 	}
@@ -125,9 +125,9 @@ struct lua_hook
 	lua_hook() {}
 	virtual ~lua_hook(){}
 
-	void add_field_int( std::string field_name/*, int flags = none*/ );
-	void add_field_int( std::string field_name, int default_value = int()/*, int flags = none*/ );
-
+	void add_field_int( std::string field_name );
+	void add_field_int( std::string field_name, int flags = none );
+	void add_field_int( std::string field_name, int default_value = int(), int flags = none );
 
 	int_field & field_int( std::string field_name );
 };

@@ -46,9 +46,9 @@ public:
 	static void register_meta_class()
 	{
 		// register fields
-		meta_class_.add_field<int, none>( "test_int" );
-		meta_class_.add_field<std::string, none>( "test_string" );
-		meta_class_.add_field<float, none>( "test_float" );
+		meta_class_.add_field<int>( "test_int" ); // todo del none
+		meta_class_.add_field<std::string>( "test_string" );
+		meta_class_.add_field<float>( "test_float" );
 		// register class
 		class_registry::classes_.insert( 
 			classes::value_type( 
@@ -94,7 +94,7 @@ int main()
 
 		// define class with default value
 		meta_class test_class;
-		test_class.add_field<bool, none>( "hello_bool", true );
+		test_class.add_field<bool>( "hello_bool", true );
 		test_class.add_field<std::string, none>( "hello_string" );
 	
 		// create an instance of that just defined class
@@ -177,7 +177,7 @@ int main()
 			// define class with default value
 			meta_class simple_class( 
 				"simple_class", *new typed_field<std::string>( 
-					"hello_string", "hello_string_" ) );
+					"hello_string", "hello_string_", save | load ) );
 			// create an instance of that just defined class
 			meta_object & simple_object = simple_class.create_object( "simple_object" );    
 			// write class instance to archive
@@ -215,19 +215,28 @@ int main()
 		// todo use concrete fields inside lua and write converter between lua<>cpp?
 		module(L)
 		[ 
+			class_<meta_field>("meta_field")
+				.enum_("flags")
+				[
+					value("none", 1),
+					value("save", 2),
+					value("load", 4),
+					value("replicate", 8)
+				],
 			class_<int_field>("int_field")
 				.def("get", &int_field::get )
 				.def("set", &int_field::set ),
 			class_<lua_hook>("lua_hook")
-				.def("add_field_int", (void(lua_hook::*)(std::string)) &lua_hook::add_field_int) 
+				.def("add_field_int", (void(lua_hook::*)(std::string)) &lua_hook::add_field_int)
 				.def("add_field_int", (void(lua_hook::*)(std::string, int)) &lua_hook::add_field_int) 
+				.def("add_field_int", (void(lua_hook::*)(std::string, int, int)) &lua_hook::add_field_int) 
 				.def("field_int",	&lua_hook::field_int ),
 			class_<meta_object, lua_hook>("meta_object") 	
 				.def(constructor<std::string>())
 		];
 
 		lua_dostring(	L, "meta_obj = meta_object('hello_object')" );
-		lua_dostring(	L, "meta_obj:add_field_int( 'hello_int' )" );
+		lua_dostring(	L, "meta_obj:add_field_int( 'hello_int', meta_field.none )" );
 		lua_dostring(	L, "meta_obj:field_int( 'hello_int' ):set( 1234 )" );		
 
 		lua_close(L);

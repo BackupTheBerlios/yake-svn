@@ -27,14 +27,26 @@ public:
 		{ delete iter->second; }
 	}
 
+	// used by c++
 	template< typename T, int flags >
 	void add_field( std::string field_name, T default_value = T() )
 	{
-		typed_field<T, flags> * field = new typed_field<T, flags>( 
-			*this, field_name, default_value );
+		typed_field<T> * field = new typed_field<T>( 
+			*this, field_name, default_value, flags );
 		fields_.insert( fields_map::value_type( field_name, field ) );
 		on_add_field( *field );
 	}
+
+	// used by script etc.
+	template< typename T >
+	void add_field( std::string field_name, T default_value = T(), int flags = none )
+	{
+		typed_field<T> * field = new typed_field<T>( 
+			*this, field_name, default_value, flags );
+		fields_.insert( fields_map::value_type( field_name, field ) );
+		on_add_field( *field );
+	}
+
 
 	template< typename T >
 	void add_field( T & field )

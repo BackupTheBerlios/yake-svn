@@ -14,7 +14,6 @@ namespace serialization
 template<class Archive>
 void serialize(Archive & ar, meta_object & object, const unsigned int version)
 {
-		// todo check flags
 	  ar & object.object_name_;
 	  ar & object.fields_;
 }

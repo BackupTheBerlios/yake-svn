@@ -4,6 +4,7 @@
 #include <vector>
 #include "meta_object.h"
 
+// todo lua hook
 class meta_class
 {
 public:
@@ -34,11 +35,18 @@ public:
 		{ delete *iter; }
 	}
 
+	template< typename T >
+	void add_field( std::string field_name, T default_value = T() )
+	{
+		fields_.push_back( new typed_field<T>( 
+			field_name, default_value ) );
+	}
+
 	template< typename T, int flags >
 	void add_field( std::string field_name, T default_value = T() )
 	{
-		fields_.push_back( new typed_field<T, flags>( 
-			field_name, default_value ) );
+		fields_.push_back( new typed_field<T>( 
+			field_name, default_value, flags ) );
 	}
 
 	template< typename T >

@@ -5,5 +5,5 @@ std::string meta_field::as_string()
 {
 		return std::string( 
 			get_object().get_name() + "::" + get_name() + 
-				"[" + type_name_ + "]=" + value_as_string() );
+				"[" + type_as_string() + "]=" + value_as_string() );
 }

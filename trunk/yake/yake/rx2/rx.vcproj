@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="rx"
 	ProjectGUID="{4EC9947A-9703-4524-A472-062355C29E74}"
+	RootNamespace="rx"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -36,7 +37,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(ProjectDir)../boost_1_31_0/boost_1_31_0/bin/boost/libs/serialization/build/libboost_serialization.lib/vc7.1/$(OutDir)/runtime-link-static/threading-multi/libboost_serialization.lib $(ProjectDir)../raknet/lib/RakNetLibStatic.lib ws2_32.lib $(ProjectDir)../lua/lib/lua.lib $(ProjectDir)../luabind/bin/luabind.lib $(ProjectDir)../lua/lib/lualib.lib"
+				AdditionalDependencies="$(ProjectDir)../boost_1_31_0/boost_1_31_0/bin/boost/libs/serialization/build/libboost_serialization.lib/vc7.1/$(outdir)/runtime-link-static/threading-multi/libboost_serialization.lib $(ProjectDir)../raknet/lib/RakNetLibStatic.lib ws2_32.lib $(ProjectDir)../lua/lib/lua.lib $(ProjectDir)../luabind/bin/luabind.lib $(ProjectDir)../lua/lib/lualib.lib"
 				OutputFile="$(OutDir)/rx.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
