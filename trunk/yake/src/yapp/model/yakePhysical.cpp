@@ -37,9 +37,11 @@ namespace model {
 		mJoints.clear();
 	}
 	//-----------------------------------------------------
-	Physical::ComplexList Physical::getComplexObjects() const
+	Physical::ActorVector Physical::getActors() const
 	{
-		Physical::ComplexList c;
+		Physical::ActorVector c;
+		//std::copy( mActors.begin(), mActors.end(), ActorMap2ActorVectorInserter( c ) );
+
 		ConstVectorIterator<Physical::ActorMap> itActor( mActors.begin(), mActors.end() );
 		while (itActor.hasMoreElements())
 		{
@@ -53,30 +55,31 @@ namespace model {
 		VectorIterator< ActorMap > itActor( mActors.begin(), mActors.end() );
 		while (itActor.hasMoreElements())
 		{
-			physics::IMovableActor* pMovableActor = dynamic_cast<physics::IMovableActor*>( itActor.getNext().second.get() );
-			if (pMovableActor)
-				pMovableActor->translate( d );
+			physics::WeakIMovableActorPtr pMovableActor = 
+				boost::dynamic_pointer_cast<physics::IMovableActor>( itActor.getNext().second.lock() );
+			if (!pMovableActor.expired())
+				pMovableActor.lock()->translate( d );
 		}
 	}
 	//-----------------------------------------------------
-	void Physical::addActor( SharedPtr<physics::IActor> & pActor, const String & rName )
+	void Physical::addActor( physics::WeakIActorPtr& pActor, const String & rName )
 	{
-		YAKE_ASSERT( pActor.get() );
-		if (!pActor.get())
+		YAKE_ASSERT( !pActor.expired() );
+		if (pActor.expired())
 			return;
 		String name = (rName.length() > 0) ? rName : (base::uniqueName::create("physical_actor_"));
 		mActors.insert( std::make_pair(name,pActor) );
 	}
 	//-----------------------------------------------------
-	void Physical::addJoint( SharedPtr<physics::IJoint> & pJoint )
+	void Physical::addJoint(physics::WeakIJointPtr& pJoint )
 	{
-		YAKE_ASSERT( pJoint.get() );
-		if (!pJoint.get())
+		YAKE_ASSERT( !pJoint.expired() );
+		if (pJoint.expired())
 			return;
 		mJoints.push_back( pJoint );
 	}
 	//-----------------------------------------------------
-	SharedPtr<physics::IActor> Physical::getActorByName( const String & rName ) const
+	physics::WeakIActorPtr Physical::getActorByName( const String & rName ) const
 	{
 		ActorMap::const_iterator itFind = mActors.find( rName );
 		YAKE_ASSERT( itFind != mActors.end() )( rName ).warning("couldn't find the object!");

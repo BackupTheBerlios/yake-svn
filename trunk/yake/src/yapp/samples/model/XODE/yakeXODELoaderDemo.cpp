@@ -73,19 +73,26 @@ public:
 		// objects
 		setupWorld();
 
+		YAKE_LOG("Running simulation...");
+
 		// main loop
 		real lastTime = base::native::getTime();
 		while (!shutdownRequested())
 		{
 			// timing
+			static real totalTimeElapsed = 0;
 			real time = base::native::getTime();
 			real timeElapsed = time - lastTime;
 			lastTime = time;
+			totalTimeElapsed += timeElapsed;
+			if (totalTimeElapsed > 1) // run not more than 1 second
+				requestShutdown();
 
 			// step simulation
 			if ( !shutdownRequested() )
 				mPWorld->step( timeElapsed );
 		}
+		YAKE_LOG("...done!");
 
 		YAKE_SAFE_DELETE( mPhysical );
 

@@ -46,34 +46,35 @@ namespace model {
 
 		/** Adds a physical actor and registers it with a name for easy lookup.
 		*/
-		void addActor( SharedPtr<physics::IActor> & pActor, const String & rName );
+		void addActor( physics::WeakIActorPtr& pActor, const String & rName );
 
 		/** Retrieve a physical actor by the name it was registered within this model::Physical object.
 		*/
-		SharedPtr<physics::IActor> getActorByName( const String & rName ) const;
+		physics::WeakIActorPtr getActorByName( const String& rName ) const;
 
 		/** Adds a body affector. */
-		void addAffector( SharedPtr<physics::IBodyAffector> & pAffector );
+		void addAffector( SharedPtr<physics::IBodyAffector>& pAffector );
 
 		/** Adds a joint. */
-		void addJoint( SharedPtr<physics::IJoint> & pJoint );
+		void addJoint( physics::WeakIJointPtr& pJoint );
 		//void addJointGroup( SharedPtr<physics::IJointGroup> & pJointGroup );
 
 		/** Adds a body. */
-		void addBody( SharedPtr<physics::IBody> & pBody, const String & rName );
+		void addBody( SharedPtr<physics::IBody>& pBody, const String & rName );
 
 		/** Translates this model::Physical object by translating all contained actors. */
-		void translate( const Vector3 & d );
+		void translate( const Vector3& d );
 
-		typedef Vector< SharedPtr<physics::IActor> > ComplexList;
+		typedef Vector< physics::WeakIActorPtr > ActorVector;
 		/** @todo optimize! */
-		ComplexList getComplexObjects() const;
+		ActorVector getActors() const;
 	private:
-		typedef AssocVector< String, SharedPtr<physics::IActor> > ActorMap;
+		typedef AssocVector< String, physics::WeakIActorPtr > ActorMap;
 		ActorMap		mActors;
 
-		typedef Vector< SharedPtr<physics::IJoint> > JointList;
+		typedef Vector< physics::WeakIJointPtr > JointList;
 		JointList		mJoints;
+
 	};
 
 } // model

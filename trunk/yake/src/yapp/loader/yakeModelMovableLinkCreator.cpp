@@ -64,7 +64,7 @@ namespace model {
 			Physical* pP = rModel.getPhysicalByName( sourceModelName );
 			YAKE_ASSERT( pP );
 			if (sourceMovableType == "physics.actor")
-				pMovable = dynamic_cast<physics::IMovableActor*>(pP->getActorByName( sourceMovableName ).get());
+				pMovable = dynamic_cast<physics::IMovableActor*>(pP->getActorByName( sourceMovableName ).lock().get());
 			//else if (sourceMovableType == "physics.complex")
 			//	pMovable = pP->getActorByName( sourceMovableName ).get();
 		}
