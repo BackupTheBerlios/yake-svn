@@ -44,7 +44,7 @@ namespace base
 namespace templates
 {
 
-/* Helpers */ // todo: test
+/* Helpers */ // todo: test, functor
 #define FUNCTION( number ) \
 	YAKE_TYPES_ONE_FREE( number ) \
 	templates::Pointer< T > create( typename T::RegistryType::Id id, YAKE_ARGUMENTS_ONE_FREE( number ) ) \
