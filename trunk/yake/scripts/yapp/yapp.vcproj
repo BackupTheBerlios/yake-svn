@@ -40,7 +40,7 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../common/lib/$(ConfigurationName)"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/base.pdb"
+				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
 				ImportLibrary="../../common/lib/debug/$(ProjectName).lib"
 				TargetMachine="1"/>
@@ -88,6 +88,7 @@
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
