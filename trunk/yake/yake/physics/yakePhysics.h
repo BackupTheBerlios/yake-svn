@@ -25,3 +25,4 @@
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
 #include <yake/physics/yakePhysicsSystem.h>
+#include <yake/physics/yakePhysicsAffectors.h>
