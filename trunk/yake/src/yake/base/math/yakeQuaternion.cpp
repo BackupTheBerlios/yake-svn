@@ -84,9 +84,9 @@ namespace math
 	//-----------------------------------------------------------------------
     void Quaternion::ToRotationMatrix (Matrix3& kRot) const
     {
-        real fTx  = 2.0*x;
-        real fTy  = 2.0*y;
-        real fTz  = 2.0*z;
+        real fTx  = real(2.0)*x;
+        real fTy  = real(2.0)*y;
+        real fTz  = real(2.0)*z;
         real fTwx = fTx*w;
         real fTwy = fTy*w;
         real fTwz = fTz*w;
@@ -97,15 +97,15 @@ namespace math
         real fTyz = fTz*y;
         real fTzz = fTz*z;
 
-        kRot[0][0] = 1.0-(fTyy+fTzz);
+        kRot[0][0] = real(1.0)-(fTyy+fTzz);
         kRot[0][1] = fTxy-fTwz;
         kRot[0][2] = fTxz+fTwy;
         kRot[1][0] = fTxy+fTwz;
-        kRot[1][1] = 1.0-(fTxx+fTzz);
+        kRot[1][1] = real(1.0)-(fTxx+fTzz);
         kRot[1][2] = fTyz-fTwx;
         kRot[2][0] = fTxz-fTwy;
         kRot[2][1] = fTyz+fTwx;
-        kRot[2][2] = 1.0-(fTxx+fTyy);
+        kRot[2][2] = real(1.0)-(fTxx+fTyy);
     }
 
 	//-----------------------------------------------------------------------
