@@ -38,7 +38,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-using namespace yake::base::mpl;
 using namespace yake::base::templates;
 
 namespace yake {

@@ -34,15 +34,15 @@
 #include <OgreNoMemoryMacros.h>
 
 #define VEC_YAKE2OGRE( YV ) Ogre::Vector3( YV.x, YV.y, YV.z )
-#define VEC_OGRE2YAKE( YV ) yake::Vector3( YV.x, YV.y, YV.z )
+#define VEC_OGRE2YAKE( YV ) yake::base::math::Vector3( YV.x, YV.y, YV.z )
 
 #define QUAT_YAKE2OGRE( q ) Ogre::Quaternion( q.w, q.x, q.y, q.z )
-#define QUAT_OGRE2YAKE( q ) yake::Quaternion( q.w, q.x, q.y, q.z )
+#define QUAT_OGRE2YAKE( q ) yake::base::math::Quaternion( q.w, q.x, q.y, q.z )
 
 #define COL_YAKE2OGRE( c ) Ogre::ColourValue( c.r, c.g, c.b, c.a )
-#define COL_OGRE2YAKE( c ) yake::Color( c.r, c.g, c.b, c.a )
+#define COL_OGRE2YAKE( c ) yake::base::math::Color( c.r, c.g, c.b, c.a )
 
-#define MATRIX4_OGRE2YAKE( m ) yake::Matrix4( \
+#define MATRIX4_OGRE2YAKE( m ) yake::base::math::Matrix4( \
 				m[0][0], m[0][1], m[0][2], m[0][3], \
 				m[1][0], m[1][1], m[1][2], m[1][3], \
 				m[2][0], m[2][1], m[2][2], m[2][3], \
