@@ -33,7 +33,7 @@ namespace audio {
 			SoundDataOpenALBase(kSample,SLM_LOOP_ON)
 	{
 		mSoundData = new openalpp::Sample( filename.c_str() );
-		YAKE_ASSERT( mSoundData );
+		YAKE_ASSERT( mSoundData.valid() );
 	}
 
 	SourceOpenAL::SourceOpenAL() : mSoundData( 0 )
@@ -43,30 +43,28 @@ namespace audio {
 
 	SourceOpenAL::~SourceOpenAL()
 	{
-		YAKE_SAFE_DELETE( mSource );
-		mSoundData = 0;
 	}
 	
 	void SourceOpenAL::setOrientation( const Quaternion & orientation )
 	{
-		YAKE_ASSERT( mSource );
+		YAKE_ASSERT( mSource.valid() );
 		mOrientation = orientation;
 		Vector3 direction = mOrientation * Vector3(0,0,1);
 		mSource->setDirection( direction.x, direction.y, direction.z );
 	}
 	Quaternion SourceOpenAL::getOrientation() const
 	{
-		YAKE_ASSERT( mSource );
+		YAKE_ASSERT( mSource.valid() );
 		return mOrientation;
 	}
 	void SourceOpenAL::setPosition( const Vector3 & position )
 	{
-		YAKE_ASSERT( mSource );
+		YAKE_ASSERT( mSource.valid() );
 		mSource->setPosition( position.x, position.y, position.z );
 	}
 	Vector3 SourceOpenAL::getPosition() const
 	{
-		YAKE_ASSERT( mSource );
+		YAKE_ASSERT( mSource.valid() );
 		float x,y,z;
 		mSource->getPosition(x,y,z);
 		return Vector3(x,y,z);
@@ -74,13 +72,13 @@ namespace audio {
 
 	void SourceOpenAL::setVelocity( const Vector3 & velocity )
 	{
-		YAKE_ASSERT( mSource );
+		YAKE_ASSERT( mSource.valid() );
 		mSource->setVelocity( velocity.x, velocity.y, velocity.z );
 	}
 
 	Vector3 SourceOpenAL::getVelocity() const
 	{
-		YAKE_ASSERT( mSource );
+		YAKE_ASSERT( mSource.valid() );
 		float x,y,z;
 		mSource->getVelocity( x, y, z );
 		return Vector3( x, y, z );
@@ -96,11 +94,13 @@ namespace audio {
 		if (!mSoundData)
 			return;
 
+		YAKE_ASSERT( mSource.valid() );
+
 		if (mSoundData->getType_() == SoundDataOpenALBase::kStream)
-			static_cast<openalpp::Source*>(mSource)->setSound( * static_cast< openalpp::Stream* >( mSoundData->getSoundData_() ) );
+			static_cast<openalpp::Source*>(mSource.get())->setSound( static_cast< openalpp::Stream* >( mSoundData->getSoundData_().get() ) );
 		else
 			if (mSoundData->getType_() == SoundDataOpenALBase::kSample)
-				static_cast<openalpp::Source*>(mSource)->setSound( * static_cast< openalpp::Sample* >( mSoundData->getSoundData_() ) );
+				static_cast<openalpp::Source*>(mSource.get())->setSound( static_cast< openalpp::Sample* >( mSoundData->getSoundData_().get() ) );
 
 		if (mSoundData->getLoopMode() == ISoundData::SLM_LOOP_ON)
 			mSource->setLooping( true );
@@ -117,19 +117,19 @@ namespace audio {
 
 	void SourceOpenAL::play()
 	{
-		YAKE_ASSERT( mSource );
+		YAKE_ASSERT( mSource.valid() );
 		mSource->play();
 	}
 
 	void SourceOpenAL::stop()
 	{
-		YAKE_ASSERT( mSource );
+		YAKE_ASSERT( mSource.valid() );
 		mSource->stop();
 	}
 
 	void SourceOpenAL::pause()
 	{
-		YAKE_ASSERT( mSource );
+		YAKE_ASSERT( mSource.valid() );
 		mSource->pause();
 	}
 

@@ -36,11 +36,11 @@ namespace audio {
 
 	ListenerOpenAL::~ListenerOpenAL()
 	{
-		YAKE_SAFE_DELETE( mListener );
 	}
 
 	void ListenerOpenAL::setOrientation( const Quaternion & orientation )
 	{
+		YAKE_ASSERT( mListener.valid() );
 		Vector3 lookAt = orientation * Vector3(0,0,1);	//FIXME: Set these vectors globally in Yake !?
 		Vector3 up = orientation * Vector3(0,1,0);
 		mListener->setOrientation( lookAt.x, lookAt.y, lookAt.z, up.x, up.y, up.z );
@@ -68,11 +68,13 @@ namespace audio {
 
 	void ListenerOpenAL::setPosition( const Vector3 & position )
 	{
+		YAKE_ASSERT( mListener.valid() );
 		mListener->setPosition( position.x, position.y, position.z );
 	}
 
 	Vector3 ListenerOpenAL::getPosition() const
 	{
+		YAKE_ASSERT( mListener.valid() );
 		float x,y,z;
 		mListener->getPosition( x, y, z );
 		return Vector3( x, y, z );
@@ -80,11 +82,13 @@ namespace audio {
 
 	void ListenerOpenAL::setVelocity( const Vector3 & velocity )
 	{
+		YAKE_ASSERT( mListener.valid() );
 		mListener->setVelocity( velocity.x, velocity.y, velocity.z );
 	}
 
 	Vector3 ListenerOpenAL::getVelocity() const
 	{
+		YAKE_ASSERT( mListener.valid() );
 		float x,y,z;
 		mListener->getVelocity( x, y, z );
 		return Vector3( x, y, z );

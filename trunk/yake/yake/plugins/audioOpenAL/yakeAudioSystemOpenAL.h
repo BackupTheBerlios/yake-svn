@@ -55,7 +55,6 @@ namespace audio {
 	public:
 		virtual ~SoundDataOpenALBase()
 		{
-			YAKE_SAFE_DELETE( mSoundData );
 		}
 
 		virtual void setLoopMode( const LoopMode loop )
@@ -66,11 +65,14 @@ namespace audio {
 		Type getType_() const
 		{ return mType; }
 
-		openalpp::SoundData * getSoundData_() const
-		{ return mSoundData; }
+		openalpp::ref_ptr<openalpp::SoundData> getSoundData_() const
+		{ 
+			YAKE_ASSERT( mSoundData.valid() );
+			return mSoundData; 
+		}
 
 	protected:
-		openalpp::SoundData*	mSoundData;
+		openalpp::ref_ptr<openalpp::SoundData>	mSoundData;
 		Type					mType;
 		LoopMode				mLoopMode;
 	};
@@ -100,7 +102,7 @@ namespace audio {
 		virtual void setPosition( const Vector3 & position );
 		virtual Vector3 getPosition() const;
 	protected:
-		openalpp::SourceBase*	mSource;
+		openalpp::ref_ptr<openalpp::SourceBase>	mSource;
 		SoundDataOpenALBase*	mSoundData;
 		Quaternion				mOrientation;
 	};
@@ -119,7 +121,7 @@ namespace audio {
 		virtual Vector3 getPosition() const;
 
 	protected:
-		openalpp::Listener*		mListener;
+		openalpp::ref_ptr<openalpp::Listener>		mListener;
 		Quaternion				mCachedOrientation;
 	};
 
@@ -145,7 +147,7 @@ namespace audio {
 		virtual void setSoundVelocity( real velocity );
 
 	protected:
-		openalpp::AudioEnvironment	* mEnv;
+		openalpp::ref_ptr<openalpp::AudioEnvironment> mEnv;
 	};
 
 	class AudioSystemOpenAL : public IAudioSystem

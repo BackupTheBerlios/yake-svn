@@ -46,7 +46,7 @@ namespace audio {
 	WorldOpenAL::WorldOpenAL() : mEnv(0)
 	{
 		mEnv = new openalpp::AudioEnvironment();
-		YAKE_ASSERT( mEnv ).debug("Could not instantiate OpenAL++ audio environment. Out of memory ?");
+		YAKE_ASSERT( mEnv.valid() ).debug("Could not instantiate OpenAL++ audio environment. Out of memory ?");
 		setDopplerFactor( 1. );
 		setSoundVelocity( 300. );
 		mEnv->setDistanceModel( openalpp::None );
@@ -54,7 +54,6 @@ namespace audio {
 
 	WorldOpenAL::~WorldOpenAL()
 	{
-		YAKE_SAFE_DELETE( mEnv );
 	}
 
 	ISoundData* WorldOpenAL::createSoundDataFromFile( const String & filename )
@@ -89,7 +88,7 @@ namespace audio {
 
 	void WorldOpenAL::setDopplerFactor( real factor )
 	{
-		YAKE_ASSERT( mEnv ).debug("Need an instantiated OpenAL++ audio environment.");
+		YAKE_ASSERT( mEnv.valid() ).debug("Need an instantiated OpenAL++ audio environment.");
 		try {
 			mEnv->setDopplerFactor( factor );
 		} catch ( const openalpp::Error & e )
@@ -100,7 +99,7 @@ namespace audio {
 
 	void WorldOpenAL::setSoundVelocity( real velocity )
 	{
-		YAKE_ASSERT( mEnv ).debug("Need an instantiated OpenAL++ audio environment.");
+		YAKE_ASSERT( mEnv.valid() ).debug("Need an instantiated OpenAL++ audio environment.");
 		try {
 			mEnv->setSoundVelocity( velocity );
 		} catch ( const openalpp::Error & e )
