@@ -12,6 +12,9 @@ namespace yake { namespace net = TNL; }
 #include "reflection.h"
 using namespace reflection;
 
+// todo use network wrapper, add yake rpc
+// todo net_parm for extrapolation etc.
+
 // -----------------------------------------
 // class macro
 #define DEFINE_NET_CLASS(CLASS_NAME, SUPER_CLASS_NAME)\
@@ -74,7 +77,7 @@ struct network_observer : property_observer<VALUE_TYPE>
 
 	virtual void set(VALUE_TYPE value)
 	{ 
-		mThisClass->notify(mPosition, value);
+		mThisClass->notify_property_changed(mPosition, value);
 	}
 
 	unsigned int mPosition;
@@ -266,7 +269,7 @@ Value_ getPropertyValue(const Object_ obj_, const Property & prop_)
 Property & getPropertyAt(const Class & class_, const int pos_)
 {
 	Class::PropertyList::const_iterator iter = class_.getProperties().begin();
-	std::advance(iter,pos_);
+	std::advance(iter, pos_);
 	return const_cast<Property&>(*iter);
 }
 
@@ -301,16 +304,18 @@ public: // rx methods
 	virtual const Class & getRxClass() const = 0;
 	const Class & getClass() const { return getRxClass(); }
 
-	typedef std::list< std::pair< unsigned int, int > > DirtyInts;
+	typedef std::list< std::pair<unsigned int, int> > DirtyInts;
 	DirtyInts m_DirtyInts;
 
 	// todo bytebuffer
-	void notify(unsigned int pos_, int value_) 
+	template<typename VALUE_TYPE>
+	void notify_property_changed(unsigned int pos_, VALUE_TYPE value_) 
 	{
 		// is this the scope object on the client or an object on the server?
 		if(isClientScopeObject()) 
 		{ // client sends update to server
-			c2sPropertyChangedInt(value_, pos_);
+			TNL::ByteBuffer tnl_buf(reinterpret_cast<TNL::U8*>(&value_), sizeof(VALUE_TYPE));
+			c2sPropertyChanged(tnl_buf, pos_);
 			std::cout << "set(" << value_ << ")" << std::endl;
 		}
 		else if(isServerScopeObject())
@@ -325,7 +330,7 @@ public: // network methods
 	bool isServerScopeObject() const { return !isGhost(); }
 	bool isClientGhostObject() const { return isGhost() && !isClientScopeObject(); }
 
-	TNL_DECLARE_RPC(c2sPropertyChangedInt,  (TNL::Int<32> value_, TNL::Int<32> position_));
+	TNL_DECLARE_RPC(c2sPropertyChanged, (TNL::ByteBufferRef value_, TNL::Int<32> position_));
 
 	void clear()
 	{
@@ -399,11 +404,16 @@ private: // data
 };
 
 // send property update to server
-TNL_IMPLEMENT_NETOBJECT_RPC(Replicatable, c2sPropertyChangedInt, (TNL::Int<32> value_, TNL::Int<32> position_), 
+TNL_IMPLEMENT_NETOBJECT_RPC(Replicatable, c2sPropertyChanged, (TNL::ByteBufferRef value_, TNL::Int<32> position_), 
    TNL::NetClassGroupGameMask, TNL::RPCGuaranteedOrdered, TNL::RPCToGhostParent, 0)
 {
-	std::cout << "c2sPropertyChanged(" << value_ << ")" << std::endl;
-	getPropertyAt(getClass(), position_).set(this, static_cast<int>(value_));	
+	Property & prop = getPropertyAt(getClass(), position_);
+	if(prop.getTypeInfo() == typeid(int))
+	{
+		assert(sizeof(int) == value_.getBufferSize());
+		prop.set(this, *reinterpret_cast<const int*>(value_.getBuffer()));
+		std::cout << "c2sPropertyChanged( <int>" << *reinterpret_cast<const int*>(value_.getBuffer()) << ")" << std::endl;
+	}
 }
 
 #endif // _BIND_NETWORK_H_

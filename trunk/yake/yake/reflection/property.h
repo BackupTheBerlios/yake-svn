@@ -225,7 +225,7 @@ public:
     /** returns the class that the member is declared into.
         @return the class that the member is declared into.
      */
-    const Class &getClass() const 
+    const Class & getClass() const 
 		{
         return *m_class;
     }
@@ -233,7 +233,7 @@ public:
     /** returns the property's type.
         @return the property's type.
      */
-    const char *getType() const 
+    const char * getType() const 
 		{
         return m_type;
     }
@@ -249,7 +249,7 @@ public:
     /** returns the property's name.
         @return the property's name.
      */
-    const char *getName() const 
+    const char * getName() const 
 		{
         return m_name;
     }
@@ -259,7 +259,8 @@ public:
         @param object object to get the property of
         @exception TypeMismatchError thrown if there is a type mismatch
      */
-    template <class Object, class Value> void get(Value &result, const Object *object) const 
+    template <class Object, class Value> 
+		void get(Value &result, const Object *object) const 
 		{
         if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
         typedef const __property_handler__<Value> PropertyType;
