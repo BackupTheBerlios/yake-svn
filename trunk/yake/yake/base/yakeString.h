@@ -62,6 +62,11 @@ namespace base
 		{
 			return int32( atoi( rString.c_str() ) );
 		}
+		static bool parseBool( const String& rString )
+		{
+			String in = toLowerCase( rString );
+			return (in == "yes" || in == "1" || in == "true");
+		}
 		static void trim(String& rString, bool left = true, bool right = true);
 		static std::vector< String > split( const String& rString, const String& delims = "\t\n", unsigned int maxSplits = 0);
 		static String toLowerCase( const String& rString );
