@@ -5,8 +5,8 @@
 	\todo add loading of script bindings
 	\todo add subscription to shutdown request by graphics system (due to closed window)
 */
-#include <yake/graphics/yakeGraphicsSystem.h>
-#include <yake/physics/yakePhysicsSystem.h>
+#include <yake/graphics/yakeGraphics.h>
+#include <yake/physics/yakePhysics.h>
 #include <yake/scripting/yakeScriptingSystem.h>
 #include <yake/input/yakeInputSystem.h>
 #include <yake/input/yakeInputEventGenerator.h>
