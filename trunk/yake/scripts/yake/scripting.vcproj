@@ -13,15 +13,15 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../../common/lib/debug"
+			OutputDirectory="../../common/bin/debug"
 			IntermediateDirectory="../../common/obj/debug/$(ProjectName)"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..;../../;../../dependencies/boost/;../../dependencies/ttl/"
-				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_WINDOWS;_USRDLL;_DEBUG;YAKE_SCRIPTING_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -32,8 +32,11 @@
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\$(ProjectName).lib"/>
+				Name="VCLinkerTool"
+				AdditionalDependencies="base.lib"
+				AdditionalLibraryDirectories="../../common/lib/debug"
+				GenerateDebugInformation="TRUE"
+				ImportLibrary="../../../../common/lib/debug/$(TargetName).lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -49,20 +52,22 @@
 			<Tool
 				Name="VCXMLDataGeneratorTool"/>
 			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
 				Name="VCManagedWrapperGeneratorTool"/>
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../../common/lib/release"
+			OutputDirectory="../../common/bin/release"
 			IntermediateDirectory="../../common/obj/release/$(ProjectName)"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="..;../../;../../dependencies/boost/;../../dependencies/ttl/"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_SCRIPTING_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -71,8 +76,10 @@
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)\$(ProjectName).lib"/>
+				Name="VCLinkerTool"
+				AdditionalDependencies="base.lib"
+				AdditionalLibraryDirectories="../../common/lib/release"
+				ImportLibrary="../../../../common/lib/release/$(TargetName).lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -87,6 +94,8 @@
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
 			<Tool
 				Name="VCManagedWrapperGeneratorTool"/>
 			<Tool

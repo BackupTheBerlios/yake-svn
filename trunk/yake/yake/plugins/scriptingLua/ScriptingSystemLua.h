@@ -18,8 +18,14 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 ------------------------------------------------------------------------------------
 */
-#ifndef INC_YAKE_SCRIPTINGSYSTEMLUA_H
-#define INC_YAKE_SCRIPTINGSYSTEMLUA_H
+#ifndef YAKE_SCRIPTINGSYSTEMLUA_H
+#define YAKE_SCRIPTINGSYSTEMLUA_H
+
+#if defined( YAKESCRIPTINGLUA_EXPORTS )
+#	define YAKE_SCRIPTINLUA_API DLLEXPORT
+#else
+#	define YAKE_SCRIPTINLUA_API DLLIMPORT
+#endif
 
 struct lua_State;
 
@@ -27,7 +33,7 @@ namespace yake {
 	using namespace base;
 namespace scripting {
 
-	class ScriptingSystemLua : public scripting::IScriptingSystem
+	class YAKE_SCRIPTINLUA_API ScriptingSystemLua : public scripting::IScriptingSystem
 	{
 		YAKE_DECLARE_CONCRETE( ScriptingSystemLua, "lua" );
 	public:
@@ -72,7 +78,7 @@ namespace scripting {
 	const uint32 LUALIB_MATH		= 0x00000010;
 	const uint32 LUALIB_DEBUG		= 0x00000020;
 
-	class LuaVM : public scripting::IVM
+	class YAKE_SCRIPTINLUA_API LuaVM : public scripting::IVM
 	{
 	protected:
 		ScriptingSystemLua		* mCreator;
@@ -127,7 +133,7 @@ namespace scripting {
 		}*/
 	};
 
-	class LuaScript : public scripting::IScript
+	class YAKE_SCRIPTINLUA_API LuaScript : public scripting::IScript
 	{
 	public:
 		LuaScript( IScriptingSystem* pCreator );

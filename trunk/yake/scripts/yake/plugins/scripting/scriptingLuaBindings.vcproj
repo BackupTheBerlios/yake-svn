@@ -33,11 +33,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="luad.lib luabindd.lib"
+				AdditionalDependencies="scriptingLua.lib scripting.lib luad.lib luabindd.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies\lua\lib;../../../../dependencies\luabind\lib"
-				ModuleDefinitionFile="..\..\..\..\src\yake\plugins\scriptingLua\plugin.def"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
@@ -86,11 +86,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lua.lib luabind.lib"
+				AdditionalDependencies="scriptingLua.lib scripting.lib lua.lib luabind.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies\lua\lib;../../../../dependencies\luabind\lib"
-				ModuleDefinitionFile="..\..\..\..\src\yake\plugins\scriptingLua\plugin.def"
+				ModuleDefinitionFile=""
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -140,12 +140,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\yake\plugins\scriptingLuaBindings\plugin.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yake\plugins\scriptingLuaBindings\plugin.def">
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\yake\plugins\scriptingLuaBindings\yakeBinder.cpp">
 			</File>
 		</Filter>
@@ -154,9 +148,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd">
 			<File
 				RelativePath="..\..\..\..\yake\plugins\scriptingLuaBindings\pch.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\plugins\scriptingLuaBindings\plugin.h">
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\scriptingLuaBindings\yakeBinder.h">

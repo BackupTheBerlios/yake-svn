@@ -31,8 +31,11 @@ namespace scripting {
 namespace binder {
 namespace lua {
 
+	/** @todo Add more binders... "lua.math", "lua.data", "lua.gfx" etc.
+	*/
 	class Binder : public IBinder
 	{
+		YAKE_DECLARE_CONCRETE( Binder, "lua.core" );
 	public:
 		virtual void bind( scripting::IVM* pVM );
 	};

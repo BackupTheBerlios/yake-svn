@@ -278,40 +278,28 @@ namespace input {
 		InputDevice		* device;
 	};
 
-	class InputSystem;
-	class YAKE_INPUT_API InputPlugin : public base::Plugin
-	{
-	public:
-		virtual InputSystem* createSystem() = 0;
-	};
-
 	class InputEventGenerator;
 	/** Input system interface.
 	*/
-	class YAKE_INPUT_API InputSystem// : public System
+	class YAKE_INPUT_API IInputSystem// : public System
 	{
-	protected:
-		/*InputSystem() : System( ST_INPUT )
-		{
-		}*/
+		YAKE_DECLARE_REGISTRY_0( IInputSystem, base::String )
 	public:
-		virtual ~InputSystem() {}
+		virtual ~IInputSystem();
+
 		/** Used for enumerating devices. */
 		struct DeviceListEntry
 		{
 			base::String		name;
 			InputDeviceType		type;
 		};
-		typedef std::vector< DeviceListEntry > DeviceList;
+		typedef std::vector< DeviceListEntry > DeviceEntryList;
 
 	public:
 		virtual void update() = 0;
-		virtual DeviceList getAvailableDevices() = 0;
-
+		virtual DeviceEntryList getAvailableDevices() = 0;
 		virtual InputDevice* activateDevice( const base::String & deviceName ) = 0;
-
 		virtual InputDevice* getDevice( const base::String & deviceName ) const = 0;
-
 		virtual void getActiveDevices( std::vector< InputDevice* > & devices ) const = 0;
 	};
 

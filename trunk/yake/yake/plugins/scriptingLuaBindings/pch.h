@@ -25,7 +25,6 @@
 */
 #include <yake/base/yake.h>
 #include <yake/scripting/yakeScriptingSystem.h>
-#include <yake/plugins/scriptingLuaBindings/plugin.h>
 
 extern "C" 
 {

@@ -28,6 +28,14 @@
 
 //#include <yakeBase/yake/yakeStableHeaders.h>
 
+#if defined( YAKE_SCRIPTING_EXPORTS )
+#	pragma message("Exporting yake::scripting")
+#	define YAKE_SCRIPTING_API DLLEXPORT
+#else
+#	pragma message("Importing yake::scripting")
+#	define YAKE_SCRIPTING_API DLLIMPORT
+#endif
+
 namespace yake {
 namespace scripting {
 	class IVM;
@@ -39,7 +47,7 @@ namespace scripting {
 			To detect whether the scripting VM language is compatible, check the language of its creator
 			system and the description string and the version!
 	*/
-	class /*YAKE_BASE_API*/ ScriptingRegistrationManager
+	class YAKE_SCRIPTING_API ScriptingRegistrationManager
 	{
 	protected:
 		typedef Signal1< void, scripting::IVM* > RegisterScriptBindingsSignal;
@@ -53,8 +61,9 @@ namespace scripting {
 	class IScriptingSystem;
 	class IVM;
 
-	class IBinder
+	class YAKE_SCRIPTING_API IBinder
 	{
+		YAKE_DECLARE_REGISTRY_0( IBinder, base::String );
 	public:
 		virtual ~IBinder() {}
 
@@ -63,7 +72,7 @@ namespace scripting {
 
 	/**
 	*/
-	class /*YAKE_BASE_API*/ ScriptingBindingsPlugin : public ::yake::base::Plugin
+	class YAKE_SCRIPTING_API ScriptingBindingsPlugin : public ::yake::base::Plugin
 	{
 	public:
 		virtual yake::base::templates::SharedPtr<IBinder> createBinder() = 0;
@@ -73,7 +82,7 @@ namespace scripting {
 		\see IVM
 		\see ScriptingSystem
 	*/
-	class /*YAKE_BASE_API*/ IScript
+	class YAKE_SCRIPTING_API IScript
 	{
 	public:
 		/** Get a pointer to the scripting system that
@@ -90,7 +99,7 @@ namespace scripting {
 		\see IScript
 		\see ScriptingSystem
 	*/
-	class /*YAKE_BASE_API*/ IVM
+	class YAKE_SCRIPTING_API IVM
 	{
 	public:
 		virtual ~IVM() {}
@@ -119,7 +128,7 @@ namespace scripting {
 		\see IVM
 		\see IScript
 	*/
-	class /*YAKE_BASE_API*/ IScriptingSystem// : public System
+	class YAKE_SCRIPTING_API IScriptingSystem// : public System
 	{
 		YAKE_DECLARE_REGISTRY_0( IScriptingSystem, base::String );
 	public:

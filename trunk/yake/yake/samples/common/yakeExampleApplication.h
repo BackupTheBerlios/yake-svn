@@ -6,7 +6,7 @@
 #include <yake/graphics/yakeGraphics.h>
 #include <yake/physics/yakePhysics.h>
 #include <yake/scripting/yakeScriptingSystem.h>
-#include <yake/input/yakeInputSystem.h>
+#include <yake/input/yakeInput.h>
 #include <yake/input/yakeInputEventGenerator.h>
 #include <yake/audio/yakeAudio.h>
 #include <iostream>
@@ -26,10 +26,10 @@ namespace exapp {
 		LibList									mLibs;
 		SharedPtr< graphics::IGraphicsSystem >	mGraphicsSystem;
 		SharedPtr< physics::IPhysicsSystem >	mPhysicsSystem;
-		scripting::ScriptingSystem				* mScriptingSystem;
-		SharedPtr<scripting::IBinder>			mScriptingBindings;
-		input::InputSystem						* mInputSystem;
-		SharedPtr<audio::IAudioSystem>			mAudioSystem;
+		SharedPtr< scripting::IScriptingSystem>	mScriptingSystem;
+		SharedPtr< scripting::IBinder >			mScriptingBindings;
+		SharedPtr< input::IInputSystem >		mInputSystem;
+		SharedPtr< audio::IAudioSystem >		mAudioSystem;
 		bool									mShutdownRequested;
 	protected:
 		input::KeyboardEventGenerator			mKeyboardEventGenerator;
@@ -53,9 +53,7 @@ namespace exapp {
 				mLoadScriptingSystem( loadScripting ), 
 				mLoadInputSystem( loadInput ), 
 				mLoadScriptingBindings( loadScriptingBindings ),
-				mLoadAudioSystem( loadAudio ),
-				mScriptingSystem(0),
-				mInputSystem(0)//, mScriptingBindings(0)
+				mLoadAudioSystem( loadAudio )
 		{
 		}
 
@@ -92,7 +90,7 @@ namespace exapp {
 			return *mGraphicsSystem;
 		}
 
-		scripting::ScriptingSystem& getScriptingSystem() const
+		scripting::IScriptingSystem& getScriptingSystem() const
 		{
 			if (!mScriptingSystem)
 				YAKE_EXCEPT( "Don't have a scripting system!", "getScriptingSystem()" );
@@ -109,7 +107,7 @@ namespace exapp {
 			return *mScriptingBindings;
 		}
 
-		input::InputSystem& getInputSystem() const
+		input::IInputSystem& getInputSystem() const
 		{ return *mInputSystem; }
 
 		audio::IAudioSystem* getAudioSystem() const
@@ -124,24 +122,21 @@ namespace exapp {
 			// scripting
 			if ( mLoadScriptingSystem )
 			{
-				scripting::ScriptingPlugin* pSP = 
-					loadPlugin<scripting::ScriptingPlugin>( "scriptingLua" );
-				YAKE_ASSERT( pSP ).debug( "Cannot load scripting plugin." );
+				SharedPtr<base::Library> pLib = loadLib("scriptingBindingsLua" );
+				YAKE_ASSERT( pLib ).debug("Cannot load scripting bindings plugin.");
 
-				mScriptingSystem = pSP->createSystem();
-				YAKE_ASSERT( mScriptingSystem ).error( "Cannot create scripting system." );
+				mScriptingSystem = create< scripting::IScriptingSystem >();
+				YAKE_ASSERT( mScriptingSystem ).error("Cannot create scripting system.");
 			}
 
 			// scripting bindings
 			if ( mLoadScriptingBindings )
 			{
-				scripting::ScriptingBindingsPlugin* pSBP = 
-				  loadPlugin<scripting::ScriptingBindingsPlugin>( "scriptingBindingsLua" );
-				YAKE_ASSERT( pSBP ).debug("Cannot load scripting bindings plugin.");
- 
-				mScriptingBindings = pSBP->createBinder();
-				YAKE_ASSERT( mScriptingBindings ).error(
-				                              "Cannot create scripting bindings object." );
+				SharedPtr<base::Library> pLib = loadLib("scriptingBindingsLua" );
+				YAKE_ASSERT( pLib ).debug("Cannot load scripting bindings plugin.");
+
+				mScriptingBindings = create< scripting::IBinder >();
+				YAKE_ASSERT( mScriptingBindings ).error("Cannot create scripting bindings object.");
 			}
 
 			// graphics
@@ -170,10 +165,10 @@ namespace exapp {
 			// input
 			if (mLoadInputSystem)
 			{
-				input::InputPlugin* pIP = loadPlugin<input::InputPlugin>( "inputOgre" );
-				YAKE_ASSERT( pIP ).debug("Cannot load input plugin.");
+				SharedPtr<base::Library> pLib = loadLib("inputOgre" );
+				YAKE_ASSERT( pLib ).debug("Cannot load input plugin.");
 
-				mInputSystem = pIP->createSystem();
+				mInputSystem = create< input::IInputSystem >();
 				YAKE_ASSERT( mInputSystem ).error("Cannot create input system.");
 
 				setupInput();
@@ -196,10 +191,10 @@ namespace exapp {
 		void setupInput()
 		{
 			YAKE_ASSERT( mInputSystem );
-			input::InputSystem::DeviceList devs;
+			input::IInputSystem::DeviceEntryList devs;
 			devs = getInputSystem().getAvailableDevices();
 
-			for (input::InputSystem::DeviceList::const_iterator it = devs.begin(); it != devs.end(); ++it)
+			for (input::IInputSystem::DeviceEntryList::const_iterator it = devs.begin(); it != devs.end(); ++it)
 			{
 				std::cout << "input device: " << (*it).name << std::endl;
 				if ((*it).type == input::IDT_KEYBOARD)
@@ -214,6 +209,7 @@ namespace exapp {
 			mMouseEventGenerator.attachDevice( mMouse );
 		}
 	protected:
+		/** @todo deprecated so remove:
 		template< class PluginType >
 		PluginType* loadPlugin( const base::String & file )
 		{
@@ -240,6 +236,7 @@ namespace exapp {
 
 			return pPlugin;
 		}
+		*/
 
 		void unloadAllPlugins()
 		{
@@ -268,12 +265,12 @@ namespace exapp {
 
 		void destroyAllSystems()
 		{
-			YAKE_SAFE_DELETE( mInputSystem );
-			//YAKE_SAFE_DELETE( mScriptingBindings );
+			mScriptingBindings.reset();
+			mScriptingSystem.reset();
+			mInputSystem.reset();
 			mGraphicsSystem.reset();
 			mPhysicsSystem.reset();
 			mAudioSystem.reset();
-			YAKE_SAFE_DELETE( mScriptingSystem );
 		}
 	};
 

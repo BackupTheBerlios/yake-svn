@@ -25,6 +25,7 @@ namespace yake {
 namespace scripting {
 
 	YAKE_IMPLEMENT_REGISTRY( IScriptingSystem );
+	YAKE_IMPLEMENT_REGISTRY( IBinder );
 
 }
 }

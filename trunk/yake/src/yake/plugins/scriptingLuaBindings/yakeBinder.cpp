@@ -76,6 +76,8 @@ namespace scripting {
 namespace binder {
 namespace lua {
 
+	YAKE_REGISTER_CONCRETE( Binder );
+
 	struct Player
 	{
 		String	mName;
