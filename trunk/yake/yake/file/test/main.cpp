@@ -339,6 +339,17 @@ bool test_virtual_vfs_iterator()
 	return( count == 4 );
 }
 
+// todo
+bool test_virtual_seek()
+{
+	YAKE_LOG(  "test_virtual_seek()" );
+
+	using namespace filesystem;
+	using namespace filesystem::virtualfs;
+
+	return true;
+}
+
 // virtual: ftp ---------------------------------------------------------//
 bool test_ftp_exists()
 {
@@ -427,6 +438,7 @@ int main()
 		YAKE_CHECK( test_virtual_streams() );
 		YAKE_CHECK( test_virtual_nfs_iterator() );
 		YAKE_CHECK( test_virtual_vfs_iterator() );
+		YAKE_CHECK( test_virtual_seek() );
 
 		// ftp
 		YAKE_USE_LIB( ftp_file_system )
