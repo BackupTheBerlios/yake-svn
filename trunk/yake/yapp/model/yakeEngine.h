@@ -41,6 +41,11 @@ namespace vehicle {
 	public:
 		virtual ~IEngine() 
 		{}
+
+		virtual void updateSimulation( real timeElapsed ) = 0;
+
+		virtual void setThrottle( real throttle ) = 0;
+		virtual real getThrottle() const = 0;
 	};
 
 	/** Interface to a vehicle engine.
@@ -56,11 +61,6 @@ namespace vehicle {
 		virtual void setParamMinRPM( const real rpm ) = 0;
 		virtual void setParamMaxRPM( const real rpm ) = 0;
 		virtual void setParamRedlineRPM( const real rpm ) = 0;
-
-		virtual void updateSimulation( real timeElapsed ) = 0;
-
-		virtual void setThrottle( real throttle ) = 0;
-		virtual real getThrottle() const = 0;
 
 		virtual real getRPM() const = 0;
 		virtual uint8 getGear() const = 0;

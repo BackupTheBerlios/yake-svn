@@ -33,12 +33,19 @@ namespace app {
 namespace model {
 
 	class MountPoint;
+
+	/** Base class for objects that can be attached to mount points (MountPoint).
+		@see MountPoint
+	*/
 	class YAPP_BASE_API Mountable
 	{
 	public:
 		MountPoint* getMountPoint() const;
 	};
 
+	/** Base class for mount points. Mountable objects can be attached to it.
+		@see Mountable
+	*/
 	class YAPP_BASE_API MountPoint : public yake::base::Movable
 	{
 	protected:
@@ -50,31 +57,43 @@ namespace model {
 		void detach( const SharedPtr<Mountable> & mountable );
 	};
 
+	/** Example class representing a turret with one or two axis of rotation.
+	*/
 	class YAPP_BASE_API Turret //: public Entity
 	{
 	public:
 	};
 
+	/** Example class representing a mountable turret, i.e. a turret which can
+		be attached to a mount point.
+	*/
 	class YAPP_BASE_API MountedTurrent : public Turret, public Mountable
 	{
 	public:
 	};
 
-	class YAPP_BASE_API WeaponMountPoint : public MountPoint
+	/** A thruster is a special kind of engine. It applies force to the vehicle
+		it's attached to at a specified offset, direction etc.
+		@see MountedThruster
+		@see vehicle::IEngine
+	*/
+	class YAPP_BASE_API Thruster : public vehicle::IEngine
 	{
 	public:
-	};
+		/** At least the following methods are inherited from vehicle::IEngine:
 
-	class YAPP_BASE_API Thruster
-	{
-	public:
-		void setForce( real force );
+		virtual void updateSimulation( real timeElapsed ) = 0;
+		virtual void setThrottle( real throttle ) = 0;
+		virtual real getThrottle() const = 0;
+		*/
 		void setMinimumForce( real force );
 		void setMaximumForce( real force );
-		void setThrust( real thrust ); //!< range [0,1]
 		real getForce() const;
 	};
 
+	/** A thruster that can be attached to a mount point.
+		@see Thruster
+	*/
 	class YAPP_BASE_API MountedThruster :  public Mountable
 	{
 	public:
