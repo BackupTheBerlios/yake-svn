@@ -1,5 +1,5 @@
-#ifndef _CONTAINER_CONTROL_BASE_H_
-#define _CONTAINER_CONTROL_BASE_H_
+#ifndef _YAPP_GUI_CONTAINER_CONTROL_BASE_H_
+#define _YAPP_GUI_CONTAINER_CONTROL_BASE_H_
 
 #include "config.h"
 #include "control_base.h"
@@ -75,4 +75,4 @@ container_control_base & operator^(container_control_base & container,
 } // namespace gui
 } // namespace yake
 
-#endif // _CONTAINER_CONTROL_BASE_H_
+#endif // _YAPP_GUI_CONTAINER_CONTROL_BASE_H_

@@ -1,5 +1,5 @@
-#ifndef _WINDOW_BASE_H_
-#define _WINDOW_BASE_H_
+#ifndef _YAPP_GUI_WINDOW_BASE_H_
+#define _YAPP_GUI_WINDOW_BASE_H_
 
 #include <vector>
 
@@ -104,4 +104,4 @@ const window_base::window_list & get_windows();
 } // namespace gui
 } // namespace yake
 
-#endif // _WINDOW_BASE_H_
+#endif // _YAPP_GUI_WINDOW_BASE_H_

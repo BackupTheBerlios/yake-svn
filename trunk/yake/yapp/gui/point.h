@@ -1,5 +1,5 @@
-#ifndef _POINT_H_
-#define _POINT_H_
+#ifndef _YAPP_GUI_POINT_H_
+#define _YAPP_GUI_POINT_H_
 
 #include <boost/function.hpp>
 
@@ -37,4 +37,4 @@ public:
 } // namespace gui
 } // namespace yake
 
-#endif // _POINT_H_
+#endif // _YAPP_GUI_POINT_H_

@@ -1,5 +1,5 @@
-#ifndef _WIDGET_EDITOR_H
-#define _WIDGET_EDITOR_H
+#ifndef _YAPP_GUI_EDITOR_WIDGET_EDITOR_H
+#define _YAPP_GUI_EDITOR_WIDGET_EDITOR_H
 
 #include <boost/shared_ptr.hpp>
 #include <CEGUI.h>
@@ -57,4 +57,4 @@ private:
 } // namespace gui
 } // namespace yake
 
-#endif // _WIDGET_EDITOR_H
+#endif // _YAPP_GUI_EDITOR_WIDGET_EDITOR_H

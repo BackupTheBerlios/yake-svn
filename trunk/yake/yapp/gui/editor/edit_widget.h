@@ -1,5 +1,5 @@
-#ifndef _EDIT_WIDGET_H_
-#define _EDIT_WIDGET_H_
+#ifndef _YAPP_GUI_EDITOR_EDIT_WIDGET_H_
+#define _YAPP_GUI_EDITOR_EDIT_WIDGET_H_
 
 #include "control_base.h"
 #include "plugin/edit_widget.h" // todo remove
@@ -32,4 +32,4 @@ private: // data
 } // namespace gui
 } // namespace yake
 
-#endif // _EDIT_WIDGET_H_
+#endif // _YAPP_GUI_EDITOR_EDIT_WIDGET_H_

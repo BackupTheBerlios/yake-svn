@@ -1,5 +1,5 @@
-#ifndef _CODE_GENERATOR_H_
-#define _CODE_GENERATOR_H_
+#ifndef _YAPP_GUI_EDITOR_CODE_GENERATOR_H_
+#define _YAPP_GUI_EDITOR_CODE_GENERATOR_H_
 
 #include "../config.h"
 #include "../compare_sequences.h"
@@ -143,4 +143,4 @@ private:
 } // namespace gui
 } // namespace yake
 
-#endif // _CODE_GENERATOR_H_
+#endif // _YAPP_GUI_EDITOR_CODE_GENERATOR_H_

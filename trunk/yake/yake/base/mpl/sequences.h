@@ -18,8 +18,8 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_MPL_SEQUENCES_H
-#define YAKE_BASE_MPL_SEQUENCES_H
+#ifndef _YAKE_BASE_MPL_SEQUENCES_H_
+#define _YAKE_BASE_MPL_SEQUENCES_H_
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
@@ -45,4 +45,4 @@ namespace sequences = boost::mpl;
 } // base
 } // yake
 
-#endif // YAKE_BASE_MPL_SEQUENCES_H
+#endif // _YAKE_BASE_MPL_SEQUENCES_H_

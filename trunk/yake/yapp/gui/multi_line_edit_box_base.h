@@ -1,5 +1,5 @@
-#ifndef _MULTI_LINE_EDIT_BOX_H_
-#define _MULTI_LINE_EDIT_BOX_H_
+#ifndef _YAPP_GUI_MULTI_LINE_EDIT_BOX_H_
+#define _YAPP_GUI_MULTI_LINE_EDIT_BOX_H_
 
 #include <reflection.h>
 #include <bind_lua/bind_lua.h>
@@ -98,4 +98,4 @@ typedef multi_line_edit_box_base::info multi_line_edit_box;
 } // namespace gui
 } // namespace yake
 
-#endif // _MULTI_LINE_EDIT_BOX_H_
+#endif // _YAPP_GUI_MULTI_LINE_EDIT_BOX_H_

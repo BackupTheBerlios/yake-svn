@@ -1,5 +1,5 @@
-#ifndef _PROPERTY_LIST_BASE_H_
-#define _PROPERTY_LIST_BASE_H_
+#ifndef _YAPP_GUI_PROPERTY_LIST_BASE_H_
+#define _YAPP_GUI_PROPERTY_LIST_BASE_H_
 
 #include "plugin/property_list.h" // todo remove
 
@@ -46,4 +46,4 @@ typedef property_list_base::info property_list;
 } // namespace gui
 } // namespace yake
 
-#endif // _PROPERTY_LIST_BASE_H_
+#endif // _YAPP_GUI_PROPERTY_LIST_BASE_H_

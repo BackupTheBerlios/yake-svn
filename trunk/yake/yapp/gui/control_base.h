@@ -1,5 +1,5 @@
-#ifndef _CONTROL_BASE_H_
-#define _CONTROL_BASE_H_
+#ifndef _YAPP_GUI_CONTROL_BASE_H_
+#define _YAPP_GUI_CONTROL_BASE_H_
 
 #include <CEGUI.h>
 #include <reflection.h>
@@ -58,4 +58,4 @@ public: // implementation-specific accessors
 } // namespace gui
 } // namespace yake
 
-#endif // _CONTROL_BASE_H_
+#endif // _YAPP_GUI_CONTROL_BASE_H_

@@ -1,5 +1,5 @@
-#ifndef _STATIC_TEXT_BASE_H_
-#define _STATIC_TEXT_BASE_H_
+#ifndef _YAPP_GUI_STATIC_TEXT_BASE_H_
+#define _YAPP_GUI_STATIC_TEXT_BASE_H_
 
 #include <reflection.h>
 #include <bind_lua/bind_lua.h>
@@ -104,4 +104,4 @@ typedef static_text_base::info static_text;
 } // namespace gui
 } // namespace yake
 
-#endif // _STATIC_TEXT_BASE_H_
+#endif // _YAPP_GUI_STATIC_TEXT_BASE_H_

@@ -1,7 +1,7 @@
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#ifndef _YAPP_GUI_CONFIG_H_
+#define _YAPP_GUI_CONFIG_H_
 
-#include <boost/mpl/list.hpp>
+#include <yake/base/mpl/sequences>
 
 namespace yake
 {
@@ -30,7 +30,7 @@ namespace gui
 /* implemented types */
 // properties
 struct point;
-typedef boost::mpl::list // todo: use yake::base::mpl::sequences::list
+typedef yake::base::mpl::sequences::list
 	<
 		bool,
 		float,
@@ -42,7 +42,7 @@ typedef boost::mpl::list // todo: use yake::base::mpl::sequences::list
 class button_base;
 class static_text_base;
 class multi_line_edit_box_base;
-typedef boost::mpl::list
+typedef yake::base::mpl::sequences
 	<
 		button_base,
 		static_text_base,
@@ -66,4 +66,4 @@ typedef boost::mpl::list
 } // namespace gui
 } // namespace yake
 
-#endif // _CONFIG_H_
+#endif // _YAPP_GUI_CONFIG_H_

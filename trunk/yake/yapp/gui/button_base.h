@@ -1,5 +1,5 @@
-#ifndef _BUTTON_BASE_H_
-#define _BUTTON_BASE_H_
+#ifndef _YAPP_GUI_BUTTON_BASE_H_
+#define _YAPP_GUI_BUTTON_BASE_H_
 
 #include <reflection.h>
 
@@ -157,4 +157,4 @@ typedef button_base::info button;
 } // namespace gui
 } // namespace yake
 
-#endif // _BUTTON_BASE_H_
+#endif // _YAPP_GUI_BUTTON_BASE_H_

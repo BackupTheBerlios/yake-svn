@@ -1,5 +1,5 @@
-#ifndef _DEFAULT_WINDOW_H_
-#define _DEFAULT_WINDOW_H_
+#ifndef _YAPP_GUI_DEFAULT_WINDOW_H_
+#define _YAPP_GUI_DEFAULT_WINDOW_H_
 
 #include "window_base.h"
 #include "cegui_window.h"
@@ -62,4 +62,4 @@ private: // data
 } // namespace gui
 } // namespace yake
 
-#endif // _DEFAULT_WINDOW_H_
+#endif // _YAPP_GUI_DEFAULT_WINDOW_H_
