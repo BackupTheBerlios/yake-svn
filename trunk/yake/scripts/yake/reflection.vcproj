@@ -155,7 +155,7 @@
 				RelativePath="..\..\yake\reflection\classregistry.h">
 			</File>
 			<File
-				RelativePath="..\..\yake\reflection\construct_type_from_arbitrary_args.h">
+				RelativePath="..\..\yake\reflection\construct_type_from_arbitrary_types.h">
 			</File>
 			<File
 				RelativePath="..\..\yake\reflection\event.h">

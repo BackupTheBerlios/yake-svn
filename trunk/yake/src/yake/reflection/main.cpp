@@ -12,6 +12,17 @@ using namespace reflection;
 using namespace std;
 
 // -----------------------------------------
+// property
+struct property_test
+{
+	CLASS(property_test, NullClass);
+	PROPERTY(const char *, caption);
+	const char * get_caption() const { return m_caption.c_str(); }
+	void set_caption(const char * caption) { m_caption = caption; }
+	std::string m_caption;
+};
+
+// -----------------------------------------
 // serialization
 struct SerializationTest : public Object
 {
