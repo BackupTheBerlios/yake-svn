@@ -40,8 +40,8 @@ namespace yake {
 			mOdeContactGroup = new dJointGroup( 0 );
 
 			mOdeWorld->setGravity( 0., 0., 0. );
-			mOdeWorld->setCFM( 0.005 );
-			mOdeWorld->setERP( 0.995 );
+			mOdeWorld->setCFM( 0.001 );
+			mOdeWorld->setERP( 0.9999 );
 		}
 
 		//-----------------------------------------------------

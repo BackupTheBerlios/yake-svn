@@ -43,6 +43,10 @@ namespace yake {
 			virtual real getSpring() const;
 			virtual real getDamping() const;
 
+			virtual void setMotor1Velocity(real vel);
+			virtual void setMotor1MaximumForce(real force);
+			virtual void setMotor2Velocity(real vel);
+			virtual void setMotor2MaximumForce(real force);
 		protected:
 			void _applySpring();
 			real _getCFMFromSpring() const;
@@ -88,6 +92,8 @@ namespace yake {
 			virtual Vector3 getAxis1() const;
 			virtual Vector3 getAxis2() const;
 
+			virtual void setMotor1Velocity(real vel);
+			virtual void setMotor1MaximumForce(real force);
 			virtual void setMotor2Velocity(real vel);
 			virtual void setMotor2MaximumForce(real force);
 

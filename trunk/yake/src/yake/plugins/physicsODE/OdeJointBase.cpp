@@ -117,6 +117,34 @@ namespace yake {
 			}
 		}
 
+		//-----------------------------------------------------
+		void OdeJointBase::setMotor1Velocity(float vel)
+		{
+			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
+			dJointSetHingeParam( mOdeJoint->id(), dParamVel, vel );
+		}
+
+		//-----------------------------------------------------
+		void OdeJointBase::setMotor1MaximumForce(float force)
+		{
+			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
+			dJointSetHingeParam( mOdeJoint->id(), dParamFMax, force );
+		}
+
+		//-----------------------------------------------------
+		void OdeJointBase::setMotor2Velocity(float vel)
+		{
+			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
+			dJointSetHingeParam( mOdeJoint->id(), dParamVel2, vel );
+		}
+
+		//-----------------------------------------------------
+		void OdeJointBase::setMotor2MaximumForce(float force)
+		{
+			YAKE_ASSERT( mOdeJoint ).debug("Need an ODE joint to work with!");
+			dJointSetHingeParam( mOdeJoint->id(), dParamFMax2, force );
+		}
+
 
 	}
 }

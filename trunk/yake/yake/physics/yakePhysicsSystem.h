@@ -125,6 +125,9 @@ namespace yake {
 			virtual Vector3 getAxis1() const = 0;
 			virtual Vector3 getAxis2() const = 0;
 
+			virtual void setMotor1Velocity(real vel) = 0;
+			virtual void setMotor1MaximumForce(real force) = 0;
+
 			virtual void setMotor2Velocity(real vel) = 0;
 			virtual void setMotor2MaximumForce(real force) = 0;
 
