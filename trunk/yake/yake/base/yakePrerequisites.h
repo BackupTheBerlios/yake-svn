@@ -86,7 +86,7 @@
 #define YAKE_SIGNALS_USE_TTL
 
 // Helper macros
-// todo: remove, deprecated, use safe_delete(_attay)
+// todo: remove, deprecated, use safe_delete(_array)
 #define YAKE_SAFE_RELEASE(ptr)              if(ptr) { ptr->release(); ptr = 0; }
 #define YAKE_SAFE_DELETE(ptr)               if(ptr) { delete ptr; ptr = 0; }
 #define YAKE_SAFE_DELETE_ARRAY(ptr_array)   if(ptr) { delete [] ptr_array; ptr_array = 0; }
