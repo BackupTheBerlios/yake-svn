@@ -387,7 +387,7 @@ void MiniApp::run()
 	TriangleMeshId groundMeshId = mPWorld1->createTriangleMesh(groundMeshDesc);
 	YAKE_ASSERT( kTriangleMeshIdNone != groundMeshId );
 
-	SharedPtr<IShape> pStaticWorldShape1 = pStaticWorldActor1.lock()->createShape( IShape::TriMeshDesc( groundMeshId ) );
+	IShape* pStaticWorldShape1 = pStaticWorldActor1.lock()->createShape( IShape::TriMeshDesc( groundMeshId ) );
 	YAKE_ASSERT( pStaticWorldActor1.lock()->getShapes().size() == 1 )(pStaticWorldActor1.lock()->getShapes().size()).warning("no world shape!");
 
 	// create a simple static environment - world 2
@@ -417,11 +417,12 @@ void MiniApp::run()
 
 		// spawn randomised objects in intervals
 		// @todo add compound objects, i.e. objects with compound collision geometry.
-		static real timeSinceLastSpawn = 2;
-		timeSinceLastSpawn += timeElapsed;
-		if (timeSinceLastSpawn > 1.5)
+		static real timeSinceLastSpawn = 0;
+		timeSinceLastSpawn -= timeElapsed;
+		if (timeSinceLastSpawn <= 0.f)
 		{
-			timeSinceLastSpawn = 0;
+			timeSinceLastSpawn = 1.5;
+			//timeSinceLastSpawn = 1000000.;
 
 			// decide whether to spawn object in physics world 1 or two
 			static bool bUseWorldOne = true;
@@ -430,14 +431,16 @@ void MiniApp::run()
 
 			// spawn the object
 			const Vector3 spawnOffset = bUseWorldOne ? Vector3(-5,0,0) : Vector3(5,0,0);
+			const Vector3 spawnPos = spawnOffset + Vector3(randomiser.randReal()*0.5,10,randomiser.randReal()*0.5);
 			objs.push_back( SharedPtr<Simple>( new Simple( pPWorld ) ) );
+
 			if (randomiser.randReal() < 0.5)
 				createBox( pPWorld, *objs.back(), 
-								spawnOffset + Vector3(randomiser.randReal()*0.5,10,randomiser.randReal()*0.5), // position
+								spawnPos, // position
 								Vector3(randomiser.randReal()*3,1,randomiser.randReal()*2) ); // dimensions
 			else
 				createBall( pPWorld, *objs.back(), 
-								spawnOffset + Vector3(0,10,0),  // position
+								spawnPos,  // position
 								randomiser.randReal()*2 ); //dimension/radius
 		}
 
