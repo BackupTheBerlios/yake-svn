@@ -30,6 +30,7 @@
 #endif
 // Boost
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 #include <boost/assert.hpp>
 #include <boost/mpl/assert_is_same.hpp>
 // Yake
@@ -51,7 +52,6 @@ namespace base
 {
 namespace templates
 {
-
 	template< typename T >
 	class AutoPtr : public std::auto_ptr< T >
 	{
@@ -74,6 +74,8 @@ namespace templates
 	public:
 		SharedPtr(): boost::shared_ptr< T >()  {}
 
+		SharedPtr( boost::shared_ptr< T > const& r ) : boost::shared_ptr< T >( r ) {}
+
 		template< class Y >
 		SharedPtr( SharedPtr<Y> const& r ): boost::shared_ptr< T >( r )  {}
 
@@ -91,6 +93,55 @@ namespace templates
 	{
 		return SharedPtr<T>(r, ::boost::detail::dynamic_cast_tag());
 	}
+
+	template<typename T>
+	class WeakPtr : public ::boost::weak_ptr< T >
+	{
+	public:
+		typedef T element_Type;
+		WeakPtr() {}
+
+		WeakPtr( boost::weak_ptr< T > const& r ) : boost::weak_ptr< T >( r ) {}
+
+		template<class Y>
+		WeakPtr(const SharedPtr<Y>& r) :
+			::boost::weak_ptr<T>( ::boost::weak_ptr<Y>(r) )
+		{}
+
+		WeakPtr(const WeakPtr& r) :
+			::boost::weak_ptr<T>( ::boost::weak_ptr<T>(r) )
+		{}
+
+		template<class Y>
+		WeakPtr(const WeakPtr<Y>& r) :
+			::boost::weak_ptr<T>( ::boost::weak_ptr<Y>(r) )
+		{}
+
+/*		WeakPtr& operator=(WeakPtr const & r)
+		{
+			return WeakPtr( r );
+		}*/
+		template<class Y> WeakPtr & operator=(WeakPtr<Y> const & r)
+		{
+			return ::boost::weak_ptr<T>( ::boost::weak_ptr<Y>( r ) );
+		}
+		template<class Y> WeakPtr<T> & operator=(SharedPtr<Y> const & r)
+		{
+			return WeakPtr<T>( ::boost::weak_ptr<T>( ::boost::weak_ptr<Y>( r ) ) );
+		}
+
+		SharedPtr<T> lock() const
+		{
+			return ::boost::weak_ptr<T>::lock();
+		}
+
+		bool expired() const
+		{
+			return ::boost::weak_ptr<T>::expired();
+		}
+	};
+	
+
 /*namespace PointerConfigs
 {
   struct Standard
