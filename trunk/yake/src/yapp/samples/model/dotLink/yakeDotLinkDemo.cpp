@@ -111,7 +111,7 @@ public:
 		
 		yake::data::dom::xml::XmlSerializer ser;
 		ser.parse( mfnXODE, false );
-		YAKE_ASSERT( ser.getDocumentNode() );
+		YAKE_ASSERT( ser.getDocumentNode() )( mfnXODE ).error("Could not load XODE document!");
 		
 		parser::xode::XODEParserV1 parser( *mPhysical );
 		parser.load( ser.getDocumentNode() , mPWorld.get() );
@@ -124,6 +124,10 @@ public:
 		
 		app::model::DotLinkLoader dotLinkLoader;
 		dotLinkLoader.load( mfnLink, *mModel.get() );
+
+		//
+		//physics::WeakIStaticActorPtr pSA = mPWorld->createStaticActor( physics::IActor::Desc() );
+		//pSA.lock()->createShape( physics::IShape::PlaneDesc( Vector3(0,1,0), -200 ) );
 	}
 
 	virtual void run()
@@ -146,7 +150,7 @@ public:
 
 		if (mVPs[0].second)
 		{
-			mVPs[0].second->translate( Vector3( 100,0,300 ) );
+			mVPs[0].second->translate( Vector3( 100,0,600 ) );
 			//mVPs[0].second->rotate( Vector3( 0, 1, 0 ), 45 );
 			//mVPs[0].second->pitch(-10);
 		}

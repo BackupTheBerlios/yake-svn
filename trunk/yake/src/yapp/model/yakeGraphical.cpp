@@ -82,7 +82,7 @@ namespace model {
 
 		yake::data::dom::xml::XmlSerializer ser;
 		ser.parse(fn, false);
-		YAKE_ASSERT( ser.getDocumentNode() );
+		YAKE_ASSERT( ser.getDocumentNode() )( fn ).error("Could not parse dotScene document!");
 
 		// 2. parse DOM and create graphical objects
 
