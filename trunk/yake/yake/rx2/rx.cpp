@@ -43,7 +43,8 @@ int main()
 		meta_class test_class =
 			define<meta_class>( "test_class" )
 				.add_field<bool>( "hello_bool", true )
-				.add_field<std::string>( "hello_string" );
+				.add_field<std::string>( "hello_string" )
+				.add_handler<bool>( "on_click" );
 
 		// create an instance of that just defined class
 		meta_object & test_object = create( test_class,  "test_object" );

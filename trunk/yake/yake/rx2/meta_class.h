@@ -6,6 +6,7 @@
 #include "class_registry.h"
 #include "meta_object.h"
 #include "meta_hooks.h"
+#include "type_info.h"
 
 namespace rx
 {
@@ -34,6 +35,7 @@ struct attach_field
 class meta_class
 {
 public: // types
+	/* fields */
 	// we need the smart pointer here, because the deconstructor cannot take care of
 	// deleting (there can be n copies at the same time [ for instance when define<>
 	// is using the copy constructor multiple times ], so we can't just delete the
@@ -41,6 +43,10 @@ public: // types
 	typedef std::vector< std::pair<
 		yake::base::templates::SharedPtr< meta_field >, 
 		void(*)(meta_object&, meta_field&, bool) > > fields_list;
+
+	/* event and handler traits */
+	typedef std::vector< TypeInfo > arg_types;
+	typedef std::map< std::string, arg_types > traits;
 
 public: // constructors
 	meta_class()
@@ -64,7 +70,8 @@ public: // constructors
 
 	meta_class( const meta_class & copy )
 		: name_( copy.name_ ),
-			fields_( copy.fields_ )
+			fields_( copy.fields_ ),
+			handler_traits_( copy.handler_traits_ )
 	{
 		register_class( *this );       
 	}
@@ -122,6 +129,25 @@ public: // field management
 		throw exception();
 	}
 
+public: // events and handlers
+	template< typename T1 >
+	meta_class & add_handler( const std::string & name )
+  {
+		arg_types args;
+    args.push_back( typeid( T1 ) );
+    handler_traits_.insert( traits::value_type( name, args ) );
+		return *this;
+  }
+
+	template< typename T1 >
+	meta_class & add_event( const std::string & name )
+  {
+		arg_types args;
+    args.push_back( typeid( T1 ) );
+    event_traits_.insert( traits::value_type( name, args ) );
+		return *this;
+  }
+
 public: // object creation	
 	friend meta_object & create( const meta_class & meta_class_, std::string object_name );	
 	template< typename T1, typename T2, typename T3 >
@@ -136,6 +162,8 @@ public: // info
 private:
 	mutable std::string name_;
 	fields_list fields_;
+  traits handler_traits_;
+  traits event_traits_;
 };
 
 // used by regular meta object instancing
