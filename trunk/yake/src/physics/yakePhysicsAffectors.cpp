@@ -18,8 +18,9 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include "yakeStableHeaders.h"
-#include "yakePhysicsAffectors.h"
+#include <inc/physics/yakePCH.h>
+#include <inc/physics/yakePhysicsSystem.h>
+#include <inc/physics/yakePhysicsAffectors.h>
 
 namespace yake {
 	namespace physics {
