@@ -114,31 +114,27 @@ namespace physics {
 		struct Desc
 		{
 			Desc(	const ShapeType type_,
-					bool bMovable_ = true,
 					const Vector3 & rkPosition = Vector3::kZero, 
 					const Quaternion & rkOrientation = Quaternion::kIdentity,
 					IMaterial* material_ = 0) :
 				type( type_ ),
 				position( rkPosition ),
 				orientation( rkOrientation ),
-				bMovable( bMovable_ ),
 				pMaterial( material_ )
 			{}
 			ShapeType	type; // superfluous as shape type is determined by dynamic_cast on Desc struct...
 			Vector3		position;
 			Quaternion	orientation;
-			bool		bMovable;
 			IMaterial*	pMaterial;
 		};
 		struct SphereDesc : Desc
 		{
 			SphereDesc(	real radius_ = real(1.),
 						// base class:
-						bool bMovable_ = true,
 						const Vector3 & rkPosition = Vector3::kZero, 
 						const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_SPHERE, bMovable_, rkPosition, rkOrientation ),
+				Desc( ST_SPHERE, rkPosition, rkOrientation ),
 				radius( radius_ )
 			{}
 			real		radius;
@@ -147,11 +143,10 @@ namespace physics {
 		{
 			BoxDesc(	const Vector3 & rkDimensions = Vector3(1,1,1),
 						// base class:
-						bool bMovable_ = true,
 						const Vector3 & rkPosition = Vector3::kZero, 
 						const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_BOX, bMovable_, rkPosition, rkOrientation ),
+				Desc( ST_BOX, rkPosition, rkOrientation ),
 				dimensions( rkDimensions )
 			{}
 			Vector3		dimensions;
@@ -161,11 +156,10 @@ namespace physics {
 			PlaneDesc(	const Vector3 & rkNormal = Vector3(0,1,0),
 						const real d_ = real(1.),
 						// base class:
-						bool bMovable_ = true,
 						const Vector3 & rkPosition = Vector3::kZero, 
 						const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_PLANE, bMovable_, rkPosition, rkOrientation ),
+				Desc( ST_PLANE, rkPosition, rkOrientation ),
 				normal( rkNormal ),
 				d( d_ )
 			{}
@@ -177,11 +171,10 @@ namespace physics {
 			CapsuleDesc(const real height_ = real(2.),
 						const real radius_ = real(1.),
 						// base class:
-						bool bMovable_ = true,
 						const Vector3 & rkPosition = Vector3::kZero, 
 						const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_CAPSULE, bMovable_, rkPosition, rkOrientation ),
+				Desc( ST_CAPSULE, rkPosition, rkOrientation ),
 				height( height_ ),
 				radius( radius_ )
 			{}
@@ -192,11 +185,10 @@ namespace physics {
 		{
 			TriMeshDesc(	const String & rkMeshFilename,
 							// base class:
-							bool bMovable_ = true,
 							const Vector3 & rkPosition = Vector3::kZero, 
 							const Quaternion & rkOrientation = Quaternion::kIdentity
 						 ) :
-				Desc( ST_TRIANGLE_MESH, bMovable_, rkPosition, rkOrientation ),
+				Desc( ST_TRIANGLE_MESH, rkPosition, rkOrientation ),
 				meshFilename( rkMeshFilename )
 			{}
 			String		meshFilename;
