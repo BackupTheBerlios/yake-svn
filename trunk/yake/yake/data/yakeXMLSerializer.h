@@ -26,6 +26,7 @@
 #ifndef YAKE_DATA_DOM_XMLSERIALIZER_H
 #define YAKE_DATA_DOM_XMLSERIALIZER_H
 
+#include <yake/data/yakeDataPrerequisites.h>
 #include <yake/data/yakeDataSerializer.h>
 
 class TiXmlElement;

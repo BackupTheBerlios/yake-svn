@@ -26,6 +26,8 @@
 #ifndef YAKE_DATA_DOM_SERIALIZER_H
 #define YAKE_DATA_DOM_SERIALIZER_H
 
+#include <yake/data/yakeDataPrerequisites.h>
+
 namespace yake {
 	using namespace base::templates;
 	using namespace base;
@@ -75,24 +77,23 @@ namespace dom {
 		// node values
 		virtual ValueType getValue( String const& rName ) const = 0;
 		virtual void setValue( String const& rName, ValueType const& rValue ) = 0;
+		template< typename T >
+		T getValueAs( String const& rName ) const
+		{
+			ValueType val = getValue( rName );
+			return varGet< T >( val );
+		}
 
 		// attributes
 		virtual const AttributeMap& getAttributes() const = 0;
 		virtual ValueType getAttributeValue( String const& rName ) const = 0;
 		virtual void setAttributeValue( String const& rName, ValueType const& rValue ) = 0;
 
-		template< typename T, int Dummy >
+		template< typename T >
 		T getAttributeValueAs( String const& rName ) const
 		{
 			ValueType val = getAttributeValue( rName );
 			return varGet< T >( val );
-		}
-
-		template< int Dummy >
-		real getAttributeValueAs( String const& rName ) const
-		{
-			ValueType val = getAttributeValue( rName );
-			return varGet< real >( val );
 		}
 	};
 
