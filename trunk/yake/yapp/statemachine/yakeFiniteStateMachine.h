@@ -80,6 +80,9 @@ namespace state {
 		return lhs;
 	}
 
+	typedef boost::function<void(void)> TransitionFn;
+	typedef std::deque< TransitionFn > TransitionFnList;
+
 	/** Template base class for very, very simple clonable objects.
 		@todo move out into yake::base or yapp::base.
 	*/
@@ -106,7 +109,7 @@ namespace state {
 		event_step, event_exit). Thereby it's possible to bind various kind of handlers to these
 		events, for example, LUA scripting hooks.
 	*/
-	class State : public clonableT<State>
+	class YAPP_BASE_API State : public clonableT<State>
 	{
 		YAKE_DECLARE_CLONABLE( State, State );
 	protected:
@@ -122,6 +125,12 @@ namespace state {
 		void exit();
 
 		// events
+		typedef Signal0<void> event_enter_sig;
+		typedef Signal0<void> event_step_sig;
+		typedef Signal0<void> event_exit_sig;
+		event_enter_sig	event_enter;
+		event_step_sig	event_step;
+		event_exit_sig	event_exit;
 		/*
 		event<void> event_enter;
 		event<void> event_step;
@@ -144,116 +153,138 @@ namespace state {
 		virtual void onStep() {}
 		virtual void onExit() {}
 	};
-//-------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------
-//-------------------------------------------------------------------------------------------------
-#ifdef SK_DEAD
-	/** A simple state machine managing states and transitions between registered states.
+	typedef State* StatePtr;
+
+	/** A state transition in a state machine.
+		A transition is used to directionally connect states. If transition
+		functions were added they are called whenever the operator () of the
+		transition object is called.
+		It is possible to derive from this class in order to customize its behaviour
+		or provide different or additional functionality.
+		One event is provided, the event_execute event. It can be used to attach
+		various kinds of handlers, e.g. handlers scripted with Lua.
 	*/
-	template<typename StateIdType>
-	class StateMachine
+	class YAPP_BASE_API Transition : public clonableT<Transition>
 	{
+		YAKE_DECLARE_CLONABLE( Transition, Transition );
+	protected:
+		Transition(const Transition& rkOther) : mTransitionFns(rkOther.mTransitionFns)
+		{}
 	public:
-		typedef StateIdType StateId; // can be made templated.
+		Transition() {}
+		Transition( const TransitionFn & fn0 )
+			{
+				mTransitionFns.push_back( fn0 ); 
+			}
+		Transition( const TransitionFn & fn0,
+					const TransitionFn & fn1 )
+			{ 
+				mTransitionFns.push_back( fn0 );
+				mTransitionFns.push_back( fn1 );
+			}
+		Transition( const TransitionFn & fn0,
+					const TransitionFn & fn1,
+					const TransitionFn & fn2)
+			{ 
+				mTransitionFns.push_back( fn0 );
+				mTransitionFns.push_back( fn1 );
+				mTransitionFns.push_back( fn2 );
+			}
+		void operator()();
+		void addTransitionFn( const TransitionFn& fn );
 
-		typedef boost::function<void(void)> StateFn;
-		typedef std::map< StateId, StateFn > StateFnMap;
+		TransitionFnList	mTransitionFns;
 
-		typedef boost::function<void(void)> TransitionFn;
-		typedef std::deque< TransitionFn > TransitionFnList;
+		//events
+		//event_execute();
+	};
+	typedef Transition* TransitionPtr;
+	typedef boost::shared_ptr<Transition> SharedTransitionPtr;
+
+	//---------------------------------------------------------
+	/** A stacked state machine.
+		States and transitions must be added to a machine before they can be used.
+		The type of state ids can be chosen as a template parameter.
+		If a transition between states shall be successfull the corresponding transition
+		object has to exist, i.e. one has to add it to the machine before use.
+		Possible entry states can be defined by provding transitions from kStateNone to
+		a specific state.
+		When changing a state with changeTo() one can choose whether to exit the previously
+		active state and enter the new one or whether to pop the new state on the stack.
+		The top-most state in the stack (i.e. the one last changed to) is the active one.
+		If the machine's executeState() function is called the active's state step() method
+		will be called.
+		When a machine is destroyed, the stack will be cleared by removing the states one
+		by one and calling their exit() methods (beginning at the top of the stack, i.e. the
+		active state).
+	*/
+	template< typename StateIdType >
+	class Machine : public clonableT<Machine>
+	{
+		YAKE_DECLARE_CLONABLE( Machine, Machine );
+	protected:
+		Machine(const Machine& rkOther) :
+				mStates(rkOther.mStates),
+				mStack(rkOther.mStack), //@todo copy stack, too?
+				mTransitions(rkOther.mTransitions)
+		{}
+	public:
+		Machine() {}
+		virtual ~Machine()
+		{ exitAll(); }
+
+		typedef StateIdType StateId;
+
+		typedef boost::shared_ptr<State> SharedStatePtr;
+		typedef std::map< StateId, SharedStatePtr > StateMap;
+		typedef std::pair<StateId, SharedStatePtr> IdStatePair;
+		typedef std::deque< IdStatePair > StateStack;
 		typedef std::pair<StateId,StateId> StateIdPair;
-		typedef std::map< StateIdPair, TransitionFnList > TransitionMap;
+		typedef std::map< StateIdPair, SharedTransitionPtr > TransitionMap;
 
 		const static StateId kStateNone;
-	public:
-		StateMachine();
 
-		//@{ name control
-		/** Return the id of the currently active state.
-			@return the id of the currently active state or kStateNone.
-		*/
-		StateId getCurrentState() const;
-		/** Initiate a state transition from the currently active state to a new one.
-			The transition table will be searched for a valid state transition. If
-			a transition is found it will be executed and the new state will become active.
-			The new state's state function will be called.
-			@Remarks Rossible return values:
-				- eRejected: no valid transition from the currently active to state to the specified one
-				- eInvalidParam: no state with the given id (idTo) was registered.
-				- eInvalidNesting: A transition was already in progress, nested transitions are not allowed.
-			@param idTo the id of the target state
-		*/
-		ErrorCode changeStateTo( const StateId & idTo );
-		//@}
+		ErrorCode addState( const StateIdType & rkId, SharedStatePtr & rState );
+		ErrorCode addState( const StateIdType & rkId, StatePtr rState );
+		ErrorCode addTransition( const StateId & rkFrom, const StateId & rkTo, SharedTransitionPtr & rTransition );
+		ErrorCode addTransition( const StateId & rkFrom, const StateId & rkTo, TransitionPtr rTransition );
+		ErrorCode changeTo( const StateIdType & rkId, bool bStacked = false );
+		ErrorCode exitAll();
+		ErrorCode exitTopOnStack();
+		ErrorCode executeState();
+		void dump(std::ostream & s) const;
 
-		//@{ name state registration
-		/** Register a state.
-			@Remarks If a state with the given id exists in the machine the operation will replcae
-				the existing registration information!
-			@param id state id
-			@param fn the function associated with the state
-		*/
-		void regState( const StateId & id, const StateFn & fn );
-		/** Unregister a state.
-			A state and all state transitions originating from it are unregistered.
-			Transitions that target the unregistered state will fail.
-			@todo unregister transitions!
-			@param id state id
-		*/
-		void unregState( const StateId & id );
-		//@}
-
-		//@{ name transition registration
-		/** Register a transition from one state to another.
-			No transition function will be registered.
-			@param idFrom source state
-			@param idTo target state
-		*/
-		void regTransition( const StateId & idFrom, const StateId & idTo );
-		/** Register a transition from one state to another and a function to be called when the
-			transition is executed.
-			@param idFrom source state
-			@param idTo target state
-			@param fn transition function
-		*/
-		void regTransition( const StateId & idFrom, const StateId & idTo, const TransitionFn & fn );
-		/** Register a transition from one state to another and a list of functions to be called when the
-			transition is executed.
-			@param idFrom source state
-			@param idTo target state
-			@param fns transition functions
-		*/
-		void regTransition( const StateId & idFrom, const StateId & idTo, const TransitionFnList & fns );
-		//@}
-		/** Adds a single transition function to a registered transition.
-			@see regTransition
-		*/
-		void addTransitionFn( const StateId & idFrom, const StateId & idTo, const TransitionFn & fn );
-
-		/// Dumps state machine information to a stream.
-		void dump(std::ostream& rhs) const;
 	private:
-		bool _stateExists( const StateId & id ) const;
-		/// Returns true if a transition was found, false if not. If found, then fns contains the list of the transition's functions.
-		bool _getTransition( const StateIdPair & idpair, TransitionFnList & fns ) const;
-		/** Execute the specified state's function.
-			@Return true if successful, otherwise false.
-		*/
-		bool _executeState( const StateId & id );
-	private:
-		StateId			mCurrentStateId;
-		StateFnMap		mStates;
+		StateMap		mStates;
+		StateStack		mStack;
 		TransitionMap	mTransitions;
-		bool				mTransitionInProgress;
+
+		SharedStatePtr _getStateById( const StateId & rkId )
+		{
+			StateMap::const_iterator itFind = mStates.find( rkId );
+			if (itFind == mStates.end())
+				return SharedStatePtr();
+			return itFind->second;
+		}
+		bool _getStateById( const StateId & rkId, IdStatePair & statePair )
+		{
+			StateMap::const_iterator itFind = mStates.find( rkId );
+			if (itFind == mStates.end())
+				return false;
+			statePair = *itFind;
+			return true;
+		}
+		SharedTransitionPtr _getTransition( const StateIdPair & idPair )
+		{
+			TransitionMap::const_iterator itFind = mTransitions.find( idPair );
+			if (itFind == mTransitions.end())
+				return SharedTransitionPtr();
+			return itFind->second;
+		}
 	};
-
-	/// A specialization for state machines using String for identifying states.
-	template<> const String StateMachine<String>::kStateNone = "NONE";
-
 	#include "yakeFiniteStateMachine_inc.h"
-#endif
+	//---------------------------------------------------------
+
 } // state
 } // app
 } // yake

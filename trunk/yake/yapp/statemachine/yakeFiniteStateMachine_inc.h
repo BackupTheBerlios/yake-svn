@@ -26,165 +26,130 @@
 //---------------------------------------------------------
 // NOTE: Do not include this file directly!
 //---------------------------------------------------------
-template<typename StateIdType>
-StateMachine<StateIdType>::StateMachine() : mCurrentStateId( kStateNone ), mTransitionInProgress(false)
-{
-}
-template<typename StateIdType>
-bool StateMachine<StateIdType>::_stateExists( const StateId & id ) const
-{
-	return (mStates.find( id ) != mStates.end());
-}
-template<typename StateIdType>
-bool StateMachine<StateIdType>::_executeState( const StateId & id )
-{
-	typename StateFnMap::const_iterator it = mStates.find( id );
-	if (it == mStates.end())
-		return false;
-	it->second();
-	return true;
-}
-template<typename StateIdType>
-StateIdType StateMachine<StateIdType>::getCurrentState() const
-{
-	return mCurrentStateId;
-}
-template<typename StateIdType>
-void StateMachine<StateIdType>::regState( const StateId & id, const StateFn & fn )
-{
-	//if (_stateExists(id))
-	//	return;
-	mStates[ id ] = fn;
-}
-template<typename StateIdType>
-void StateMachine<StateIdType>::unregState( const StateId & id )
-{
-	// @todo handle mCurrentStateId == id
 
-	// remove state
-	typename StateFnMap::iterator it = mStates.find( id );
-	if (it != mStates.end())
-		mStates.erase( it );
+	//---------------------------------------------------------
+	// State
+	//---------------------------------------------------------
 
-	// @todo remove all transitions!
-}
-template<typename StateIdType>
-void StateMachine<StateIdType>::regTransition( const StateId & idFrom, const StateId & idTo, const TransitionFnList & fns )
-{
-	// special case: idFrom == kStateNone is valid even though kStateNone may not be a registered state!
-	if (idFrom != kStateNone && !_stateExists(idFrom))
-		return; // @todo report error
-	if (!_stateExists(idTo))
-		return; // @todo report error
-	StateIdPair pair = std::make_pair(idFrom,idTo);
-	typename TransitionMap::const_iterator itFind = mTransitions.find( pair );
-	if (itFind != mTransitions.end())
-		mTransitions[ pair ] = fns;
-	else
-		mTransitions.insert( std::make_pair(pair, fns) );
-}
-template<typename StateIdType>
-void StateMachine<StateIdType>::regTransition( const StateId & idFrom, const StateId & idTo )
-{
-	TransitionFnList fns;
-	regTransition( idFrom, idTo, fns );
-}
-template<typename StateIdType>
-void StateMachine<StateIdType>::regTransition( const StateId & idFrom, const StateId & idTo, const TransitionFn & fn )
-{
-	TransitionFnList fns;
-	fns.push_back( fn );
-	regTransition( idFrom, idTo, fns );
-}
-template<typename StateIdType>
-void StateMachine<StateIdType>::addTransitionFn( const StateId & idFrom, const StateId & idTo, const TransitionFn & fn )
-{
-	if (!_stateExists(idFrom) || !_stateExists(idTo))
-		return; // @todo report error
-	StateIdPair pair = std::make_pair(idFrom,idTo);
-	typename TransitionMap::iterator itFind = mTransitions.find( pair );
-	if (itFind == mTransitions.end())
-		return; // @todo report error
-	itFind->second.push_back( fn );
-}
-template<typename StateIdType>
-bool StateMachine<StateIdType>::_getTransition( const StateIdPair & idpair, TransitionFnList & fns ) const
-{
-	typename TransitionMap::const_iterator itFind = mTransitions.find( idpair );
-	if (itFind == mTransitions.end())
-		return false; // @todo report error?
-	fns = itFind->second;
-	return true;
-}
-template<typename StateIdType>
-ErrorCode StateMachine<StateIdType>::changeStateTo( const StateId & idTo )
-{
-	if (mTransitionInProgress)
-		return eInvalidNesting;
+	template<> const base::String Machine<base::String>::kStateNone = "NONE";
 
-	mTransitionInProgress = true;
-	const StateId idFrom = mCurrentStateId;
-
-	// transition between registered states
-	if (!_stateExists(idTo))
+	//---------------------------------------------------------
+	template< typename StateIdType >
+		ErrorCode Machine<StateIdType>::addTransition( const StateId & rkFrom, const StateId & rkTo, SharedTransitionPtr & rTransition )
+		{
+			const StateIdPair idPair( rkFrom, rkTo );
+			if (_getTransition( idPair ).get())
+				return eAlreadyRegistered; // already registered.
+			mTransitions[ idPair ] = rTransition;
+			return eOk;
+		}
+	template< typename StateIdType >
+		ErrorCode Machine<StateIdType>::addTransition( const StateId & rkFrom, const StateId & rkTo, TransitionPtr rTransition )
+		{
+			const StateIdPair idPair( rkFrom, rkTo );
+			if (_getTransition( idPair ).get())
+				return eAlreadyRegistered; // already registered.
+			mTransitions[ idPair ] = SharedTransitionPtr(rTransition);
+			return eOk;
+		}
+	template< typename StateIdType >
+		ErrorCode Machine<StateIdType>::exitAll()
+		{
+			while (mStack.size() > 0)
+			{
+				mStack.front().second->exit();
+				mStack.pop_front();
+			}
+			return eOk;
+		}
+	template< typename StateIdType >
+		ErrorCode Machine<StateIdType>::exitTopOnStack()
+		{
+			if (mStack.size() > 0)
+			{
+				mStack.front().second->exit();
+				mStack.pop_front();
+			}
+			return eOk;
+		}
+	template< typename StateIdType >
+		ErrorCode Machine<StateIdType>::addState( const StateIdType & rkId, SharedStatePtr & rState )
 	{
-		mTransitionInProgress = false;
-		return eInvalidParam; // @todo report error
+		if (_getStateById( rkId ).get())
+			return eAlreadyRegistered;
+		mStates[ rkId ] = rState;
+		return eOk;
 	}
-	if (idFrom != kStateNone && !_stateExists(idFrom))
+	template< typename StateIdType >
+		ErrorCode Machine<StateIdType>::addState( const StateIdType & rkId, StatePtr rState )
 	{
-		mTransitionInProgress = false;
-		return eInvalidParam; // @todo report error
+		if (_getStateById( rkId ).get())
+			return eAlreadyRegistered;
+		mStates[ rkId ] = SharedStatePtr(rState);
+		return eOk;
 	}
-	StateIdPair pair = std::make_pair(idFrom,idTo);
-	TransitionFnList fns;
-	bool bTransitionRegistered = _getTransition( pair, fns );
+	template< typename StateIdType >
+		ErrorCode Machine<StateIdType>::changeTo( const StateIdType & rkId, bool bStacked = false )
+	{
+		StateId currentStateId = (mStack.size() > 0) ? (mStack.front().first) : kStateNone;
 
-	// execute transition if possible
-	if (bTransitionRegistered)
-	{
-		ConstDequeIterator<TransitionFnList> it( fns.begin(), fns.end() );
-		while (it.hasMoreElements())
-			it.getNext()(); // call function
-	}
-	else
-	{
-		mTransitionInProgress = false;
-		return eRejected;
-	}
+		// find transition
+		SharedTransitionPtr pTrans = _getTransition( StateIdPair( currentStateId, rkId ) );
+		if (!pTrans.get()) // transition not found
+			return eTransitionNotFound;
 
-	// call state function
-	mCurrentStateId = idTo;
-	if (!_executeState( mCurrentStateId ))
-	{
-		mTransitionInProgress = false;
-		return eError; // @todo report error
-	}
-	mTransitionInProgress = false;
-	return eOk;
-}
-template<typename StateIdType>
-void StateMachine<StateIdType>::dump(std::ostream& rhs) const
-{
-	rhs << "STATE MACHINE:" << std::endl;
+		// find state
+		IdStatePair state;
+		if (false == _getStateById(rkId, state))
+			return eStateNotFound; // state not found
 
-	// states
-	rhs << "states:" << std::endl;
-	templates::ConstVectorIterator< StateFnMap > itState( mStates.begin(), mStates.end() );
-	while (itState.hasMoreElements())
-	{
-		const std::pair<StateId, StateFn> & state = itState.getNext();
-		rhs << "   " << state.first << std::endl;
-	}
+		// change state
+		if (!bStacked)
+			exitTopOnStack(); // this is safe even if no state is on the stack yet.
 
-	// transitions
-	rhs << "transitions:" << std::endl;
-	templates::ConstVectorIterator< TransitionMap > itTrans( mTransitions.begin(), mTransitions.end() );
-	while (itTrans.hasMoreElements())
-	{
-		const std::pair< StateIdPair, TransitionFnList > & trans = itTrans.getNext();
-		rhs << "   from " << trans.first.first << " to " << trans.first.second << " (" << int(trans.second.size()) << " calls)" << std::endl;
-	}
+		(*pTrans)();
+		mStack.push_front( state );
+		mStack.front().second->enter();
 
-	rhs << std::endl;
-}
+		return eOk;
+	}
+	template< typename StateIdType >
+	ErrorCode Machine<StateIdType>::executeState()
+	{
+		if (mStack.size() > 0)
+			mStack.front().second->step();
+		return eOk;
+	}
+	template< typename StateIdType >
+	void Machine<StateIdType>::dump(std::ostream & s) const
+	{
+		s << "FSM:" << std::endl;
+
+		s << "\t" << "id of 'none' state: " << kStateNone << std::endl;
+
+		s << "\t" << unsigned int(mStates.size()) << " registered states" << std::endl;
+		::yake::base::templates::ConstVectorIterator<StateMap> itState( mStates.begin(), mStates.end() );
+		while (itState.hasMoreElements())
+		{
+			s << "\t\t" << itState.getNext().first << std::endl;
+		}
+
+		s << "\t" << unsigned int(mTransitions.size()) << " registered transitions" << std::endl;
+		::yake::base::templates::ConstVectorIterator<TransitionMap> itTrans( mTransitions.begin(), mTransitions.end() );
+		while (itTrans.hasMoreElements())
+		{
+			const StateIdPair & idPair = itTrans.getNext().first;
+			s << "\t\t" << idPair.first << " -> " << idPair.second << std::endl;
+		}
+
+		s << "\t" << unsigned int(mStack.size()) << " states on the stack" << std::endl;
+		if (mStack.size() > 0)
+		{
+			s << "\t\t(from top to bottom:)" << std::endl;
+			::yake::base::templates::ConstVectorIterator<StateStack> itStack( mStack.begin(), mStack.end() );
+			while (itStack.hasMoreElements())
+			{
+				s << "\t\t" << itStack.getNext().first << std::endl;
+			}
+		}
+	}
