@@ -61,15 +61,17 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="../common/obj/release/yakeBase"
-			ConfigurationType="1"
+			OutputDirectory="../common/bin/release"
+			IntermediateDirectory="../common/obj/release/$(ProjectName)"
+			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="../;../dependencies/boost/;../dependencies/ttl/"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;DLL_BUILD;YAKE_BASE_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="inc/base/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -77,12 +79,14 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/Yake.Base.exe"
+				AdditionalDependencies="winmm.lib"
+				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				ImportLibrary="../common/lib/release/$(ProjectName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -149,6 +153,12 @@
 				RelativePath="..\src\base\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"/>

@@ -100,10 +100,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scripting", "scripting.vcpr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scriptingLua", "plugins\scripting\scriptingLua.vcproj", "{41CEA11B-9678-43E5-B2F4-754944D7B461}"
 	ProjectSection(ProjectDependencies) = postProject
+		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesScriptingLua", "samples\scripting\samplesScriptingLua.vcproj", "{26B28ECB-A1FD-4CC0-A5EE-6E4587BBB058}"
 	ProjectSection(ProjectDependencies) = postProject
+		{41CEA11B-9678-43E5-B2F4-754944D7B461} = {41CEA11B-9678-43E5-B2F4-754944D7B461}
 	EndProjectSection
 EndProject
 Global

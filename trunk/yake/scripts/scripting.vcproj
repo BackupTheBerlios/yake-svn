@@ -53,8 +53,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../common/lib"
-			IntermediateDirectory="../common/obj/release/yakeScripting"
+			OutputDirectory="../common/bin/release"
+			IntermediateDirectory="../common/obj/release/$(ProjectName)"
 			ConfigurationType="4"
 			CharacterSet="2">
 			<Tool
