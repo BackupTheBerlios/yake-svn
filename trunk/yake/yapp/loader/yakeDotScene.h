@@ -248,20 +248,20 @@ namespace dotscene {
 			rotation.z = atof( pNode->getAttributeValueAs<String>("qz").c_str() );
 			rotation.w = atof( pNode->getAttributeValueAs<String>("qw").c_str() );
 		}
-		if (pNode->getAttributeValueAs<String>("axisx") != "")
+		if (pNode->getAttributeValueAs<String>("axisX") != "")
 		{
 			Vector3 axis;
-			axis.x = atof( pNode->getAttributeValueAs<String>("axisx").c_str() );
-			axis.y = atof( pNode->getAttributeValueAs<String>("axisy").c_str() );
-			axis.z = atof( pNode->getAttributeValueAs<String>("axisz").c_str() );
+			axis.x = atof( pNode->getAttributeValueAs<String>("axisX").c_str() );
+			axis.y = atof( pNode->getAttributeValueAs<String>("axisY").c_str() );
+			axis.z = atof( pNode->getAttributeValueAs<String>("axisZ").c_str() );
 			rotation.FromAxes( &axis );
 		}
-		if (pNode->getAttributeValueAs<String>("anglex") != "")
+		if (pNode->getAttributeValueAs<String>("angleX") != "")
 		{
 			Vector3 axis;
-			axis.x = atof( pNode->getAttributeValueAs<String>("anglex").c_str() );
-			axis.y = atof( pNode->getAttributeValueAs<String>("anglex").c_str() );
-			axis.z = atof( pNode->getAttributeValueAs<String>("anglex").c_str() );
+			axis.x = atof( pNode->getAttributeValueAs<String>("angleX").c_str() );
+			axis.y = atof( pNode->getAttributeValueAs<String>("angleY").c_str() );
+			axis.z = atof( pNode->getAttributeValueAs<String>("angleZ").c_str() );
 			real angle = atof( pNode->getAttributeValueAs<String>("angle").c_str() );;
 			rotation.FromAngleAxis( angle, axis );
 		}
@@ -345,23 +345,23 @@ namespace dotscene {
 				readPosition( pChild, normal );
 				pLight->setDirection( normal );
 			}
-			else if (childNodeName == "colour_diffuse")
+			else if (childNodeName == "colourDiffuse")
 			{
 				Color colour_diffuse;
 				readColour( pChild, colour_diffuse );
 				pLight->setDiffuseColour( colour_diffuse );
 			}
-			else if (childNodeName == "colour_specular")
+			else if (childNodeName == "colourSpecular")
 			{
 				Color colour_specular;
 				readColour( pChild, colour_specular );
 				pLight->setSpecularColour( colour_specular );
 			}
-			else if (childNodeName == "light_range")
+			else if (childNodeName == "lightRange")
 			{
 				readLightRange( pChild, pLight );
 			}
-			else if (childNodeName == "light_attenuation")
+			else if (childNodeName == "lightAttenuation")
 			{
 				readLightAttenuation( pChild, pLight );
 			}
