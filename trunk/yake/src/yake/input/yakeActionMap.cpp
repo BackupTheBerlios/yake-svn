@@ -42,30 +42,30 @@ namespace input {
 
 	//-----------------------------------------------------
 	KeyboardActionCondition::KeyboardActionCondition(
-		KeyboardDevice* device, const KeyCode key, bool continuous /* = false  */) :
+		KeyboardDevice* device, const KeyCode key, KeyboardActionMode mode) :
 						mKeyb(device),
 						mKey(key),
-						mContinuous(continuous),
+						mMode(mode),
 						mLastState(false)
 	{
 	}
 
 	//-----------------------------------------------------
 	void KeyboardActionCondition::setKeyboard( KeyboardDevice* device )
-	{ 
-		mKeyb = device; 
+	{
+		mKeyb = device;
 	}
 
 	//-----------------------------------------------------
 	void KeyboardActionCondition::setKey( const KeyCode key )
 	{ 
-		mKey = key; 
+		mKey = key;
 	}
 
 	//-----------------------------------------------------
-	void KeyboardActionCondition::setContinuous( bool continuous /*= false*/ )
+	void KeyboardActionCondition::setMode( KeyboardActionMode mode )
 	{ 
-		mContinuous = continuous; 
+		mMode = mode;
 	}
 
 	//-----------------------------------------------------
@@ -73,7 +73,7 @@ namespace input {
 	{
 		if (!mKeyb)
 			return false;
-		if (mContinuous)
+		if (mMode == KAM_CONTINUOUS)
 			return mKeyb->isKeyDown( mKey );
 		else
 		{
@@ -81,7 +81,18 @@ namespace input {
 			if (state != mLastState)
 			{
 				mLastState = state;
-				return true;
+				if (mMode == KAM_PRESSED_AND_RELEASED)
+					return true;
+				else
+				{
+					// fire only if key is 'pressed'
+					if (mLastState && mMode == KAM_PRESSED)
+						return true;
+					else if (!mLastState && mMode == KAM_RELEASED)
+						return true;
+					else
+						return false;
+				}
 			}
 			else
 				return false;

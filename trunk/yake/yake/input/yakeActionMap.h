@@ -88,7 +88,13 @@ namespace input {
 	class YAKE_INPUT_API KeyboardActionCondition : public ActionCondition
 	{
 	public:
-		KeyboardActionCondition( KeyboardDevice* device, const KeyCode key, bool continuous = false );	
+		enum KeyboardActionMode {
+			KAM_CONTINUOUS,
+			KAM_PRESSED,
+			KAM_RELEASED,
+			KAM_PRESSED_AND_RELEASED
+		};
+		KeyboardActionCondition( KeyboardDevice* device, const KeyCode key, KeyboardActionMode mode = KAM_CONTINUOUS );	
 
 		void setKeyboard( KeyboardDevice* device );
 		void setKey( const KeyCode key );
@@ -97,14 +103,15 @@ namespace input {
 			or a continuous stream of signals until a corresponding "key up"
 			is encountered.
 		*/
-		void setContinuous( bool continuous = false );
+		void setMode( KeyboardActionMode mode );
 
 		virtual bool operator()();
 	private:
-		KeyboardDevice*	mKeyb;
-		KeyCode			mKey;
-		bool			mContinuous;
-		bool			mLastState;
+		KeyboardDevice*		mKeyb;
+		KeyCode				mKey;
+		bool				mContinuous;
+		bool				mLastState;
+		KeyboardActionMode	mMode;
 	};
 
 	class YAKE_INPUT_API MouseActionCondition : public ActionCondition
