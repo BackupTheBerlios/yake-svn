@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "common/inc/path.hpp"
-
 #include <yake/base/templates/yakeRegistry.h>
 #include <yake/base/yakeString.h>
+
+#include "common/inc/path.hpp"
 
 #include "config.hpp"
 #include "file.hpp"

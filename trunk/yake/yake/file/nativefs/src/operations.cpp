@@ -578,7 +578,10 @@ namespace
 {
 
 	struct open_mode_xlate 
-	{ std::ios_base::openmode mode_enum; char mode_string; };
+	{ 
+		std::ios_base::openmode mode_enum; 
+		char mode_string; 
+	};
 
 	const open_mode_xlate mode_table[] =
 	{
@@ -623,8 +626,8 @@ namespace
 #   ifdef BOOST_WINDOWS
 		FILE * stream = fopen( ph.string().c_str(), lookup_mode( mode ).c_str() );
 		if( stream == NULL )
-            throw(
-				filesystem_error( "yake::filesystem::nativefs::open_file",
+            throw( filesystem_error( 
+							"yake::filesystem::nativefs::open_file",
                 	"Invalid file stream." ) );
 		return ( handle )( dword )( stream );
 #   else
@@ -639,9 +642,9 @@ namespace
 				filesystem_error( "yake::filesystem::nativefs::close_file",
                 	"Invalid file stream." ) );
 #   ifdef BOOST_WINDOWS
-		if( fclose( reinterpret_cast< FILE * >( file_handle ) ) != 0 ) // todo:BOOST_HANDLE
-            throw(
-				filesystem_error( "yake::filesystem::nativefs::close_file",
+		if( fclose( reinterpret_cast<FILE*>( file_handle ) ) != 0 ) // todo:BOOST_HANDLE
+            throw( filesystem_error( 
+							"yake::filesystem::nativefs::close_file",
                 	"Error while closing the file stream." ) );
 #   else
 		// todo: same as above?
@@ -664,10 +667,8 @@ namespace
 #   ifdef BOOST_WINDOWS
 		if( bytes_to_read <= 0 ) return 0;
 
-		size_t bytes_read = fread( buffer, sizeof( char ), bytes_to_read,
-            reinterpret_cast< FILE * >( file_handle ) );
-
-		return bytes_read;
+		return fread( buffer, sizeof( char ), bytes_to_read,
+            reinterpret_cast<FILE*>( file_handle ) );
 #   else
 		// todo: same as above?
 #   endif        
@@ -684,29 +685,73 @@ namespace
 					unsigned char* buffer, dword bytes_to_write )
 	{
 		if( file_handle == NULL )
-            throw(
-				filesystem_error( "yake::filesystem::nativefs::write_file",
+      throw( filesystem_error( 
+				"yake::filesystem::nativefs::write_file",
                 	"Invalid file stream." ) );
 
 		if( bytes_to_write > 0 && buffer == NULL )
-            throw(
-				filesystem_error( "yake::filesystem::nativefs::write_file",
-                	"Invalid buffer pointer." ) );
+      throw( filesystem_error( 
+				"yake::filesystem::nativefs::write_file",
+					"Invalid buffer pointer." ) );
 
 		// todo test read only
 
 #   ifdef BOOST_WINDOWS
 		if( bytes_to_write <= 0 ) return 0;
 
-		size_t bytes_written = fwrite( buffer, sizeof( char ), bytes_to_write,
-            reinterpret_cast< FILE * >( file_handle ) );
+		size_t bytes_written = fwrite( 
+			buffer, sizeof( char ), bytes_to_write,
+            reinterpret_cast<FILE*>( file_handle ) );
 
 		if( bytes_written == 0 )
-			throw(
-				filesystem_error( "yake::filesystem::nativefs::write_file",
-                	"Error while reading." ) );
+			throw( filesystem_error( 
+				"yake::filesystem::nativefs::write_file",
+					"Error while reading." ) );
 
 		return bytes_written;
+#   else
+		// todo: same as above?
+#   endif        
+	}
+
+namespace
+{
+	struct seek_dir 
+	{ 
+		std::ios_base::seekdir std_origin; 
+		int stdio_origin; 
+	};
+
+	const seek_dir seek_table[] =
+	{
+		{ std::ios_base::beg, SEEK_SET },
+		{ std::ios_base::cur, SEEK_CUR },
+		{ std::ios_base::end, SEEK_END },
+	};
+} // unnamed namespace
+
+	YAKE_FILESYSTEM_DECL std::streamoff seek_file( handle this_file, 
+				 std::streamoff off, std::ios_base::seekdir way )
+	{
+		if( this_file == NULL )
+      throw( filesystem_error( 
+				"yake::filesystem::nativefs::write_file",
+                	"Invalid file stream." ) );
+
+#   ifdef BOOST_WINDOWS
+		// set position
+		if( fseek( reinterpret_cast<FILE*>( this_file ),
+					static_cast<long>( off ), 
+					seek_table[ way ].stdio_origin ) != 0 )
+		{
+			throw( filesystem_error( 
+				"yake::filesystem::nativefs::seek_file",
+					"Error while seeking." ) );
+		}
+
+		// get position
+		return ftell( reinterpret_cast<FILE*>( this_file ) );
+
 #   else
 		// todo: same as above?
 #   endif        

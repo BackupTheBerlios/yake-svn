@@ -36,7 +36,7 @@
 				AdditionalDependencies="libboost_serialization.lib"
 				OutputFile="../Test/debug/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../dependencies/boost/bin/boost/libs/serialization/build/libboost_serialization.lib/vc7.1/$(outdir)/runtime-link-static/"
+				AdditionalLibraryDirectories="../../../dependencies/boost/bin/boost/libs/io/build/libboost_io.lib/vc7.1/debug;&quot;../../../dependencies/boost/bin/boost/libs/serialization/build/libboost_serialization.lib/vc7.1/$(outdir)/runtime-link-static/&quot;"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"

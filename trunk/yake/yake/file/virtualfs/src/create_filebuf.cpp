@@ -1,4 +1,5 @@
 #include <inc/create_filebuf.hpp>
+#include <nativefs/inc/operations.hpp>
 
 namespace filesystem
 {
@@ -16,11 +17,18 @@ std::streambuf & create_filebuf( const path & ph, std::ios_base::openmode
 		return (*filebuf);
 	}
 
+	// todo
 	//if( force_virtual || resolve::instance().exists_fs_for( ph ) )
 	//{
 		// create virtual file buffer
-		virtualfs::filebuf* filebuf = new virtualfs::filebuf();
-		if( !filebuf->open( ph, mode ) ) throw exception();
+
+	std::cout << "create_filebuf " << ph.string() << std::endl;
+
+		virtualfs::filebuf * filebuf = new virtualfs::filebuf( ph, mode );
+		//if( !filebuf->open( ph, mode ) ) throw exception();
+
+	std::cout << "create_filebuf done" << std::endl;
+
 		return (*filebuf);
 	//}
 

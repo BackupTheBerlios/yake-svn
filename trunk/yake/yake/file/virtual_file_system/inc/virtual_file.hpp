@@ -38,6 +38,7 @@ public:
 	const file_system & get_file_system() const;
 	int read( unsigned char * buffer, dword bytes_to_read );
 	int read_complete_file( unsigned char * buffer, dword bytes_to_read = 0 );
+	std::streamoff seek( std::streamoff off, std::ios_base::seekdir way );
 
 private:
 	// load

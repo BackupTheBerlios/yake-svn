@@ -1,12 +1,12 @@
 #ifndef _VIRTUALFS_OPERATIONS_
 #define _VIRTUALFS_OPERATIONS_
 
+#include <boost/iterator.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include "config.hpp"
 #include "file_system.hpp"
 #include "resolve.hpp"
-
-#include <boost/iterator.hpp>
-#include <boost/shared_ptr.hpp>
 
 // todo: safe reinterpret cast see mdcpp
 
@@ -17,16 +17,10 @@ namespace virtualfs
 
 // basic ---------------------------------------------------------//
 YAKE_VIRTUALFS_API bool exists( const path & ph );
-
 YAKE_VIRTUALFS_API void create_directory( const path & ph );
-
 YAKE_VIRTUALFS_API bool remove( const path & ph );
 YAKE_VIRTUALFS_API unsigned long remove_all( const path & ph );
-
-YAKE_VIRTUALFS_API void rename( const path & from_path,
-                 const path & to_path );
-
-
+YAKE_VIRTUALFS_API void rename( const path & from_path, const path & to_path );
 
 // information ---------------------------------------------------------//
 YAKE_VIRTUALFS_API path current_path();
@@ -38,6 +32,7 @@ YAKE_VIRTUALFS_API int read_file( handle this_file, unsigned char* buffer, dword
 YAKE_VIRTUALFS_API int read_complete_file( handle this_file, unsigned char* buffer, dword bytes_to_read );
 YAKE_VIRTUALFS_API void close_file( handle this_file );
 YAKE_VIRTUALFS_API void copy_file( const path&, const path& );
+YAKE_VIRTUALFS_API std::streamoff seek_file( handle this_file, std::streamoff off, std::ios_base::seekdir way );
 
 // archive operations ---------------------------------------------------------//
 YAKE_VIRTUALFS_API void create_archive_from( const path & archive, const path & dir );

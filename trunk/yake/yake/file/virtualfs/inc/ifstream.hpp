@@ -9,6 +9,8 @@ namespace filesystem
 namespace virtualfs
 {
 
+using namespace std;
+
 template<class _Elem,	class _Traits>
 class basic_ifstream
 		: public basic_istream<_Elem, _Traits>
@@ -20,56 +22,58 @@ public:
 	typedef basic_istream<_Elem, _Traits> _Mysb;
 
 	basic_ifstream()
-		: m_pStreambuf(0), _Mysb(m_pStreambuf)
+		: streambuf_(0), _Mysb(streambuf_)
 	{	// construct unopened
 	}
 
-	basic_ifstream( std::streambuf& _rStreambuf )
-		: m_pStreambuf(&_rStreambuf), _Mysb(m_pStreambuf)
+	basic_ifstream( std::streambuf & buf )
+		: streambuf_(&buf), _Mysb(streambuf_)
 	{	// construct with streambuffer
-		_Mysb::init( m_pStreambuf );
+		_Mysb::init( streambuf_ );
 	}
 
 	explicit basic_ifstream( const path & file_path,
 		ios_base::openmode mode = ios_base::in,
 		int prot = (int)ios_base::_Openprot )
-		: m_pStreambuf(0), _Mysb(m_pStreambuf)
+		: streambuf_(0), _Mysb(streambuf_)
 	{	// construct with named file and specified mode
-		open( file_path, mode | ios_base::in, prot );
+		open( file_path, mode, prot );
 	}
 
 	explicit basic_ifstream( handle this_file )
-		: m_pStreambuf(0), _Mysb(m_pStreambuf)
+		: streambuf_(0), _Mysb(streambuf_)
 	{	// construct with specified C stream
-		m_pStreambuf = new filebuf( this_file );
+		streambuf_ = new filebuf( this_file );
 	}
 
 	virtual ~basic_ifstream()
 	{	// destroy the object
-		delete m_pStreambuf;
+		delete streambuf_;
 	}
 
-	_Myfb *rdbuf() const
+	_Myfb * rdbuf() const
 	{	// return pointer to file buffer
-		return m_pStreambuf;
+		return streambuf_;
 	}
 
 	void open( const path & file_path, ios_base::open_mode mode )
 	{	// open named file with specified mode (old style)
-		open( file_path, (ios_base::openmode)mode, (int)ios_base::_Openprot );
+		open( file_path, 
+			static_cast<ios_base::openmode>(mode), 
+			static_cast<int>( ios_base::_Openprot ) );
 	}
 
 	void open( const path & file_path,
 		ios_base::openmode mode = ios_base::in,
-		int prot = (int)ios_base::_Openprot )
+		int prot = static_cast<int>( ios_base::_Openprot ) )
 	{	// open a C stream with specified mode
-		m_pStreambuf = &create_filebuf( file_path, mode/*, prot*/ ); // todo
-		_Mysb::init( m_pStreambuf ); // todo, plattform independent? use setstate?
+		streambuf_ = &create_filebuf( file_path, mode/*, prot*/ ); // todo
+		_Mysb::init( streambuf_ ); // todo, plattform independent? use setstate?
 
 	}
 
 private:
-	std::streambuf* m_pStreambuf;
+	std::streambuf * streambuf_;
 };
 
 typedef basic_ifstream< char, std::char_traits< char > > ifstream;

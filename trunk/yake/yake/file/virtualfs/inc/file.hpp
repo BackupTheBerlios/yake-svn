@@ -44,12 +44,14 @@ public:
 	// the output buffer is phisically written to the file
 	//virtual void flush() = 0;
 
-	// ------------------------------------------------------------//
 	// read block of data from a stream
 	virtual int read( unsigned char* buffer, dword bytes_to_read ) = 0;
 
 	// read the whole file from a stream
 	virtual int read_complete_file( unsigned char* buffer, dword bytes_to_read = 0 ) = 0;      
+
+	// set position of internal data pointer
+	virtual std::streamoff seek( std::streamoff off, std::ios_base::seekdir way ) = 0;
 
 	/*// get the next character.
 	virtual int getc() = 0;

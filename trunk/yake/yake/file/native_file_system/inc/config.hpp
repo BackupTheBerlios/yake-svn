@@ -1,9 +1,6 @@
 #ifndef _NATIVE_FILE_SYSTEM_CONFIG_HPP_
 #define _NATIVE_FILE_SYSTEM_CONFIG_HPP_
 
-#include <boost/archive/binary_iarchive.hpp> //text_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-
 #include <yake/base/yakePrerequisites.h>
 #include <yake/base/templates/yakePointer.h>
 

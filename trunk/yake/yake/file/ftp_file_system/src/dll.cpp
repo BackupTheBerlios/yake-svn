@@ -1,5 +1,4 @@
 #include "windows.h"
-#include <iostream>
 #include <virtualfs/inc/resolve.hpp>
 #include <inc/ftp_file_system.hpp>
 

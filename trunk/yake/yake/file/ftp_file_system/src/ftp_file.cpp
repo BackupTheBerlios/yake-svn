@@ -68,5 +68,10 @@ int ftp_file::read_complete_file( unsigned char * buffer, dword bytes_to_read )
 	return 0;
 }
 
+std::streamoff ftp_file::seek( std::streamoff off, std::ios_base::seekdir way )
+{
+	return filesystem::nativefs::seek_file( handle_, off, way );  
+}
+
 } // virtualfs
 } // filesystem

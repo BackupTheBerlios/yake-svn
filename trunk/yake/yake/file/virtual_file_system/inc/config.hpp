@@ -25,7 +25,6 @@ static const std::string archive_id = "vfs";
 typedef boost::archive::binary_iarchive in_archive;
 typedef boost::archive::binary_oarchive out_archive;
 
-
 } // virtualfs
 } // filesystem
 

@@ -35,6 +35,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="../Test/debug/$(ProjectName).dll"
+				AdditionalLibraryDirectories="../../../dependencies/boost/bin/boost/libs/io/build/libboost_io.lib/vc7.1/debug"
 				ImportLibrary="Debug/$(TargetName).lib"/>
 			<Tool
 				Name="VCMIDLTool"/>

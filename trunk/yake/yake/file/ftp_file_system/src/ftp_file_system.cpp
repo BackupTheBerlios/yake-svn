@@ -82,7 +82,7 @@ bool ftp_file_system::exists( const path & ph )
 		return false;
 
 	// absolute?
-	if( ph.string().find( "ftp:/" ) != string::npos ) // todo has_root_path() does not work for ftp:/
+	if( ph.string().find( "ftp:/" ) != std::string::npos ) // todo has_root_path() does not work for ftp:/
 	{
 		// for each root path
 		for( root_path_list::const_iterator iter = get_root_paths().begin(); 
@@ -90,9 +90,9 @@ bool ftp_file_system::exists( const path & ph )
 			iter++ )
 		{
 			// find root string within absolute path
-			if( ph.string().find( "ftp:/myfriend:myfriend@machine1.myip.us/yake_ftp" ) != string::npos
-				&& ph.string().find( "ftp:/myfriend:myfriend@machine1.myip.us/yake_ftp.vfs" ) == string::npos
-				&& ph.string().find( "ftp:/myfriend:myfriend@machine1.myip.us/yake_ftp/ftp_cheeze.vfs" ) == string::npos )//path( iter->first, no_check ).string() ) != string::npos ) // todo path converts ftp:// to ftp:/
+			if( ph.string().find( "ftp:/myfriend:myfriend@machine1.myip.us/yake_ftp" ) != std::string::npos
+				&& ph.string().find( "ftp:/myfriend:myfriend@machine1.myip.us/yake_ftp.vfs" ) == std::string::npos
+				&& ph.string().find( "ftp:/myfriend:myfriend@machine1.myip.us/yake_ftp/ftp_cheeze.vfs" ) == std::string::npos )//path( iter->first, no_check ).string() ) != string::npos ) // todo path converts ftp:// to ftp:/
 				{ std::cout << "== true" << std::endl;	return true; }; // todo further checks and combine this code with that one below        
 		}
 	}

@@ -54,7 +54,6 @@ void virtual_file::load_data_from_stream( in_archive * iarchive )
 
 	// set position to data offset
 	iarchive->is.seekg( archive_.get_data_offset().operator +( data_offset_ ), std::ios_base::beg );
-	// TODO HOW SHOULD THIS WORK FOR VIRTUAL BUFFER?
 
 	// deserialize data size
 	int data_size;
@@ -165,11 +164,34 @@ int virtual_file::read( unsigned char * buffer, dword bytes_to_read )
 	return bytes_to_read;
 }
 
-	int virtual_file::read_complete_file( unsigned char * buffer, dword bytes_to_read )
-	{
-		// todo
-		return 0;
-	}
+std::streamoff virtual_file::seek( std::streamoff off, std::ios_base::seekdir way )
+{
+  // Advances the read/write head by off characters, 
+  // returning the new position, where the offset is 
+  // calculated from:
+  //  - the start of the sequence if way == ios_base::beg
+  //  - the current position if way == ios_base::cur
+  //  - the end of the sequence if way == ios_base::end
+  if( way == std::ios_base::beg )
+  {
+    data_position_ = static_cast<dword>( off ); 
+  }
+  else if( way == std::ios_base::cur )
+  {
+    data_position_ += static_cast<dword>( off );           
+  }
+  else if( way == std::ios_base::end )
+  {
+    data_position_ = data_.size() - static_cast<dword>( off ); 
+  }
+  return data_position_;
+}
+
+int virtual_file::read_complete_file( unsigned char * buffer, dword bytes_to_read )
+{
+	// todo
+	return 0;
+}
 
 } // virtualfs
 } // filesystem

@@ -13,12 +13,12 @@ native_file::native_file(
 	std::ios_base::openmode mode )
 	: m_filename(const_cast<path&>(ph))
 {
-  m_handle = filesystem::nativefs::open_file( ph, mode );
+  handle_ = filesystem::nativefs::open_file( ph, mode );
 }
 
 void native_file::close()
 {
-	filesystem::nativefs::close_file( m_handle );
+	filesystem::nativefs::close_file( handle_ );
 }
 
 const file_system & native_file::get_file_system() const
@@ -28,12 +28,17 @@ const file_system & native_file::get_file_system() const
 
 int native_file::read( unsigned char * buffer, dword bytes_to_read )
 {
-  return filesystem::nativefs::read_file( m_handle, buffer, bytes_to_read );
+  return filesystem::nativefs::read_file( handle_, buffer, bytes_to_read );
 }
 
 int native_file::read_complete_file( unsigned char * buffer, dword bytes_to_read )
 {
-	return filesystem::nativefs::read_complete_file( m_handle, buffer, bytes_to_read );
+	return filesystem::nativefs::read_complete_file( handle_, buffer, bytes_to_read );
+}
+
+std::streamoff native_file::seek( std::streamoff off, std::ios_base::seekdir way )
+{
+	return filesystem::nativefs::seek_file( handle_, off, way );  
 }
 
 } // virtualfs

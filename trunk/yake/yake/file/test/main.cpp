@@ -168,6 +168,40 @@ bool test_native_iterator()
 	return( count == 3 );
 }
 
+bool test_native_seek()
+{
+	YAKE_LOG(  "test_native_seek()" );
+
+	using namespace filesystem;
+	using namespace filesystem::virtualfs;
+
+	// create test data
+	path native_files( "test_data", no_check );
+	nativefs::remove_all( native_files );
+	nativefs::create_directory( native_files );
+	create_dummy_file( native_files / "cheeze" );
+
+	// open
+	virtualfs::ifstream file( native_files / "cheeze" ); 
+
+	{ // tell
+		assert( static_cast<int>( file.tellg() ) == 0 );
+		std::string data;
+		file >> data;
+		std::cout << data << std::endl;
+		assert( static_cast<int>( file.tellg() ) == 6 );
+	}
+
+	{ // seek
+		std::string data;
+		file.clear(); // clear eof
+		file.seekg( 0, std::ios::beg );
+		file >> data;
+		std::cout << data << std::endl;
+		return( data == FILE_CONTENT );
+	}
+}
+
 // virtual: root management ---------------------------------------------------------//
 bool test_root_absolute_path()
 {
@@ -256,14 +290,12 @@ bool test_virtual_streams()
 			throw exception();
 	}
 
-	bool ok = true;
-
 	{ // virtual filesystem streams using native filebuffer
 		vfs::ifstream file( native_filename );
 		std::string data;
 		file >> data;
 		std::cout << data << std::endl;
-		if( data != FILE_CONTENT ) ok = false;
+		if( data != FILE_CONTENT ) return false;
 	}
 
 	{ // virtual filesystem stream using explicitly instanced virtual filebuffer
@@ -273,7 +305,7 @@ bool test_virtual_streams()
 		std::string data;
 		file >> data;
 		std::cout << data << std::endl;
-		if( data != FILE_CONTENT ) ok = false;
+		if( data != FILE_CONTENT ) return false;
 	}
 
 	{ // virtual filesystem stream using virtual filebuffer	  
@@ -281,10 +313,8 @@ bool test_virtual_streams()
 		std::string data;
 		file >> data;
 		std::cout << data << std::endl;
-		if( data != FILE_CONTENT ) ok = false;
+		if( data != FILE_CONTENT ) return false;
 	}
-
-	return ok;
 }
 
 bool test_virtual_nfs_iterator()
@@ -348,12 +378,16 @@ bool test_virtual_seek()
 
 	// create test data
 	path native_files( "test_data", no_check );
-	nativefs::remove_all( native_files );
+	if( nativefs::exists( native_files ) ) 
+		nativefs::remove_all( native_files );
 	nativefs::create_directory( native_files );
 	create_dummy_file( native_files / "cheeze" );
 
 	// open
-	virtualfs::ifstream file( native_files / "cheeze" ); 
+  std::streambuf & buf = virtualfs::create_filebuf( 
+		native_files / "cheeze", std::ios_base::in, 
+			virtualfs::force_virtual );
+	virtualfs::ifstream file( buf );
 
 	{ // tell
 		assert( static_cast<int>( file.tellg() ) == 0 );
@@ -363,15 +397,15 @@ bool test_virtual_seek()
 		assert( static_cast<int>( file.tellg() ) == 6 );
 	}
 
-	{ // todo: seek
+	{ // seek
 		std::string data;
-		file.seekg( 3, std::ios::beg );
-		std::cout << file.tellg() << std::endl;
+		file.clear(); // clear eof
+		file.seekg( 0, std::ios::beg );
 		file >> data;
 		std::cout << data << std::endl;
+		return( data == FILE_CONTENT );
 	}
 
-	return true;
 }
 
 // virtual: ftp ---------------------------------------------------------//
@@ -433,25 +467,24 @@ bool test_ftp_vfs_mixing()
 	file >> data;
 	std::cout << data << std::endl;
 	return data == FILE_CONTENT;
-
-	return true;
 }
 
 // main ---------------------------------------------------------//
 int main()
 {	
 	YAKE_LOG(  "## filesystem test" );
-	try
-	{
+	//try
+	//{
 		// common
-		YAKE_CHECK( test_exceptions() );
-		YAKE_CHECK( test_path_normalize() );
+		//YAKE_CHECK( test_exceptions() );
+		//YAKE_CHECK( test_path_normalize() );
 
 		// native
 		YAKE_USE_LIB( native_file_system )
-		YAKE_CHECK( test_native_operations() );
+		/*YAKE_CHECK( test_native_operations() );
 		YAKE_CHECK( test_native_streams() );
 		YAKE_CHECK( test_native_iterator() );
+		YAKE_CHECK( test_native_seek() );*/
 
 		// virtual
 		YAKE_USE_LIB( virtual_file_system )
@@ -459,18 +492,18 @@ int main()
 		YAKE_CHECK( test_root_remove_path() );
 		YAKE_CHECK( test_create_archive() );
 		YAKE_CHECK( test_virtual_file() );
-		YAKE_CHECK( test_virtual_streams() );
+		/*YAKE_CHECK( test_virtual_streams() );
 		YAKE_CHECK( test_virtual_nfs_iterator() );
 		YAKE_CHECK( test_virtual_vfs_iterator() );
-		YAKE_CHECK( test_virtual_seek() );
+		YAKE_CHECK( test_virtual_seek() );*/
 
 		// ftp
 		/*YAKE_USE_LIB( ftp_file_system )
 		YAKE_CHECK( test_ftp_exists() );
 		YAKE_CHECK( test_ftp_file() );
-		YAKE_CHECK( test_ftp_iterator() );*/
-		//YAKE_CHECK( test_ftp_vfs_mixing() );
-	}
+		YAKE_CHECK( test_ftp_iterator() );
+		YAKE_CHECK( test_ftp_vfs_mixing() );*/
+	/*}
 	catch( const filesystem::filesystem_error & err )
 	{
 		std::cout << err.who() << err.what();
@@ -478,7 +511,7 @@ int main()
 	catch( ... )
 	{
 		std::cout << "error: exception occured" << std::endl;
-	}
+	}*/
 	std::cin.get();
 	return 0;
 }

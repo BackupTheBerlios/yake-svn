@@ -38,7 +38,6 @@ public:
 
 	/*resolving_type get_resolving_type() const
 	{
-    return implementation_resolving;
 	};*/
 
 	/*void flush( Handle _hFile )

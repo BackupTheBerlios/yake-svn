@@ -34,6 +34,7 @@
 				Name="VCLinkerTool"
 				OutputFile="../Test/debug/$(ProjectName).dll"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="../../../dependencies/boost/bin/boost/libs/io/build/libboost_io.lib/vc7.1/debug"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/ftp_system.pdb"
 				SubSystem="2"

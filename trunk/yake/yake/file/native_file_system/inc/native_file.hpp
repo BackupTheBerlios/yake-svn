@@ -29,6 +29,8 @@ public:
 	int read( unsigned char * buffer, dword bytes_to_read );
 	int read_complete_file( unsigned char * buffer, dword bytes_to_read = 0 );
 
+	std::streamoff seek( std::streamoff off, std::ios_base::seekdir way );
+
 	/* todo: implement buffered stuff, maybe the vfs implementation should handle this
 	using internal ptrs etc.
 	see glibc, genops.c => _IO_default_pbackfail, _IO_sungetc, _IO_sputbackc
@@ -62,7 +64,7 @@ public:
 
 private:
 	path & m_filename;
-	nativefs::handle m_handle;
+	nativefs::handle handle_;
 };
 
 } // virtualfs

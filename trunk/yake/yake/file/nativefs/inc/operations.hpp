@@ -63,6 +63,9 @@ YAKE_FILESYSTEM_DECL int read_complete_file( handle file_handle,
 YAKE_FILESYSTEM_DECL size_t write_file( handle file_handle, 
 				 unsigned char* buffer, dword bytes_to_write );
 
+YAKE_FILESYSTEM_DECL std::streamoff seek_file( handle this_file, 
+				 std::streamoff off, std::ios_base::seekdir way );
+
 // todo: flush -> closeall
 
 //  directory_iterator helpers  ----------------------------------------------//

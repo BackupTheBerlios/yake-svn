@@ -2,6 +2,7 @@
 #include <inc/virtual_file_system_register.hpp>
 
 #include <nativefs/inc/ofstream.hpp>
+#include <nativefs/inc/ifstream.hpp>
 #include <virtualfs/inc/ifstream.hpp>
 #include <virtualfs/inc/operations.hpp>
 
@@ -151,8 +152,17 @@ virtual_archive & virtual_file_system::get_or_open_archive( const path & absolut
 	else
 	{	
 		// deserialize archive
-		virtualfs::ifstream * in = new virtualfs::ifstream( absolute_archive_path );
-		in_archive * ia = new in_archive( *in );
+
+		// todo clean up, we need the clear, otherwise nfs would be exluded because we are still in the resolve_fs_for loop
+		resolve::instance().clear_exlusion();
+
+	virtualfs::filebuf & buf = *new virtualfs::filebuf();
+	buf.open(	absolute_archive_path, std::ios_base::in ); 
+	std::istream * in = new nativefs::ifstream();
+	in->rdbuf(&buf);
+
+		//virtualfs::istream * in = new virtualfs::ifstream( absolute_archive_path );
+		in_archive * ia = new in_archive( *in ); // todo crash here because we are using virtual filebuf?!?!
 
 		virtual_archive * archive = new virtual_archive( ia, archive_string );
 		ia->operator >> ( *archive );
@@ -303,7 +313,7 @@ bool virtual_file_system::remove( const path & ph )
 {
   throw( filesystem_error(
     "virtual_file_system::remove",
-			read_only_error ) );
+		read_only_error ) );
 }
 
 unsigned long virtual_file_system::remove_all( const path & ph )
@@ -317,7 +327,7 @@ void virtual_file_system::rename( const path & from_path, const path & to_path )
 {
   throw( filesystem_error( 
 		"virtual_file_system::rename",
-			read_only_error ) );
+		read_only_error ) );
 }
 
 void virtual_file_system::copy_file( const path & from_file_ph, const path & to_file_ph )

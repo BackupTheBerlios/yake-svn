@@ -137,6 +137,12 @@ void close_file( handle this_file )
 	const_cast<file_system&>( my_file->get_file_system() ).close( *my_file );
 }
 
+std::streamoff seek_file( handle this_file, std::streamoff off, std::ios_base::seekdir way )
+{ // set position
+  	std::cout << "===>ops:seek_file" << std::endl;
+	return ( (file*) (dword) this_file )->seek( off, way );
+}
+
 // archive operations ---------------------------------------------------------//
 void create_archive_from( const path & archive, const path & dir )
 { // create archive using a virtual file system

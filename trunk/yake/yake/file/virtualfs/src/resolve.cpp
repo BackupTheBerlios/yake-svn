@@ -74,8 +74,6 @@ file_system_ptr resolve::resolve_fs_for( const path & ph )
 {
 	std::cout << "resolve::resolve_fs_for " << ph.string() << std::endl;
 
-	static std::set< std::string > exlusion;
-
 	for( system_list::iterator iter_sys( system_list_.begin() );
 		iter_sys != system_list_.end();
 		iter_sys++ )
@@ -83,24 +81,24 @@ file_system_ptr resolve::resolve_fs_for( const path & ph )
 		std::cout << "-------------------------------" << std::endl;
 		std::cout << "current: " << iter_sys->first << std::endl;
 
-		if( exlusion.find( iter_sys->first ) == exlusion.end() )
+		if( exclusion_.find( iter_sys->first ) == exclusion_.end() )
 		{
-			exlusion.insert( iter_sys->first );
+			exclusion_.insert( iter_sys->first );
       if( iter_sys->second->exists( ph ) )
 			{
 				std::cout << "found: " << iter_sys->first << std::endl << std::endl;
-				exlusion.clear();
+				exclusion_.clear();
 				return iter_sys->second;
 			}
 		}
 		else
 		{
-			std::cout << "exluded: " << iter_sys->first << std::endl;
+			std::cout << "excluded: " << iter_sys->first << std::endl;
 		}
 	}
 
 	// unknown
-	exlusion.clear();
+	exclusion_.clear();
 	return file_system_ptr(); 
 
 /*	file_system_ptr file_sys = resolve_fs( ph );

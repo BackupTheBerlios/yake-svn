@@ -1,7 +1,6 @@
 #include "windows.h"
-#include <iostream>
-#include <virtualfs/inc/resolve.hpp>
 #include <inc/virtual_file_system.hpp>
+#include <virtualfs/inc/resolve.hpp>
 
 // todo linux _init() equivalence
 // or __attribute__((constructor))  and  __attribute__((destructor))

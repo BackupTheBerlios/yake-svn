@@ -2,14 +2,15 @@
 #define _VIRTUALFS_RESOLVE_
 
 #include "config.hpp"
-#include "filebuf.hpp"
 #include "root.hpp"
+#include "file_system.hpp"
 
 #include <nativefs/inc/filebuf.hpp>
 #include <nativefs/inc/operations.hpp>
 
 #include <yake/base/templates/yakePointer.h>
 #include <yake/base/templates/yakeSingleton.h>
+
 
 //#include <boost/tuple/tuple.hpp>
 
@@ -104,10 +105,17 @@ public:
 		throw exception();
 	}
 
+	// todo we need a better exlusion system, some kind of graph and an extra exists() function?
+	void clear_exlusion()
+	{
+		exclusion_.clear();
+	}
+
 	//file_system_ptr resolve_fs( const path & ph );
 
 private:
 	system_list system_list_;
+	std::set< std::string > exclusion_;
 
 YAKE_BUILD_SINGLETON( resolve )
 };

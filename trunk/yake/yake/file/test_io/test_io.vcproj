@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="native_file_system"
-	ProjectGUID="{9A05BBE5-7139-44FC-AA91-EC472B7A12B4}"
+	Name="test_io"
+	ProjectGUID="{12BA5E48-16D5-44B0-BEF6-92D0C1DF1767}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -14,17 +14,16 @@
 			Name="Debug|Win32"
 			OutputDirectory="Debug"
 			IntermediateDirectory="Debug"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./;../;../../../;../../../dependencies/boost/"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_NFS_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="FALSE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -33,13 +32,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../Test/debug/$(ProjectName).dll"
+				OutputFile="$(OutDir)/test_io.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../dependencies/boost/bin/boost/libs/io/build/libboost_io.lib/vc7.1/debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
-				SubSystem="2"
-				ImportLibrary="$(OutDir)/$(ProjectName).lib"
+				ProgramDatabaseFile="$(OutDir)/test_io.pdb"
+				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -66,12 +64,12 @@
 			Name="Release|Win32"
 			OutputDirectory="Release"
 			IntermediateDirectory="Release"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;NATIVE_FILE_SYSTEM_EXPORTS"
-				RuntimeLibrary="0"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				RuntimeLibrary="4"
 				UsePrecompiledHeader="3"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -80,13 +78,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/native_file_system.dll"
+				OutputFile="$(OutDir)/test_io.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/native_file_system.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -114,32 +111,10 @@
 	</References>
 	<Files>
 		<Filter
-			Name="inc"
-			Filter="">
-			<File
-				RelativePath=".\inc\config.hpp">
-			</File>
-			<File
-				RelativePath=".\inc\native_file.hpp">
-			</File>
-			<File
-				RelativePath=".\inc\native_file_system.hpp">
-			</File>
-			<File
-				RelativePath=".\inc\native_file_system_register.hpp">
-			</File>
-		</Filter>
-		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath=".\src\dll.cpp">
-			</File>
-			<File
-				RelativePath=".\src\native_file.cpp">
-			</File>
-			<File
-				RelativePath=".\src\native_file_system.cpp">
+				RelativePath=".\src\test_io.cpp">
 			</File>
 		</Filter>
 	</Files>
