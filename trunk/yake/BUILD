@@ -32,7 +32,7 @@ and
 2. BUILD INSTRUCTIONS FOR YAKE 0.1b2 ON PC/LINUX
 ------------------------------------------------
 
-Last modified: 16/9/2004 by Nikita Bouida (mj)
+Last modified: 22/9/2004 by Nikita Buida (mj)
 
 This instruction applies to CVS version of Yake.
 
@@ -63,6 +63,21 @@ install all that libraries on your Linux system as usual. You should edit OgreSt
 dependencies dir as it is described in Yake forums to avoid string redefinition ( 
 just comment out Ogre's definitions of additional operators ).
 
+#. Execute autogen.sh script - it will create various missing scripts needed for automake & friends.
+
+Now there are two ways of building Yake: automated-command-line and IDE-wise ;)
+If you want command line build then do as usual:
+	./configure
+	make
+	make install
+
+NOTE:
+
+On the current state of development not all components of CVS version can be built 
+without errors as it is unstable. So for the first time I'd recomend to use KDevelop
+to rid of minor bugs and then to build however you like.
+
+Else, KDevelop'ers could do:
 #. Run KDevelop and open project file from yake root dir.
 #. Run automake and friends from KDevelop Build menu.
 #. Run configure from Build menu. 
@@ -82,6 +97,6 @@ You will need to set up working dir for demo, e.g. create config files and have 
 
 NOTE:
 
-To 16/09/2004 I managed to build only described libraries and demos. More to come in 
+To 22/09/2004 I managed to build only described libraries and demos. More to come in 
 the next release of this doc.
 
