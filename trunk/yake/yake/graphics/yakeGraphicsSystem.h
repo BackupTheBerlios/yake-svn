@@ -60,7 +60,7 @@ using namespace yake::base::templates;
 
 		typedef base::templates::AssocVector<base::String,base::String> ParamMap;
 
-		// todo: remove => managed by constructor/destructor
+		// todo: remove => managed by constructor/destructor and actually we don't need the paramap at all => config file
 		virtual void initialise(const ParamMap& rParams) throw(GraphicsException) = 0;
 		virtual void shutdown() throw(GraphicsException) = 0;
 
