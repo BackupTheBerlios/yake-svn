@@ -207,5 +207,24 @@
 		<libadd>yappModel</libadd>
 	</BuildProgram>
 
+	<BuildProgram 
+		name="XODELoaderDemo"
+		src="src/yapp/samples/model/XODE"
+	>
+		<libadd>common_libs</libadd>
+		<libadd>yappModel</libadd>
+		<libadd>yappLoader</libadd>
+	</BuildProgram>
+
+	<BuildProgram 
+		name="dotLinkLoaderDemo"
+		src="src/yapp/samples/model/dotLink"
+	>
+
+		<libadd>common_libs</libadd>
+		<libadd>yappModel</libadd>
+		<libadd>yappLoader</libadd>
+	</BuildProgram>
+
 </BuildSpec>
 
