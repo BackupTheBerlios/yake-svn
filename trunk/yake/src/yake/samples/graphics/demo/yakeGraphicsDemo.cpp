@@ -22,6 +22,7 @@ using namespace yake::base::math;
 using namespace yake::graphics;
 using namespace yake::data;
 
+// todo template approach for subsystems
 class TheApp : public yake::exapp::ExampleApplication
 {
 private:

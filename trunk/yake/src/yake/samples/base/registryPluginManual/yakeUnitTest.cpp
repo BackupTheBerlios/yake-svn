@@ -29,7 +29,7 @@ int main()
 
 	// Get the concrete implementation
 	YAKE_LOG_INFORMATION( "Creating concrete implementation..." )
-	Pointer< INetworkDriver > pNetDriver = create< INetworkDriver >();
+	SharedPtr< INetworkDriver > pNetDriver = create< INetworkDriver >();
 
 	// Huhu my new friend
 	DebugOutputStream::instance() << pNetDriver->sayHelloMyFriend();

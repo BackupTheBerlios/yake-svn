@@ -31,7 +31,7 @@ YAKE_DECLARE_CLASS( yake::testsuite::Dilemma )
 // Class
 public:
 	// Destructor.
-	virtual ~Dilemma() {}
+	~Dilemma() {}
 
 	// Constructor.
 	Dilemma()
