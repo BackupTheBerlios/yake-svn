@@ -1,6 +1,6 @@
-#include "bind_serialization/bind_serialization.h"
 #include "bind_lua/bind_lua.h"
 #include "bind_network/bind_network.h"
+#include "bind_serialization/bind_serialization.h"
 
 #include "reflection.h"
 #include "events.h"
@@ -50,12 +50,12 @@ IMPLEMENT_CLASS(LuaTest, lua)
 
 // -----------------------------------------
 // lua property
-struct A
+struct manual_event
 {
 	struct my_event 
 	{	
-		void attach() { std::cout << "hello\n"; } 
-		bool operator()(int i, int j) const { std::cout << "hallo" << i << std::endl; return true; } 
+		void attach() { std::cout << "manual_event::attach(): hello\n"; } 
+		bool operator()(int i, int j) const { std::cout << "manual_event::operator(): hallo" << i << std::endl; return true; } 
 	};
 	my_event e;
 };
@@ -68,13 +68,13 @@ struct abstract_class
 	virtual void do_pure_virtual() = 0; 
 };
 
-struct rx_A
+struct rx_event
 {
-	CLASS(rx_A, NullClass, lua);
+	CLASS(rx_event, NullClass, lua);
 	EVENT(public, f, (const abstract_class &), lua);
 	EVENT(public, e, (int, int), lua);
 };
-IMPLEMENT_CLASS(rx_A, lua)
+IMPLEMENT_CLASS(rx_event, lua)
 
 // -----------------------------------------
 // network
@@ -175,6 +175,7 @@ struct Handler
 void handler(int fara)
 { std::cout << "handler(" << fara << ")\n"; }
 
+
 // -----------------------------------------
 // main
 int main()
@@ -260,7 +261,6 @@ int main()
 		ia >> dobj;
 		ifs.close();
 
-		int dvalue;
 		dobj->getClass().getProperty("value").get(value, dobj);
 		cout << value << endl;
 		assert(value == 100);
@@ -271,16 +271,45 @@ int main()
 		using namespace luabind;
 		module(L)
 		[
-			class_<A::my_event>("my_event")
-				.def("attach", &A::my_event::attach)
+			class_<manual_event::my_event>("my_event")
+				.def("attach", &manual_event::my_event::attach)
 				.def(get_const_signature<int, int>::signature()),
-			class_<A>("A")
+			class_<manual_event>("manual_event")
 				.def(constructor<>())
-				.def_readwrite("e", &A::e)
+				.def_readwrite("e", &manual_event::e)
 		];
-		dostring(L, "a = A(); a.e:attach(); a.e(123, 456);");
+		dostring(L, "m_e = manual_event(); m_e.e:attach(); m_e.e(123, 456);");
 	}
 
+	// todo: delete this ...
+	{
+    using namespace luabind;
+
+		lua_State * L = lua_open();
+		lua_baselibopen(L);
+		open(L);
+
+		// class_::def(self(int())); where self::operator() returns call_operatorN
+		// call_operator<self_type, class A1, class A2, ..., class AN> where self_type = self_type || const_self_type
+		typedef operators::call_operator2<self_type, int, int> op_type;
+		op_type op = 0;
+
+		module(L)
+		[
+			class_<manual_event::my_event>("my_event")
+				.def("attach", &manual_event::my_event::attach)
+				.def(op), /* same as def(self(int(), int()) */
+			class_<manual_event>("manual_event")
+				.def(constructor<>())
+				.def_readwrite("e", &manual_event::e)
+		];
+
+		dostring(L, "m_e = manual_event(); m_e.e:attach(); m_e.e(123, 456);");
+
+		std::cin.get();
+	}
+
+	/*
 	// lua bindings
 	{
 		// properties and methods
@@ -290,10 +319,10 @@ int main()
 
 		// events
 		dostring(L, "function do_it_in_script(arg1, arg2) print('do_it_in_script(' .. arg1 .. ',' .. arg2 .. ')') end");
-		dostring(L, "rx_a = rx_A();"); 
-		dostring(L, "rx_a.e:attach_handler(do_it_in_script);"); 
-		dostring(L, "rx_a.e(123, 456);");
-	}
+		dostring(L, "rx_e = rx_event();"); 
+		dostring(L, "rx_e.e:attach_handler(do_it_in_script);"); 
+		dostring(L, "rx_e.e(123, 456);");
+	}*/
 
 	// networking
 	{

@@ -2,11 +2,11 @@
 
 // -----------------------------------------
 // lua utility
-bool dostring(lua_State* L, const char* str)
+bool dostring(lua_State * L, const char * str)
 {
 	if (luaL_loadbuffer(L, str, std::strlen(str), str) || lua_pcall(L, 0, 0, 0))
 	{
-		const char* a = lua_tostring(L, -1);
+		const char * a = lua_tostring(L, -1);
 		std::cout << a << "\n";
 		lua_pop(L, 1);
 		return true;
