@@ -1,1 +1,3 @@
 - events any benutzen für script anbindung siehe any converters
+- cegui adaptors see modified /cegui_mk2/Samples/Demo7
+- generic adpators see yake_tests/event_extended
