@@ -59,10 +59,6 @@ namespace model {
 		virtual void update() = 0;
 	};
 
-	class IScriptCallback
-	{
-	};
-
 /*
 	class YAPP_BASE_API Behaviour
 	{
@@ -87,6 +83,9 @@ namespace model {
 	/** Actor represents a high-level entity in an application/game.
 		It's appearance (graphical, physical, audible, etc) and its behaviour
 		is defined by various attachable components.
+		@Remarks The actor code is still very much experimental and in early stages!
+			You've been warned! Lots of it is still in flux.
+		@todo use rx and rx::events (incl. scripted callbacks, class inheritance...)
 	*/
 	class YAPP_BASE_API Actor
 	{

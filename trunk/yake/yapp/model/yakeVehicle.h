@@ -32,8 +32,14 @@
 namespace yake {
 namespace app {
 namespace model {
+
+/** yapp::vehicle is experimental code! Concrete implementations are not in public CVS
+	and lots of its code may well be still in flux.
+*/
 namespace vehicle {
 
+	/** Represents a vehicle :)
+	*/
 	class YAPP_BASE_API Vehicle : public Actor
 	{
 	public:
