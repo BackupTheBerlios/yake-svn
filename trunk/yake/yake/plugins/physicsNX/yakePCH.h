@@ -26,7 +26,7 @@
 //YAKE:
 
 #include <yake/base/yake.h>
-#include <yake/physics/yakePhysicsSystem.h>
+#include <yake/physics/yakePhysics.h>
 
 #ifdef YAKE_PHYSICS_NX_EXPORTS
 #	define YAKE_PHYSICSNX_API DLLEXPORT
