@@ -27,7 +27,7 @@ namespace exapp {
 		typedef Vector< SharedPtr<base::Library> > LibList;
 		LibList									mLibs;
 		SharedPtr< graphics::IGraphicsSystem >	mGraphicsSystem;
-		physics::IPhysicsSystem					* mPhysicsSystem;
+		SharedPtr< physics::IPhysicsSystem >	mPhysicsSystem;
 		scripting::ScriptingSystem				* mScriptingSystem;
 		SharedPtr<scripting::IBinder>			mScriptingBindings;
 		input::InputSystem						* mInputSystem;
@@ -57,7 +57,6 @@ namespace exapp {
 				mLoadScriptingBindings( loadScriptingBindings ),
 				mLoadAudioSystem( loadAudio ),
 				mScriptingSystem(0),
-				mPhysicsSystem(0),
 				mInputSystem(0)//, mScriptingBindings(0)
 		{
 		}
@@ -163,11 +162,11 @@ namespace exapp {
 			// physics
 			if (mLoadPhysicsSystem)
 			{
-				physics::PhysicsPlugin* pPP = loadPlugin<physics::PhysicsPlugin>( "physicsODE" );
-				YAKE_ASSERT( pPP ).debug("Cannot load physics plugin.");
+				SharedPtr<base::Library> pLib = loadLib("physicsNX" );
+				YAKE_ASSERT( pLib ).debug("Cannot load graphics plugin.");
 
-				mPhysicsSystem = pPP->createSystem();
-				YAKE_ASSERT( mPhysicsSystem ).error("Cannot create graphics system.");
+				mPhysicsSystem = create< physics::IPhysicsSystem >();
+				YAKE_ASSERT( mPhysicsSystem ).error("Cannot create physics system.");
 			}
 
 			// input
@@ -274,8 +273,8 @@ namespace exapp {
 			YAKE_SAFE_DELETE( mInputSystem );
 			//YAKE_SAFE_DELETE( mScriptingBindings );
 			mGraphicsSystem.reset();
+			mPhysicsSystem.reset();
 			mAudioSystem.reset();
-			YAKE_SAFE_DELETE( mPhysicsSystem );
 			YAKE_SAFE_DELETE( mScriptingSystem );
 		}
 	};
