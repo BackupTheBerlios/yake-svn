@@ -51,9 +51,11 @@ namespace base
 class YAKE_BASE_API Movable
 {
 YAKE_DECLARE_CLASS( yake::base::Movable )
+protected:
+	Movable();
 // Class
 public:
-	virtual ~Movable() {}
+	virtual ~Movable();
 
 // Methods
 public:
@@ -66,6 +68,14 @@ public:
 	{
 		setPosition( getPosition() + rDelta );
 	}
+	// move this out of here
+	void setFixedYawEnabled( bool enabled );
+	void setFixedYawAxis( const Vector3 & yawAxis );
+	void lookAt( const Vector3 & target );
+	void setDirection( const Vector3 & vec );
+private:
+	Vector3		mYawAxis;
+	bool		mFixedYaw;
 };
 
 } // base
