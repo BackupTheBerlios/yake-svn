@@ -86,13 +86,13 @@
 #define YAKE_SIGNALS_USE_TTL
 
 // Helper macros
-#define YAKE_SAFE_RELEASE( x )              if( x ) { x->release(); x = 0; }
-#define YAKE_SAFE_DELETE( x )               if( x ) { delete x; x = 0; }
-#define YAKE_SAFE_DELETE_ARRAY( x )         if( x ) { delete [] x; x = 0; }
+#define YAKE_SAFE_RELEASE(ptr)              if(ptr) { ptr->release(); ptr = 0; }
+#define YAKE_SAFE_DELETE(ptr)               if(ptr) { delete ptr; ptr = 0; }
+#define YAKE_SAFE_DELETE_ARRAY(ptr_array)   if(ptr) { delete [] ptr_array; ptr_array = 0; }
 
-#define YAKE_DECLARE_CLASS( name )          static const char * yake_private_currentClass() { return #name; }
+#define YAKE_DECLARE_CLASS(name)            static const char * yake_private_currentClass() { return #name; }
 #define YAKE_DECLARE_GLOBAL                 YAKE_DECLARE_CLASS( global )
-#define YAKE_DECLARE_FUNCTION( name )       static const char * yake_private_currentFunction = #name "()";
+#define YAKE_DECLARE_FUNCTION(name)         static const char * yake_private_currentFunction = #name "()";
 
 #define YAKE_THIS_CLASS                     yake_private_currentClass()
 #define YAKE_THIS_FUNCTION                  yake_private_currentFunction
