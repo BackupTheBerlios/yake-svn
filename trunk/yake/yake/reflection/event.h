@@ -18,7 +18,7 @@ private: \
 		{ \
         __event_##EVENT_NAME##__() \
 				{ \
-					static __register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(reflection::event<REMOVE_BRACES##ARGS>), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
+					static reflection::__register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(reflection::event<REMOVE_BRACES##ARGS>), getClassStaticPtr(), reflection::ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
         } \
     } __event_##EVENT_NAME##__; \
     friend struct __event_##EVENT_NAME##__; \
@@ -31,7 +31,7 @@ private: \
 		{ \
         __event_##EVENT_NAME##__() \
 				{ \
-					static __register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(EVENT_CLASS), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
+					static reflection::__register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(EVENT_CLASS), getClassStaticPtr(), reflection::ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
         } \
     } __event_##EVENT_NAME##__; \
     friend struct __event_##EVENT_NAME##__; \

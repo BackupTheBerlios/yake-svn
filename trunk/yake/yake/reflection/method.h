@@ -155,7 +155,7 @@ private: \
 		{ \
         __method_##METHOD_NAME##__() \
 				{ \
-            static reflection::__register_method__ reg(__create_callable__(&METHOD_NAME), __create_function_base__(&METHOD_NAME), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #RETURN_TYPE, #METHOD_NAME, #METHOD_ARGS, #VIRTUAL); \
+            static reflection::__register_method__ reg(__create_callable__(&METHOD_NAME), __create_function_base__(&METHOD_NAME), getClassStaticPtr(), reflection::ACCESS_##ACCESS_ATTR, #RETURN_TYPE, #METHOD_NAME, #METHOD_ARGS, #VIRTUAL); \
         } \
     } __method_##METHOD_NAME##__; \
     friend struct __method_##METHOD_NAME##__; \
