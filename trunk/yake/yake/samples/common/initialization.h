@@ -12,6 +12,7 @@
 #include <boost/mpl/find.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/next.hpp>
+#include <boost/mpl/reverse.hpp>
 // yake
 #include <yake/base/mpl/inherit_linear.h>
 #include <yake/base/mpl/inherit_multiple.h>
@@ -44,7 +45,7 @@ boost::shared_ptr<System> create(const char * id)
 namespace // unnamed
 {
 	// holds a reference to a system and makes it accessable
-	template <class System>
+	template <class System, class Parent>
 	struct auto_init_system_holder
 	{
 		auto_init_system_holder()
@@ -56,40 +57,21 @@ namespace // unnamed
 
 		boost::shared_ptr<System> m_system;
 	};
-
-
-	// todo: put this somewhere else?
-	// note: you cannot use gui without a renderer (todo: for win32 gui fake renderer needed?)
-	/*template <>
-	struct auto_init_system_holder<gui_system>
-	{
-		// the user can add an adapter for a gui/renderer combination without changing the code
-		auto_init_system_holder()
-			: m_system(create<gui_system>()),
-			  m_gui_renderer_adapter(
-				create<gui_renderer_adapter>(
-					gui_renderer_adapter::identifier(
-						static_cast<auto_init_system_holder<graphics_system>*>(this)->get_system()->get_type_info(),
-						m_system->get_type_info())))
-		{}
-
-		boost::shared_ptr<gui_system> get_system()
-		{ m_system.reset(system); }
-
-		boost::shared_ptr<gui_system> m_system;
-		boost::shared_ptr<gui_renderer_adapter> m_gui_renderer_adapter;
-	};*/
 } // namespace unnamed
 
 // loads the libraries, initializes the systems and makes them accessable
 template <class Config = default_config>
 struct auto_init : 
 	private load_libraries<Config>, 
-	private inherit_multiple<Config, typename lambda< auto_init_system_holder<_> >::type >::type
+	private inherit_multiple
+	<
+		typename boost::mpl::reverse<Config>::type, // note: correcting initialization order, otherwise graphics system would be initialized after gui
+		typename lambda< auto_init_system_holder<_, auto_init> >::type
+	>::type
 {
   template <class System>
   boost::shared_ptr<System> get_system()
-  { static_cast<auto_init_system_holder<System>&>(*this)->get_system(); }
+  { return static_cast<auto_init_system_holder<System, auto_init>*>(this)->get_system(); }
 };
 
 // -----------------------------------------
@@ -101,8 +83,8 @@ struct delayed_auto_init
 public: // types
 	typedef typename inherit_multiple
 	<
-		Config, 
-		typename lambda< auto_init_system_holder<_> >::type
+		typename boost::mpl::reverse<Config>::type, // note: correcting initialization order, otherwise graphics system would be initialized after gui
+		typename lambda< auto_init_system_holder<_, delayed_auto_init> >::type
 	>::type Systems;
 
 public: // methods
@@ -113,8 +95,8 @@ public: // methods
 	}
 
 	template <class System>
-	System & get_system()
-	{ static_cast<auto_init_system_holder<System>*>(m_systems.get())->get_system(); }
+	boost::shared_ptr<System> get_system()
+	{ return static_cast<auto_init_system_holder<System, delayed_auto_init>*>(m_systems.get())->get_system(); }
 
 private: // data
 	boost::shared_ptr<Config> m_config;
@@ -198,11 +180,11 @@ struct manual_init : private inherit_multiple<Systems, typename lambda< manual_i
 {
   template <class System>
   boost::shared_ptr<System> get_system()
-  { static_cast<manual_init_system_holder<System>&>(*this).get_system(); }
+  { return static_cast<manual_init_system_holder<System>*>(this)->get_system(); }
 
   template <class System>
   void load_system(const char * id)
-  { static_cast<manual_init_system_holder<System>&>(*this).set_system(create<System>(id)); }
+  { return static_cast<manual_init_system_holder<System>*>(this)->set_system(create<System>(id)); }
 };
 
 } // namespace common
