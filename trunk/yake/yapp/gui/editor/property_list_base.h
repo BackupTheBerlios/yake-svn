@@ -1,7 +1,7 @@
 #ifndef _YAPP_GUI_EDITOR_PROPERTY_LIST_BASE_H_
 #define _YAPP_GUI_EDITOR_PROPERTY_LIST_BASE_H_
 
-#include <yapp/plugins/guiCEGUI/editor/property_list.h> // todo remove
+#include <yapp/plugins/gui_cegui/editor/property_list.h> // todo remove
 
 namespace yake
 {
