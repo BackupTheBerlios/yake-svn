@@ -274,8 +274,10 @@ namespace yake {
 		class YAKE_PHYSICS_API IComplexObject : public base::Movable
 		{
 		public:
-			class ISlipNormalSource
+			class YAKE_PHYSICS_API ISlipNormalSource
 			{
+			protected:
+				ISlipNormalSource() {}
 			public:
 				virtual ~ISlipNormalSource() {}
 				virtual Vector3 getLateralSlipNormal() const = 0;
