@@ -30,6 +30,7 @@
 #endif
 // Yake
 #include <yake/base/yakeException.h>
+#include <yake/base/templates/yakeSmartAssert.h>
 #include <yake/base/templates/yakePointer.h>
 #include <yake/base/templates/yakeManager.h>
 #include <yake/base/mpl/yakeBuildArguments.h>
@@ -87,18 +88,18 @@ public: // methods
 YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 #undef FUNCTION
 
-	templates::SharedPtr< ICreator > getDefaultCreator()
+	templates::SharedPtr<ICreator> getDefaultCreator()
 	{
 		YAKE_ASSERT( getIdentifiers().size() > 0 ).debug( "No default creator available." ); // todo: does not work in release mode, should throw exception
 		if( !m_pDefaultCreator ) m_pDefaultCreator = getObject( *getIdentifiers().begin() ); // todo: (if(!m_pDefaultCreator) m_pDefaultCreator = front();
 		return m_pDefaultCreator;
 	}
 
-	void setDefaultCreator( const templates::SharedPtr< ICreator > pCreator )
+	void setDefaultCreator(const templates::SharedPtr<ICreator> pCreator)
 	{	m_pDefaultCreator = pCreator; }
 
 private: // data
-	templates::SharedPtr< ICreator > m_pDefaultCreator;
+	templates::SharedPtr<ICreator> m_pDefaultCreator;
 };
 
 
