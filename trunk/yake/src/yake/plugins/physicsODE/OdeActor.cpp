@@ -252,7 +252,7 @@ namespace physics {
 			}
 			else
 			{
-				// still colliding
+				// still colliding, so reset timeout
 				itFind->second = 0;
 			}
 			
@@ -284,6 +284,7 @@ namespace physics {
 				contact[i].surface.slip1 = 0; // 0.1
 				contact[i].surface.slip2 = 0.1;
 
+#ifdef DEAD
 				// FIXME put that stuff in material: if ( mLateralSlip && mSlipNormalSource )
 				{
 					// velocities & coefficients
@@ -330,6 +331,7 @@ namespace physics {
 						}
 					}
 				}
+#endif
 				contact[i].surface.motion1 = 0;
 				contact[i].surface.motion2 = 0;
 
@@ -498,6 +500,15 @@ namespace physics {
 	//-----------------------------------------------------
 	void OdeDynamicActor::setPosition( Vector3 const& rPosition )
 	{
+		//@todo is this necessary? or is it implicitely done by mBody->setPosition() below?
+		/*
+		for( ShapeList::iterator i = mShapes.begin(); i != mShapes.end(); ++i )
+		{
+			OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( i->get() );
+			pGeom->setPosition( rPosition );
+		}
+		*/
+
 		YAKE_ASSERT( mBody );
 		mBody->setPosition( rPosition );
 	}

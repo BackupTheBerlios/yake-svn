@@ -45,6 +45,7 @@ namespace physics {
 			mOdeBody->setForce( 0, 0, 0 );
 			mOdeBody->setLinearVel( 0, 0, 0 );
 			mOdeBody->setAngularVel( 0, 0, 0 );
+			dMassSetSphere( &mMass, 1, 1 );
 			setMass( 1 );
 			setPosition( Vector3(0,0,0) );
 			setOrientation( Quaternion::kIdentity );
