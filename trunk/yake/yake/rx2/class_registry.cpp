@@ -4,24 +4,22 @@
 namespace rx
 {
 
-classes class_registry::classes_;
-
 void register_class( const meta_class & meta_class_ )
 {
-		class_registry::classes_.insert( 
+		class_registry::instance().classes_.insert( 
 			classes::value_type( 
 				meta_class_.get_name(), &meta_class_ ) ); 
 }
 
 void unregister_class( const meta_class & meta_class_ )
 {
-	class_registry::classes_.erase( meta_class_.get_name() );
+	class_registry::instance().classes_.erase( meta_class_.get_name() );
 }
 
 const meta_class & get_class( const std::string & name )
 {
-	classes::iterator iter = class_registry::classes_.find( name );
-	if( iter == class_registry::classes_.end() ) throw exception();
+	classes::iterator iter = class_registry::instance().classes_.find( name );
+	if( iter == class_registry::instance().classes_.end() ) throw exception();
 	return *iter->second;  
 }
 
@@ -48,16 +46,16 @@ meta_class::traits::iterator find_handler_traits( meta_class & meta_class_, cons
 bool validate_events( const std::string & event, const std::string & handler )
 {
 	// get class name and event
-	std::string event_class_name( event.substr( 0, event.find( '::' ) ) );
-	std::string event_name( event.substr( event.find( '::' ) + 2, event.length() - event_class_name.length() - 2 ) );
+	std::string event_class_name( event.substr( 0, event.find( "::" ) ) );
+	std::string event_name( event.substr( event.find( "::" ) + 2, event.length() - event_class_name.length() - 2 ) );
 
 	// get class name and handler
-	std::string handler_class_name( handler.substr( 0, handler.find( '::' ) ) );
-	std::string handler_name( handler.substr( handler.find( '::' ) + 2, handler.length() - handler_class_name.length() - 2 ) );
+	std::string handler_class_name( handler.substr( 0, handler.find( "::" ) ) );
+	std::string handler_name( handler.substr( handler.find( "::" ) + 2, handler.length() - handler_class_name.length() - 2 ) );
 
 	// do the classes exist?
-  if( class_registry::classes_.find( event_class_name ) == class_registry::classes_.end() 
-		|| class_registry::classes_.find( handler_class_name ) == class_registry::classes_.end() )
+  if( class_registry::instance().classes_.find( event_class_name ) == class_registry::instance().classes_.end() 
+		|| class_registry::instance().classes_.find( handler_class_name ) == class_registry::instance().classes_.end() )
 		return false;
 
 	// get classes

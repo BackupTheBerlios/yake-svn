@@ -12,7 +12,8 @@ void register_object( const meta_object & meta_object_ )
 {
 		object_registry::objects_.insert( 
 			objects::value_type( 
-				meta_object_.get_name(), &meta_object_ ) );
+				meta_object_.get_name(), 
+				const_cast< meta_object* >( &meta_object_ ) ) );
 }
 
 void unregister_object( const meta_object & meta_object_ )
@@ -20,7 +21,7 @@ void unregister_object( const meta_object & meta_object_ )
   object_registry::objects_.erase( meta_object_.get_name() );
 }
 
-const meta_object & get_object( const std::string & name )
+meta_object & get_object( const std::string & name )
 {
 	objects::iterator iter = object_registry::objects_.find( name );
 	if( iter == object_registry::objects_.end() ) throw exception();

@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 
+#include <yake/base/templates/yakeSingleton.h>
+
 namespace rx
 {
 
@@ -14,7 +16,8 @@ typedef std::map< std::string, const meta_class * > classes;
 struct class_registry
 {
 public:	
-	static classes classes_;
+	classes classes_;
+  YAKE_BUILD_SINGLETON( class_registry )
 };
 
 // class registration

@@ -108,10 +108,10 @@ public: // field management
 public: // event and handlers
 	template< class event_class >
 	meta_object & add_event( 
-	const std::string & name, 
-		const event_class & this_event )
+		const std::string & name, 
+		event_class & this_event )
 	{
-		events_.insert( events::value_type( name, this_event ) );
+		events_.insert( events::value_type( name, &this_event ) );
 		return *this;    
 	}
 
@@ -140,6 +140,14 @@ public: // event and handlers
     events::iterator iter( events_.find( name ) );
 		if( iter == events_.end() ) throw exception();
     return *iter->second;
+	}
+
+	template< typename T1 >
+	event<T1> & get_event( const std::string & name )
+	{
+    events::iterator iter( events_.find( name ) );
+		if( iter == events_.end() ) throw exception();
+    return dynamic_cast< event<T1> & >( *iter->second );
 	}
 
 public: // info

@@ -4,9 +4,9 @@
 // lua
 extern "C"
 {
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
+	#include "lua.h"
+	#include "lauxlib.h"
+	#include "lualib.h"
 }
 #include <luabind/luabind.hpp>
 #include <luabind/return_reference_to_policy.hpp>
@@ -53,14 +53,16 @@ namespace
 				.def("add_field_int", (meta_object& (meta_object::*)(std::string, int)) &meta_object::add_field<int, none>, return_reference_to(self))
 				.def("add_field_int", (meta_object& (meta_object::*)(std::string, int, int)) &meta_object::add_field<int>, return_reference_to(self))
 				.def("field_int",	(int_field& (meta_object::*)(std::string) const) &meta_object::field<int> )
-				.def("get_handler",	&meta_object::get_handler ),
+				.def("get_handler",	&meta_object::get_handler )
+				.def("get_event", &meta_object::get_event ),
 			class_<meta_class>("meta_class") 	
 				.def(constructor<std::string>())
-				.def("add_field_int", (meta_class& (meta_class::*)(std::string, int)) &meta_class::add_field<int>, return_reference_to(self))
+				//.def("add_field_int", (meta_class& (meta_class::*)(std::string, int)) &meta_class::add_field<int>, return_reference_to(self)) todo link problem
 				.def("add_field_int", (meta_class& (meta_class::*)(std::string, int, int)) &meta_class::add_field<int>, return_reference_to(self))
 				.def("field_int",	(int_field& (meta_class::*)(std::string) const) &meta_class::field<int> ),
 			def("instance", &instance),
-			def("get_object", &get_object)
+			def("get_object", &get_object),
+			def("get_class", &get_class)
 		];
 	}
 
@@ -70,7 +72,7 @@ namespace
 		using namespace rx::lua;
 		using namespace luabind;
 
-		/*module(&L)
+		module(&L)
 		[ 
 			class_<boost::function_base>("function_base"),
 			class_<event_base>("event_base")
@@ -78,7 +80,7 @@ namespace
 			def("lua_handler_to_cpp_0", &lua_handler_to_cpp<0>),
 			def("lua_handler_to_cpp_1", &lua_handler_to_cpp<1>),
 			def("lua_handler_to_cpp_2", &lua_handler_to_cpp<2>)
-		];*/
+		];
 	}
 
 } // unnamed namespace

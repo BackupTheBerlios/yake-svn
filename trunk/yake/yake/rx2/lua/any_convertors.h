@@ -83,6 +83,7 @@ namespace
 
 void register_any_convertors()
 {
+	using namespace rx::lua;
 	register_any_converter<int>();
 	register_any_converter<float>();
 	register_any_converter<bool>();

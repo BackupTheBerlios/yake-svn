@@ -23,7 +23,7 @@ static void rx_construct_meta_class()\
 void rx_init( const std::string & object_name )\
 {\
   meta_object_ =\
-	  rx::instance<rx::meta_object>( meta_class_, object_name )\
+	  rx::instance_holder( meta_class_, object_name )\
 			.add_field( set_ref( name1, ref1 ) )\
 			.add_field( name2 )\
 			.add_field( name3 )\
@@ -46,7 +46,7 @@ static void rx_construct_meta_class()\
 void rx_init( const std::string & object_name )\
 {\
   meta_object_ =\
-	 rx::instance<rx::meta_object>( meta_class_, object_name )\
+	 rx::instance_holder( meta_class_, object_name )\
 			.add_event( &name1 )\
 			.add_handler<type2>( name2, this );\
 }\

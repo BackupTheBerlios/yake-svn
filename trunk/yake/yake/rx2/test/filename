@@ -1,0 +1,4 @@
+22 serialization::archive 3 1 0
+0 13 simple_object 0 0 1 0 0 12 hello_string 3 16 rx::string_field 1 0
+1 0 0 6 0
+0 12 hello_string 13 hello_string_ -4.3160208e+008 -4.3160208e+008

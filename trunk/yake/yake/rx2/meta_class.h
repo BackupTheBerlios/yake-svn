@@ -12,6 +12,7 @@
 #include "meta_hooks.h"
 #include "type_info.h"
 #include "instance.h"
+#include "events.h"
 
 namespace rx
 {
@@ -19,16 +20,23 @@ namespace rx
 struct meta_object_holder;
 
 // This is used for attaching clones of meta_class-fields to the newly created meta object
-template<class T>
-struct attach_field
+template<typename T>
+struct attach
 {
-	typedef typed_field<T> typed;
-
-	static void attach( meta_object & obj, meta_field & field )
+	typedef typed_field<T> field_type;
+	static void clone_field( meta_object & obj, meta_field & field )
 	{
 		// add clone to meta object
-		typed & this_field = dynamic_cast< typed& >( field );
+		field_type & this_field = dynamic_cast< field_type& >( field );
 		obj.add_field< T >( this_field.name_, this_field.value_, this_field.flags_ );
+	}
+
+	typedef event<T> event_type;
+	static void clone_event( meta_object & obj, event_base & event, std::string & name )
+	{
+		// add clone to meta object
+		event_type & this_event = dynamic_cast< event_type& >( event );
+		obj.add_event( name, *new event_type( this_event ) ); // todo delete, same problem with c++ fields, see dcon metaobject
 	}
 };
 
@@ -40,9 +48,28 @@ public: // types
 	// deleting (there can be n copies at the same time [ for instance when define<>
 	// is using the copy constructor multiple times ], so we can't just delete the
 	// objects without counting references within other meta_class copies)
-	typedef std::vector< std::pair<
-		yake::base::templates::SharedPtr< meta_field >, 
-		void(*)(meta_object&, meta_field&) > > fields_list;
+	typedef std::vector
+	< 
+		std::pair
+		<
+			yake::base::templates::SharedPtr< meta_field >, 
+			void(*)(meta_object&, meta_field&) 
+		> 
+	> fields_list;
+
+	// todo: cleanup with triar<> make_triar or struct
+	typedef std::vector
+	< 
+		std::pair
+		<
+			yake::base::templates::SharedPtr< event_base >,
+			std::pair
+			<
+				void(*)(meta_object&, event_base&, std::string&),
+				std::string
+			>
+		> 
+	> events_list;
 
 	/* event and handler traits */
 	typedef std::vector< TypeInfo > arg_types;
@@ -58,14 +85,6 @@ public: // constructors
 		: name_( name )
 	{
 		register_class( *this );
-	}
-
-	template< typename T1 >
-	meta_class( std::string name, T1 & t1 )
-		: name_( name )
-	{
-		register_class( *this );
-		add_field( t1 );
 	}
 
 	meta_class( const meta_class & copy )
@@ -84,14 +103,16 @@ public: // constructors
 public: // field management
 	template< typename T >
 	meta_class & add_field( std::string field_name, 
-		typename boost::remove_reference<T>::type default_value = boost::remove_reference<T>::type() )
+		typename boost::remove_reference<T>::type default_value = 
+			boost::remove_reference<T>::type() )
 	{
 		return add_field( field_name, default_value, none );
 	}
 
 	template< typename T, int flags >
 	meta_class & add_field( std::string field_name, 
-		typename boost::remove_reference<T>::type default_value = boost::remove_reference<T>::type() )
+		typename boost::remove_reference<T>::type default_value = 
+			boost::remove_reference<T>::type() )
 	{
 		return add_field( field_name, default_value, flags );
 	}
@@ -101,9 +122,14 @@ public: // field management
 	meta_class & add_field( std::string field_name, T default_value, int flags )
 	{
 		// add field to container with typed attach method
-		fields_.push_back( std::make_pair(
-			new typed_field<T>( field_name, default_value, flags ),
-			attach_field<T>::attach ) );
+		fields_.push_back
+		( 
+			std::make_pair
+			(
+				new typed_field<T>( field_name, default_value, flags ),
+				attach<T>::clone_field 
+			) 
+		);
 		//  return reference to this
 		return *this;
 	}
@@ -112,9 +138,14 @@ public: // field management
 	meta_class & add_field( T & field )
 	{
 		// add field to container with typed attach method
-		fields_.push_back( std::make_pair(
-			&field,
-			attach_field<T::value_type>::attach ) );
+		fields_.push_back
+		( 
+			std::make_pair
+			(
+				&field,
+				attach<T::value_type>::clone_field 
+			) 
+		);
 		//  return reference to this
 		return *this;
 	}
@@ -135,6 +166,7 @@ public: // events and handlers
 	template< typename T1 >
 	meta_class & add_handler( const std::string & name )
   {
+		// create traits for validation
 		arg_types args;
     args.push_back( typeid( T1 ) );
 		handler_traits_.push_back( std::make_pair( name, args ) );
@@ -144,9 +176,23 @@ public: // events and handlers
 	template< typename T1 >
 	meta_class & add_event( const std::string & name )
   {
+		// create traits for validation
 		arg_types args;
     args.push_back( typeid( T1 ) );
 		event_traits_.push_back( std::make_pair( name, args ) );
+		// create event object
+		events_.push_back
+		( 
+			std::make_pair
+			(
+				new event<T1>(),
+				std::make_pair
+				(
+					attach<T1>::clone_event,
+					name
+				)
+			) 
+		);
 		return *this;
   }
 
@@ -163,6 +209,7 @@ public: // info
 public:
 	mutable std::string name_;
 	fields_list fields_;
+	events_list events_;
   traits handler_traits_;
   traits event_traits_;
 };

@@ -6,8 +6,14 @@
 namespace rx
 {
 
+struct meta_object_holder;
+
 // used by regular meta object instancing
 meta_object & instance( const meta_class & meta_class_, std::string object_name );
+
+// used by c++ classes
+meta_object_holder instance_holder( const meta_class & meta_class_, std::string object_name );
+
 
 /* This class is used by instance() and allows the user to do not
    specify the typed_field names within the constructor or initialization
@@ -68,13 +74,6 @@ private: // data
 	int handler_pos_;
 	int event_pos_;
 };
-
-// used by c++ classes
-template< typename T >
-meta_object_holder instance( const meta_class & meta_class_, std::string object_name )
-{
-	return meta_object_holder( meta_class_, object_name );
-}
 
 } // namespace rx
 
