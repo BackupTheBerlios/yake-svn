@@ -34,6 +34,7 @@
 #ifndef YAKE_PHYSICS_ACTOR_H
 #	include <yake/physics/yakePhysicsActor.h>
 #endif
+//#include <yake/base/mpl/yakeAbstractFactory.h>
 
 namespace yake {
 	using namespace base;
@@ -41,15 +42,23 @@ namespace yake {
 	using namespace base::math;
 namespace physics {
 
-	class IWorld// : public IPropertyQueryHandler
+	class IWorld	//: public mpl::AbstractFactory< mpl::sequences::list< IActor, IAvatar > >
+					//: public IPropertyQueryHandler
 	{
 	public:
 		virtual ~IWorld() {}
 
-		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase& rJointDesc ) = 0;
-		virtual SharedPtr<IActor> createActor( const IActor::Desc& rActorDesc = IActor::Desc() ) = 0;
-		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc& rAvatarDesc ) = 0;
-		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc& rMatDesc ) = 0;
+		///@todo return WeakPtr<>
+		virtual IJoint* createJoint( const IJoint::DescBase& rJointDesc ) = 0;
+		virtual IActor* createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() ) = 0;
+		virtual IMovableActor* createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() ) = 0;
+		virtual IDynamicActor* createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() ) = 0;
+		virtual IAvatar* createAvatar( const IAvatar::Desc& rAvatarDesc ) = 0;
+		virtual IMaterial* createMaterial( const IMaterial::Desc& rMatDesc ) = 0;
+		virtual void destroyJoint( IJoint* rJoint ) = 0;
+		virtual void destroyActor( IActor* rActor ) = 0;
+		virtual void destroyAvatar( IAvatar* rAvatar ) = 0;
+		virtual void destroyMaterial( IMaterial* rMaterial ) = 0;
 
 		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc& rTrimeshDesc ) = 0;
 
@@ -58,7 +67,7 @@ namespace physics {
 		virtual Deque<String> getSupportedSolvers() const = 0;
 		virtual bool useSolver( const String& rSolver ) = 0;
 		virtual String getCurrentSolver() const = 0;
-		virtual const PropertyNameList& getCurrentSolverParams() const = 0;
+		virtual const PropertyNameList getCurrentSolverParams() const = 0;
 		virtual void setCurrentSolverParam( const String& rName, const boost::any& rValue ) = 0;
 
 		virtual void step(const real timeElapsed) = 0;

@@ -36,6 +36,8 @@ namespace physics {
 	public:
 		struct Desc
 		{
+			Desc() {}
+			explicit Desc(const Desc& desc) {}
 			virtual ~Desc() {}
 			Deque< SharedPtr<IShape::Desc> >	shapes;
 		};
@@ -58,6 +60,7 @@ namespace physics {
 	public:
 		struct Desc : IActor::Desc
 		{
+			explicit Desc(const Desc& desc);
 		};
 	};
 
@@ -66,6 +69,8 @@ namespace physics {
 	public:
 		struct Desc : IActor::Desc
 		{
+			Desc() {}
+			explicit Desc(const Desc& desc) {}
 		};
 	};
 	
@@ -74,6 +79,8 @@ namespace physics {
 	public:
 		struct Desc : IActor::Desc
 		{
+			Desc() {}
+			explicit Desc(const Desc& desc) {}
 		};
 		
 		virtual IBody& getBody() const = 0;
