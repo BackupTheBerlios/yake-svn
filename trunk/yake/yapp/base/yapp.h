@@ -31,6 +31,7 @@
 #include <yapp/model/yakeModel.h>
 #include <yapp/model/yakeComplexModel.h>
 #include <yapp/model/yakeVehicle.h>
+#include <yapp/base/event/yakeEvent.h>
 /*
 #include <yapp/gui/yappGUIVisual.h>
 #include <yapp/gui/yappButton.h>
