@@ -133,7 +133,7 @@ public:
 	{
 	}
 
-	void Print( const char* text, WORD wAttributes )
+	void Print( const char * text, WORD wAttributes )
 	{
 		AllocConsole();
 
@@ -149,7 +149,7 @@ private:
     static bool consoleApp_;
 } logConsole_g;
 
-YAKE_BASE_NATIVE_API void debug_Log( const char* what, DebugLog::Severity eSeverity, const char* source )
+YAKE_BASE_NATIVE_API void debug_Log( const char * what, DebugLog::Severity eSeverity, const char * source )
 {
 	static char szBuffer[ 1024 ];
 
@@ -157,13 +157,16 @@ YAKE_BASE_NATIVE_API void debug_Log( const char* what, DebugLog::Severity eSever
     ( eSeverity == DebugLog::WARNINGS ? FOREGROUND_GREEN | FOREGROUND_RED : FOREGROUND_RED ) );
 	wColor |= FOREGROUND_INTENSITY;
 
-	sprintf( szBuffer, "%s: %s", source, what );
+	if( *source != NULL )
+		sprintf( szBuffer, "%s: %s", source, what );
+	else
+		sprintf( szBuffer, "%s", what );
 
 	logConsole_g.Print( szBuffer, wColor );
 	logConsole_g.Print( "\n", FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED );
 }
 
-YAKE_BASE_NATIVE_API void debug_Print( const char* string )
+YAKE_BASE_NATIVE_API void debug_Print( const char * string )
 {
   logConsole_g.Print( string, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED );
 }

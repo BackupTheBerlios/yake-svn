@@ -49,6 +49,10 @@ void Log::onLog( const OnLog::slot_type& rSlot )
   mOnLog.connect( rSlot );
 }
 
+void Log::log( const String& rWhat, Severity severity )
+{
+	mOnLog( rWhat, severity, "" );
+}
 
 void Log::log( const String& rWhat, Severity severity, const String& rSource )
 {

@@ -41,10 +41,12 @@ namespace yake
 namespace base
 {
 
+// todo: printf sucks
 #define YAKE_LOGPRINTF yake::base::Log::instance().logPrintf
 #define YAKE_LOG_INFORMATION( what ) yake::base::Log::instance().log( what, yake::base::Log::INFORMATIONS, YAKE_HERE );
 #define YAKE_LOG_WARNING( what )     yake::base::Log::instance().log( what, yake::base::Log::WARNINGS,     YAKE_HERE );
 #define YAKE_LOG_ERROR( what )   	   yake::base::Log::instance().log( what, yake::base::Log::ERRORS,       YAKE_HERE );
+#define YAKE_LOG( what )   	         yake::base::Log::instance().log( what, yake::base::Log::INFORMATIONS );
 
 class YAKE_BASE_API Log
 {
@@ -62,8 +64,9 @@ public:
 // Methods
 public:
 	void onLog( const OnLog::slot_type& rSlot );
+	void log( const String& rWhat, Severity severity );
 	void log( const String& rWhat, Severity severity, const String& rSource );
-	void logPrintf(char *fmt, ...);
+	void logPrintf(char *fmt, ...); // todo: remove this
 
 // Data
 private:
