@@ -71,8 +71,6 @@ namespace state {
 	}
 
 
-	typedef std::string String;
-
 	/** A simple state machine managing states and transitions between registered states.
 	*/
 	template<typename StateIdType>
