@@ -30,9 +30,9 @@ using namespace yake::base::mpl;
 //#define YAKE_GUI_DISABLE_LUA
 
 #ifndef YAKE_GUI_DISABLE_LUA
-#	pragma message("yapp::gui config: yapp.gui.config.lua_enabled")
+#	pragma message("Yapp gui config: yapp.gui.config.lua_enabled")
 #else
-#	pragma message("yapp::gui config: yapp.gui.config.lua_disabled")
+#	pragma message("Yapp gui config: yapp.gui.config.lua_disabled")
 #endif
 
 // todo: check whether reflection supports lua (is YAKE_RX_DISABLE_LUA defined?) or not, if disabled we cannot enable gui lua binding support
