@@ -43,7 +43,7 @@ std::vector< Identifier_ > DefaultFunctionsNames::Map< Identifier_, Value_, Mana
 {
 	std::vector< Identifier_ > result;
 
-	for( Container::const_iterator iter = mContainer.begin(); iter != mContainer.end(); iter++ )
+	for( typename Container::const_iterator iter = mContainer.begin(); iter != mContainer.end(); iter++ )
 		result.push_back( ( *iter ).first );
 
 	return result;
@@ -96,7 +96,7 @@ std::vector< Identifier_ > RegisterFunctionsNames::Map< Identifier_, Value_, Man
 {
 	std::vector< Identifier_ > result;
 
-	for( Container::const_iterator iter = mContainer.begin(); iter != mContainer.end(); iter++ )
+	for( typename Container::const_iterator iter = mContainer.begin(); iter != mContainer.end(); iter++ )
 		result.push_back( ( *iter ).first );
 
 	return result;

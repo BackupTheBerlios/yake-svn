@@ -88,7 +88,7 @@ namespace dom {
 			return varGet<T>( val );
 		}
 
-		template<>
+		template< int Dummy >
 		real getAttributeValueAs( const String & name ) const
 		{
 			ValueType val = getAttributeValue(name);
