@@ -48,18 +48,23 @@ namespace native
 YAKE_BASE_NATIVE_API LibraryHandle library_Load( const char* pFilename )
 {
 	YAKE_ASSERT( pFilename ).debug( "Invalid filename." );    
-       
-	yake::base::String name( pFilename );
-        
+
 	// Due to Linux libraries naming we decided to add some "brand" prefix
-	yake::base::String yakeLibNamePrefix = "libyake";
+	yake::base::String yakeLibPrefix( "libyake" );
+	yake::base::String name( pFilename );
+	
+	// We're adding Linux port prefix to every library name
+	name = yakeLibPrefix + name;        
 	
 	// dlopen() does not add .so to the filename, like windows does for .dll
-         if ( name.substr( name.length() - 3, 3 ) != ".so" )
-	 	name = yakeLibNamePrefix + name + ".so";
+	if ( name.substr( name.length() - 3, 3 ) != ".so" )
+		name += ".so";
 
 	LibraryHandle handle = ( LibraryHandle )dlopen( name.c_str(), RTLD_LAZY );
 	
+	if ( handle == 0 )
+		throw Exception( "Failed to load " + name + String("due to ") + String( dlerror() ) , "native::Linux::library_Load" );
+
 	return handle;
 }
 
