@@ -108,6 +108,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesScriptingLua", "samp
 		{41CEA11B-9678-43E5-B2F4-754944D7B461} = {41CEA11B-9678-43E5-B2F4-754944D7B461}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "data", "data.vcproj", "{77A59B89-C2B3-429C-8317-ADE0D046CC3B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesDataMisc", "samples\data\samplesDataMisc.vcproj", "{22EFD734-D8C5-47D6-8461-C37E02A9F0B6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{77A59B89-C2B3-429C-8317-ADE0D046CC3B} = {77A59B89-C2B3-429C-8317-ADE0D046CC3B}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -194,6 +204,14 @@ Global
 		{26B28ECB-A1FD-4CC0-A5EE-6E4587BBB058}.Debug.Build.0 = Debug|Win32
 		{26B28ECB-A1FD-4CC0-A5EE-6E4587BBB058}.Release.ActiveCfg = Release|Win32
 		{26B28ECB-A1FD-4CC0-A5EE-6E4587BBB058}.Release.Build.0 = Release|Win32
+		{77A59B89-C2B3-429C-8317-ADE0D046CC3B}.Debug.ActiveCfg = Debug|Win32
+		{77A59B89-C2B3-429C-8317-ADE0D046CC3B}.Debug.Build.0 = Debug|Win32
+		{77A59B89-C2B3-429C-8317-ADE0D046CC3B}.Release.ActiveCfg = Release|Win32
+		{77A59B89-C2B3-429C-8317-ADE0D046CC3B}.Release.Build.0 = Release|Win32
+		{22EFD734-D8C5-47D6-8461-C37E02A9F0B6}.Debug.ActiveCfg = Debug|Win32
+		{22EFD734-D8C5-47D6-8461-C37E02A9F0B6}.Debug.Build.0 = Debug|Win32
+		{22EFD734-D8C5-47D6-8461-C37E02A9F0B6}.Release.ActiveCfg = Release|Win32
+		{22EFD734-D8C5-47D6-8461-C37E02A9F0B6}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
