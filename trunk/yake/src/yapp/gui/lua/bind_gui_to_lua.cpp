@@ -43,10 +43,20 @@ void bind_gui_to_lua()
 		class_<button>("button")
 			.def(constructor<>())
 			.def(constructor<const char *>())
-			.def("caption", &button::caption, return_reference_to(self)) // todo: return_reference_to(_1) luabind 7 rc3 problem: http://sourceforge.net/mailarchive/message.php?msg_id=7990099
+#if(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_6)
+			.def("caption", &button::caption, return_reference_to(self))
 			.def("pos", (button & (button::*)(float, float)) &button::pos, return_reference_to(self))
-			//.def("absolute_position", (button & (button::*)(float, float)) &button::absolute_position, return_reference_to(self))
 			.def("clicked", &button::clicked, return_reference_to(self)),
+#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC3)
+			.def("caption", &button::caption, return_reference_to(_1)) // luabind 7 rc3 problem: http://sourceforge.net/mailarchive/message.php?msg_id=7990099
+			.def("pos", (button & (button::*)(float, float)) &button::pos, return_reference_to(_1))
+			.def("clicked", &button::clicked, return_reference_to(_1)),
+#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC4)
+			.def("caption", &button::caption, return_reference_to(_1))
+			.def("pos", (button & (button::*)(float, float)) &button::pos, return_reference_to(_1))
+			.def("clicked", &button::clicked, return_reference_to(_1)),
+#endif
+			//.def("absolute_position", (button & (button::*)(float, float)) &button::absolute_position, return_reference_to(self))
 		class_<static_text>("static_text")
 			.def(constructor<>())
 			.def(constructor<const char *>())
@@ -61,8 +71,16 @@ void bind_gui_to_lua()
 		class_<window_base>("window_base")
 			.def("run", &window_base::run)
 			.def("get_client_area", &window_base::get_client_area)
+#if(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_6)
 			.def("add", (window_base & (window_base::*)(const button &)) &window_base::add<button>, return_reference_to(self)) //todo: typelist of concrete widgets we want to bind => centralizing widget registration ...
 			.def("add", (window_base & (window_base::*)(const static_text &)) &window_base::add<static_text>, return_reference_to(self))
+#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC3)
+			.def("add", (window_base & (window_base::*)(const button &)) &window_base::add<button>, return_reference_to(_1)) //todo: typelist of concrete widgets we want to bind => centralizing widget registration ...
+			.def("add", (window_base & (window_base::*)(const static_text &)) &window_base::add<static_text>, return_reference_to(_1))
+#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC4)
+			.def("add", (window_base & (window_base::*)(const button &)) &window_base::add<button>, return_reference_to(_1)) //todo: typelist of concrete widgets we want to bind => centralizing widget registration ...
+			.def("add", (window_base & (window_base::*)(const static_text &)) &window_base::add<static_text>, return_reference_to(_1))
+#endif
 			.property("childs", &window_base::get_childs, return_stl_iterator)
 			.property("title", &window_base::get_title, &window_base::set_title),
 		class_<default_window, window_base>("default_window")

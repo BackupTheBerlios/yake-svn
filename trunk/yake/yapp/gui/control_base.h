@@ -2,7 +2,7 @@
 #define _YAPP_GUI_CONTROL_BASE_H_
 
 #include <CEGUI.h>
-#include <reflection.h>
+#include <yake/reflection/reflection.h>
 
 namespace yake
 {

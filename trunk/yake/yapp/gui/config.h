@@ -29,6 +29,12 @@ using namespace yake::base::mpl;
 // enable/disable lua bindings
 //#define YAKE_GUI_DISABLE_LUA
 
+#ifndef YAKE_GUI_DISABLE_LUA
+#	pragma message("yapp::gui config: yapp.gui.config.lua_enabled")
+#else
+#	pragma message("yapp::gui config: yapp.gui.config.lua_disabled")
+#endif
+
 // todo: check whether reflection supports lua (is YAKE_RX_DISABLE_LUA defined?) or not, if disabled we cannot enable gui lua binding support
 
 // todo: #include <bind_lua/bind_lua.h> if lua enabled
@@ -48,23 +54,25 @@ using namespace yake::base::mpl;
 // properties
 struct point;
 typedef sequences::list
-	<
-		bool,
-		float,
-		const char *,
-		const point &	
-	> implemented_properties;
+<
+	bool,
+	float,
+	const char *,
+	const point &	
+> 
+implemented_properties;
 
 // widgets
 class button_base;
 class static_text_base;
 class multi_line_edit_box_base;
 typedef sequences::list
-	<
-		button_base,
-		static_text_base,
-		multi_line_edit_box_base 
-	> implemented_widgets;
+<
+	button_base,
+	static_text_base,
+	multi_line_edit_box_base 
+> 
+implemented_widgets;
 
 /* helper: checks whether all implemented types are handled by a function or structure */
 // accepts n types and returns a list of concrete types
