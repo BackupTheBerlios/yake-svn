@@ -30,6 +30,7 @@
 #endif
 // Yake
 #include "yakeMath.h"
+#include "yakeQuaternion.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -354,7 +355,44 @@ namespace math
             return Vector3( ( 2 * this->dotProduct(normal) * normal ) - *this );
         }
 
-        // special vectors
+        /** Gets the shortest arc quaternion to rotate this vector to the destination
+            vector. 
+        @remarks
+            Don't call this if you think the dest vector can be close to the inverse
+            of this vector, since then ANY axis of rotation is ok. 
+        */
+        Quaternion getRotationTo(const Vector3& dest) const
+        {
+            // Based on Stan Melax's article in Game Programming Gems
+            Quaternion q;
+            // Copy, since cannot modify local
+            Vector3 v0 = *this;
+            Vector3 v1 = dest;
+            v0.normalise();
+            v1.normalise();
+
+            Vector3 c = v0.crossProduct(v1);
+
+            // NB if the crossProduct approaches zero, we get unstable because ANY axis will do
+            // when v0 == -v1
+            real d = v0.dotProduct(v1);
+            // If dot == 1, vectors are the same
+            if (d >= 1.0f)
+            {
+                return Quaternion::kIdentity;
+            }
+            real s = Math::Sqrt( (1+d)*2 );
+            real invs = 1 / s;
+
+
+            q.x = c.x * invs;
+            q.y = c.y * invs;
+            q.z = c.z * invs;
+            q.w = s * 0.5;
+            return q;
+        }
+
+		// special vectors
         static const Vector3 kZero;
         static const Vector3 kUnitX;
         static const Vector3 kUnitY;

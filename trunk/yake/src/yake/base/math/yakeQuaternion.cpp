@@ -80,7 +80,7 @@ namespace math
             *apkQuat[k] = (kRot[k][i]+kRot[i][k])*fRoot;
         }
     }
-/*
+
 	//-----------------------------------------------------------------------
     void Quaternion::ToRotationMatrix (Matrix3& kRot) const
     {
@@ -106,7 +106,7 @@ namespace math
         kRot[2][0] = fTxz-fTwy;
         kRot[2][1] = fTyz+fTwx;
         kRot[2][2] = 1.0-(fTxx+fTyy);
-    }*/
+    }
 
 	//-----------------------------------------------------------------------
     void Quaternion::FromAngleAxis (const real& rfAngle,
@@ -197,6 +197,7 @@ namespace math
             akAxis[iCol].z = kRot[2][iCol];
         }
     }
+	*/
     //-----------------------------------------------------------------------
     void Quaternion::ToAxes (Vector3& xAxis, Vector3& yAxis, Vector3& zAxis) const
     {
@@ -216,7 +217,6 @@ namespace math
         zAxis.y = kRot[1][2];
         zAxis.z = kRot[2][2];
     }
-	*/
 
     //-----------------------------------------------------------------------
     Quaternion Quaternion::operator+ (const Quaternion& rkQ) const

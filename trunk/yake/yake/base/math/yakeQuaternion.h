@@ -42,6 +42,7 @@ namespace math
 {
 
 	class Matrix3;
+	class Vector3;
 
 	class YAKE_BASE_API Quaternion
 	{
@@ -64,14 +65,14 @@ namespace math
 		}
 
         void FromRotationMatrix (const Matrix3& kRot);
-        //void ToRotationMatrix (Matrix3& kRot) const;
+        void ToRotationMatrix (Matrix3& kRot) const;
 
         void FromAngleAxis (const real& rfAngle, const Vector3& rkAxis);
         void ToAngleAxis (real& rfAngle, Vector3& rkAxis) const;
         void FromAxes (const Vector3* akAxis);
         void FromAxes (const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
         //void ToAxes (Vector3* akAxis) const;
-        //void ToAxes (Vector3& xAxis, Vector3& yAxis, Vector3& zAxis) const;
+        void ToAxes (Vector3& xAxis, Vector3& yAxis, Vector3& zAxis) const;
 
         inline Quaternion& operator= (const Quaternion& rkQ)
 		{
