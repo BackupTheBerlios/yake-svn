@@ -1,7 +1,6 @@
 //****************************************************************************
 //**
-//**    UNITTEST.CPP
-//**    Unit test
+//**    Sample
 //**
 //****************************************************************************
 
@@ -28,7 +27,12 @@ int main()
 
 	YAKE_USE_LIB( "graphicsOgre.dll" );	
 	{
+		// Either create default graphics system ...
 		Pointer< IGraphicsSystem > pGraphicsSystem = create< IGraphicsSystem >();
+
+		// ... or alternatively we can create a graphics system by name:
+		//Pointer< IGraphicsSystem > pGraphicsSystem = create< IGraphicsSystem >("ogre3d");
+
 		Pointer< IGraphicalWorld > pWorld( pGraphicsSystem->create< IGraphicalWorld >() );
 	}
 

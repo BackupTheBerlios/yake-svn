@@ -25,8 +25,6 @@
 #include <inc/base/yake.h>
 #include <inc/graphics/yakeGraphicsSystem.h>
 
-#pragma comment(lib, "OgreMain.lib")
-
 #include <dependencies/ogrenew/ogremain/include/Ogre.h>
 #include <dependencies/ogrenew/ogremain/include/OgreStringConverter.h>
 #include <dependencies/ogrenew/ogremain/include/OgreRoot.h>
