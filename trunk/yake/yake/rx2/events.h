@@ -76,6 +76,14 @@ struct event : public event_base
     handlers_.push_back( new handler( boost::bind( ptr, cls, _1 ) ) );
   }
 
+	// hard wiring
+  template< typename function_ptr >
+  void attach_handler( function_ptr ptr )
+  { 
+		// create new handler
+    handlers_.push_back( new handler( boost::bind( ptr, _1 ) ) );
+  }
+
 	// soft wiring
   void attach_handler( boost::function_base & this_handler )
   {
@@ -96,6 +104,7 @@ private:
 
 
 // todo split files and place event into yake::base
+// todo lua_handler_to_cpp_1 simpliy => add attach policy with event::attach_handler( lua::functor ) and bind to lua
 #include "lua/lua_handler_to_cpp.h"
 namespace rx
 {

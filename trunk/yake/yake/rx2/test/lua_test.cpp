@@ -35,6 +35,12 @@ std::string fnc_has_any_arg( boost::any test )
 	return boost::any_cast<bool>(test) ? "ok" : "no";
 }
 
+/* ### standard handler ### */
+void cpp_handler( std::string text )
+{
+	std::cout << "cpp_handler(" << text << ")" << std::endl;
+}
+
 int main()
 {
 	using namespace rx;
@@ -68,19 +74,32 @@ int main()
 		// define class
 		meta_class test_class =
 			define<meta_class>( "test_class" )
-				.add_event<bool>( "click" );
+				.add_event<std::string>( "click" );
 
+		// todo: fix, deconstructor of meta_class is the last call => unregister_class
+		register_class( test_class );
 		get_class( "test_class" );
 
 		// lua handler
-		do_string(L, "function do_it_in_script( arg1 ) print( arg1 ) end");
+		lua_dostring( L, "function do_it_in_script( arg1 ) print( 'do_it_in_script(' .. arg1 .. ')' ) end");
 		lua_dostring(	L, "meta_obj = instance( get_class('test_class'), 'hello_object')" );
-		lua_dostring(	L, "meta_obj:get_event( 'click' ):attach_handler( lua_function_to_cpp_1( do_it_in_script ) )" );
+		lua_dostring(	L, "meta_obj:get_event( 'click' ):attach_handler( lua_handler_to_cpp_1( do_it_in_script ) )" );
 
-		// test
-		get_object( "hello_object" ).get_event<bool>( "click" )( true );
+		// fire event
+		get_object( "hello_object" ).get_event<std::string>( "click" )( "c++ argument" );
 
-		// c++ handler
+    // c++ handler and the client has the ownership
+		boost::function< void( std::string ) > fnc = boost::bind( &cpp_handler, _1 );
+		get_object( "hello_object" ).get_event<std::string>( "click" ).attach_handler( fnc );
+
+		// c++ handler and the event has the ownership
+		get_object( "hello_object" ).get_event<std::string>( "click" ).attach_handler( &cpp_handler );
+
+		// fire event
+		get_object( "hello_object" ).get_event<std::string>( "click" )( "c++ argument" );
+
+
+
 		/*boost::function< void( const std::string&, int ) > fnc = boost::bind( &cpp_handler, _1, _2 );
 		cpp_e.set( fnc );
 

@@ -90,7 +90,9 @@ public: // constructors
 	meta_class( const meta_class & copy )
 		: name_( copy.name_ ),
 			fields_( copy.fields_ ),
-			handler_traits_( copy.handler_traits_ )
+			events_( copy.events_ ),
+			handler_traits_( copy.handler_traits_ ),
+			event_traits_( copy.event_traits_ )
 	{
 		register_class( *this );       
 	}

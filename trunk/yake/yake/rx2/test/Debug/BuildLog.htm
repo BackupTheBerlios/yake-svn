@@ -8,15 +8,15 @@
 Buildprotokoll</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
 <h3>------- Buildvorgang wurde gestartet: Projekt: lua_test, Konfiguration: Debug|Win32 -------</h3>
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
-Befehlszeilen</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Die temporäre Datei "d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000077.rsp" wird erstellt. Inhalt:
+Befehlszeilen</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Die temporäre Datei "d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000034.rsp" wird erstellt. Inhalt:
 [
 /Od /I "../../../dependencies/boost/" /I "../../../dependencies/lua/include" /I "../../../dependencies/luabind" /I "../../../dependencies/RakNet/Source" /I "../../../" /I "../" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Gm /EHsc /RTC1 /MTd /Zc:forScope /GR /Fo"Debug/" /Fd"Debug/vc70.pdb" /W3 /c /Wp64 /ZI /TP
 .\lua_test.cpp
-]Erstellen der Befehlszeile "cl.exe @d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000077.rsp /nologo"Die temporäre Datei "d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000078.rsp" wird erstellt. Inhalt:
+]Erstellen der Befehlszeile "cl.exe @d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000034.rsp /nologo"Die temporäre Datei "d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000035.rsp" wird erstellt. Inhalt:
 [
 /OUT:"Debug/lua_test.exe" /INCREMENTAL /NOLOGO /LIBPATH:"../../../dependencies/luabind/lib/Debug" /LIBPATH:"../../../dependencies/raknet/lib/" /LIBPATH:"../../../dependencies/lua/lib/Debug" /LIBPATH:"../../../dependencies/boost/bin/boost/libs/serialization/build/libboost_serialization.lib/vc7.1/Debug/runtime-link-static/threading-multi/" /DEBUG /PDB:"Debug/lua_test.pdb" /SUBSYSTEM:CONSOLE /MACHINE:X86 libboost_serialization.lib RakNetLibStatic.lib ws2_32.lib lua.lib luabind.lib lualib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib .\Debug\rx.lib "\M2_Profil_Working\Dev\yake\yake\dependencies\boost\bin\boost\libs\serialization\build\libboost_serialization.lib\vc7.1\debug\runtime-link-static\threading-multi\libboost_serialization.lib"
 .\Debug\lua_test.obj
-]Erstellen der Befehlszeile "link.exe @d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000078.rsp"</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+]Erstellen der Befehlszeile "link.exe @d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000035.rsp"</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Ausgabefenster</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Kompilieren...
 lua_test.cpp
 Yake Platform/Compiler config: Yake.Core.Prerequisites.Vc71
@@ -24,8 +24,25 @@ d:\M2_Profil_Working\Dev\yake\yake\yake\base\yakeException.h(46) : warning C4275
         d:\Programme\Microsoft Visual Studio .NET 2003\Vc7\include\exception(39): Siehe Deklaration von 'exception'
         d:\M2_Profil_Working\Dev\yake\yake\yake\base\yakeException.h(45): Siehe Deklaration von 'yake::base::Exception'
 Verknüpfen...
+LINK : warning LNK4098: Standardbibliothek 'LIBCMT' steht in Konflikt mit anderen Bibliotheken; /NODEFAULT:Bibliothek verwenden
+LINK : warning LNK4098: Standardbibliothek 'LIBCD' steht in Konflikt mit anderen Bibliotheken; /NODEFAULT:Bibliothek verwenden
+RakNetLibStatic.lib(BitStream.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+RakNetLibStatic.lib(DistributedNetworkObject.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+RakNetLibStatic.lib(DistributedNetworkObjectManager.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+RakNetLibStatic.lib(DistributedNetworkObjectStub.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+RakNetLibStatic.lib(EncodeClassName.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+RakNetLibStatic.lib(GetTime.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+RakNetLibStatic.lib(NetworkObject.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+RakNetLibStatic.lib(NetworkTypes.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+luabind.lib(class_rep.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+luabind.lib(create_class.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+luabind.lib(find_best_match.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+luabind.lib(function.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+luabind.lib(implicit_cast.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+luabind.lib(open.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
+luabind.lib(stack_content_by_name.obj) : warning LNK4204: Für 'd:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\vc70.pdb' fehlen Debuginformationen für das Verweismodul; Objekt wird verknüpft, als ob keine Debuginformationen vorhanden wären
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Ergebnisse</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
 Das Build-Protokoll wurde unter "file://d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\BuildLog.htm" gespeichert.
-lua_test - 0 Fehler, 1 Warnung(en)</pre></table><table   width=100% height=20 bgcolor=#CFCFE5><tr><td><font face=arial size=+2>
+lua_test - 0 Fehler, 18 Warnung(en)</pre></table><table   width=100% height=20 bgcolor=#CFCFE5><tr><td><font face=arial size=+2>
 </font></table></body></html>
