@@ -216,7 +216,7 @@ template
 struct event : public rx_event_base, public lua_event_base, public ::event<arg1, arg2 /*, lua::search_for_lua_handlers_1*/> 
 {
 	typedef ::event<arg1, arg2/*, lua::search_for_lua_handlers_1*/> base;
-	typedef std::vector< const luabind::functor<void> > lua_functor_list;
+	typedef std::vector< luabind::functor<void> > lua_functor_list;
 
 	// todo: do we have to do the same for the handlers of the base class as well?
 	event() : m_lua_functor_list(new lua_functor_list()) {}
