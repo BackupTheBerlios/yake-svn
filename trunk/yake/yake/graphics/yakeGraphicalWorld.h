@@ -133,16 +133,11 @@ namespace graphics {
 		virtual void setAspectRatio( real aspectRatio ) = 0;
 		virtual real getAspectRatio() const = 0;
 
-		inline void setDirection( const Vector3 & direction );
 		inline void rotate( const Quaternion & q );
 		inline void rotate( const Vector3 & axis, real degrees );
-		inline void lookAt( const Vector3 & pt );
 		inline void pitch( real degrees );
 	};
 
-	void ICamera::setDirection(const Vector3 & direction)
-	{
-	}
 	void ICamera::rotate(const Vector3 & axis, real degrees)
 	{
 		Quaternion q;
