@@ -26,7 +26,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASEPREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include "../yakePrerequisites.h"
 #endif
 
 //============================================================================
@@ -38,38 +38,44 @@ namespace base
 {
 namespace templates
 {
-
+/* Example of usage:
+		typedef ObjectLinkUpdater<Movable,Movable,const real> TimeBasedMovableUpdater;
+		//typedef templates::ObjectLink<Movable,Movable> MovableLink;
+		//MovableLink link(pSceneNode,pPhysical);
+		TimeBasedMovableUpdater t( pPhysical, pSceneNode );
+		t.update( timeElapsed );
+*/
 /** Represents a link between two objects.
 	This link can be modified, for example, using an ObjectLinkUpdater.
 	\see ObjectLinkUpdater
 */
-template < typename TSRC, typename TTARGET >
+template < typename T_ONE, typename T_TWO >
 class ObjectLink
 {
 protected:
-	typedef TSRC SourceType;
-	typedef TTARGET TargetType;
+	typedef T_ONE OneType;
+	typedef T_TWO TwoType;
 
-	SourceType	* mSource;
-	TargetType	* mTarget;
+	OneType	* mOne;
+	TwoType	* mTwo;
 public:
-	ObjectLink( TSRC* pSource, TTARGET* pTarget ) : mSource( pSource ), mTarget( pTarget )
+	ObjectLink( T_ONE* pFirst, T_TWO* pSecond ) : mOne( pFirst ), mTwo( pSecond )
 	{
 	}
 
-	TSRC* getSource() const
+	T_ONE* getFirst() const
 	{
-		return mSource;
+		return mOne;
 	}
 
-	TTARGET* getTarget() const
+	T_TWO* getSecond() const
 	{
-		return mTarget;
+		return mTwo;
 	}
 
 	bool isValid() const
 	{
-		return ( mTarget != 0 && mSource != 0 );
+		return ( mTwo != 0 && mOne != 0 && mTwo != mOne );
 	}
 };
 
@@ -81,17 +87,18 @@ template < typename SRC, typename TGT, typename UPD >
 class ObjectLinkUpdater
 {
 protected:
-	ObjectLink< SRC, TGT >	mLink;
+	typedef ObjectLink< SRC, TGT > LinkType;
+	LinkType	mLink;
 public:
 	ObjectLinkUpdater( SRC* pSource, TGT* pTarget ) : mLink( pSource, pTarget )
 	{
 	}
 
-	ObjectLink< SRC, TGT > * getLink() const
+	LinkType* getLink() const
 	{
 		return &mLink;
 	}
-	virtual void update( const UPD & upd ) = 0;
+	virtual void update( UPD ) = 0;
 };
 
 // physical-audible
