@@ -91,10 +91,10 @@ namespace templates
 		Pointer(): boost::shared_ptr< T >()  {}
 
 		template< class Y >
-		Pointer( Pointer<Y> const& r ): boost::shared_ptr< T >( r )  {}
+		Pointer( Pointer<Y> const & r ): boost::shared_ptr< T >( r )  {}
 
 		template< class Y >
-		explicit Pointer( Y* p ): boost::shared_ptr< T >( p ) {}
+		explicit Pointer( Y * p ): boost::shared_ptr< T >( p ) {}
 
 		~Pointer() {}
 
