@@ -1,9 +1,16 @@
+#ifndef YAKE_DATA_DOTSCENE_H
+#define YAKE_DATA_DOTSCENE_H
 
+#include <yake/data/yakeData.h>
+
+#pragma warning(disable: 4244)
 
 namespace yake {
 namespace data {
 namespace serializer {
 namespace dotscene {
+
+	typedef ::yake::base::templates::Vector< graphics::ISceneNode* > SceneNodeList;
 
 	/** DotSceneReader base class providing default implementation for DOM parsing.
 	* \todo read lights, environment, external references ..
@@ -23,8 +30,9 @@ namespace dotscene {
 			\return 
 		*/
 		virtual bool load(	const SharedPtr<dom::INode> & docNode,
-							SharedPtr<graphics::IGraphicalWorld> & pGWorld,
-							graphics::ISceneNode* pParentSN);
+							graphics::IGraphicalWorld* pGWorld);
+
+		SceneNodeList getRootLevelSceneNodes() const;
 
 		/** Prepare for next run of load/store.
 		*/
@@ -40,37 +48,38 @@ namespace dotscene {
 		virtual void readPosition( const SharedPtr<dom::INode> & pNode, Vector3 & position );
 	private:
 		SharedPtr<dom::INode>					mDocNode;
-		SharedPtr<graphics::IGraphicalWorld>	mGWorld;
+		graphics::IGraphicalWorld*				mGWorld;
+		SceneNodeList							mRootNodes;
 	};
 
+	//------------------------------------------------------
+	SceneNodeList DotSceneSerializer::getRootLevelSceneNodes() const
+	{
+		return mRootNodes;
+	}
 	//------------------------------------------------------
 	void DotSceneSerializer::reset()
 	{
 		mDocNode.reset();
-		mGWorld.reset();
 	}
 
 	//------------------------------------------------------
 	bool DotSceneSerializer::load(
 							const SharedPtr<dom::INode> & docNode,
-							SharedPtr<graphics::IGraphicalWorld> & pGWorld,
-							graphics::ISceneNode* pParentSN)
+							graphics::IGraphicalWorld* pGWorld)
 	{
 		std::cout << "load()" << std::endl;
 		YAKE_ASSERT( docNode.get() );
 		if (!docNode.get())
 			return false;
-		YAKE_ASSERT( pGWorld.get() );
-		if (!pGWorld.get())
-			return false;
-		YAKE_ASSERT( pParentSN );
-		if (!pParentSN)
+		YAKE_ASSERT( pGWorld );
+		if (!pGWorld)
 			return false;
 		mDocNode = docNode;
 		mGWorld = pGWorld;
 		//
 		std::cout << "parsing scene..." << std::endl;
-		readScene( mDocNode, pParentSN );
+		readScene( mDocNode, 0 );
 
 		//
 		return true;
@@ -81,7 +90,6 @@ namespace dotscene {
 	{
 		std::cout << "readScene() [" << varGet<String>(pNode->getValue("name")) << "]" << std::endl;
 		YAKE_ASSERT( pNode );
-		YAKE_ASSERT( pParentSN );
 		SharedPtr<dom::INode> pNodes = pNode->getNodeByName("nodes");
 		std::cout << "scene: found nodes = " << (pNodes.get() ? "yes" : "no") << std::endl;
 		if (pNodes.get())
@@ -93,7 +101,6 @@ namespace dotscene {
 	{
 		std::cout << "readNodes()" << std::endl;
 		YAKE_ASSERT( pNodes );
-		YAKE_ASSERT( pParentSN );
 		const dom::NodeList & nodes = pNodes->getNodes();
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
@@ -106,26 +113,33 @@ namespace dotscene {
 	{
 		std::cout << "readNode() [name=" << varGet<String>(pNode->getAttributeValue("name")) << "]" << std::endl;
 		YAKE_ASSERT( pNode );
-		YAKE_ASSERT( pParentSN );
+		graphics::ISceneNode* pChildSN = mGWorld->createSceneNode();
+		YAKE_ASSERT( pChildSN );
+		if (pParentSN)
+			pParentSN->addChildNode( pChildSN );
+		else
+			mRootNodes.push_back( pChildSN );
 		const dom::NodeList & nodes = pNode->getNodes();
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String childNodeName = varGet<String>((*it)->getValue("name"));
-			childNodeName.toLowerCase();
+			childNodeName = ::yake::base::StringUtil::toLowerCase(childNodeName);
 			std::cout << "node child: " <<  childNodeName << std::endl;
 
 			const SharedPtr<dom::INode> & pChild = (*it);
 			if (childNodeName == "entity")
-				readEntity( pChild, pParentSN );
+				readEntity( pChild, pChildSN );
 			else if (childNodeName == "position")
 			{
 				Vector3 position;
 				readPosition( pChild, position );
+				pChildSN->setPosition( position );
 			}
 			else if (childNodeName == "orientation")
 			{
 				Quaternion orientation;
 				readOrientation( pChild, orientation );
+				pChildSN->setOrientation( orientation );
 			}
 		}
 	}
@@ -138,9 +152,10 @@ namespace dotscene {
 		YAKE_ASSERT( pParentSN );
 		String name = varGet<String>(pNode->getAttributeValue("name"));
 		String meshName = varGet<String>(pNode->getAttributeValue("meshfile"));
+		String castsShadow = varGet<String>(pNode->getAttributeValue("castsShadow"));
 		graphics::IEntity* pEnt = mGWorld->createEntity( meshName );
 		YAKE_ASSERT( pEnt );
-		pEnt->setCastsShadow( false );
+		pEnt->setCastsShadow( (castsShadow == "yes") );
 		pParentSN->attachEntity( pEnt );
 	}
 
@@ -195,3 +210,5 @@ namespace dotscene {
 } // serializer
 } // data
 } // yake
+
+#endif
