@@ -59,7 +59,7 @@ struct abstract_factory :
 		typename lambda::lambda< FactoryUnit<lambda::_> >::type
 	>::type
 {     
-	typedef Types_ ProductList;
+	typedef Types ProductList;
         
 	// todo: free parameters
 	template <class AbstractProduct> 
