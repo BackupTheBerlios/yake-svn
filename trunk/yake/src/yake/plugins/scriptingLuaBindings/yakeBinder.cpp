@@ -228,15 +228,6 @@ namespace lua {
 			class_< RandomNumberGeneratorMT >( "RandomNumberGeneratorMT" )
 				.def( constructor<>() )
 		];
-		
-		// just for demo purposes ... TODO eliminate from this file
-		module(pLuaVM->getLuaState(), "yake")
-		[
-			class_<Player>("Player")
-				.def(constructor<>())
-				.def("getName", &Player::getName)
-				.def("setName", &Player::setName)
-		];
 	}
 
 
