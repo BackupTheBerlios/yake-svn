@@ -70,9 +70,9 @@ public:
 	}
 	// move this out of here
 	void setFixedYawEnabled( bool enabled );
-	void setFixedYawAxis( const Vector3 & yawAxis );
-	void lookAt( const Vector3 & target );
-	void setDirection( const Vector3 & vec );
+	virtual void setFixedYawAxis( const Vector3 & yawAxis );
+	virtual void lookAt( const Vector3 & target );
+	virtual void setDirection( const Vector3 & vec );
 private:
 	Vector3		mYawAxis;
 	bool		mFixedYaw;
