@@ -134,14 +134,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audioOpenAL", "plugins\audi
 		{42BB6F78-B04C-4968-AA5E-271DC45BEFBB} = {42BB6F78-B04C-4968-AA5E-271DC45BEFBB}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rx", "rx.vcproj", "{B70A41E1-2A3C-422C-BB19-FA1751B4A72C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesRxBasics", "samples\rx\samplesRxBasics.vcproj", "{5ECA70DD-F347-4FA8-973A-5A1E604210B0}"
 	ProjectSection(ProjectDependencies) = postProject
-		{B70A41E1-2A3C-422C-BB19-FA1751B4A72C} = {B70A41E1-2A3C-422C-BB19-FA1751B4A72C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "physicsNX", "plugins\physics\physicsNX.vcproj", "{5749946B-081D-4A80-8119-2BE84F571E81}"
+	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Global
@@ -246,14 +244,14 @@ Global
 		{66DC2F33-EF4C-46A0-9955-6A60F75D8279}.Debug.Build.0 = Debug|Win32
 		{66DC2F33-EF4C-46A0-9955-6A60F75D8279}.Release.ActiveCfg = Release|Win32
 		{66DC2F33-EF4C-46A0-9955-6A60F75D8279}.Release.Build.0 = Release|Win32
-		{B70A41E1-2A3C-422C-BB19-FA1751B4A72C}.Debug.ActiveCfg = Debug|Win32
-		{B70A41E1-2A3C-422C-BB19-FA1751B4A72C}.Debug.Build.0 = Debug|Win32
-		{B70A41E1-2A3C-422C-BB19-FA1751B4A72C}.Release.ActiveCfg = Release|Win32
-		{B70A41E1-2A3C-422C-BB19-FA1751B4A72C}.Release.Build.0 = Release|Win32
 		{5ECA70DD-F347-4FA8-973A-5A1E604210B0}.Debug.ActiveCfg = Debug|Win32
 		{5ECA70DD-F347-4FA8-973A-5A1E604210B0}.Debug.Build.0 = Debug|Win32
 		{5ECA70DD-F347-4FA8-973A-5A1E604210B0}.Release.ActiveCfg = Release|Win32
 		{5ECA70DD-F347-4FA8-973A-5A1E604210B0}.Release.Build.0 = Release|Win32
+		{5749946B-081D-4A80-8119-2BE84F571E81}.Debug.ActiveCfg = Debug|Win32
+		{5749946B-081D-4A80-8119-2BE84F571E81}.Debug.Build.0 = Debug|Win32
+		{5749946B-081D-4A80-8119-2BE84F571E81}.Release.ActiveCfg = Release|Win32
+		{5749946B-081D-4A80-8119-2BE84F571E81}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
