@@ -1,3 +1,7 @@
+// use static read write functions within partial specialized structs for int, float etc
+// default struct = error, unknown type, not supported by network
+// see metaclass
+
 struct observer
 {
 	virtual ~observer() {}

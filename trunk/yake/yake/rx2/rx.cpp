@@ -40,12 +40,13 @@ int main()
 		std::cout << "[ meta operations ]" << std::endl;	
 
 		// define class with default value
-		meta_class test_class( "test_class" );
-		test_class.add_field<bool>( "hello_bool", true );
-		test_class.add_field<std::string>( "hello_string" );
-	
+		meta_class test_class =
+			define<meta_class>( "test_class" )
+				.add_field<bool>( "hello_bool", true )
+				.add_field<std::string>( "hello_string" );
+
 		// create an instance of that just defined class
-		meta_object & test_object = new_( test_class,  "test_object" );
+		meta_object & test_object = create( test_class,  "test_object" );
 
 		// set and stream some values
 		assert( test_object.field<bool>( "hello_bool" ) );
@@ -64,7 +65,7 @@ int main()
 			"dead" ) << std::endl;
 
 		// try another object
-		meta_object & test_object_2 = new_( test_class, "test_object_2" );
+		meta_object & test_object_2 = create( test_class, "test_object_2" );
 		assert( test_object_2.field<bool>( "hello_bool" ) );
 		std::cout << "test_object_2::hello_bool=" << ( test_object_2.field<bool>( 
 			"hello_bool" ) ? "true" : "false" ) << std::endl;
@@ -136,7 +137,7 @@ int main()
 	}*/
 
 	// serialize meta objects
-	{
+/*	{
 		std::cout << std::endl << "[ serialization ]" << std::endl;	
 
 		// serialize
@@ -173,7 +174,7 @@ int main()
 	}
 
 	// script bindings
-	/*{
+	{
 		std::cout << std::endl << "[ binding mop to lua ]" << std::endl;	
 
 		using namespace luabind;

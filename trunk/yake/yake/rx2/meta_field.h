@@ -30,6 +30,7 @@ enum field_flags
 
 struct meta_field
 {	
+public: // constructors
 	meta_field( int flags = none )
 		: object_(0), 
 			flags_(flags)
@@ -50,6 +51,7 @@ struct meta_field
 
 	virtual ~meta_field() {}
 
+public: // info
 	virtual const TypeInfo type() = 0;
   virtual std::string value_as_string() = 0;
 	std::string as_string();
@@ -65,6 +67,7 @@ struct meta_field
 		return name_;
 	}
 
+public: // data
 	meta_object * object_;
 	std::string name_;
 	int flags_;

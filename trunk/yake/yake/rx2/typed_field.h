@@ -13,6 +13,7 @@ struct typed_field : public meta_field
 	typedef typed_field< T > this_type;
 	typedef T value_type;
 
+public: // constructors
 	typed_field( int flags = none )
 		: meta_field( flags )
 	{}
@@ -31,6 +32,7 @@ struct typed_field : public meta_field
 	{	
 	}
 
+public: // value access operations
 	T & operator=( T const & value )
 	{
 		value_ = value;
@@ -61,6 +63,7 @@ struct typed_field : public meta_field
 		return value_;
 	}
 
+public: // info
 	const TypeInfo type()
 	{
 		return typeid( value_ );
@@ -71,6 +74,7 @@ struct typed_field : public meta_field
 		return boost::lexical_cast<std::string>( value_ );
 	}
 
+public: // prediction
 	// todo via constr, clone
 	void set_min_error( float predict_min_error )
 	{

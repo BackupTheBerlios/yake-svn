@@ -4,7 +4,7 @@ namespace rx
 {
 
 // used by regular meta object instancing
-meta_object & new_( const meta_class & meta_class_, std::string object_name )
+meta_object & create( const meta_class & meta_class_, std::string object_name )
 {
 		meta_class & non_const_class = const_cast< meta_class & >( meta_class_ );
 
@@ -16,8 +16,6 @@ meta_object & new_( const meta_class & meta_class_, std::string object_name )
 			// call the according attach method for this field (using cloning)
 			( iter->second )( *obj, *iter->first, true );
 		}
-
-		non_const_class.objects_.insert( meta_class::objects::value_type( object_name, obj ) ); 
 
 		return *obj;
 }

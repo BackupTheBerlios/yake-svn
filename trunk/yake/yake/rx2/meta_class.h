@@ -2,6 +2,7 @@
 #define meta_class_h
 
 #include <vector>
+#include <yake/base/templates/yakePointer.h>
 #include "class_registry.h"
 #include "meta_object.h"
 #include "meta_hooks.h"
@@ -32,67 +33,81 @@ struct attach_field
 
 class meta_class
 {
-public:
-	typedef std::vector< std::pair< meta_field*, void(*)(meta_object&, meta_field&, bool) > > fields_list;
-	typedef std::map< std::string, meta_object* > objects;
+public: // types
+	// we need the smart pointer here, because the deconstructor cannot take care of
+	// deleting (there can be n copies at the same time [ for instance when define<>
+	// is using the copy constructor multiple times ], so we can't just delete the
+	// objects without counting references within other meta_class copies)
+	typedef std::vector< std::pair<
+		yake::base::templates::SharedPtr< meta_field >, 
+		void(*)(meta_object&, meta_field&, bool) > > fields_list;
 
-public:
-	meta_class() 
+public: // constructors
+	meta_class()
 	{
     register_class( *this );
 	}
 
-	meta_class( std::string class_name )
-		: class_name_( class_name )
+	meta_class( std::string name )
+		: name_( name )
 	{
 		register_class( *this );
 	}
 
-	// todo free function stuff
 	template< typename T1 >
-	meta_class( std::string class_name, T1 & t1 )
-		: class_name_( class_name )
+	meta_class( std::string name, T1 & t1 )
+		: name_( name )
 	{
 		register_class( *this );
 		add_field( t1 );
 	}
+
+	meta_class( const meta_class & copy )
+		: name_( copy.name_ ),
+			fields_( copy.fields_ )
+	{
+		register_class( *this );       
+	}
     
 	~meta_class()
 	{
-		for( fields_list::iterator iter = fields_.begin(); 
-			iter != fields_.end(); iter++ )
-		{ delete iter->first; }
-		unregister_class( class_name_ );
+		unregister_class( *this );
 	}
 
+public: // field management
 	template< typename T >
-	void add_field( std::string field_name, T default_value = T() )
+	meta_class & add_field( std::string field_name, T default_value = T() )
 	{
-		add_field( field_name, default_value, none );
+		return add_field( field_name, default_value, none );
 	}
 
 	template< typename T, int flags >
-	void add_field( std::string field_name, T default_value = T() )
+	meta_class & add_field( std::string field_name, T default_value = T() )
 	{
-		add_field( field_name, default_value, flags );
+		return add_field( field_name, default_value, flags );
 	}
 
 	// used by script hook
 	template< typename T >
-	void add_field( std::string field_name, T default_value, int flags )
+	meta_class & add_field( std::string field_name, T default_value, int flags )
 	{
 		// add field to container with typed attach method
 		fields_.push_back( std::make_pair(
 			new typed_field<T>( field_name, default_value, flags ),
 			attach_field<T>::attach ) );
+		//  return reference to this
+		return *this;
 	}
 
 	template< typename T >
-	void add_field( T & field )
+	meta_class & add_field( T & field )
 	{
+		// add field to container with typed attach method
 		fields_.push_back( std::make_pair(
 			&field,
 			attach_field<T::value_type>::attach ) );
+		//  return reference to this
+		return *this;
 	}
 
 	template< typename T >
@@ -102,52 +117,55 @@ public:
 			iter != fields_.end(); iter++ )
 		{
       if( iter->first->name_ == name )
-				return static_cast< typed_field<T>& >( *iter->first );
+				return static_cast< typed_field<T>& >( *iter->first.get() );
 		}
-		throw exception(); // todo
+		throw exception();
 	}
 
-	// used by regular meta object instancing
-	friend meta_object & new_( const meta_class & meta_class_, std::string object_name );
-
-	// used by c++ classes
-	// todo use free function stuff
+public: // object creation	
+	friend meta_object & create( const meta_class & meta_class_, std::string object_name );	
 	template< typename T1, typename T2, typename T3 >
-	meta_object & new_( std::string object_name, T1 & f1, T2 & f2, T3 & f3 )
+	friend meta_object & create( const meta_class & meta_class_, std::string object_name, T1 & f1, T2 & f2, T3 & f3 );
+
+public: // info
+	std::string & get_name() const
 	{
-		meta_object * obj = new meta_object( object_name );
-
-		// set name
-		f1.field_name_ = fields_[0].first->get_name();
-		// call the according attach method for this field ( using reference )
-		( fields_[0].second )( *obj, f1 );
-		f1.field_name_ = fields_[1].first->get_name();
-		( fields_[1].second )( *obj, f2 );
-		f1.field_name_ = fields_[2].first->get_name();
-		( fields_[2].second )( *obj, f3 );
-
-		objects_.insert( objects::value_type( object_name, obj ) ); 
-
-		return *obj;
-	}
-
-	std::string & get_class_name()
-	{
-		return class_name_;
-	}
-
-	meta_object & get_object( std::string object_name )
-	{
-		return *objects_.find( object_name )->second;
+		return name_;
 	}
 
 private:
-	std::string class_name_;
+	mutable std::string name_;
 	fields_list fields_;
-	objects objects_;	
 };
 
-meta_object & new_( const meta_class & meta_class_, std::string object_name );
+// used by regular meta object instancing
+meta_object & create( const meta_class & meta_class_, std::string object_name );
+
+// used by c++ classes
+template< typename T1, typename T2, typename T3 >
+meta_object & create( const meta_class & meta_class_, std::string object_name, T1 & f1, T2 & f2, T3 & f3 )
+{
+	meta_class & non_const_class = const_cast< meta_class & >( meta_class_ );
+
+	meta_object * obj = new meta_object( object_name );
+
+	// set name
+	f1.field_name_ = non_const_class.fields_[0].first->get_name();
+	// call the according attach method for this field ( using reference )
+	( non_const_class.fields_[0].second )( *obj, f1 );
+	f1.field_name_ = non_const_class.fields_[1].first->get_name();
+	( non_const_class.fields_[1].second )( *obj, f2 );
+	f1.field_name_ = non_const_class.fields_[2].first->get_name();
+	( non_const_class.fields_[2].second )( *obj, f3 );
+
+	return *obj;
+}
+
+template< typename T >
+T define( const std::string & name )
+{
+  return T( name );
+}
 
 } // namespace rx
 

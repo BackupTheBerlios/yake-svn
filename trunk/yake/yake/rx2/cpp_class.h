@@ -14,8 +14,8 @@ public:
 	// they have the same order as within the meta_class
 	// field container see build_meta_class
 	cpp_class( std::string object_name ) 
-		: meta_object_( 
-				meta_class_.create_object( 
+		: meta_object_( new_( 
+					meta_class_,
 					object_name, 
 					test_int, 
 					test_string, 

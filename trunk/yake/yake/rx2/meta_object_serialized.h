@@ -14,7 +14,7 @@ namespace serialization
 template<class Archive>
 void serialize(Archive & ar, rx::meta_object & object, const unsigned int version)
 {
-	  ar & object.object_name_;
+	  ar & object.name_;
 	  ar & object.fields_;
 }
 
