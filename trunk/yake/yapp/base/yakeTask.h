@@ -81,7 +81,8 @@ namespace task {
 	public:
 		~TaskManager();
 
-		//@{ Operations
+		///@name Operations
+		//@{
 		void addTask( ITask* pTask, bool bExecuteOnlyOnce = false );
 		void removeTask( ITask* pTask );
 		//@}

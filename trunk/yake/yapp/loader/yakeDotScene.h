@@ -37,7 +37,7 @@ namespace dotscene {
 
 	typedef ::yake::base::templates::Vector< graphics::ISceneNode* > SceneNodeList;
 
-	/** DotSceneReader base class providing default implementation for DOM parsing.
+	/** DotSceneReader base class providing default implementation for DOM parsing of dotScene files.
 	* \todo read environment, external references ..
 	*/
 	class DotSceneSerializer
