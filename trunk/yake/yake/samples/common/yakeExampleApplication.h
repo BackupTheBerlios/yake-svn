@@ -2,11 +2,11 @@
 	\todo add loading of script bindings
 	\todo add subscription to shutdown request by graphics system (due to closed window)
 */
-#include <inc/graphics/yakeGraphicsSystem.h>
-#include <inc/physics/yakePhysicsSystem.h>
-#include <inc/scripting/yakeScriptingSystem.h>
-#include <inc/input/yakeInputSystem.h>
-#include <inc/input/yakeInputEventGenerator.h>
+#include <yake/graphics/yakeGraphicsSystem.h>
+#include <yake/physics/yakePhysicsSystem.h>
+#include <yake/scripting/yakeScriptingSystem.h>
+#include <yake/input/yakeInputSystem.h>
+#include <yake/input/yakeInputEventGenerator.h>
 
 namespace yake {
 	using namespace base::templates;

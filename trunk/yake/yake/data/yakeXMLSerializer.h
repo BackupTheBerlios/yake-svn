@@ -27,7 +27,7 @@
 #define YAKE_DATA_DOM_XMLSERIALIZER_H
 #pragma once
 
-#include <inc/data/yakeDataSerializer.h>
+#include <yake/data/yakeDataSerializer.h>
 
 class TiXmlElement;
 class TiXmlDocument;

@@ -24,7 +24,7 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <inc/registryPluginInterface/interface.h>
+#include <yake/registryPluginInterface/interface.h>
 
 #if defined( YAKE_REGISTRYPLUGINCONCRETE_EXPORTS )
 #	define YAKE_REGISTRY_PLUGIN_CONCRETE_API DLLEXPORT

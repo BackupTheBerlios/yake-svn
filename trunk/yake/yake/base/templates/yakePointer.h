@@ -33,11 +33,11 @@
 #include <dependencies/boost/boost/assert.hpp>
 #include <dependencies/boost/boost/mpl/assert_is_same.hpp>
 // Yake
-#include <inc/base/yakeException.h>
-#include <inc/base/mpl/yakeCast.h>
-#include <inc/base/mpl/yakeTraits.h>
-#include <inc/base/mpl/yakeBuildArguments.h>
-#include <inc/base/mpl/yakeEmptyType.h>
+#include <yake/base/yakeException.h>
+#include <yake/base/mpl/yakeCast.h>
+#include <yake/base/mpl/yakeTraits.h>
+#include <yake/base/mpl/yakeBuildArguments.h>
+#include <yake/base/mpl/yakeEmptyType.h>
 
 
 // todo : use loki and add create() iteration

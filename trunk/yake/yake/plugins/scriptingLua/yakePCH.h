@@ -18,5 +18,5 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <inc/base/yake.h>
-#include <inc/scripting/yakeScriptingSystem.h>
+#include <yake/base/yake.h>
+#include <yake/scripting/yakeScriptingSystem.h>

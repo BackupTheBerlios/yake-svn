@@ -29,7 +29,7 @@
 #	include "yakePrerequisites.h"
 #endif
 // Yake
-#include <inc/base/native/yakeNative.h>
+#include <yake/base/native/yakeNative.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

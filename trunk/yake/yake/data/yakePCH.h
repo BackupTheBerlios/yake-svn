@@ -26,6 +26,6 @@
 #ifndef YAKE_DATA_PCH_H
 #define YAKE_DATA_PCH_H
 
-#include <inc/base/yake.h>
+#include <yake/base/yake.h>
 
 #endif

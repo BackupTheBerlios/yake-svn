@@ -22,8 +22,8 @@
 #define __INC_PCH_H__
 #pragma once
 
-#include <inc/base/yake.h>
-#include <inc/graphics/yakeGraphicsSystem.h>
+#include <yake/base/yake.h>
+#include <yake/graphics/yakeGraphicsSystem.h>
 
 #include <dependencies/ogrenew/ogremain/include/Ogre.h>
 #include <dependencies/ogrenew/ogremain/include/OgreStringConverter.h>

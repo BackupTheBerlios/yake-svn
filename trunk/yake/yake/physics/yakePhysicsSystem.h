@@ -21,7 +21,7 @@
 #ifndef YAKE_PHYSICSSYSTEM_H
 #define YAKE_PHYSICSSYSTEM_H
 
-#include <inc/physics/yakePhysics.h>
+#include <yake/physics/yakePhysics.h>
 
 namespace yake {
 

@@ -29,7 +29,7 @@
 #	include "../yakePrerequisites.h"
 #endif
 // Yake
-#include <inc/base/templates/yakeThreads.H>
+#include <yake/base/templates/yakeThreads.H>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

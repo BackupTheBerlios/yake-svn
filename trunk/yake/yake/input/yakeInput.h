@@ -32,5 +32,5 @@
 #endif
 
 #ifndef YAKE_BASE_PREREQUISITES_H
-#include <yakeBase/inc/yakePrerequisites.h>
+#include <yakeBase/yake/yakePrerequisites.h>
 #endif

@@ -23,9 +23,9 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#include <inc/base/yake.h>
-#include <inc/scripting/yakeScriptingSystem.h>
-#include <inc/plugins/scriptingLuaBindings/plugin.h>
+#include <yake/base/yake.h>
+#include <yake/scripting/yakeScriptingSystem.h>
+#include <yake/plugins/scriptingLuaBindings/plugin.h>
 
 extern "C" {
 #include <dependencies/lua/include/lua.h>

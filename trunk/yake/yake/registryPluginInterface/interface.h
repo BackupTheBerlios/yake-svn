@@ -24,7 +24,7 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <inc/base/yakePCH.h>
+#include <yake/base/yakePCH.h>
 
 #if defined( YAKE_REGISTRYPLUGININTERFACE_EXPORTS )
 #	define YAKE_REGISTRY_PLUGIN_INTERFACE_API DLLEXPORT

@@ -29,10 +29,10 @@
 #include "../yakePrerequisites.h"
 #endif
 // Yake
-#include <inc/base/yakeException.h>
-#include <inc/base/templates/yakePointer.h>
-#include <inc/base/templates/yakeManager.h>
-#include <inc/base/mpl/yakeBuildArguments.h>
+#include <yake/base/yakeException.h>
+#include <yake/base/templates/yakePointer.h>
+#include <yake/base/templates/yakeManager.h>
+#include <yake/base/mpl/yakeBuildArguments.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

@@ -29,7 +29,7 @@
 #	include "yakePrerequisites.h"
 #endif
 // Yake
-#include <inc/base/yakeDataChunk.h>
+#include <yake/base/yakeDataChunk.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

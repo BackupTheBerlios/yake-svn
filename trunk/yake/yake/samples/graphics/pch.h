@@ -4,9 +4,9 @@
 // STL
 #include <iostream>
 // Yake
-#include <yakeBase/inc/yake.h>
-#include <yakeBase/inc/yakeDebugOutputStream.h>
-#include <yakeBase/inc/yakeLog.h>
-#include <yakeBase/inc/yakeLibrary.h>
-#include <yakeScripting/inc/yakeScriptingSystem.h>
-#include <yakeGraphics/inc/yakeGraphicsSystem.h>
+#include <yakeBase/yake/yake.h>
+#include <yakeBase/yake/yakeDebugOutputStream.h>
+#include <yakeBase/yake/yakeLog.h>
+#include <yakeBase/yake/yakeLibrary.h>
+#include <yakeScripting/yake/yakeScriptingSystem.h>
+#include <yakeGraphics/yake/yakeGraphicsSystem.h>

@@ -22,7 +22,7 @@
 #define INC_YAKE_PHYSICS_AFFECTORS_H
 
 #ifndef INC_YAKE_PREREQUISITES_H
-#include <inc/base/yakePrerequisites.h>
+#include <yake/base/yakePrerequisites.h>
 #endif
 
 namespace yake {

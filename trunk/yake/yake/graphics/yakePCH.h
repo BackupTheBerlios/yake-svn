@@ -24,6 +24,6 @@
 // STL
 #include <iostream>
 // Yake
-#include <inc/base/yake.h>
-#include <inc/base/yakeDebugOutputStream.h>
-#include <inc/base/yakeLog.h>
+#include <yake/base/yake.h>
+#include <yake/base/yakeDebugOutputStream.h>
+#include <yake/base/yakeLog.h>

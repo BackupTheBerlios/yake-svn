@@ -21,14 +21,14 @@
 #ifndef YAKE_GRAPHICAL_H
 #define YAKE_GRAPHICAL_H
 
-#include <yakeGraphics/inc/yakeGraphics.h>
+#include <yakeGraphics/yake/yakeGraphics.h>
 
 #ifndef YAKE_BASE_MOVABLE_H
-#include <yakeBase/inc/yakeMovable.h>
+#include <yakeBase/yake/yakeMovable.h>
 #endif
 
 #ifndef YAKE_PHYSICSSYSTEM_H
-#include <yakeGraphics/inc/yakeGraphicsSystem.h>
+#include <yakeGraphics/yake/yakeGraphicsSystem.h>
 #endif
 
 namespace yake {

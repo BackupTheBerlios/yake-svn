@@ -26,8 +26,8 @@
 #ifndef INC_YAKE_INPUTEVENTGENERATOR_H
 #define INC_YAKE_INPUTEVENTGENERATOR_H
 
-#include <inc/input/yakeInput.h>
-#include <inc/input/yakeInputSystem.h>
+#include <yake/input/yakeInput.h>
+#include <yake/input/yakeInputSystem.h>
 
 namespace yake {
 namespace input {

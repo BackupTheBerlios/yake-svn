@@ -24,7 +24,7 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //===========================================================================
-#include <inc/base/yakePlatform.h>
+#include <yake/base/yakePlatform.h>
 #include <assert.h>
 #include <ctime>
 #include <math.h>
@@ -47,7 +47,7 @@
 
 // Include platform specific configuration files
 #if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
-#	include <inc/base/prerequisites/yakePrerequisitesVC.h>
+#	include <yake/base/prerequisites/yakePrerequisitesVC.h>
 #else
 #	error("Yake: No configuration file set for the selected platform/compiler!")
 #endif

@@ -24,8 +24,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <inc/graphics/yakeGraphicsSystem.h>
-#include <inc/graphics/yakeGraphicalWorld.h>
+#include <yake/graphics/yakeGraphicsSystem.h>
+#include <yake/graphics/yakeGraphicalWorld.h>
 
 #if defined( YAKE_GRAPHICSCONCRETEAPI_EXPORTS )
 #	define YAKE_GRAPHICS_CONCRETE_API DLLEXPORT
@@ -33,7 +33,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #	define YAKE_GRAPHICS_CONCRETE_API DLLIMPORT
 #endif
 
-#include <inc/plugins/graphicsOgre/yakeGraphicsWorld.h>
+#include <yake/plugins/graphicsOgre/yakeGraphicsWorld.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

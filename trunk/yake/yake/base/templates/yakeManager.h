@@ -29,8 +29,8 @@
 #	include "../yakePrerequisites.h"
 #endif
 // Yake
-#include <inc/base/templates/yakeFastMap.h>
-#include <inc/base/mpl/yakeEmptyType.h>
+#include <yake/base/templates/yakeFastMap.h>
+#include <yake/base/mpl/yakeEmptyType.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

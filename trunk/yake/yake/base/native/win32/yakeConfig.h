@@ -5,9 +5,9 @@
 //    IMPLEMENTATION HEADERS
 //============================================================================
 // Yake
-#include <inc/base/native/yakeNative.h>
+#include <yake/base/native/yakeNative.h>
 #include <windows.h>
-#include <inc/base/native/win32/yakeUndefine.h>
+#include <yake/base/native/win32/yakeUndefine.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

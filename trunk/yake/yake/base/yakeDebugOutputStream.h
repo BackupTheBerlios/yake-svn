@@ -29,8 +29,8 @@
 #	include "yakePrerequisites.h"
 #endif
 // Yake
-#include <inc/base/yakeOutputStream.h>
-#include <inc/base/templates/yakeSingleton.h>
+#include <yake/base/yakeOutputStream.h>
+#include <yake/base/templates/yakeSingleton.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

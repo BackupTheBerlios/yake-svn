@@ -29,8 +29,8 @@
 #	include "yakePrerequisites.h"
 #endif
 // Yake
-#include <inc/base/yakeInputStream.h>
-#include <inc/base/Templates/yakePointer.h>
+#include <yake/base/yakeInputStream.h>
+#include <yake/base/Templates/yakePointer.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

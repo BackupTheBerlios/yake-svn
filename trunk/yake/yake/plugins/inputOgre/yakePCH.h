@@ -22,7 +22,7 @@
 #define __INC_PCH_H__
 #pragma once
 
-#include <inc/base/yake.h>
+#include <yake/base/yake.h>
 
 #define VEC_YAKE2OGRE( YV ) Ogre::Vector3( YV.x, YV.y, YV.z )
 #define VEC_OGRE2YAKE( YV ) yake::Vector3( YV.x, YV.y, YV.z )

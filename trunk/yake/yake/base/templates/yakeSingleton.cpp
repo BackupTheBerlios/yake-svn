@@ -20,7 +20,7 @@
 */
 
 
-#include <yakeBase/inc/templates/yakeSingleton.h>
+#include <yakeBase/yake/templates/yakeSingleton.h>
 
 using namespace yake::base::Templates::Detail;
 

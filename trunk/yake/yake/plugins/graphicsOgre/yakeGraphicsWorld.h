@@ -24,8 +24,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <inc/graphics/yakeGraphicalWorld.h>
-#include <inc/plugins/graphicsOgre/yakeGraphicsSystem.h>
+#include <yake/graphics/yakeGraphicalWorld.h>
+#include <yake/plugins/graphicsOgre/yakeGraphicsSystem.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

@@ -26,7 +26,7 @@
 //============================================================================
 // Yake
 #include "yakePCH.h"
-#include "inc/base/templates/yakeVariant.h"
+#include "yake/base/templates/yakeVariant.h"
 
 
 //============================================================================

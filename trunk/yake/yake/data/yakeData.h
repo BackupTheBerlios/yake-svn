@@ -26,8 +26,8 @@
 #ifndef YAKE_DATA_H
 #define YAKE_DATA_H
 
-#include <inc/data/yakeDataPrerequisites.h>
-#include <inc/data/yakeDataSerializer.h>
-#include <inc/data/yakeXMLSerializer.h>
+#include <yake/data/yakeDataPrerequisites.h>
+#include <yake/data/yakeDataSerializer.h>
+#include <yake/data/yakeXMLSerializer.h>
 
 #endif

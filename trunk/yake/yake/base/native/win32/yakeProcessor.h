@@ -8,7 +8,7 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
 
-#include <inc/base/yakeProcessor.h>
+#include <yake/base/yakeProcessor.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

@@ -21,14 +21,14 @@
 #ifndef YAKE_PHYSICAL_H
 #define YAKE_PHYSICAL_H
 
-#include <inc/physics/yakePhysics.h>
+#include <yake/physics/yakePhysics.h>
 
 #ifndef YAKE_BASE_MOVABLE_H
-#include <inc/base/yakeMovable.h>
+#include <yake/base/yakeMovable.h>
 #endif
 
 #ifndef YAKE_PHYSICSSYSTEM_H
-#include <inc/physics/yakePhysicsSystem.h>
+#include <yake/physics/yakePhysicsSystem.h>
 #endif
 
 namespace yake {

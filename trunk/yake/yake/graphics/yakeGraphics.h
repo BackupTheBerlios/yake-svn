@@ -27,5 +27,5 @@
 #endif
 
 #ifndef YAKE_BASE_PREREQUISITES_H
-#include <inc/base/yakePrerequisites.h>
+#include <yake/base/yakePrerequisites.h>
 #endif

@@ -32,7 +32,7 @@
 #	include "yakePrerequisites.h"
 #endif
 // Yake
-#include <inc/base/mpl/yakeCast.h>
+#include <yake/base/mpl/yakeCast.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

@@ -32,7 +32,7 @@
 
 SCRIPTINGLUA_API yake::base::Plugin* dynlibStartPlugin(void);
 
-#include <inc/plugins/scriptingLua/ScriptingSystemLua.h>
+#include <yake/plugins/scriptingLua/ScriptingSystemLua.h>
 
 class ScriptingLuaPlugin : public yake::scripting::ScriptingPlugin
 {

@@ -29,8 +29,8 @@
 #	include "yakePrerequisites.h"
 #endif
 // Yake
-#include <inc/base/Templates/yakeSingleton.h>
-#include <inc/base/yakeString.h>
+#include <yake/base/Templates/yakeSingleton.h>
+#include <yake/base/yakeString.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

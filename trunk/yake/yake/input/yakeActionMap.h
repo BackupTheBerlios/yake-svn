@@ -27,7 +27,7 @@
 #define YAKE_INPUT_ACTIONMAP_H
 #pragma once
 
-#include <inc/input/yakeInput.h>
+#include <yake/input/yakeInput.h>
 
 namespace yake {
 

@@ -21,7 +21,7 @@
 #ifndef YAKE_GRAPHICS_ENTITY_H
 #define YAKE_GRAPHICS_ENTITY_H
 
-#include <inc/graphics/yakeGraphics.h>
+#include <yake/graphics/yakeGraphics.h>
 
 namespace yake {
 	using namespace base::math;

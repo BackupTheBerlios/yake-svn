@@ -24,7 +24,7 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <inc/graphics/yakeGraphics.h>
+#include <yake/graphics/yakeGraphics.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
