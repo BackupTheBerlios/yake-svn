@@ -32,14 +32,13 @@ namespace yake
 namespace base
 {
 
+	//-----------------------------------------------------
+	// The following implementation is based on Ogre::String.
 
 	//-----------------------------------------------------
-	// The following implementation has been taken from Ogre::String.
-
-	//-----------------------------------------------------
-	void String::trim(bool left, bool right)
+	void StringUtil::trim(String& rString, bool left, bool right)
 	{
-		size_t lspaces, rspaces, len = length(), i;
+		size_t lspaces, rspaces, len = rString.length(), i;
 
 		lspaces = rspaces = 0;
 
@@ -47,7 +46,7 @@ namespace base
 		{
 			// Find spaces / tabs on the left
 			for( i = 0;
-				i < len && ( at(i) == ' ' || at(i) == '\t' || at(i) == '\r');
+				i < len && ( rString[i] == ' ' || rString[i] == '\t' || rString[i] == '\r');
 				++lspaces, ++i );
 		}
 
@@ -55,15 +54,15 @@ namespace base
 		{
 			// Find spaces / tabs on the right
 			for( i = len - 1;
-				i >= 0 && ( at(i) == ' ' || at(i) == '\t' || at(i) == '\r');
+				i >= 0 && ( rString[i] == ' ' || rString[i] == '\t' || rString[i] == '\r');
 				rspaces++, i-- );
 		}
 
-		*this = substr(lspaces, len-lspaces-rspaces);
+		rString = rString.substr(lspaces, len-lspaces-rspaces);
 	}
 
 	//-----------------------------------------------------------------------
-	std::vector<String> String::split( const String& delims, unsigned int maxSplits) const
+	std::vector<String> StringUtil::split(const String& rString, const String& delims, unsigned int maxSplits)
 	{
 		// static unsigned dl;
 		std::vector<String> ret;
@@ -74,60 +73,62 @@ namespace base
 		start = 0;
 		do 
 		{
-			pos = find_first_of(delims, start);
+			pos = rString.find_first_of(delims, start);
 			if (pos == start)
 			{
 				// Do nothing
 				start = pos + 1;
 			}
-			else if (pos == npos || (maxSplits && numSplits == maxSplits))
+			else if (pos == rString.npos || (maxSplits && numSplits == maxSplits))
 			{
 				// Copy the rest of the string
-				ret.push_back( substr(start) );
+				ret.push_back( rString.substr(start) );
 			}
 			else
 			{
 				// Copy up to delimiter
-				ret.push_back( substr(start, pos - start) );
+				ret.push_back( rString.substr(start, pos - start) );
 				start = pos + 1;
 			}
 			// parse up to next real data
-			start = find_first_not_of(delims, start);
+			start = rString.find_first_not_of(delims, start);
 			++numSplits;
 
-		} while (pos != npos);
+		} while (pos != rString.npos);
 
 		return ret;
 	}
 
 	//-----------------------------------------------------------------------
-	String String::toLowerCase(void) 
+	String StringUtil::toLowerCase(const String& rString) 
 	{
+		String out( rString );
 		std::transform(
-			begin(),
-			end(),
-			begin(),
+			out.begin(),
+			out.end(),
+			out.begin(),
 			static_cast<int(*)(int)>(::tolower) );
 
-		return *this;
+		return out;
 	}
 
 	//-----------------------------------------------------------------------
-	String String::toUpperCase(void) 
+	String StringUtil::toUpperCase(const String& rString) 
 	{
+		String out( rString );
 		std::transform(
-			begin(),
-			end(),
-			begin(),
+			out.begin(),
+			out.end(),
+			out.begin(),
 			static_cast<int(*)(int)>(::toupper) );
 
-		return *this;
+		return out;
 	}
 
 	//-----------------------------------------------------------------------
-	real String::toReal( void )
+	real StringUtil::toReal(const String& rString)
 	{
-		return static_cast<real>(atof( this->c_str() ));
+		return static_cast<real>(atof( rString.c_str() ));
 	}
 	
 } // base

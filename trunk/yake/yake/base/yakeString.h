@@ -39,58 +39,31 @@ namespace base
 
 //typedef std::string YAKE_BASE_STRING;
 
-/** The YAKE string class. It's derived from the STL string and enhanced by a few useful functions.
-	NB If you need to store Unicode use the UString class.
-	It knows how to convert between Unicode formats and internally holds a UTF-8 string.
-	\todo UTF-8 code removed! Has to be redone. Current string class is based on Ogre's ( www.ogre3d.org ).
-*/
-class YAKE_BASE_API String : public YAKE_BASE_STRING
-{
-public:
-	String() : YAKE_BASE_STRING() {}
-	String( const String& rhs ) : YAKE_BASE_STRING( static_cast< const YAKE_BASE_STRING& >(rhs) ) {}
-	String( const YAKE_BASE_STRING& rhs ) : YAKE_BASE_STRING( rhs ) {}
-	String( const char * rhs ) : YAKE_BASE_STRING( rhs ) {}
+	typedef YAKE_BASE_API YAKE_BASE_STRING String;
+	typedef YAKE_BASE_API std::stringstream StrStream;
 
-	void trim(bool left = true, bool right = true);
-	std::vector< String > split( const String& delims = "\t\n", unsigned int maxSplits = 0) const;
-	String toLowerCase( void );
-	String toUpperCase( void );
-	real toReal( void );
-
-
-	size_t operator ()( const YAKE_BASE_STRING& rStringBase ) const
+	template<typename T>
+	String& operator << (String & lhs, const T & rhs)
 	{
-		register size_t ret = 0;
-		for( YAKE_BASE_STRING::const_iterator it = rStringBase.begin(); it != rStringBase.end(); ++it )
-			ret = 5 * ret + *it;
-		return ret;
+		StrStream ss;
+		ss << rhs;
+		lhs += ss.str();
+		return lhs;
+	}
+
+	class YAKE_BASE_API StringUtil
+	{
+	public:
+		static real parseReal( const String& rString )
+		{
+			return (real) atof( rString.c_str() );
+		}
+		static void trim(String& rString, bool left = true, bool right = true);
+		static std::vector< String > split( const String& rString, const String& delims = "\t\n", unsigned int maxSplits = 0);
+		static String toLowerCase( const String& rString );
+		static String toUpperCase( const String& rString );
+		static real toReal( const String& rString );
 	};
-
-	char charAt( size_t pos ) const
-	{
-		return YAKE_BASE_STRING::operator [](pos);
-	}
-
-	template< typename T >
-	String& operator << ( const T& t )
-	{
-		std::ostringstream out;
-		out << t;
-		(*this) += out.str();
-		return *this;
-	}
-};
-
-
-class StringConverter 
-{
-public:
-	static real parseReal( const String& rString )
-	{
-		return (real) atof( rString.c_str() );
-	}
-};
 
 #undef YAKE_BASE_STRING
 

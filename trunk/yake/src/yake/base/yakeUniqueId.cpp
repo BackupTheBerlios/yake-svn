@@ -60,7 +60,7 @@ namespace base
 	void GUID::fromString( const String & id )
 	{
 		YAKE_ASSERT( 1==0 ).fatal("NOT IMPLEMENTED! That reason enough ?");
-		std::vector< String > elems = id.split( "-" );
+		std::vector< String > elems = StringUtil::split( id,"-" );
 		if (elems.size() < 5)
 			return; //FIXME: USE YAKE_ASSERT
 
