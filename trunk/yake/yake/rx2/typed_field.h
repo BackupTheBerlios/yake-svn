@@ -15,49 +15,46 @@ template< typename T >
 struct typed_field : public meta_field
 {
 	typedef typed_field< T > this_type;
-	typedef T value_type;
+
 	typedef typename boost::remove_reference<T>::type no_ref_T;
 	typedef typename boost::add_reference<T>::type ref_T;
 	typedef typename boost::add_reference<const T>::type const_ref_T;
 
+	typedef T value_type;
+	typedef no_ref_T * pointer_T;
+
 public: // constructors
 	typed_field( int flags = none )
 		: meta_field( flags ), 
-			value_( boost::remove_reference<T>::type() ),
-			ref_( value_ ),
-			use_ref(false)
+			ptr_( NULL )
 	{}
 
-	// used by wrapper c++ members, called within c++ class constructor
-	typed_field( T value, int flags ) 
+	// Used by wrapper c++ members, called by the c++ class constructor
+	// We are using a reference to a c++ variable instead of holding the variable. 
+	typed_field( ref_T ref_to_value, int flags ) 
 		: meta_field( flags ),
-			ref_( value ),
-			use_ref(true)
+			ptr_( &ref_to_value )
 	{
 	}
 
 	typed_field( std::string field_name, const_ref_T value = const_ref_T(), int flags = none ) 
 		: meta_field( field_name, flags ), 
 		  value_( value ),
-			ref_( value_ ),
-			use_ref(false)
+			ptr_( NULL )
 	{	
 	}
 
 	typed_field( meta_object & object, std::string field_name, T value, int flags = none ) 
 		: meta_field( object, field_name, flags ),
 		  value_( value ),
-			ref_( value_ ),
-			use_ref(false)
+			ptr_( NULL )
 	{	
 	}
-
-	// todo typedef for ref_T and T
 
 public: // value access operations
 	ref_T operator=( const_ref_T value )
 	{
-		( use_ref ? ref_ : value_ ) = value;
+		( ptr_ ? *ptr_ : value_ ) = value;
 		if( object_ )
 		{
 			std::cout << get_object().get_name() << "::" << name_ 
@@ -67,7 +64,6 @@ public: // value access operations
 		return get();
 	}
 
-	// used by script
 	void set( const_ref_T value )
 	{
 		operator=( value );
@@ -75,7 +71,7 @@ public: // value access operations
 
 	ref_T get()
 	{
-		return use_ref ? ref_ : value_;
+		return ( ptr_ ? *ptr_ : value_ );
 	};
 
 	// explicit conversion
@@ -109,13 +105,18 @@ public: // prediction
 		predict_max_error_ = predict_max_error;    
 	}
 
+public: // data initialization access
+	template< typename this_field >
+	friend this_field & set_ref( this_field & field, typename this_field::value_type ref )
+
 public: // data
  	no_ref_T value_;
-	ref_T ref_;
-	bool use_ref; // If this field is a "wrapper" for a c++ pod field like int my_int
-								// we have to use a reference to that instead instead of the value.
-								// The trick is that we hold both, a value and a reference, so that
-								// we don't have to access a wrapper/reference field via obj.field<int&>( "my_int" ) ...
+	// If this field is a "wrapper" for a c++ pod field like int my_int
+	// we have to use a reference to that instead instead of the value.
+	// The trick is that we hold both, a value and a reference, so that
+	// we don't have to access a wrapper/reference field via obj.field<int&>( "my_int" ) ...
+	// Set the actual referene using the constructor or the set_ref helper function.
+	pointer_T ptr_;
 
 	// todo move this into observer
 	float predict_min_error_;
@@ -142,6 +143,13 @@ bool operator==( typed_field<T> & field, const char * value )
 {
 	return field.get() == value;    
 }
+
+template< typename this_field >
+T & set_ref( this_field & field, typename this_field::value_type ref )
+{
+	field.ptr_ = &ref;
+  return field;
+};
 
 /*template< typename T >
 bool operator==( typed_field< ref<T> > & field, T value )

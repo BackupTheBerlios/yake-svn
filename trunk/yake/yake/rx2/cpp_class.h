@@ -8,30 +8,16 @@
 
 // todo meta_object deserialization should set cpp_class members
 
-
-	/* todo
-
-<psy|code> if i want to replicate a position, do i _have_ to use typed_field<Vector3> or sth like that?
-<psy|code> and now i have to tie this to the actual Movable...
-
-<metaX> I think there are two possibilities : 
-<metaX> 1. a simply class-to-member-ptr wrapper
-<metaX> 2. used typed_field<vector> ;P
-<metaX> -d
-* FuSiON has joined #yake
-<metaX> how would you do it with rx1?
-<metaX> well, would be possible to do this:
-<metaX> struct player : public movable, rxobject {}; and then add a class-member-ptr to movable::position ...
-<metaX> but there would be no sychronization
-==><metaX> perhaps it's possible to do typed_field<vector&>( "blah", this->myvector );?
+#define INIT_RX( )
 
 
-
-	*/
-
-
-
-
+// todo we need pointers within typed_field ... do we really need them?
+template< typename T >
+T & set_ref( T & field, typename T::value_type ref )
+{
+	field.ptr_ = &ref;
+  return field;
+};
 
 struct cpp_class
 {
@@ -40,14 +26,13 @@ public:
 	// they have the same order as within the meta_class
 	// field container see build_meta_class
 	cpp_class( std::string object_name ) 
-		:	//position_wrapped( "position_wrapped", ref<int>(position_) ),
-			position_wrapped( position_, none ),			
+		:	//position_wrapped( position_, none ),			
 			meta_object_( 
 				instance<meta_object>( meta_class_, object_name )
 					.add_field( test_int )
 					.add_field( test_string )
 					.add_field( test_float )
-					.add_field( position_wrapped ) )
+					.add_field( set_ref( position_wrapped, position_ )  ) )
 
 					// init_rx
 	{

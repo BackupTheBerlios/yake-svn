@@ -10,6 +10,7 @@ int hello = 123;
 ref<int> iref( hello );
 assert( iref == hello );
 
+position_wrapped( "position_wrapped", ref<int>(position_) ),
 
 template< typename T >
 struct ref

@@ -5,7 +5,7 @@
 #pragma warning(disable: 4800) // bits AND => bool
 
 // serialization
-#include <boost/archive/text_oarchive.hpp> // you have to include the archives _before_ using BOOST_CLASS_EXPORT
+#include <boost/archive/text_oarchive.hpp> // we have to include the archives _before_ using BOOST_CLASS_EXPORT
 #include <boost/archive/text_iarchive.hpp>
 #include "typed_field_serialized.h"
 #include "meta_object_serialized.h"
@@ -208,9 +208,6 @@ int main()
 		luaopen_io(L);
 		open(L);
 
-		// todo register function
-		// todo use concrete fields inside lua and write converter between lua<>cpp?
-		// todo lua supports meta-mechanisms?
 		module(L)
 		[ class_<meta_field>("meta_field")
 				.enum_("flags")
