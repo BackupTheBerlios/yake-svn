@@ -1,10 +1,10 @@
-AUTHORS (short list, but that doesn't hurt)
+AUTHORS (short list, so?)
 =======
 
 YAKE Team 
 ---------
-Stephan Kaiser		(psyclonist/codeandroid)
-?					(meta)
+Stephan Kaiser      (psyclonist/codeandroid)
+(to be revealed)    (meta)
 
 Feature Contributors
 --------------------
@@ -12,9 +12,10 @@ The following list includes developers who have contributed features to YAKE:
 
 Contributor                             Subject Areas 
 -----------                             --------------------------------------
-? (mj)                                : Linux port, yake::graphics enhancements
+Nikita Buida (mj)                     : Linux port, SCons, various enhancements
+                                        and fixes and samples
 ? (Poldi)                             : Linux port
-
+Jan Eickmann ( jeickmann )            : Fixes
 
 
 If we've forgotten you in the above list, please contact us!
@@ -43,6 +44,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
-along with OGRE; see the file COPYING.  If not, write to
+along with YAKE; see the file COPYING and COPYING.LIB.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
