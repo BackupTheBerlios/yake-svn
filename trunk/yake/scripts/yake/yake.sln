@@ -165,6 +165,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesThread1", "samples\t
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samples_application", "samples\application\samples_application.vcproj", "{44C8B2A3-281A-4910-A737-7EA1F6F43E35}"
 	ProjectSection(ProjectDependencies) = postProject
+		{ECC8FA24-93AC-4659-8EBD-26B6F418AC64} = {ECC8FA24-93AC-4659-8EBD-26B6F418AC64}
+		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
 	EndProjectSection
 EndProject
 Global
