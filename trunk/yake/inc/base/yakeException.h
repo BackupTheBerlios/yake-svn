@@ -22,7 +22,7 @@
 #define YAKE_BASE_EXCEPTION_H
 
 
-#define YAKE_EXCEPT(c,d,s) throw( yake::::Base::Exception(c,d,s,__FILE__,__LINE__) )
+#define YAKE_EXCEPT(m,s) throw( yake::base::Exception(m,s,__FILE__,__LINE__) )
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
@@ -50,6 +50,7 @@ public:
 	Exception( const Exception& rException ) throw();
 	Exception( const String& rMessage ) throw();
 	Exception( const String& rMessage, const String& rSource ) throw ();
+	Exception( const String& rMessage, const String& rSource, const char* file, int line ) throw();
 	virtual ~Exception() throw();
 
 // Methods
@@ -58,6 +59,8 @@ public:
 
 	virtual String getMessage() const throw();
 	virtual String getSource() const throw();
+	virtual String getFile() const throw();
+	virtual int getLine() const throw();
 
 	const char* what() const throw();
 
@@ -66,6 +69,8 @@ private:
 	mutable String mAsciiWhat;
 	String mMessage;
 	String mSource;
+	String mFile;
+	int    mLine;
 };
 
 } // base

@@ -28,27 +28,30 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
+namespace base {
 
-Exception::Exception()
+Exception::Exception() : mLine(-1)
 {
 }
 
-Exception::Exception( const Exception& rException )
+Exception::Exception( const Exception& rException ) : mLine(-1)
 {
   *this = rException;
 }
 
 Exception::Exception( const String& rMessage )
-: mMessage( rMessage )
+: mMessage( rMessage ), mLine(-1)
 {
 }
 
 Exception::Exception( const String& rMessage, const String& rSource )
-: mMessage( rMessage ), mSource( rSource )
+: mMessage( rMessage ), mSource( rSource ), mLine(-1)
+{
+}
+
+Exception::Exception( const String& rMessage, const String& rSource, const char* file, int line )
+: mMessage( rMessage ), mSource( rSource ), mFile(file), mLine(line)
 {
 }
 
@@ -61,6 +64,8 @@ Exception& Exception::operator=( const Exception& rException )
 {
   mMessage = rException.mMessage;
   mSource = rException.mSource;
+  mFile = rException.mFile;
+  mLine = rException.mLine;
 
   return *this;
 }
@@ -76,10 +81,33 @@ String Exception::getSource() const
   return mSource;
 }
 
+String Exception::getFile() const
+{
+  return mFile;
+}
+
+int Exception::getLine() const
+{
+  return mLine;
+}
 
 const char* Exception::what() const throw()
 {
-  return mAsciiWhat.c_str();
+	if (mAsciiWhat.length() == 0)
+	{
+		std::stringstream ss;
+		ss << "YAKE EXCEPTION" << std::endl;
+		if (mFile.length() > 0)
+		{
+			ss << "FILE: " << mFile.c_str() << std::endl;
+			if (mLine >= 0)
+				ss << "LINE: " << mLine << std::endl;
+		}
+		ss << "SOURCE: " << mSource.c_str() << std::endl;
+		ss << "REASON: " << mMessage.c_str() << std::endl;
+		mAsciiWhat = ss.str();
+	}
+	return mAsciiWhat.c_str();
 }
 
 
