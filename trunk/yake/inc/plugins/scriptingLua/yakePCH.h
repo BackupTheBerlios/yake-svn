@@ -18,33 +18,5 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-// The following ifdef block is the standard way of creating macros which make exporting 
-// from a DLL simpler. All files within this DLL are compiled with the SCRIPTINGLUA_EXPORTS
-// symbol defined on the command line. this symbol should not be defined on any project
-// that uses this DLL. This way any other project whose source files include this file see 
-// SCRIPTINGLUA_API functions as being imported from a DLL, whereas this DLL sees symbols
-// defined with this macro as being exported.
-#ifdef YAKESCRIPTINGLUA_EXPORTS
-#define SCRIPTINGLUA_API __declspec(dllexport)
-#else
-#define SCRIPTINGLUA_API __declspec(dllimport)
-#endif
-
-SCRIPTINGLUA_API yake::base::Plugin* dynlibStartPlugin(void);
-
-#include <inc/plugins/scriptingLua/ScriptingSystemLua.h>
-
-class ScriptingLuaPlugin : public yake::scripting::ScriptingPlugin
-{
-public:
-	ScriptingLuaPlugin();
-	virtual ~ScriptingLuaPlugin();
-
-	virtual yake::base::String getName() const;
-	//virtual yake::version getVersion() const;
-	virtual bool initialise();
-	virtual bool shutdown();
-
-	// co-variant override
-	virtual yake::scripting::ScriptingSystemLua* createSystem();
-};
+#include <inc/base/yake.h>
+#include <inc/scripting/yakeScriptingSystem.h>

@@ -21,9 +21,8 @@
 // scriptingLua.cpp : Defines the entry point for the DLL application.
 //
 
-#include <yakeBase/inc/yakeStableHeaders.h>
-#include "../inc/ScriptingSystemLua.h"
-#include "../inc/plugin.h"
+#include <inc/plugins/scriptingLua/yakePCH.h>
+#include <inc/plugins/scriptingLua/plugin.h>
 
 //---------------------------------------------------------
 // This is an example of an exported function.

@@ -21,15 +21,11 @@ http://www.gnu.org/copyleft/lesser.txt.
 #ifndef INC_YAKE_SCRIPTINGSYSTEMLUA_H
 #define INC_YAKE_SCRIPTINGSYSTEMLUA_H
 
-#include <yakeScripting/inc/yakeScriptingSystem.h>
-
 struct lua_State;
 
 namespace yake {
-
 	using namespace base;
-
-	namespace scripting {
+namespace scripting {
 
 	class ScriptingSystemLua : public scripting::ScriptingSystem
 	{
@@ -131,6 +127,6 @@ namespace yake {
 		}*/
 	};
 
-	}
-}
+} // scripting
+} // yake
 #endif

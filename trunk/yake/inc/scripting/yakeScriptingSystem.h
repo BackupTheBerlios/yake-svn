@@ -21,7 +21,7 @@
 #ifndef INC_YAKE_SCRIPTINGSYSTEM_H
 #define INC_YAKE_SCRIPTINGSYSTEM_H
 
-#include <yakeBase/inc/yakeStableHeaders.h>
+//#include <yakeBase/inc/yakeStableHeaders.h>
 
 namespace yake {
 	namespace scripting {

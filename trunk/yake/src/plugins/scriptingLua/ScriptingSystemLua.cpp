@@ -18,7 +18,7 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <yakeScriptingSystem.h>
+#include <inc/plugins/scriptingLua/yakePCH.h>
 extern "C" {
 #include <dependencies/lua/include/lua.h>
 #include <dependencies/lua/include/lualib.h>
@@ -26,7 +26,7 @@ extern "C" {
 }
 #define LUABIND_NO_HEADERS_ONLY
 #include <dependencies/luabind/luabind/luabind.hpp>
-#include "../inc/ScriptingSystemLua.h"
+#include <inc/plugins/scriptingLua/ScriptingSystemLua.h>
 
 namespace yake {
 namespace scripting {

@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../common/lib/debug"
-			IntermediateDirectory="../common/obj/debug/yakeScripting"
+			OutputDirectory="../../../common/lib/debug"
+			IntermediateDirectory="../../../common/obj/debug/$(ProjectName)"
 			ConfigurationType="4"
 			CharacterSet="2">
 			<Tool
@@ -103,7 +103,7 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath="..\yakeScripting\inc\yakeScriptingSystem.h">
+				RelativePath="..\inc\scripting\yakeScriptingSystem.h">
 			</File>
 		</Filter>
 	</Files>

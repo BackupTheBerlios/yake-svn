@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="yakeScriptingPluginLua"
+	Name="scriptingLua"
 	ProjectGUID="{41CEA11B-9678-43E5-B2F4-754944D7B461}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -12,19 +12,20 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../common/bin/debug"
-			IntermediateDirectory="../common/obj/debug/yakeScriptingLua"
+			OutputDirectory="../../../common/bin/debug"
+			IntermediateDirectory="../../../common/obj/debug/$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\dependencies\luabind;../dependencies/ttl/;..;..\yakeScripting\inc;..\plugins\yakeScriptingLua\inc"
+				AdditionalIncludeDirectories="../../../;../../../dependencies/luabind;../../../dependencies/ttl/;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKESCRIPTINGLUA_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="inc/plugins/scriptingLua/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -33,14 +34,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="lua.lib luabind.lib"
-				OutputFile="../common/bin/debug/yakeScriptingLua.dll"
+				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../common/lib/debug;..\dependencies\lua\lib\debug;..\dependencies\luabind\lib\debug"
-				ModuleDefinitionFile="../plugins/yakeScriptingLua/src/plugin.def"
+				AdditionalLibraryDirectories="../../../common/lib/debug;../../../dependencies\lua\lib\debug;../../../dependencies\luabind\lib\debug"
+				ModuleDefinitionFile="..\..\..\src\plugins\scriptingLua\plugin.def"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/yakeScriptingLua.pdb"
+				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
-				ImportLibrary="../common/lib/debug/yakeScriptingLua.lib"
+				ImportLibrary="../../../common/lib/debug/$(TargetName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -121,13 +122,25 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\plugins\yakeScriptingLua\src\plugin.cpp">
+				RelativePath="..\..\..\src\plugins\scriptingLua\plugin.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\scriptingLua\plugin.def">
 			</File>
 			<File
 				RelativePath="..\plugins\yakeScriptingLua\src\plugin.def">
 			</File>
 			<File
-				RelativePath="..\plugins\yakeScriptingLua\src\ScriptingSystemLua.cpp">
+				RelativePath="..\..\..\src\plugins\scriptingLua\ScriptingSystemLua.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\scriptingLua\yakePCH.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -135,10 +148,13 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath="..\plugins\yakeScriptingLua\inc\plugin.h">
+				RelativePath="..\..\..\inc\plugins\scriptingLua\plugin.h">
 			</File>
 			<File
-				RelativePath="..\plugins\yakeScriptingLua\inc\ScriptingSystemLua.h">
+				RelativePath="..\..\..\inc\plugins\scriptingLua\ScriptingSystemLua.h">
+			</File>
+			<File
+				RelativePath="..\..\..\inc\plugins\scriptingLua\yakePCH.h">
 			</File>
 		</Filter>
 	</Files>
