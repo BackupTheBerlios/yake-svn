@@ -182,6 +182,11 @@ namespace physics {
 		*/
 		virtual void addForceAtPos( const Vector3& rForce, const Vector3& rPos ) = 0;
 
+		/** Adds a force defined in the global reference frame, acting at a position defined
+			in the local reference frame. 
+		*/
+		virtual void addForceAtLocalPos( const Vector3& rForce, const Vector3& rPos ) = 0;
+
 		/** Adds a force defined in the local reference frame.
 		*/
 		virtual void addLocalForce( const Vector3& rForce ) = 0;

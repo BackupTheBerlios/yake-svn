@@ -90,6 +90,12 @@ namespace physics {
 		}
 		
 		//---------------------------------------------------
+		void OdeBody::addForceAtLocalPos( Vector3 const& rForce, Vector3 const& rPos )
+		{
+			mOdeBody->addForceAtRelPos( rForce.x, rForce.y, rForce.z, rPos.x, rPos.y, rPos.z );
+		}
+
+		//---------------------------------------------------
 		void OdeBody::addLocalForce( Vector3 const& rForce )
 		{
 			mOdeBody->addRelForce( rForce.x, rForce.y, rForce.z );

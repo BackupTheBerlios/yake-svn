@@ -46,6 +46,7 @@ namespace physics {
 
 		virtual void addForce( const Vector3 & rkForce );
 		virtual void addForceAtPos( const Vector3 & rkForce, const Vector3 & rkPos );
+		virtual void addForceAtLocalPos( const Vector3& rForce, const Vector3& rPos );
 		virtual void addLocalForce( const Vector3 & rkForce );
 		virtual void addLocalForceAtLocalPos( const Vector3 & rkForce, const Vector3 & rkPos );
 		virtual void addLocalForceAtPos( const Vector3 & rkForce, const Vector3 & rkPos );
