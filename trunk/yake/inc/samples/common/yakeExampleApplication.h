@@ -6,18 +6,22 @@
 #include <inc/input/yakeInputEventGenerator.h>
 
 namespace yake {
+	using namespace base::templates;
 namespace exapp {
 
 	class ExampleApplication
 	{
 	private:
-		typedef std::vector< base::Plugin* >	PluginList;
+		typedef Vector< base::Plugin* >	PluginList;
 		PluginList								mPlugins;
-		graphics::IGraphicsSystem				* mGraphicsSystem;
+		typedef Vector< Pointer<base::Library> > LibList;
+		LibList									mLibs;
+		Pointer< graphics::IGraphicsSystem >	mGraphicsSystem;
 		physics::PhysicsSystem					* mPhysicsSystem;
 		scripting::ScriptingSystem				* mScriptingSystem;
 		//scripting::ScriptingBindings			* mScriptingBindings;
 		input::InputSystem						* mInputSystem;
+		bool									mShutdownRequested;
 	protected:
 		input::KeyboardEventGenerator			mKeyboardEventGenerator;
 		input::MouseEventGenerator				mMouseEventGenerator;
@@ -32,29 +36,39 @@ namespace exapp {
 		bool									mLoadInputSystem;
 	public:
 		ExampleApplication(bool loadGraphics, bool loadPhysics, bool loadScripting, bool loadInput ) :
+				mShutdownRequested(false), 
 				mLoadGraphicsSystem( loadGraphics ), mLoadPhysicsSystem( loadPhysics ), mLoadScriptingSystem( loadScripting ), mLoadInputSystem( loadInput ),
-				mGraphicsSystem(0), mScriptingSystem(0), mPhysicsSystem(0), mInputSystem(0)//, mScriptingBindings(0)
+				mScriptingSystem(0), mPhysicsSystem(0), mInputSystem(0)//, mScriptingBindings(0)
 		{
 		}
 
 		virtual ~ExampleApplication()
 		{
-			//YAKE_SAFE_DELETE( mScriptingBindings );
 			destroyAllSystems();
 			unloadAllPlugins();
 		}
 
+		void requestShutdown()
+		{
+			mShutdownRequested = true;
+		}
+
+		bool shutdownRequested() const
+		{
+			return mShutdownRequested;
+		}
+
 		graphics::IGraphicsSystem& getGraphicsSystem() const
 		{
-			//if (!mGraphicsSystem)
-			//	YAKE_EXCEPT( "Don't have a graphics system!", "getGraphicsSystem()" );
+			if (!mGraphicsSystem)
+				YAKE_EXCEPT( "Don't have a graphics system!", "getGraphicsSystem()" );
 			return *mGraphicsSystem;
 		}
 
 		scripting::ScriptingSystem& getScriptingSystem() const
 		{
-			//if (!mGraphicsSystem)
-			//	YAKE_EXCEPT( "Don't have a scripting system!", "getScriptingSystem()" );
+			if (!mGraphicsSystem)
+				YAKE_EXCEPT( "Don't have a scripting system!", "getScriptingSystem()" );
 			return *mScriptingSystem;
 		}
 
@@ -93,13 +107,20 @@ namespace exapp {
 			// graphics
 			if (mLoadGraphicsSystem)
 			{
-				YAKE_ASSERT( 0 ).debug("currently disabled.");
+				Pointer<base::Library> pLib = loadLib( "graphicsOGRE.dll" );
+				YAKE_ASSERT( pLib ).debug("Cannot load graphics plugin.");
+
+				mGraphicsSystem = create< graphics::IGraphicsSystem >();
+				// ... or alternatively we can create a graphics system by name:
+				//mGraphicsSystem = create< graphics::IGraphicsSystem >("ogre3d");
+
+				//mGraphicsSystem->subscribeToShutdownRequest( Bind0( ExampleApplication::requestShutdown, this ) );
 			}
 
 			// physics
 			if (mLoadPhysicsSystem)
 			{
-				physics::PhysicsPlugin* pPP = loadPlugin<physics::PhysicsPlugin>( "yakePhysicsODE.dll" );
+				physics::PhysicsPlugin* pPP = loadPlugin<physics::PhysicsPlugin>( "physicsODE.dll" );
 				YAKE_ASSERT( pPP ).debug("Cannot load physics plugin.");
 
 				mPhysicsSystem = pPP->createSystem();
@@ -182,13 +203,23 @@ namespace exapp {
 				delete (*it);
 			}
 			mPlugins.clear();
+
+			mLibs.clear();
+		}
+
+		Pointer<base::Library> loadLib( const base::String & file )
+		{
+            Pointer<base::Library> pDynLib( new base::Library( file ) );
+			YAKE_ASSERT( pDynLib ).debug( "Out of memory." );
+			mLibs.push_back( pDynLib );
+			return pDynLib;
 		}
 
 		void destroyAllSystems()
 		{
 			YAKE_SAFE_DELETE( mInputSystem );
 			//YAKE_SAFE_DELETE( mScriptingBindings );
-			YAKE_SAFE_DELETE( mGraphicsSystem );
+			mGraphicsSystem.reset();
 			YAKE_SAFE_DELETE( mPhysicsSystem );
 			YAKE_SAFE_DELETE( mScriptingSystem );
 		}
