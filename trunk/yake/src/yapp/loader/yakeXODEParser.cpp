@@ -21,7 +21,7 @@
 
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
-#include <yapp/loader/yakeXODE.h>
+#include <yapp/loader/yakeXODEParser.h>
 
 namespace yake {
 namespace data {
@@ -79,7 +79,7 @@ namespace xode {
 	//------------------------------------------------------
 	void XODEParser::readWorld( const SharedPtr<dom::INode> pWorldNode )
 	{
-		YAKE_ASSERT( pNode );
+		YAKE_ASSERT( pWorldNode );
 		
 		// Assuming single space in <world>
 		SharedPtr<dom::INode> pSpaceNode = pWorldNode->getNodeByName( "space" );
@@ -251,7 +251,7 @@ namespace xode {
 
 	//------------------------------------------------------
 	void XODEParser::readMassShape( const SharedPtr<dom::INode> pMShapeNode, 
-					physics::IBody* pBody, 
+					physics::IBody& rBody, 
 					Transform const& rParentTransform )
 	{
 	
@@ -276,7 +276,7 @@ namespace xode {
 				
 				physics::IBody::CylinderMassDesc desc( radius, length, density, rParentTransform.mPosition );
 				
-				pBody->addMass( desc );
+				rBody.addMass( desc );
 			}
 			else if ( nodeName == "sphere" )
 			{
@@ -285,7 +285,7 @@ namespace xode {
 				
 				physics::IBody::SphereMassDesc desc( radius, density, rParentTransform.mPosition );
 				
-				pBody->addMass( desc );
+				rBody.addMass( desc );
 			}
 			else if ( nodeName == "box" )
 			{
@@ -294,7 +294,7 @@ namespace xode {
 				
 				physics::IBody::BoxMassDesc desc( sX, sY, sZ, density, rParentTransform.mPosition );
 				
-				pBody->addMass( desc );
+				rBody.addMass( desc );
 			}
 			else if ( nodeName == "cappedCylinder" )
 			{
@@ -303,22 +303,22 @@ namespace xode {
 				
 				physics::IBody::CapsuleMassDesc desc( radius, length, density, rParentTransform.mPosition );
 				
-				pBody->addMass( desc );
+				rBody.addMass( desc );
 			}
 		}
 	}
 		
 	//------------------------------------------------------
 	void XODEParser::readMassAdjust( const SharedPtr<dom::INode> pMAdjustNode, 
-					 physics::IBody* pBody )
+					 physics::IBody& rBody )
 	{
 			real total = StringUtil::parseReal( pMAdjustNode->getAttributeValueAs<String>( "total" ) );
 			
-			pBody->setMass( total );
+			rBody.setMass( total );
 	}
 	
 	//------------------------------------------------------
-	void XODEParser::readMass( const SharedPtr<dom::INode> pMassNode, physics::IBody* pBody, Transform const& rParentTransform )
+	void XODEParser::readMass( const SharedPtr<dom::INode> pMassNode, physics::IBody& rBody, Transform const& rParentTransform )
 	{
 		const dom::NodeList& nodes = pMassNode->getNodes();
 
@@ -347,15 +347,15 @@ namespace xode {
 
 			if ( nodeName == "mass_shape" )
 			{
-				readMassShape( *it, pBody, massTransform );
+				readMassShape( *it, rBody, massTransform );
 			}
 			else if ( nodeName == "adjust" )
 			{
-				readMassAdjust( *it, pBody );
+				readMassAdjust( *it, rBody );
 			}
 			else if ( nodeName == "mass" )
 			{
-				readMass( *it, pBody, massTransform );
+				readMass( *it, rBody, massTransform );
 			}
 		}
 		
@@ -369,16 +369,10 @@ namespace xode {
 		
 		physics::IDynamicActor::Desc actorDesc;
 		
-		SharedPtr<physics::IActor> pActor = mPWorld->createActor( actorDesc );
+		physics::IDynamicActor* pDynActor = mPWorld->createDynamicActor( actorDesc );
+		YAKE_ASSERT( pDynActor ).error( "Failed to create actor!" );
 		
-		YAKE_ASSERT( pActor != NULL ).error( "Failed to create actor!" );
-		
-		physics::IDynamicActor* pDynActor =  dynamic_cast<physics::IDynamicActor*>( pActor.get() );
-		
-		physics::IBody* pBody = pDynActor->getBody();
-		YAKE_ASSERT( pBody != NULL );
-		
-		mBaseModel.addComplex( pActor , name );
+		mBaseModel.addActor( SharedPtr<physics::IActor>(pDynActor), name );
 		
 		const dom::NodeList& nodes = pBodyNode->getNodes();
 		
@@ -413,12 +407,12 @@ namespace xode {
 			
 			if ( nodeName == "geom" )
 			{
-				readGeom( *it, pActor.get(), bodyTransform );
+				readGeom( *it, pDynActor, bodyTransform );
 			}
 			else if ( nodeName == "mass" )
 			{
 				
-				readMass( *it, pBody, bodyTransform );
+				readMass( *it, pDynActor->getBody(), bodyTransform );
 			}
 			else if ( nodeName == "joint" )
 			{
@@ -448,10 +442,10 @@ namespace xode {
 		if ( pParentObject == NULL )
 		{
 			// adding shape to new IStaticActor
-			physics::IStaticActor::Desc desc;
-			SharedPtr<physics::IActor> pCO = mPWorld->createActor( desc );
+			//physics::IStaticActor::Desc desc;
+			SharedPtr<physics::IActor> pCO( mPWorld->createStaticActor() );
 			pParentObject = pCO.get();
-			mBaseModel.addComplex( pCO, name );
+			mBaseModel.addActor( pCO, name );
 		}
 
 		const dom::NodeList& nodes = pGeomNode->getNodes();
@@ -502,7 +496,7 @@ namespace xode {
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
-				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				YAKE_ASSERT( pParentObject ).error( "FIXME Static shapes are not supported" );
 				
 				pParentObject->createShape( desc );
 			}
@@ -525,7 +519,7 @@ namespace xode {
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
-				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				YAKE_ASSERT( pParentObject ).error( "FIXME Static shapes are not supported" );
 				
 				pParentObject->createShape( desc );
 			}
@@ -562,7 +556,7 @@ namespace xode {
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
-				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				YAKE_ASSERT( pParentObject ).error( "FIXME Static shapes are not supported" );
 				
 				pParentObject->createShape( desc );
 			}
@@ -578,7 +572,7 @@ namespace xode {
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
-				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				YAKE_ASSERT( pParentObject ).error( "FIXME Static shapes are not supported" );
 				
 				pParentObject->createShape( desc );
 			}
@@ -612,7 +606,7 @@ namespace xode {
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
-				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				YAKE_ASSERT( pParentObject ).error( "FIXME Static shapes are not supported" );
 				
 				pParentObject->createShape( desc );
 			}
@@ -643,7 +637,7 @@ namespace xode {
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
-				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				YAKE_ASSERT( pParentObject ).error( "FIXME Static shapes are not supported" );
 				
 				pParentObject->createShape( desc );
 			}
@@ -835,13 +829,13 @@ namespace xode {
 			jointTransform = jointTransform.getDerivedTransform( rDesc.mParentTransform );
 		}
 		
-		SharedPtr<physics::IActor> pActor1 = mBaseModel.getComplexByName( rDesc.mBody1Name );
-		SharedPtr<physics::IActor> pActor2 = mBaseModel.getComplexByName( body2Name );
+		SharedPtr<physics::IActor> pActor1 = mBaseModel.getActorByName( rDesc.mBody1Name );
+		SharedPtr<physics::IActor> pActor2 = mBaseModel.getActorByName( body2Name );
 		
 		physics::IDynamicActor* pDynActor1 = dynamic_cast<physics::IDynamicActor*>( pActor1.get() );
 		physics::IDynamicActor* pDynActor2 = dynamic_cast<physics::IDynamicActor*>( pActor2.get() );
 
-		YAKE_ASSERT( pDynActor1 != NULL && pDynActor2 != NULL ).error( "You're trying to attach joint to non-dynamic actors! That's not possible!" );
+		YAKE_ASSERT( pDynActor1 && pDynActor2 ).error( "You're trying to attach joint to non-dynamic actors! That's not possible!" );
 				
 		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it )
 		{

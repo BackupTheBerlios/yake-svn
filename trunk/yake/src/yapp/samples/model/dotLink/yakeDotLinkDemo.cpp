@@ -28,7 +28,7 @@
 #include <yapp/model/yakeGraphical.h>
 #include <yapp/base/yapp.h>
 #include <yapp/model/yakePhysical.h>
-#include <yapp/loader/yakeXODE.h>
+#include <yapp/loader/yakeXODEParser.h>
 #include <yapp/loader/yakeDotLinkLoader.h>
 #include <yapp/model/yakeComplexModel.h>
 
@@ -43,10 +43,10 @@ class TheApp : public yake::exapp::ExampleApplication
 private:
 	Vector< std::pair<IViewport*,ICamera*> >	mVPs;
 	
-	physics::IWorld*				mPWorld;
-	app::model::Physical* 				mPhysical;
-	SharedPtr<graphics::IGraphicalWorld>		mGWorld;
-	app::model::Graphical*				mGraphical;
+	SharedPtr<physics::IWorld>					mPWorld;
+	SharedPtr<graphics::IWorld>					mGWorld;
+	SharedPtr<app::model::Physical>				mPhysical;
+	SharedPtr<app::model::Graphical>			mGraphical;
 	SharedPtr<app::model::complex::Model>		mModel;
 		
 	String	mfnXODE;
@@ -100,32 +100,27 @@ public:
 	void setupWorld()
 	{
 		// Loading graphical part
-		mGraphical = new app::model::Graphical();
+		mGraphical.reset( new app::model::Graphical() );
 		YAKE_ASSERT( mGraphical );
-		
-		SharedPtr<app::model::Graphical> pGraphical( mGraphical );
 		
 		mGraphical->fromDotScene( mfnScene, mGWorld.get() );
 
-		
 		// Loading physical part
-		mPhysical = new app::model::Physical();
-		YAKE_ASSERT( pPhysical );
-		
-		SharedPtr<app::model::Physical> pPhysical( mPhysical );
+		mPhysical.reset( new app::model::Physical() );
+		YAKE_ASSERT( mPhysical );
 		
 		yake::data::dom::xml::XmlSerializer ser;
 		ser.parse( mfnXODE, false );
 		YAKE_ASSERT( ser.getDocumentNode() );
 		
 		parser::xode::XODEParserV1 parser( *mPhysical );
-		parser.load( ser.getDocumentNode() , mPWorld );
+		parser.load( ser.getDocumentNode() , mPWorld.get() );
 		
 		// Bringing it all together!
 		mModel = SharedPtr<app::model::complex::Model>( new app::model::complex::Model() );
 		
-		mModel->addGraphical( pGraphical, "baseGraphical" );
-		mModel->addPhysical( pPhysical, "basePhysical" );
+		mModel->addGraphical( mGraphical, "baseGraphical" );
+		mModel->addPhysical( mPhysical, "basePhysical" );
 		
 		app::model::DotLinkLoader dotLinkLoader;
 		dotLinkLoader.load( mfnLink, *mModel.get() );
@@ -141,7 +136,7 @@ public:
 		mPWorld = getPhysicsSystem().createWorld();
 		YAKE_ASSERT( mPWorld );
 		
-		mPWorld->setGlobalGravity( Vector3( 0, 0, -9.81 ) );
+		//@todo mPWorld->setGlobalGravity( Vector3( 0, 0, -9.81 ) );
 
 		// graphics
 		mGWorld = getGraphicsSystem().createWorld();
@@ -200,7 +195,7 @@ public:
 			// step simulation
 			if ( !shutdownRequested() )
 			{
-				mPWorld->update( timeElapsed );
+				mPWorld->step( timeElapsed );
 				
 				//mModel->updatePhysics( timeElapsed );
 				mModel->updateControllers( timeElapsed );
@@ -210,10 +205,10 @@ public:
 		}
 
 		mModel.reset();
-		YAKE_SAFE_DELETE( mGraphical );
+		mGraphical.reset();
 		mGWorld.reset();
-		YAKE_SAFE_DELETE( mPhysical );
-		YAKE_SAFE_DELETE( mPWorld );
+		mPhysical.reset();
+		mPWorld.reset();
 	}
 };
 
