@@ -4,6 +4,7 @@
 #include "window_base.h"
 #include <yapp/plugins/guiCEGUI/window.h>
 
+// todo: gui system sits within yapp::gui
 namespace yake
 {
 namespace gui 
