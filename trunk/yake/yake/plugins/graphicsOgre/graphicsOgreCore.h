@@ -59,6 +59,8 @@ namespace ogre3d {
 
 		void _chooseSceneManager();
 
+		void getConfig();
+
 	protected:
 		bool					mReady;
 
