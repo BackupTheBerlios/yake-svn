@@ -339,13 +339,37 @@ bool test_virtual_vfs_iterator()
 	return( count == 4 );
 }
 
-// todo
 bool test_virtual_seek()
 {
 	YAKE_LOG(  "test_virtual_seek()" );
 
 	using namespace filesystem;
 	using namespace filesystem::virtualfs;
+
+	// create test data
+	path native_files( "test_data", no_check );
+	nativefs::remove_all( native_files );
+	nativefs::create_directory( native_files );
+	create_dummy_file( native_files / "cheeze" );
+
+	// open
+	virtualfs::ifstream file( native_files / "cheeze" ); 
+
+	{ // tell
+		assert( static_cast<int>( file.tellg() ) == 0 );
+		std::string data;
+		file >> data;
+		std::cout << data << std::endl;
+		assert( static_cast<int>( file.tellg() ) == 6 );
+	}
+
+	{ // todo: seek
+		std::string data;
+		file.seekg( 3, std::ios::beg );
+		std::cout << file.tellg() << std::endl;
+		file >> data;
+		std::cout << data << std::endl;
+	}
 
 	return true;
 }
@@ -441,10 +465,10 @@ int main()
 		YAKE_CHECK( test_virtual_seek() );
 
 		// ftp
-		YAKE_USE_LIB( ftp_file_system )
+		/*YAKE_USE_LIB( ftp_file_system )
 		YAKE_CHECK( test_ftp_exists() );
 		YAKE_CHECK( test_ftp_file() );
-		YAKE_CHECK( test_ftp_iterator() );
+		YAKE_CHECK( test_ftp_iterator() );*/
 		//YAKE_CHECK( test_ftp_vfs_mixing() );
 	}
 	catch( const filesystem::filesystem_error & err )

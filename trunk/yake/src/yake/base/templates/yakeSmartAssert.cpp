@@ -146,14 +146,16 @@ namespace assert
 
 		bool IgnoreAlways = false;
 
-		native::debug_AssertFailed
-			( 
-				ctx.getMessage().c_str(),
-				ctx.getExpression().c_str(), 
-				ctx.getFile().c_str(),
-				ctx.getLine(), 
-				IgnoreAlways 
-			); 
+		if( !native::debug_AssertFailed(
+      ctx.getMessage().c_str(),
+			ctx.getExpression().c_str(), 
+			ctx.getFile().c_str(),
+			ctx.getLine(), 
+			IgnoreAlways ) 
+			&& !IgnoreAlways )
+		{
+			abort();
+		}
 
 		if (ctx.getLevel() == AL_ERROR || ctx.getLevel() == AL_FATAL)
 			abort();
