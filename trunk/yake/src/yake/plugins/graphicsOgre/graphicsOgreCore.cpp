@@ -295,6 +295,8 @@ namespace ogre3d {
 				mRoot->_fireFrameEnded();*/
 				if (!mRoot->renderOneFrame())
 					mShutdownSignal();
+				if ( mRWin->isClosed() )
+					mShutdownSignal();
 			}
 			catch (Ogre::Exception& e)
 			{
