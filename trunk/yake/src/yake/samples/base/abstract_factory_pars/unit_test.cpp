@@ -42,7 +42,7 @@ struct SuperMonster { virtual ~SuperMonster() {} };
 
 struct SillySoldier : Soldier { SillySoldier(int i) {std::cout << i << std::endl;} };
 struct SillyMonster : Monster { SillyMonster(bool b, long l) {std::cout << l << std::endl;} };
-struct SillySuperMonster : SuperMonster { SillySuperMonster(std::string s) {std::cout << s << std::endl;} };
+struct SillySuperMonster : SuperMonster { SillySuperMonster(const std::string & s) {std::cout << s << std::endl;} };
 
 typedef abstract_factory
 < 
@@ -52,7 +52,7 @@ typedef abstract_factory
 	<
 		boost::mpl::list<int>,
 		boost::mpl::list<bool, long>,
-		boost::mpl::list<std::string>
+		boost::mpl::list<const std::string &>
 	>
 > AbstractEnemyFactory;
 
