@@ -1,7 +1,7 @@
 #ifndef _STATIC_INIT_H_
 #define _STATIC_INIT_H_
 
-#define static_init(FUNCTION) \
+#define STATIC_INIT(FUNCTION) \
 namespace { \
 struct static_init_##FUNCTION \
 { \

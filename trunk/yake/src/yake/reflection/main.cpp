@@ -42,26 +42,26 @@ IMPLEMENT_CLASS(LuaTest, lua)
 
 struct null {};
 
-// accepts any number of arguments and returns the according type selected by the holder
+// meta functions: accepts any number of arguments and returns the according type selected by the holder
 template< template<int, typename, typename, typename> class holder, typename T1 = null, typename T2 = null, typename T3 = null>
 struct construct_type_from_arbitrary_args
 {
-	// signature dispatching according to the number of arguments
+	// type dispatching according to the number of arguments
 	typedef typename boost::mpl::if_
 	< 
-		boost::is_same<T3, null>, 
-		typename holder<2, T1, T2, T3>::type,
+		boost::is_same<T1, null>, 
+		typename holder<0, T1, T2, T3>::type,
 		typename boost::mpl::if_
 		< 
 			boost::is_same<T2, null>, 
 			typename holder<1, T1, T2, T3>::type,
 			typename boost::mpl::if_
 			< 
-				boost::is_same<T1, null>, 
-				typename holder<0, T1, T2, T3>::type,
+				boost::is_same<T3, null>, 
+				typename holder<2, T1, T2, T3>::type,
 				typename holder<3, T1, T2, T3>::type
-			>
-		>
+			>::type
+		>::type
 	>::type type;
 };
 
@@ -72,68 +72,77 @@ struct construct_type_from_arbitrary_args
 // The overloaded template function .def() of class_ accepts the
 // signature and automagically resolves the paramater types, because
 // it's a template function.
-template<int, typename T1, typename T2, typename T3>
+template <int, bool, typename T1, typename T2, typename T3>
 struct signature_holder {};
 
-template<typename T1, typename T2, typename T3>
-struct signature_holder<0, T1, T2, T3> 
+template <bool Constant, typename T1, typename T2, typename T3>
+struct signature_holder<0, Constant, T1, T2, T3> 
 {
   static luabind::detail::application_operator
 	< 
 		luabind::constructor<>, 
-		true
+		Constant
 	> * signature()
 	{ return 0; }
 };
 
-template<typename T1, typename T2, typename T3>
-struct signature_holder<1, T1, T2, T3> 
+template <bool Constant, typename T1, typename T2, typename T3>
+struct signature_holder<1, Constant, T1, T2, T3> 
 {
 		static luabind::detail::application_operator
-		< 
+		<
 			luabind::constructor<	luabind::other<T1> >, 
-			true
+			Constant
 		> * signature()
 		{ return 0; }
 };
 
-template<typename T1, typename T2, typename T3>
-struct signature_holder<2, T1, T2, T3> 
+template <bool Constant, typename T1, typename T2, typename T3>
+struct signature_holder<2, Constant, T1, T2, T3> 
 {
 	static luabind::detail::application_operator
-	< 
+	<
 		luabind::constructor
 		<
 			luabind::other<T1>, 
 			luabind::other<T2>
 		>, 
-		true
+		Constant
 	> * signature()
 	{ return 0; }
 };
 
-template<typename T1, typename T2, typename T3>
-struct signature_holder<3, T1, T2, T3> 
+template <bool Constant, typename T1, typename T2, typename T3>
+struct signature_holder<3, Constant, T1, T2, T3> 
 {
 	static luabind::detail::application_operator
-	< 
+	<
 		luabind::constructor
 		<
 			luabind::other<T1>, 
 			luabind::other<T2>,
 			luabind::other<T3>
 		>, 
-		true
+		Constant
 	> * signature()
 	{ return 0; }
 };
 
 // selects a signature holding template according to the number of arguments
-template<int num_args, typename T1, typename T2, typename T3>
+template <int num_args, typename T1, typename T2, typename T3>
+struct get_const_signature_holder 
+{ 
+	typedef typename signature_holder<num_args, true, T1, T2, T3> type; 
+};
+
+template <int num_args, typename T1, typename T2, typename T3>
 struct get_signature_holder 
 {
-	typedef typename signature_holder<num_args, T1, T2, T3> type;
+	typedef typename signature_holder<num_args, false, T1, T2, T3> type;
 };
+
+template<typename T1 = null, typename T2 = null, typename T3 = null>
+struct get_const_signature : construct_type_from_arbitrary_args<get_const_signature_holder, T1, T2, T3>::type {};
 
 template<typename T1 = null, typename T2 = null, typename T3 = null>
 struct get_signature : construct_type_from_arbitrary_args<get_signature_holder, T1, T2, T3>::type {};
@@ -150,6 +159,18 @@ struct A
 
 // -----------------------------------------
 // lua event bindings
+#include "type_info.h"
+template <typename class_> 
+bool lua_is_class_registered()
+{
+	typedef std::vector<yake::base::type_info> type_info_list;
+	static type_info_list type_infos;
+	if(std::find(type_infos.begin(), type_infos.end(), typeid(class_)) == type_infos.end())
+	{	type_infos.push_back(typeid(class_)); return false; }
+	else
+	{ return true; }
+}
+
 struct rx_A
 {
 	CLASS(rx_A, NullClass, lua);
@@ -163,30 +184,23 @@ private:
 		struct initor
 		{
 			initor() 
-			{ 
-				// events
-				using namespace luabind;
-				module(L)
-				[ 
-					class_<boost::function_base>("function_base"),
-					class_<reflection::lua_event_base>("lua_event_base")
-						.def("attach_handler", &reflection::lua_event_base::attach_handler)
-				];
-
-				/* todo: hold list of event typeids and check whether this event is registered or not */ 
-				using namespace luabind; 
-				module(L) 
-				[ 
-					class_<reflection::event<int>, reflection::lua_event_base>("e") 
-						.def(self(other<int>())) 
-				]; 
+			{
+				/* register the event class to lua if it is not registered yet */
+				if(!lua_is_class_registered< reflection::event<int> >())
+				{
+					luabind::module(L) 
+					[ 
+						luabind::class_<reflection::event<int>, reflection::lua_event_base>("e") 
+							.def(get_signature<int>::signature())
+					];
+				}
+				assert(lua_is_class_registered< reflection::event<int> >());
+				/* bind the event as read-only property */
 				get_lua_class().def_readonly("e", &rx_A::e); 
 				commit_lua_properties(); 
 			} 
-		}; 
-
-		register_event_e() 
-		{ static initor init; } 
+		};
+		register_event_e() { static initor init; } 
 	} reg_event_e;
 
 };
@@ -377,7 +391,7 @@ int main()
 		[
 			class_<A::my_event>("my_event")
 				.def("attach", &A::my_event::attach)
-				.def(get_signature<int, int>::signature()),
+				.def(get_const_signature<int, int>::signature()),
 			class_<A>("A")
 				.def(constructor<>())
 				.def_readwrite("e", &A::e)

@@ -20,7 +20,7 @@ void serialize(Archive & ar_, CLASS_NAME & obj_, const unsigned int) \
 namespace { \
 static void register_##CLASS_NAME##() \
 { ClassRegistry::registerClass(CLASS_NAME##::getClassStatic()); } }
-//static_init( register_##CLASS_NAME ) todo need singleton, yake class::registry => class registry?
+//STATIC_INIT( register_##CLASS_NAME ) todo need singleton, yake class::registry => class registry?
 
 BOOST_CLASS_EXPORT(Object)
 

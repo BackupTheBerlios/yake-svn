@@ -1,6 +1,8 @@
 #ifndef _LUA_H_
 #define _LUA_H_
 
+#include "static_init.h"
+
 extern "C"
 {
 	#include "lua.h"
@@ -78,6 +80,21 @@ struct global_lua_state
 
 	lua_State * m_L;
 } L;
+
+namespace
+{
+	static void register_lua_event_base()
+	{
+		using namespace luabind;
+		module(L)
+		[ 
+			class_<boost::function_base>("function_base"),
+			class_<reflection::lua_event_base>("lua_event_base")
+				.def("attach_handler", &reflection::lua_event_base::attach_handler)
+		];
+	}
+	STATIC_INIT(register_lua_event_base)
+}
 
 #define IMPLEMENT_LUA_CLASS(CLASS_NAME) \
 static struct static_initor##CLASS_NAME \
