@@ -111,7 +111,7 @@ namespace input {
 	}
 
 	//-----------------------------------------------------
-	void ActionMap::reg( ActionCondition* condition, const ActionId & actionId )
+	void ActionMap::reg( const ActionId & actionId, ActionCondition* condition )
 	{
 		YAKE_ASSERT( condition );
 		ActionMapEntry* entry = new ActionMapEntry;

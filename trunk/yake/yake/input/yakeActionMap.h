@@ -142,7 +142,7 @@ namespace input {
 		~ActionMap();
 
 		typedef Signal1< void > ActionSignal;
-		void reg( ActionCondition* condition, const ActionId & actionId );
+		void reg( const ActionId & actionId, ActionCondition* condition );
 		void subscribeToActionId( const ActionId & actionId, const ActionSignal::slot_type & slot );
 		void update();
 	private:
