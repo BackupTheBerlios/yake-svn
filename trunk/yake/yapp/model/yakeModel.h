@@ -29,4 +29,18 @@
 #include <yapp/base/yappPrerequisites.h>
 #include <yapp/model/yakeUpdaters.h>
 
+namespace yake {
+namespace app {
+namespace model {
+
+	class YAPP_BASE_API Submodel
+	{
+	public:
+		virtual ~Submodel() {}
+	};
+
+}
+}
+}
+
 #endif

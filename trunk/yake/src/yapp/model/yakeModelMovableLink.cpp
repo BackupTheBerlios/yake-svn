@@ -23,52 +23,47 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAPP_MODEL_PHYSICAL_H
-#define YAPP_MODEL_PHYSICAL_H
-
-#include <yapp/base/yappPrerequisites.h>
-#include <yake/physics/yakePhysicsSystem.h>
-#include <yapp/model/yakeModel.h>
+#include <yapp/base/yappPCH.h>
+#include <yapp/base/yapp.h>
+#include <yapp/loader/yakeModelMovableLink.h>
 
 namespace yake {
-	using namespace base::templates;
 namespace app {
 namespace model {
 
-	/** A physical container model.
-	*/
-	class YAPP_BASE_API Physical : public Submodel
+	YAKE_REGISTER_CONCRETE( ModelMovableLink );
+
+	ModelMovableLink::ModelMovableLink()
 	{
-	public:
-		Physical()
-		{}
-		virtual ~Physical()
+	}
+	SignalConnection ModelMovableLink::subscribeToPositionChanged( Movable* pMovable )
+	{
+		return mPositionSignal.connect( Bind1( &Movable::setPosition, pMovable ) );
+	}
+	SignalConnection ModelMovableLink::subscribeToOrientationChanged( Movable* pMovable )
+	{
+		return mOrientationSignal.connect( Bind1( &Movable::setOrientation, pMovable ) );
+	}
+	void ModelMovableLink::update( real timeElapsed )
+	{
+		Movable * pSource = getSource();
+		YAKE_ASSERT( pSource ).debug("no update source -> no updates");
+		if (!pSource)
+			return;
+		Vector3 position = pSource->getPosition();
+		if (mLastPosition != position)
 		{
-			mComplexObjects.clear();
-			mJoints.clear();
+			mPositionSignal( position );
+			mLastPosition = position;
 		}
-		void addComplex( SharedPtr<physics::IComplexObject> & pComplex, const String & rName );
-		SharedPtr<physics::IComplexObject> getComplexByName( const String & rName ) const;
-		void addAffector( SharedPtr<physics::IAffector> & pAffector );
-		void addJoint( SharedPtr<physics::IJoint> & pJoint );
-		void addJointGroup( SharedPtr<physics::IJointGroup> & pJointGroup );
-		void addBody( SharedPtr<physics::IBody> & pBody, const String & rName );
-		void addBodyGroup( SharedPtr<physics::BodyGroup> & pBodyGroup );
-		SharedPtr<physics::IBody> getBodyByName( const String & rName ) const;
-		void translate( const Vector3 & d );
+		Quaternion orientation = pSource->getOrientation();
+		if (mLastOrientation != orientation)
+		{
+			mOrientationSignal( orientation );
+			mLastOrientation = orientation;
+		}
+	}
 
-		typedef Vector< SharedPtr<physics::IComplexObject> > ComplexList;
-		ComplexList getComplexObjects() const;
-	private:
-		typedef AssocVector< String, SharedPtr<physics::IComplexObject> > ComplexMap;
-		ComplexMap		mComplexObjects;
-
-		typedef Vector< SharedPtr<physics::IJoint> > JointList;
-		JointList		mJoints;
-	};
-
-} // model
-} // app
-} // yake
-
-#endif
+}
+}
+}

@@ -34,32 +34,44 @@ namespace model {
 	//-----------------------------------------------------
 	Graphical::~Graphical()
 	{
-		for (NodeMap::iterator it = mNodes.begin(); it != mNodes.end(); ++it)
+		for (NodeList::iterator it = mNodes.begin(); it != mNodes.end(); ++it)
 		{
-			if (it->second)
+			if (it->second.pSN)
 			{
-				YAKE_ASSERT( it->first );
-				delete (it->first);
+				YAKE_ASSERT( it->second.pSN );
+				delete (it->second.pSN);
 			}
 		}
 		mNodes.clear();
 	}
 	//-----------------------------------------------------
-	void Graphical::addSceneNode( graphics::ISceneNode* pSceneNode, bool bTransferOwnership )
+	void Graphical::addSceneNode( graphics::ISceneNode* pSceneNode, const String & rName, bool bTransferOwnership )
 	{
 		YAKE_ASSERT( pSceneNode );
 		if (!pSceneNode)
 			return;
-		mNodes.insert( std::make_pair(pSceneNode,bTransferOwnership) );
+		SceneNodeEntry e;
+		e.bOwned = bTransferOwnership;
+		e.pSN = pSceneNode;
+		String name = (rName.length() > 0) ? rName : (base::uniqueName::create("graphical_sn_"));
+		mNodes.insert( std::make_pair(name,e) );
 	}
 	//-----------------------------------------------------
 	Graphical::SceneNodeList Graphical::getRootSceneNodes() const
 	{
 		SceneNodeList nodes;
-		ConstVectorIterator< AssocVector<graphics::ISceneNode*, bool> > it(mNodes.begin(), mNodes.end());
+		ConstVectorIterator< AssocVector<String,SceneNodeEntry> > it(mNodes.begin(), mNodes.end());
 		while (it.hasMoreElements())
-			nodes.push_back( it.getNext().first );
+			nodes.push_back( it.getNext().second.pSN );
 		return nodes;
+	}
+	//-----------------------------------------------------
+	graphics::ISceneNode* Graphical::getSceneNodeByName(const String & rName)
+	{
+		AssocVector<String,SceneNodeEntry>::const_iterator itFind = mNodes.find( rName );
+		if (itFind == mNodes.end())
+			return 0;
+		return itFind->second.pSN;
 	}
 	//-----------------------------------------------------
 	void Graphical::fromDotScene(const String & fn, graphics::IGraphicalWorld* pGWorld)
@@ -68,14 +80,14 @@ namespace model {
 	
 		// 1. read dotscene file into DOM
 
-		SharedPtr<yake::data::dom::ISerializer> ser( new yake::data::dom::xml::XmlSerializer() );
-		ser->parse(fn, false);
-		YAKE_ASSERT( ser->getDocumentNode() );
+		yake::data::dom::xml::XmlSerializer ser;
+		ser.parse(fn, false);
+		YAKE_ASSERT( ser.getDocumentNode() );
 
 		// 2. parse DOM and create graphical objects
 
 		yake::data::serializer::dotscene::DotSceneSerializerV1 dss;
-		dss.load( ser->getDocumentNode(), pGWorld );
+		dss.load( ser.getDocumentNode(), pGWorld );
 
 		// 3. create graphical model & add it to complex model
 
@@ -86,7 +98,9 @@ namespace model {
 			it( nodes.begin(), nodes.end() );
 		while (it.hasMoreElements())
 		{
-			this->addSceneNode( it.getNext(), true );
+			graphics::ISceneNode* pSN = it.getNext();
+			String name = dss.getNameForSceneNode( pSN );
+			this->addSceneNode( pSN, (name.length() > 0 ) ? name : yake::base::uniqueName::create("dotScene_sn_"), true );
 		}
 	}
 

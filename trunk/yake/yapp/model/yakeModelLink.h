@@ -23,52 +23,38 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAPP_MODEL_PHYSICAL_H
-#define YAPP_MODEL_PHYSICAL_H
+#ifndef YAPP_MODELLINK_H
+#define YAPP_MODELLINK_H
 
 #include <yapp/base/yappPrerequisites.h>
-#include <yake/physics/yakePhysicsSystem.h>
-#include <yapp/model/yakeModel.h>
+#include <yapp/model/yakeUpdaters.h>
+#include <yake/data/yakeData.h>
 
 namespace yake {
-	using namespace base::templates;
 namespace app {
 namespace model {
 
-	/** A physical container model.
-	*/
-	class YAPP_BASE_API Physical : public Submodel
+	class YAPP_BASE_API ModelLink : public IObjectController
 	{
 	public:
-		Physical()
-		{}
-		virtual ~Physical()
-		{
-			mComplexObjects.clear();
-			mJoints.clear();
-		}
-		void addComplex( SharedPtr<physics::IComplexObject> & pComplex, const String & rName );
-		SharedPtr<physics::IComplexObject> getComplexByName( const String & rName ) const;
-		void addAffector( SharedPtr<physics::IAffector> & pAffector );
-		void addJoint( SharedPtr<physics::IJoint> & pJoint );
-		void addJointGroup( SharedPtr<physics::IJointGroup> & pJointGroup );
-		void addBody( SharedPtr<physics::IBody> & pBody, const String & rName );
-		void addBodyGroup( SharedPtr<physics::BodyGroup> & pBodyGroup );
-		SharedPtr<physics::IBody> getBodyByName( const String & rName ) const;
-		void translate( const Vector3 & d );
-
-		typedef Vector< SharedPtr<physics::IComplexObject> > ComplexList;
-		ComplexList getComplexObjects() const;
-	private:
-		typedef AssocVector< String, SharedPtr<physics::IComplexObject> > ComplexMap;
-		ComplexMap		mComplexObjects;
-
-		typedef Vector< SharedPtr<physics::IJoint> > JointList;
-		JointList		mJoints;
+		YAKE_DECLARE_CLASS( ModelLink );
+		YAKE_DECLARE_REGISTRY_0( ModelLink, ::yake::base::String );
 	};
 
-} // model
-} // app
-} // yake
+	template< class SourceType >
+	class ModelLinkController : public ModelLink
+	{
+	private:
+		SourceType	* mSource;
+	public:
+		virtual void setSource( SourceType * source )
+		{ mSource = source; }
+		SourceType* getSource() const
+		{ return mSource; }
+	};
+
+}
+}
+}
 
 #endif

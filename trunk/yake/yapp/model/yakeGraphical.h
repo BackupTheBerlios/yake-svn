@@ -28,7 +28,7 @@
 
 #include <yapp/base/yappPrerequisites.h>
 #include <yake/graphics/yakeGraphicsSystem.h>
-
+#include <yapp/model/yakeModel.h>
 
 namespace yake {
 	using namespace base::templates;
@@ -37,19 +37,25 @@ namespace model {
 
 	/** A graphical container model.
 	*/
-	class YAPP_BASE_API Graphical
+	class YAPP_BASE_API Graphical : public Submodel
 	{
 	public:
 		Graphical()
 		{}
-		~Graphical();
+		virtual ~Graphical();
 		typedef Vector<graphics::ISceneNode*> SceneNodeList;
-		void addSceneNode( graphics::ISceneNode* pSceneNode, bool bTransferOwnership = true );
+		void addSceneNode( graphics::ISceneNode* pSceneNode, const String & rName, bool bTransferOwnership = true );
 		SceneNodeList getRootSceneNodes() const;
+		graphics::ISceneNode* getSceneNodeByName( const String & rName );
 		void fromDotScene(const String & fn, graphics::IGraphicalWorld* pGWorld);
 	private:
-		typedef AssocVector< graphics::ISceneNode*, bool > NodeMap;
-		NodeMap		mNodes;
+		struct SceneNodeEntry
+		{
+			graphics::ISceneNode*	pSN;
+			bool					bOwned;
+		};
+		typedef AssocVector< String, SceneNodeEntry > NodeList;
+		NodeList		mNodes;
 	};
 
 } // model

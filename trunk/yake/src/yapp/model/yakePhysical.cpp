@@ -33,26 +33,31 @@ namespace model {
 	//-----------------------------------------------------
 	Physical::ComplexList Physical::getComplexObjects() const
 	{
-		return mComplexObjects;
+		Physical::ComplexList c;
+		ConstVectorIterator<Physical::ComplexMap> it( mComplexObjects.begin(), mComplexObjects.end() );
+		while (it.hasMoreElements())
+		{
+			c.push_back( it.getNext().second );
+		}
+		return c;
 	}
-
 	//-----------------------------------------------------
 	void Physical::translate( const Vector3 & d )
 	{
-		VectorIterator< ComplexList > itComplex( mComplexObjects.begin(), mComplexObjects.end() );
+		VectorIterator< ComplexMap > itComplex( mComplexObjects.begin(), mComplexObjects.end() );
 		while (itComplex.hasMoreElements())
 		{
-			itComplex.getNext()->translate( d );
+			itComplex.getNext().second->translate( d );
 		}
 	}
-
 	//-----------------------------------------------------
-	void Physical::addComplex( SharedPtr<physics::IComplexObject> & pComplex )
+	void Physical::addComplex( SharedPtr<physics::IComplexObject> & pComplex, const String & rName )
 	{
 		YAKE_ASSERT( pComplex.get() );
 		if (!pComplex.get())
 			return;
-		mComplexObjects.push_back( pComplex );
+		String name = (rName.length() > 0) ? rName : (base::uniqueName::create("physical_complex_"));
+		mComplexObjects.insert( std::make_pair(name,pComplex) );
 	}
 	//-----------------------------------------------------
 	void Physical::addJoint( SharedPtr<physics::IJoint> & pJoint )
@@ -61,6 +66,18 @@ namespace model {
 		if (!pJoint.get())
 			return;
 		mJoints.push_back( pJoint );
+	}
+	//-----------------------------------------------------
+	SharedPtr<physics::IBody> Physical::getBodyByName( const String & rName ) const
+	{
+		YAKE_ASSERT( 1==0 && "not implemented!" );
+		return SharedPtr<physics::IBody>();
+	}
+	//-----------------------------------------------------
+	SharedPtr<physics::IComplexObject> Physical::getComplexByName( const String & rName ) const
+	{
+		YAKE_ASSERT( 1==0 && "not implemented!" );
+		return SharedPtr<physics::IComplexObject>();
 	}
 
 }

@@ -23,52 +23,41 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAPP_MODEL_PHYSICAL_H
-#define YAPP_MODEL_PHYSICAL_H
+#ifndef YAPP_MODELMOVABLELINK_H
+#define YAPP_MODELMOVABLELINK_H
 
 #include <yapp/base/yappPrerequisites.h>
-#include <yake/physics/yakePhysicsSystem.h>
-#include <yapp/model/yakeModel.h>
+#include <yapp/loader/yakeModelLink.h>
 
 namespace yake {
-	using namespace base::templates;
 namespace app {
 namespace model {
 
-	/** A physical container model.
-	*/
-	class YAPP_BASE_API Physical : public Submodel
+	class YAPP_BASE_API ModelMovableLink : public ModelLinkController< Movable >
 	{
+	protected:
+		typedef Signal1< void(const Vector3 &) > PositionSignal;
+		PositionSignal		mPositionSignal;
+
+		typedef Signal1< void(const Quaternion &) > OrientationSignal;
+		OrientationSignal	mOrientationSignal;
+
+		Vector3				mLastPosition;
+		Quaternion			mLastOrientation;
+
 	public:
-		Physical()
-		{}
-		virtual ~Physical()
-		{
-			mComplexObjects.clear();
-			mJoints.clear();
-		}
-		void addComplex( SharedPtr<physics::IComplexObject> & pComplex, const String & rName );
-		SharedPtr<physics::IComplexObject> getComplexByName( const String & rName ) const;
-		void addAffector( SharedPtr<physics::IAffector> & pAffector );
-		void addJoint( SharedPtr<physics::IJoint> & pJoint );
-		void addJointGroup( SharedPtr<physics::IJointGroup> & pJointGroup );
-		void addBody( SharedPtr<physics::IBody> & pBody, const String & rName );
-		void addBodyGroup( SharedPtr<physics::BodyGroup> & pBodyGroup );
-		SharedPtr<physics::IBody> getBodyByName( const String & rName ) const;
-		void translate( const Vector3 & d );
+		YAKE_DECLARE_CONCRETE( ModelMovableLink, "yake.movable" );
 
-		typedef Vector< SharedPtr<physics::IComplexObject> > ComplexList;
-		ComplexList getComplexObjects() const;
-	private:
-		typedef AssocVector< String, SharedPtr<physics::IComplexObject> > ComplexMap;
-		ComplexMap		mComplexObjects;
-
-		typedef Vector< SharedPtr<physics::IJoint> > JointList;
-		JointList		mJoints;
+		ModelMovableLink();
+		SignalConnection subscribeToPositionChanged( const PositionSignal::slot_type & slot );
+		SignalConnection subscribeToOrientationChanged( const OrientationSignal::slot_type & slot );
+		SignalConnection subscribeToPositionChanged( Movable* pMovable );
+		SignalConnection subscribeToOrientationChanged( Movable* pMovable );
+		virtual void update( real timeElapsed );
 	};
 
-} // model
-} // app
-} // yake
+}
+}
+}
 
 #endif

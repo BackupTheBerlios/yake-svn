@@ -115,6 +115,24 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
+	Physical* Model::getPhysicalByName( const String & rName ) const
+	{
+		PhysicalMap::const_iterator itFind = mPhysicals.find( rName );
+		if (itFind == mPhysicals.end())
+			return 0;
+		return itFind->second.get();
+	}
+
+	//-----------------------------------------------------
+	Graphical* Model::getGraphicalByName( const String & rName ) const
+	{
+		GraphicalMap::const_iterator itFind = mGraphicals.find( rName );
+		if (itFind == mGraphicals.end())
+			return 0;
+		return itFind->second.get();
+	}
+
+	//-----------------------------------------------------
 	void Model::addController(SharedPtr<IObjectController> & pController, const String & rName)
 	{
 		YAKE_ASSERT( pController.get() );

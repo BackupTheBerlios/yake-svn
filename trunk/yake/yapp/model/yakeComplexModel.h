@@ -73,7 +73,10 @@ namespace complex {
 			"physical://model.model...model/physicalname"
 		*/
 		Physical* queryPhysical( const String & rQuery ) const;
-		Graphical* executeQuery( const String & rQuery ) const;
+		Graphical* queryGraphical( const String & rQuery ) const;
+
+		Physical* getPhysicalByName( const String & rName ) const;
+		Graphical* getGraphicalByName( const String & rName ) const;
 
 		/** Adds a "Physical" object to this model.
 			The model references it using a shared pointer.
