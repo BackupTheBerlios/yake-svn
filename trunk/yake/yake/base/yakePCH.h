@@ -54,6 +54,7 @@
 #include "math/yakeGeometry.h"
 #include "math/yakeSimpleSpline.h"
 
+#include "yakeState.h"
 #include "yakeParamHolder.h"
 #include "yakeMovable.h"
 #include "yakeCommandInterface.h"

@@ -174,11 +174,9 @@ class UpdatedStateManager : public StateManager
 public:
 	virtual void update( const T & upd )
 	{
-		for( StateList::iterator it = mSubStates.begin(); it != mSubStates.end(); ++it )
-		{
-			YAKE_ASSERT( it->second ).error( "Encountered 0 pointer in list!" );
-			it->second->update( upd );
-		}
+		UpdatedState<T>* pState = dynamic_cast<UpdatedState<T>*>(mRootState);
+		if (pState)
+			pState->update( upd );
 	}
 };
 
