@@ -11,29 +11,30 @@
 // mop
 #include "meta_class.h"
 #include "class_registry.h"
+// events
+#include "event_test.h"
+// c++ class
+#include "cpp_class.h"
 // serialization
 //#include "typed_field_serialized.h"
 //#include "meta_object_serialized.h"
 // scripting
-/*extern "C"
+extern "C"
 {
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
 }
-
 #include <luabind/luabind.hpp>
 // repl
+/*
 #include "Multiplayer.h"
 #include "DistributedNetworkObjectHeader.h"
 #include "RakServerInterface.h"
 #include "RakClientInterface.h"
 #include "RakNetworkFactory.h"
 #include "BitStream.h"*/
-// events
-#include "event_test.h"
-// c++ class
-#include "cpp_class.h"
+
 
 using namespace rx;
 
@@ -52,7 +53,7 @@ int main()
 				.add_event<bool>( "click" );
 
 		// create an instance of that just defined class
-		meta_object & test_object = create( test_class,  "test_object" );
+		meta_object & test_object = instance( test_class,  "test_object" );
 
 		// set and stream some values
 		assert( test_object.field<bool>( "hello_bool" ) );
@@ -71,7 +72,7 @@ int main()
 			"dead" ) << std::endl;
 
 		// try another object
-		meta_object & test_object_2 = create( test_class, "test_object_2" );
+		meta_object & test_object_2 = instance( test_class, "test_object_2" );
 		assert( test_object_2.field<bool>( "hello_bool" ) );
 		std::cout << "test_object_2::hello_bool=" << ( test_object_2.field<bool>( 
 			"hello_bool" ) ? "true" : "false" ) << std::endl;
@@ -188,7 +189,7 @@ int main()
 			// close archive
 			ifs.close();
 		}
-	}
+	}*/
 
 	// script bindings
 	{
@@ -204,8 +205,7 @@ int main()
 		// todo use concrete fields inside lua and write converter between lua<>cpp?
 		// todo lua supports meta-mechanisms?
 		module(L)
-		[ 
-			class_<meta_field>("meta_field")
+		[ class_<meta_field>("meta_field")
 				.enum_("flags")
 				[
 					value("none",					1),
@@ -222,35 +222,31 @@ int main()
 			class_<int_field>("int_field")
 				.def("get", &int_field::get )
 				.def("set", &int_field::set ),
-			class_<lua_hook_object>("lua_hook_object")
-				.def("add_field_int", (void(lua_hook_object::*)(std::string)) &lua_hook_object::add_field_int)
-				.def("add_field_int", (void(lua_hook_object::*)(std::string, int)) &lua_hook_object::add_field_int) 
-				.def("add_field_int", (void(lua_hook_object::*)(std::string, int, int)) &lua_hook_object::add_field_int)
-				.def("field_int",	&lua_hook_object::field_int ),
-			class_<meta_object, lua_hook_object>("meta_object") 	
-				.def(constructor<std::string>()),
+			class_<meta_object>("meta_object") 	
+				.def(constructor<std::string>())
+				.def("add_field_int", (meta_object& (meta_object::*)(std::string, int)) &meta_object::add_field<int, none>)
+				.def("add_field_int", (meta_object& (meta_object::*)(std::string, int, int)) &meta_object::add_field<int>)
+				.def("field_int",	(int_field& (meta_object::*)(std::string) const) &meta_object::field<int> ),
 			class_<meta_class>("meta_class") 	
 				.def(constructor<std::string>())
-				.def("new_", &meta_class::new_ )
-				.def("add_field_int", (void(meta_class::*)(std::string, int)) &meta_class::add_field<int>)
-				.def("add_field_int", (void(meta_class::*)(std::string, int, int)) &meta_class::add_field<int>)
-				.def("field_int",	(int_field&(meta_class::*)(std::string)) &meta_class::field<int> )
+				.def("add_field_int", (meta_class& (meta_class::*)(std::string, int)) &meta_class::add_field<int>)
+				.def("add_field_int", (meta_class& (meta_class::*)(std::string, int, int)) &meta_class::add_field<int>)
+				.def("field_int",	(int_field& (meta_class::*)(std::string) const) &meta_class::field<int> ),
+			def("instance", &instance)
 		];
 
 		lua_dostring(	L, "meta_cl = meta_class('hello_class')" );
-		lua_dostring(	L, "meta_cl:add_field_int( 'hello_int', meta_field.none )" );
+		lua_dostring(	L, "meta_cl:add_field_int( 'hello_int', meta_field.none ):add_field_int( 'hello_int2', meta_field.none )" );
 		lua_dostring(	L, "meta_cl:field_int( 'hello_int' ):set( 12345 )" );
-		lua_dostring(	L, "meta_obj = meta_cl:new_('hello_object')" );
+		lua_dostring(	L, "meta_obj = instance( meta_cl, 'hello_object')" );
 		lua_dostring(	L, "meta_obj:field_int( 'hello_int' ):set( 1234 )" );
 
-		std::cout << get_class( "hello_class" ).get_object( 
-			"hello_object" ).field<int>( "hello_int" ).as_string() << std::endl;
-
-		assert( get_class( "hello_class" ).get_object( "hello_object" ).field<int>( "hello_int" ) == 1234 );
+		std::cout << get_object( "hello_object" ).field<int>( "hello_int" ).as_string() << std::endl;
+		assert( get_object( "hello_object" ).field<int>( "hello_int" ) == 1234 );
 
 		lua_close(L);
 	}
-
+/*
 	// field flags and replication
 	{
 		std::cout << std::endl << "[ field flags and replication ]" << std::endl;	

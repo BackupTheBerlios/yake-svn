@@ -60,34 +60,37 @@ public: // constructors
 public: // field management
 	// used by c++
 	template< typename T, int flags >
-	void add_field( std::string field_name, T default_value = T() )
+	meta_object & add_field( std::string field_name, T default_value = T() )
 	{
 		add_field( field_name, default_value, flags );
+		return *this;
 	}
 
 	// used by script
 	template< typename T >
-	void add_field( std::string field_name, T default_value = T(), int flags = none )
+	meta_object & add_field( std::string field_name, T default_value = T(), int flags = none )
 	{
 		typed_field<T> * field = new typed_field<T>( 
 			*this, field_name, default_value, flags );
 		fields_.insert( fields_map::value_type( field_name, field ) );
 		on_add_field( *field );
+		return *this;
 	}
 
 	// used by c++ classes within the constructor
 	template< typename T >
-	void add_field( T & field )
+	meta_object & add_field( T & field )
 	{
 		field.object_ = this;
 		fields_.insert( fields_map::value_type( field.name_, &field ) );
 		on_add_field( field );
+		return *this;
 	}
 
 	template< typename T >
-	typed_field<T> & field( std::string name )
+	typed_field<T> & field( std::string name ) const
 	{
-		fields_map::iterator iter = fields_.find( name );
+		fields_map::const_iterator iter = fields_.find( name );
 		if( iter == fields_.end() ) throw exception();
 		return static_cast< typed_field<T>& >( *iter->second );
 	}

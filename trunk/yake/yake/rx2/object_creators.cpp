@@ -5,7 +5,7 @@ namespace rx
 {
 
 // used by regular meta object instancing
-meta_object & create( const meta_class & meta_class_, std::string object_name )
+meta_object & instance( const meta_class & meta_class_, std::string object_name )
 {
 		meta_class & non_const_class = const_cast< meta_class & >( meta_class_ );
 

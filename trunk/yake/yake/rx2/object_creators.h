@@ -7,7 +7,7 @@ namespace rx
 {
 
 // used by regular meta object instancing
-meta_object & create( const meta_class & meta_class_, std::string object_name );
+meta_object & instance( const meta_class & meta_class_, std::string object_name );
 
 struct meta_object_holder
 {
@@ -58,7 +58,7 @@ struct meta_object_holder
 
 // used by c++ classes
 template< typename T >
-meta_object_holder create( const meta_class & meta_class_, std::string object_name )
+meta_object_holder instance( const meta_class & meta_class_, std::string object_name )
 {
 	return meta_object_holder( meta_class_, object_name );
 }

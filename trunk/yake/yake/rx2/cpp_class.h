@@ -43,11 +43,13 @@ public:
 		:	//position_wrapped( "position_wrapped", ref<int>(position_) ),
 			position_wrapped( position_, none ),			
 			meta_object_( 
-				create<meta_object>( meta_class_, object_name )
+				instance<meta_object>( meta_class_, object_name )
 					.add_field( test_int )
 					.add_field( test_string )
 					.add_field( test_float )
 					.add_field( position_wrapped ) )
+
+					// init_rx
 	{
 	}
 
@@ -61,6 +63,7 @@ public:
 	typed_field<int&> position_wrapped;
 	
 public:
+	// declare_rx
 	static void build_meta_class()
 	{
 		// register fields
@@ -88,6 +91,8 @@ private:
 	// but one c++ class can have n meta objects
 	meta_object_ptr meta_object_;
 };
+
+// define_rx
 
 /* todo
 the static class calls the meta_class constructor which calls

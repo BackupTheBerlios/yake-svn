@@ -113,7 +113,7 @@ struct sql_hook
 
 // meta class and object derive from this class, because
 // luabing cannot handle template functions 
-template< class T >
+/*template< class T >
 struct lua_hook
 {
 	lua_hook() {}
@@ -138,17 +138,18 @@ struct lua_hook
 	{
 		return dynamic_cast< T* >( this )->field<int>( field_name );
 	}
-};
+};*/
 
 // User defines the hook here
 class meta_object;
 class meta_class;
 
-typedef lua_hook< meta_object > lua_hook_object;
-typedef lua_hook< meta_class > lua_hook_class;
+//typedef lua_hook< meta_object > lua_hook_object;
+//typedef lua_hook< meta_class > lua_hook_class;
 
-typedef inherit< raknet_hook, lua_hook_object >::type meta_object_hooks;
-typedef lua_hook_class meta_class_hooks;
+//typedef inherit< raknet_hook, lua_hook_object >::type meta_object_hooks;
+typedef raknet_hook meta_object_hooks;
+//typedef lua_hook_class meta_class_hooks;
 
 } // namespace rx
 

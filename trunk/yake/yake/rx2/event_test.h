@@ -17,7 +17,7 @@ struct entity
 
 	entity( const std::string & object_name )
 		: meta_object_( 
-				create<meta_object>( meta_class_, object_name )
+				instance<meta_object>( meta_class_, object_name )
 					.add_event( &birth )
 					.add_handler<const std::string &>( &entity::on_birth, this ) )
 	{

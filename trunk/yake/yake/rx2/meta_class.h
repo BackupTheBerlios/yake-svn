@@ -120,9 +120,9 @@ public: // field management
 	}
 
 	template< typename T >
-	typed_field<T> & field( std::string name )
+	typed_field<T> & field( std::string name ) const
 	{
-		for( fields_list::iterator iter = fields_.begin();
+		for( fields_list::const_iterator iter = fields_.begin();
 			iter != fields_.end(); iter++ )
 		{
       if( iter->first->name_ == name )
@@ -152,7 +152,7 @@ public: // events and handlers
 
 public: // object creation	
 	friend meta_object_holder;
-	friend meta_object & create( const meta_class & meta_class_, std::string object_name );	
+	friend meta_object & instance( const meta_class & meta_class_, std::string object_name );	
 
 public: // info
 	std::string & get_name() const
