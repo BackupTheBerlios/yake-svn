@@ -36,6 +36,8 @@ namespace vehicle {
 
 	//-----------------------------------------------------
 	YAKE_IMPLEMENT_REGISTRY( IPhysicalVehicleComponent );
+	YAKE_IMPLEMENT_REGISTRY( IVehicleSystem );
+	YAKE_REGISTER_CONCRETE( NativeVehicleSystem );
 
 } // ns vehicle
 } // ns model

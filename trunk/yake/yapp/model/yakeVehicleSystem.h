@@ -55,7 +55,8 @@ namespace vehicle {
 
 		virtual Vehicle* createVehicle( const ::yake::base::String & rTemplate, 
 										physics::IWorld* pWorld, 
-										graphics::IWorld* pGWorld );
+										graphics::IWorld* pGWorld )
+		{ return 0; }
 	private:
 		bool _loadModelFromDotVehicle(::yake::app::model::complex::Model* pModel,
 									const ::yake::base::String & rFN, 

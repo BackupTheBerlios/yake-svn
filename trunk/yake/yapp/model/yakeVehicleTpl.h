@@ -39,13 +39,14 @@ namespace vehicle {
 		VehicleTemplate();
 		~VehicleTemplate();
 
-		struct GeomTemplate
+		struct ShapeTemplate
 		{
-			Vector3											position_;
-			Vector3											dimensions_;
-			physics::ShapeType								type_;
+			Vector3								position_;
+			Quaternion							orientation_;
+			physics::ShapeType					type_;
+			SharedPtr<physics::IShape::Desc>	pDesc_;
 		};
-		typedef Deque<GeomTemplate> GeomTemplateList;
+		typedef Deque<ShapeTemplate> ShapeTemplateList;
 
 		enum GearMode
 		{
@@ -59,9 +60,15 @@ namespace vehicle {
 			GearMode			mode_;
 		};
 		typedef Vector<GearTemplate> GearTemplateList;
+
 		struct EngineTemplate
 		{
 			virtual ~EngineTemplate() {}
+		};
+		struct ThrusterTemplate : public EngineTemplate
+		{
+			real				minForce;
+			real				maxForce;
 		};
 		struct CarEngineTemplate : public EngineTemplate
 		{
@@ -101,6 +108,7 @@ namespace vehicle {
 			String		gfxDescriptor_;
 			String		gfxDescriptorType_;
 			Vector3		position_;
+			Quaternion	orientation;
 			real		suspensionSpring_;
 			real		suspensionDamping_;
 		};
@@ -110,12 +118,12 @@ namespace vehicle {
 
 		struct ChassisTemplate
 		{
-			String				name_;
 			real				mass_;
 			String				gfxDescriptor_;
 			Vector3				position_;
+			Quaternion			orientation_;
 			Vector3				dimensions_;
-			GeomTemplateList	geoms_;
+			ShapeTemplateList	collisionShapes_;
 		};
 		ChassisTemplate	chassisTpl_;
 	private:

@@ -79,16 +79,16 @@ namespace vehicle {
 		*/
 		enum WheelCollisionFlag
 		{
-			WCF_NAME = 0x00000001,
-			WCF_OTHEROBJ = 0x00000002,
-			WCF_OTHEROBJ_NAME = 0x00000004,
-			WCF_OTHEROBJ_MATERIAL_NAME = 0x00000008
+			WCF_NAME					= 0x00000001,
+			WCF_OTHEROBJ				= 0x00000002,
+			WCF_OTHEROBJ_NAME			= 0x00000004,
+			WCF_OTHEROBJ_MATERIAL_NAME	= 0x00000008
 		};
 		struct WheelCollisionInfo
 		{
 			uint32						flags_;
 			String						wheelName_;
-			physics::IActor*	otherObj_;
+			physics::IActor*			otherObj_;
 			String						otherObjName_;
 			String						otherObjMaterialName_;
 		};

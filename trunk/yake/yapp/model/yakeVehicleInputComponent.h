@@ -33,36 +33,30 @@ namespace app {
 namespace model {
 namespace vehicle {
 
+	enum VehicleInputComponentType {
+		VICT_ENGINE,
+		VICT_THRUSTER,
+		VICT_CAR_ENGINE,
+		VICT_CAR
+	};
+
 	enum VehicleGearMode {
 		VGM_FORWARD,
 		VGM_NEUTRAL,
 		VGM_REVERSE
 	};
 
-	/** Draft for a vehicle input component. The interface is in parts similar to that of the
-		physical interface. Naturally.
-		@Remarks Merge this functionality into physics rep where it belongs. Input components
-			are for retrieving and setting input states. Applying these to the physics component
-			is to be done by control components. This here is just an interface for the physics
-			component.
-	*/
-	class YAPP_BASE_API IInputVehicleComponent : public InputComponent
+	class YAPP_BASE_API IEngineInputComponent : public InputComponent
 	{
 	public:
-		YAKE_DECLARE_CLASS( IInputVehicleComponent );
-		YAKE_DECLARE_REGISTRY( IInputVehicleComponent );
-
-		/** Set steering value. Value is in the range [-1,1]. */
-		virtual void steerAnalog( const size_t idxSteerGroup, const real targetSteer ) = 0;
-
-		/** Set braking value for a given brake. Value is in the range [0,1]. */
-		virtual void brakeAnalog( const size_t idxBrake, const real ratio ) = 0;
+		virtual ~IEngineInputComponent() {}
 
 		/** Set throttle for a given engine. Value is in the range [0,1]. */
 		virtual void throttleAnalog( const size_t idxEngine, const real throttle ) = 0;
-
-		//virtual void handbrake( const bool activate ) = 0;
-
+	};
+	class YAPP_BASE_API ICarEngineInputComponent : public IEngineInputComponent
+	{
+	public:
 		/** Shift up for a given engine. */
 		virtual void shiftGearUp( const size_t idxEngine ) = 0;
 		/** Shift down for a given engine. */
@@ -71,6 +65,22 @@ namespace vehicle {
 		virtual VehicleGearMode getCurrentGearMode( const size_t idxEngine ) const = 0;
 		/** Get current gear for a given engine. */
 		virtual uint8 getCurrentGear( const size_t idxEngine ) const = 0;
+	};
+	class YAPP_BASE_API IThrusterInputComponent : public IEngineInputComponent
+	{
+	public:
+	};
+
+	class YAPP_BASE_API ICarInputComponent : public InputComponent
+	{
+	public:
+		/** Set steering value. Value is in the range [-1,1]. */
+		virtual void steerAnalog( const size_t idxSteerGroup, const real targetSteer ) = 0;
+
+		/** Set braking value for a given brake. Value is in the range [0,1]. */
+		virtual void brakeAnalog( const size_t idxBrake, const real ratio ) = 0;
+
+		//virtual void handbrake( const bool activate ) = 0;
 	};
 
 }

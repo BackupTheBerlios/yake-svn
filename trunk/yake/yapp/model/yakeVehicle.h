@@ -28,6 +28,7 @@
 
 #include <yapp/base/yappPrerequisites.h>
 #include <yapp/model/yakeActor.h>
+#include <yapp/model/yakeVehicleInputComponent.h>
 
 namespace yake {
 namespace app {
@@ -47,6 +48,8 @@ namespace vehicle {
 		virtual ~Vehicle();
 		void setModel( complex::Model* pComplex );
 		virtual void onAct();
+
+		InputComponent* queryInputInterface( VehicleInputComponentType type );
 	private:
 		complex::Model*	mComplex;
 	};
