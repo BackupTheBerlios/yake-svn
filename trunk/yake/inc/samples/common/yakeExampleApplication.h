@@ -1,4 +1,9 @@
 
+#include <inc/graphics/yakeGraphicsSystem.h>
+#include <inc/physics/yakePhysicsSystem.h>
+#include <inc/scripting/yakeScriptingSystem.h>
+#include <inc/input/yakeInputSystem.h>
+#include <inc/input/yakeInputEventGenerator.h>
 
 namespace yake {
 namespace exapp {
@@ -8,7 +13,7 @@ namespace exapp {
 	private:
 		typedef std::vector< base::Plugin* >	PluginList;
 		PluginList								mPlugins;
-		graphics::GraphicsSystem				* mGraphicsSystem;
+		graphics::IGraphicsSystem				* mGraphicsSystem;
 		physics::PhysicsSystem					* mPhysicsSystem;
 		scripting::ScriptingSystem				* mScriptingSystem;
 		//scripting::ScriptingBindings			* mScriptingBindings;
@@ -24,9 +29,10 @@ namespace exapp {
 		bool									mLoadGraphicsSystem;
 		bool									mLoadPhysicsSystem;
 		bool									mLoadScriptingSystem;
+		bool									mLoadInputSystem;
 	public:
-		ExampleApplication(bool loadGraphics, bool loadPhysics, bool loadScripting) :
-				mLoadGraphicsSystem( loadGraphics ), mLoadPhysicsSystem( loadPhysics ), mLoadScriptingSystem( loadScripting ),
+		ExampleApplication(bool loadGraphics, bool loadPhysics, bool loadScripting, bool loadInput ) :
+				mLoadGraphicsSystem( loadGraphics ), mLoadPhysicsSystem( loadPhysics ), mLoadScriptingSystem( loadScripting ), mLoadInputSystem( loadInput ),
 				mGraphicsSystem(0), mScriptingSystem(0), mPhysicsSystem(0), mInputSystem(0)//, mScriptingBindings(0)
 		{
 		}
@@ -38,7 +44,7 @@ namespace exapp {
 			unloadAllPlugins();
 		}
 
-		graphics::GraphicsSystem& getGraphicsSystem() const
+		graphics::IGraphicsSystem& getGraphicsSystem() const
 		{
 			//if (!mGraphicsSystem)
 			//	YAKE_EXCEPT( "Don't have a graphics system!", "getGraphicsSystem()" );
@@ -70,7 +76,7 @@ namespace exapp {
 			// scripting
 			if (mLoadScriptingSystem)
 			{
-				scripting::ScriptingPlugin* pSP = loadPlugin<scripting::ScriptingPlugin>( "yakeScriptingLua.dll" );
+				scripting::ScriptingPlugin* pSP = loadPlugin<scripting::ScriptingPlugin>( "scriptingLua.dll" );
 				YAKE_ASSERT( pSP ).debug("Cannot load scripting plugin.");
 
 				mScriptingSystem = pSP->createSystem();
@@ -87,11 +93,7 @@ namespace exapp {
 			// graphics
 			if (mLoadGraphicsSystem)
 			{
-				graphics::GraphicsPlugin* pGP = loadPlugin<graphics::GraphicsPlugin>( "yakeGraphicsOGRE.dll" );
-				YAKE_ASSERT( pGP ).debug("Cannot load graphics plugin.");
-
-				mGraphicsSystem = pGP->createSystem();
-				YAKE_ASSERT( mGraphicsSystem ).error("Cannot create graphics system.");
+				YAKE_ASSERT( 0 ).debug("currently disabled.");
 			}
 
 			// physics
@@ -105,13 +107,16 @@ namespace exapp {
 			}
 
 			// input
-			input::InputPlugin* pIP = loadPlugin<input::InputPlugin>( "yakeInputOGRE.dll" );
-			YAKE_ASSERT( pIP ).debug("Cannot load input plugin.");
+			if (mLoadInputSystem)
+			{
+				input::InputPlugin* pIP = loadPlugin<input::InputPlugin>( "inputOGRE.dll" );
+				YAKE_ASSERT( pIP ).debug("Cannot load input plugin.");
 
-			mInputSystem = pIP->createSystem();
-			YAKE_ASSERT( mInputSystem ).error("Cannot create input system.");
+				mInputSystem = pIP->createSystem();
+				YAKE_ASSERT( mInputSystem ).error("Cannot create input system.");
 
-			setupInput();
+				setupInput();
+			}
 		}
 
 		virtual void run() = 0;
