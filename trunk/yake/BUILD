@@ -4,9 +4,17 @@ This document contains build instructions for different platforms:
 CONTENTS
 --------
 
+0. Prologue
 1. BUILD INSTRUCTIONS FOR YAKE ON PC/WIN
 2. BUILD INSTRUCTIONS FOR YAKE 0.1b2 ON PC/LINUX
 
+0. Prologue
+-----------
+
+The YAKE Documentation and User Wiki may contain more detailed instructions or
+additional information.
+
+You can find it here: http://www.yake.org/wiki .
 
 
 1. BUILD INSTRUCTIONS FOR YAKE ON PC/WIN
