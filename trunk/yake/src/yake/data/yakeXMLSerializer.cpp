@@ -145,6 +145,9 @@ namespace xml {
 
 		// read contents
 		mRootElem = mXmlDoc->RootElement();
+		YAKE_ASSERT( mRootElem ).debug("No root element found in document!");
+		if (!mRootElem)
+			return;
 		mRootNode.reset( new XmlNode( mRootElem ) );
 
 		// recursively traverse xml tree and fire events as needed
