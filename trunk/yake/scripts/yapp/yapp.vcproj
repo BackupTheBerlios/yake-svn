@@ -430,6 +430,16 @@
 				RelativePath="..\..\yapp\loader\yakeModelMovableLinkCreator.h">
 			</File>
 		</Filter>
+		<Filter
+			Name="statemachine"
+			Filter="">
+			<File
+				RelativePath="..\..\yapp\statemachine\yakeFiniteStateMachine.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\statemachine\yakeFiniteStateMachine_inc.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
