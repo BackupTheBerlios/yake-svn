@@ -28,12 +28,6 @@
 
 #include <yapp/base/yappPrerequisites.h>
 
-//State --transition--> State
-// A quote from some website ( I forgot which one ):
-//"(...) an event is the stimulus that causes a state machine to transition between states."
-// Event => State --transition--> State
-//
-
 namespace yake {
 namespace app {
 
@@ -42,7 +36,11 @@ namespace app {
 		eOk,
 		eError,
 		eRejected,
-		eInvalidNesting
+		eInvalidNesting,
+		eAlreadyRegistered,
+		eNotFound,
+		eStateNotFound,
+		eTransitionNotFound
 	};
 
 namespace state {
@@ -64,13 +62,94 @@ namespace state {
 		case eInvalidNesting:
 			lhs << "Invalid Nesting";
 			break;
+		case eAlreadyRegistered:
+			lhs << "Already registered";
+			break;
+		case eNotFound:
+			lhs << "Not found";
+			break;
+		case eStateNotFound:
+			lhs << "State not found";
+			break;
+		case eTransitionNotFound:
+			lhs << "Transition not found";
+			break;
 		default:
 			lhs << "UNKNOWN";
 		};
 		return lhs;
 	}
 
+	/** Template base class for very, very simple clonable objects.
+		@todo move out into yake::base or yapp::base.
+	*/
+	template<typename T>
+	struct clonableT
+	{
+		virtual ~clonableT() {}
+		virtual T* clone() const = 0;
+	};
 
+#define YAKE_DECLARE_CLONABLE( BASECLASS, CLASS ) \
+	public: \
+		BASECLASS* clone() const\
+		{ \
+			return new CLASS(*this); \
+		} \
+	private:
+
+	/** A state for a state machine.
+		A state is clonable. Derived classes should therefore overload the copy constructor.
+		A state has three main functions: enter, step, exit. Derived classes should implement
+		onEnter(), onStep() and onExit() if they need to modify the default behaviour. Furthermore
+		a call to either enter(), step() or exit() will trigger the corresponding event (event_enter,
+		event_step, event_exit). Thereby it's possible to bind various kind of handlers to these
+		events, for example, LUA scripting hooks.
+	*/
+	class State : public clonableT<State>
+	{
+		YAKE_DECLARE_CLONABLE( State, State );
+	protected:
+		State(const State& rkOther)
+		{
+		}
+	public:
+		State() {}
+		virtual ~State() {};
+
+		void enter();
+		void step(); // or executeStep() or step()
+		void exit();
+
+		// events
+		/*
+		event<void> event_enter;
+		event<void> event_step;
+		event<void> event_exit;
+
+		clients do this:
+			coolstate = {
+				enter = function {
+					print("lala");
+				}
+				exit = function {
+					print("lala");
+				}
+			}
+			coolstate thestate;
+			thestate:event_enter:connect( coolstate:f ); // or ( thestate:f ) ?
+		*/
+	protected:
+		virtual void onEnter() {}
+		virtual void onStep() {}
+		virtual void onExit() {}
+	};
+//-------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
+#ifdef SK_DEAD
 	/** A simple state machine managing states and transitions between registered states.
 	*/
 	template<typename StateIdType>
@@ -174,7 +253,7 @@ namespace state {
 	template<> const String StateMachine<String>::kStateNone = "NONE";
 
 	#include "yakeFiniteStateMachine_inc.h"
-
+#endif
 } // state
 } // app
 } // yake
