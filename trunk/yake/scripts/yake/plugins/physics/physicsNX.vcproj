@@ -34,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="oded.lib physics.lib NxPhysics.lib"
+				AdditionalDependencies="physics.lib NxPhysics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib;&quot;$(NXSDK_DIR)/Physics/lib/win32/release&quot;"
@@ -86,7 +86,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ode.lib physics.lib"
+				AdditionalDependencies="physics.lib NxPhysics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib"
