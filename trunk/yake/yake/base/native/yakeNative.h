@@ -43,10 +43,10 @@ namespace native
 {
 
 // Library Interface.
-typedef const void* LibraryHandle;
-YAKE_BASE_NATIVE_API LibraryHandle library_Load( const char* pFilemame );
-YAKE_BASE_NATIVE_API void* library_GetSymbol( LibraryHandle, const char* pFunction );
-YAKE_BASE_NATIVE_API void library_Free( LibraryHandle );
+typedef const void * LibraryHandle;
+YAKE_BASE_NATIVE_API LibraryHandle library_Load(const char * filemame);
+YAKE_BASE_NATIVE_API void * library_GetSymbol(LibraryHandle, const char * function);
+YAKE_BASE_NATIVE_API void library_Free(LibraryHandle);
 
 // Debugging Interface.
 struct DebugLog
