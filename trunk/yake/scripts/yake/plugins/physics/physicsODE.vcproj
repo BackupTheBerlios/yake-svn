@@ -148,6 +148,9 @@
 				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeJointBase.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeWalker.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsODE\OdeWorld.cpp">
 			</File>
 			<File
@@ -190,6 +193,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeJoint.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeWalker.h">
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsODE\OdeWorld.h">

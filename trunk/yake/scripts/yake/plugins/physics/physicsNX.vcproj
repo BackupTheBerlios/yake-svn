@@ -24,6 +24,7 @@
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="yake/plugins/physicsNX/yakePCH.h"
 				WarningLevel="3"
@@ -75,6 +76,7 @@
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ode/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKEPHYSICSODE_EXPORTS"
 				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="yake/plugins/physicsNX/yakePCH.h"
 				WarningLevel="3"
@@ -130,7 +132,13 @@
 				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeActorNx.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeAvatarNx.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeBodyNx.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeJointNx.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakePCH.cpp">
@@ -146,6 +154,9 @@
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakePhysicsTrimeshNx.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\physicsNX\yakeShapeNx.cpp">
@@ -165,10 +176,19 @@
 				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeActorNx.h">
 			</File>
 			<File
+				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeAvatarNx.h">
+			</File>
+			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeBodyNx.h">
 			</File>
 			<File
+				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeJointNx.h">
+			</File>
+			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakePCH.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakePhysicsTrimeshNx.h">
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsNX\yakeShapeNx.h">

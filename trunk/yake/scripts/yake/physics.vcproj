@@ -24,7 +24,6 @@
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				BufferSecurityCheck="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="yake/physics/yakePCH.h"
@@ -166,6 +165,9 @@
 					<Tool
 						Name="VCCustomBuildTool"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\yake\physics\yakePhysicsAvatar.h">
 			</File>
 			<File
 				RelativePath="..\..\yake\physics\yakePhysicsPrerequisites.h">
