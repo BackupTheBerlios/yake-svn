@@ -23,59 +23,38 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_YAPP_BASE_EVENT_MESSAGEINSTANCE_H
-#define YAKE_YAPP_BASE_EVENT_MESSAGEINSTANCE_H
+#ifndef YAKE_YAPP_BASE_EVENT_MESSAGEQ_H
+#define YAKE_YAPP_BASE_EVENT_MESSAGEQ_H
 
-#include "yakeMessageId.h"
 #include <yake/base/yakeParamHolder.h>
 
 using namespace yake::base;
+using namespace yake::base::templates;
 
 namespace yapp {
 namespace event {
 
-	enum MsgResultCode {
-		kMsgUnhandled,
-		kMsgHandled,
-		kMsgHandledExclusively,
-		kMsgCorrupt,
-		kMsgError
-	};
+	class MessageInstance;
 
-	/** A message instance. Objects of this type are used within message managers (-> MessageManager)
-		but can be used by applications and other clients, too.
-		It holds everything needed for a single instance of a message including the id, (optionally)
-		the parameter list (key/value pairs), (optionally) the origin of the message.
-		It can be selected whether the ParamHolder object is owned by the message instance. If this is
-		the case then the message instance is responsible for destruction.
-		Specifying parameters and origin is optional (set to 0 if not used).
-		@see MessageManager
-	*/
-	class YAPP_BASE_API MessageInstance
+	typedef Deque< SharedPtr<MessageInstance> > MsgInstanceList;
+	typedef ConstDequeIterator<MsgInstanceList> MsgInstanceListConstIterator;
+
+	class YAPP_BASE_API MessageQueue
 	{
 	public:
-		MessageInstance( const MessageId id, ParamHolder* pParams = 0, const void* pOrigin = 0, bool bOwnParamObject = false );
-		~MessageInstance();
+		MessageQueue();
+		virtual ~MessageQueue();
 
-		/** Return the message's id. */
-		MessageId id() const;
-
-		/** Return the parameter holder object containing key/value pairs for all parameters.
-			The return value may be 0 if no parameters are assigned to this message.
+		void postMessage( MessageInstance* pMsg );
+		/** Ownership of pParams is transferred! The Object will be erased as soon as the message
+			was handled!
 		*/
-		ParamHolder* params() const;
+		void postMessage( const MessageId id, ParamHolder* pParams, const void* pOrigin = 0 );
 
-		/** Return the origin of this message.
-			The return value may be 0 if no origin was assigned to the message.
-		*/
-		const void* origin() const;
-
-		void reset();
+		void clear();
+		MsgInstanceListConstIterator getMsgInstanceIterator() const;
 	private:
-		MessageId		mId;
-		ParamHolder*	mParams;
-		bool			mOwnsParams;
-		void*			mOrigin;
+		MsgInstanceList		mQ;
 	};
 
 }

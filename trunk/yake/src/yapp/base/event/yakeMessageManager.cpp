@@ -24,6 +24,7 @@
    ------------------------------------------------------------------------------------
 */
 #include <yapp/base/yappPCH.h>
+#include <yake/base/yakeParamHolder.h>
 #include <yapp/base/event/yakeMessageManager.h>
 #include <yapp/base/event/yakeMessageInstance.h>
 #include <yapp/base/event/yakeMessageListener.h>
@@ -37,11 +38,17 @@ namespace event {
 #define MSGMGR_COUT_LINE( x ) \
 	std::cout << x << std::endl;
 
-	MessageManager::MessageManager()
+	MessageManager::MessageManager() : mExecuting(false), mExecQ(0), mCacheQ(0)
 	{
+		mCacheQ = new MsgInstanceList();
+		YAKE_ASSERT( mCacheQ );
+		mExecQ = new MsgInstanceList();
+		YAKE_ASSERT( mExecQ );
 	}
 	MessageManager::~MessageManager()
 	{
+		YAKE_SAFE_DELETE( mExecQ );
+		YAKE_SAFE_DELETE( mCacheQ );
 		mMsgIds.clear();
 	}
 	void MessageManager::postMessage(
@@ -50,6 +57,7 @@ namespace event {
 							const void* pOrigin /* = 0 */, 
 							bool executeImmediately /* = false  */)
 	{
+		YAKE_ASSERT( mCacheQ );
 		MSGMGR_COUT_LINE( "MsgMgr::postMessage() id=" << id );
 		//FIXME: use an auto-adjusting pool!
 		MessageInstance* pI = new MessageInstance(id, pParams, pOrigin, /*FIXME:*/false);
@@ -60,17 +68,51 @@ namespace event {
 			YAKE_SAFE_DELETE( pI );
 		}
 		else
-			mQ.push_back( SharedPtr<MessageInstance>(pI) );
+			mCacheQ->push_back( SharedPtr<MessageInstance>(pI) );
+	}
+	void MessageManager::postQueue( MessageQueue* pQueue )
+	{
+		YAKE_ASSERT( mCacheQ );
+		YAKE_ASSERT( pQueue ).debug("need a valid ptr!");
+		if (!pQueue)
+			return;
+		MsgInstanceListConstIterator it = pQueue->getMsgInstanceIterator();
+		while (it.hasMoreElements())
+		{
+			mCacheQ->push_back( it.getNext() );
+		}
+		pQueue->clear();
 	}
 	void MessageManager::executeQ()
 	{
 		MSGMGR_COUT_LINE( "MsgMgr::executeQ()" );
-		VectorIterator<MsgInstanceList> it( mQ.begin(), mQ.end() );
+		YAKE_ASSERT( mCacheQ );
+		YAKE_ASSERT( mExecQ );
+		if (!mExecuting)
+		{
+			mExecuting = true;
+			// switch queues
+			std::swap( mCacheQ, mExecQ );
+		}
+		else
+		{
+			YAKE_ASSERT( !mExecuting ).debug("Q is already in the process of being executed!");
+			if (!mExecuting)
+				return;
+		}
+		VectorIterator<MsgInstanceList> it( mExecQ->begin(), mExecQ->end() );
 		while (it.hasMoreElements())
 			executeMsgInstance( *(it.getNext()).get() );
+
+		mExecQ->clear();
+
+		mExecuting = false;
 	}
 	void MessageManager::clearQ()
-	{ mQ.clear(); }
+	{
+		YAKE_ASSERT( mCacheQ );
+		mCacheQ->clear(); 
+	}
 	void MessageManager::executeMsgInstance( MessageInstance & msg )
 	{
 		MSGMGR_COUT_LINE( "MsgMgr::executeMsgInstance() id=" << msg.id() );

@@ -23,13 +23,46 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_YAPP_BASE_EVENT_EVENT_H
-#define YAKE_YAPP_BASE_EVENT_EVENT_H
-
+#include <yapp/base/yappPCH.h>
 #include <yake/base/yakeParamHolder.h>
-#include <yapp/base/event/yakeMessageId.h>
 #include <yapp/base/event/yakeMessageInstance.h>
-#include <yapp/base/event/yakeMessageListener.h>
-#include <yapp/base/event/yakeMessageManager.h>
+#include <yapp/base/event/yakeMessageQ.h>
 
-#endif
+namespace yapp {
+namespace event {
+
+	MessageQueue::MessageQueue()
+	{
+	}
+
+	MessageQueue::~MessageQueue()
+	{
+	}
+
+	void MessageQueue::postMessage( MessageInstance* pMsg )
+	{
+		YAKE_ASSERT( pMsg ).warning("need a valid ptr!");
+		if (!pMsg)
+			return;
+		mQ.push_back( SharedPtr<MessageInstance>(pMsg) );
+	}
+	void MessageQueue::postMessage( const MessageId id, ParamHolder* pParams, const void* pOrigin )
+	{
+		//todo use pool to allocate?
+		MessageInstance* pInstance = new MessageInstance(id,pParams,pOrigin,true);
+		YAKE_ASSERT( pInstance ).debug("couldn't get hold of a bit of mem!");
+		if (!pInstance)
+			return;
+		mQ.push_back( SharedPtr<MessageInstance>(pInstance) );
+	}
+	void MessageQueue::clear()
+	{
+		mQ.clear();
+	}
+	MsgInstanceListConstIterator MessageQueue::getMsgInstanceIterator() const
+	{
+		return MsgInstanceListConstIterator( mQ.begin(), mQ.end() );
+	}
+
+}
+}

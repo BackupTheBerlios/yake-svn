@@ -26,13 +26,36 @@
 #ifndef YAKE_YAPP_BASE_EVENT_MESSAGEMANAGER_H
 #define YAKE_YAPP_BASE_EVENT_MESSAGEMANAGER_H
 
+#include <yake/base/yakeParamHolder.h>
 #include "yakeMessageInstance.h"
+#include "yakeMessageQ.h"
+
+using namespace yake::base;
+using namespace yake::base::templates;
 
 namespace yapp {
 namespace event {
 
 	class MessageListener;
-	class YAPP_BASE_API  MessageManager
+	/**
+		@Remarks
+			QUEUES, INSTANCES, EXECUTION AND PARALELL POSTING OF INSTANCES:
+			The MessageManager uses two queues to allow for posting message instance
+			while executing a queue.
+			The two queues are called "cache" and "exec".
+			Message instances are always added to the cache Q while execution works
+			on the exec Q.
+			When you call execute (and it's not already executing) then the two queue
+			objects are exchanged and what previously was the cache Q becomes the
+			exec Q.
+			The exec Q is automatically emptied after execution.
+			Message instances can be posted while the queue is executing, but they
+			will not be processed within the same execution process. You have to call
+			execute() again to process them.
+			TODO This may become configurable in the future.
+			Do not call execute() while an execution is in progress! This will fail!
+	*/
+	class YAPP_BASE_API MessageManager
 	{
 	public:
 		MessageManager();
@@ -42,15 +65,62 @@ namespace event {
 			It may be taken from a pool and is managed by the creating MessageManager object.
 		*/
 		MessageInstance* createMessage();
-		void postMessage( MessageInstance* pMsg );
+		/** Posts a message instance.
+			@see createMessage()
+			@param pMsg a valid pointer to a message instance, could be created using createMessage()
+			@param executeImmediately if set to yes then the message will immediately be executed, otherwise
+				it will be queued.
+		*/
+		void postMessage( MessageInstance* pMsg, bool executeImmediately = false );
+		/** Posts a message instance.
+			@see createMessage()
+			@param id a valid message id
+			@param pParams optional parameters of the messages.
+			@param pOrigin optional origin. useful for listeners that listen to a message from a certain origin.
+			@param executeImmediately if set to yes then the message will immediately be executed, otherwise
+				it will be queued. 
+		*/
 		void postMessage( const MessageId id, ParamHolder* pParams, const void* pOrigin = 0, bool executeImmediately = false );
+		/** Posts all messages in the specified queue. Order of messages is kept.
+			The queue is immediately cleared!
+			This method can be used to batch messages somewhere else and then batch post them
+			to a central manager. Useful in multi-threaded applications.
+			@param pQueue valid pointer to a MessageQueue object
+		*/
+		void postQueue( MessageQueue* pQueue );
 
+		/** Connect a listener to messages of certain type (id). If pOrigin is set then
+			the listener listens only to message instances from that origin.
+		*/
 		void connect( MessageListener* pListener, const MessageId id, const void* pOrigin = 0 );
+
+		/** Disconnect a listener from messages (no matter which id/type).
+			If pOrigin is 0, then the listener will be disconnected from all message types,
+			otherwise it will only be disconnected from message types that share the specified
+			origin.
+		*/
 		void disconnect( MessageListener* pListener, const void* pOrigin = 0 );
+
+		/** Disconnect a listener from a specific message type.
+			If pOrigin is 0, then the listener will be disconnected from all message types,
+			otherwise it will only be disconnected from message types that share the specified
+			origin.
+		*/
 		void disconnect( MessageListener* pListener, const MessageId id, const void* pOrigin = 0 );
+
+		/** Disconnected all listeners for a specific message id.
+			If pOrigin is specified (non-0) then only listeners sharing that origin will be removed,
+			otherwise all isteners for the specified message id will be removed.
+		*/
 		void disconnect( const MessageId id, const void* pOrigin = 0 );
 
+		/** Execute queued message instances.
+			The order of posted instances is kept.
+			Processed instances are removed from the queue.
+		*/
 		void executeQ();
+
+		/** Removes any message instances from the queue. */
 		void clearQ();
 	private:
 		typedef Vector< MessageListener* > ListenerList;
@@ -63,8 +133,9 @@ namespace event {
 		typedef AssocVector< MessageId, SharedPtr<MsgIdEntry> > MsgIdList;
 		MsgIdList			mMsgIds;
 
-		typedef Vector< SharedPtr<MessageInstance> > MsgInstanceList;
-		MsgInstanceList		mQ;
+		MsgInstanceList*	mCacheQ;
+		MsgInstanceList*	mExecQ;
+		bool				mExecuting;
 	private:
 		void executeMsgInstance( MessageInstance & msg );
 		void executeMsgInstanceToListenerList( MessageInstance & msg, ListenerList & list );
