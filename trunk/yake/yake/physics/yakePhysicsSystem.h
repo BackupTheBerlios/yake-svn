@@ -95,6 +95,23 @@ namespace physics {
 	class IMaterial
 	{
 	public:
+		struct Desc
+		{
+			Desc( real friction = 0.1, real restitution = 0.5, real staticFriction = 0.3, real rollingFriction = 0.2 ) :
+				mFriction( friction ),
+				mRestitution( restitution ),
+				mStaticFriction( staticFriction ),
+				mRollingFriction( rollingFriction )
+			{}
+			
+			virtual ~Desc() {}
+			
+			real mFriction;
+			real mRestitution;
+			real mStaticFriction;
+			real mRollingFriction;
+		};
+
 		virtual ~IMaterial() {}
 
 		virtual void setRollingFriction(const real friction) = 0;
@@ -215,12 +232,15 @@ namespace physics {
 			Desc(	const ShapeType type_,
 					const Vector3 & rkPosition = Vector3::kZero, 
 					const Quaternion & rkOrientation = Quaternion::kIdentity,
-					IMaterial* material_ = 0) :
+					IMaterial* material_ = 0 ) :
 				type( type_ ),
 				position( rkPosition ),
 				orientation( rkOrientation ),
 				pMaterial( material_ )
 			{}
+
+			virtual ~Desc() {}
+
 			ShapeType	type; // superfluous as shape type is determined by dynamic_cast on Desc struct...
 			Vector3		position;
 			Quaternion	orientation;
@@ -436,11 +456,14 @@ namespace physics {
 			DescBase(	const JointType type_, 
 						IActor & rFirst,
 						IActor & rSecond ) :
-				type(type_),
-				actor1(rFirst),
-				actor2(rSecond)
+				type( type_ ),
+				actor1( rFirst ),
+				actor2( rSecond )
 			{
 			}
+
+			virtual ~DescBase() {}
+
 			JointType type; // not really needed...
 			IActor& actor1;
 			IActor& actor2;
@@ -449,32 +472,77 @@ namespace physics {
 		{
 			DescFixed(	IActor & rFirst,
 						IActor & rSecond ) :
-				DescBase(JT_FIXED,rFirst,rSecond)
+				DescBase( JT_FIXED,rFirst,rSecond )
 			{}
 		};
 		struct DescHinge : DescBase
 		{
 			DescHinge(	IActor & rFirst,
 						IActor & rSecond,
-						const Vector3 & rkAxis0) :
-				DescBase(JT_HINGE,rFirst,rSecond),
-				axis0(rkAxis0)
+						const Vector3 & rAxis0,
+						const Vector3 & rAnchor ) :
+				DescBase( JT_HINGE,rFirst,rSecond ),
+				axis0( rAxis0 ),
+				anchor( rAnchor )
 			{}
 			Vector3		axis0;
+			Vector3		anchor;
 		};
 		struct DescHinge2 : DescBase
 		{
 			DescHinge2(	IActor & rFirst,
 						IActor & rSecond,
-						const Vector3 & rkAxis0, 
-						const Vector3 & rkAxis1) :
-				DescBase(JT_HINGE2,rFirst,rSecond),
-				axis0(rkAxis0),
-				axis1(rkAxis1)
+						const Vector3 & rAxis0, 
+						const Vector3 & rAxis1,
+						const Vector3 & rAnchor ) :
+				DescBase( JT_HINGE2,rFirst,rSecond ),
+				axis0( rAxis0 ),
+				axis1( rAxis1 ),
+				anchor( rAnchor )
 			{}
 			Vector3		axis0;
 			Vector3		axis1;
+			Vector3		anchor;
 		};
+
+		struct DescBall : DescBase
+		{
+			DescBall(	IActor& rFirst,
+						IActor& rSecond,
+						Vector3 const& rAnchor ) :
+				DescBase( JT_BALL, rFirst, rSecond ),
+				anchor( rAnchor )
+			{}
+			Vector3		anchor;
+		};
+	
+		struct DescSlider : DescBase
+		{
+			DescSlider(	IActor& rFirst,
+						IActor& rSecond,
+						Vector3 const& rAxis ) :
+				DescBase( JT_SLIDER, rFirst, rSecond ),
+				axis( rAxis )
+			{}
+			Vector3		axis;
+		};
+	
+		struct DescUniversal : DescBase
+		{
+			DescUniversal(	IActor& rFirst,
+							IActor& rSecond,
+							Vector3 const& rAxis0, 
+							Vector3 const& rAxis1,
+							Vector3 const& rAnchor ) :
+				DescBase( JT_UNIVERSAL, rFirst, rSecond ),
+				axis0( rAxis0 ),
+				axis1( rAxis1 ),
+				anchor( rAnchor )
+ 			{}
+ 			Vector3		axis0;
+ 			Vector3		axis1;
+			Vector3		anchor;
+ 		};
 	public:
 		virtual ~IJoint() {}
 
@@ -503,9 +571,7 @@ namespace physics {
 		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase & rkJointDesc ) = 0;
 		virtual SharedPtr<IActor> createActor( const IActor::Desc & rkActorDesc = IActor::Desc() ) = 0;
 		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc & rkAvatarDesc ) = 0;
-		/*
 		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc & rkMatDesc ) = 0;
-		*/
 
 		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc & rkTrimeshDesc ) = 0;
 
