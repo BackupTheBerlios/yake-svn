@@ -148,7 +148,13 @@
 				RelativePath="..\..\src\yake\base\yakeMimeTypeManager.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\yake\base\yakeMovable.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\yake\base\yakeOutputStream.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\yake\base\yakeParamHolder.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\yake\base\yakePCH.cpp">
@@ -253,10 +259,16 @@
 					RelativePath="..\..\src\yake\base\math\yakeMatrix3.cpp">
 				</File>
 				<File
+					RelativePath="..\..\src\yake\base\math\yakeMatrix4.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\yake\base\math\yakeQuaternion.cpp">
 				</File>
 				<File
 					RelativePath="..\..\src\yake\base\math\yakeRand.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\yake\base\math\yakeSimpleSpline.cpp">
 				</File>
 				<File
 					RelativePath="..\..\src\yake\base\math\yakeVector3.cpp">
@@ -274,6 +286,9 @@
 			</File>
 			<File
 				RelativePath="..\..\yake\base\yakeByteSwapOutputStreamDecorator.h">
+			</File>
+			<File
+				RelativePath="..\..\yake\base\yakeCommandInterface.h">
 			</File>
 			<File
 				RelativePath="..\..\yake\base\yakeConfigFile.h">
@@ -319,6 +334,9 @@
 			</File>
 			<File
 				RelativePath="..\..\yake\base\yakeOutputStreamDecorator.h">
+			</File>
+			<File
+				RelativePath="..\..\yake\base\yakeParamHolder.h">
 			</File>
 			<File
 				RelativePath="..\..\yake\base\yakePCH.h">
@@ -376,6 +394,9 @@
 				</File>
 				<File
 					RelativePath="..\..\yake\base\templates\yakeDangling.h">
+				</File>
+				<File
+					RelativePath="..\..\yake\base\templates\yakeDeque.h">
 				</File>
 				<File
 					RelativePath="..\..\yake\base\templates\yakeFastMap.h">
@@ -477,6 +498,9 @@
 					RelativePath="..\..\yake\base\math\yakeMatrix3.h">
 				</File>
 				<File
+					RelativePath="..\..\yake\base\math\yakeMatrix4.h">
+				</File>
+				<File
 					RelativePath="..\..\yake\base\math\yakeMersenneTwister.h">
 				</File>
 				<File
@@ -486,7 +510,13 @@
 					RelativePath="..\..\yake\base\math\yakeRand.h">
 				</File>
 				<File
+					RelativePath="..\..\yake\base\math\yakeSimpleSpline.h">
+				</File>
+				<File
 					RelativePath="..\..\yake\base\math\yakeVector3.h">
+				</File>
+				<File
+					RelativePath="..\..\yake\base\math\yakeVector4.h">
 				</File>
 			</Filter>
 			<Filter
