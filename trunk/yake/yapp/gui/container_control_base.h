@@ -57,7 +57,8 @@ template<typename ConcreteInfo, typename ConcreteControl>
 container_control_base & operator<<(container_control_base & container, 
 		const control_base::info_base<ConcreteInfo, ConcreteControl> & info)
 {
-  ConcreteControl * control = new ConcreteControl(static_cast<const ConcreteInfo &>(info));
+  //ConcreteControl * control = new ConcreteControl(static_cast<const ConcreteInfo &>(info));
+	ConcreteControl * control = get_gui_system().create<Control>(); static_cast<const ConcreteInfo &>(info) hmm ...
   container.add(*control);
   return container;
 }

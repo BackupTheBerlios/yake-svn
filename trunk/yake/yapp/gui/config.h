@@ -54,25 +54,23 @@ using namespace yake::base::mpl;
 // properties
 struct point;
 typedef sequences::list
-<
-	bool,
-	float,
-	const char *,
-	const point &	
-> 
-implemented_properties;
+	<
+		bool,
+		float,
+		const char *,
+		const point &	
+	> implemented_properties;
 
 // widgets
 class button_base;
 class static_text_base;
 class multi_line_edit_box_base;
 typedef sequences::list
-<
-	button_base,
-	static_text_base,
-	multi_line_edit_box_base 
-> 
-implemented_widgets;
+	<
+		button_base,
+		static_text_base,
+		multi_line_edit_box_base 
+	> implemented_widgets;
 
 /* helper: checks whether all implemented types are handled by a function or structure */
 // accepts n types and returns a list of concrete types
