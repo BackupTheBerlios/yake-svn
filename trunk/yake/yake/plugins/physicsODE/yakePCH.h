@@ -21,9 +21,9 @@
 #ifndef __INC_PCH_H__
 #define __INC_PCH_H__
 
-#include <dependencies/ode/include/ode/ode.h>
-#include <dependencies/ode/include/ode/odecpp.h>
-#include <dependencies/ode/include/ode/odecpp_collision.h>
+#include <ode/ode.h>
+#include <ode/odecpp.h>
+#include <ode/odecpp_collision.h>
 
 #include <yake/base/yake.h>
 #include <yake/physics/yakePhysicsSystem.h>
