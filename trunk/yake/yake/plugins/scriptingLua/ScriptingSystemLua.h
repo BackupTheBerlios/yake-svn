@@ -27,8 +27,9 @@ namespace yake {
 	using namespace base;
 namespace scripting {
 
-	class ScriptingSystemLua : public scripting::ScriptingSystem
+	class ScriptingSystemLua : public scripting::IScriptingSystem
 	{
+		YAKE_DECLARE_CONCRETE( ScriptingSystemLua, "lua" );
 	public:
 		ScriptingSystemLua();
 		virtual ~ScriptingSystemLua();
@@ -80,7 +81,7 @@ namespace scripting {
 		LuaVM( ScriptingSystemLua* pSystem, uint32 libs = LUALIB_BASE|LUALIB_TABLE|LUALIB_STRING|LUALIB_MATH|LUALIB_IO );
 		virtual ~LuaVM();
 
-		virtual const scripting::ScriptingSystem* getCreator() const
+		virtual const scripting::IScriptingSystem* getCreator() const
 		{ return mCreator; }
 
 		virtual void execute( const String & rData );
@@ -129,12 +130,12 @@ namespace scripting {
 	class LuaScript : public scripting::IScript
 	{
 	public:
-		LuaScript( ScriptingSystem* pCreator );
+		LuaScript( IScriptingSystem* pCreator );
 		virtual ~LuaScript();
 		/** Get a pointer to the scripting system that
 			created this IScript object.
 		*/
-		virtual const ScriptingSystem* getCreator() const;
+		virtual const IScriptingSystem* getCreator() const;
 
 		virtual bool isLoaded();
 		virtual void setData( const base::String& rData );
@@ -143,7 +144,7 @@ namespace scripting {
 
 	private:
 		base::String			mFileName;
-		const ScriptingSystem*	mCreator;
+		const IScriptingSystem*	mCreator;
 	};
 
 } // scripting

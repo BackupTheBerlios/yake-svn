@@ -35,6 +35,9 @@ namespace yake {
 namespace scripting {
 
 	//-----------------------------------------------------------------------
+	YAKE_REGISTER_CONCRETE( ScriptingSystemLua );
+
+	//-----------------------------------------------------------------------
 	#define IS_MASK_SET(val, mask) ((mask & val) == mask)
 
 	//------------------------------------------------------
@@ -76,7 +79,7 @@ namespace scripting {
 	//------------------------------------------------------
 	void LuaVM::execute( scripting::IScript* pScript )
 	{
-		if ( ( pScript->getCreator()->getLanguage() != scripting::ScriptingSystem::L_LUA ) || 
+		if ( ( pScript->getCreator()->getLanguage() != scripting::IScriptingSystem::L_LUA ) || 
 			( 0 == mLuaState ) )
 			return;
 
@@ -88,7 +91,7 @@ namespace scripting {
 	}
 
 	//------------------------------------------------------
-	ScriptingSystemLua::ScriptingSystemLua() : ScriptingSystem()
+	ScriptingSystemLua::ScriptingSystemLua()
 	{
 	}
 
@@ -118,7 +121,7 @@ namespace scripting {
 	}
 
 	//------------------------------------------------------
-	LuaScript::LuaScript( scripting::ScriptingSystem* pCreator ) : mCreator( pCreator )
+	LuaScript::LuaScript( scripting::IScriptingSystem* pCreator ) : mCreator( pCreator )
 	{
 		YAKE_ASSERT( mCreator ).debug( "creator scripting system undefined!" );
 	}
@@ -129,7 +132,7 @@ namespace scripting {
 	}
 
 	//------------------------------------------------------
-	const ScriptingSystem* LuaScript::getCreator() const 
+	const IScriptingSystem* LuaScript::getCreator() const 
 	{
 		return mCreator;
 	}

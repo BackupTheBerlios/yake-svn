@@ -33,11 +33,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="luad.lib luabindd.lib"
+				AdditionalDependencies="scripting.lib luad.lib luabindd.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies\lua\lib;../../../../dependencies\luabind\lib"
-				ModuleDefinitionFile="..\..\..\..\src\yake\plugins\scriptingLua\plugin.def"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
@@ -86,11 +86,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lua.lib luabind.lib"
+				AdditionalDependencies="scripting.lib lua.lib luabind.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies\lua\lib;../../../../dependencies\luabind\lib"
-				ModuleDefinitionFile="..\..\..\..\src\yake\plugins\scriptingLua\plugin.def"
+				ModuleDefinitionFile=""
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -126,15 +126,6 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\..\..\..\src\yake\plugins\scriptingLua\plugin.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yake\plugins\scriptingLua\plugin.def">
-			</File>
-			<File
-				RelativePath="..\plugins\yakeScriptingLua\src\plugin.def">
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\yake\plugins\scriptingLua\ScriptingSystemLua.cpp">
 			</File>
 			<File
@@ -157,9 +148,6 @@
 			Name="inc"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File
-				RelativePath="..\..\..\..\yake\plugins\scriptingLua\plugin.h">
-			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\scriptingLua\ScriptingSystemLua.h">
 			</File>

@@ -23,15 +23,15 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef INC_YAKE_SCRIPTINGSYSTEM_H
-#define INC_YAKE_SCRIPTINGSYSTEM_H
+#ifndef YAKE_SCRIPTINGSYSTEM_H
+#define YAKE_SCRIPTINGSYSTEM_H
 
 //#include <yakeBase/yake/yakeStableHeaders.h>
 
 namespace yake {
-	namespace scripting {
-		class IVM;
-	}
+namespace scripting {
+	class IVM;
+}
 
 	/** The scripting registration manager forwards requests to
 		subscribed objects to register their script bindings.
@@ -48,121 +48,114 @@ namespace yake {
 		void registerScriptBindings( scripting::IVM* pVM );
 	};
 
-	namespace scripting {
+namespace scripting {
 
-		class ScriptingSystem;
-		class IVM;
+	class IScriptingSystem;
+	class IVM;
 
-		class IBinder
-		{
-		public:
-			virtual ~IBinder() {}
+	class IBinder
+	{
+	public:
+		virtual ~IBinder() {}
 
-			virtual void bind( scripting::IVM* pVM ) = 0;
-		};
+		virtual void bind( scripting::IVM* pVM ) = 0;
+	};
 
-		/**
+	/**
+	*/
+	class /*YAKE_BASE_API*/ ScriptingBindingsPlugin : public ::yake::base::Plugin
+	{
+	public:
+		virtual yake::base::templates::SharedPtr<IBinder> createBinder() = 0;
+	};
+
+	/** A script that can be executed by a virtual machine.
+		\see IVM
+		\see ScriptingSystem
+	*/
+	class /*YAKE_BASE_API*/ IScript
+	{
+	public:
+		/** Get a pointer to the scripting system that
+			created this IScript object.
 		*/
-		class /*YAKE_BASE_API*/ ScriptingPlugin : public ::yake::base::Plugin
-		{
-		public:
-			virtual ScriptingSystem* createSystem() = 0;
-		};
+		virtual const IScriptingSystem* getCreator() const = 0;
 
-		/**
+		virtual bool isLoaded() = 0;
+		virtual void setData( const base::String & data ) = 0;
+	};
+
+	/** Scripting virtual machine.
+		A virtual machine can execute scripting code.
+		\see IScript
+		\see ScriptingSystem
+	*/
+	class /*YAKE_BASE_API*/ IVM
+	{
+	public:
+		virtual ~IVM() {}
+
+		/** Get a pointer to the scripting system that
+			created this IVM object.
 		*/
-		class /*YAKE_BASE_API*/ ScriptingBindingsPlugin : public ::yake::base::Plugin
-		{
-		public:
-			virtual yake::base::templates::SharedPtr<IBinder> createBinder() = 0;
-		};
+		virtual const IScriptingSystem* getCreator() const = 0;
 
-		/** A script that can be executed by a virtual machine.
-			\see IVM
-			\see ScriptingSystem
+		/** Execute the script data contained in pScript.
+			\param pScript script object
 		*/
-		class /*YAKE_BASE_API*/ IScript
+		virtual void execute( IScript* pScript ) = 0;
+
+		/** Execute the data contained in the string.
+			\param data a string containing scripting data to execute.
+		*/
+		virtual void execute( const base::String & data ) = 0;
+
+		//virtual PropertyInterface* getPropertyInterface()
+		//{ return 0; }
+	};
+
+	/** Scripting system interface.
+		Provides means to create virtual machines and scripts.
+		\see IVM
+		\see IScript
+	*/
+	class /*YAKE_BASE_API*/ IScriptingSystem// : public System
+	{
+		YAKE_DECLARE_REGISTRY_0( IScriptingSystem, base::String );
+	public:
+		//ScriptingSystem( SystemType type ) : System( type ) {}
+		enum Language
 		{
-		public:
-			/** Get a pointer to the scripting system that
-				created this IScript object.
-			*/
-			virtual const ScriptingSystem* getCreator() const = 0;
-
-			virtual bool isLoaded() = 0;
-			virtual void setData( const base::String & data ) = 0;
+			L_LUA,
+			L_PYTHON,
+			L_PERL,
+			L_RUBY,
+			L_CPP
 		};
+		/** Get the language used by the scripting system.
+		*/
+		virtual Language getLanguage() const = 0;
 
-		/** Scripting virtual machine.
-			A virtual machine can execute scripting code.
+		/** Get the version of the scripting system. */
+		//virtual version getVersion() const = 0;
+
+		/** Get a unique name for the system (e.g. "yake.core.lua", "yake.graphicsonly.python").
+		*/
+		virtual base::String getName() const = 0;
+
+		/** Create a scipting virtual machine.
 			\see IScript
-			\see ScriptingSystem
 		*/
-		class /*YAKE_BASE_API*/ IVM
-		{
-		public:
-			virtual ~IVM() {}
-
-			/** Get a pointer to the scripting system that
-				created this IVM object.
-			*/
-			virtual const ScriptingSystem* getCreator() const = 0;
-
-			/** Execute the script data contained in pScript.
-				\param pScript script object
-			*/
-			virtual void execute( IScript* pScript ) = 0;
-
-			/** Execute the data contained in the string.
-				\param data a string containing scripting data to execute.
-			*/
-			virtual void execute( const base::String & data ) = 0;
-
-			//virtual PropertyInterface* getPropertyInterface()
-			//{ return 0; }
-		};
-
-		/** Scripting system interface.
-			Provides means to create virtual machines and scripts.
+		virtual IVM* createVM() = 0;
+		
+		/** Create a script resource from a file. It can be executed
+			by a virtual machine.
 			\see IVM
-			\see IScript
 		*/
-		class /*YAKE_BASE_API*/ ScriptingSystem// : public System
-		{
-		public:
-			//ScriptingSystem( SystemType type ) : System( type ) {}
-			enum Language
-			{
-				L_LUA,
-				L_PYTHON,
-				L_PERL,
-				L_RUBY,
-				L_CPP
-			};
-			/** Get the language used by the scripting system.
-			*/
-			virtual Language getLanguage() const = 0;
+		virtual IScript* createScriptFromFile( const base::String & file ) = 0;
+	};
 
-			/** Get the version of the scripting system. */
-			//virtual version getVersion() const = 0;
-
-			/** Get a unique name for the system (e.g. "yake.core.lua", "yake.graphicsonly.python").
-			*/
-			virtual base::String getName() const = 0;
-
-			/** Create a scipting virtual machine.
-				\see IScript
-			*/
-			virtual IVM* createVM() = 0;
-			
-			/** Create a script resource from a file. It can be executed
-				by a virtual machine.
-				\see IVM
-			*/
-			virtual IScript* createScriptFromFile( const base::String & file ) = 0;
-		};
-
-	}
+}
 }
 
 

@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="scripting"
 	ProjectGUID="{8A16CDB5-B272-49AD-AF22-B8FD0E5E1A03}"
+	RootNamespace="scripting"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -12,18 +13,19 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../../../../common/lib/debug"
-			IntermediateDirectory="../../../../common/obj/debug/$(ProjectName)"
+			OutputDirectory="../../common/lib/debug"
+			IntermediateDirectory="../../common/obj/debug/$(ProjectName)"
 			ConfigurationType="4"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				AdditionalIncludeDirectories="..;../../;../../dependencies/boost/;../../dependencies/ttl/"
+				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_LIB"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="5"
-				UsePrecompiledHeader="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -31,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=""/>
+				OutputFile="$(OutDir)\$(ProjectName).lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -53,15 +55,16 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../../common/bin/release"
+			OutputDirectory="../../common/lib/release"
 			IntermediateDirectory="../../common/obj/release/$(ProjectName)"
 			ConfigurationType="4"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..;../../;../../dependencies/boost/;../../dependencies/ttl/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
-				RuntimeLibrary="4"
-				UsePrecompiledHeader="3"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -69,7 +72,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(OutDir)/$(ProjectName).lib"/>
+				OutputFile="$(OutDir)\$(ProjectName).lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -97,6 +100,9 @@
 			Name="src"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath="..\..\src\yake\scripting\yakeScriptingSystem.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="inc"
