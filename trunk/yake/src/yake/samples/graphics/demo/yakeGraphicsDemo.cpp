@@ -27,7 +27,7 @@ class TheApp : public yake::exapp::ExampleApplication
 {
 private:
 	Vector<std::pair<IViewport*,ICamera*> >	mVPs;
-	SharedPtr< IGraphicalWorld >			mGWorld;
+	SharedPtr< IWorld >					mGWorld;
 
 	graphics::ISceneNode*				mLightOneNode;
 	graphics::ISceneNode*				mLightTwoNode;
@@ -90,6 +90,7 @@ public:
 		YAKE_ASSERT( mNinja.pSN );
 
 		mNinja.pE = mGWorld->createEntity("ninja.mesh");
+		//mNinja.pE = mGWorld->createEntity("box_1x1x1.mesh");
 		YAKE_ASSERT( mNinja.pE );
 		mNinja.pE->setCastsShadow( true );
 
@@ -389,6 +390,10 @@ int main()
 	catch (const yake::base::Exception & e)
 	{
 		std::cout << std::endl << e.what() << std::endl;
+	}
+	catch (...)
+	{
+		std::cout << std::endl << "-----------------" << std::endl << "UNHANDLED EXCEPTION" << std::endl;
 	}
 #if defined( YAKE_DEBUG_BUILD )
 	std::cout << std::endl << "Waiting for you...";
