@@ -40,7 +40,8 @@ namespace app {
 		eAlreadyRegistered,
 		eNotFound,
 		eStateNotFound,
-		eTransitionNotFound
+		eTransitionNotFound,
+		eNestingTooDeep
 	};
 
 namespace state {
