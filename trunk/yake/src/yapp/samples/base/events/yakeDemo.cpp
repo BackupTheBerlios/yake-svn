@@ -10,7 +10,7 @@
 #include <yapp/samples/base/events/yakePCH.h>
 #include <yapp/base/yapp.h>
 #include <yapp/base/event/yakeEvent.h>
-#include <yapp/base/event/yakeParamHolder.h>
+#include <yake/base/yakeParamHolder.h>
 
 using namespace yake;
 using namespace yake::base::templates;
@@ -58,7 +58,7 @@ public:
 	class M1Listener : public MessageListener
 	{
 	public:
-		virtual MsgResultCode onMessage( const MessageId id, yapp::event::ParamHolder* pParams )
+		virtual MsgResultCode onMessage( const MessageId id, yake::base::ParamHolder* pParams )
 		{
 			if (kMsgHandled == MessageListener::onMessage( id, pParams ))
 				return kMsgHandled;
@@ -68,26 +68,26 @@ public:
 				if (pParams)
 				{
 					// case 1 : dump all parameters
-					yapp::event::ParamHolder::StringVector keys;
+					yake::base::ParamHolder::StringVector keys;
 					keys = pParams->getKeys();
-					ConstVectorIterator<yapp::event::ParamHolder::StringVector> it( keys.begin(), keys.end() );
+					ConstVectorIterator<yake::base::ParamHolder::StringVector> it( keys.begin(), keys.end() );
 					while (it.hasMoreElements())
 					{
 						String key = it.getNext();
 						std::cout << key;
-						yapp::event::ParamHolder::Param value = pParams->get(key);
+						yake::base::ParamHolder::Param value = pParams->get(key);
 						std::cout << " [type=" << value.which() << "] ";
 						std::cout << " = ";
-						if (value.which() == yapp::event::ParamHolder::kString)
+						if (value.which() == yake::base::ParamHolder::kString)
 							std::cout << varGet<String>(value) << std::endl;
 						else
 							std::cout << std::endl;
 					}
 
 					// case 2 : we expect a certain parameter of type String
-					yapp::event::ParamHolder::Param value = pParams->get("aString");
+					yake::base::ParamHolder::Param value = pParams->get("aString");
 					//YAKE_ASSERT( value.which() != yapp::event::ParamHolder::kNone ); // superfluous, check for error condition...
-					YAKE_ASSERT( value.which() == yapp::event::ParamHolder::kString ); // to be sure...
+					YAKE_ASSERT( value.which() == yake::base::ParamHolder::kString ); // to be sure...
 					std::cout << "Retrieving expected param 'aString' = " << varGet<String>(value) << std::endl;
 
 					// case 3 : we expect a certain parameter of type Pointer
@@ -107,7 +107,7 @@ public:
 			mRetCode(code),
 			mName(name)
 		{}
-		virtual MsgResultCode onMessage( const MessageId id, yapp::event::ParamHolder* pParams )
+		virtual MsgResultCode onMessage( const MessageId id, yake::base::ParamHolder* pParams )
 		{
 			std::cout << "> M2 (" << mName << ") received " << id << std::endl;
 			return mRetCode;
@@ -119,7 +119,7 @@ public:
 	void run()
 	{
 		// construct message instance
-		yapp::event::ParamHolder par1;
+		yake::base::ParamHolder par1;
 		par1.set( "aString", "aloha" );
 		par1.set( "aString", "aloha2" );
 		par1.set( "anotherString", "aloha" );
