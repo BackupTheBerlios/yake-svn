@@ -62,6 +62,16 @@ namespace exapp {
 			return mShutdownRequested;
 		}
 
+		const input::KeyboardDevice* getKeyboard() const
+		{
+			return mKeyboard;
+		}
+
+		const input::MouseDevice* getMouse() const
+		{
+			return mMouse;
+		}
+
 		graphics::IGraphicsSystem& getGraphicsSystem() const
 		{
 			if (!mGraphicsSystem)
