@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/luabind;../../../../dependencies/ttl/;../../../../dependencies/boost/"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/lua/include;../../../../dependencies/luabind;../../../../dependencies/ttl/;../../../../dependencies/boost/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKESCRIPTINGLUA_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -74,7 +74,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="3"
 				GlobalOptimizations="TRUE"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/luabind;../../../../dependencies/ttl/;../../../../dependencies/boost/"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/lua/include;../../../../dependencies/luabind;../../../../dependencies/ttl/;../../../../dependencies/boost/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKESCRIPTINGLUA_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"
@@ -130,10 +130,10 @@
 				RelativePath="..\..\..\..\src\yake\plugins\scriptingLua\plugin.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakeScriptingLua\src\plugin.def">
+				RelativePath="..\..\..\..\src\yake\plugins\scriptingLua\plugin.def">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\yake\plugins\scriptingLua\plugin.def">
+				RelativePath="..\plugins\yakeScriptingLua\src\plugin.def">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\scriptingLua\ScriptingSystemLua.cpp">
