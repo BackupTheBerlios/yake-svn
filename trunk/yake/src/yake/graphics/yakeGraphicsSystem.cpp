@@ -33,11 +33,32 @@
 namespace yake {
 namespace graphics {
 
-YAKE_IMPLEMENT_REGISTRY( IGraphicsSystem )
+	YAKE_IMPLEMENT_REGISTRY( IGraphicsSystem )
 
-IGraphicsSystem::~IGraphicsSystem()
-{
-}
+	IGraphicsSystem::~IGraphicsSystem()
+	{
+	}
+
+	Ray ICamera::createCameraToViewportRay(const real screenX, const real screenY) const
+	{
+		real centeredScreenX = (screenX - 0.5f);
+		real centeredScreenY = (0.5f - screenY);
+
+		const real nearDist = getNearClipDistance();
+
+		real normalizedSlope = Math::Tan(getFOV() / 2); // getFOV() returns FOVy
+		real viewportYToWorldY = normalizedSlope * nearDist * 2;
+		real viewportXToWorldX = viewportYToWorldY * getAspectRatio();
+
+		Vector3 rayDirection(centeredScreenX * viewportXToWorldX,
+			centeredScreenY * viewportYToWorldY,
+			-nearDist);
+		rayDirection = getOrientation() * rayDirection; //getDerivedOrientation() * rayDirection;
+		rayDirection.normalise();
+
+		//return Ray(getDerivedPosition(), rayDirection);
+		return Ray( getPosition(), rayDirection );
+	}
 
 } // graphics
 } // yake

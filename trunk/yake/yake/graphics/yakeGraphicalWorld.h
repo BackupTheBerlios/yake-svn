@@ -136,6 +136,12 @@ namespace graphics {
 		inline void rotate( const Quaternion & q );
 		inline void rotate( const Vector3 & axis, real degrees );
 		inline void pitch( real degrees );
+
+		/** Return a ray in world space coordinates as cast from the camera through a viewport
+			position.
+			@param screenX, screenY position where the ray intersects the viewport, in normalised screen coords [0,1]
+		*/
+		virtual Ray createCameraToViewportRay(const real screenX, const real screenY) const;
 	};
 
 	void ICamera::rotate(const Vector3 & axis, real degrees)
