@@ -29,7 +29,7 @@ typedef sequences::list
 		float,
 		const char *,
 		const point &	
-	> implemented_properties;
+	> available_properties;
 
 // widgets
 typedef sequences::list
@@ -37,7 +37,7 @@ typedef sequences::list
 		button_base,
 		static_text_base,
 		multi_line_edit_box_base 
-	> implemented_widgets;
+	> available_widgets;
 
 /* helper: checks whether all implemented types are handled by a function or structure */
 // accepts n types and returns a list of concrete types
@@ -53,12 +53,30 @@ struct get_type_list
 	typedef typename boost::mpl::remove_if< given_types, boost::is_same<boost::mpl::_, null_type> >::type type;
 };
 
+// accept n properties and checks whether all widget types are handled or not at compile time
+#define YAKE_STATIC_ASSERT_PROPERTIES(PROP1, PROP2, PROP3, PROP4, PROP5, PROP6, PROP7, PROP8, PROP9, PROP10, PROP11, PROP12, PROP13, PROP14, PROP15, PROP16) \
+	YAKE_STATIC_ASSERT( \
+		(compare_sequences /* condition */ \
+		 < \
+			 available_properties, /* conditional types */ \
+			 get_type_list /* implemented types */ \
+			 < \
+				  typename yake::base::mpl::get_type_or_null<PROP1>::type, \
+				  typename yake::base::mpl::get_type_or_null<PROP2>::type, \
+				  typename yake::base::mpl::get_type_or_null<PROP3>::type \
+			 >::type \
+     >::type::value), \
+    conditional_and_available_properties_lists_do_not_match) /* error */
+
+} // namespace gui
+} // namespace yake
+
 // accept n widgets and checks whether all widget types are handled or not at compile time
 #define YAKE_STATIC_ASSERT_WIDGETS(WIDGET1, WIDGET2, WIDGET3, WIDGET4, WIDGET5, WIDGET6, WIDGET7, WIDGET8, WIDGET9, WIDGET10, WIDGET11, WIDGET12,	WIDGET13, WIDGET14, WIDGET15, WIDGET16) \
 	YAKE_STATIC_ASSERT( \
 		(compare_sequences /* condition */ \
 		 < \
-			 implemented_widgets, /* conditional types */ \
+			 available_widgets, /* conditional types */ \
 			 get_type_list /* implemented types */ \
 			 < \
 				  typename yake::base::mpl::get_type_or_null<WIDGET1>::type, \
@@ -66,7 +84,7 @@ struct get_type_list
 				  typename yake::base::mpl::get_type_or_null<WIDGET3>::type \
 			 >::type \
      >::type::value), \
-    conditional_and_implemented_widget_lists_do_not_match) /* error */
+    conditional_and_available_widget_lists_do_not_match) /* error */
 
 } // namespace gui
 } // namespace yake

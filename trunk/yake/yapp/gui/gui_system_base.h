@@ -52,7 +52,7 @@ struct YAPP_GUI_API gui_system_base
 		<
 			implemented_widgets,
 			yake::base::mpl::abstract_factory_unit_pars,
-			typename get_widget_infos_lists<implemented_widgets>::type
+			typename get_widget_infos_lists<available_widgets>::type
 		>
 {
 	// virtual destructor

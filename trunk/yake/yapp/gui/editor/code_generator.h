@@ -53,7 +53,7 @@ struct widget_serializer
 			// get widget type info
 			const type_info & widget_type_info = (*widget_iter)->getClass().get_type_info();
 			std::string widget_type_string = dispatch_widget_type(widget_type_info);
-      // add widget info
+			// add widget info
 			creator_function += "  self:add(" + widget_type_string + "()";
 			// add widget properties
 			for(reflection::Class::PropertyList::const_iterator prop_iter = (*widget_iter)->getClass().getProperties().begin();
@@ -73,21 +73,8 @@ private:
 	{
 		// check whether all widget types are handled or not at compile time
 		YAKE_STATIC_ASSERT_WIDGETS(button_base, static_text_base, multi_line_edit_box_base);
-		
-		// todo: use macro, see config.h
-		/*BOOST_STATIC_ASSERT((
-			compare_sequences
-			< 
-				implemented_widgets, // conditional types
-				boost::mpl::list // handled/implemented (by this function) types
-				<
-					button_base, 
-					static_text_base,
-					multi_line_edit_box_base
-				>
-			>::type::value));*/
 
-    // returning the name of the widget info type
+		// returning the name of the widget info type
 		if(type_info == typeid(button_base)) return "button";
 		else if(type_info == typeid(static_text_base)) return "static_text";
 		else if(type_info == typeid(multi_line_edit_box_base)) return "multi_line_edit_box";
@@ -101,18 +88,7 @@ private:
 	static std::string dispatch_property_value(const reflection::Property & prop, const control_base & widget)
 	{
 		// check whether all property types are handled or not at compile time
-		BOOST_STATIC_ASSERT((
-			compare_sequences
-			< 
-				implemented_properties, // conditional types
-				boost::mpl::list // handled/implemented (by this function) types
-				<
-					bool,
-					float,
-					const char *,
-					const point &	
-				> 
-			>::type::value));
+		YAKE_STATIC_ASSERT_PROPERTIES(bool, float, const char* , const point &);
 
 		// returning the formated value of the property
 		const std::type_info & type_info = prop.getTypeInfo();
