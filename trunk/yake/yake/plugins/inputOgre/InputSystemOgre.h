@@ -70,20 +70,17 @@ namespace input {
 	};
 
 	//-----------------------------------------------------------------------
-	class InputSystemOgre : public InputSystem
+	class InputSystemOgre : public IInputSystem
 	{
+		YAKE_DECLARE_CONCRETE( InputSystemOgre, "ogre" )
 	public:
 		InputSystemOgre();
 		virtual ~InputSystemOgre();
 
 		virtual void update();
-
-		virtual DeviceList getAvailableDevices();
-
+		virtual DeviceEntryList getAvailableDevices();
 		virtual InputDevice* activateDevice( const base::String & deviceName );
-
 		virtual InputDevice* getDevice( const base::String & deviceName ) const;
-
 		virtual void getActiveDevices( std::vector< InputDevice* > & devices ) const;
 
 	protected:

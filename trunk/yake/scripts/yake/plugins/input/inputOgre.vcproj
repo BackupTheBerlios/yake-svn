@@ -38,7 +38,7 @@
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ogrenew/OgreMain/lib/Debug"
-				ModuleDefinitionFile="../../../../src/yake/plugins/inputOGRE/plugin.def"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
@@ -90,7 +90,7 @@
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ogrenew/OgreMain/lib/Release"
-				ModuleDefinitionFile="../../../../src/yake/plugins/inputOGRE/plugin.def"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -127,13 +127,7 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{C67DED0A-2A44-4e20-AE89-F806E18528B8}">
 			<File
-				RelativePath="..\..\..\..\src\yake\plugins\inputOgre\inputPlugin.cpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\yake\plugins\inputOgre\InputSystemOgre.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yake\plugins\inputOgre\plugin.def">
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\inputOgre\yakePCH.cpp">
@@ -155,9 +149,6 @@
 			Name="inc"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{822EB821-5C65-4f72-8334-5A5492305603}">
-			<File
-				RelativePath="..\..\..\..\yake\plugins\inputOgre\inputPlugin.h">
-			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\inputOgre\InputSystemOgre.h">
 			</File>

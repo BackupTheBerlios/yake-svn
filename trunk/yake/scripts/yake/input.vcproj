@@ -133,6 +133,9 @@
 				RelativePath="..\..\src\yake\input\yakeInputEventGenerator.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\yake\input\yakeInputSystem.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\yake\input\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">

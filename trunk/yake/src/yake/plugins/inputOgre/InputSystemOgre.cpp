@@ -30,175 +30,177 @@
 #endif
 
 namespace yake {
-	namespace input {
+namespace input {
 
-		//-----------------------------------------------------------------------
-		MouseDeviceOgre::MouseDeviceOgre(Ogre::InputReader * inputReader) :
-					mInputReader(inputReader),
-					mPosition(Vector3::kZero)
-		{
-			mButtons[0] = mButtons[1] = mButtons[2] = false;
-		}
+	YAKE_REGISTER_CONCRETE( InputSystemOgre );
 
-		//-----------------------------------------------------------------------
-		MouseDeviceOgre::~MouseDeviceOgre()
-		{
-		}
+	//-----------------------------------------------------------------------
+	MouseDeviceOgre::MouseDeviceOgre(Ogre::InputReader * inputReader) :
+				mInputReader(inputReader),
+				mPosition(Vector3::kZero)
+	{
+		mButtons[0] = mButtons[1] = mButtons[2] = false;
+	}
 
-		//-----------------------------------------------------------------------
-		int MouseDeviceOgre::getNumButtons() const
-		{
-			return 3;
-		}
+	//-----------------------------------------------------------------------
+	MouseDeviceOgre::~MouseDeviceOgre()
+	{
+	}
 
-		//-----------------------------------------------------------------------
-		bool MouseDeviceOgre::isButtonDown( int button ) const
-		{
-			if (button > 2) return false;
-			if (button < 0) return false;
-			return mButtons[ button ];
-		}
-		
-		//-----------------------------------------------------------------------
-		Vector3 MouseDeviceOgre::getPosition() const
-		{
-			return mPosition;
-		}
+	//-----------------------------------------------------------------------
+	int MouseDeviceOgre::getNumButtons() const
+	{
+		return 3;
+	}
 
-		//-----------------------------------------------------------------------
-		void MouseDeviceOgre::poll()
-		{
-			for (int btn = 0; btn < 3; ++btn)
-			{
-				mButtons[btn] = mInputReader->getMouseButton( btn );
-			}
-			mPosition.x += mInputReader->getMouseRelativeX();
-			mPosition.y += mInputReader->getMouseRelativeY();
-			mPosition.z += mInputReader->getMouseRelativeZ();
-			/*mPosition.x = mInputReader->getMouseAbsX();
-			mPosition.y = mInputReader->getMouseAbsY();
-			mPosition.z = mInputReader->getMouseAbsZ();*/
-		}
+	//-----------------------------------------------------------------------
+	bool MouseDeviceOgre::isButtonDown( int button ) const
+	{
+		if (button > 2) return false;
+		if (button < 0) return false;
+		return mButtons[ button ];
+	}
+	
+	//-----------------------------------------------------------------------
+	Vector3 MouseDeviceOgre::getPosition() const
+	{
+		return mPosition;
+	}
 
-		//-----------------------------------------------------------------------
-		KeyboardDeviceOgre::KeyboardDeviceOgre(Ogre::InputReader * inputReader) : mInputReader(inputReader)
+	//-----------------------------------------------------------------------
+	void MouseDeviceOgre::poll()
+	{
+		for (int btn = 0; btn < 3; ++btn)
 		{
+			mButtons[btn] = mInputReader->getMouseButton( btn );
 		}
+		mPosition.x += mInputReader->getMouseRelativeX();
+		mPosition.y += mInputReader->getMouseRelativeY();
+		mPosition.z += mInputReader->getMouseRelativeZ();
+		/*mPosition.x = mInputReader->getMouseAbsX();
+		mPosition.y = mInputReader->getMouseAbsY();
+		mPosition.z = mInputReader->getMouseAbsZ();*/
+	}
 
-		//-----------------------------------------------------------------------
-		KeyboardDeviceOgre::~KeyboardDeviceOgre()
-		{
-		}
+	//-----------------------------------------------------------------------
+	KeyboardDeviceOgre::KeyboardDeviceOgre(Ogre::InputReader * inputReader) : mInputReader(inputReader)
+	{
+	}
 
-		//-----------------------------------------------------------------------
-		void KeyboardDeviceOgre::poll()
-		{
-		}
+	//-----------------------------------------------------------------------
+	KeyboardDeviceOgre::~KeyboardDeviceOgre()
+	{
+	}
 
-		//-----------------------------------------------------------------------
-		bool KeyboardDeviceOgre::isKeyDown( KeyCode key ) const
-		{
-			if (!mInputReader)
-				return false;
-			return mInputReader->isKeyDown( static_cast<Ogre::KeyCode>(key) );
-		}
+	//-----------------------------------------------------------------------
+	void KeyboardDeviceOgre::poll()
+	{
+	}
 
-		//-----------------------------------------------------------------------
-		InputSystemOgre::InputSystemOgre()
-		{
-			mInputReader = Ogre::PlatformManager::getSingleton().createInputReader();
-			YAKE_ASSERT( mInputReader ).debug("Could not create input reader.");
-			if (mInputReader)
-				mInputReader->initialise(Ogre::Root::getSingleton().getAutoCreatedWindow(), true, true, false);
-		}
+	//-----------------------------------------------------------------------
+	bool KeyboardDeviceOgre::isKeyDown( KeyCode key ) const
+	{
+		if (!mInputReader)
+			return false;
+		return mInputReader->isKeyDown( static_cast<Ogre::KeyCode>(key) );
+	}
 
-		//-----------------------------------------------------------------------
-		InputSystemOgre::~InputSystemOgre()
-		{
-			for (ActiveDeviceList::const_iterator it = mActiveDevices.begin(); it != mActiveDevices.end(); ++it)
-				delete (*it).device;
-			Ogre::PlatformManager::getSingleton().destroyInputReader( mInputReader );
-		}
+	//-----------------------------------------------------------------------
+	InputSystemOgre::InputSystemOgre()
+	{
+		mInputReader = Ogre::PlatformManager::getSingleton().createInputReader();
+		YAKE_ASSERT( mInputReader ).debug("Could not create input reader.");
+		if (mInputReader)
+			mInputReader->initialise(Ogre::Root::getSingleton().getAutoCreatedWindow(), true, true, false);
+	}
 
-		//-----------------------------------------------------------------------
-		void InputSystemOgre::update()
-		{
-			if (mInputReader)
-				mInputReader->capture();
-			for (ActiveDeviceList::const_iterator it = mActiveDevices.begin(); it != mActiveDevices.end(); ++it)
-				(*it).device->poll();
-		}
+	//-----------------------------------------------------------------------
+	InputSystemOgre::~InputSystemOgre()
+	{
+		for (ActiveDeviceList::const_iterator it = mActiveDevices.begin(); it != mActiveDevices.end(); ++it)
+			delete (*it).device;
+		Ogre::PlatformManager::getSingleton().destroyInputReader( mInputReader );
+	}
 
-		//-----------------------------------------------------------------------
-		void InputSystemOgre::getActiveDevices( std::vector< InputDevice* > & devices ) const
-		{
-			devices.clear();
-			for (ActiveDeviceList::const_iterator it = mActiveDevices.begin(); it != mActiveDevices.end(); ++it)
-				devices.push_back( (*it).device );
-		}
+	//-----------------------------------------------------------------------
+	void InputSystemOgre::update()
+	{
+		if (mInputReader)
+			mInputReader->capture();
+		for (ActiveDeviceList::const_iterator it = mActiveDevices.begin(); it != mActiveDevices.end(); ++it)
+			(*it).device->poll();
+	}
 
-		//-----------------------------------------------------------------------
-		InputDevice* InputSystemOgre::activateDevice( const base::String & deviceName )
+	//-----------------------------------------------------------------------
+	void InputSystemOgre::getActiveDevices( std::vector< InputDevice* > & devices ) const
+	{
+		devices.clear();
+		for (ActiveDeviceList::const_iterator it = mActiveDevices.begin(); it != mActiveDevices.end(); ++it)
+			devices.push_back( (*it).device );
+	}
+
+	//-----------------------------------------------------------------------
+	InputDevice* InputSystemOgre::activateDevice( const base::String & deviceName )
+	{
+		if (getDevice(deviceName))
+			return 0;
+
+		if (deviceName == "Keyboard")
 		{
-			if (getDevice(deviceName))
+			input::KeyboardDevice* pKeyboard = new KeyboardDeviceOgre( mInputReader );
+			YAKE_ASSERT( pKeyboard ).debug("Out of memory ?");
+			if (!pKeyboard)
 				return 0;
 
-			if (deviceName == "Keyboard")
-			{
-				input::KeyboardDevice* pKeyboard = new KeyboardDeviceOgre( mInputReader );
-				YAKE_ASSERT( pKeyboard ).debug("Out of memory ?");
-				if (!pKeyboard)
-					return 0;
-
-				ActiveDevice dev;
-				dev.name = "Keyboard";
-				dev.type = IDT_KEYBOARD;
-				dev.device = pKeyboard;
-				mActiveDevices.push_back( dev );
-				return pKeyboard;
-			}
-			else if (deviceName == "Mouse")
-			{
-				input::MouseDevice* pMouse = new MouseDeviceOgre( mInputReader );
-				YAKE_ASSERT( pMouse ).debug("Out of memory ?");
-				if (!pMouse)
-					return 0;
-
-				ActiveDevice dev;
-				dev.name = "Mouse";
-				dev.type = IDT_MOUSE;
-				dev.device = pMouse;
-				mActiveDevices.push_back( dev );
-				return pMouse;
-			}
-			return 0;
+			ActiveDevice dev;
+			dev.name = "Keyboard";
+			dev.type = IDT_KEYBOARD;
+			dev.device = pKeyboard;
+			mActiveDevices.push_back( dev );
+			return pKeyboard;
 		}
-
-		//-----------------------------------------------------------------------
-		InputDevice* InputSystemOgre::getDevice( const base::String & deviceName ) const
+		else if (deviceName == "Mouse")
 		{
-			for (ActiveDeviceList::const_iterator it = mActiveDevices.begin(); it != mActiveDevices.end(); ++it)
-				if ((*it).name == deviceName)
-					return (*it).device;
-			return 0;
+			input::MouseDevice* pMouse = new MouseDeviceOgre( mInputReader );
+			YAKE_ASSERT( pMouse ).debug("Out of memory ?");
+			if (!pMouse)
+				return 0;
+
+			ActiveDevice dev;
+			dev.name = "Mouse";
+			dev.type = IDT_MOUSE;
+			dev.device = pMouse;
+			mActiveDevices.push_back( dev );
+			return pMouse;
 		}
-
-		//-----------------------------------------------------------------------
-		InputSystemOgre::DeviceList InputSystemOgre::getAvailableDevices()
-		{
-			DeviceList list;
-			DeviceListEntry entry;
-
-			entry.name = "Mouse";
-			entry.type = IDT_MOUSE;
-			list.push_back( entry );
-
-			entry.name = "Keyboard";
-			entry.type = IDT_KEYBOARD;
-			list.push_back( entry );
-
-			return list;
-		}
-
+		return 0;
 	}
+
+	//-----------------------------------------------------------------------
+	InputDevice* InputSystemOgre::getDevice( const base::String & deviceName ) const
+	{
+		for (ActiveDeviceList::const_iterator it = mActiveDevices.begin(); it != mActiveDevices.end(); ++it)
+			if ((*it).name == deviceName)
+				return (*it).device;
+		return 0;
+	}
+
+	//-----------------------------------------------------------------------
+	InputSystemOgre::DeviceEntryList InputSystemOgre::getAvailableDevices()
+	{
+		DeviceEntryList list;
+		DeviceListEntry entry;
+
+		entry.name = "Mouse";
+		entry.type = IDT_MOUSE;
+		list.push_back( entry );
+
+		entry.name = "Keyboard";
+		entry.type = IDT_KEYBOARD;
+		list.push_back( entry );
+
+		return list;
+	}
+
+}
 }
