@@ -72,7 +72,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../;../../dependencies/boost/;../../dependencies/ttl/;..dependencies/tinyxml"
+				AdditionalIncludeDirectories="../../;../../dependencies/boost/;../../dependencies/ttl/;../../dependencies/ZThread/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_THREAD_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
