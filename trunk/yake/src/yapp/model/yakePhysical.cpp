@@ -26,13 +26,17 @@
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
 
-namespace yapp {
+namespace yake {
+namespace app {
 namespace model {
 
+	//-----------------------------------------------------
 	Physical::ComplexList Physical::getComplexObjects() const
 	{
 		return mComplexObjects;
 	}
+
+	//-----------------------------------------------------
 	void Physical::translate( const Vector3 & d )
 	{
 		VectorIterator< ComplexList > itComplex( mComplexObjects.begin(), mComplexObjects.end() );
@@ -59,5 +63,6 @@ namespace model {
 		mJoints.push_back( pJoint );
 	}
 
+}
 }
 }
