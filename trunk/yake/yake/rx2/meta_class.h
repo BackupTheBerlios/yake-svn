@@ -188,7 +188,7 @@ public: // events and handlers
 			std::make_pair
 			(
 				new event<T1>(),
-				std::make_pair
+				std::make_pair< void(*)(meta_object&, event_base&, std::string&) >
 				(
 					typename attach<T1>::clone_event,
 					name
