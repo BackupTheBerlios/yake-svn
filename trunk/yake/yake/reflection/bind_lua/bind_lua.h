@@ -1,10 +1,11 @@
 #ifndef _BIND_LUA_H_
 #define _BIND_LUA_H_
 
+#include <yake/base/mpl/dispatch_arbitrary_types.h>
+#include <yake/base/mpl/get_type_or_null.h>
+
 #include "static_init.h"
 #include "type_info.h"
-#include "construct_type_from_arbitrary_types.h"
-#include "get_type_or_null.h"
 #include "events.h"
 
 extern "C"
@@ -13,6 +14,8 @@ extern "C"
 	#include "lauxlib.h"
 	#include "lualib.h"
 }
+
+using namespace yake::base::mpl;
 
 // -----------------------------------------
 // lua utility
@@ -309,11 +312,11 @@ struct get_signature_holder
 	typedef typename signature_holder<num_args, false, T1, T2, T3> type;
 };
 
-template<typename T1 = null, typename T2 = null, typename T3 = null>
-struct get_const_signature : construct_type_from_arbitrary_types<get_const_signature_holder, T1, T2, T3>::type {};
+template<typename T1 = null_type, typename T2 = null_type, typename T3 = null_type>
+struct get_const_signature : dispatch_arbitrary_types<get_const_signature_holder, T1, T2, T3>::type {};
 
-template<typename T1 = null, typename T2 = null, typename T3 = null>
-struct get_signature : construct_type_from_arbitrary_types<get_signature_holder, T1, T2, T3>::type {};
+template<typename T1 = null_type, typename T2 = null_type, typename T3 = null_type>
+struct get_signature : dispatch_arbitrary_types<get_signature_holder, T1, T2, T3>::type {};
 
 
 template <typename class_> 
@@ -330,7 +333,7 @@ bool lua_is_class_registered()
 
 #define LUA_EVENT(ACCESS_ATTR, EVENT_NAME, ARGS) \
 public: \
-	const reflection::event<REMOVE_BRACES##ARGS> & get_##EVENT_NAME() const \
+	const reflection::event<YAKE_REMOVE_BRACES##ARGS> & get_##EVENT_NAME() const \
 	{ return EVENT_NAME; } \
 private: \
 	struct register_event_##EVENT_NAME \
@@ -340,12 +343,12 @@ private: \
 			initor() \
 			{ \
 				/* register the event class to lua if it is not registered yet */ \
-				if(!lua_is_class_registered< reflection::event<REMOVE_BRACES##ARGS> >()) \
+				if(!lua_is_class_registered< reflection::event<YAKE_REMOVE_BRACES##ARGS> >()) \
 				{ \
 					luabind::module(L) \
 					[ \
-						luabind::class_<reflection::event<REMOVE_BRACES##ARGS>, reflection::lua_event_base>(#EVENT_NAME) \
-							.def(get_signature<REMOVE_BRACES##ARGS>::signature()) \
+						luabind::class_<reflection::event<YAKE_REMOVE_BRACES##ARGS>, reflection::lua_event_base>(#EVENT_NAME) \
+							.def(get_signature<YAKE_REMOVE_BRACES##ARGS>::signature()) \
 					]; \
 				} \
 				/* bind the event as read-only property */ \

@@ -9,7 +9,7 @@
 
 // removes the braces of (int, float, bool) and returns int, float, bool, null, null ...
 // [used by EVENT( ..., (int, float, bool), ... ) etc.]
-#define REMOVE_BRACES(arg1, arg2, arg3) typename get_type_or_null<arg1>::type, typename get_type_or_null<arg2>::type/*todo , typename get_type_or_null<arg3>::type*/
+#define YAKE_REMOVE_BRACES(arg1, arg2, arg3) typename yake::base::mpl::get_type_or_null<arg1>::type, typename yake::base::mpl::get_type_or_null<arg2>::type/*todo , typename yake::base::mpl::get_type_or_null<arg3>::type*/
 
 // access synonyms used in reflection
 #define ACCESS_public        ACCESS_PUBLIC

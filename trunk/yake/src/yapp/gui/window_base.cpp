@@ -15,7 +15,7 @@ float window_base::defaults::size::height = 0.5f;
 float window_base::defaults::size::width = 0.5f;
 float window_base::defaults::position::x = 0.1f;
 float window_base::defaults::position::y = 0.1f;
-const char * window_base::defaults::title = "window";
+const char * window_base::defaults::title = typeid(window_base).name();
 
 } // namespace gui
 } // namespace yake

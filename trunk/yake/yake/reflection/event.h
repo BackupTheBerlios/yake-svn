@@ -18,12 +18,12 @@ private: \
 		{ \
         __event_##EVENT_NAME##__() \
 				{ \
-					static reflection::__register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(reflection::event<REMOVE_BRACES##ARGS>), getClassStaticPtr(), reflection::ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
+					static reflection::__register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(reflection::event<YAKE_REMOVE_BRACES##ARGS>), getClassStaticPtr(), reflection::ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
         } \
     } __event_##EVENT_NAME##__; \
     friend struct __event_##EVENT_NAME##__; \
 ACCESS_ATTR: \
-    reflection::event< REMOVE_BRACES##ARGS > EVENT_NAME
+    reflection::event<YAKE_REMOVE_BRACES##ARGS> EVENT_NAME
 
 #define RX_CUSTOM_EVENT(ACCESS_ATTR, EVENT_CLASS, EVENT_NAME) \
 private: \

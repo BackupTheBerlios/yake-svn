@@ -14,11 +14,11 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/type_traits.hpp>
 
+// yake
+#include <yake/base/mpl/null_type.h>
+
 // rx 
 #include "reflection.h"
-
-// todo: replace with yake type
-#include "null.h"
 
 // lua
 extern "C"
@@ -32,8 +32,10 @@ extern "C"
 #include <luabind/luabind.hpp>
 #include <luabind/functor.hpp>
 
-// using std and boost::lambda placeholders
+// using boost::lambda placeholders
 boost::lambda::placeholder1_type _l1;
+
+using namespace yake::base::mpl;
 
 // todo move this to yake::base
 // todo we need to add slots which are returned when you connect to an event/signal
@@ -43,23 +45,23 @@ boost::lambda::placeholder1_type _l1;
 struct event_base
 {
 	virtual ~event_base() {}
-  virtual void attach_handler( const boost::function_base & this_handler ) = 0;
+  virtual void attach_handler(const boost::function_base & this_handler) = 0;
 };
 
 
 template< typename arg1 >
 struct regular_cast_1
 {
-	typedef boost::function< void (arg1) > result_functor;
+	typedef boost::function<void (arg1)> result_functor;
 
-	static result_functor cast( boost::function_base & function )
+	static result_functor cast(boost::function_base & function)
 	{
-			return static_cast< result_functor & >( function );
+			return static_cast<result_functor &>(function);
 	}
 };
 
 
-template< typename arg1, typename arg2 >
+template <typename arg1, typename arg2>
 struct regular_cast_2
 {
 	typedef boost::function< void (arg1, arg2) > result_functor;
@@ -73,8 +75,8 @@ struct regular_cast_2
 // todo: use BOOST file iterations see boost::function headers
 template
 < 
-	typename arg1 = null,
-	typename arg2 = null/*,
+	typename arg1 = null_type,
+	typename arg2 = null_type/*,
 	template<typename> class handler_cast_policy = regular_cast_1*/
 >
 struct event : public event_base
@@ -132,7 +134,7 @@ template
 	typename arg1/*,
 	template<typename> class handler_cast_policy*/
 >
-struct event<arg1, null/*, handler_cast_policy*/> : public event_base
+struct event<arg1, null_type/*, handler_cast_policy*/> : public event_base
 {
 	// handlers
   typedef boost::function<void (arg1)> handler;
@@ -210,8 +212,8 @@ struct lua_event_base
 
 template
 < 
-	typename arg1 = null,
-	typename arg2 = null
+	typename arg1 = null_type,
+	typename arg2 = null_type
 >
 struct event : public rx_event_base, public lua_event_base, public ::event<arg1, arg2 /*, lua::search_for_lua_handlers_1*/> 
 {
@@ -311,7 +313,7 @@ template
 < 
 	typename arg1
 >
-struct event<arg1, null> : public rx_event_base, public lua_event_base, public ::event<arg1 /*, lua::search_for_lua_handlers_1*/> 
+struct event<arg1, null_type> : public rx_event_base, public lua_event_base, public ::event<arg1 /*, lua::search_for_lua_handlers_1*/> 
 {
 	typedef ::event<arg1/*, lua::search_for_lua_handlers_1*/> base;
 	typedef std::vector< luabind::functor<void> > lua_functor_list;
