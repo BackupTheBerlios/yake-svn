@@ -148,7 +148,7 @@ private:
 			typedef Concrete ConcreteT; \
 			ConcreteT::Register(); \
 		} \
-	} g_Concrete##Initor; \
+	} g_##Concrete##Initor; \
 	} // nameless
 
 } // templates
