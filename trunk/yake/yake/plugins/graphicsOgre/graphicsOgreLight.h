@@ -48,6 +48,7 @@ namespace ogre3d {
 		virtual void setDiffuseColour( const Color& colour );
 		virtual void setSpecularColour( const Color& colour );
 		
+		virtual void setEnabled( bool enabled );
 		virtual void setCastsShadow( bool enabled );
 
 		virtual void setPosition( const Vector3 & position );

@@ -73,6 +73,7 @@ namespace graphics {
 		virtual void setType( const LightType type ) = 0;
 		virtual LightType getType() const = 0;
 
+		virtual void setEnabled( bool enabled ) = 0;
  		virtual void setCastsShadow( bool enabled ) = 0;
 
 		virtual void setDiffuseColour( const Color & colour ) = 0;

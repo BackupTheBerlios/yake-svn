@@ -115,6 +115,13 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
+	void OgreLight::setEnabled( bool enabled )
+	{
+		YAKE_ASSERT( mLight ).debug( "need actual light!" );
+		mLight->setVisible( enabled );
+	}
+
+	//------------------------------------------------------
 	void OgreLight::setAttenuation( real range, real constant, real linear, real quadratic )
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );

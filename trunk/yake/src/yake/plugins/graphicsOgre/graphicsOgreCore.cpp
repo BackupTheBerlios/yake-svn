@@ -277,7 +277,10 @@ namespace ogre3d {
 			}
 			catch (Ogre::Exception& e)
 			{
-				YAKE_LOGPRINTF("[yake.graphics.ogre] OGRE EXCEPTION\n%s\n", e.getFullDescription() );
+				//YAKE_LOGPRINTF("[yake.graphics.ogre] OGRE EXCEPTION\n%s\n", e.getFullDescription() );
+				base::String rMsg = "[yake.graphics.ogre] OGRE EXCEPTION\n" + e.getFullDescription() + "\n";
+				YAKE_LOG( rMsg );
+				YAKE_EXCEPT( rMsg, "yake.graphicsOGRE.core" );
 				mReady = false;
 			}
 		} // if (mReady && mRWin && mRSys){
