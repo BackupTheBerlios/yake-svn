@@ -184,6 +184,85 @@ public:
 
 };
 
+	/** The VectorIterator and ConstVectorIterator are based on the templates
+		of the same name from OGRE (http://www.ogre3d.org).
+	*/
+
+	template < class T >
+	class VectorIterator
+	{
+	private:
+		typename T::iterator mCurrent;
+		typename T::iterator mEnd;
+		VectorIterator() {}
+	public:
+		VectorIterator(typename T::iterator start, typename T::iterator end) :
+			mCurrent( start ), mEnd( end )
+		{
+		}
+		bool hasMoreElements()
+		{
+			return mCurrent != mEnd;
+		}
+		/** Returns the next element in the collection, and advances to the next. */
+		typename T::value_type getNext(void)
+		{
+			return *mCurrent++;
+		}
+		/** Returns the next element in the collection, without advancing to the next. */
+		typename T::value_type peekNext(void)
+		{
+			return *mCurrent;
+		}
+		/** Returns a pointer to the next element in the collection, without advancing to the next afterwards. */
+		typename T::pointer peekNextPtr(void)
+		{
+			return &(*mCurrent);
+		}
+		/** Moves the iterator on one element. */
+		void moveNext(void)
+		{
+			mCurrent++;
+		}
+	};
+	template < class T >
+	class ConstVectorIterator
+	{
+	private:
+		typename T::const_iterator mCurrent;
+		typename T::const_iterator mEnd;
+		ConstVectorIterator() {}
+	public:
+		ConstVectorIterator(typename T::const_iterator start, typename T::const_iterator end) :
+			mCurrent( start ), mEnd( end )
+		{
+		}
+		bool hasMoreElements()
+		{
+			return mCurrent != mEnd;
+		}
+		/** Returns the next element in the collection, and advances to the next. */
+		typename T::value_type getNext(void)
+		{
+			return *mCurrent++;
+		}
+		/** Returns the next element in the collection, without advancing to the next. */
+		typename T::value_type peekNext(void)
+		{
+			return *mCurrent;
+		}
+		/** Returns a pointer to the next element in the collection, without advancing to the next afterwards. */
+		typename T::const_pointer peekNextPtr(void)
+		{
+			return &(*mCurrent);
+		}
+		/** Moves the iterator on one element. */
+		void moveNext(void)
+		{
+			mCurrent++;
+		}
+	};
+
 } // templates
 } // base
 } // yake
