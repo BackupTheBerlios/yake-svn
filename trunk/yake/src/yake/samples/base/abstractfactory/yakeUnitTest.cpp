@@ -14,7 +14,7 @@
 // Yake
 #include <yake/base/yake.h>
 #include <yake/base/mpl/yakeAbstractFactory.h>
-#include <yake/base/mpl/yakeSequences.h>
+#include <yake/base/mpl/sequences.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
