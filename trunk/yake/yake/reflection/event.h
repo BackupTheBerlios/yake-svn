@@ -12,7 +12,6 @@
     MACROS
 *****************************************************************************/
 
-// todo: use construct_type_from_arbitry_args to construct an event class for typeid()
 #define RX_EVENT(ACCESS_ATTR, EVENT_NAME, ARGS) \
 private: \
     struct __event_##EVENT_NAME##__ \
@@ -26,7 +25,6 @@ private: \
 ACCESS_ATTR: \
     reflection::event< REMOVE_BRACES##ARGS > EVENT_NAME
 
-// todo typeid is wrong, should point to rx::event ...
 #define RX_CUSTOM_EVENT(ACCESS_ATTR, EVENT_CLASS, EVENT_NAME) \
 private: \
     struct __event_##EVENT_NAME##__ \
@@ -76,6 +74,7 @@ public:
       if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
       if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
 			
+			// todo: does this work for n parameters? different size?
 			// this pointer + member offset + interface offset => ptr to the base interface
 			event_base * this_event = reinterpret_cast<event_base*>(((char*)object) + m_offset + __CLASS_OFFSET__(event<Null>, event_base));
 			this_event->attach_handler(this_handler);

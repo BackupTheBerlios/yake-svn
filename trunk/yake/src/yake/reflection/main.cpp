@@ -54,7 +54,7 @@ struct A
 struct rx_A
 {
 	CLASS(rx_A, NullClass, lua);
-	EVENT(public, e, (int), lua);
+	EVENT(public, e, (int, int), lua);
 };
 IMPLEMENT_CLASS(rx_A, lua)
 
@@ -256,10 +256,10 @@ int main()
 		LuaTest o; o.a = 589;	o.foo(); cout << o.a << std::endl;
 
 		// events
-		dostring(L, "function do_it_in_script(arg1) print('do_it_in_script(' .. arg1 .. ')') end");
+		dostring(L, "function do_it_in_script(arg1, arg2) print('do_it_in_script(' .. arg1 .. ',' .. arg2 .. ')') end");
 		dostring(L, "rx_a = rx_A();"); 
 		dostring(L, "rx_a.e:attach_handler(do_it_in_script);"); 
-		dostring(L, "rx_a.e(123);");
+		dostring(L, "rx_a.e(123, 456);");
 	}
 
 	// networking

@@ -2,9 +2,7 @@
 #define _CONSTRUCT_TYPE_FROM_ARBITRARY_ARGS_H_
 
 #include <boost/mpl/if.hpp>
-
-// todo: use yake empty class
-struct null {};
+#include "null.h"
 
 // meta functions: accepts any number of arguments and returns the according type selected by the holder
 template< template<int, typename, typename, typename> class holder, typename T1 = null, typename T2 = null, typename T3 = null>
