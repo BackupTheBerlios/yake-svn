@@ -88,7 +88,7 @@ namespace vehicle {
 		{
 			uint32						flags_;
 			String						wheelName_;
-			physics::IComplexObject*	otherObj_;
+			physics::IActor*	otherObj_;
 			String						otherObjName_;
 			String						otherObjMaterialName_;
 		};

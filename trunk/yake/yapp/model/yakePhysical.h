@@ -27,7 +27,7 @@
 #define YAPP_MODEL_PHYSICAL_H
 
 #include <yapp/base/yappPrerequisites.h>
-#include <yake/physics/yakePhysicsSystem.h>
+#include <yake/physics/yakePhysics.h>
 #include <yapp/model/yakeModel.h>
 
 namespace yake {
@@ -47,20 +47,19 @@ namespace model {
 			mComplexObjects.clear();
 			mJoints.clear();
 		}
-		void addComplex( SharedPtr<physics::IComplexObject> & pComplex, const String & rName );
-		SharedPtr<physics::IComplexObject> getComplexByName( const String & rName ) const;
-		void addAffector( SharedPtr<physics::IAffector> & pAffector );
+		void addComplex( SharedPtr<physics::IActor> & pComplex, const String & rName );
+		SharedPtr<physics::IActor> getComplexByName( const String & rName ) const;
+		void addAffector( SharedPtr<physics::IBodyAffector> & pAffector );
 		void addJoint( SharedPtr<physics::IJoint> & pJoint );
-		void addJointGroup( SharedPtr<physics::IJointGroup> & pJointGroup );
-		void addBody( SharedPtr<physics::IBody> & pBody, const String & rName );
-		void addBodyGroup( SharedPtr<physics::BodyGroup> & pBodyGroup );
-		SharedPtr<physics::IBody> getBodyByName( const String & rName ) const;
+		//void addJointGroup( SharedPtr<physics::IJointGroup> & pJointGroup );
+		void addActor( SharedPtr<physics::IBody> & pBody, const String & rName );
+		SharedPtr<physics::IActor> getActorByName( const String & rName ) const;
 		void translate( const Vector3 & d );
 
-		typedef Vector< SharedPtr<physics::IComplexObject> > ComplexList;
+		typedef Vector< SharedPtr<physics::IActor> > ComplexList;
 		ComplexList getComplexObjects() const;
 	private:
-		typedef AssocVector< String, SharedPtr<physics::IComplexObject> > ComplexMap;
+		typedef AssocVector< String, SharedPtr<physics::IActor> > ComplexMap;
 		ComplexMap		mComplexObjects;
 
 		typedef Vector< SharedPtr<physics::IJoint> > JointList;

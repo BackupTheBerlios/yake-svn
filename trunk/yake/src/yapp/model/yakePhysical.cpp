@@ -51,7 +51,7 @@ namespace model {
 		}
 	}
 	//-----------------------------------------------------
-	void Physical::addComplex( SharedPtr<physics::IComplexObject> & pComplex, const String & rName )
+	void Physical::addComplex( SharedPtr<physics::IActor> & pComplex, const String & rName )
 	{
 		YAKE_ASSERT( pComplex.get() );
 		if (!pComplex.get())
@@ -68,18 +68,18 @@ namespace model {
 		mJoints.push_back( pJoint );
 	}
 	//-----------------------------------------------------
-	SharedPtr<physics::IBody> Physical::getBodyByName( const String & rName ) const
+	SharedPtr<physics::IActor> Physical::getActorByName( const String & rName ) const
 	{
 		YAKE_ASSERT( 1==0 && "not implemented!" );
-		return SharedPtr<physics::IBody>();
+		return SharedPtr<physics::IActor>();
 	}
 	//-----------------------------------------------------
-	SharedPtr<physics::IComplexObject> Physical::getComplexByName( const String & rName ) const
+	SharedPtr<physics::IActor> Physical::getComplexByName( const String & rName ) const
 	{
 		ComplexMap::const_iterator itFind = mComplexObjects.find( rName );
 		YAKE_ASSERT( itFind != mComplexObjects.end() )( rName ).warning("couldn't find the object!");
 		if (itFind == mComplexObjects.end())
-			return SharedPtr<physics::IComplexObject>();
+			return SharedPtr<physics::IActor>();
 		else
 			return itFind->second;
 	}

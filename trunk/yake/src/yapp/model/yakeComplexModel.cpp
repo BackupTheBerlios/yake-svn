@@ -158,7 +158,7 @@ namespace complex {
 			VectorIterator< Physical::ComplexList > itCO( coList.begin(), coList.end() );
 			while (itCO.hasMoreElements())
 			{
-				SharedPtr<physics::IComplexObject> pCO = itCO.getNext();
+				SharedPtr<physics::IActor> pCO = itCO.getNext();
 				physics::IBody* pBody = pCO->getBody();
 
 				real kVel = -.2 * timeElapsed;

@@ -43,7 +43,7 @@ namespace vehicle {
 		{
 			Vector3											position_;
 			Vector3											dimensions_;
-			physics::ICollisionGeometry::CollisonGeomType	type_;
+			physics::ShapeType								type_;
 		};
 		typedef Deque<GeomTemplate> GeomTemplateList;
 

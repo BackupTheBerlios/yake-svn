@@ -60,7 +60,7 @@ namespace vehicle {
 	class VehicleCreatorHelperV1
 	{
 	public:
-		VehicleCreatorHelperV1( VehicleTemplate & tpl, IPhysicalVehicleComponent* pPC, model::complex::Model* pComplex, graphics::IGraphicalWorld* pGWorld );
+		VehicleCreatorHelperV1( VehicleTemplate & tpl, IPhysicalVehicleComponent* pPC, model::complex::Model* pComplex, graphics::IWorld* pGWorld );
 		bool create();
 	protected:
 		virtual void onChassis( VehicleTemplate::ChassisTemplate & tpl );
@@ -69,12 +69,12 @@ namespace vehicle {
 		virtual void onWheel( const size_t index, const VehicleTemplate::WheelTemplate & tpl );
 	private:
 		model::complex::Model*				mComplex;
-		graphics::IGraphicalWorld*			mGWorld;
+		graphics::IWorld*			mGWorld;
 		VehicleTemplate						mTpl;
 		IPhysicalVehicleComponent*			mPC;
 	};	
 	//-----------------------------------------------------
-	VehicleCreatorHelperV1::VehicleCreatorHelperV1(VehicleTemplate & tpl, IPhysicalVehicleComponent* pPC, model::complex::Model* pComplex, graphics::IGraphicalWorld* pGWorld ) :
+	VehicleCreatorHelperV1::VehicleCreatorHelperV1(VehicleTemplate & tpl, IPhysicalVehicleComponent* pPC, model::complex::Model* pComplex, graphics::IWorld* pGWorld ) :
 			mTpl( tpl ),
 			mComplex( pComplex ),
 			mGWorld( pGWorld ),
@@ -112,8 +112,8 @@ namespace vehicle {
 		mComplex->addGraphical( SharedPtr<model::Graphical>(pGraphical) );
 
 		// tie all root scene nodes to the physics object
-		model::Graphical::SceneNodeList & nodes = pGraphical->getRootSceneNodes();
-		VectorIterator< model::Graphical::SceneNodeList > it(nodes.begin(), nodes.end());
+		const model::Graphical::SceneNodeList & nodes = pGraphical->getRootSceneNodes();
+/*		VectorIterator< model::Graphical::SceneNodeList > it(nodes.begin(), nodes.end());
 		while (it.hasMoreElements())
 		{
 			graphics::ISceneNode* pSN = it.getNext();
@@ -128,7 +128,7 @@ namespace vehicle {
 			pMUC->setUpdateSource( mPC->getChassisMovable() );
 			pMUC->subscribeToPositionChanged( pSN );
 			pMUC->subscribeToOrientationChanged( pSN );
-		}
+		}*/
 	}
 	//-----------------------------------------------------
 	void VehicleCreatorHelperV1::onEngine( const size_t index, const VehicleTemplate::EngineTemplate & tpl )
@@ -153,8 +153,8 @@ namespace vehicle {
 		mComplex->addGraphical( SharedPtr<model::Graphical>(pGraphical) );
 
 		// tie all root scene nodes to the physics object
-		model::Graphical::SceneNodeList & nodes = pGraphical->getRootSceneNodes();
-		VectorIterator< model::Graphical::SceneNodeList > it(nodes.begin(), nodes.end());
+		const model::Graphical::SceneNodeList & nodes = pGraphical->getRootSceneNodes();
+/*		VectorIterator< model::Graphical::SceneNodeList > it(nodes.begin(), nodes.end());
 		while (it.hasMoreElements())
 		{
 			graphics::ISceneNode* pSN = it.getNext();
@@ -169,11 +169,11 @@ namespace vehicle {
 			pMUC->setUpdateSource( mPC->getWheelMovable(index) );
 			pMUC->subscribeToPositionChanged( pSN );
 			pMUC->subscribeToOrientationChanged( pSN );
-		}
+		}*/
 	}
 
 	//-----------------------------------------------------
-	Vehicle* NativeVehicleSystem::createVehicle(const ::yake::base::String & rTemplate, physics::IWorld* pPWorld, graphics::IGraphicalWorld* pGWorld)
+	Vehicle* NativeVehicleSystem::createVehicle(const ::yake::base::String & rTemplate, physics::IWorld* pPWorld, graphics::IWorld* pGWorld)
 	{
 		YAKE_ASSERT( pPWorld );
 		YAKE_ASSERT( pGWorld );
@@ -204,7 +204,7 @@ namespace vehicle {
 	bool NativeVehicleSystem::_loadModelFromDotVehicle(::yake::app::model::complex::Model* pModel,
 								const ::yake::base::String & rFN, 
 								physics::IWorld* pPWorld,
-								graphics::IGraphicalWorld* pGWorld,
+								graphics::IWorld* pGWorld,
 								IPhysicalVehicleComponent* pPC
 								)
 	{

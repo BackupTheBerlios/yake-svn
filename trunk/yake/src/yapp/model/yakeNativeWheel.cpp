@@ -56,8 +56,7 @@ namespace vehicle {
 	void NativeWheel::setRadius( const real radius )
 	{
 		YAKE_ASSERT( mCO );
-		base::templates::Vector<physics::ICollisionGeometry*> v;
-		v = mCO->getCollisionGeometryVector();
+		ShapePtrVector v = mCO->getShapes();
 		YAKE_ASSERT( v.size() == 1 );
 		physics::ICollisionGeometry* pGeom = v.front();
 		YAKE_ASSERT( pGeom );
@@ -130,7 +129,7 @@ namespace vehicle {
 		return mAngSkidCache;
 	}
 	//-----------------------------------------------------
-	physics::IComplexObject* NativeWheel::getPhysicsComplex() const
+	physics::IActor* NativeWheel::getPhysicsComplex() const
 	{
 		return mCO;
 	}

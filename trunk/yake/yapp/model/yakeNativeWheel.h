@@ -36,12 +36,12 @@ namespace vehicle {
 
 	/** Utilized by the "yake.native" vehicle implementation.
 	*/
-	class NativeWheel : public physics::IComplexObject::ISlipNormalSource, public Movable
+	class NativeWheel : public physics::IActor::ISlipNormalSource, public Movable
 	{
 	public:
 		NativeWheel(physics::IWorld* pPWorld);
 		virtual ~NativeWheel();
-		physics::IComplexObject* getPhysicsComplex() const;
+		physics::IActor* getPhysicsComplex() const;
 
 		void setJoint( SharedPtr<physics::IJoint> & jt );
 		physics::IJoint* getJoint() const;
@@ -70,7 +70,7 @@ namespace vehicle {
 		SharedPtr<CachedInterpolator<real> > _getAngSkidCache();
 	private:
 		SharedPtr<physics::IJoint>	mJoint;
-		physics::IComplexObject*	mCO;
+		physics::IActor*	mCO;
 		SharedPtr<CachedInterpolator<real> >	mLinSkidCache;
 		SharedPtr<CachedInterpolator<real> >	mAngSkidCache;
 	};

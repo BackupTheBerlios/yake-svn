@@ -121,7 +121,7 @@ namespace vehicle {
 
 		WheelCollisionSignal				mWheelCollisionSig;
 
-		physics::IComplexObject*			mpChassis;
+		physics::IActor*			mpChassis;
 		Physical*							mpPhysical;
 	private:
 		SteerGroup* _getSteerGroup(const size_t index) const;

@@ -341,7 +341,6 @@ namespace vehicle {
 			COUTLN(	"  geom type=" << geomTpl.type_ <<
 					" pos=" << geomTpl.position_.x << ", " << geomTpl.position_.y << ", " << geomTpl.position_.z <<
 					" dim=" << geomTpl.dimensions_.x << ", " << geomTpl.dimensions_.y << ", " << geomTpl.dimensions_.z );
-			physics::ICollisionGeometry* pGeom = 0;
 		}
 	}
 	//------------------------------------------------------
@@ -374,9 +373,9 @@ namespace vehicle {
 
 		String geomType = StringUtil::toLowerCase( pNode->getAttributeValueAs<String>("type") );
 		if (geomType == "sphere")
-			geomTpl.type_ = physics::ICollisionGeometry::CGT_SPHERE;
+			geomTpl.type_ = physics::ST_SPHERE;
 		else if (geomType == "box")
-			geomTpl.type_ = physics::ICollisionGeometry::CGT_BOX;
+			geomTpl.type_ = physics::ST_BOX;
 
 		COUTLN("  -> type= " << geomType );
 

@@ -63,8 +63,8 @@ namespace model {
 			std::cout << "Searching for physical named '" << sourceModelName << "'" << std::endl;
 			Physical* pP = rModel.getPhysicalByName( sourceModelName );
 			YAKE_ASSERT( pP );
-			if (sourceMovableType == "physics.body")
-				pMovable = pP->getBodyByName( sourceMovableName ).get();
+			if (sourceMovableType == "physics.actor")
+				pMovable = pP->getActorByName( sourceMovableName ).get();
 			else if (sourceMovableType == "physics.complex")
 				pMovable = pP->getComplexByName( sourceMovableName ).get();
 		}

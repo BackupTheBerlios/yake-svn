@@ -19,7 +19,7 @@ namespace model {
 		YAKE_ASSERT( pComplex );
 		mComplex = pComplex;
 	}
-	void Pawn::setMovable( physics::IComplexObject* pMovable )
+	void Pawn::setMovable( physics::IActor* pMovable )
 	{
 		mMovable = pMovable;
 	}

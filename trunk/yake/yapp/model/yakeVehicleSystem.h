@@ -44,7 +44,7 @@ namespace vehicle {
 
 		virtual Vehicle* createVehicle( const ::yake::base::String & rTemplate,
 										physics::IWorld* pPWorld, 
-										graphics::IGraphicalWorld* pGWorld ) = 0;
+										graphics::IWorld* pGWorld ) = 0;
 	};
 
 	class YAPP_BASE_API NativeVehicleSystem : public IVehicleSystem
@@ -55,12 +55,12 @@ namespace vehicle {
 
 		virtual Vehicle* createVehicle( const ::yake::base::String & rTemplate, 
 										physics::IWorld* pWorld, 
-										graphics::IGraphicalWorld* pGWorld );
+										graphics::IWorld* pGWorld );
 	private:
 		bool _loadModelFromDotVehicle(::yake::app::model::complex::Model* pModel,
 									const ::yake::base::String & rFN, 
 									physics::IWorld* pPWorld,
-									graphics::IGraphicalWorld* pGWorld,
+									graphics::IWorld* pGWorld,
 									IPhysicalVehicleComponent* pPC
 									);
 	};
