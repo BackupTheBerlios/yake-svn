@@ -6,14 +6,6 @@
 #define YAKE_THREAD_WITH_ZTHREAD
 #define YAKE_MUTEX_WITH_ZTHREAD
 
-#if defined(YAKE_MUTEX_WITH_ZTHREAD)
-#	define YAKE_MUTEX_TYPE ZThreadMutexForwarder
-#	include <yake/thread/ZThreadMutexForwarder.h>
-//#elif defined(YAKE_MUTEX_WITH_OPENTHREADS)
-#else
-#	pragma message("yakeThread.h: No mutex forwarder specified")
-#endif
-
 #if defined(YAKE_THREAD_WITH_ZTHREAD)
 #	define YAKE_THREAD_TYPE ZThread
 //#elif defined(YAKE_THREAD_WITH_OPENTHREADS)
@@ -24,6 +16,20 @@
 namespace yake {
 namespace thread {
 
+	class YAKE_THREAD_API ThreadException : public ::yake::base::Exception
+	{
+	};
+
+}
+}
+
+#if defined(YAKE_MUTEX_WITH_ZTHREAD)
+#	define YAKE_MUTEX_TYPE ZThreadMutexForwarder
+#	include <yake/thread/ZThreadMutexForwarder.h>
+#endif
+
+namespace yake {
+namespace thread {
 	class YAKE_THREAD_API IRunnable
 	{
 	public:
@@ -70,9 +76,9 @@ namespace thread {
 		YAKE_DECLARE_REGISTRY_0(IThread, ::yake::base::String)
 		virtual ~IThread() {}
 
-		virtual void yield() = 0;
-		virtual void sleep(const uint32 ms) = 0;
-		virtual void wait(const uint32 ms = 0) = 0;
+		virtual void yield() throw( ThreadException ) = 0;
+		virtual void sleep(const uint32 ms) throw( ThreadException ) = 0;
+		virtual void wait(const uint32 ms = 0) throw( ThreadException ) = 0;
 	};
 	YAKE_THREAD_COMMON_POINTERS( IThread );
 
@@ -82,9 +88,9 @@ namespace thread {
 	public:
 		virtual ~ILockable() {}
 
-		virtual void acquire() = 0;
-		virtual bool tryAcquire(const uint32 timeout) = 0;
-		virtual void release() = 0;
+		virtual void acquire() throw( ThreadException ) = 0;
+		virtual bool tryAcquire(const uint32 timeout) throw( ThreadException ) = 0;
+		virtual void release() throw( ThreadException ) = 0;
 	};
 	YAKE_THREAD_COMMON_POINTERS( ILockable );
 
@@ -102,11 +108,11 @@ namespace thread {
 		ForwardingMutexT() {}
 		virtual ~ForwardingMutexT() {}
 
-		virtual void acquire()
+		virtual void acquire() throw( ThreadException )
 		{ m_impl.acquire(); }
-		virtual bool tryAcquire(const uint32 timeout)
+		virtual bool tryAcquire(const uint32 timeout) throw( ThreadException )
 		{ return m_impl.tryAcquire(timeout); }
-		virtual void release()
+		virtual void release() throw( ThreadException )
 		{ return m_impl.release(); }
 	private:
 		Impl	m_impl;
@@ -127,17 +133,17 @@ namespace thread {
 		ForwardingThreadT( Task& rTask ) { m_impl = new Impl( rTask ); }
 		virtual ~ForwardingThreadT() { delete m_impl; }
 
-		virtual void yield()
+		virtual void yield() throw( ThreadException )
 		{ 
 			YAKE_ASSERT( m_impl );
 			m_impl->yield(); 
 		}
-		virtual void sleep(const uint32 ms)
+		virtual void sleep(const uint32 ms) throw( ThreadException )
 		{ 
 			YAKE_ASSERT( m_impl );
 			m_impl->sleep(ms);
 		}
-		virtual void wait(const uint32 ms = 0)
+		virtual void wait(const uint32 ms = 0) throw( ThreadException )
 		{ 
 			YAKE_ASSERT( m_impl );
 			m_impl->sleep(ms);

@@ -12,4 +12,6 @@
 	typedef ::yake::base::templates::WeakPtr<CLASS> Weak##CLASS##Ptr; \
 	typedef ::yake::base::templates::SharedPtr<CLASS> Shared##CLASS##Ptr;
 
+#define YAKE_THREAD_EXCEPT(m,s) throw( yake::base::Exception(m,s,__FILE__,__LINE__) )
+
 #endif

@@ -13,15 +13,40 @@ namespace thread {
 	public:
 		void acquire()
 		{
-			mtx_.acquire();
+			try {
+				mtx_.acquire();
+			} 
+			catch(ZThread::Deadlock_Exception& e)
+			{
+				YAKE_THREAD_EXCEPT(e.what(), "zthread mutex forwarder: deadlock in acquire()");
+			} 
+			catch(ZThread::Interrupted_Exception& e)
+			{
+				YAKE_THREAD_EXCEPT(e.what(), "zthread mutex forwarder: interrupt in acquire()");
+			}
 		}
 		bool tryAcquire(const uint32 timeout)
 		{
-			return mtx_.tryAcquire(timeout);
+			try {
+				return mtx_.tryAcquire(timeout);
+			}
+			catch(ZThread::Deadlock_Exception& e)
+			{
+				YAKE_THREAD_EXCEPT(e.what(), "zthread mutex forwarder: deadlock in tryAcquire()");
+			} 
+			catch(ZThread::Interrupted_Exception& e)
+			{
+				YAKE_THREAD_EXCEPT(e.what(), "zthread mutex forwarder: interrupt in tryAcquire()");
+			}
 		}
 		void release()
 		{
-			return mtx_.release();
+			try {
+				mtx_.release();
+			} catch(ZThread::InvalidOp_Exception& e)
+			{
+				YAKE_THREAD_EXCEPT(e.what(), "zthread mutex forwarder: invalid op in release()");
+			}
 		}
 	private:
 		ZThread::Mutex	mtx_;

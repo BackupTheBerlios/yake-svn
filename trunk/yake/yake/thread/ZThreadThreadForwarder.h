@@ -32,36 +32,56 @@ namespace thread {
 		{
 			delete m_t;
 		}
-		static Thread* create(IRunnablePtr pRunnable)
+		static Thread* create(IRunnablePtr pRunnable) throw( ThreadException )
 		{
 			return create( SharedIRunnablePtr(pRunnable) );
 		}
-		static Thread* create(SharedIRunnablePtr pRunnable)
+		static Thread* create(SharedIRunnablePtr pRunnable) throw( ThreadException )
 		{
-			if (!pRunnable.get())
-				return 0;
-			return new Thread(pRunnable);
+			try {
+				if (!pRunnable.get())
+					return 0;
+				return new Thread(pRunnable);
+			} catch(ZThread::Synchronization_Exception& e)
+			{
+				YAKE_THREAD_EXCEPT(e.what(), "yake.thread: sync exception!");
+			}
 		}
-		virtual void yield()
+		virtual void yield() throw( ThreadException )
 		{ 
 			YAKE_ASSERT( m_t );
 			if (!m_t)
 				return;
-			m_t->yield();
+			try {
+				m_t->yield();
+			} catch(ZThread::Synchronization_Exception& e)
+			{
+				YAKE_THREAD_EXCEPT(e.what(), "yake.thread: sync exception!");
+			}
 		}
-		virtual void sleep(const uint32 ms)
+		virtual void sleep(const uint32 ms) throw( ThreadException )
 		{ 
 			YAKE_ASSERT( m_t );
 			if (!m_t)
 				return;
-			m_t->sleep( ms );
+			try {
+				m_t->sleep( ms );
+			} catch(ZThread::Synchronization_Exception& e)
+			{
+				YAKE_THREAD_EXCEPT(e.what(), "yake.thread: sync exception!");
+			}
 		}
-		virtual void wait(const uint32 ms = 0)
+		virtual void wait(const uint32 ms = 0) throw( ThreadException )
 		{ 
 			YAKE_ASSERT( m_t );
 			if (!m_t)
 				return;
-			m_t->wait( ms );
+			try {
+				m_t->wait( ms );
+			} catch(ZThread::Synchronization_Exception& e)
+			{
+				YAKE_THREAD_EXCEPT(e.what(), "yake.thread: sync exception!");
+			}
 		}
 	private:
 		ZThread::Thread*	m_t;
