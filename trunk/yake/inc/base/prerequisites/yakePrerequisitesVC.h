@@ -25,6 +25,11 @@
 //    IMPLEMENTATION HEADERS
 //============================================================================
 
+// VC specific headers
+#include <wchar.h>
+#include <hash_map>
+#include <xhash>
+
 // Include platform specific configuration files
 #if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
 #	if (YAKE_COMP_VER == 1200)
@@ -39,11 +44,6 @@
 #else
 #	error("Yake: No configuration file set for the selected platform/compiler!")
 #endif
-
-// VC specific headers
-#include <wchar.h>
-#include <hash_map>
-#include <xhash>
 
 // String specialization
 #if !defined ( _STLP_HASH_FUN_H )
