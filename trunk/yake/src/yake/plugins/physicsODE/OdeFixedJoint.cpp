@@ -82,6 +82,12 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
+	void OdeFixedJoint::setMotorEnabled(size_t axisIndex, bool enabled)
+	{
+		YAKE_ASSERT( false ).error( "Motor can't be applied to fixed joint!" );
+	}
+
+	//-----------------------------------------------------
 	void OdeFixedJoint::setLimits( size_t axisIndex, real low, real high )
 	{
 		YAKE_ASSERT( false ).error( "Fixed joint is unlimited!" );

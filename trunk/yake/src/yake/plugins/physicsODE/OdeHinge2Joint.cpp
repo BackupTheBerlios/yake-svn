@@ -78,17 +78,40 @@ namespace physics {
 	{
 		YAKE_ASSERT( axisIndex < 2 ).error( "Hinge2 joint has only two axes! You are trying to use more..." );
 		
-		if ( axisIndex == 0 )
+		mVelTarget[axisIndex] = targetVelocity;
+		mMaxForce[axisIndex] = maximumForce;
+	}
+	
+	//-----------------------------------------------------
+	void OdeHinge2Joint::setMotorEnabled(size_t axisIndex, bool enabled)
+	{
+		YAKE_ASSERT( axisIndex < 2 ).error( "Hinge2 joint has only two axes! You are trying to use more..." );
+		if (enabled)
 		{
-			dJointSetHinge2Param( mOdeJoint->id(), dParamVel, targetVelocity );
-			dJointSetHinge2Param( mOdeJoint->id(), dParamFMax, maximumForce );
+			if (axisIndex == 0)
+			{
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, mVelTarget[0] );
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, mMaxForce[0] );
+			}
+			else if (axisIndex == 1)
+			{
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, mVelTarget[1] );
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, mMaxForce[1] );
+			}
 		}
-		else if ( axisIndex == 1 )
+		else
 		{
-			dJointSetHinge2Param( mOdeJoint->id(), dParamVel2, targetVelocity );
-			dJointSetHinge2Param( mOdeJoint->id(), dParamFMax2, maximumForce );
+			if (axisIndex == 0)
+			{
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, 0 );
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, 0 );
+			}
+			else if (axisIndex == 1)
+			{
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, 0 );
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, 0 );
+			}
 		}
-		
 	}
 	
 	//-----------------------------------------------------

@@ -72,19 +72,37 @@ namespace physics {
 	void OdeSliderJoint::setMotor( size_t axisIndex, real targetVelocity, real maximumForce )
 	{
 		YAKE_ASSERT( axisIndex < 1 ).error( "Slider joint has only one axis! You are trying to set more..." );
-		dJointSetSliderParam( mOdeJoint->id(), dParamVel, targetVelocity );
-		dJointSetSliderParam( mOdeJoint->id(), dParamFMax, maximumForce );
+		if (axisIndex >= 1)
+			return;
+		mVelTarget0 = targetVelocity;
+		mMaxForce0 = maximumForce;
 	}
 	
+	//-----------------------------------------------------
+	void OdeSliderJoint::setMotorEnabled(size_t axisIndex, bool enabled)
+	{
+		YAKE_ASSERT( axisIndex < 1 ).error( "Slider joint has only one axis! You are trying to set more..." );
+		if (enabled)
+		{
+			static_cast<dSliderJoint*>(mOdeJoint)->setParam( dParamVel, mVelTarget0 );
+			static_cast<dSliderJoint*>(mOdeJoint)->setParam( dParamVel, mMaxForce0 );
+		}
+		else
+		{
+			static_cast<dSliderJoint*>(mOdeJoint)->setParam( dParamVel, 0 );
+			static_cast<dSliderJoint*>(mOdeJoint)->setParam( dParamVel, 0 );
+		}
+	}
+
 	//-----------------------------------------------------
 	void OdeSliderJoint::setLimits( size_t axisIndex, real low, real high )
 	{
 		YAKE_ASSERT( axisIndex < 1 ).error( "Slider joint has only one axis! You are trying to set more..." );
 		
-		/// TODO What about dParamBounce, dParamFudgeFactor and other stop params?
+		///@todo What about dParamBounce, dParamFudgeFactor and other stop params?
 		/// Maybe to set 'em to defaults?
-		dJointSetHingeParam( mOdeJoint->id(), dParamLoStop, low );
-		dJointSetHingeParam( mOdeJoint->id(), dParamHiStop, high );
+		dJointSetSliderParam( mOdeJoint->id(), dParamLoStop, low );
+		dJointSetSliderParam( mOdeJoint->id(), dParamHiStop, high );
 	}
 
 } // physics

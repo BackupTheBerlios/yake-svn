@@ -78,19 +78,42 @@ namespace physics {
 	{
 		YAKE_ASSERT( axisIndex < 2 ).error( "Universal joint has only two axes! You are trying to use more..." );
 		
-		if ( axisIndex == 0 )
-		{
-			dJointSetUniversalParam( mOdeJoint->id(), dParamVel, targetVelocity );
-			dJointSetUniversalParam( mOdeJoint->id(), dParamFMax, maximumForce );
-		}
-		else if ( axisIndex == 1 )
-		{
-			dJointSetUniversalParam( mOdeJoint->id(), dParamVel2, targetVelocity );
-			dJointSetUniversalParam( mOdeJoint->id(), dParamFMax2, maximumForce );
-		}
-		
+		mVelTarget[axisIndex] = targetVelocity;
+		mMaxForce[axisIndex] = maximumForce;
 	}
 	
+	//-----------------------------------------------------
+	void OdeUniversalJoint::setMotorEnabled(size_t axisIndex, bool enabled)
+	{
+		YAKE_ASSERT( axisIndex < 2 ).error( "Universal joint has only two axes! You are trying to use more..." );
+		if (enabled)
+		{
+			if (axisIndex == 0)
+			{
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, mVelTarget[0] );
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, mMaxForce[0] );
+			}
+			else if (axisIndex == 1)
+			{
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, mVelTarget[1] );
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, mMaxForce[1] );
+			}
+		}
+		else
+		{
+			if (axisIndex == 0)
+			{
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, 0 );
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, 0 );
+			}
+			else if (axisIndex == 1)
+			{
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, 0 );
+				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, 0 );
+			}
+		}
+	}
+
 	//-----------------------------------------------------
 	void OdeUniversalJoint::setLimits( size_t axisIndex, real low, real high )
 	{

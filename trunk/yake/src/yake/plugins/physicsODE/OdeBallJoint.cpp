@@ -61,17 +61,23 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
+	void OdeBallJoint::setMotor( size_t axisIndex, real velocityTarget, real maximumForce )
+	{
+		YAKE_ASSERT( false ).error( "Motor can't be applied to ball joint!" );
+	}
+	
+	//-----------------------------------------------------
+	void OdeBallJoint::setMotorEnabled(size_t axisIndex, bool enabled)
+	{
+		YAKE_ASSERT( false ).error( "Motor can't be applied to ball joint!" );
+	}
+
+	//-----------------------------------------------------
 	void OdeBallJoint::setAnchor( size_t anchorIndex, Vector3 const& rAnchor )
 	{
 		YAKE_ASSERT( anchorIndex < 1 ).error( "Ball joint has only one anchor! You are trying to set more..." );
 		
 		dJointSetBallAnchor( mOdeJoint->id(), rAnchor.x, rAnchor.y, rAnchor.z );
-	}
-	
-	//-----------------------------------------------------
-	void OdeBallJoint::setMotor( size_t axisIndex, real targetVelocity, real maximumForce )
-	{
-		YAKE_ASSERT( false ).error( "Ball joint doesn't have any axes! Can't set motor..." );
 	}
 	
 	//-----------------------------------------------------

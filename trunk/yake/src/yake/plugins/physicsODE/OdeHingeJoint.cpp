@@ -73,10 +73,27 @@ namespace physics {
 	//-----------------------------------------------------
 	void OdeHingeJoint::setMotor( size_t axisIndex, real targetVelocity, real maximumForce )
 	{
-		YAKE_ASSERT( axisIndex < 1 ).error( "Hinge joint has only one axis! You are trying to use more..." );
-		
-		dJointSetHingeParam( mOdeJoint->id(), dParamVel, targetVelocity );
-		dJointSetHingeParam( mOdeJoint->id(), dParamFMax, maximumForce );
+		YAKE_ASSERT( axisIndex < 1 ).error( "Hinge joint has only one axis! You are trying to set more..." );
+		if (axisIndex >= 1)
+			return;
+		mVelTarget0 = targetVelocity;
+		mMaxForce0 = maximumForce;
+	}
+	
+	//-----------------------------------------------------
+	void OdeHingeJoint::setMotorEnabled(size_t axisIndex, bool enabled)
+	{
+		YAKE_ASSERT( axisIndex < 1 ).error( "Hinge joint has only one axis! You are trying to set more..." );
+		if (enabled)
+		{
+			static_cast<dHingeJoint*>(mOdeJoint)->setParam( dParamVel, mVelTarget0 );
+			static_cast<dHingeJoint*>(mOdeJoint)->setParam( dParamVel, mMaxForce0 );
+		}
+		else
+		{
+			static_cast<dHingeJoint*>(mOdeJoint)->setParam( dParamVel, 0 );
+			static_cast<dHingeJoint*>(mOdeJoint)->setParam( dParamVel, 0 );
+		}
 	}
 	
 	//-----------------------------------------------------
