@@ -84,14 +84,14 @@ int main()
     entity e( "e" );
 
 		// event signature/traits validation
-		assert( validate( "entity::birth", "entity::on_birth" ) );
+		assert( validate_events( "entity::birth", "entity::on_birth" ) );
 
 		// hard wiring
 		e.birth.attach_handler( &entity::on_birth, &e );
 		// hard soft wiring
 		e.birth.attach_handler( e.get_object().get_handler( "on_birth" ) );
 		// soft wire
-		soft_wire( "e.birth", "e.on_birth" );
+		wire_events( "e.birth", "e.on_birth" );
 
 		// fire
 		e.birth( "hello e" );

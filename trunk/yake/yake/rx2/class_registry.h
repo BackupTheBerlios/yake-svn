@@ -23,7 +23,7 @@ void unregister_class( const meta_class & meta_class_ );
 const meta_class & get_class( const std::string & name );
 
 // handler/event traits/signature validation
-bool validate( const std::string & event, const std::string & handler );
+bool validate_events( const std::string & event, const std::string & handler );
 
 } // namespace rx
 

@@ -27,7 +27,7 @@ const meta_object & get_object( const std::string & name );
 // soft wiring
 boost::function_base & get_handler( const std::string & name );
 event_base & get_event( const std::string & name );
-void soft_wire( const std::string & event, const std::string & handler );
+void wire_events( const std::string & event, const std::string & handler );
 
 } // namespace rx
 

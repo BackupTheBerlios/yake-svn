@@ -45,7 +45,7 @@ meta_class::traits::iterator find_handler_traits( meta_class & meta_class_, cons
   return meta_class_.event_traits_.end();
 }
 
-bool validate( const std::string & event, const std::string & handler )
+bool validate_events( const std::string & event, const std::string & handler )
 {
 	// get class name and event
 	std::string event_class_name( event.substr( 0, event.find( '::' ) ) );

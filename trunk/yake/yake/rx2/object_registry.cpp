@@ -42,7 +42,7 @@ boost::function_base & get_handler( const std::string & name )
 	return const_cast<meta_object&>( get_object( obj_name ) ).get_handler( handler_name );
 }
 
-void soft_wire( const std::string & event, const std::string & handler )
+void wire_events( const std::string & event, const std::string & handler )
 {
   event_base & this_event = get_event( event );
 	boost::function_base & this_handler = get_handler( handler );
