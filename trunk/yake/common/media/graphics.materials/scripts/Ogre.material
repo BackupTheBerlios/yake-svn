@@ -67,22 +67,6 @@ material Ogre/Eyes
 		}
 	}
 }
-material Cursor/default
-{
-	technique
-	{
-		pass
-		{
-			scene_blend alpha_blend
-
-			texture_unit
-			{
-				texture cursor.png
-				tex_address_mode clamp
-			}
-		}
-	}
-}
 material Core/StatsBlockBorder/Down
 {
 	technique
