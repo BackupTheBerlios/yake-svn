@@ -43,7 +43,8 @@ public:
 	TheApp() : ExampleApplication( true /*graphics*/,
 									true /*physics*/,
 									false /*scripting*/,
-									true /*input*/ )
+									true /*input*/,
+									false /*script bindings*/)
 	{
 	}
 
