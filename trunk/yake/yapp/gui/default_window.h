@@ -2,7 +2,7 @@
 #define _YAPP_GUI_DEFAULT_WINDOW_H_
 
 #include "window_base.h"
-#include <yapp/plugins/guiCEGUI/window.h>
+#include <yapp/plugins/gui_cegui/window.h>
 
 // todo: gui system sits within yapp::gui
 namespace yake

@@ -1,6 +1,8 @@
 #ifndef _YAPP_GUI_BUTTON_BASE_H_
 #define _YAPP_GUI_BUTTON_BASE_H_
 
+// todo: move to /controls/
+
 #include <reflection.h>
 
 #include <bind_lua/bind_lua.h>
@@ -15,8 +17,8 @@
 #include "control_base.h"
 #include "point.h"
 
-#include <yapp/plugins/guiCEGUI/event_adaptor.h> // todo remove
-#include <yapp/plugins/guiCEGUI/util.h>
+#include <yapp/plugins/gui_cegui/event_adaptor.h> // todo remove
+#include <yapp/plugins/gui_cegui/util.h>
 
 namespace yake
 {

@@ -4,6 +4,8 @@
 #include "config.h"
 #include "control_base.h"
 
+#include <yapp/gui/gui_system_base.h>
+
 namespace yake
 {
 namespace gui
@@ -53,24 +55,24 @@ public: // accessor
 	virtual void remove(const control_base & child) = 0;
 };
 
-template<typename ConcreteInfo, typename ConcreteControl>
+template<typename ConcreteInfo, typename ControlBase>
 container_control_base & operator<<(container_control_base & container, 
-		const control_base::info_base<ConcreteInfo, ConcreteControl> & info)
+		const control_base::info_base<ConcreteInfo, ControlBase> & info)
 {
   //ConcreteControl * control = new ConcreteControl(static_cast<const ConcreteInfo &>(info));
-	ConcreteControl * control = get_gui_system().create<Control>(); static_cast<const ConcreteInfo &>(info) hmm ...
+	ControlBase * control = get_gui_system()->create<ControlBase>(static_cast<const ConcreteInfo &>(info));
   container.add(*control);
   return container;
 }
 
-template<typename ConcreteInfo, typename ConcreteControl>
-container_control_base & operator<(container_control_base &container, 
-		const control_base::info_base<ConcreteInfo, ConcreteControl> & info) 
+template<typename ConcreteInfo, typename ControlBase>
+container_control_base & operator<(container_control_base & container, 
+		const control_base::info_base<ConcreteInfo, ControlBase> & info) 
 {	return container << info; }
 
-template<typename ConcreteInfo, typename ConcreteControl>
+template<typename ConcreteInfo, typename ControlBase>
 container_control_base & operator^(container_control_base & container, 
-		const control_base::info_base<ConcreteInfo, ConcreteControl> & info) 
+		const control_base::info_base<ConcreteInfo, ControlBase> & info) 
 {	return container << info; }
 
 } // namespace gui

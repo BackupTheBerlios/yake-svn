@@ -13,7 +13,7 @@
 #include "config.h"
 #include "control_base.h"
 
-#include <yapp/plugins/guiCEGUI/util.h>
+#include <yapp/plugins/gui_cegui/util.h>
 
 namespace yake
 {

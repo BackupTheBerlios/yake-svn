@@ -13,7 +13,7 @@
 #include "config.h"
 #include "control_base.h"
 
-#include <yapp/plugins/guiCEGUI/util.h> // todo remove
+#include <yapp/plugins/gui_cegui/util.h> // todo remove
 
 namespace yake
 {
