@@ -3,11 +3,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yapp", "yapp.vcproj", "{F11
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesVehicle", "samples\base\samplesVehicle.vcproj", "{B9A9E534-6EB6-4667-B91B-74B930636F5E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F1116FDF-65C1-4788-AC1F-F339279B937A} = {F1116FDF-65C1-4788-AC1F-F339279B937A}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesEvents", "samples\base\samplesEvents.vcproj", "{CD6F13A0-F399-411A-9766-0F8E02761D90}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -17,6 +12,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesDotScene", "samples\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesStateMachine", "samples\base\samplesStateMachine.vcproj", "{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesVehicleEditor", "samples\base\samplesVehicleEditor.vcproj", "{F8D6A30D-4A0A-4B89-9BF4-14FD9D59E37B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesVehicle", "samples\base\samplesVehicle.vcproj", "{B9A9E534-6EB6-4667-B91B-74B930636F5E}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -30,10 +33,6 @@ Global
 		{F1116FDF-65C1-4788-AC1F-F339279B937A}.Debug.Build.0 = Debug|Win32
 		{F1116FDF-65C1-4788-AC1F-F339279B937A}.Release.ActiveCfg = Release|Win32
 		{F1116FDF-65C1-4788-AC1F-F339279B937A}.Release.Build.0 = Release|Win32
-		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Debug.ActiveCfg = Debug|Win32
-		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Debug.Build.0 = Debug|Win32
-		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Release.ActiveCfg = Release|Win32
-		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Release.Build.0 = Release|Win32
 		{CD6F13A0-F399-411A-9766-0F8E02761D90}.Debug.ActiveCfg = Debug|Win32
 		{CD6F13A0-F399-411A-9766-0F8E02761D90}.Debug.Build.0 = Debug|Win32
 		{CD6F13A0-F399-411A-9766-0F8E02761D90}.Release.ActiveCfg = Release|Win32
@@ -46,6 +45,14 @@ Global
 		{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}.Debug.Build.0 = Debug|Win32
 		{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}.Release.ActiveCfg = Release|Win32
 		{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}.Release.Build.0 = Release|Win32
+		{F8D6A30D-4A0A-4B89-9BF4-14FD9D59E37B}.Debug.ActiveCfg = Debug|Win32
+		{F8D6A30D-4A0A-4B89-9BF4-14FD9D59E37B}.Debug.Build.0 = Debug|Win32
+		{F8D6A30D-4A0A-4B89-9BF4-14FD9D59E37B}.Release.ActiveCfg = Release|Win32
+		{F8D6A30D-4A0A-4B89-9BF4-14FD9D59E37B}.Release.Build.0 = Release|Win32
+		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Debug.ActiveCfg = Debug|Win32
+		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Debug.Build.0 = Debug|Win32
+		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Release.ActiveCfg = Release|Win32
+		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
