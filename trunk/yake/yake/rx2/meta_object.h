@@ -3,9 +3,12 @@
 
 #include <map>
 #include "typed_field.h"
-#include "meta_object_hooks.h"
+#include "meta_hooks.h"
 
 #include <iostream> // todo del
+
+namespace rx
+{
 
 class meta_object : public meta_object_hooks
 {
@@ -58,8 +61,9 @@ public:
 	template< typename T >
 	typed_field<T> & field( std::string name )
 	{
-		if( fields_.find( name ) == fields_.end() ) throw exception(); // todo
-		return *static_cast< typed_field<T>* >( fields_[ name ] );
+		fields_map::iterator iter = fields_.find( name );
+		if( iter == fields_.end() ) throw exception(); // todo
+		return *static_cast< typed_field<T>* >( iter->second );
 	}
 
 	fields_map::const_iterator begin() const
@@ -81,5 +85,6 @@ public:
 	fields_map fields_; 
 };
 
+} // namespace rx
 
 #endif

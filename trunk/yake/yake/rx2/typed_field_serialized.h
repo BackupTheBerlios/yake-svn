@@ -5,10 +5,10 @@
 #include "meta_field_serialized.h"
 #include "concrete_fields.h"
 
-BOOST_CLASS_EXPORT(bool_field)
-BOOST_CLASS_EXPORT(int_field)
-BOOST_CLASS_EXPORT(float_field)
-BOOST_CLASS_EXPORT(string_field)
+BOOST_CLASS_EXPORT(rx::bool_field)
+BOOST_CLASS_EXPORT(rx::int_field)
+BOOST_CLASS_EXPORT(rx::float_field)
+BOOST_CLASS_EXPORT(rx::string_field)
 
 namespace boost 
 { 
@@ -16,14 +16,14 @@ namespace serialization
 {
 
 template<class Archive, typename T>
-void serialize(Archive & ar, typed_field<T> & field, const unsigned int version)
+void serialize(Archive & ar, rx::typed_field<T> & field, const unsigned int version)
 {
-		ar & boost::serialization::base_object<meta_field>(field);
+	ar & boost::serialization::base_object<rx::meta_field>(field);
 
 		if( ( ( ar.is_loading::value ) &&
-			(	field.flags_ & ::load ) ) || 
+			(	field.flags_ & rx::load ) ) || 
 			( ( ar.is_saving::value ) && 
-			(	field.flags_ & ::save ) ) )
+			(	field.flags_ & rx::save ) ) )
 		{
 			ar & field.value_;
 		}

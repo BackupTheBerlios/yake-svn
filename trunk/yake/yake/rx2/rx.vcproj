@@ -120,10 +120,13 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\meta_field.cpp">
+				RelativePath=".\class_registry.cpp">
 			</File>
 			<File
-				RelativePath=".\meta_object_hooks.cpp">
+				RelativePath=".\meta_class.cpp">
+			</File>
+			<File
+				RelativePath=".\meta_field.cpp">
 			</File>
 			<File
 				RelativePath=".\rx.cpp">
@@ -149,10 +152,10 @@
 				RelativePath=".\meta_field_serialized.h">
 			</File>
 			<File
-				RelativePath=".\meta_object.h">
+				RelativePath=".\meta_hooks.h">
 			</File>
 			<File
-				RelativePath=".\meta_object_hooks.h">
+				RelativePath=".\meta_object.h">
 			</File>
 			<File
 				RelativePath=".\meta_object_serialized.h">

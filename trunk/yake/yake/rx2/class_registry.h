@@ -1,7 +1,13 @@
 #ifndef class_registry_h
 #define class_registry_h
 
-#include "meta_class.h"
+#include <string>
+#include <map>
+
+namespace rx
+{
+
+class meta_class;
 
 // use yake registry
 typedef std::map< std::string, meta_class * > classes;
@@ -11,6 +17,10 @@ public:
 	static classes classes_;
 };
 
-classes class_registry::classes_;
+void register_class( meta_class & meta_class_ );
+void unregister_class( std::string name );
+meta_class & get_class( std::string name );
+
+} // namespace rx
 
 #endif

@@ -4,6 +4,9 @@
 #include "meta_field.h"
 #include <boost/lexical_cast.hpp>
 
+namespace rx
+{
+
 template< typename T >
 struct typed_field : public meta_field
 {
@@ -94,5 +97,7 @@ bool operator==( typed_field<T> & field, T value )
 {
 	return field.value_ == value;    
 }
+
+} // namespace rx
 
 #endif

@@ -4,7 +4,7 @@
 #include <boost/serialization/map.hpp>
 #include "meta_object.h"
 
-BOOST_CLASS_EXPORT(meta_object)
+BOOST_CLASS_EXPORT(rx::meta_object)
 
 namespace boost 
 { 
@@ -12,7 +12,7 @@ namespace serialization
 {
 
 template<class Archive>
-void serialize(Archive & ar, meta_object & object, const unsigned int version)
+void serialize(Archive & ar, rx::meta_object & object, const unsigned int version)
 {
 	  ar & object.object_name_;
 	  ar & object.fields_;

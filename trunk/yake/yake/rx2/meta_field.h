@@ -4,6 +4,9 @@
 #include <typeinfo>
 #include <string>
 
+namespace rx
+{
+
 class meta_object;
 
 enum flags
@@ -13,7 +16,6 @@ enum flags
 	load			= 4,
 	replicate	= 8
 };
-
 
 struct meta_field
 {	
@@ -59,5 +61,7 @@ struct meta_field
 	std::string field_name_;
 	int flags_;
 };
+
+} // namespace rx
 
 #endif

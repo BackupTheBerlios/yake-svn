@@ -2,10 +2,14 @@
 #define meta_class_h
 
 #include <vector>
+#include "class_registry.h"
 #include "meta_object.h"
+#include "meta_hooks.h"
 
-// todo lua hook
-class meta_class
+namespace rx
+{
+
+class meta_class  : public meta_class_hooks
 {
 public:
 	typedef std::vector< meta_field * > fields_list; // todo smart ptrs
@@ -13,11 +17,14 @@ public:
 
 public:
 	meta_class() 
-	{}
+	{
+    register_class( *this );
+	}
 
 	meta_class( std::string class_name )
 		: class_name_( class_name )
 	{
+		register_class( *this );
 	}
 
 	// todo free function stuff
@@ -25,6 +32,7 @@ public:
 	meta_class( std::string class_name, T1 & t1 )
 		: class_name_( class_name )
 	{
+		register_class( *this );
 		add_field( t1 );
 	}
     
@@ -33,6 +41,7 @@ public:
 		for( fields_list::iterator iter = fields_.begin(); 
 			iter != fields_.end(); iter++ )
 		{ delete *iter; }
+		unregister_class( class_name_ );
 	}
 
 	template< typename T >
@@ -40,6 +49,14 @@ public:
 	{
 		fields_.push_back( new typed_field<T>( 
 			field_name, default_value ) );
+	}
+
+	// used by script hook
+	template< typename T >
+	void add_field( std::string field_name, T default_value, int flags )
+	{
+		fields_.push_back( new typed_field<T>( 
+			field_name, default_value, flags ) );
 	}
 
 	template< typename T, int flags >
@@ -55,19 +72,20 @@ public:
 		fields_.push_back( &field );
 	}
 
-	// used by regular meta object instancing
-	meta_object & create_object( std::string object_name )
+	template< typename T >
+	typed_field<T> & field( std::string name )
 	{
-		meta_object * obj = new meta_object( object_name );
-
-		for( fields_list::iterator iter = fields_.begin(); 
+		for( fields_list::iterator iter = fields_.begin();
 			iter != fields_.end(); iter++ )
-		{ 
-			( *iter )->add_clone_to_object( *obj );
+		{
+      if( ( *iter )->field_name_ == name )
+				return *static_cast< typed_field<T>* >( *iter );
 		}
-
-		return *obj;
+		throw exception(); // todo
 	}
+
+	// used by regular meta object instancing
+	meta_object & create_object( std::string object_name );
 
 	// used by c++ classes
 	// todo use free function stuff
@@ -89,7 +107,7 @@ public:
 		return *obj;
 	}
 
-	std::string get_class_name()
+	std::string & get_class_name()
 	{
 		return class_name_;
 	}
@@ -104,5 +122,7 @@ private:
 	fields_list fields_;
 	objects objects_;	
 };
+
+} // namespace rx
 
 #endif

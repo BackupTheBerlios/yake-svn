@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 // mop
+#include "meta_class.h"
 #include "class_registry.h"
 // serialization
 #include "typed_field_serialized.h"
@@ -29,6 +30,8 @@ extern "C"
 #include "RakNetworkFactory.h"
 #include "BitStream.h"
 
+using namespace rx;
+/*
 struct cpp_class
 {
 public:
@@ -43,16 +46,12 @@ public:
 	typed_field<float> test_float;
 	
 public:
-	static void register_meta_class()
+	static void build_meta_class()
 	{
 		// register fields
-		meta_class_.add_field<int>( "test_int" ); // todo del none
+		meta_class_.add_field<int>( "test_int" );
 		meta_class_.add_field<std::string>( "test_string" );
-		meta_class_.add_field<float>( "test_float" );
-		// register class
-		class_registry::classes_.insert( 
-			classes::value_type( 
-				meta_class_.get_class_name(), &meta_class_ ) );        
+		meta_class_.add_field<float>( "test_float" );      
 	}	
 
 	static meta_class & get_class()
@@ -71,7 +70,12 @@ private:
 	meta_object & meta_object_;
 };
 
-meta_class cpp_class::meta_class_( "cpp_class" );
+ todo
+the static class calls the meta_class constructor which calls
+the register_class function of the class registry and this is
+not initialised at this time, so we need a singleton class
+registry/yake registry 
+//meta_class cpp_class::meta_class_( "cpp_class" );
 
 namespace
 {
@@ -81,11 +85,11 @@ namespace
 		{
 			static int counter = 0;
 			if( counter++ > 0 ) return;
-			cpp_class::register_meta_class();
+			cpp_class::build_meta_class();
 		} \
 	} g_cpp_class_initor;
 } // nameless
-
+*/
 int main()
 {
 	// runtime class and object defining
@@ -93,7 +97,7 @@ int main()
 		std::cout << "[ meta operations ]" << std::endl;	
 
 		// define class with default value
-		meta_class test_class;
+		meta_class test_class( "test_class" );
 		test_class.add_field<bool>( "hello_bool", true );
 		test_class.add_field<std::string, none>( "hello_string" );
 	
@@ -122,7 +126,7 @@ int main()
 	}
 
 	// reflect a c++ object
-	{
+	/*{
 		std::cout << std::endl << "[ c++/meta cooperation ]" << std::endl;	
 
 		// create the c++ object	
@@ -163,7 +167,7 @@ int main()
 		{
 			std::cout << iter->second->as_string() << std::endl;
 		}
-	}
+	}*/
 
 	// serialize meta objects
 	{
@@ -196,6 +200,7 @@ int main()
 			meta_object simple_object;
 			ia >> simple_object;
 			std::cout << simple_object.field<std::string>( "hello_string" ).as_string() << std::endl;
+			assert( simple_object.field<std::string>( "hello_string" ).get() == "hello_string_" ); // todo
 			// close archive
 			ifs.close();
 		}
@@ -226,18 +231,32 @@ int main()
 			class_<int_field>("int_field")
 				.def("get", &int_field::get )
 				.def("set", &int_field::set ),
-			class_<lua_hook>("lua_hook")
-				.def("add_field_int", (void(lua_hook::*)(std::string)) &lua_hook::add_field_int)
-				.def("add_field_int", (void(lua_hook::*)(std::string, int)) &lua_hook::add_field_int) 
-				.def("add_field_int", (void(lua_hook::*)(std::string, int, int)) &lua_hook::add_field_int) 
-				.def("field_int",	&lua_hook::field_int ),
-			class_<meta_object, lua_hook>("meta_object") 	
+			class_<lua_hook_object>("lua_hook_object")
+				.def("add_field_int", (void(lua_hook_object::*)(std::string)) &lua_hook_object::add_field_int)
+				.def("add_field_int", (void(lua_hook_object::*)(std::string, int)) &lua_hook_object::add_field_int) 
+				.def("add_field_int", (void(lua_hook_object::*)(std::string, int, int)) &lua_hook_object::add_field_int) 
+				.def("field_int",	&lua_hook_object::field_int ),
+			class_<meta_object, lua_hook_object>("meta_object") 	
+				.def(constructor<std::string>()),
+			class_<lua_hook_class>("lua_hook_class")
+				.def("add_field_int", (void(lua_hook_class::*)(std::string)) &lua_hook_class::add_field_int)
+				.def("add_field_int", (void(lua_hook_class::*)(std::string, int)) &lua_hook_class::add_field_int) 
+				.def("add_field_int", (void(lua_hook_class::*)(std::string, int, int)) &lua_hook_class::add_field_int) 
+				.def("field_int",	&lua_hook_class::field_int ),
+			class_<meta_class, lua_hook_class>("meta_class") 	
 				.def(constructor<std::string>())
+				.def("create_object", &meta_class::create_object )
 		];
 
-		lua_dostring(	L, "meta_obj = meta_object('hello_object')" );
-		lua_dostring(	L, "meta_obj:add_field_int( 'hello_int', meta_field.none )" );
+		lua_dostring(	L, "meta_cl = meta_class('hello_class')" );
+		lua_dostring(	L, "meta_cl:add_field_int( 'hello_int', meta_field.none )" );
+		lua_dostring(	L, "meta_obj = meta_cl:create_object('hello_object')" );
 		lua_dostring(	L, "meta_obj:field_int( 'hello_int' ):set( 1234 )" );		
+
+		std::cout << get_class( "hello_class" ).get_object( 
+			"hello_object" ).field<int>( "hello_int" ).as_string() << std::endl;
+
+		assert( get_class( "hello_class" ).get_object( "hello_object" ).field<int>( "hello_int" ) == 1234 );
 
 		lua_close(L);
 	}

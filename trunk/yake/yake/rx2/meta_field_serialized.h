@@ -7,7 +7,7 @@
 
 #include "meta_field.h"
 
-BOOST_IS_ABSTRACT(meta_field)
+BOOST_IS_ABSTRACT(rx::meta_field)
 
 namespace boost 
 { 
@@ -15,7 +15,7 @@ namespace serialization
 {
 
 template<class Archive>
-void serialize(Archive & ar, meta_field & field, const unsigned int version)
+void serialize(Archive & ar, rx::meta_field & field, const unsigned int version)
 {
   ar & field.flags_;
 	ar & field.object_;
