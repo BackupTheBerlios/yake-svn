@@ -18,8 +18,8 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef INC_YAKE_PHYSICS_AFFECTORZONE_H
-#define INC_YAKE_PHYSICS_AFFECTORZONE_H
+#ifndef YAKE_PHYSICS_AFFECTORZONE_H
+#define YAKE_PHYSICS_AFFECTORZONE_H
 
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #	include <yake/physics/yakePhysicsPrerequisites.h>
