@@ -22,7 +22,7 @@
 #define YAKE_BASE_EXCEPTION_H
 
 
-#define YAKE_EXCEPT(m,s) throw( yake::base::Exception(m,s,__FILE__,__LINE__) )
+#define YAKE_EXCEPT(message, source) throw( yake::base::Exception(message, source,__FILE__,__LINE__) )
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
