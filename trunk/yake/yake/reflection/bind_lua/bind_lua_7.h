@@ -131,12 +131,12 @@ static void commit_lua_methods() \
 	detail::class_rep & lua_crep = get_lua_crep(); \
 \
 	/* set reference to crep */ \
-	for( std::map<const char*, detail::method_rep, detail::ltstr>::iterator iter( lua_class.m_methods.begin() ); \
-		iter != lua_class.m_methods.end(); ++iter ) \
+	for( std::map<const char*, detail::method_rep, detail::ltstr>::iterator iter( lua_class.m_registration->m_methods.begin() ); \
+		iter != lua_class.m_registration->m_methods.end(); ++iter ) \
 	{	iter->second.crep = &lua_crep; } \
 \
 	/* add to crep */ \
-	lua_crep.m_methods = lua_class.m_methods; \
+	lua_crep.m_methods = lua_class->m_registration->m_methods; \
 } \
 \
 static void commit_lua_properties() \
@@ -147,8 +147,8 @@ static void commit_lua_properties() \
 	detail::class_rep & lua_crep = get_lua_crep(); \
 \
 	/* copy getters and setters to crep */ \
-	lua_crep.m_getters = lua_class.m_getters; \
-	lua_crep.m_setters = lua_class.m_setters; \
+	lua_crep.m_getters = lua_class.m_registration->m_getters; \
+	lua_crep.m_setters = lua_class.m_registration->m_setters; \
 }
 
 // -----------------------------------------
