@@ -23,10 +23,19 @@
 using namespace yake::base;
 using namespace yake::samples::common;
 
-struct graphics_system {};
-struct gui_system {};
-struct input_system {};
-struct physics_system {};
+namespace yake 
+{
+namespace samples
+{
+namespace common
+{
+	struct graphics_system {};
+	struct gui_system {};
+	struct input_system {};
+	struct physics_system {};
+} // namespace common
+} // namespace samples
+} // namespace yake
 
 namespace yake
 {
@@ -63,18 +72,18 @@ class my_app_manual : application< manual_init<basic_config> >
      load_system<graphics_system>("yake.graphics.ogre3d");
      load_library("cegui_plugin");
      load_system<graphics_system>("yake.gui.cegui");
-     m_gui_renderer_adapter.reset(
-		 create<gui_renderer_adapter>(
-			gui_renderer_adapter::identifier(
-				get_system<graphics_system>()->get_type_info(), 
-				get_system<gui_system>()->get_type_info())));
+     /*m_gui_renderer_adapter.reset(
+			create<gui_renderer_adapter>(
+				gui_renderer_adapter::identifier(
+					get_system<graphics_system>()->get_type_info(), 
+					get_system<gui_system>()->get_type_info())));*/
    }
 
 	 void load_library(const char * lib)
 	 { m_lib_man.load_library(lib); }
 
 	 library_manager m_lib_man;
-	 boost::shared_ptr<gui_renderer_adapter> m_gui_renderer_adapter;
+	 //boost::shared_ptr<gui_renderer_adapter> m_gui_renderer_adapter;
 };
 
 

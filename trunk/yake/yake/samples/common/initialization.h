@@ -6,8 +6,14 @@
 #include <string>
 // boost
 #include <boost/shared_ptr.hpp>
+#include <boost/mpl/begin.hpp>
+#include <boost/mpl/iterator_range.hpp>
+#include <boost/mpl/find.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/next.hpp>
 // yake
 #include <yake/base/mpl/inherit_linear.h>
+#include <yake/base/mpl/inherit_multiple.h>
 #include <yake/base/mpl/yakeSequences.h>
 // local
 #include "load_libraries.h"
@@ -26,6 +32,10 @@ namespace common
 // todo: use yake registry
 template <class System>
 boost::shared_ptr<System> create()
+{ return boost::shared_ptr<System>(new System()); }
+
+template <class System>
+boost::shared_ptr<System> create(const char * id)
 { return boost::shared_ptr<System>(new System()); }
 
 // -----------------------------------------
@@ -73,12 +83,12 @@ namespace // unnamed
 // loads the libraries, initializes the systems and makes them accessable
 template <class Config = default_config>
 struct auto_init : 
-	load_libraries<Config>, 
-	inherit_linear<Config, typename lambda< auto_init_system_holder<_> >::type >::type
+	private load_libraries<Config>, 
+	private inherit_multiple<Config, typename lambda< auto_init_system_holder<_> >::type >::type
 {
 public: // methods
   template <class System>
-  System & get_system()
+  boost::shared_ptr<System> get_system()
   { static_cast<auto_init_system_holder<System>&>(*this)->get_system(); }
 };
 
@@ -89,7 +99,7 @@ template <class Config = default_config>
 struct delayed_auto_init
 {
 public: // types
-	typedef typename inherit_linear
+	typedef typename inherit_multiple
 	<
 		Config, 
 		typename lambda< auto_init_system_holder<_> >::type
@@ -115,35 +125,31 @@ private: // data
 /* semi automatic initialization */
 namespace // unnamed
 {
-	template <class System>
-	struct semi_init_system_holder_head
+	struct semi_init_system_holder_root
 	{
 		virtual void load_systems() {}
 	};
 
-	template <class System>
-	struct semi_init_system_holder
+	template <class Base, class System>
+	struct semi_init_system_holder : Base
 	{
-		virtual void load_system() 
-		{ m_system = create<System>(); Base::load_system(); }
-		// ############################################################### work on here tomorrow
-		// WE NEED BASE HERE => LINEAR INHERITANCE ... SOLVED THIS, SEE ABSTRACT FACTORY SAMPLE
+		void load_systems() 
+		{ m_system = create<System>(); Base::load_systems(); }
 
 		boost::shared_ptr<System> get_system()
 		{ return m_system; }
 
 		boost::shared_ptr<System> m_system;
 	};
-
 } // namespace unnamed
 
 template <class Config = default_config>
 struct semi_auto_init : 
-	private typename inherit_linear
+	private inherit_linear
 	<
 		Config, 
-		typename lambda< semi_init_system_holder<_> >::type,
-		semi_init_system_holder_head
+		typename lambda< semi_init_system_holder<_, _> >::type,
+		semi_init_system_holder_root
 	>::type
 {
 public: // methods
@@ -156,8 +162,21 @@ public: // methods
 		virtual void load_libraries() = 0;
 
 		template <class System>
-		System & get_system()
-    static_cast<semi_init_system_holder<System>&>(*this)->get_system(); }
+		boost::shared_ptr<System> get_system()
+		{
+			// create list of bases
+			typedef boost::mpl::find<Config, System>::type last;
+			typedef boost::mpl::iterator_range<typename boost::mpl::begin<Config>::type, next<last>::type>::type bases;
+			// cast to base
+			inherit_linear
+			< 
+				Config, 
+				typename lambda< semi_init_system_holder<_, _> >::type,
+				semi_init_system_holder_root
+			>::type & base = *this;
+			// get system
+			return base.get_system();
+		}
 };
 
 // -----------------------------------------
@@ -167,27 +186,27 @@ namespace // unnamed
 	template <class System>
 	struct manual_init_system_holder
 	{
-		void set_system(shared_ptr<System> system)
-		{ m_system.reset(system); }
+		void set_system(boost::shared_ptr<System> system)
+		{ m_system = system; }
 
-		shared_ptr<System> get_system()
+		boost::shared_ptr<System> get_system()
 		{ return m_system; }
 
-		shared_ptr<System> m_system;
+		boost::shared_ptr<System> m_system;
 	};
 } // namspace unnamed
 
 template <class Systems>
-struct manual_init : inherit_linear<Systems, lambda< manual_init_system_holder<_> >::type
+struct manual_init : private inherit_multiple<Systems, typename lambda< manual_init_system_holder<_> >::type >::type
 {
 public: // methods
   template <class System>
-  System & get_system()
-  { static_cast<manual_init_system_holder<System>&>(*this)->get_system(); }
+  boost::shared_ptr<System> get_system()
+  { static_cast<manual_init_system_holder<System>&>(*this).get_system(); }
 
   template <class System>
   void load_system(const char * id)
-  { get_system<System>().set_system(create<System>(id)); }
+  { static_cast<manual_init_system_holder<System>&>(*this).set_system(create<System>(id)); }
 };
 
 } // namespace common
