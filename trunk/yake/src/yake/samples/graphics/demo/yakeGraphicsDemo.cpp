@@ -15,6 +15,9 @@
 // Yake
 #include <yake/base/yake.h>
 #include <yake/samples/common/yakeExampleApplication.h>
+#include <yake/data/yakeData.h>
+
+#include <yake/samples/data/demo/yakeDotScene.h> // temporarily
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -23,12 +26,13 @@ using namespace yake::base::templates;
 using namespace yake::graphics;
 using namespace yake;
 using namespace yake::base::math;
+using namespace yake::data;
 
 class TheApp : public yake::exapp::ExampleApplication
 {
 private:
 	Vector<std::pair<IViewport*,ICamera*> >	mVPs;
-	Pointer< IGraphicalWorld >				mGWorld;
+	SharedPtr< IGraphicalWorld >			mGWorld;
 	physics::IWorld*						mPWorld;
 
 	struct SimpleOne {
@@ -71,6 +75,23 @@ public:
 		mVPs[idx].first->setDimensions( sx, sy, w, h );
 		mVPs[idx].first->setZ( z );
 		return idx;
+	}
+
+	void setupDotScene()
+	{
+		// dotScene test
+
+		// 1. read dotscene file into DOM
+
+		SharedPtr<dom::ISerializer> ser( new dom::xml::XmlSerializer() );
+		ser->parse("../../media/graphics.scenes/r2t/r2t_test.scene", false);
+
+		// 2. parse DOM and create graphical scene
+
+		graphics::ISceneNode* pSN = mGWorld->createSceneNode();
+		YAKE_ASSERT( pSN );
+		yake::data::serializer::dotscene::DotSceneSerializerV1 dss;
+		dss.load( ser->getDocumentNode(), mGWorld, pSN );
 	}
 
 	void setupNinja()
@@ -143,6 +164,7 @@ public:
 		createCameraViewportPair( 0.0, 0.5, 0.5, 0.5, 12 );
 		createCameraViewportPair( 0.5, 0.5, 0.5, 0.5, 13 );
 
+		mVPs[0].second->translate( Vector3(0,2,0) );
 		mVPs[1].second->setPosition( Vector3(0,2,-80) );
 		mVPs[3].second->setPosition( Vector3(0,50,-250) );
 
@@ -155,6 +177,7 @@ public:
 		setupNinja();
 		setupGround();
 		setupBox();
+		setupDotScene();
 
 		// main loop
 
@@ -171,6 +194,18 @@ public:
 			mMouseEventGenerator.update();
 			mKeyboardEventGenerator.update();
 
+			//
+			YAKE_ASSERT( getKeyboard() );
+			if (getKeyboard())
+			{
+				static iCam = 0;
+				real distance = -5. * timeElapsed;
+				if (getKeyboard()->isKeyDown(input::KC_LEFT))
+					mVPs[iCam].second->translate( Vector3(distance, 0, 0) );
+				if (getKeyboard()->isKeyDown(input::KC_RIGHT))
+					mVPs[iCam].second->translate( Vector3(-distance, 0, 0) );
+			}
+
 			// process physics
 			mPWorld->update( timeElapsed );
 
@@ -182,7 +217,8 @@ public:
 			mGWorld->render( timeElapsed );
 		}
 
-		// clean up
+		// clean up (FIXME: still incomplete)
+		// TODO: use a yake::base::State for handling all scene specific stuff...
 
 		YAKE_SAFE_DELETE( mBox.pCO );
 		YAKE_SAFE_DELETE( mBox.pSN );
