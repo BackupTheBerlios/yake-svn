@@ -113,7 +113,7 @@ namespace physics {
 	{
 		fireCollisionExited.connect( rkSlot );
 	}
-	void ActorNx::destroyShape( SharedPtr<IShape> & rShape )
+	void ActorNx::destroyShape( IShape* pShape )
 	{
 		YAKE_ASSERT( 1==0 );
 	}
@@ -139,11 +139,11 @@ namespace physics {
 		}
 		return out;
 	}
-	SharedPtr<IShape> ActorNx::createShape( const IShape::Desc & rkShapeDesc )
+	IShape* ActorNx::createShape( const IShape::Desc & rkShapeDesc )
 	{
 		YAKE_ASSERT( mpNxActor ).error("Actor is invalid! Cannot create shape without a valid actor.");
 		if (!mpNxActor)
-			return SharedPtr<IShape>();
+			return 0;
 
 		MaterialNx* pMaterial = 0;
 		if (!rkShapeDesc.pMaterial.expired())
@@ -190,7 +190,7 @@ namespace physics {
 				{
 					delete pShape;
 					pShape = 0;
-					return SharedPtr<IShape>();
+					return 0;
 				}
 				pShape->createAsMesh_( rkTrimesh.meshId );
 			}
@@ -199,9 +199,12 @@ namespace physics {
 			YAKE_ASSERT( 1==0 )(rkShapeDesc.type).error("Unsupported shape type!");
 			delete pShape;
 			pShape = 0;
-			return SharedPtr<IShape>();
+			return 0;
 		}
 		mShapes.push_back( SharedPtr<ShapeNx>(pShape) );
+
+		pShape->setPosition( rkShapeDesc.position );
+		pShape->setOrientation( rkShapeDesc.orientation );
 
 		//WORKAROUND: now remove the work-a-round default shape
 		if (mpNxDefaultShape)
@@ -213,7 +216,7 @@ namespace physics {
 		if (mpBody)
 			mpNxActor->updateMassFromShapes( 1, 0 );
 
-		return mShapes.back();
+		return mShapes.back().get();
 	}
 	void ActorNx::setPosition( const Vector3 & rkPosition )
 	{

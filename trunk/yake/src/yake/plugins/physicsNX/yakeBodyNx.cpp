@@ -86,6 +86,11 @@ namespace physics {
 		YAKE_ASSERT( mNxActor );
 		mNxActor->addForceAtPos( toNx( rkForce ), toNx( rkPos ) );
 	}
+	void BodyNx::addForceAtLocalPos( const Vector3& rForce, const Vector3& rPos )
+	{
+		YAKE_ASSERT( mNxActor );
+		mNxActor->addForceAtLocalPos( toNx( rForce ), toNx( rPos ) );
+	}
 	void BodyNx::addLocalForce( const Vector3 & rkForce )
 	{
 		YAKE_ASSERT( mNxActor );

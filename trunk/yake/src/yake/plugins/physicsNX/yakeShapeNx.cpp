@@ -160,20 +160,22 @@ namespace physics {
 	void ShapeNx::setPosition( const Vector3 & rkPosition )
 	{
 		YAKE_ASSERT( mpNxShape ).error("Cannot access property as long as object isn't finalized!");
+		mpNxShape->setLocalPosition( toNx(rkPosition) );
 	}
 	Vector3 ShapeNx::getPosition() const
 	{
 		YAKE_ASSERT( mpNxShape ).error("Cannot access property as long as object isn't finalized!");
-		return Vector3::kZero; //@todo
+		return fromNx( mpNxShape->getLocalPosition() );
 	}
 	void ShapeNx::setOrientation( const Quaternion & rkOrientation )
 	{
 		YAKE_ASSERT( mpNxShape ).error("Cannot access property as long as object isn't finalized!");
+		mpNxShape->setLocalOrientation( toNx(rkOrientation) );
 	}
 	Quaternion ShapeNx::getOrientation() const
 	{
 		YAKE_ASSERT( mpNxShape ).error("Cannot access property as long as object isn't finalized!");
-		return Quaternion::kIdentity; //@todo
+		return fromNx( mpNxShape->getLocalOrientation() );
 	}
 
 }
