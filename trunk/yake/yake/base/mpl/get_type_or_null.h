@@ -17,13 +17,18 @@
    Place - Suite 330, Boston, MA 02111-1307, USA, or go to
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
- */
-#ifndef YAKE_BASE_MPL_SELECT_H
-#define YAKE_BASE_MPL_SELECT_H
+*/
+#ifndef _YAKE_BASE_MPL_GET_TYPE_OR_NULL_H_
+#define _YAKE_BASE_MPL_GET_TYPE_OR_NULL_H_
+
+#include <boost/mpl/if.hpp>
+
+#include "null_type.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
+
 namespace yake
 {
 namespace base
@@ -31,20 +36,15 @@ namespace base
 namespace mpl
 {
 
-template <bool flag, typename T, typename U>
-struct Select
+// meta functions: returns given arg if there is one, otherwise it will return null
+template <typename T = null_type>
+struct get_type_or_null
 {
-	typedef T Result;
+  typedef T type;   
 };
-
-template <typename T, typename U>
-struct Select<false, T, U>
-{
-	typedef U Result;
-}
 
 } // mpl
 } // base
 } // yake
 
-#endif // YAKE_BASE_MPL_SELECT_H
+#endif // _YAKE_BASE_MPL_GET_TYPE_OR_NULL_H_

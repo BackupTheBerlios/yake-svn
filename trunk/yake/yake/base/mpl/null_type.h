@@ -18,8 +18,8 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_MPL_EMPTYTYPE_H
-#define YAKE_BASE_MPL_EMPTYTYPE_H
+#ifndef YAKE_BASE_MPL_NULL_TYPE_H
+#define YAKE_BASE_MPL_NULL_TYPE_H
 
 #include <boost/mpl/empty_base.hpp>
 
@@ -34,11 +34,11 @@ namespace base
 namespace mpl
 {
 
-typedef boost::mpl::empty_base EmptyType;
+typedef boost::mpl::empty_base null_type;
 
 } // mpl
 } // base
 } // yake
 
 
-#endif // YAKE_BASE_MPL_EMPTYTYPE_H
+#endif // YAKE_BASE_MPL_NULL_TYPE_H
