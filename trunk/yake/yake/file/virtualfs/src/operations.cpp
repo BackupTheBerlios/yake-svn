@@ -149,7 +149,7 @@ void create_archive_from( const path & archive, const path & dir )
 
 //  directory_iterator helpers  ----------------------------------------------//
 
-yake::base::templates::Pointer<file_system> current_fs;
+yake::base::templates::SharedPtr<file_system> current_fs;
 
   inline const char *  find_first_file( const char * dir,
     YAKE_HANDLE & handle, YAKE_SYSTEM_DIRECTORY_TYPE & data )

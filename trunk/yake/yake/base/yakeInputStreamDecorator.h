@@ -44,14 +44,14 @@ class YAKE_BASE_API IInputStreamDecorator : public IInputStream
 {
 // Class
 public:
-  IInputStreamDecorator( const Pointer< IInputStream >& pDecorated )
+  IInputStreamDecorator( const SharedPtr< IInputStream >& pDecorated )
     : mpDecorated( pDecorated )
   {}
 
 // Methods
 public:
 
-  const Pointer< IInputStream >& getDecorated()                   { return mpDecorated; }
+  const SharedPtr< IInputStream >& getDecorated()                   { return mpDecorated; }
 
   int Seek( int offset, SeekBase base )                           { return mpDecorated->Seek( offset, base ); }
   int Tell() const                                                { return mpDecorated->Tell(); }
@@ -80,7 +80,7 @@ public:
   int read( double* pBuffer, int count )                         { return mpDecorated->read( pBuffer, count ); }
 
 private:
-  Pointer< IInputStream > mpDecorated;
+  SharedPtr< IInputStream > mpDecorated;
 };
 
 } // base

@@ -64,7 +64,7 @@ public:
 	YAKE_DECLARE_REGISTRY_0( filesystem::virtualfs::file_system, yake::base::String )
 };
 
-typedef yake::base::templates::Pointer<file_system> file_system_ptr;
+typedef yake::base::templates::SharedPtr<file_system> file_system_ptr;
 
 } // virtualfs
 } // filesystem

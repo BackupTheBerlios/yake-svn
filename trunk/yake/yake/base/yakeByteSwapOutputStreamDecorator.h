@@ -58,7 +58,7 @@ class YAKE_BASE_API ByteSwapOutputStreamDecorator : public IOutputStreamDecorato
 {
 // Class
 public:
-  ByteSwapOutputStreamDecorator( const Pointer< IOutputStream >& pDecorated )
+  ByteSwapOutputStreamDecorator( const SharedPtr< IOutputStream >& pDecorated )
     : IOutputStreamDecorator( pDecorated )
   {}
 

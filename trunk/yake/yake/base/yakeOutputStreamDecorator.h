@@ -43,11 +43,11 @@ namespace base
 class YAKE_BASE_API IOutputStreamDecorator : public IOutputStream
 {
 public:
-  IOutputStreamDecorator( const Pointer< IOutputStream >& pDecorated )
+  IOutputStreamDecorator( const SharedPtr< IOutputStream >& pDecorated )
     : mpDecorated( pDecorated )
   {}
 
-  const Pointer< IOutputStream >& GetDecorated()                  { return mpDecorated; }
+  const SharedPtr< IOutputStream >& GetDecorated()                  { return mpDecorated; }
 
   int Seek( int iOffset, SeekBase Base )                          { return mpDecorated->Seek( iOffset, Base ); }
   int Tell() const                                                { return mpDecorated->Tell(); }
@@ -80,7 +80,7 @@ public:
   int write( const double* pBuffer, int count )                  { return mpDecorated->write( pBuffer, count ); }
 
 private:
-	templates::Pointer< IOutputStream > mpDecorated;
+	templates::SharedPtr< IOutputStream > mpDecorated;
 };
 
 } // base

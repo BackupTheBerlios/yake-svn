@@ -50,7 +50,7 @@ class YAKE_BASE_API ByteSwapInputStreamDecorator : public IInputStreamDecorator
 {
 // Class
 public:
-  ByteSwapInputStreamDecorator( const Pointer< IInputStream >& pDecorated )
+  ByteSwapInputStreamDecorator( const SharedPtr< IInputStream >& pDecorated )
     : IInputStreamDecorator( pDecorated )
   {}
 
