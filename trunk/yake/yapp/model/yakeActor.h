@@ -80,6 +80,8 @@ namespace model {
 	};
 */
 
+	class IScriptCallback;
+
 	/** Actor represents a high-level entity in an application/game.
 		It's appearance (graphical, physical, audible, etc) and its behaviour
 		is defined by various attachable components.
