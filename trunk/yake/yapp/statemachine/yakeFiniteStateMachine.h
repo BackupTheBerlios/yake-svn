@@ -86,6 +86,8 @@ namespace state {
 	typedef boost::function<void(void)> TransitionFn;
 	typedef std::deque< TransitionFn > TransitionFnList;
 
+// todo: a type specific template? this seems to be senseless, please add a creator policy and kick the pure virtual function
+
 	/** Template base class for very, very simple clonable objects.
 		@todo move out into yake::base or yapp::base.
 	*/

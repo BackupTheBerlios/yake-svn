@@ -1,4 +1,3 @@
-include <vector>
 #include "edit_window_visitor.h"
 #include "widget_editor.h"
 

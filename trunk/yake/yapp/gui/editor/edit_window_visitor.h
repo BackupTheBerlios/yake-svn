@@ -1,5 +1,5 @@
-#ifndef _YAPP_GUI_EDITOR_EDIT_WINDOW_VISITOR_H
-#define _YAPP_GUI_EDITOR_EDIT_WINDOW_VISITOR_H
+#ifndef _YAPP_GUI_EDITOR_EDIT_WINDOW_VISITOR_H_
+#define _YAPP_GUI_EDITOR_EDIT_WINDOW_VISITOR_H_
 
 #include <boost/shared_ptr.hpp>
 
@@ -38,4 +38,4 @@ private:
 } // namespace gui
 } // namespace yake
 
-#endif // _YAPP_GUI_EDITOR_EDIT_WINDOW_VISITOR_H
+#endif // _YAPP_GUI_EDITOR_EDIT_WINDOW_VISITOR_H_

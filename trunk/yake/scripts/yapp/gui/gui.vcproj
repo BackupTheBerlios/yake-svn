@@ -26,7 +26,7 @@
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yapp/gui/yakePCH.h"
+				PrecompiledHeaderThrough="yapp/gui/precompiled.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
@@ -136,6 +136,9 @@
 				RelativePath="..\..\..\yapp\gui\point.h">
 			</File>
 			<File
+				RelativePath="..\..\..\yapp\gui\precompiled.h">
+			</File>
+			<File
 				RelativePath="..\..\..\yapp\gui\property_list_base.h">
 			</File>
 			<File
@@ -176,6 +179,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\yapp\gui\multi_line_edit_box_base.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\yapp\gui\precompiled.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\src\yapp\gui\property_list_base.cpp">
