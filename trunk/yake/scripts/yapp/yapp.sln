@@ -11,15 +11,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesDotScene", "samples\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesStateMachine", "samples\base\samplesStateMachine.vcproj", "{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesVehicleEditor", "samples\base\samplesVehicleEditor.vcproj", "{F8D6A30D-4A0A-4B89-9BF4-14FD9D59E37B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesStateMachine", "samples\state\samplesStateMachine.vcproj", "{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesVehicle", "samples\base\samplesVehicle.vcproj", "{B9A9E534-6EB6-4667-B91B-74B930636F5E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ceguiOgreRendererAdapter", "plugins\gui\ceguiOgreRendererAdapter.vcproj", "{526DC299-3C9B-46ED-8C16-0490AE5CAE88}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -45,14 +45,14 @@ Global
 		{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}.Debug.Build.0 = Debug|Win32
 		{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}.Release.ActiveCfg = Release|Win32
 		{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}.Release.Build.0 = Release|Win32
-		{F8D6A30D-4A0A-4B89-9BF4-14FD9D59E37B}.Debug.ActiveCfg = Debug|Win32
-		{F8D6A30D-4A0A-4B89-9BF4-14FD9D59E37B}.Debug.Build.0 = Debug|Win32
-		{F8D6A30D-4A0A-4B89-9BF4-14FD9D59E37B}.Release.ActiveCfg = Release|Win32
-		{F8D6A30D-4A0A-4B89-9BF4-14FD9D59E37B}.Release.Build.0 = Release|Win32
 		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Debug.ActiveCfg = Debug|Win32
 		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Debug.Build.0 = Debug|Win32
 		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Release.ActiveCfg = Release|Win32
 		{B9A9E534-6EB6-4667-B91B-74B930636F5E}.Release.Build.0 = Release|Win32
+		{526DC299-3C9B-46ED-8C16-0490AE5CAE88}.Debug.ActiveCfg = Debug|Win32
+		{526DC299-3C9B-46ED-8C16-0490AE5CAE88}.Debug.Build.0 = Debug|Win32
+		{526DC299-3C9B-46ED-8C16-0490AE5CAE88}.Release.ActiveCfg = Release|Win32
+		{526DC299-3C9B-46ED-8C16-0490AE5CAE88}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
