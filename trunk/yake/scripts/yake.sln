@@ -68,6 +68,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesGraphicsDemo", "samp
 		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "physics", "physics.vcproj", "{1C674F1C-7DDF-4AC5-A52A-14C31248A9D4}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "physicsODE", "plugins\physics\physicsODE.vcproj", "{2F5124AA-56BD-4909-811A-E79901978C86}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -126,6 +134,14 @@ Global
 		{723A2F36-A3DC-40E5-A7B0-0629219B04DE}.Debug.Build.0 = Debug|Win32
 		{723A2F36-A3DC-40E5-A7B0-0629219B04DE}.Release.ActiveCfg = Release|Win32
 		{723A2F36-A3DC-40E5-A7B0-0629219B04DE}.Release.Build.0 = Release|Win32
+		{1C674F1C-7DDF-4AC5-A52A-14C31248A9D4}.Debug.ActiveCfg = Debug|Win32
+		{1C674F1C-7DDF-4AC5-A52A-14C31248A9D4}.Debug.Build.0 = Debug|Win32
+		{1C674F1C-7DDF-4AC5-A52A-14C31248A9D4}.Release.ActiveCfg = Release|Win32
+		{1C674F1C-7DDF-4AC5-A52A-14C31248A9D4}.Release.Build.0 = Release|Win32
+		{2F5124AA-56BD-4909-811A-E79901978C86}.Debug.ActiveCfg = Debug|Win32
+		{2F5124AA-56BD-4909-811A-E79901978C86}.Debug.Build.0 = Debug|Win32
+		{2F5124AA-56BD-4909-811A-E79901978C86}.Release.ActiveCfg = Release|Win32
+		{2F5124AA-56BD-4909-811A-E79901978C86}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

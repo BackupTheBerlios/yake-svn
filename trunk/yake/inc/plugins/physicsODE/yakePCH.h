@@ -26,8 +26,8 @@
 #include <dependencies/ode/include/ode/odecpp.h>
 #include <dependencies/ode/include/ode/odecpp_collision.h>
 
-#include <yakeBase/inc/yake.h>
-#include <yakePhysics/inc/yakePhysicsSystem.h>
+#include <inc/base/yake.h>
+#include <inc/physics/yakePhysicsSystem.h>
 
 #define VEC_YAKE2ODE( YV ) Ogre::Vector3( YV.x, YV.y, YV.z )
 #define VEC_ODE2YAKE( YV ) ::yake::base::math::Vector3( YV.x, YV.y, YV.z )

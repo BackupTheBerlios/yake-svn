@@ -18,10 +18,10 @@ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
 http://www.gnu.org/copyleft/lesser.txt.
 ------------------------------------------------------------------------------------
 */
-#include <plugins/yakePhysicsODE/inc/pch.h>
-#include <plugins/yakePhysicsODE/inc/OdeWorld.h>
-#include <plugins/yakePhysicsODE/inc/OdeJoint.h>
-#include <plugins/yakePhysicsODE/inc/OdeBody.h>
+#include <inc/plugins/physicsODE/yakePCH.h>
+#include <inc/plugins/physicsODE/OdeWorld.h>
+#include <inc/plugins/physicsODE/OdeJoint.h>
+#include <inc/plugins/physicsODE/OdeBody.h>
 
 namespace yake {
 	namespace physics {

@@ -18,9 +18,9 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <plugins/yakePhysicsODE/inc/pch.h>
-#include <plugins/yakePhysicsODE/inc/OdeWorld.h>
-#include <plugins/yakePhysicsODE/inc/PhysicsSystemODE.h>
+#include <inc/plugins/physicsODE/yakePCH.h>
+#include <inc/plugins/physicsODE/OdeWorld.h>
+#include <inc/plugins/physicsODE/PhysicsSystemODE.h>
 
 namespace yake {
 namespace physics {

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="yakePhysicsPluginODE"
+	Name="physicsODE"
 	ProjectGUID="{2F5124AA-56BD-4909-811A-E79901978C86}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -12,20 +12,20 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../common/bin/debug"
-			IntermediateDirectory="../common/obj/debug/yakePhysicsPluginOde"
+			OutputDirectory="../../../common/bin/debug"
+			IntermediateDirectory="../../../common/obj/debug/$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..;../dependencies/ttl/"
+				AdditionalIncludeDirectories="../../../;../../../dependencies/ttl/;../../../dependencies/boost/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKEPHYSICSODE_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="plugins/yakePhysicsODE/inc/pch.h"
+				PrecompiledHeaderThrough="inc/plugins/physicsODE/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -33,15 +33,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="oded.lib yakePhysics.lib"
-				OutputFile="$(OutDir)/yakePhysicsODE.dll"
+				AdditionalDependencies="oded.lib physics.lib"
+				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../common/lib/debug;../dependencies/ode/lib/debug/"
-				ModuleDefinitionFile="../plugins/yakePhysicsODE/src/plugin.def"
+				AdditionalLibraryDirectories="../../../common/lib/debug;../../../dependencies/ode/lib/debug/"
+				ModuleDefinitionFile="..\..\..\src\plugins\physicsODE\plugin.def"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/yakePhysicsODE.pdb"
+				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
-				ImportLibrary="../common/lib/debug/yakePhysicsODE.lib"
+				ImportLibrary="../common/lib/debug/$(TargetName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -120,34 +120,43 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\OdeBallJoint.cpp">
+				RelativePath="..\..\..\src\plugins\physicsODE\OdeBallJoint.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\OdeBody.cpp">
+				RelativePath="..\..\..\src\plugins\physicsODE\OdeBody.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\OdeCollisionGeometry.cpp">
+				RelativePath="..\..\..\src\plugins\physicsODE\OdeCollisionGeometry.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\OdeComplexObject.cpp">
+				RelativePath="..\..\..\src\plugins\physicsODE\OdeComplexObject.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\OdeFixedJoint.cpp">
+				RelativePath="..\..\..\src\plugins\physicsODE\OdeFixedJoint.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\OdeHinge2Joint.cpp">
+				RelativePath="..\..\..\src\plugins\physicsODE\OdeHinge2Joint.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\OdeHingeJoint.cpp">
+				RelativePath="..\..\..\src\plugins\physicsODE\OdeHingeJoint.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\OdeJointBase.cpp">
+				RelativePath="..\..\..\src\plugins\physicsODE\OdeJointBase.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\OdeWorld.cpp">
+				RelativePath="..\..\..\src\plugins\physicsODE\OdeWorld.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\pch.cpp">
+				RelativePath="..\..\..\src\plugins\physicsODE\PhysicsSystemODE.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\physicsODE\plugin.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\physicsODE\plugin.def">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\physicsODE\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -155,43 +164,34 @@
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\PhysicsSystemODE.cpp">
-			</File>
-			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\plugin.cpp">
-			</File>
-			<File
-				RelativePath="..\plugins\yakePhysicsODE\src\plugin.def">
-			</File>
 		</Filter>
 		<Filter
 			Name="inc"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\inc\OdeBody.h">
+				RelativePath="..\..\..\inc\plugins\physicsODE\OdeBody.h">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\inc\OdeCollisionGeometry.h">
+				RelativePath="..\..\..\inc\plugins\physicsODE\OdeCollisionGeometry.h">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\inc\OdeComplexObject.h">
+				RelativePath="..\..\..\inc\plugins\physicsODE\OdeComplexObject.h">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\inc\OdeJoint.h">
+				RelativePath="..\..\..\inc\plugins\physicsODE\OdeJoint.h">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\inc\OdeWorld.h">
+				RelativePath="..\..\..\inc\plugins\physicsODE\OdeWorld.h">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\inc\pch.h">
+				RelativePath="..\..\..\inc\plugins\physicsODE\PhysicsSystemODE.h">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\inc\PhysicsSystemODE.h">
+				RelativePath="..\..\..\inc\plugins\physicsODE\plugin.h">
 			</File>
 			<File
-				RelativePath="..\plugins\yakePhysicsODE\inc\plugin.h">
+				RelativePath="..\..\..\inc\plugins\physicsODE\yakePCH.h">
 			</File>
 		</Filter>
 	</Files>

@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../common/lib/debug"
-			IntermediateDirectory="../common/obj/debug/yakePhysics"
+			OutputDirectory="../common/bin/debug"
+			IntermediateDirectory="../common/obj/debug/$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -25,7 +25,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yakePhysics/inc/pch.h"
+				PrecompiledHeaderThrough="inc/physics/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -33,13 +33,13 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../common/bin/debug/yakePhysics.dll"
+				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../common/lib/debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/yakePhysics.pdb"
+				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
-				ImportLibrary="../common/lib/debug/yakePhysics.lib"
+				ImportLibrary="../common/lib/debug/$(TargetName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -118,7 +118,10 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{D98C3EC0-57EF-43b5-9AA8-19A456D4679B}">
 			<File
-				RelativePath="..\yakePhysics\src\pch.cpp">
+				RelativePath="..\src\physics\yakeGraphical.cpp">
+			</File>
+			<File
+				RelativePath="..\src\physics\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -127,7 +130,13 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\yakePhysics\src\yakePhysical.cpp">
+				RelativePath="..\src\physics\yakePhysical.cpp">
+			</File>
+			<File
+				RelativePath="..\src\physics\yakePhysicsAffectors.cpp">
+			</File>
+			<File
+				RelativePath="..\src\physics\yakePhysicsSystem.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -135,16 +144,22 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{931F508C-E413-4f0f-8658-E107F95EA8B8}">
 			<File
-				RelativePath="..\yakePhysics\inc\pch.h">
+				RelativePath="..\inc\physics\yakeForceSpace.h">
 			</File>
 			<File
-				RelativePath="..\yakePhysics\inc\yakePhysical.h">
+				RelativePath="..\inc\physics\yakePCH.h">
 			</File>
 			<File
-				RelativePath="..\yakePhysics\inc\yakePhysics.h">
+				RelativePath="..\inc\physics\yakePhysical.h">
 			</File>
 			<File
-				RelativePath="..\yakePhysics\inc\yakePhysicsSystem.h">
+				RelativePath="..\inc\physics\yakePhysics.h">
+			</File>
+			<File
+				RelativePath="..\inc\physics\yakePhysicsAffectors.h">
+			</File>
+			<File
+				RelativePath="..\inc\physics\yakePhysicsSystem.h">
 			</File>
 		</Filter>
 	</Files>

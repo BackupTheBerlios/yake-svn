@@ -18,12 +18,9 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-// scriptingLua.cpp : Defines the entry point for the DLL application.
-//
-
-#include <plugins/yakePhysicsODE/inc/pch.h>
-#include <plugins/yakePhysicsODE/inc/PhysicsSystemOde.h>
-#include <plugins/yakePhysicsODE/inc/plugin.h>
+#include <inc/plugins/physicsODE/yakePCH.h>
+#include <inc/plugins/physicsODE/PhysicsSystemOde.h>
+#include <inc/plugins/physicsODE/plugin.h>
 
 //---------------------------------------------------------
 // This is an example of an exported function.

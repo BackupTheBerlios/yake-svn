@@ -27,8 +27,10 @@ int main()
 	YAKE_DECLARE_FUNCTION( main )
 
 	YAKE_USE_LIB( "graphicsOgre.dll" );	
-	Pointer< IGraphicsSystem > pGraphicsSystem = create< IGraphicsSystem >();
-	Pointer< IGraphicalWorld > pWorld( pGraphicsSystem->create< IGraphicalWorld >() );
+	{
+		Pointer< IGraphicsSystem > pGraphicsSystem = create< IGraphicsSystem >();
+		Pointer< IGraphicalWorld > pWorld( pGraphicsSystem->create< IGraphicalWorld >() );
+	}
 
 #if defined( YAKE_DEBUG_BUILD )
 	std::cout << std::endl << "Waiting for you...";
