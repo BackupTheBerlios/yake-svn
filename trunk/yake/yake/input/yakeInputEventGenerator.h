@@ -115,11 +115,15 @@ namespace input {
 		for every device it can handle. Subscribing to signals may be more useful
 		than checking for certain input of each device manually.
 	*/
-	class YAKE_INPUT_API InputEventGenerator
+	class YAKE_INPUT_API JoystickEventGenerator : public DeviceEventGenerator
 	{
 	public:
-		InputEventGenerator( InputSystem * inputSystem );
-		~InputEventGenerator();
+		JoystickEventGenerator();
+		~JoystickEventGenerator();
+
+		virtual void update();
+		virtual void attachDevice( InputDevice* device );
+		virtual InputDevice* detachDevice();
 
 		void update( real timeElapsed );
 
@@ -146,7 +150,6 @@ namespace input {
 		JoystickAxisSignal	mJoystickAxisSignal;
 
 	protected:
-		InputSystem			* mInputSystem;
 	};
 
 }
