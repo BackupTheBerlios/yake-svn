@@ -224,7 +224,7 @@ namespace physics {
 	//-----------------------------------------------------
 	void OdeComplexObject::postStep( real timeElapsed )
 	{
-		base::templates::Vector< CollisionList::iterator > its;
+		base::templates::Vector< OdeComplexObject* > its;
 		for (CollisionList::iterator it = mCollisions.begin(); it != mCollisions.end(); ++it)
 		{
 			CollisionInfo& info = it->second;
@@ -232,15 +232,18 @@ namespace physics {
 			if (info.time >= 0.1)
 			{
 				mLeaveCollisionSignal( this, it->first );
-				its.push_back( it );
+				its.push_back( it->first );
 			}
 		}
-		base::templates::VectorIterator< base::templates::Vector< CollisionList::iterator > > itErase(
+		base::templates::VectorIterator< base::templates::Vector< OdeComplexObject* > > itErase(
 			its.begin(), its.end() );
 		while (itErase.hasMoreElements())
 		{
-			mCollisions.erase( itErase.getNext() );
+			CollisionList::iterator itFind = mCollisions.find( itErase.getNext() );
+			if (itFind != mCollisions.end())
+				mCollisions.erase( itFind );
 		}
+		its.clear();
 	}
 
 	//-----------------------------------------------------
@@ -316,26 +319,32 @@ namespace physics {
 												contact[i].geom.normal[2] );
 					normal.normalise();
 
-					real dot = normal.dotProduct( mSlipNormal );
-					if (dot < 0.9 && dot > -0.9)
+					mSlipNormal = mSlipNormalSource->getLateralSlipNormal();
+					if ( (mSlipNormal - normal).length() < 0.01 )
 					{
-						YAKE_ASSERT( mSlipNormalSource );
-						mSlipNormal = mSlipNormalSource->getLateralSlipNormal();
-						// find the fdir1 direction
-						Vector3 perpVec = mSlipNormal.crossProduct( normal );
-						perpVec.normalise();
+						std::cout << "warning: OdeComplexObject::_collide: normal = slipNormal" << std::endl;
+					}
+					else
+					{
+						real dot = normal.dotProduct( mSlipNormal );
+						if (dot < 0.9 && dot > -0.9)
+						{
+							// find the fdir1 direction
+							Vector3 perpVec = mSlipNormal.crossProduct( normal );
+							perpVec.normalise();
 
-						// set contact info
+							// set contact info
 
-						contact[i].surface.mode |= dContactFDir1|dContactSlip2;
+							contact[i].surface.mode |= dContactFDir1|dContactSlip2;
 
-						//  (kLinearVel*f)*linearVel + (kAngularVel*f)*angularVel
-						contact[i].surface.slip2 =	mSlipLinearCoeff * linVel.length() +
-													mSlipAngularCoeff * angVel.length();
+							//  (kLinearVel*f)*linearVel + (kAngularVel*f)*angularVel
+							contact[i].surface.slip2 =	mSlipLinearCoeff * linVel.length() +
+														mSlipAngularCoeff * angVel.length();
 
-						contact[i].fdir1[0] = perpVec.x;
-						contact[i].fdir1[1] = perpVec.y;
-						contact[i].fdir1[2] = perpVec.z;
+							contact[i].fdir1[0] = perpVec.x;
+							contact[i].fdir1[1] = perpVec.y;
+							contact[i].fdir1[2] = perpVec.z;
+						}
 					}
 				}
 				contact[i].surface.motion1 = 0;
