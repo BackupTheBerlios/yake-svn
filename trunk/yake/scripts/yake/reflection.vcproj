@@ -253,6 +253,9 @@
 				Name="bind_lua"
 				Filter="">
 				<File
+					RelativePath="..\..\src\yake\reflection\bind_lua\bind_lua.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\yake\reflection\bind_lua\lua_handler_to_cpp.cpp">
 				</File>
 			</Filter>
@@ -264,6 +267,13 @@
 				</File>
 				<File
 					RelativePath="..\..\src\yake\reflection\main.cpp">
+				</File>
+			</Filter>
+			<Filter
+				Name="bind_network"
+				Filter="">
+				<File
+					RelativePath="..\..\src\yake\reflection\bind_network\bind_network.cpp">
 				</File>
 			</Filter>
 		</Filter>
