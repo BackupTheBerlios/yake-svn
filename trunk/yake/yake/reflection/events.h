@@ -239,6 +239,7 @@ struct event : public rx_event_base, public lua_event_base, public ::event<arg1,
 
 	// -----------------------------------------
 	// lua
+	// todo: make lua bindings optional with define (see gui wrapper)
 
 	// attach lua functor
 	void attach_handler(const luabind::functor<void> & lua_function)

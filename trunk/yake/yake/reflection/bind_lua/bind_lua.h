@@ -118,7 +118,7 @@ static void register_lua_class() \
 { \
 		/* class header with constructor */ \
 		get_lua_class().def( luabind::constructor<>() ); \
-		/* bind all class */ \
+		/* bind class */ \
 		luabind::module(L)[ get_lua_class() ]; \
 } \
 \
