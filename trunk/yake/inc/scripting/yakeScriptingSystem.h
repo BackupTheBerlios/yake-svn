@@ -17,6 +17,11 @@
    Place - Suite 330, Boston, MA 02111-1307, USA, or go to
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
+   If you are interested in another license model contact the Yake Team via
+   E-Mail: team@yake.org.
+   For more information see the LICENSE file in the root directory of the
+   source code distribution.
+   ------------------------------------------------------------------------------------
 */
 #ifndef INC_YAKE_SCRIPTINGSYSTEM_H
 #define INC_YAKE_SCRIPTINGSYSTEM_H
@@ -48,6 +53,14 @@ namespace yake {
 		class ScriptingSystem;
 		class IVM;
 
+		class IBinder
+		{
+		public:
+			virtual ~IBinder() {}
+
+			virtual void bind( scripting::IVM* pVM ) = 0;
+		};
+
 		/**
 		*/
 		class /*YAKE_BASE_API*/ ScriptingPlugin : public ::yake::base::Plugin
@@ -61,7 +74,7 @@ namespace yake {
 		class /*YAKE_BASE_API*/ ScriptingBindingsPlugin : public ::yake::base::Plugin
 		{
 		public:
-			virtual void bind( IVM * pVM ) = 0;
+			virtual yake::base::templates::SharedPtr<IBinder> createBinder() = 0;
 		};
 
 		/** A script that can be executed by a virtual machine.
