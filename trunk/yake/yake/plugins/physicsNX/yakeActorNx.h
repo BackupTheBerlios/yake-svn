@@ -38,8 +38,8 @@ namespace physics {
 
 		virtual IBody& getBody() const;
 
-		virtual SharedPtr<IShape> createShape( const IShape::Desc & rkShapeDesc );
-		virtual void destroyShape( SharedPtr<IShape> & rShape );
+		virtual IShape* createShape( const IShape::Desc & rkShapeDesc );
+		virtual void destroyShape( IShape* pShape );
 		virtual const ShapePtrVector getShapes() const;
 
 		virtual void subscribeToCollisionEnteredSignal( const SignalCollision::slot_type & rkSlot );

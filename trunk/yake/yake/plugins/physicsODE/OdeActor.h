@@ -15,7 +15,7 @@ namespace physics
 		virtual ~OdeActor();
 
 		//virtual SharedPtr<IShape> createShape( const IShape::Desc& rShapeDesc );
-		virtual void destroyShape_( SharedPtr<IShape>& rShape );
+		virtual void destroyShape_( IShape* pShape );
  		virtual const IActor::ShapePtrVector getShapes_() const;
 
 		virtual void subscribeToCollisionEnteredSignal( IActor::SignalCollision::slot_type const& rSlot );
@@ -25,19 +25,16 @@ namespace physics
 		void _collide( OdeActor* pOther, dGeomID geomA, dGeomID geomB, dJointGroup* pContactJointGroup );
 	
 	protected:	
-		IShape* createShapeFromDesc( const IShape::Desc& rShapeDesc );
+		OdeGeom* createShapeFromDesc( const IShape::Desc& rShapeDesc );
 		OdeGeom* createTransformGeomIfNeeded( OdeGeom* pGeom, const Vector3& rOffset, const Quaternion& rRelOrientation );
 		
 		OdeWorld*								mOdeWorld;
-		IActor::ShapePtrVector					mShapes;
+
+		typedef Deque<SharedPtr<OdeGeom> > ShapeList;
+		ShapeList								mShapes;
 		
 		IActor::SignalCollision					mEnterCollisionSignal;
 		IActor::SignalCollision					mExitCollisionSignal;
-		
-		/// dGeomID <--> OdeGeom* to obtain shape material info during collision detection
-		/// Would allow fast material lookups
-		typedef base::templates::AssocVector< dGeomID, OdeGeom* > OdeShapesMap;
-		static OdeShapesMap						mOdeShapes; 
 		
 		typedef real CollisionInfo;
 		typedef std::map< OdeActor*, CollisionInfo > CollisionCache;
@@ -50,9 +47,9 @@ namespace physics
 		OdeStaticActor( OdeWorld* pOdeWorld );
 		virtual ~OdeStaticActor();
 		
-		virtual SharedPtr<IShape> createShape( const IShape::Desc& rShapeDesc );
-		virtual void destroyShape( SharedPtr<IShape>& rShape )
-		{ return OdeActor::destroyShape_( rShape ); }
+		virtual IShape* createShape( const IShape::Desc& rShapeDesc );
+		virtual void destroyShape( IShape* pShape )
+		{ return OdeActor::destroyShape_( pShape ); }
 		virtual const ShapePtrVector getShapes() const
 		{ return OdeActor::getShapes_(); }
 
@@ -71,9 +68,9 @@ namespace physics
 		virtual Vector3 getPosition() const;
 		virtual Quaternion getOrientation() const;
 		
-		virtual SharedPtr<IShape> createShape( const IShape::Desc& rShapeDesc );
-		virtual void destroyShape( SharedPtr<IShape>& rShape )
-		{ return OdeActor::destroyShape_( rShape ); }
+		virtual IShape* createShape( const IShape::Desc& rShapeDesc );
+		virtual void destroyShape( IShape* pShape )
+		{ return OdeActor::destroyShape_( pShape ); }
 		virtual const ShapePtrVector getShapes() const
 		{ return OdeActor::getShapes_(); }
 
@@ -98,9 +95,9 @@ namespace physics
 		virtual Vector3 getPosition() const;
 		virtual Quaternion getOrientation() const;
 		
-		virtual SharedPtr<IShape> createShape( IShape::Desc const& rShapeDesc );
-		virtual void destroyShape( SharedPtr<IShape>& rShape )
-		{ return OdeActor::destroyShape_( rShape ); }
+		virtual IShape* createShape( const IShape::Desc& rShapeDesc );
+		virtual void destroyShape( IShape* pShape )
+		{ return OdeActor::destroyShape_( pShape ); }
 		virtual const ShapePtrVector getShapes() const
 		{ return OdeActor::getShapes_(); }
 

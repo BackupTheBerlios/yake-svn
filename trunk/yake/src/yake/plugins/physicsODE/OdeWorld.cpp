@@ -292,6 +292,7 @@ namespace physics {
 			real t = overflow + timeElapsed;
 			while ( t > mStepSize )
 			{
+				YAKE_LOG("OdeWorld::step()");
 				t -= mStepSize;
 		
 		#ifdef ADJUST_FPU_PRECISION
@@ -349,6 +350,7 @@ namespace physics {
 		//-----------------------------------------------------
 		void OdeWorld::_OdeNearCallback ( void* data, dGeomID o1, dGeomID o2 )
 		{
+			YAKE_LOG("OdeWorld::->NearCallBack()");
 			// make sure we traverse through all spaces and sub-spaces
 			if ( dGeomIsSpace (o1) || dGeomIsSpace (o2) )
 			{

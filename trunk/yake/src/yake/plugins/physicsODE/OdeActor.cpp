@@ -33,9 +33,6 @@ namespace physics {
 	//-----------------------------------------------------
 	
 	//-----------------------------------------------------
-	OdeActor::OdeShapesMap	OdeActor::mOdeShapes; 
-
-	//-----------------------------------------------------
 	OdeActor::OdeActor( OdeWorld* pWorld ) :
 				mOdeWorld( pWorld )
 	{
@@ -45,10 +42,7 @@ namespace physics {
 	OdeActor::~OdeActor()
 	{
 		// destroy all shapes
-		for( IActor::ShapePtrVector::iterator victim = mShapes.begin(); victim != mShapes.end(); ++victim )
-		{
-			//YAKE_SAFE_DELETE( *victim );
-		}
+		mShapes.clear();
 	}
 	
 	//-----------------------------------------------------
@@ -59,7 +53,7 @@ namespace physics {
 		if ( rOffset == Vector3::kZero && rRelOrientation == Quaternion::kIdentity )
 			return pGeom;
 			
-		OdeTransformGeom* pTrans = new OdeTransformGeom( mOdeWorld->_getOdeSpace() );
+		OdeTransformGeom* pTrans = new OdeTransformGeom( mOdeWorld->_getOdeSpace(), this );
 		pTrans->attachGeom( pGeom );
 		
 		pTrans->setPosition( rOffset );
@@ -69,7 +63,7 @@ namespace physics {
 	}
 
 	//-----------------------------------------------------
-	IShape* OdeActor::createShapeFromDesc( IShape::Desc const& rShapeDesc )
+	OdeGeom* OdeActor::createShapeFromDesc( IShape::Desc const& rShapeDesc )
 	{
 		IShape::Desc* pShapeDesc = &const_cast<IShape::Desc&>( rShapeDesc );
 		
@@ -83,13 +77,14 @@ namespace physics {
 		
 		if ( IShape::SphereDesc* pSphereDesc = dynamic_cast<IShape::SphereDesc*>( pShapeDesc ) )
 		{
-			OdeSphere* pSphere = new OdeSphere( mOdeWorld->_getOdeSpace(), pSphereDesc->radius );
+			OdeSphere* pSphere = new OdeSphere( mOdeWorld->_getOdeSpace(), this, pSphereDesc->radius );
 			
 			result = createTransformGeomIfNeeded( pSphere, rShapeDesc.position, rShapeDesc.orientation );
 		}
 		else if ( IShape::BoxDesc* pBoxDesc = dynamic_cast<IShape::BoxDesc*>( pShapeDesc ) )
 		{
 			OdeBox* pBox = new OdeBox( mOdeWorld->_getOdeSpace(), 
+										this,
 										pBoxDesc->dimensions.x, 
 										pBoxDesc->dimensions.y,
 										pBoxDesc->dimensions.z  );
@@ -105,6 +100,7 @@ namespace physics {
  			real d = pPlaneDesc->d + normal.dotProduct( pPlaneDesc->position ); 
 			
 			OdePlane* pPlane = new OdePlane(	mOdeWorld->_getOdeSpace(), 
+												this,
 												normal.x,
 												normal.y,
 												normal.z,
@@ -114,6 +110,7 @@ namespace physics {
 		else if ( IShape::CapsuleDesc* pCapsuleDesc = dynamic_cast<IShape::CapsuleDesc*>( pShapeDesc ) )
 		{
 			OdeCCylinder* pCapsule = new OdeCCylinder( mOdeWorld->_getOdeSpace(), 
+										this,
 										pCapsuleDesc->radius,
 										pCapsuleDesc->height  );
 			result = createTransformGeomIfNeeded( pCapsule, rShapeDesc.position, rShapeDesc.orientation );
@@ -122,7 +119,7 @@ namespace physics {
  		{
  			dTriMeshDataID dataId = mOdeWorld->getMeshDataById( pTriMeshDesc->meshId );
 			
-			OdeTriMesh* pMesh = new OdeTriMesh( mOdeWorld->_getOdeSpace(), dataId );
+			OdeTriMesh* pMesh = new OdeTriMesh( mOdeWorld->_getOdeSpace(), this, dataId );
 			
 			YAKE_ASSERT( pMesh ).error( "Mesh with such id wasn't found!" );
 			
@@ -134,8 +131,8 @@ namespace physics {
 		/// setting material if any
 		if ( pOdeMaterial != 0 )
 			result->setMaterial( *pOdeMaterial );
-	
-		return dynamic_cast<IShape*>( result );
+
+		return result;
 	}
 
 	//-----------------------------------------------------
@@ -152,12 +149,14 @@ namespace physics {
 	}*/
 	
 	//-----------------------------------------------------
-	void OdeActor::destroyShape_( SharedPtr<IShape>& rShape )
+	bool operator == (const SharedPtr<OdeGeom>& lhs, const OdeGeom* rhs)
 	{
-		IActor::ShapePtrVector::iterator victim = std::find( mShapes.begin(), mShapes.end(), rShape.get() );
-		
-		//TODO is this correct?
-		YAKE_SAFE_DELETE( *victim );
+		return (lhs.get() == rhs);
+	}
+	void OdeActor::destroyShape_( IShape* pShape )
+	{
+		OdeGeom* pGeom = dynamic_cast<OdeGeom*>( pShape );
+		ShapeList::iterator victim = std::find( mShapes.begin(), mShapes.end(), pGeom );
 		
 		mShapes.erase( victim );
 	}
@@ -165,7 +164,12 @@ namespace physics {
 	//-----------------------------------------------------
 	const IActor::ShapePtrVector OdeActor::getShapes_() const
 	{
-		return mShapes;
+		IActor::ShapePtrVector ret;
+		ret.reserve( mShapes.size() );
+		//std::copy( mShapes.begin(), mShapes.end(), std::back_inserter( mShapes ) );
+		for (ShapeList::const_iterator it = mShapes.begin(); it != mShapes.end(); ++it)
+			ret.push_back( dynamic_cast<IShape*>(it->get()) );
+		return ret;
 	}
 
  	//-----------------------------------------------------
@@ -216,14 +220,12 @@ namespace physics {
 		if ( ( dGeomGetClass( geomA ) == dRayClass ) || ( dGeomGetClass( geomB ) == dRayClass ) )
 			return;
 
-		OdeShapesMap::iterator iA = mOdeShapes.find( geomA );
-		OdeShapesMap::iterator iB = mOdeShapes.find( geomB );
+		OdeGeom* pShapeA = reinterpret_cast<OdeGeom*>(dGeomGetData( geomA ));
+		OdeGeom* pShapeB = reinterpret_cast<OdeGeom*>(dGeomGetData( geomB ));
+		
+		OdeActor* pActorA = pShapeA->getOwner();
+		OdeActor* pActorB = pShapeB->getOwner();
 
-		YAKE_ASSERT( !( iA == mOdeShapes.end() || iB == mOdeShapes.end() ) ).error( "No corresponding OdeGeom found!" );
-		
-		OdeGeom* pShapeA = iA->second;
-		OdeGeom* pShapeB = iB->second;
-		
 		const OdeMaterial& rMatA = pShapeA->getMaterial();
 		const OdeMaterial& rMatB = pShapeB->getMaterial();
 		
@@ -363,18 +365,14 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	SharedPtr<IShape> OdeStaticActor::createShape( const IShape::Desc& rShapeDesc )
+	IShape* OdeStaticActor::createShape( const IShape::Desc& rShapeDesc )
 	{
-		IShape* pShape = createShapeFromDesc( rShapeDesc );
-		
+		OdeGeom* pShape = createShapeFromDesc( rShapeDesc );
 		OdeGeom* pGeom = dynamic_cast<OdeGeom*>( pShape );
 		
-		mShapes.push_back( pShape );
-		mOdeShapes.insert( OdeShapesMap::value_type( pGeom->_getOdeGeomID(), pGeom ) ); 
+		mShapes.push_back( SharedPtr<OdeGeom>(pShape) );
 		
-		pGeom->_setData( this );
-		
-		return SharedPtr<IShape>( pShape );
+		return dynamic_cast<IShape*>( mShapes.back().get() );
 	}
 
  	//-----------------------------------------------------
@@ -405,21 +403,18 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	SharedPtr<IShape> OdeMovableActor::createShape( const IShape::Desc& rShapeDesc )
+	IShape* OdeMovableActor::createShape( const IShape::Desc& rShapeDesc )
 	{
 		if ( const IShape::PlaneDesc* pPlaneDesc = dynamic_cast<const IShape::PlaneDesc*>( &rShapeDesc ) )
 			YAKE_ASSERT( false ).error( "Attempted to attach immovable plane shape to movable actor!" );
 			
-		IShape* pShape = createShapeFromDesc( rShapeDesc );
+		OdeGeom* pShape = createShapeFromDesc( rShapeDesc );
 		
 		OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( pShape );
 		
-		mShapes.push_back( pShape );
-		mOdeShapes.insert( OdeShapesMap::value_type( pGeom->_getOdeGeomID(), pGeom ) ); 
+		mShapes.push_back( SharedPtr<OdeGeom>(pShape) );
 		
-		pGeom->_setData( this );
-		
-		return SharedPtr<IShape>( pShape );
+		return dynamic_cast<IShape*>( mShapes.back().get() );
 	}
 	
 	//-----------------------------------------------------
@@ -427,9 +422,9 @@ namespace physics {
 	{
 		mPosition = rPosition;
 		
-		for( ShapePtrVector::iterator i = mShapes.begin(); i != mShapes.end(); ++i )
+		for( ShapeList::iterator i = mShapes.begin(); i != mShapes.end(); ++i )
 		{
-			OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( *i );
+			OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( i->get() );
 			
 			pGeom->setPosition( mPosition );
 		}
@@ -440,9 +435,9 @@ namespace physics {
 	{
 		mOrientation = rOrientation;
 		
-		for( ShapePtrVector::iterator i = mShapes.begin(); i != mShapes.end(); ++i )
+		for( ShapeList::iterator i = mShapes.begin(); i != mShapes.end(); ++i )
 		{
-			OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( *i );
+			OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( i->get() );
 			
 			pGeom->setOrientation( mOrientation );
 		}
@@ -483,6 +478,8 @@ namespace physics {
 		mBody = new OdeBody( mOdeWorld, *this );
 		
 		YAKE_ASSERT( mBody ).error( "Failed to create body!" );
+		mBody->setPosition( Vector3::kZero );
+		mBody->setOrientation( Quaternion::kIdentity );
 	}
 
 	//-----------------------------------------------------
@@ -527,26 +524,20 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	SharedPtr<IShape> OdeDynamicActor::createShape( const IShape::Desc& rShapeDesc )
+	IShape* OdeDynamicActor::createShape( const IShape::Desc& rShapeDesc )
 	{
 		YAKE_ASSERT( mBody );
 		if ( const IShape::PlaneDesc* pPlaneDesc = dynamic_cast<const IShape::PlaneDesc*>( &rShapeDesc ) )
 			YAKE_ASSERT( false ).error( "Attempted to attach immovable plane shape to movable actor!" );
 			
-		IShape* pShape = createShapeFromDesc( rShapeDesc );
+		OdeGeom* pShape = createShapeFromDesc( rShapeDesc );
 		YAKE_ASSERT( pShape );
 		
-		OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( pShape );
-		YAKE_ASSERT( pGeom );
+		mShapes.push_back( SharedPtr<OdeGeom>(pShape) );
 		
-		mShapes.push_back( pShape );
-		mOdeShapes.insert( OdeShapesMap::value_type( pGeom->_getOdeGeomID(), pGeom ) ); 
+		dGeomSetBody( pShape->_getOdeGeomID(), mBody->_getOdeBody()->id() );
 		
-		pGeom->_setData( this );
-		
-		dGeomSetBody( pGeom->_getOdeGeomID(), mBody->_getOdeBody()->id() );
-		
-		return SharedPtr<IShape>( pShape );
+		return dynamic_cast<IShape*>( mShapes.back().get() );
 	}
 	
  	//-----------------------------------------------------

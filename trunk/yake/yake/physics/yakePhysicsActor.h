@@ -46,8 +46,8 @@ namespace physics {
 
 		typedef Vector<IShape*> ShapePtrVector;
 
-		virtual SharedPtr<IShape> createShape( const IShape::Desc& rShapeDesc ) = 0;
-		virtual void destroyShape( SharedPtr<IShape>& rShape ) = 0;
+		virtual IShape* createShape( const IShape::Desc& rShapeDesc ) = 0;
+		virtual void destroyShape( IShape* pShape ) = 0;
 		virtual const ShapePtrVector getShapes() const = 0;
 
 		typedef Signal0<void> SignalCollision;

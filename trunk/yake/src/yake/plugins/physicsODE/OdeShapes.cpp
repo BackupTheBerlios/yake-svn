@@ -29,8 +29,13 @@ namespace physics {
 		//-----------------------------------------------------
 		
 		//-----------------------------------------------------
-		OdeGeom::OdeGeom() : mOdeGeomID( 0 ), mOdeSpace( NULL ), mOdeGeom( NULL )
+		OdeGeom::OdeGeom(OdeActor* pOwner) : 
+			mOdeGeomID( 0 ), 
+			mOdeSpace( 0 ), 
+			mOdeGeom( 0 ),
+			mOwner( pOwner )
 		{
+			YAKE_ASSERT( mOwner );
 		}
 		
 		//-----------------------------------------------------
@@ -127,7 +132,8 @@ namespace physics {
 		//-----------------------------------------------------
 		
 		//-----------------------------------------------------
-		OdeTriMesh::OdeTriMesh( dSpace* pSpace, dTriMeshDataID meshDataId )
+		OdeTriMesh::OdeTriMesh( dSpace* pSpace, OdeActor* pOwner, dTriMeshDataID meshDataId ) :
+			OdeMovableGeom( pOwner )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 			
@@ -139,6 +145,8 @@ namespace physics {
 			// enabling collisions with spheres and boxes
 			dGeomTriMeshEnableTC( mOdeGeomID, dSphereClass, 1 );
 			dGeomTriMeshEnableTC( mOdeGeomID, dBoxClass, 1 );
+
+			_setData( this );
 		}
 
 		//-----------------------------------------------------
@@ -245,7 +253,8 @@ namespace physics {
 		//-----------------------------------------------------
 
 		//-----------------------------------------------------
-		OdeSphere::OdeSphere( dSpace* pSpace, real radius )
+		OdeSphere::OdeSphere( dSpace* pSpace, OdeActor* pOwner, real radius ) :
+			OdeMovableGeom( pOwner )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 
@@ -255,6 +264,8 @@ namespace physics {
 			mOdeGeom = new dSphere( mOdeSpace->id(), static_cast<dReal>( radius ) );
 			YAKE_ASSERT( mOdeGeom );
 			mOdeGeomID = mOdeGeom->id();
+
+			_setData( this );
 		}
 		
 		//-----------------------------------------------------
@@ -268,7 +279,8 @@ namespace physics {
 		//-----------------------------------------------------
 
 		//-----------------------------------------------------			
-		OdeCCylinder::OdeCCylinder( dSpace* pSpace, real radius, real length )
+		OdeCCylinder::OdeCCylinder( dSpace* pSpace, OdeActor* pOwner, real radius, real length ) :
+			OdeMovableGeom( pOwner )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 			
@@ -280,6 +292,8 @@ namespace physics {
 			mOdeGeom = new dCCylinder( mOdeSpace->id(), static_cast<dReal>( radius ), static_cast<dReal>( length ) );
 			
 			mOdeGeomID = mOdeGeom->id();
+
+			_setData( this );
 		}
 		
 		//-----------------------------------------------------
@@ -293,7 +307,8 @@ namespace physics {
 		//-----------------------------------------------------
 		
 		//-----------------------------------------------------			
-		OdeBox::OdeBox( dSpace* pSpace, real sizex, real sizey, real sizez)
+		OdeBox::OdeBox( dSpace* pSpace, OdeActor* pOwner, real sizex, real sizey, real sizez) : 
+			OdeMovableGeom( pOwner )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 			
@@ -302,6 +317,8 @@ namespace physics {
 			mOdeGeom = new dBox( mOdeSpace->id(), sizex, sizey, sizez );
 			
 			mOdeGeomID = mOdeGeom->id();
+
+			_setData( this );
 		}
 
 		//-----------------------------------------------------
@@ -315,7 +332,8 @@ namespace physics {
 		//-----------------------------------------------------
 		
 		//-----------------------------------------------------
-		OdePlane::OdePlane( dSpace* pSpace, real a, real b, real c, real d )
+		OdePlane::OdePlane( dSpace* pSpace, OdeActor* pOwner, real a, real b, real c, real d ) :
+			OdeStaticGeom( pOwner )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 			
@@ -333,6 +351,8 @@ namespace physics {
 			mOdeGeom = new dPlane( mOdeSpace->id(), normal.x, normal.y, normal.z, d );
 			YAKE_ASSERT( mOdeGeom );
 			mOdeGeomID = mOdeGeom->id();
+
+			_setData( this );
 		}
 		
 		//-----------------------------------------------------
@@ -346,7 +366,9 @@ namespace physics {
 		//-----------------------------------------------------
 		
 		//-----------------------------------------------------
-		OdeTransformGeom::OdeTransformGeom( dSpace* pSpace ) : mAttachedGeom( NULL )
+		OdeTransformGeom::OdeTransformGeom( dSpace* pSpace, OdeActor* pOwner ) : 
+			OdeMovableGeom( pOwner ),
+			mAttachedGeom( NULL )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 			
@@ -358,6 +380,8 @@ namespace physics {
 			
 			dGeomTransformSetCleanup( mOdeGeomID, 1 );
 			dGeomTransformSetInfo( mOdeGeomID, 1 );
+
+			_setData( this );
 		}
 		
 		//-----------------------------------------------------
@@ -366,14 +390,6 @@ namespace physics {
 			return ST_OTHER;
 		}
 
-		//-----------------------------------------------------
-		void OdeTransformGeom::_setData( void* pData )
-		{
-			mOdeGeom->setData( pData );
-			
-			if ( mAttachedGeom != NULL )
-				mAttachedGeom->_setData( pData );
-		}
 		//-----------------------------------------------------
 		void OdeTransformGeom::attachGeom( OdeGeom* pGeom )
 		{ 
