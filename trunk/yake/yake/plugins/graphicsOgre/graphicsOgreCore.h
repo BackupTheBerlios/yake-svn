@@ -39,7 +39,10 @@ namespace ogre3d {
 	class OgreCore
 	{
 	public:
-		OgreCore();
+		OgreCore(const bool bWindowAlreadyCreated = false,
+				const bool bShutdownOgre = true,
+				const bool bParseDefaultResourceFile = true,
+				Ogre::RenderWindow* pRenderWindow = 0);
 		~OgreCore();
 
 		void update( real timeElapsed );
@@ -63,6 +66,7 @@ namespace ogre3d {
 
 	protected:
 		bool					mReady;
+		bool					mShutdownOgre;
 
 		Ogre::Root*				mRoot;
 		Ogre::RenderSystem*		mRSys;

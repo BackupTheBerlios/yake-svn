@@ -41,23 +41,35 @@ using namespace yake::base::templates;
 namespace yake {
 namespace graphics {
 
-/** The graphics system interface.
-*/
-struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem 
-	//: public AbstractFactory< sequences::list< IWorld > >
-{
-	YAKE_DECLARE_REGISTRY_0( IGraphicsSystem, yake::base::String )
-	
-	// Destructor.
-	virtual ~IGraphicsSystem();
+	typedef ::yake::base::Exception GraphicsException;
 
-	virtual SharedPtr<IWorld> createWorld() = 0;
+#define YAKE_GRAPHICS_EXCEPT( MSG ) \
+	throw GraphicsException( MSG, "yake::graphics", __FILE__, __LINE__ );
+#define YAKE_GRAPHICS_EXCEPT2( MSG, SRC ) \
+	throw GraphicsException( MSG, SRC, __FILE__, __LINE__ );
 
-	typedef Signal0<void> ShutdownSignal;
-	virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot ) = 0;
+	/** The graphics system interface.
+	*/
+	struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem 
+		//: public AbstractFactory< sequences::list< IWorld > >
+	{
+		YAKE_DECLARE_REGISTRY_0( IGraphicsSystem, base::String )
+		
+		// Destructor.
+		virtual ~IGraphicsSystem();
 
-	virtual const std::type_info & get_type_info() = 0;
-};
+		typedef base::templates::AssocVector<base::String,base::String> ParamMap;
+
+		virtual void initialise(const ParamMap& rParams) throw(GraphicsException) = 0;
+		virtual void shutdown() throw(GraphicsException) = 0;
+
+		virtual SharedPtr<IWorld> createWorld() = 0;
+
+		typedef Signal0<void> ShutdownSignal;
+		virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot ) = 0;
+
+		virtual const std::type_info & get_type_info() = 0;
+	};
 
 } // graphics
 } // yake

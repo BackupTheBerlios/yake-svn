@@ -34,14 +34,51 @@ namespace yake {
 namespace graphics {
 namespace ogre3d {
 
-GraphicsSystem::GraphicsSystem()
+	GraphicsSystem::GraphicsSystem() : mCore(0)
 {
-	mCore = new OgreCore();
-	YAKE_ASSERT( mCore );
-	GraphicalWorld::setCore( mCore );
 }
 
 GraphicsSystem::~GraphicsSystem()
+{
+	YAKE_SAFE_DELETE( mCore );
+}
+
+bool strMapContains( const GraphicsSystem::ParamMap& container, const String& value )
+{
+	return (container.end() != container.find(value));
+}
+void GraphicsSystem::initialise(const ParamMap& rParams) throw(GraphicsException)
+{
+	YAKE_ASSERT( !mCore );
+	if (mCore)
+		YAKE_GRAPHICS_EXCEPT("Core already initialised!");
+
+	bool bWindowAlreadyCreated = false;
+	bool bShutdownOgre = true;
+	bool bParseDefaultResourceFile = true;
+	Ogre::RenderWindow* pRenderWindow = 0;
+
+	if (strMapContains(rParams,"windowAlreadyCreated"))
+	{
+		bWindowAlreadyCreated = base::StringUtil::parseBool( rParams.find("windowAlreadyCreated")->second );
+		const base::String test = rParams.find("renderWindowPtr")->second;
+		int p = base::StringUtil::parseInt( test );
+		pRenderWindow = reinterpret_cast<Ogre::RenderWindow*>(p);
+	}
+	if (strMapContains(rParams,"shutdownOgre"))
+	{
+		bShutdownOgre = base::StringUtil::parseBool( rParams.find("shutdownOgre")->second );
+	}
+	if (strMapContains(rParams,"parseDefaultResourceFile"))
+	{
+		bParseDefaultResourceFile = base::StringUtil::parseBool( rParams.find("parseDefaultResourceFile")->second );
+	}
+
+	mCore = new OgreCore(bWindowAlreadyCreated,bShutdownOgre,bParseDefaultResourceFile,pRenderWindow);
+	YAKE_ASSERT( mCore );
+	GraphicalWorld::setCore( mCore );
+}
+void GraphicsSystem::shutdown() throw(GraphicsException)
 {
 	YAKE_SAFE_DELETE( mCore );
 }

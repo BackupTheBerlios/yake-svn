@@ -66,77 +66,93 @@ namespace ogre3d {
 	};
 
 
-	OgreCore::OgreCore()
+	OgreCore::OgreCore(const bool bWindowAlreadyCreated /*= false*/, 
+				const bool bShutdownOgre /*= true*/, 
+				const bool bParseDefaultResourceFile /*= true*/,
+				Ogre::RenderWindow* pRenderWindow /*= 0*/) :
+		mShutdownOgre( bShutdownOgre )
 	{
 		mReady = false;
 		try {
-			mRoot = new Root(
-				Ogre::String("yake.graphics.ogre_plugins.cfg"),
-				Ogre::String("yake.graphics.ogre.cfg"),
-				Ogre::String("yake.graphics.ogre.log") );
-
 			getConfig();
-			setupResourcesFromConfigFile();
+
+			if (!bWindowAlreadyCreated)
+			{
+
+				mRoot = new Root(
+					Ogre::String("yake.graphics.ogre_plugins.cfg"),
+					Ogre::String("yake.graphics.ogre.cfg"),
+					Ogre::String("yake.graphics.ogre.log") );
+
+				if (bParseDefaultResourceFile)
+					setupResourcesFromConfigFile();
 
 #if defined( YAKE_OGREPLUGIN_NO_CONFIG_DIALOG )
-			RenderSystemList *rl = Root::getSingleton().getAvailableRenderers();
-			RenderSystemList::const_iterator it = rl->begin();
-			if (rl->empty())
-			{
-				mReady = false;
-				return;
-			}
+				RenderSystemList *rl = Root::getSingleton().getAvailableRenderers();
+				RenderSystemList::const_iterator it = rl->begin();
+				if (rl->empty())
+				{
+					mReady = false;
+					return;
+				}
 
-			bool found = false;
-			while (!found && it != rl->end())
-			{
-				mRSys = (*it);
-				String str = mRSys->getName().c_str();
-				//if (str.find("3D9"))
-				if ( str.find("GL") )
-					found = true;
-				++it;
-			}
-			if (!found)
-			{
-				mReady = false;
-				return;
-			}
+				bool found = false;
+				while (!found && it != rl->end())
+				{
+					mRSys = (*it);
+					String str = mRSys->getName().c_str();
+					//if (str.find("3D9"))
+					if ( str.find("GL") )
+						found = true;
+					++it;
+				}
+				if (!found)
+				{
+					mReady = false;
+					return;
+				}
 
-			Root::getSingleton().setRenderSystem(mRSys);
-			D3D9RenderSystem *mRSys9 = (D3D9RenderSystem *)Root::getSingleton().getRenderSystem();
-			mRSys9->initConfigOptions();
-			mRSys->setConfigOption("Anti aliasing", "None");
-			mRSys->setConfigOption("Full Screen", "No");
-			mRSys->setConfigOption("VSync", "No");
-			mRSys->setConfigOption("Video Mode", "800 x 600 @ 32-bit colour");
+				Root::getSingleton().setRenderSystem(mRSys);
+				D3D9RenderSystem *pRSys9 = (D3D9RenderSystem *)Root::getSingleton().getRenderSystem();
+				pRSys9->initConfigOptions();
+				mRSys->setConfigOption("Anti aliasing", "None");
+				mRSys->setConfigOption("Full Screen", "No");
+				mRSys->setConfigOption("VSync", "No");
+				mRSys->setConfigOption("Video Mode", "800 x 600 @ 32-bit colour");
 #else
-			if (!mRoot->showConfigDialog())
-			{
-				return;
-			}
+				if (!mRoot->showConfigDialog())
+				{
+					return;
+				}
 #endif
-			mRWin = mRoot->initialise(true, "YAKE Demo");
+				mRWin = mRoot->initialise(true, "YAKE Demo");
 
-			_chooseSceneManager();
+				_chooseSceneManager();
 
-			TextureManager::getSingleton().setDefaultNumMipmaps( 0 );
-			Animation::setDefaultInterpolationMode(Animation::IM_SPLINE);
+				TextureManager::getSingleton().setDefaultNumMipmaps( 0 );
+				Animation::setDefaultInterpolationMode(Animation::IM_SPLINE);
 
-			/*Overlay* o = (Overlay*)OverlayManager::getSingleton().getByName("Core/DebugOverlay");
-			if (o)
-				o->show();
-			*/
-	
-			//...
+				// Initialise, parse scripts etc.
+
+				mRoot->getRenderSystem()->_initRenderTargets();
+
+				ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+			}
+			else
+			{	// bWindowAlreadyCreated == true
+				mRoot = Root::getSingletonPtr();
+				mRSys = Root::getSingleton().getRenderSystem();
+
+				YAKE_ASSERT( pRenderWindow );
+				mRWin = pRenderWindow;
+				ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+				_chooseSceneManager();
+				if (bParseDefaultResourceFile)
+					setupResourcesFromConfigFile();
+			}
 
 			mSysFL = new SystemFrameListener( mRWin );
 			mRoot->addFrameListener( mSysFL );
-
-			mRoot->getRenderSystem()->_initRenderTargets();
-
-			// Initialise, parse scripts etc.
-			ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
 			mReady = true;
 		}
@@ -144,7 +160,7 @@ namespace ogre3d {
 		{
 			//YAKE_LOGPRINTF("[yake.graphics.ogre] OGRE EXCEPTION\n%s\n", e.getFullDescription().c_str() );
 			mReady = false;
-			YAKE_EXCEPT(e.getFullDescription().c_str(), "[yake.graphics.ogre] OGRE EXCEPTION");
+			YAKE_GRAPHICS_EXCEPT2(e.getFullDescription().c_str(), "[yake.graphics.ogre] OGRE EXCEPTION");
 		}
 	}
 
@@ -180,7 +196,12 @@ namespace ogre3d {
 				mRoot->removeFrameListener( mSysFL );
 				YAKE_SAFE_DELETE(mSysFL);
 			}
-			YAKE_SAFE_DELETE(mRoot);
+			if (mShutdownOgre)
+			{
+				YAKE_SAFE_DELETE(mRoot);
+			}
+			else
+				mRoot = 0;
 		}
 		catch (Ogre::Exception& e)
 		{
