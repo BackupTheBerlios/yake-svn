@@ -25,8 +25,10 @@
 */
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
+#include <yake/samples/data/demo/yakeDotScene.h>
 
-namespace yapp {
+namespace yake {
+namespace app {
 namespace model {
 
 	//-----------------------------------------------------
@@ -40,6 +42,7 @@ namespace model {
 				delete (it->first);
 			}
 		}
+		mNodes.clear();
 	}
 	//-----------------------------------------------------
 	void Graphical::addSceneNode( graphics::ISceneNode* pSceneNode, bool bTransferOwnership )
@@ -49,6 +52,44 @@ namespace model {
 			return;
 		mNodes.insert( std::make_pair(pSceneNode,bTransferOwnership) );
 	}
+	//-----------------------------------------------------
+	Graphical::SceneNodeList Graphical::getRootSceneNodes() const
+	{
+		SceneNodeList nodes;
+		ConstVectorIterator< AssocVector<graphics::ISceneNode*, bool> > it(mNodes.begin(), mNodes.end());
+		while (it.hasMoreElements())
+			nodes.push_back( it.getNext().first );
+		return nodes;
+	}
+	//-----------------------------------------------------
+	void Graphical::fromDotScene(const String & fn, graphics::IGraphicalWorld* pGWorld)
+	{
+		YAKE_ASSERT( pGWorld );
+	
+		// 1. read dotscene file into DOM
 
+		SharedPtr<yake::data::dom::ISerializer> ser( new yake::data::dom::xml::XmlSerializer() );
+		ser->parse(fn, false);
+		YAKE_ASSERT( ser->getDocumentNode() );
+
+		// 2. parse DOM and create graphical objects
+
+		yake::data::serializer::dotscene::DotSceneSerializerV1 dss;
+		dss.load( ser->getDocumentNode(), pGWorld );
+
+		// 3. create graphical model & add it to complex model
+
+		// 4. fill graphical
+		yake::data::serializer::dotscene::SceneNodeList nodes =
+			dss.getRootLevelSceneNodes();
+		ConstVectorIterator<yake::data::serializer::dotscene::SceneNodeList>
+			it( nodes.begin(), nodes.end() );
+		while (it.hasMoreElements())
+		{
+			this->addSceneNode( it.getNext(), true );
+		}
+	}
+
+}
 }
 }
