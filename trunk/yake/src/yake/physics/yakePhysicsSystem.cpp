@@ -26,5 +26,47 @@ namespace physics {
 
 	YAKE_IMPLEMENT_REGISTRY( IPhysicsSystem );
 
+	BodyGroup::BodyGroup()
+	{
+	}
+	BodyGroup::BodyGroup( const BodyGroup & rkBodyGroup ) :
+		mBodies( rkBodyGroup.mBodies )
+	{
+	}
+	BodyGroup::BodyGroup( const BodyVector & rkBodies ) :
+		mBodies( rkBodies )
+	{
+	}
+	BodyGroup::~BodyGroup()
+	{
+	}
+	BodyGroup& BodyGroup::operator += (SharedPtr<IBody> & rBody)
+	{
+		mBodies.push_back( rBody );
+		return *this;
+	}
+	BodyGroup& BodyGroup::operator -= (SharedPtr<IBody> & rBody)
+	{
+		BodyVector::iterator itFind = std::find(mBodies.begin(), mBodies.end(), rBody );
+		if (itFind != mBodies.end())
+			mBodies.erase( itFind );
+		return *this;
+	}
+	BodyGroup::iterator BodyGroup::begin()
+	{
+		return mBodies.begin();
+	}
+	BodyGroup::const_iterator BodyGroup::begin() const
+	{
+		return mBodies.begin();
+	}
+	BodyGroup::iterator BodyGroup::end()
+	{
+		return mBodies.end();
+	}
+	BodyGroup::const_iterator BodyGroup::end() const
+	{
+		return mBodies.end();
+	}
 }
 }

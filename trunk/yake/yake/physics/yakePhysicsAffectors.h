@@ -26,95 +26,82 @@
 #endif
 
 namespace yake {
-	namespace physics {
+namespace physics {
 
-		/** A generic body affector. Basically defines the interface and implements
-			some basic and usually common functionality.
-		*/
-		class BodyAffector
+	/** A generic body affector. Basically defines the interface, factory and implements
+		some basic and usually common functionality.
+	*/
+	class IBodyAffector
+	{
+		YAKE_DECLARE_REGISTRY_0( IBodyAffector, String )
+	public:
+		virtual ~IBodyAffector() {}
+
+		virtual void applyTo( IBody & rBody, const real timeElapsed ) = 0;
+		virtual void applyTo( BodyGroup & rGroup, const real timeElapsed );
+	};
+
+	/** Constant acceleration affector template. Base class for constant acceleration affectors.
+		\see ConstantDirectionalAccelerationBodyAffector
+		\see ConstantPointAccelerationBodyAffector
+	*/
+	template< typename AccType >
+	class ConstantAccelerationBodyAffector : public IBodyAffector
+	{
+	protected:
+		AccType		mAcceleration;
+	public:
+		ConstantAccelerationBodyAffector()
 		{
-		public:
-			virtual ~BodyAffector() {}
-			virtual void apply( IBody* pBody, real fTimeElapsed ) = 0;
+		}
+		
+		ConstantAccelerationBodyAffector( const AccType & acc ) : mAcceleration( acc )
+		{ }
 
-			/** Default implementation for applying an affector to a group of bodies.
-			*/
-			virtual void apply( const BodyGroup & bodyGroup, real fTimeElapsed )
-			{
-				for (BodyGroup::BodyList::const_iterator it = bodyGroup.getBodyList().begin(); it != bodyGroup.getBodyList().end(); ++it)
-				{
-					apply( *it, fTimeElapsed );
-				}
-			}
-		};
+		void setAcceleration( const AccType & acc )
+		{ mAcceleration = acc; }
 
-		/** Constant acceleration affector template. Base class for constant acceleration affectors.
-			\see ConstantDirectionalAccelerationBodyAffector
-			\see ConstantPointAccelerationBodyAffector
-		*/
-		template< typename AccType >
-		class ConstantAccelerationBodyAffector : public BodyAffector
+		AccType getAcceleration() const
+		{ return mAcceleration; }
+	};
+
+	/** A directional constant acceleration affector. Actually it could be used for dynamic accelerations, too.
+	*/
+	class ConstantDirectionalAccelerationBodyAffector : public ConstantAccelerationBodyAffector<Vector3>
+	{
+		YAKE_DECLARE_CONCRETE( ConstantDirectionalAccelerationBodyAffector, "yake.constant_directional_acceleration" )
+	public:
+		virtual void applyTo( IBody & rBody, const real timeElapsed )
 		{
-		protected:
-			AccType		mAcceleration;
-		public:
-			ConstantAccelerationBodyAffector()
-			{
-			}
-			
-			ConstantAccelerationBodyAffector( const AccType & acc ) : mAcceleration( acc )
-			{ }
+			rBody.addForce( mAcceleration * rBody.getMass() );
+		}
+	};
 
-			void setAcceleration( const AccType & acc )
-			{ mAcceleration = acc; }
+	/** A point acceleration affector which applies a constant acceleration on affected bodies where
+		the resulting force vector always points toward a given point. Nice for spherical gravitation,
+		like on planets.
+	*/
+	class BodyConstantSphericalAccelerationAffector : public ConstantAccelerationBodyAffector<real>
+	{
+		YAKE_DECLARE_CONCRETE( BodyConstantSphericalAccelerationAffector, "yake.constant_spherical_acceleration" )
+	protected:
+		Vector3		mPoint;
+	public:
+		BodyConstantSphericalAccelerationAffector( const Vector3 & point = Vector3::kZero, const real acc = 1. ) : 
+			mPoint( point ), 
+			ConstantAccelerationBodyAffector<real>( acc )
+		{ }
 
-			AccType getAcceleration() const
-			{ return mAcceleration; }
-		};
-
-		/** A directional constant acceleration affector. Actually it could be used for dynamic accelerations, too.
-		*/
-		class ConstantDirectionalAccelerationBodyAffector : public ConstantAccelerationBodyAffector<Vector3>
+		virtual void applyTo( IBody & rBody, const real timeElapsed )
 		{
-		public:
-			virtual void apply( physics::IBody* pBody, real fTimeElapsed )
-			{
-				if (pBody)
-				{
-					Vector3 force = mAcceleration * pBody->getMass();
-					pBody->addForce( force );
-				}
-			}
-		};
-
-		/** A point acceleration affector which applies a constant acceleration on affected bodies where
-			the resulting force vector always points toward a given point. Nice for spherical gravitation,
-			like on planets.
-		*/
-		class BodyConstantPointAccelerationAffector : public ConstantAccelerationBodyAffector<real>
-		{
-		protected:
-			Vector3		mPoint;
-		private:
-			BodyConstantPointAccelerationAffector( const real & acc );
-		public:
-			BodyConstantPointAccelerationAffector( const Vector3 & point, const real & acc ) : mPoint( point ), ConstantAccelerationBodyAffector<real>( acc )
-			{ }
-
-			virtual void apply( IBody* pBody, real fTimeElapsed )
-			{
-				if (pBody)
-				{
-					Vector3 direction = pBody->getPosition() - mPoint;
-					direction.normalise();
-					Vector3 force = direction * mAcceleration * pBody->getMass();
-					pBody->addForce( force );
-				}
-			}
-		};
+			Vector3 direction = rBody.getActor().getPosition() - mPoint;
+			direction.normalise();
+			rBody.addForce( direction * mAcceleration * rBody.getMass() );
+		}
+	};
 
 
-	}
+}
 }
 
 #endif

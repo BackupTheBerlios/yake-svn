@@ -23,8 +23,19 @@
 #include <yake/physics/yakePhysicsAffectors.h>
 
 namespace yake {
-	namespace physics {
+namespace physics {
 
+	YAKE_IMPLEMENT_REGISTRY( IBodyAffector );
 
+	void IBodyAffector::applyTo(BodyGroup & rGroup, const real timeElapsed)
+	{
+		VectorIterator<BodyGroup::BodyVector> it(rGroup.begin(), rGroup.end());
+		while (it.hasMoreElements())
+		{
+			applyTo( *(it.getNext()), timeElapsed );
+		}
 	}
+
+
+}
 }

@@ -47,42 +47,32 @@ namespace yake {
 namespace physics {
 
 	/** @todo
-			+ BodyGroup:
-				+ operator + (pBody)
-				+ operator - (pBody)
-			+ GravityZone/AffectorZone/Affectors
+			+ GravityZone/AffectorZone
 	*/
 	class IBody;
 
 	class BodyGroup
 	{
 	public:
-		BodyGroup();
-		~BodyGroup();
-
         typedef Vector<SharedPtr<IBody> > BodyVector;
 		typedef BodyVector::iterator iterator;
 		typedef BodyVector::const_iterator const_iterator;
 		typedef BodyVector::value_type value_type;
 
-		BodyGroup& operator + (SharedPtr<IBody> & rBody);
+		BodyGroup( const BodyGroup & rkBodyGroup );
+		BodyGroup( const BodyVector & rkBodies );
+		BodyGroup();
+		~BodyGroup();
+
 		BodyGroup& operator += (SharedPtr<IBody> & rBody);
-		BodyGroup& operator + (BodyGroup & rBodyGroup);
-		BodyGroup& operator += (BodyGroup & rBodyGroup);
-		BodyGroup& operator - (SharedPtr<IBody> & rBody);
 		BodyGroup& operator -= (SharedPtr<IBody> & rBody);
-		BodyGroup& operator - (BodyGroup & rBodyGroup);
-		BodyGroup& operator -= (BodyGroup & rBodyGroup);
-	};
 
-	class IBodyAffector
-	{
-		YAKE_DECLARE_REGISTRY_0( IBodyAffector, String )
-	public:
-		virtual ~IBodyAffector() {}
-
-		virtual void applyTo( IBody & rBody ) = 0;
-		virtual void applyTo( BodyGroup & rGroup );
+		iterator begin();
+		const_iterator begin() const;
+		iterator end();
+		const_iterator end() const;
+	private:
+		BodyVector	mBodies;
 	};
 
 	/* not used (yet?)
@@ -321,7 +311,7 @@ namespace physics {
 		/** Returns a reference to the actor this body belongs to. A body always belongs to exactly
 			one actor.
 		*/
-		//virtual IActor& getActor() const = 0;
+		virtual IActor& getActor() const = 0;
 
 		/** Sets the mass of the body. The unit can be freely chosen by the application
 			but should be consistent within the simulation, of course.
