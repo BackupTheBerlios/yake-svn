@@ -37,7 +37,6 @@ namespace base {
 		The amount of values such a variant can hold is limited to a few common types.
 		Pointers are wrapped within a ParamHolder::Pointer object because several
 		templates fail when trying to use the variant with (void*) as a type or similar types.
-		@todo Move this into yake::base.
 	*/
 	class YAKE_BASE_API ParamHolder
 	{

@@ -51,7 +51,6 @@ namespace physics {
 		ST_CYLINDER,
 		ST_TRIANGLE_MESH,
 		ST_VOXEL_SET,
-		//ST_TRANSFORM_CONTAINER, //@todo superfluous?
 		ST_OTHER
 	};
 
