@@ -191,8 +191,7 @@ namespace vehicle {
 		pVehicle->addComponent( pPhysicsComponent, "core" );
 
 		// load vehicle (physics + graphics)
-		String fn = "../../media/fordboss.vehicle";
-		_loadModelFromDotVehicle( pModel, fn, pPWorld, pGWorld, pPhysicsComponent );
+		_loadModelFromDotVehicle( pModel, rTemplate, pPWorld, pGWorld, pPhysicsComponent );
 
 		// create input component
 		// create control component
