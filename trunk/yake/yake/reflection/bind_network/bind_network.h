@@ -87,7 +87,8 @@ struct network_observer : property_observer<VALUE_TYPE>
 };
 
 // -----------------------------------------
-// specialised property handler class which notifies the according observers 
+// specialised property handler class which notifies the according observers
+// this hooks into the reflected properties (access to the field by means of reflection::property)
 #define __OBSERVER_PROPERTY__(PROPERTY_NAME) \
 template <class C, class VALUE_TYPE> struct __observer_property__##PROPERTY_NAME : public __property__<C, VALUE_TYPE> \
 { \
@@ -137,7 +138,7 @@ private:\
         }\
         inline void set(TYPE value)\
 				{\
-				    /* notify observers */ \
+				    /* notify observers, this calls the observer, if the user modifies the property directly */ \
 						for(ObserverList##NAME::iterator iter = owner()->__observers__##NAME.begin();\
 								iter != owner()->__observers__##NAME.end(); iter++)\
 						{ (*iter)->set(value); }\

@@ -172,7 +172,8 @@ struct __property_base__
 
 
 //property handler
-template <class T> struct __property_handler__ : public __property_base__ 
+template <class T> 
+struct __property_handler__ : public __property_base__ 
 {
     //get
     virtual T get(const void *object) const = 0;
@@ -183,7 +184,8 @@ template <class T> struct __property_handler__ : public __property_base__
 
 
 //property handler class
-template <class C, class T> struct __property__ : public __property_handler__<T> 
+template <class C, class T> 
+struct __property__ : public __property_handler__<T> 
 {
     //type of getters/setters
     typedef T (C::*Getter)() const;
@@ -261,7 +263,7 @@ public:
         @exception TypeMismatchError thrown if there is a type mismatch
      */
     template <class Object, class Value> 
-		void get(Value &result, const Object *object) const 
+		void get(Value & result, const Object * object) const 
 		{
         if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
         typedef const __property_handler__<Value> PropertyType;
@@ -270,16 +272,47 @@ public:
         result = prop->get((const void *)object);
     }
 
+    /** returns the value of the property
+        @param object object to get the property of
+        @exception TypeMismatchError thrown if there is a type mismatch
+     */
+    template <class Value, class Object> 
+		Value get(const Object * object) const 
+		{
+        if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
+        typedef const __property_handler__<Value> PropertyType;
+        PropertyType * prop = dynamic_cast<PropertyType *>(m_handler);
+        if (!prop) throw TypeMismatchError(m_name);
+        return prop->get((const void *)object);
+    }
+
     /** sets the property's value
         @param object object to set the property of
         @param value value of the object
         @exception TypeMismatchError thrown if there is a type mismatch
      */
     template <class Object, class Value> 
-		void set(Object *object, const Value &value) const 
+		void set(Object * object, const Value & value) const 
 		{
         if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
         typedef const __property_handler__<Value> PropertyType;
+        PropertyType *prop = dynamic_cast<PropertyType *>(m_handler);
+        if (!prop) throw TypeMismatchError(m_name);
+        prop->set((void *)object, value);
+    }
+
+		// todo: somehow clean up this, which is needed if the __property_handler__ has a 'reference to the value' type
+		//       which would not work with the version above, because because 'const foo &' would become __property_handler__<foo>
+    /** sets the property's value accepting references ('Value' would be 'const foo &')
+        @param object object to set the property of
+        @param value value of the object
+        @exception TypeMismatchError thrown if there is a type mismatch
+     */
+    template <class Object, class Value> 
+		void set_ref(Object * object, const Value & value) const 
+		{
+        if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
+        typedef const __property_handler__<const Value &> PropertyType;
         PropertyType *prop = dynamic_cast<PropertyType *>(m_handler);
         if (!prop) throw TypeMismatchError(m_name);
         prop->set((void *)object, value);
