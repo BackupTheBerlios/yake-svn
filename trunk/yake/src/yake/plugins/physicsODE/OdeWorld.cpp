@@ -33,14 +33,14 @@ namespace yake {
 		//-----------------------------------------------------
 		OdeWorld::OdeWorld()
 		{
-			mStepSize = 1. / 60.;	// default: 50Hz
+			mStepSize = 1. / 100.;	// default: 50Hz
 			mOdeWorld = new dWorld();
 			mOdeSpace = new dSimpleSpace( 0 );
 			//mOdeSpace = new dHashSpace( 0 );
 			mOdeContactGroup = new dJointGroup( 0 );
 
 			mOdeWorld->setGravity( 0., 0., 0. );
-			mOdeWorld->setCFM( 0.025 );
+			mOdeWorld->setCFM( 0.05 );
 			mOdeWorld->setERP( 0.99 );
 			mOdeWorld->setAutoDisableFlag( 1 );
 			mOdeWorld->setAutoDisableAngularThreshold( 0.005 ); // ODE default: 0.01
@@ -50,7 +50,7 @@ namespace yake {
 
 			dWorldSetQuickStepNumIterations( mOdeWorld->id(), 20 );
 
-			dWorldSetContactMaxCorrectingVel( mOdeWorld->id(), 2. );
+			//dWorldSetContactMaxCorrectingVel( mOdeWorld->id(), 2. );
 			dWorldSetContactSurfaceLayer( mOdeWorld->id(), 0.0075 );
 		}
 
@@ -140,6 +140,14 @@ namespace yake {
 		ICollisionGeometry* OdeWorld::createCollisionGeomMesh( const base::String & collisionMeshResourceName )
 		{
 			ICollisionGeometry* pGeom = new OdeCollisionGeomTriMesh( mOdeSpace, collisionMeshResourceName );
+			YAKE_ASSERT( pGeom ).debug("Out of memory ?");
+			return pGeom;
+		}
+
+		//-----------------------------------------------------
+		ICollisionGeometry* OdeWorld::createCollisionGeomTransform()
+		{
+			ICollisionGeometry* pGeom = new OdeCollisionGeomTransform( mOdeSpace );
 			YAKE_ASSERT( pGeom ).debug("Out of memory ?");
 			return pGeom;
 		}

@@ -49,11 +49,15 @@ namespace yake {
 			virtual Vector3 rayGetOrigin() const;
 			virtual Quaternion rayGetOrientation() const;
 			virtual base::String meshGetName() const;
+			virtual void tfAttachGeom( ICollisionGeometry* pGeom );
+			virtual ICollisionGeometry* tfGetAttachedGeom() const;
 
 			// Helpers
 
 			virtual dGeomID _getOdeGeomID() const
 			{ return mOdeGeomID; }
+			virtual dSpace* _getOdeSpace() const
+			{ return mOdeSpace; }
 
 			virtual void _setData(void * data);
 			virtual void* _getData() const;
@@ -61,6 +65,7 @@ namespace yake {
 		protected:
 			CollisonGeomType	mType;
 			dGeomID				mOdeGeomID;
+			dSpace*				mOdeSpace;
 		};
 
 		//-----------------------------------------------------
@@ -69,6 +74,7 @@ namespace yake {
 		protected:
 			OdeCollisionGeom() : mOdeGeom( 0 )
 			{ }
+			~OdeCollisionGeom();
 		public:
 			virtual dGeom* _getOdeGeomPtr() { return mOdeGeom; }
 
@@ -76,19 +82,21 @@ namespace yake {
 			dGeom*				mOdeGeom;
 		};
 
-		namespace Internal {
-			//-----------------------------------------------------
-			class OdeCollisionGeomTransform : public OdeCollisionGeom
-			{
-			private:
-				OdeCollisionGeomTransform();
-			public:
-				// Ownership of the geom object passed in is transferred to this object!!
-				OdeCollisionGeomTransform(dSpace* space, OdeCollisionGeomBase* geom);
-			protected:
-				OdeCollisionGeomBase	* mWrappedGeom;
-			};
-		}
+		//-----------------------------------------------------
+		class OdeCollisionGeomTransform : public OdeCollisionGeom
+		{
+		private:
+			OdeCollisionGeomTransform();
+		public:
+			// Ownership of the geom object passed in is transferred to this object!!
+			OdeCollisionGeomTransform(dSpace* space);
+			virtual void tfAttachGeom( ICollisionGeometry* pGeom );
+			virtual ICollisionGeometry* tfGetAttachedGeom() const;
+
+			virtual void _setData(void * data);
+		protected:
+			OdeCollisionGeomBase	* mWrappedGeom;
+		};
 
 		//-----------------------------------------------------
 		class OdeCollisionGeomPlane : public OdeCollisionGeom
@@ -156,11 +164,14 @@ namespace yake {
 			typedef unsigned long CMIndex;
 			dReal*		mpVertices;
 			uint32*		mpIndices;
+			dReal*		mpNormals;
 
 			typedef base::templates::Vector<CMVertex> VertexList;
 			typedef base::templates::Vector<CMIndex> IndexList;
+			typedef base::templates::Vector<Vector3> NormalList;
 			VertexList	mVertices;
 			IndexList	mIndices;
+			NormalList	mNormals;
 		};
 
 	}

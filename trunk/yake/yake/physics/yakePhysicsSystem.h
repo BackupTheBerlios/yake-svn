@@ -217,6 +217,7 @@ namespace yake {
 			virtual ICollisionGeometry* createCollisionGeomSphere(real radius) = 0;
 			virtual ICollisionGeometry* createCollisionGeomBox(real lx, real ly, real lz) = 0;
 			virtual ICollisionGeometry* createCollisionGeomMesh( const base::String & collisionMeshResourceName ) = 0;
+			virtual ICollisionGeometry* createCollisionGeomTransform() = 0;
 		};
 
 		/** Represents a collision geometry object which can be attached to
@@ -236,7 +237,8 @@ namespace yake {
 				CGT_BOX,
 				CGT_CYLINDER,
 				CGT_CCYLINDER,
-				CGT_MESH
+				CGT_MESH,
+				CGT_TRANSFORM
 			};
 
 			virtual ~ICollisionGeometry() {}
@@ -250,6 +252,8 @@ namespace yake {
 			virtual base::String meshGetName() const = 0;
 			virtual Vector3 rayGetOrigin() const = 0;
 			virtual Quaternion rayGetOrientation() const = 0;
+			virtual void tfAttachGeom( ICollisionGeometry* pGeom ) = 0;
+			virtual ICollisionGeometry* tfGetAttachedGeom() const = 0;
 		};
 
 		//-----------------------------------------------------

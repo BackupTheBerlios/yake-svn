@@ -52,6 +52,7 @@ namespace yake {
 			virtual ICollisionGeometry* createCollisionGeomSphere(real radius);
 			virtual ICollisionGeometry* createCollisionGeomBox(real lx, real ly, real lz);
 			virtual ICollisionGeometry* createCollisionGeomMesh( const base::String & collisionMeshResourceName );
+			virtual ICollisionGeometry* createCollisionGeomTransform();
 
 			// helpers
 			dWorldID _getOdeID() const;

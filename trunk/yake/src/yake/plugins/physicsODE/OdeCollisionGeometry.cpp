@@ -21,9 +21,18 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/plugins/physicsODE/yakePCH.h>
 #include <yake/plugins/physicsODE/OdeCollisionGeometry.h>
 
+//TEMP:FIXME
+#include <yake/data/yakeData.h>
+
 namespace yake {
 	namespace physics {
 
+		//-----------------------------------------------------
+		void OdeCollisionGeomBase::tfAttachGeom( ICollisionGeometry* pGeom )
+		{ YAKE_ASSERT(1==0).error("not implemented"); }
+		//-----------------------------------------------------
+		ICollisionGeometry* OdeCollisionGeomBase::tfGetAttachedGeom() const
+		{ return 0; }
 		//-----------------------------------------------------
 		Vector3 OdeCollisionGeomBase::planeGetNormal() const
 		{ return Vector3::kZero; }
@@ -55,7 +64,17 @@ namespace yake {
 		//-----------------------------------------------------
 		OdeCollisionGeomBase::~OdeCollisionGeomBase()
 		{
-			if (mOdeGeomID)
+			YAKE_ASSERT( mOdeGeomID == 0 );
+		}
+
+		//-----------------------------------------------------
+		OdeCollisionGeom::~OdeCollisionGeom()
+		{
+			if (mOdeGeom)
+			{
+				YAKE_SAFE_DELETE( mOdeGeom );
+			}
+			else if (mOdeGeomID)
 				dGeomDestroy( mOdeGeomID );
 			mOdeGeomID = 0;
 		}
@@ -123,6 +142,7 @@ namespace yake {
 		//-----------------------------------------------------
 		OdeCollisionGeomSphere::OdeCollisionGeomSphere(dSpace* space, float radius)
 		{
+			mOdeSpace = space;
 			YAKE_ASSERT( radius > 0 ).warning("Radius may be invalid!");
 			mType = CGT_SPHERE;
 			mOdeGeom = new dSphere( (*space).id(), static_cast<dReal>(radius) );
@@ -138,6 +158,7 @@ namespace yake {
 		//-----------------------------------------------------			
 		OdeCollisionGeomBox::OdeCollisionGeomBox(dSpace* space, float lx, float ly, float lz)
 		{
+			mOdeSpace = space;
 			/*YAKE_ASSERT( ( lx == 0. && ly == 0. && lz != 0. ) ||
 							( lx != 0. && ly == 0. && lz == 0. ) ||
 							( lx == 0. && ly != 0. && lz == 0. ) )(lx)(ly)(lz).warning("Dimensions may be invalid!");*/
@@ -157,6 +178,7 @@ namespace yake {
 		//-----------------------------------------------------
 		OdeCollisionGeomPlane::OdeCollisionGeomPlane(dSpace* space, float a, float b, float c, float d)
 		{
+			mOdeSpace = space;
 			mType = CGT_PLANE;
 
 			// make sure we have a valid normal for the plane equation
@@ -187,24 +209,236 @@ namespace yake {
 		}
 
 		//-----------------------------------------------------
-		Internal::OdeCollisionGeomTransform::OdeCollisionGeomTransform(dSpace* space, OdeCollisionGeomBase* geom) : mWrappedGeom(geom)
+		OdeCollisionGeomTransform::OdeCollisionGeomTransform(dSpace* space) :
+				mWrappedGeom(0)
 		{
+			mOdeSpace = space;
+			mType = CGT_TRANSFORM;
 			YAKE_ASSERT( space ).debug("Need a valid space.");
-			YAKE_ASSERT( mWrappedGeom ).debug("Need a valid collision geometry object in order to encapsulate it.");
 
-			mOdeGeom = new dGeomTransform( *space );
+			mOdeGeom = new dGeomTransform( (*space).id() );
 			mOdeGeomID = mOdeGeom->id();
-			static_cast<dGeomTransform*>(mOdeGeom)->setGeom( mWrappedGeom->_getOdeGeomID() );
+			dGeomTransformSetCleanup( mOdeGeomID, 1 );
+			dGeomTransformSetInfo( mOdeGeomID, 1 );
+		}
+		//-----------------------------------------------------
+		void OdeCollisionGeomTransform::_setData(void * data)
+		{
+			YAKE_ASSERT( mOdeGeomID ).debug("Need a valid ODE geom id!");
+			YAKE_ASSERT( mOdeGeom ).debug("Need a valid ODE geom!");
+			//dGeomSetData( mOdeGeomID, data );
+			mOdeGeom->setData( data );
+			if (mWrappedGeom)
+				mWrappedGeom->_setData( data );
+		}
+		//-----------------------------------------------------
+		void OdeCollisionGeomTransform::tfAttachGeom( ICollisionGeometry* pGeom )
+		{ 
+			YAKE_ASSERT( pGeom );
+			mWrappedGeom = static_cast<OdeCollisionGeomBase*>(pGeom);
+			YAKE_ASSERT( mWrappedGeom ).debug("Need a valid collision geometry object in order to encapsulate it.");
+			mWrappedGeom->_setData( this->_getData() );
+
+			dSpace* pSpace = mWrappedGeom->_getOdeSpace();
+			YAKE_ASSERT( pSpace );
+
+			pSpace->remove( mWrappedGeom->_getOdeGeomID() );
+			//static_cast<dGeomTransform*>(mOdeGeom)->setGeom( mWrappedGeom->_getOdeGeomID() );
+			dGeomTransformSetGeom( mOdeGeomID, mWrappedGeom->_getOdeGeomID() );
+			//dGeomSetPosition( mWrappedGeom->_getOdeGeomID(), 2, 1, 0 );
+			//dGeomSetBody( mWrappedGeom->_getOdeGeomID(), dGeomGetBody(mOdeGeomID) );
+			dGeomSetBody( mWrappedGeom->_getOdeGeomID(), 0 );
+		}
+		//-----------------------------------------------------
+		ICollisionGeometry* OdeCollisionGeomTransform::tfGetAttachedGeom() const
+		{ 
+			if (mWrappedGeom)
+			{
+				Vector3 t = mWrappedGeom->getPosition();
+				Vector3 t2 = getPosition();
+			}
+			return mWrappedGeom;
 		}
 
 		//-----------------------------------------------------
 		// OdeCollisionGeomTriMesh
 		//-----------------------------------------------------
 
+		using namespace yake::base::templates;
+		using namespace yake::data;
+
+		class PhysicsMeshLoader
+		{
+		public:
+			PhysicsMeshLoader();
+			~PhysicsMeshLoader();
+
+			void load( const base::String & meshfile );
+
+			typedef base::templates::Vector<Vector3> PositionList;
+			typedef base::templates::Vector<uint32> IndexList;
+			typedef base::templates::Vector<Vector3> NormalList;
+
+			const PositionList& getPositions() const;
+			const IndexList& getIndices() const;
+			const NormalList& getNormals() const;
+		private:
+			SharedPtr<data::dom::INode>		mDocNode;
+
+			void parseMesh( const SharedPtr<data::dom::INode> & pMeshNode );
+			void parseSubMeshes( const SharedPtr<data::dom::INode> & pSubMeshesNode );
+			void parseSubMesh( const SharedPtr<data::dom::INode> & pSubMeshNode );
+			void parseFaces( const SharedPtr<data::dom::INode> & pFacesNode, const uint32 indexOffset );
+				void readFace( const SharedPtr<data::dom::INode> & pFaceNode, const uint32 indexOffset );
+					void readNormal( const SharedPtr<data::dom::INode> & pNormalNode );
+			void parseGeometry( const SharedPtr<data::dom::INode> & pGeometryNode );
+				void readVertex( const SharedPtr<data::dom::INode> & pVertexNode );
+
+			PositionList	mVertices;
+			IndexList		mIndices;
+			NormalList		mNormals;
+		};
+		PhysicsMeshLoader::PhysicsMeshLoader()
+		{
+		}
+		PhysicsMeshLoader::~PhysicsMeshLoader()
+		{
+		}
+		const PhysicsMeshLoader::PositionList& PhysicsMeshLoader::getPositions() const
+		{ return mVertices; }
+		const PhysicsMeshLoader::IndexList& PhysicsMeshLoader::getIndices() const
+		{ return mIndices; }
+		const PhysicsMeshLoader::NormalList& PhysicsMeshLoader::getNormals() const
+		{ return mNormals; }
+		void PhysicsMeshLoader::load( const base::String & meshfile )
+		{
+			data::dom::xml::XmlSerializer ser;
+			ser.parse( meshfile, false );
+			mDocNode = ser.getDocumentNode();
+			data::dom::NodeList nodes = mDocNode->getNodes();
+			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
+			/*
+			base::String name = varGet<String>(mDocNode->getValue("name"));
+			while (it.hasMoreElements())
+			{
+				SharedPtr<data::dom::INode> & pNode = it.getNext();
+				//if (varGet<String>(pNode->getValue("name")) == "mesh")
+					parseMesh( pNode );
+			}
+			*/
+			parseMesh( mDocNode );
+		}
+		void PhysicsMeshLoader::parseMesh( const SharedPtr<data::dom::INode> & pMeshNode )
+		{
+			data::dom::NodeList nodes = pMeshNode->getNodes();
+			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
+			while (it.hasMoreElements())
+			{
+				SharedPtr<data::dom::INode> & pNode = it.getNext();
+				if (varGet<String>(pNode->getValue("name")) == "submeshes")
+					parseSubMeshes( pNode );
+			}
+		}
+		void PhysicsMeshLoader::parseSubMeshes( const SharedPtr<data::dom::INode> & pSubMeshesNode )
+		{
+			data::dom::NodeList nodes = pSubMeshesNode->getNodes();
+			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
+			while (it.hasMoreElements())
+			{
+				SharedPtr<data::dom::INode> & pNode = it.getNext();
+				if (varGet<String>(pNode->getValue("name")) == "submesh")
+					parseSubMesh( pNode );
+			}
+		}
+		void PhysicsMeshLoader::parseSubMesh( const SharedPtr<data::dom::INode> & pSubMeshNode )
+		{
+			uint32 indexOffset = mIndices.size();
+			data::dom::NodeList nodes = pSubMeshNode->getNodes();
+			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
+			while (it.hasMoreElements())
+			{
+				SharedPtr<data::dom::INode> & pNode = it.getNext();
+				base::String name = varGet<String>(pNode->getValue("name"));
+				if (name == "faces")
+					parseFaces( pNode, indexOffset );
+				else if (name == "geometry")
+					parseGeometry( pNode );
+			}
+		}
+		void PhysicsMeshLoader::parseFaces( const SharedPtr<data::dom::INode> & pFacesNode, const uint32 indexOffset )
+		{
+			data::dom::NodeList nodes = pFacesNode->getNodes();
+			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
+			while (it.hasMoreElements())
+			{
+				SharedPtr<data::dom::INode> & pNode = it.getNext();
+				base::String name = varGet<String>(pNode->getValue("name"));
+				YAKE_ASSERT( name == "face" );
+				readFace( pNode, indexOffset );
+			}
+		}
+		void PhysicsMeshLoader::readFace( const SharedPtr<data::dom::INode> & pFaceNode, const uint32 indexOffset )
+		{
+			YAKE_ASSERT( pFaceNode->getAttributeValue("v1").which() == data::dom::INode::VTID_STRING );
+			String a = varGet<String>(pFaceNode->getAttributeValue("v1"));
+			mIndices.push_back( indexOffset + atoi(a.c_str()) );
+			a = varGet<String>(pFaceNode->getAttributeValue("v2"));
+			mIndices.push_back( indexOffset + atoi(a.c_str()) );
+			a = varGet<String>(pFaceNode->getAttributeValue("v3"));
+			mIndices.push_back( indexOffset + atoi(a.c_str()) );
+
+			data::dom::NodeList nodes = pFaceNode->getNodes();
+			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
+			while (it.hasMoreElements())
+			{
+				SharedPtr<data::dom::INode> & pNode = it.getNext();
+				base::String name = varGet<String>(pNode->getValue("name"));
+				YAKE_ASSERT( name == "normal" );
+				readNormal( pNode );
+			}
+		}
+		void PhysicsMeshLoader::parseGeometry(const SharedPtr<data::dom::INode> & pGeometryNode)
+		{
+			data::dom::NodeList nodes = pGeometryNode->getNodes();
+			ConstVectorIterator<data::dom::NodeList> it(nodes.begin(),nodes.end());
+			while (it.hasMoreElements())
+			{
+				SharedPtr<data::dom::INode> & pNode = it.getNext();
+				base::String name = varGet<String>(pNode->getValue("name"));
+				YAKE_ASSERT( name == "vertex" );
+				readVertex( pNode );
+			}
+		}
+		void PhysicsMeshLoader::readVertex( const SharedPtr<data::dom::INode> & pVertexNode )
+		{
+			SharedPtr<data::dom::INode> pPositionNode = pVertexNode->getNodeByName("position");
+			YAKE_ASSERT( pPositionNode->getAttributeValue("x").which() == data::dom::INode::VTID_STRING );
+			Vector3 position;
+			String a = varGet<String>(pPositionNode->getAttributeValue("x"));
+			position.x = a.toReal();
+			a = varGet<String>(pPositionNode->getAttributeValue("y"));
+			position.y = a.toReal();
+			a = varGet<String>(pPositionNode->getAttributeValue("z"));
+			position.z = a.toReal();
+			mVertices.push_back( position );
+		}
+		void PhysicsMeshLoader::readNormal( const SharedPtr<data::dom::INode> & pNormalNode )
+		{
+			Vector3 normal;
+			String a = varGet<String>(pNormalNode->getAttributeValue("x"));
+			normal.x = a.toReal();
+			a = varGet<String>(pNormalNode->getAttributeValue("y"));
+			normal.y = a.toReal();
+			a = varGet<String>(pNormalNode->getAttributeValue("z"));
+			normal.z = a.toReal();
+			mNormals.push_back( normal );
+		}
+
 		//-----------------------------------------------------
 		OdeCollisionGeomTriMesh::OdeCollisionGeomTriMesh(dSpace* space, const base::String & meshfile ) :
 			mpVertices(0),
-			mpIndices(0)
+			mpIndices(0),
+			mpNormals(0)
 		{
 			mType = CGT_MESH;
 			mOdeGeomID = 0;
@@ -218,6 +452,7 @@ namespace yake {
 		{
 			dGeomTriMeshDataDestroy( mDataId );
 			dGeomDestroy( mOdeGeomID );
+			YAKE_SAFE_DELETE( mpNormals );
 			YAKE_SAFE_DELETE( mpVertices );
 			YAKE_SAFE_DELETE( mpIndices );
 		}
@@ -228,7 +463,36 @@ namespace yake {
 			{
 				mVertices.clear();
 				mIndices.clear();
+				mNormals.clear();
 			}
+
+			PhysicsMeshLoader loader;
+			loader.load( meshfile );
+			const PhysicsMeshLoader::IndexList & indices = loader.getIndices();
+			const PhysicsMeshLoader::PositionList & positions = loader.getPositions();
+			const PhysicsMeshLoader::NormalList & normals = loader.getNormals();
+
+			uint32 indexOffset = mIndices.size();
+			ConstVectorIterator<PhysicsMeshLoader::IndexList> itI(indices.begin(),indices.end());
+			while (itI.hasMoreElements())
+			{
+				mIndices.push_back( indexOffset + itI.getNext() );
+			}
+
+			ConstVectorIterator<PhysicsMeshLoader::PositionList> itP(positions.begin(),positions.end());
+			while (itP.hasMoreElements())
+			{
+				Vector3 & position = itP.getNext();
+				mVertices.push_back( CMVertex(position.x, position.y, position.z) );
+			}
+
+			ConstVectorIterator<PhysicsMeshLoader::NormalList> itN(normals.begin(),normals.end());
+			while (itN.hasMoreElements())
+			{
+				Vector3 & normal = itN.getNext();
+				mNormals.push_back( normal );
+			}
+/*
 			dReal dim = 100;
 
 			CMVertex v(-dim,0,-dim);
@@ -250,6 +514,7 @@ namespace yake {
 			mIndices.push_back( 3 );
 			mIndices.push_back( 5 );
 			mIndices.push_back( 4 );
+*/
 		}
 		//-----------------------------------------------------
 		void OdeCollisionGeomTriMesh::_build(dSpace* space)
@@ -279,15 +544,32 @@ namespace yake {
 				mpIndices[i++] = itI.getNext();
 			}
 
+			YAKE_SAFE_DELETE( mpNormals );
+			if (mNormals.size() > 0) // normals are optional
+			{
+				mpNormals = new dReal[ 3*mNormals.size() ];
+				uint32 i = 0;
+				base::templates::ConstVectorIterator<NormalList> itN( mNormals.begin(), mNormals.end() );
+				while (itN.hasMoreElements())
+				{
+					const Vector3& v = itN.getNext();
+					mpNormals[i*3+0] = v.x;
+					mpNormals[i*3+1] = v.y;
+					mpNormals[i*3+2] = v.z;
+					++i;
+				}
+			}
+
 			mDataId = dGeomTriMeshDataCreate();
-			dGeomTriMeshDataBuildDouble( mDataId,
+
+			dGeomTriMeshDataBuildDouble1( mDataId,
 				mpVertices,
 				sizeof(dReal)*3,
 				mVertices.size(),
 				mpIndices,
 				mIndices.size(),
-				sizeof(uint32)*3 );
-				//0/*mpNormals*/ );
+				sizeof(uint32)*3,
+				mpNormals );
 
 			this->mOdeGeomID = dCreateTriMesh( mSpaceId, mDataId, 0, 0, 0 );
 			dGeomTriMeshEnableTC( mOdeGeomID, dSphereClass, 1 );
