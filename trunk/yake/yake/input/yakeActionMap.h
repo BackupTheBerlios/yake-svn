@@ -82,18 +82,18 @@ namespace input {
 		virtual bool operator()() = 0;
 	};
 
+	enum KeyboardActionMode {
+		KAM_CONTINUOUS,
+		KAM_PRESSED,
+		KAM_RELEASED,
+		KAM_PRESSED_AND_RELEASED
+	};
 	/** KeyboardActionCondition checks key presses/releases in order to decide when
 		to trigger action signals.
 	*/
 	class YAKE_INPUT_API KeyboardActionCondition : public ActionCondition
 	{
 	public:
-		enum KeyboardActionMode {
-			KAM_CONTINUOUS,
-			KAM_PRESSED,
-			KAM_RELEASED,
-			KAM_PRESSED_AND_RELEASED
-		};
 		KeyboardActionCondition( KeyboardDevice* device, const KeyCode key, KeyboardActionMode mode = KAM_CONTINUOUS );	
 
 		void setKeyboard( KeyboardDevice* device );
