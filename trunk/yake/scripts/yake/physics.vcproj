@@ -141,6 +141,9 @@
 				RelativePath="..\..\src\yake\physics\yakePhysicsAffectors.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\yake\physics\yakePhysicsAffectorZone.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\yake\physics\yakePhysicsSystem.cpp">
 			</File>
 		</Filter>
