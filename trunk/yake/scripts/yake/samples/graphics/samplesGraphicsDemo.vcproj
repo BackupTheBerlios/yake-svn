@@ -36,7 +36,7 @@
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="../../../../common/lib/$(ConfigurationName)"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
@@ -117,6 +117,9 @@
 		<Filter
 			Name="inc"
 			Filter="">
+			<File
+				RelativePath="..\..\..\..\yake\samples\data\demo\yakeDotScene.h">
+			</File>
 			<File
 				RelativePath="..\..\..\..\yake\samples\common\yakeExampleApplication.h">
 			</File>
