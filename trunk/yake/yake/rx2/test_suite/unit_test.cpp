@@ -26,13 +26,7 @@
 #include "cpp_class.h"
 
 // scripting
-extern "C"
-{
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-#include <luabind/luabind.hpp>
+#include "lua/bind_to_lua.h"
 
 // repl
 #include "Multiplayer.h"
@@ -204,47 +198,20 @@ int main()
 
 		using namespace luabind;
 
-		lua_State* L = lua_open();
+		// open
+		lua_State * L = lua_open();
 		luaopen_io(L);
 		open(L);
+		lua::bind_to_lua(*L);
 
-		module(L)
-		[ class_<meta_field>("meta_field")
-				.enum_("flags")
-				[
-					value("none",					1),
-					value("save",					2),
-					value("load",					4),
-					value("replicate",		8),
-					value("uncompressed", 16),
-					value("compressed",		32),
-					value("copy",					64),
-					value("interpolate",	128),
-					value("server",				256),
-					value("client",				512)
-				],
-			class_<int_field>("int_field")
-				.def("get", &int_field::get )
-				.def("set", &int_field::set ),
-			class_<meta_object>("meta_object") 	
-				.def(constructor<std::string>())
-				.def("add_field_int", (meta_object& (meta_object::*)(std::string, int)) &meta_object::add_field<int, none>)
-				.def("add_field_int", (meta_object& (meta_object::*)(std::string, int, int)) &meta_object::add_field<int>)
-				.def("field_int",	(int_field& (meta_object::*)(std::string) const) &meta_object::field<int> ),
-			class_<meta_class>("meta_class") 	
-				.def(constructor<std::string>())
-				.def("add_field_int", (meta_class& (meta_class::*)(std::string, int)) &meta_class::add_field<int>)
-				.def("add_field_int", (meta_class& (meta_class::*)(std::string, int, int)) &meta_class::add_field<int>)
-				.def("field_int",	(int_field& (meta_class::*)(std::string) const) &meta_class::field<int> ),
-			def("instance", &instance)
-		];
-
+		// code
 		lua_dostring(	L, "meta_cl = meta_class('hello_class')" );
 		lua_dostring(	L, "meta_cl:add_field_int( 'hello_int', meta_field.none ):add_field_int( 'hello_int2', meta_field.none )" );
 		lua_dostring(	L, "meta_cl:field_int( 'hello_int' ):set( 12345 )" );
 		lua_dostring(	L, "meta_obj = instance( meta_cl, 'hello_object')" );
 		lua_dostring(	L, "meta_obj:field_int( 'hello_int' ):set( 1234 )" );
 
+		// check
 		std::cout << get_object( "hello_object" ).field<int>( "hello_int" ).as_string() << std::endl;
 		assert( get_object( "hello_object" ).field<int>( "hello_int" ) == 1234 );
 

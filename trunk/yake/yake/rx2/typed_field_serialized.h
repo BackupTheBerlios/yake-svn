@@ -36,4 +36,4 @@ void serialize(Archive & ar, rx::typed_field<T> & field, const unsigned int vers
 } // namespace boost
 
 
-#endif
+#endif // TYPED_FIELD_SERIALIZED_H

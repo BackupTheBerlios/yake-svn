@@ -19,6 +19,7 @@ struct entity
 		std::cout << meta_object_->get_name() << ".on_birth( \"" << cry << "\" )" << std::endl;
   }
 
+	// todo define EVENT( type, name ) type, name
 	RX_DEFINE_ONE_EVENT_ONE_HANDLER(
 		const std::string &, birth,
 		const std::string &, on_birth )

@@ -532,13 +532,22 @@
 					RelativePath="..\..\yake\base\prerequisites\yakePrerequisitesVC71Warnings.h">
 				</File>
 				<File
+					RelativePath="..\..\yake\base\prerequisites\yakePrerequisitesVC8Types.h">
+				</File>
+				<File
+					RelativePath="..\..\yake\base\prerequisites\yakePrerequisitesVC8Warnings.h">
+				</File>
+				<File
 					RelativePath="..\..\yake\base\prerequisites\yakeStringGCC.h">
 				</File>
 				<File
 					RelativePath="..\..\yake\base\prerequisites\yakeStringHashFun.h">
 				</File>
 				<File
-					RelativePath="..\..\yake\base\prerequisites\yakeStringVC.h">
+					RelativePath="..\..\yake\base\prerequisites\yakeStringVC71.h">
+				</File>
+				<File
+					RelativePath="..\..\yake\base\prerequisites\yakeStringVC8.h">
 				</File>
 			</Filter>
 			<Filter

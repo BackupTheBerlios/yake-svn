@@ -138,6 +138,13 @@
 			<File
 				RelativePath="..\object_registry.cpp">
 			</File>
+			<Filter
+				Name="lua"
+				Filter="">
+				<File
+					RelativePath="..\lua\lua_handler_to_cpp.cpp">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Headerdateien"
@@ -183,6 +190,9 @@
 				RelativePath="..\ref.h">
 			</File>
 			<File
+				RelativePath="..\static_initor.h">
+			</File>
+			<File
 				RelativePath="..\tnl_hook.h">
 			</File>
 			<File
@@ -194,6 +204,22 @@
 			<File
 				RelativePath="..\typed_field_serialized.h">
 			</File>
+			<Filter
+				Name="lua"
+				Filter="">
+				<File
+					RelativePath="..\lua\any_convertors.h">
+				</File>
+				<File
+					RelativePath="..\lua\bind_to_lua.h">
+				</File>
+				<File
+					RelativePath="..\lua\do_string.h">
+				</File>
+				<File
+					RelativePath="..\lua\lua_handler_to_cpp.h">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="unit_test"

@@ -1,6 +1,8 @@
 #ifndef _CPP_TO_META_HELPERS_
 #define _CPP_TO_META_HELPERS_
 
+#include "static_initor.h"
+
 // 3 fields, 1 ref
 #define RX_DEFINE_ONE_REF_THREE_FIELDS( type1, name1, ref1, type2, name2, type3, name3, type4, name4 )\
 public:\
@@ -32,7 +34,7 @@ RX_DEFINE_CLASS_OBJECT()
 // 1 event, 1 handler
 #define RX_DEFINE_ONE_EVENT_ONE_HANDLER( type1, name1, type2, name2 )\
 public:\
-event<type1> name1;\
+rx::event<type1> name1;\
 \
 static void rx_construct_meta_class()\
 {\
@@ -66,18 +68,6 @@ private:\
 // static initor for meta class
 #define RX_DEFINE( class_name )\
 rx::meta_class class_name::meta_class_( #class_name );\
-\
-namespace\
-{\
-	static struct class_name##_initor\
-	{\
-	class_name##_initor()\
-		{\
-			static int counter = 0;\
-			if( counter++ > 0 ) return;\
-			class_name::rx_construct_meta_class();\
-		}\
-	} g_##class_name##_initor;\
-} // nameless
+STATIC_INITOR_CL1( class_name, rx_construct_meta_class )
 
 #endif // _CPP_TO_META_HELPERS_
