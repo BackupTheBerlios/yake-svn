@@ -124,7 +124,7 @@ namespace lua {
 		[
 			class_< Library >( "Library" )
 				.def( constructor< String const& >() )
-				.def( "getSymbol", &yake::base::Library::getSymbol )
+				//.def( "getSymbol", &yake::base::Library::getSymbol )
 		];
 		
 		// Timer

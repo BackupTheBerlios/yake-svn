@@ -26,7 +26,6 @@
 //============================================================================
 // Boost
 #include <boost/type_traits.hpp>
-#include <boost/mpl/select1st.hpp>
 #include <boost/mpl/bool.hpp>
 
 // todo wrap boost

@@ -32,7 +32,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <boost/assert.hpp>
-#include <boost/mpl/assert_is_same.hpp>
 // Yake
 #include <yake/base/yakeException.h>
 #include <yake/base/mpl/yakeCast.h>
