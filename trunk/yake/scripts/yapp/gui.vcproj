@@ -19,8 +19,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./../../;../../yapp/gui;../../yake/reflection;../../dependencies/lua/include;../../dependencies/luabind;../../dependencies/boost/;../../dependencies/tnl/tnl;../../dependencies/cegui_mk2/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="./../../;../../yapp/gui;../../yake/reflection;../../dependencies/lua/include;../../dependencies/luabind;../../dependencies/boost/;../../dependencies/tnl/tnl;../../dependencies/cegui_mk2/include;../../dependencies/ttl/"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;YAPP_GUI_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -101,9 +101,6 @@
 			Name="inc"
 			Filter="">
 			<File
-				RelativePath="..\..\yapp\gui\button_base.h">
-			</File>
-			<File
 				RelativePath="..\..\yapp\gui\config.h">
 			</File>
 			<File
@@ -113,13 +110,13 @@
 				RelativePath="..\..\yapp\gui\control_base.h">
 			</File>
 			<File
+				RelativePath="..\..\yapp\gui\controls.h">
+			</File>
+			<File
 				RelativePath="..\..\yapp\gui\default_window.h">
 			</File>
 			<File
 				RelativePath="..\..\yapp\gui\gui_system_base.h">
-			</File>
-			<File
-				RelativePath="..\..\yapp\gui\multi_line_edit_box_base.h">
 			</File>
 			<File
 				RelativePath="..\..\yapp\gui\point.h">
@@ -129,9 +126,6 @@
 			</File>
 			<File
 				RelativePath="..\..\yapp\gui\renderer_adapter_base.h">
-			</File>
-			<File
-				RelativePath="..\..\yapp\gui\static_text_base.h">
 			</File>
 			<File
 				RelativePath="..\..\yapp\gui\window_base.h">
@@ -162,21 +156,28 @@
 					RelativePath="..\..\yapp\gui\lua\bind_gui_to_lua.h">
 				</File>
 			</Filter>
+			<Filter
+				Name="controls"
+				Filter="">
+				<File
+					RelativePath="..\..\yapp\gui\button_base.h">
+				</File>
+				<File
+					RelativePath="..\..\yapp\gui\multi_line_edit_box_base.h">
+				</File>
+				<File
+					RelativePath="..\..\yapp\gui\static_text_base.h">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\src\yapp\gui\button_base.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\yapp\gui\multi_line_edit_box_base.cpp">
+				RelativePath="..\..\src\yapp\gui\gui_system_base.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\yapp\gui\precompiled.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\yapp\gui\static_text_base.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\yapp\gui\window_base.cpp">
@@ -196,6 +197,19 @@
 				</File>
 				<File
 					RelativePath="..\..\src\yapp\gui\editor\property_list_base.cpp">
+				</File>
+			</Filter>
+			<Filter
+				Name="controls"
+				Filter="">
+				<File
+					RelativePath="..\..\src\yapp\gui\button_base.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\yapp\gui\multi_line_edit_box_base.cpp">
+				</File>
+				<File
+					RelativePath="..\..\src\yapp\gui\static_text_base.cpp">
 				</File>
 			</Filter>
 		</Filter>
