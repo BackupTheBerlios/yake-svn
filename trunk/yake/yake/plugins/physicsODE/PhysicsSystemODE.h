@@ -24,13 +24,15 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace yake {
 namespace physics {
 
-	class PhysicsSystemODE : public physics::PhysicsSystem
+	class PhysicsSystemODE : public IPhysicsSystem
 	{
 	public:
+		YAKE_DECLARE_CONCRETE( PhysicsSystemODE, "ODE" );
+		
 		PhysicsSystemODE();
 		virtual ~PhysicsSystemODE();
 
-		virtual physics::IWorld* createWorld();
+		virtual SharedPtr<IWorld> createWorld();
 	};
 
 }

@@ -22,128 +22,163 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define YAKE_ODEJOINT_H
 
 namespace yake {
-	namespace physics {
+namespace physics {
 
-		class OdeJointBase : public IJoint
+		class OdeWorld;
+		
+		class OdeJoint : public IJoint
 		{
 		protected:
-			OdeJointBase();
-			OdeJointBase( const OdeJointBase & );
-			OdeJointBase( IWorld* world, JointType type, IJointGroup* group = 0 );
+			OdeJoint();
+			OdeJoint( OdeJoint const& );
+			OdeJoint( OdeWorld* pWorld, JointType type );
+		
 		public:
-			virtual ~OdeJointBase();
+			virtual ~OdeJoint();
 
-			virtual JointType getType() const
-			{ return mType; }
+			virtual void attach( IBody& rBody1, IBody& rBody2 );
 
-			virtual void attach(IBody* body1, IBody* body2);
-
-			virtual void setSpring(real spring);
-			virtual void setDamping(real damping);
-			virtual real getSpring() const;
-			virtual real getDamping() const;
-
-			virtual void setMotor1Velocity(real vel);
-			virtual void setMotor1MaximumForce(real force);
-			virtual void setMotor2Velocity(real vel);
-			virtual void setMotor2MaximumForce(real force);
+			//virtual JointType getType() const;
+			
+			//virtual size_t getNumAxis() const;
+			//virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			
+			//virtual size_t getNumAnchors() const;
+			//virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			
+			//virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			
+			virtual void setLimits( size_t axisIndex, real low, real high );
+			
+			virtual void setBreakable( bool enabled );
+			virtual void setBreakableForce( real force );
+			virtual void setBreakableTorque( real torque );
+			virtual void setConnectedBodiesCollide( bool enabled );
+		
 		protected:
 			void _applySpring();
 			real _getCFMFromSpring() const;
 			real _getERPFromSpring() const;
+			
 		protected:
-			OdeWorld		* mWorld;
-			dJoint		* mOdeJoint;
-			real			mSpringConstant;
-			real			mDampingConstant;
-			JointType	mType;
+			OdeWorld* 		mWorld;
+			dJoint*			mOdeJoint;
+			
+			real				mSpringConstant;
+			real				mDampingConstant;
+			JointType		mType;
 		};
 
-		class OdeHinge2Joint : public OdeJointBase
+		class OdeHingeJoint : public OdeJoint
 		{
 		public:
-			OdeHinge2Joint( IWorld* world, IJointGroup* group = 0 );
-
-			virtual void setAnchor(const Vector3 & anchor);
-			virtual Vector3 getAnchor() const;
-
-			virtual void setAxis1(const Vector3 & axis);
-			virtual void setAxis2(const Vector3 & axis);
-			virtual Vector3 getAxis1() const;
-			virtual Vector3 getAxis2() const;
-
-			virtual void setMotor2Velocity(real vel);
-			virtual void setMotor2MaximumForce(real force);
-
-			virtual void setLowStop(real stop);
-			virtual void setHighStop(real stop);
+			OdeHingeJoint( OdeWorld* pWorld );
+			
+			virtual JointType getType() const;
+			
+			virtual size_t getNumAxis() const;
+			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			
+			virtual size_t getNumAnchors() const;
+			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			
+			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			
+			virtual void setLimits( size_t axisIndex, real low, real high );
 		};
 
-		class OdeHingeJoint : public OdeJointBase
+		class OdeHinge2Joint : public OdeJoint
 		{
 		public:
-			OdeHingeJoint( IWorld* world, IJointGroup* group = 0 );
+			OdeHinge2Joint( OdeWorld* pWorld );
 
-			virtual void setAnchor(const Vector3 & anchor);
-			virtual Vector3 getAnchor() const;
-
-			virtual void setAxis1(const Vector3 & axis);
-			virtual void setAxis2(const Vector3 & axis);
-			virtual Vector3 getAxis1() const;
-			virtual Vector3 getAxis2() const;
-
-			virtual void setMotor1Velocity(real vel);
-			virtual void setMotor1MaximumForce(real force);
-			virtual void setMotor2Velocity(real vel);
-			virtual void setMotor2MaximumForce(real force);
-
-			virtual void setLowStop(real stop);
-			virtual void setHighStop(real stop);
+			virtual JointType getType() const;
+			
+			virtual size_t getNumAxis() const;
+			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			
+			virtual size_t getNumAnchors() const;
+			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			
+			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			
+			virtual void setLimits( size_t axisIndex, real low, real high );
 		};
 
-		class OdeBallJoint : public OdeJointBase
+		class OdeBallJoint : public OdeJoint
 		{
 		public:
-			OdeBallJoint( IWorld* world, IJointGroup* group = 0 );
+			OdeBallJoint( OdeWorld* pWorld );
 
-			virtual void setAnchor(const Vector3 & anchor);
-			virtual Vector3 getAnchor() const;
-
-			virtual void setAxis1(const Vector3 & axis);
-			virtual void setAxis2(const Vector3 & axis);
-			virtual Vector3 getAxis1() const;
-			virtual Vector3 getAxis2() const;
-
-			virtual void setMotor2Velocity(real vel);
-			virtual void setMotor2MaximumForce(real force);
-
-			virtual void setLowStop(real stop);
-			virtual void setHighStop(real stop);
+			virtual JointType getType() const;
+			
+			virtual size_t getNumAxis() const;
+			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			
+			virtual size_t getNumAnchors() const;
+			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			
+			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			
+			virtual void setLimits( size_t axisIndex, real low, real high );
 		};
 
-		class OdeFixedJoint : public OdeJointBase
+		class OdeFixedJoint : public OdeJoint
 		{
 		public:
-			OdeFixedJoint( IWorld* world, IJointGroup* group = 0 );
+			OdeFixedJoint( OdeWorld* pWorld );
 
-			virtual void attach(IBody* body1, IBody* body2);
-
-			virtual void setAnchor(const Vector3 & anchor);
-			virtual Vector3 getAnchor() const;
-
-			virtual void setAxis1(const Vector3 & axis);
-			virtual void setAxis2(const Vector3 & axis);
-			virtual Vector3 getAxis1() const;
-			virtual Vector3 getAxis2() const;
-
-			virtual void setMotor2Velocity(real vel);
-			virtual void setMotor2MaximumForce(real force);
-
-			virtual void setLowStop(real stop);
-			virtual void setHighStop(real stop);
+			virtual void attach( IBody& rBody1, IBody& rBody2 );
+			
+			virtual JointType getType() const;
+			
+			virtual size_t getNumAxis() const;
+			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			
+			virtual size_t getNumAnchors() const;
+			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			
+			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			
+			virtual void setLimits( size_t axisIndex, real low, real high );
 		};
 
-	}
-}
+		class OdeSliderJoint : public OdeJoint
+		{
+		public:
+			OdeSliderJoint( OdeWorld* pWorld );
+
+			virtual JointType getType() const;
+			
+			virtual size_t getNumAxis() const;
+			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			
+			virtual size_t getNumAnchors() const;
+			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			
+			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			
+			virtual void setLimits( size_t axisIndex, real low, real high );
+		};
+		
+		class OdeUniversalJoint : public OdeJoint
+		{
+		public:
+			OdeUniversalJoint( OdeWorld* pWorld );
+
+			virtual JointType getType() const;
+			
+			virtual size_t getNumAxis() const;
+			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			
+			virtual size_t getNumAnchors() const;
+			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			
+			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
+			
+			virtual void setLimits( size_t axisIndex, real low, real high );
+		};
+} // physics
+} // yake
 
 #endif

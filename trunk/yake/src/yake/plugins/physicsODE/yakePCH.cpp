@@ -18,24 +18,5 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef __INC_PCH_H__
-#define __INC_PCH_H__
+#include <yake/plugins/physicsODE/yakePCH.h>
 
-#include <ode/ode.h>
-#include <ode/odecpp.h>
-#include <ode/odecpp_collision.h>
-
-#include <boost/any.hpp>
-
-#include <yake/base/yake.h>
-#include <yake/physics/yakePhysics.h>
-
-//@todo fix these macros
-#define VEC_YAKE2ODE( YV ) ::Ogre::Vector3( YV.x, YV.y, YV.z )
-#define VEC_ODE2YAKE( YV ) ::yake::base::math::Vector3( YV.x, YV.y, YV.z )
-
-#define QUAT_YAKE2ODE( q ) ::Ogre::Quaternion( q.w, q.x, q.y, q.z )
-#define QUAT_ODE2YAKE( q ) ::yake::base::math::Quaternion( q.w, q.x, q.y, q.z )
-
-
-#endif

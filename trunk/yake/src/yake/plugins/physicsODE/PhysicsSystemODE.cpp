@@ -18,31 +18,31 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-// The following ifdef block is the standard way of creating macros which make exporting 
-// from a DLL simpler. All files within this DLL are compiled with the SCRIPTINGLUA_EXPORTS
-// symbol defined on the command line. this symbol should not be defined on any project
-// that uses this DLL. This way any other project whose source files include this file see 
-// SCRIPTINGLUA_API functions as being imported from a DLL, whereas this DLL sees symbols
-// defined with this macro as being exported.
-#ifdef YAKEPHYSICSODE_EXPORTS
-#define PHYSICSODE_API DLLEXPORT
-#else
-#define PHYSICSODE_API DLLIMPORT
-#endif
-
+#include <yake/plugins/physicsODE/yakePCH.h>
+#include <yake/plugins/physicsODE/OdeWorld.h>
 #include <yake/plugins/physicsODE/PhysicsSystemODE.h>
 
-extern "C" yake::base::Plugin* dynlibStartPlugin(void);
+namespace yake {
+namespace physics {
 
-class OdePlugin : public yake::physics::PhysicsPlugin
-{
-public:
-	OdePlugin();
-	virtual ~OdePlugin();
+	//------------------------------------------------------
+	PhysicsSystemODE::PhysicsSystemODE() : IPhysicsSystem()
+	{
+	}
 
-	virtual yake::base::String getName() const;
-	virtual yake::base::Version getVersion() const;
-	virtual bool initialise();
-	virtual bool shutdown();
-	virtual yake::physics::PhysicsSystem* createSystem();
-};
+	//------------------------------------------------------
+	PhysicsSystemODE::~PhysicsSystemODE()
+	{
+		dCloseODE();
+	}
+
+	//------------------------------------------------------
+	physics::IWorld* PhysicsSystemODE::createWorld()
+	{
+		physics::OdeWorld* pWorld = new physics::OdeWorld();
+		YAKE_ASSERT( pWorld ).debug("Out of memory ?");
+		return pWorld;
+	}
+
+}
+}

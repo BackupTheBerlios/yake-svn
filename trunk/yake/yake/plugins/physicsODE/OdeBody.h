@@ -22,58 +22,70 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define YAKE_ODEBODY_H
 
 namespace yake {
-	namespace physics {
+namespace physics {
 
+		class OdeDynamicActor;
+		
 		class OdeBody : public IBody
 		{
 		public:
-			OdeBody( OdeWorld* world );
+			OdeBody( OdeWorld* pWorld, OdeDynamicActor& rOwner );
 			virtual ~OdeBody();
 
+			virtual IDynamicActor& getActor() const;
+
+			virtual void setMass( const real mass );
+			virtual real getMass() const;
+			virtual void setMass( const MassDesc& rDesc );
+			virtual void addMass( const MassDesc& rDesc );
+
+			
+			virtual void setLinearVelocity( Vector3 const& rVelocity );
+			virtual Vector3 getLinearVelocity() const;
+			virtual void setAngularVelocity( Vector3 const& rVelocity);
+			virtual Vector3 getAngularVelocity() const;
+			
+			virtual void addForce( Vector3 const& rForce );
+			virtual void addForceAtPos( Vector3 const& rForce, Vector3 const& rPos );
+			virtual void addLocalForce( Vector3 const& rForce );
+			virtual void addLocalForceAtLocalPos( Vector3 const& rForce, Vector3 const& rPos );
+			virtual void addLocalForceAtPos( Vector3 const& rForce, Vector3 const& rPos );
+			virtual void addTorque( Vector3 const& rTorque );
+			virtual void addLocalTorque( Vector3 const& rTorque );
+			
+			// helpers for OdeActor
 			virtual void setPosition( const Vector3 & position );
 			virtual Vector3 getPosition() const;
 			virtual void setOrientation( const Quaternion & orientation );
 			virtual Quaternion getOrientation() const;
 
-			virtual void setLinearVelocity(const Vector3 & velocity);
-			virtual Vector3 getLinearVelocity() const;
-			virtual void setAngularVelocity(const Vector3 & velocity);
-			virtual Vector3 getAngularVelocity() const;
 			
-			virtual void setMassBox(real lx, real ly, real lz, real density = 1.);
-			virtual void setMassSphere(real r, real density = 1.);
-			virtual void setMass(real mass);
-			/// TODO Implement mass addition
-			/// void dMassAdd (dMass *a, const dMass *b);
-			virtual real getMass() const;
-			virtual IBody::MassType getType() const;
-			virtual void translateMass( const Vector3 & d );
-
-			virtual void addForce( const Vector3 & force );
-			virtual void addRelForce( const Vector3 & force );
-			virtual void addTorque( const Vector3 & torque );
-			virtual void addRelTorque( const Vector3 & torque );
-			virtual void addForceAtPosition( const Vector3 & force, const Vector3 & position = Vector3(0,0,0) );
-			virtual void addRelForceAtRelPosition( const Vector3 & force, const Vector3 & relPosition = Vector3(0,0,0) );
-
-			virtual Vector3 getTorque() const;
-
-			virtual void setEnabled( bool enabled );
+// 			virtual void setMassBox(real lx, real ly, real lz, real density = 1.);
+// 			virtual void setMassSphere(real r, real density = 1.);
+// 			virtual void setMass(real mass);
+// 			/// void dMassAdd (dMass *a, const dMass *b);
+// 			virtual real getMass() const;
+// //			virtual MassType getType() const;
+// 			virtual void translateMass( const Vector3 & d );
+// 
+// 			virtual Vector3 getTorque() const;
+// 
+// 			virtual void setEnabled( bool enabled );
 
 			// helper functions
 			dBody* _getOdeBody() const;
-			OdeWorld* _getWorld() const;
-			bool _isValid() const
-			{ return mValid; }
+			//OdeWorld* _getWorld() const;
+			//bool _isValid() const { return mValid; }*/
 		protected:
-			OdeWorld		* mWorld;
-			dBody			* mOdeBody;
-			dMass			mMass;
-			MassType		mMassType;
-			bool			mValid;
+			OdeWorld* 				mOdeWorld;
+			OdeDynamicActor&		mOwner;
+			dBody* 					mOdeBody;
+			dMass					mMass;
+//			MassType		mMassType;
+//			bool			mValid;
 		};
 
-	}
-}
+} // physics
+} // yake
 
 #endif

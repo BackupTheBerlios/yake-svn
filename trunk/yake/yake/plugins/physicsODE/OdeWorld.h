@@ -25,37 +25,41 @@ namespace yake {
 
 	using namespace base::math;
 
-	namespace physics {
+namespace physics {
 
 		class OdeBody;
+		class OdeTriMesh;
+		
 		class OdeWorld : public IWorld
 		{
 		public:
 			OdeWorld();
 			virtual ~OdeWorld();
 
-			virtual void update( const real timeElapsed );
-			virtual real getSimulationTime() const;
-			virtual void setGlobalGravity( const Vector3 & acceleration );
+			virtual SharedPtr<IJoint> createJoint( IJoint::DescBase const& rJointDesc );
+			virtual SharedPtr<IActor> createActor( IActor::Desc const& rActorDesc = IActor::Desc() );
+			virtual SharedPtr<IMaterial> createMaterial( IMaterial::Desc const& rMatDesc );
+			virtual SharedPtr<IAvatar> createAvatar( IAvatar::Desc const& rAvatarDesc ) 
+			{
+				YAKE_ASSERT( 0 ).warning("not supported.");
+				return SharedPtr<IAvatar>();
+			}
+			
+			virtual TriangleMeshId createTriangleMesh( TriangleMeshDesc const& rTrimeshDesc );
 
-			virtual IBody* createBody();
-			virtual IJoint* createJoint(IJoint::JointType type, IJointGroup* group = 0);
+			virtual Deque<ShapeType> getSupportedShapes( bool bStatic = true, bool bDynamic = true) const;
+			virtual Deque<JointType> getSupportedJoints() const;
+			virtual Deque<String> getSupportedSolvers() const;
+			virtual bool useSolver( String const& rSolver );
+			virtual String getCurrentSolver() const;
+			virtual const PropertyNameList& getCurrentSolverParams() const;
+			virtual void setCurrentSolverParam( String const& rName, boost::any const& rValue );
 
-			// dynamics objects
-			virtual IComplexObject* createPlane(const Vector3 & n, real d);
-			virtual IComplexObject* createSphere(real radius);
-			virtual IComplexObject* createBox(real lx, real ly, real lz);
-			virtual IComplexObject* createMesh(const base::String & mesh);
-			virtual IComplexObject* createRay(const Vector3 & origin, const Quaternion & orientation);
-			virtual IComplexObject* createEmptyPhysicsObject();
+			virtual void step( const real timeElapsed );
+			virtual void setGlobalGravity( Vector3 const& rAcceleration );
 
-			// collision geometry
-			virtual ICollisionGeometry* createCollisionGeomSphere(real radius);
-			virtual ICollisionGeometry* createCollisionGeomBox(real lx, real ly, real lz);
-			virtual ICollisionGeometry* createCollisionGeomMesh( const base::String & collisionMeshResourceName );
-			virtual ICollisionGeometry* createCollisionGeomPlane( real a, real b, real c, real d );
-			virtual ICollisionGeometry* createCollisionGeomTransform();
 
+			///TODO what are these for?
 			// helpers
 			dWorldID _getOdeID() const;
 			dJointGroup* _getOdeContactJointGroup() const 
@@ -76,6 +80,9 @@ namespace yake {
 			{
 				return mPostStepSignal.connect( slot );
 			}
+			
+			dTriMeshDataID getMeshDataById(  TriangleMeshId id ) const;
+		
 		protected:
 			real				mStepSize;
 			dWorld*				mOdeWorld;
@@ -84,12 +91,14 @@ namespace yake {
 
 			typedef std::vector< OdeBody* > BodyList;
 			BodyList			mBodies;
+		
+			TriangleMeshId		mNextMeshId;	
+			typedef base::templates::AssocVector< TriangleMeshId, dTriMeshDataID > MeshDataMap;
+			MeshDataMap			mMeshDataMap;
 
 			PostStepSignal		mPostStepSignal;
-
-			real				mSimTime;
+			PropertyNameList	mCurrentSolverParams;
 		};
-
 	}
 }
 
