@@ -3,7 +3,7 @@
 
 #define STATIC_INIT(FUNCTION) \
 namespace { \
-struct static_init_##FUNCTION \
+static struct static_init_##FUNCTION \
 { \
 	static_init_##FUNCTION##() \
 	{ \

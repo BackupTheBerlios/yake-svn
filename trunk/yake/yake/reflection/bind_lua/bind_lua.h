@@ -1,5 +1,5 @@
-#ifndef _LUA_H_
-#define _LUA_H_
+#ifndef _BIND_LUA_H_
+#define _BIND_LUA_H_
 
 #include "static_init.h"
 #include "type_info.h"
@@ -14,16 +14,17 @@ extern "C"
 	#include "lualib.h"
 }
 
+// -----------------------------------------
+// lua utility
 bool dostring(lua_State* L, const char* str);
 
 #define LUABIND_NO_HEADERS_ONLY
 #include <luabind/luabind.hpp>
 
 
-// Lua
-
-/*
-Each c++ class (foo) has static luabind class description (luabind::class_<foo>)
+// -----------------------------------------
+// dynamic lua class bindings
+/* Each c++ class (foo) has static luabind class description (luabind::class_<foo>)
 and these are stored within the c++ class as static member.
 Due to the static initialization trick we can register the c++ class to luabind (class::register_lua_class),
 but only the 'header' (i.e. the class name, type and constructor) because we don't
@@ -59,22 +60,38 @@ Step 7: _now_ we can use the properties and methods within lua => "o.a=5; o:foo(
 // lua state
 static struct global_lua_state
 {
-	global_lua_state() : m_L(lua_open())
-	{	// open lua
-		lua_baselibopen(m_L);
-		luabind::open(m_L);
-	}
+	struct holder
+	{
+		holder() : m_L(lua_open())
+		{	// open lua
+			lua_baselibopen(m_L);
+			luabind::open(m_L);
+		}
+
+		~holder()
+		{ lua_close(m_L); }
+
+		lua_State * m_L;
+	};
+	static holder * m_holder;
 
 	~global_lua_state()
-	{ lua_close(m_L); }
+	{	
+		if(m_holder)
+		{ 
+			delete m_holder;
+			m_holder = NULL;
+		}
+	}
 
 	lua_State * get()
-	{	return m_L;	}
+	{	
+		if(!m_holder) m_holder = new holder();
+		return m_holder->m_L;	
+	}
 
 	operator lua_State*()
-	{	return m_L;	}
-
-	lua_State * m_L;
+	{	return get();	}
 } L; 
 
 // -----------------------------------------
@@ -84,7 +101,7 @@ static struct static_initor##CLASS_NAME \
 { \
 	static_initor##CLASS_NAME() \
 	{ \
-		static int counter = 0;\
+		static int counter = 0; \
 		if( counter++ > 0 ) return; \
 		CLASS_NAME##::register_lua_class(); \
 	} \
@@ -112,7 +129,11 @@ static luabind::class_<class_type> & get_lua_class() \
 } \
 \
 static luabind::detail::class_rep & get_lua_crep() \
-{	return *luabind::detail::class_registry::get_registry(L)->find_class(LUABIND_TYPEID(class_type));	} \
+{	\
+	luabind::detail::class_rep * crep = luabind::detail::class_registry::get_registry(L)->find_class(LUABIND_TYPEID(class_type)); \
+	assert(crep && "get_lua_crep(): invalid class rep pointer"); \
+	return *crep;	\
+} \
 \
 static void commit_lua_methods() \
 { \
@@ -182,20 +203,6 @@ struct register_property_##NAME \
 
 // -----------------------------------------
 // lua event bindings
-namespace
-{
-	static void register_lua_event_base()
-	{
-		using namespace luabind;
-		module(L)
-		[ 
-			class_<boost::function_base>("function_base"),
-			class_<reflection::lua_event_base>("lua_event_base")
-				.def("attach_handler", &reflection::lua_event_base::attach_handler)
-		];
-	}
-	STATIC_INIT(register_lua_event_base)
-}
 
 // lua operator signatures
 // The get function is returning a null pointer of a specific type,
@@ -347,4 +354,4 @@ private: \
 		register_event_##EVENT_NAME() { static initor init; } \
 	} reg_event_##EVENT_NAME;
 
-#endif // _LUA_H_
+#endif // _BIND_LUA_H_
