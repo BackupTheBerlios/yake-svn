@@ -293,7 +293,7 @@ int main()
 				{
 					if( old_value != replica_object.field<bool>( "hello_bool" ) )
 					{
-            std::cout << replica_object.field<bool>( "hello_bool" ) << std::endl;
+						std::cout << replica_object.field<bool>( "hello_bool" ) << std::endl;
 						old_value = replica_object.field<bool>( "hello_bool" );
 					}
 				}      
