@@ -142,115 +142,115 @@
 			Name="inc"
 			Filter="">
 			<File
-				RelativePath="..\include\bind.h">
+				RelativePath="..\..\yake\reflection\bind.h">
 			</File>
 			<File
-				RelativePath="..\include\callable.h">
+				RelativePath="..\..\yake\reflection\callable.h">
 			</File>
 			<File
-				RelativePath="..\include\class.h">
+				RelativePath="..\..\yake\reflection\class.h">
 			</File>
 			<File
-				RelativePath="..\include\classregistry.h">
+				RelativePath="..\..\yake\reflection\classregistry.h">
 			</File>
 			<File
-				RelativePath="..\include\event.h">
+				RelativePath="..\..\yake\reflection\event.h">
 			</File>
 			<File
-				RelativePath="..\include\exception.h">
+				RelativePath="..\..\yake\reflection\events.h">
 			</File>
 			<File
-				RelativePath="..\include\field.h">
+				RelativePath="..\..\yake\reflection\exception.h">
 			</File>
 			<File
-				RelativePath="..\include\method.h">
+				RelativePath="..\..\yake\reflection\field.h">
 			</File>
 			<File
-				RelativePath="..\include\object.h">
+				RelativePath="..\..\yake\reflection\method.h">
 			</File>
 			<File
-				RelativePath="..\include\property.h">
+				RelativePath="..\..\yake\reflection\object.h">
 			</File>
 			<File
-				RelativePath="..\include\reflection.h">
+				RelativePath="..\..\yake\reflection\property.h">
 			</File>
 			<File
-				RelativePath="..\include\registered.h">
+				RelativePath="..\..\yake\reflection\reflection.h">
 			</File>
 			<File
-				RelativePath="..\include\static_init.h">
+				RelativePath="..\..\yake\reflection\registered.h">
 			</File>
 			<File
-				RelativePath="..\include\staticfield.h">
+				RelativePath="..\..\yake\reflection\static_init.h">
 			</File>
 			<File
-				RelativePath="..\include\staticmethod.h">
+				RelativePath="..\..\yake\reflection\staticfield.h">
 			</File>
 			<File
-				RelativePath="..\include\utility.h">
+				RelativePath="..\..\yake\reflection\staticmethod.h">
+			</File>
+			<File
+				RelativePath="..\..\yake\reflection\utility.h">
 			</File>
 			<Filter
 				Name="bind_lua"
 				Filter="">
 				<File
-					RelativePath="..\include\bind_lua\any_convertors.h">
+					RelativePath="..\..\yake\reflection\bind_lua\any_convertors.h">
 				</File>
 				<File
-					RelativePath="..\include\bind_lua\bind_lua.h">
+					RelativePath="..\..\yake\reflection\bind_lua\bind_lua.h">
 				</File>
 				<File
-					RelativePath="..\include\bind_lua\bind_to_lua.h">
+					RelativePath="..\..\yake\reflection\bind_lua\bind_to_lua.h">
 				</File>
 				<File
-					RelativePath="..\include\bind_lua\do_string.h">
+					RelativePath="..\..\yake\reflection\bind_lua\do_string.h">
 				</File>
 				<File
-					RelativePath="..\include\bind_lua\lua_handler_to_cpp.h">
+					RelativePath="..\..\yake\reflection\bind_lua\lua_handler_to_cpp.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="bind_network"
 				Filter="">
 				<File
-					RelativePath="..\include\bind_network\bind_network.h">
+					RelativePath="..\..\yake\reflection\bind_network\bind_network.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="bind_serialization"
 				Filter="">
 				<File
-					RelativePath="..\include\bind_serialization\bind_serialization.h">
+					RelativePath="..\..\yake\reflection\bind_serialization\bind_serialization.h">
 				</File>
 			</Filter>
 			<Filter
 				Name="yake"
 				Filter="">
-				<File
-					RelativePath="..\include\events.h">
-				</File>
 			</Filter>
 		</Filter>
 		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\src\reflection.cpp">
+				RelativePath="..\..\src\yake\reflection\reflection.cpp">
 			</File>
 			<Filter
 				Name="bind_lua"
 				Filter="">
 				<File
-					RelativePath="..\src\bind_lua\lua_handler_to_cpp.cpp">
+					RelativePath="..\..\src\yake\reflection\bind_lua\lua_handler_to_cpp.cpp">
 				</File>
 			</Filter>
 			<Filter
 				Name="yake"
 				Filter="">
 				<File
-					RelativePath="..\src\events.cpp">
+					RelativePath="..\..\src\yake\reflection\events.cpp">
 				</File>
 				<File
-					RelativePath="..\src\main.cpp">
+					RelativePath="..\..\src\yake\reflection\main.cpp">
 				</File>
 			</Filter>
 		</Filter>
