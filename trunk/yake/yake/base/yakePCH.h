@@ -53,6 +53,8 @@
 #include "math/yakeColor.h"
 #include "math/yakeGeometry.h"
 #include "math/yakeSimpleSpline.h"
+#include "math/yakePlane.h"
+#include "math/yakeRay.h"
 
 #include "yakeState.h"
 #include "yakeParamHolder.h"
