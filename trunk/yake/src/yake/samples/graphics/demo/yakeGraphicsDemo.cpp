@@ -72,9 +72,7 @@ public:
 		YAKE_ASSERT( pC );
 		pC->setNearClipDistance( 1. );
 
-		// used for shadows
-		// incase infinite far distance is not supported
-		pC->setFarClipDistance( 100000 );
+		pC->setFarClipDistance( 2000 );
 
 		mVPs.push_back( std::pair<IViewport*,ICamera*>(mGWorld->createViewport( pC ), pC) );
 		size_t idx = mVPs.size()-1;
@@ -247,13 +245,18 @@ public:
 		mGWorld = getGraphicsSystem().createWorld();
 		YAKE_ASSERT( mGWorld );
 
-		mGWorld->setShadowsEnabled( true );
+		//NOTE: Make sure you create a camera before calling mGWorld->setShadowsEnabled(true)
+		// when using "ogre3d" and the terrain scene manager with modulated texture shadows.
+		// The first camera created will be used as the primary camera by the scene manager
+		// and it crashes wildly if it's a texture shadow camera!
 
 		createCameraViewportPair( 0.0, 0.0, 1, 1, 10 );
 		//createCameraViewportPair( 0.0, 0.0, 0.5, 0.5, 10 );
 		//createCameraViewportPair( 0.5, 0.0, 0.5, 0.5, 11 );
 		//createCameraViewportPair( 0.0, 0.5, 0.5, 0.5, 12 );
 		//createCameraViewportPair( 0.5, 0.5, 0.5, 0.5, 13 );
+
+		mGWorld->setShadowsEnabled( true );
 
 		if (mVPs[0].second)
 		{
@@ -353,7 +356,8 @@ public:
 			mLightTwoNode->setPosition( mVPs[0].second->getPosition() + Vector3(100,100,0) );
 
 			// render the scene
-			mGWorld->render( timeElapsed );
+			if (!shutdownRequested())
+				mGWorld->render( timeElapsed );
 		}
 
 		mSunLightNode.reset();
