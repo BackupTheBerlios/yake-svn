@@ -1,3 +1,0 @@
-- events any benutzen für script anbindung siehe any converters
-- rx2 als standalone lib bei sourceforge anmelden? => verweis auf yake
-- boost fragen
