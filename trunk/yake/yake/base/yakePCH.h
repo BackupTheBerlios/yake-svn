@@ -29,6 +29,7 @@
 #include "templates/yakeRegistry.h"
 #include "templates/yakeVector.h"
 #include "templates/yakePointer.h"
+#include <yake/base/templates/yakeDeque.h>
 
 #include "mpl/yakeAbstractFactory.h"
 #include "mpl/yakeSequences.h"
@@ -54,7 +55,9 @@
 #include "math/yakeGeometry.h"
 #include "math/yakeSimpleSpline.h"
 
+#include "yakeParamHolder.h"
 #include "yakeMovable.h"
+#include "yakeCommandInterface.h"
 
 
 
