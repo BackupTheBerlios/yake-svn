@@ -26,7 +26,7 @@
 //============================================================================
 // Preprocessor check
 #if (YAKE_PLATFORM != PLATFORM_WIN32) || ( YAKE_COMP_VER < 1310 )
-#	error "yake.base.prerequisites.vc71: This file should only be included when building using Microsoft Visual C++ 7.1 on the Win32 Platform."
+#	error "Yake platform/compiler error: This file should only be included when building using Microsoft Visual C++ 7.1 on the Win32 Platform."
 #endif
 
 //============================================================================

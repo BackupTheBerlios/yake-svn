@@ -84,7 +84,7 @@
 */
 #	error("Yake signal error: Boost as signals provider not longer supported")
 #elif defined( YAKE_SIGNALS_USE_TTL )
-#	pragma message("Yake signal config: TTL for signal-slot mechanism")
+#	pragma message("Yake signal config: yake.base.temmplates.signals.ttl")
 
 #	if YAKE_COMPILER == COMPILER_MSVC && YAKE_COMP_VER > 1300
 #		define Bind0( METHOD, OBJECT ) boost::bind( METHOD, OBJECT, _1 )
