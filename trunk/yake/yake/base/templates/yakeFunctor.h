@@ -29,7 +29,7 @@
 #	include <yake/base/yakePrerequisites.h>
 #endif
 // Boost
-#include <dependencies/boost/boost/function.hpp>
+#include <boost/function.hpp>
 
 
 //============================================================================

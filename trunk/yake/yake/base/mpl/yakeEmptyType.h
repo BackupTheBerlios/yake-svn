@@ -21,7 +21,7 @@
 #ifndef YAKE_BASE_MPL_EMPTYTYPE_H
 #define YAKE_BASE_MPL_EMPTYTYPE_H
 
-#include <dependencies/boost/boost/mpl/empty_base.hpp>
+#include <boost/mpl/empty_base.hpp>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

@@ -24,7 +24,7 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <dependencies/boost/boost/mpl/lambda.hpp>
+#include <boost/mpl/lambda.hpp>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

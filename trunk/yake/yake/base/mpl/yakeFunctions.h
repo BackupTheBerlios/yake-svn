@@ -24,8 +24,8 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <dependencies/boost/boost/mpl/apply.hpp>
-#include <dependencies/boost/boost/mpl/identity.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/identity.hpp>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

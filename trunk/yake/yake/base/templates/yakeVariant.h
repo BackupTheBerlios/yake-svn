@@ -21,7 +21,7 @@
 #ifndef YAKE_BASE_TEMPLATES_VARIANT_H
 #define YAKE_BASE_TEMPLATES_VARIANT_H
 
-#include <dependencies/ttl/ttl/var/variant.hpp>
+#include <ttl/var/variant.hpp>
 
 #define Variant ttl::var::variant
 #define VariantGet boost::get

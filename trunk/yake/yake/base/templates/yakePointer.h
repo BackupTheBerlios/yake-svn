@@ -29,9 +29,9 @@
 #	include "../yakePrerequisites.h"
 #endif
 // Boost
-#include <dependencies/boost/boost/shared_ptr.hpp>
-#include <dependencies/boost/boost/assert.hpp>
-#include <dependencies/boost/boost/mpl/assert_is_same.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/assert.hpp>
+#include <boost/mpl/assert_is_same.hpp>
 // Yake
 #include <yake/base/yakeException.h>
 #include <yake/base/mpl/yakeCast.h>

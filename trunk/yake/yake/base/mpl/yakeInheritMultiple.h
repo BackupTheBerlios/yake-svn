@@ -24,9 +24,9 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <dependencies/boost/boost/mpl/apply.hpp>
-#include <dependencies/boost/boost/mpl/fold.hpp>
-#include <dependencies/boost/boost/mpl/lambda.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/fold.hpp>
+#include <boost/mpl/lambda.hpp>
 
 #include "yakeEmptyType.h"
 

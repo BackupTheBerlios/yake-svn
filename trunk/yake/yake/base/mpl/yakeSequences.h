@@ -24,10 +24,10 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <dependencies/boost/boost/mpl/list.hpp>
+#include <boost/mpl/list.hpp>
 
-#include <dependencies/boost/boost/mpl/pop_front.hpp>
-#include <dependencies/boost/boost/mpl/front.hpp>
+#include <boost/mpl/pop_front.hpp>
+#include <boost/mpl/front.hpp>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
