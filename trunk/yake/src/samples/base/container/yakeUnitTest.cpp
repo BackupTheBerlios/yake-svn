@@ -55,7 +55,7 @@ int main()
 	myVector2.assign( 10, 111 );
 	std::cout << "Size: " << (unsigned int) myVector2.size() << std::endl;
 	assert( myVector2.size() == 10 );
-	copy( myVector2.begin(), myVector2.end(), std::ostream_iterator< int >( std::cout, " " ) );
+	std::copy( myVector2.begin(), myVector2.end(), std::ostream_iterator< int >( std::cout, " " ) );
 	std::cout << std::endl;
 
 	// Erase
@@ -63,24 +63,24 @@ int main()
 	myVector2.clear();
 
 	std::generate_n( std::back_inserter( myVector2 ), 9, IntSequence( 1 ) );
-	copy( myVector2.begin(), myVector2.end(), std::ostream_iterator< int >( std::cout, " " ) );
+	std::copy( myVector2.begin(), myVector2.end(), std::ostream_iterator< int >( std::cout, " " ) );
 	std::cout << std::endl;
 
 	myVector2.erase( std::find( myVector2.begin(), myVector2.end(), 2 ) );
-	copy( myVector2.begin(), myVector2.end(), std::ostream_iterator< int >( std::cout, " " ) );
+	std::copy( myVector2.begin(), myVector2.end(), std::ostream_iterator< int >( std::cout, " " ) );
 	std::cout << std::endl;
 	assert( myVector2.size() == 8 );
 
 	myVector2.resize( 6 );
 	assert( myVector2.size() == 6 );
-	copy( myVector2.begin(), myVector2.end(), std::ostream_iterator< int >( std::cout, " " ) );
+	std::copy( myVector2.begin(), myVector2.end(), std::ostream_iterator< int >( std::cout, " " ) );
 	std::cout << std::endl;
 
 	// Iter
 	std::cout << std::endl << "# Iter # " << std::endl;
-	copy( myVector2.begin(), myVector2.end(), std::ostream_iterator< int >( std::cout, " " ) );
+	std::copy( myVector2.begin(), myVector2.end(), std::ostream_iterator< int >( std::cout, " " ) );
 	std::cout << std::endl;
-	copy( myVector2.rbegin(), myVector2.rend(), std::ostream_iterator< int >( std::cout, " " ) );
+	std::copy( myVector2.rbegin(), myVector2.rend(), std::ostream_iterator< int >( std::cout, " " ) );
 	std::cout << std::endl;
 
 
