@@ -163,6 +163,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesThread1", "samples\t
 		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samples_application", "samples\application\samples_application.vcproj", "{44C8B2A3-281A-4910-A737-7EA1F6F43E35}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -285,6 +289,10 @@ Global
 		{2E9B8C5F-AC44-478B-AE7F-8C6DC3EA3654}.Debug.Build.0 = Debug|Win32
 		{2E9B8C5F-AC44-478B-AE7F-8C6DC3EA3654}.Release.ActiveCfg = Release|Win32
 		{2E9B8C5F-AC44-478B-AE7F-8C6DC3EA3654}.Release.Build.0 = Release|Win32
+		{44C8B2A3-281A-4910-A737-7EA1F6F43E35}.Debug.ActiveCfg = Debug|Win32
+		{44C8B2A3-281A-4910-A737-7EA1F6F43E35}.Debug.Build.0 = Debug|Win32
+		{44C8B2A3-281A-4910-A737-7EA1F6F43E35}.Release.ActiveCfg = Release|Win32
+		{44C8B2A3-281A-4910-A737-7EA1F6F43E35}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

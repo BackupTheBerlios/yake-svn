@@ -9,6 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "input", "input.vcproj", "{1
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphics", "graphics.vcproj", "{ECC8FA24-93AC-4659-8EBD-26B6F418AC64}"
 	ProjectSection(ProjectDependencies) = postProject
+		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "physics", "physics.vcproj", "{1C674F1C-7DDF-4AC5-A52A-14C31248A9D4}"
@@ -19,8 +20,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "scripting", "scripting.vcpr
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphicsOgre", "plugins\graphics\graphicsOgre.vcproj", "{A2C2A0B2-2EB0-4254-891D-FE93466809CF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphicsOGRE", "plugins\graphics\graphicsOgre.vcproj", "{A2C2A0B2-2EB0-4254-891D-FE93466809CF}"
 	ProjectSection(ProjectDependencies) = postProject
+		{ECC8FA24-93AC-4659-8EBD-26B6F418AC64} = {ECC8FA24-93AC-4659-8EBD-26B6F418AC64}
+		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
 	EndProjectSection
 EndProject
 Global
