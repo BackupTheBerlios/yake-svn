@@ -142,6 +142,9 @@
 				RelativePath="..\..\..\..\src\yake\plugins\graphicsOgre\graphicsOgreNode.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\yake\plugins\graphicsOgre\graphicsOgreParticleSystem.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\yake\plugins\graphicsOgre\graphicsOgreSkeleton.cpp">
 			</File>
 			<File
@@ -190,6 +193,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\graphicsOgre\graphicsOgreNode.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\plugins\graphicsOgre\graphicsOgreParticleSystem.h">
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\graphicsOgre\graphicsOgreSkeleton.h">

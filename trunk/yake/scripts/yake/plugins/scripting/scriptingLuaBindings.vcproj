@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="scriptingLuaBindings"
+	Name="scriptingBindingsLua"
 	ProjectGUID="{CA63F621-0912-4551-B51A-7BD18F491181}"
 	Keyword="Win32Proj">
 	<Platforms>
