@@ -33,16 +33,40 @@ namespace app {
 namespace model {
 namespace vehicle {
 
+	enum VehicleGearMode {
+		VGM_FORWARD,
+		VGM_NEUTRAL,
+		VGM_REVERSE
+	};
+
+	/** Draft for a vehicle input component. The interface is in parts similar to that of the
+		physical interface. Naturally.
+	*/
 	class YAPP_BASE_API IInputVehicleComponent : public InputComponent
 	{
 	public:
 		YAKE_DECLARE_CLASS( IInputVehicleComponent );
 		YAKE_DECLARE_REGISTRY( IInputVehicleComponent );
 
-		virtual void steerAnalog( const String & rSteerGroup, const real targetSteer ) = 0;
-		virtual void brakeAnalog( const String & rBrake, const real ratio ) = 0;
-		virtual void throttleAnalog( const String & rEngine, const real ratio ) = 0;
+		/** Set steering value. Value is in the range [-1,1]. */
+		virtual void steerAnalog( const size_t idxSteerGroup, const real targetSteer ) = 0;
+
+		/** Set braking value for a given brake. Value is in the range [0,1]. */
+		virtual void brakeAnalog( const size_t idxBrake, const real ratio ) = 0;
+
+		/** Set throttle for a given engine. Value is in the range [0,1]. */
+		virtual void throttleAnalog( const size_t idxEngine, const real throttle ) = 0;
+
 		//virtual void handbrake( const bool activate ) = 0;
+
+		/** Shift up for a given engine. */
+		virtual void shiftGearUp( const size_t idxEngine ) = 0;
+		/** Shift down for a given engine. */
+		virtual void shiftGearDown( const size_t idxEngine ) = 0;
+		/** Get current gear's mode (reverse, neutral, forward) for a given engine. */
+		virtual VehicleGearMode getCurrentGearMode( const size_t idxEngine ) const = 0;
+		/** Get current gear for a given engine. */
+		virtual uint8 getCurrentGear( const size_t idxEngine ) const = 0;
 	};
 
 }
