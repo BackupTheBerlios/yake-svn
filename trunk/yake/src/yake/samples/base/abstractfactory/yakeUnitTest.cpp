@@ -66,7 +66,7 @@ struct C {};
 typedef list<A, B, C> system_list;
 
 struct test_linear : 
-	public InheritLinear
+	private InheritLinear
 	< 
 		system_list, 
 		typename lambda< semi_init_system_holder<_, _> >::type,
