@@ -36,6 +36,165 @@ IMPLEMENT_CLASS(LuaTest, lua)
 
 // todo optionale geniersche script erweiterung hier (scipt wrapper benutzen)
 
+
+// -----------------------------------------
+// lua property
+
+struct null {};
+
+// accepts any number of arguments and returns the according type selected by the holder
+template< template<int, typename, typename, typename> class holder, typename T1 = null, typename T2 = null, typename T3 = null>
+struct construct_type_from_arbitrary_args
+{
+	// signature dispatching according to the number of arguments
+	typedef typename boost::mpl::if_
+	< 
+		boost::is_same<T3, null>, 
+		typename holder<2, T1, T2, T3>::type,
+		typename boost::mpl::if_
+		< 
+			boost::is_same<T2, null>, 
+			typename holder<1, T1, T2, T3>::type,
+			typename boost::mpl::if_
+			< 
+				boost::is_same<T1, null>, 
+				typename holder<0, T1, T2, T3>::type,
+				typename holder<3, T1, T2, T3>::type
+			>
+		>
+	>::type type;
+};
+
+// lua operator signatures
+// The get function is returning a null pointer of a specific type,
+// this type is used as function signature (constructor<> holds the signature
+// and the second parameter serves as const/non-const flag). 
+// The overloaded template function .def() of class_ accepts the
+// signature and automagically resolves the paramater types, because
+// it's a template function.
+template<int, typename T1, typename T2, typename T3>
+struct signature_holder {};
+
+template<typename T1, typename T2, typename T3>
+struct signature_holder<0, T1, T2, T3> 
+{
+  static luabind::detail::application_operator
+	< 
+		luabind::constructor<>, 
+		true
+	> * signature()
+	{ return 0; }
+};
+
+template<typename T1, typename T2, typename T3>
+struct signature_holder<1, T1, T2, T3> 
+{
+		static luabind::detail::application_operator
+		< 
+			luabind::constructor<	luabind::other<T1> >, 
+			true
+		> * signature()
+		{ return 0; }
+};
+
+template<typename T1, typename T2, typename T3>
+struct signature_holder<2, T1, T2, T3> 
+{
+	static luabind::detail::application_operator
+	< 
+		luabind::constructor
+		<
+			luabind::other<T1>, 
+			luabind::other<T2>
+		>, 
+		true
+	> * signature()
+	{ return 0; }
+};
+
+template<typename T1, typename T2, typename T3>
+struct signature_holder<3, T1, T2, T3> 
+{
+	static luabind::detail::application_operator
+	< 
+		luabind::constructor
+		<
+			luabind::other<T1>, 
+			luabind::other<T2>,
+			luabind::other<T3>
+		>, 
+		true
+	> * signature()
+	{ return 0; }
+};
+
+// selects a signature holding template according to the number of arguments
+template<int num_args, typename T1, typename T2, typename T3>
+struct get_signature_holder 
+{
+	typedef typename signature_holder<num_args, T1, T2, T3> type;
+};
+
+template<typename T1 = null, typename T2 = null, typename T3 = null>
+struct get_signature : construct_type_from_arbitrary_args<get_signature_holder, T1, T2, T3>::type {};
+
+struct A
+{
+	struct my_event 
+	{	
+		void attach() { std::cout << "hello\n"; } 
+		bool operator()(int i, int j) const { std::cout << "hallo" << i << std::endl; return true; } 
+	};
+	my_event e;
+};
+
+// -----------------------------------------
+// lua event bindings
+struct rx_A
+{
+	CLASS(rx_A, NullClass, lua);
+	EVENT(public, e, (int));
+
+	rx_A() { std::cout << "rx_A\n"; }
+
+private:
+	struct register_event_e
+	{
+		struct initor
+		{
+			initor() 
+			{ 
+				// events
+				using namespace luabind;
+				module(L)
+				[ 
+					class_<boost::function_base>("function_base"),
+					class_<reflection::lua_event_base>("lua_event_base")
+						.def("attach_handler", &reflection::lua_event_base::attach_handler)
+				];
+
+				/* todo: hold list of event typeids and check whether this event is registered or not */ 
+				using namespace luabind; 
+				module(L) 
+				[ 
+					class_<reflection::event<int>, reflection::lua_event_base>("e") 
+						.def(self(other<int>())) 
+				]; 
+				get_lua_class().def_readonly("e", &rx_A::e); 
+				commit_lua_properties(); 
+			} 
+		}; 
+
+		register_event_e() 
+		{ static initor init; } 
+	} reg_event_e;
+
+};
+IMPLEMENT_CLASS(rx_A, lua)
+
+
+
+
 // -----------------------------------------
 // network
 struct NetworkPlayerTest;
@@ -135,11 +294,11 @@ struct Handler
 void handler(int fara)
 { std::cout << "handler(" << fara << ")\n"; }
 
+
 // -----------------------------------------
 // main
 int main()
 {
-
 	// events
 	{
 		// todo ClassRegistry::createInstance( "EventTest" ); ?
@@ -211,11 +370,33 @@ int main()
 		assert(value == 100);
 	}
 
+	// porperty tests for the polished event bindings
+	{
+		using namespace luabind;
+		module(L)
+		[
+			class_<A::my_event>("my_event")
+				.def("attach", &A::my_event::attach)
+				.def(get_signature<int, int>::signature()),
+			class_<A>("A")
+				.def(constructor<>())
+				.def_readwrite("e", &A::e)
+		];
+		dostring(L, "a = A(); a.e:attach(); a.e(123, 456);");
+	}
+
 	// lua bindings
 	{
+		// properties and methods
 		cout << "[ lua ]\n";
 		dostring(L, "o = LuaTest(); o.a=5; o:foo(); print(o.a);");
 		LuaTest o; o.a = 589;	o.foo(); cout << o.a << std::endl;
+
+		// events
+		dostring(L, "function do_it_in_script(arg1) print('do_it_in_script(' .. arg1 .. ')') end");
+		dostring(L, "rx_a = rx_A();"); 
+		dostring(L, "rx_a.e:attach_handler(do_it_in_script);"); 
+		dostring(L, "rx_a.e(123);");
 	}
 
 	// networking

@@ -12,8 +12,11 @@
 
 /*****************************************************************************
     MACROS
- *****************************************************************************/
+*****************************************************************************/
 
+#define REMOVE_BRACES(ARG1) ARG1
+
+// todo: use construct_type_from_arbitry_args to construct an event class for typeid()
 #define RX_EVENT(ACCESS_ATTR, EVENT_NAME, ARGS) \
 private: \
     struct __event_##EVENT_NAME##__ \

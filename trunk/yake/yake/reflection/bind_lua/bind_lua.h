@@ -22,7 +22,6 @@ bool dostring(lua_State* L, const char* str)
 
 #define LUABIND_NO_HEADERS_ONLY
 #include <luabind/luabind.hpp>
-#include <luabind/return_reference_to_policy.hpp>
 
 
 // Lua
@@ -179,9 +178,6 @@ struct register_property_##NAME \
 	{ static initor init; } \
 } reg_property_##NAME;
 
-
-
-#define REMOVE_BRACES(ARG1) ARG1
 
 #define LUA_EVENT(ACCESS_ATTR, EVENT_NAME, ARGS) \
 private: \
