@@ -1,5 +1,5 @@
-#ifndef _PROPERTY_H_
-#define _PROPERTY_H_
+#ifndef _EXCEPTION_H_
+#define _EXCEPTION_H_
 
 #include "reflection.h"
 
