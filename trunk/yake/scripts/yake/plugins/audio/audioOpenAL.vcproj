@@ -73,7 +73,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/openalpp/include;../../../../dependencies/OpenAL/Include"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/openalpp/include;../../../../dependencies/OpenAL/Include;../../../../dependencies/OpenThreads/Include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_AUDIO_OPENAL_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
@@ -89,7 +89,7 @@
 				AdditionalDependencies="oalpp.lib audio.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/openalpp/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/openalpp/lib;../../../../dependencies/OpenThreads/lib/win32"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
