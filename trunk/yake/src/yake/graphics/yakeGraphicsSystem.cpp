@@ -30,10 +30,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake 
-{
-namespace graphics 
-{
+namespace yake {
+namespace graphics {
 
 YAKE_IMPLEMENT_REGISTRY( IGraphicsSystem )
 
