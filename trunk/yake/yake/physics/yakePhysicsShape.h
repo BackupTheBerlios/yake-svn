@@ -51,7 +51,7 @@ namespace physics {
 		ST_CYLINDER,
 		ST_TRIANGLE_MESH,
 		ST_VOXEL_SET,
-		ST_TRANSFORM_CONTAINER, //@todo superfluous?
+		//ST_TRANSFORM_CONTAINER, //@todo superfluous?
 		ST_OTHER
 	};
 
@@ -157,11 +157,11 @@ namespace physics {
 		virtual ShapeType getType() const = 0;
 	};
 
-	/** "Static" shapes (IShape) can be positioned and rotated at creation time only.
+	/** Immovable shapes can be positioned and rotated at creation time only.
 		Movable shapes on the other hand can be moved and rotated at any time.
 
-		If they are attached to an Actor, position and orientation are relative to their parent
-		(usually the Actor or a special Transform Shape (ST_TRANSFORM_CONTAINER)).
+		If they are attached to an MovableActor or DynamicActor, position and orientation are
+		relative to their parent.
 	*/
 	class IMovableShape : public IShape, public base::Movable
 	{

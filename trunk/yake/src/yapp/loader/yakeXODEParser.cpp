@@ -37,7 +37,7 @@ namespace xode {
 	}
 
 	//------------------------------------------------------
-	bool XODEParser::load(  SharedPtr<dom::INode> const& docNode, physics::IWorld* pPWorld )
+	bool XODEParser::load(  const SharedPtr<dom::INode> docNode, physics::IWorld* pPWorld )
 	{
 		std::cout << "load()" << std::endl;
 		
@@ -47,6 +47,9 @@ namespace xode {
 		mDocNode = docNode;
 		mPWorld = pPWorld;
 		
+		/// clearing out...
+		mJointDescriptions.clear();
+		
 		std::cout << "parsing xode..." << std::endl;
 		
 		readXODE( mDocNode );
@@ -55,7 +58,7 @@ namespace xode {
 	}
 	
 	//------------------------------------------------------
-	void XODEParser::readXODE( SharedPtr<dom::INode> const& pNode )
+	void XODEParser::readXODE( const SharedPtr<dom::INode> pNode )
 	{
 		YAKE_ASSERT( pNode );
 		
@@ -69,10 +72,12 @@ namespace xode {
 		std::cout << "xode: found world = " << ( pWorldNode.get() ? "yes!" : "no :(" ) << std::endl;
 		
 		readWorld( pWorldNode );
+		
+		createJointsFromDescriptions();
 	}
 	
 	//------------------------------------------------------
-	void XODEParser::readWorld( SharedPtr<dom::INode> const& pWorldNode )
+	void XODEParser::readWorld( const SharedPtr<dom::INode> pWorldNode )
 	{
 		YAKE_ASSERT( pNode );
 		
@@ -92,15 +97,15 @@ namespace xode {
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readSpace( SharedPtr<dom::INode> const& pSpaceNode )
+	void XODEParser::readSpace( const SharedPtr<dom::INode> pSpaceNode )
 	{
 		std::cout << "readSpace()" << std::endl;
 			
-		dom::NodeList const& nodes = pSpaceNode->getNodes();
+		const dom::NodeList& nodes = pSpaceNode->getNodes();
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				yake::base::StringUtil::toLowerCase( (*it)->getValueAs<String>("name") );
+				yake::base::StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
 			
 			if ( nodeName == "body" )
 			{
@@ -136,7 +141,7 @@ namespace xode {
 	}; 
 	
 	//------------------------------------------------------
-	void XODEParser::readVector3( SharedPtr<dom::INode> const& pVecNode, Vector3& rVec )
+	void XODEParser::readVector3( const SharedPtr<dom::INode> pVecNode, Vector3& rVec )
 	{
 		real x = StringUtil::parseReal( pVecNode->getAttributeValueAs<String>( "x" ) );
 		real y = StringUtil::parseReal( pVecNode->getAttributeValueAs<String>( "y" ) );
@@ -146,13 +151,13 @@ namespace xode {
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readScale( SharedPtr<dom::INode> const& pScaleNode, Vector3& rScale )
+	void XODEParser::readScale( const SharedPtr<dom::INode> pScaleNode, Vector3& rScale )
 	{
 		readVector3( pScaleNode, rScale );
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readPosition( SharedPtr<dom::INode> const& pPosNode, Vector3& rPos )
+	void XODEParser::readPosition( const SharedPtr<dom::INode> pPosNode, Vector3& rPos )
 	{
 		readVector3( pPosNode, rPos );
 	}
@@ -164,7 +169,7 @@ namespace xode {
 	 * @param pQuatNode 
 	 * @param rQuat 
 	 */
-	void XODEParser::readQuaternion( SharedPtr<dom::INode> const& pQuatNode, Quaternion& rQuat )
+	void XODEParser::readQuaternion( const SharedPtr<dom::INode> pQuatNode, Quaternion& rQuat )
 	{
 		real x = StringUtil::parseReal( pQuatNode->getAttributeValueAs<String>( "x" ) );
 		real y = StringUtil::parseReal( pQuatNode->getAttributeValueAs<String>( "y" ) );
@@ -180,7 +185,7 @@ namespace xode {
 	 * @param pRotNode 
 	 * @param rRot 
 	 */
-	void XODEParser::readAxisAngleRot( SharedPtr<dom::INode> const& pRotNode, Quaternion& rRot )
+	void XODEParser::readAxisAngleRot( const SharedPtr<dom::INode> pRotNode, Quaternion& rRot )
 	{
 		real x = StringUtil::parseReal( pRotNode->getAttributeValueAs<String>( "x" ) );
 		real y = StringUtil::parseReal( pRotNode->getAttributeValueAs<String>( "y" ) );
@@ -191,9 +196,9 @@ namespace xode {
 	}
 	  
 	//------------------------------------------------------
-	void XODEParser::readRotation( SharedPtr<dom::INode> const& pRotNode, Quaternion& rRot )
+	void XODEParser::readRotation( const SharedPtr<dom::INode> pRotNode, Quaternion& rRot )
 	{
-		dom::NodeList const& nodes = pRotNode->getNodes();
+		const dom::NodeList& nodes = pRotNode->getNodes();
 		
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
@@ -216,9 +221,9 @@ namespace xode {
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readTransform( SharedPtr<dom::INode> const& pTransformNode, Transform& rTrans )
+	void XODEParser::readTransform( const SharedPtr<dom::INode> pTransformNode, Transform& rTrans )
 	{
-		dom::NodeList const& nodes = pTransformNode->getNodes();
+		const dom::NodeList& nodes = pTransformNode->getNodes();
 		
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
@@ -245,7 +250,7 @@ namespace xode {
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readMassShape( SharedPtr<dom::INode> const& pMShapeNode, 
+	void XODEParser::readMassShape( const SharedPtr<dom::INode> pMShapeNode, 
 					physics::IBody* pBody, 
 					Transform const& rParentTransform )
 	{
@@ -254,7 +259,7 @@ namespace xode {
 
 		std::cout << "reading mass_shape with density = " << density << " " << std::endl;
 	
-		dom::NodeList const& nodes = pMShapeNode->getNodes();
+		const dom::NodeList& nodes = pMShapeNode->getNodes();
 		
 		typedef dom::NodeList::const_iterator NodeListIter;
 		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it)
@@ -268,33 +273,43 @@ namespace xode {
 			{
 				real radius, length;
 				readCylinder( *it, radius, length );
-				YAKE_ASSERT( false ).error( "cylinder mass is NYI" );
+				
+				physics::IBody::CylinderMassDesc desc( radius, length, density, rParentTransform.mPosition );
+				
+				pBody->addMass( desc );
 			}
 			else if ( nodeName == "sphere" )
 			{
 				real radius;
 				readSphere( *it, radius );
-				pBody->setMassSphere( radius, density );
+				
+				physics::IBody::SphereMassDesc desc( radius, density, rParentTransform.mPosition );
+				
+				pBody->addMass( desc );
 			}
 			else if ( nodeName == "box" )
 			{
 				real sX, sY, sZ;
 				readBox( *it, sX, sY, sZ );
-				pBody->setMassBox( sX, sY, sZ, density );
+				
+				physics::IBody::BoxMassDesc desc( sX, sY, sZ, density, rParentTransform.mPosition );
+				
+				pBody->addMass( desc );
 			}
 			else if ( nodeName == "cappedCylinder" )
 			{
 				real radius, length;
 				readCappedCylinder( *it, radius, length );
-				YAKE_ASSERT( false ).error( "cappedCylinder mass is NYI" );
+				
+				physics::IBody::CapsuleMassDesc desc( radius, length, density, rParentTransform.mPosition );
+				
+				pBody->addMass( desc );
 			}
 		}
-		
-		pBody->translateMass( rParentTransform.mPosition );
 	}
 		
 	//------------------------------------------------------
-	void XODEParser::readMassAdjust( SharedPtr<dom::INode> const& pMAdjustNode, 
+	void XODEParser::readMassAdjust( const SharedPtr<dom::INode> pMAdjustNode, 
 					 physics::IBody* pBody )
 	{
 			real total = StringUtil::parseReal( pMAdjustNode->getAttributeValueAs<String>( "total" ) );
@@ -303,9 +318,9 @@ namespace xode {
 	}
 	
 	//------------------------------------------------------
-	void XODEParser::readMass( SharedPtr<dom::INode> const& pMassNode, physics::IBody* pBody, Transform const& rParentTransform )
+	void XODEParser::readMass( const SharedPtr<dom::INode> pMassNode, physics::IBody* pBody, Transform const& rParentTransform )
 	{
-		dom::NodeList const& nodes = pMassNode->getNodes();
+		const dom::NodeList& nodes = pMassNode->getNodes();
 
 		// Seek transform
 		Transform massTransform;
@@ -328,7 +343,7 @@ namespace xode {
 		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>("name") );
+				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
 
 			if ( nodeName == "mass_shape" )
 			{
@@ -347,21 +362,25 @@ namespace xode {
 	} 
 
 	//------------------------------------------------------
-	void XODEParser::readBody( SharedPtr<dom::INode> const& pBodyNode )
+	void XODEParser::readBody( const SharedPtr<dom::INode> pBodyNode )
 	{
 		const String name = pBodyNode->getAttributeValueAs<String>( "name" );
 		std::cout << "readBody() [" << name << "]" << std::endl;
 		
-		SharedPtr<physics::IComplexObject> pComplexObj( mPWorld->createEmptyPhysicsObject() );
-		YAKE_ASSERT( pComplexObj );
+		physics::IDynamicActor::Desc actorDesc;
 		
-		physics::IBody* pBody = mPWorld->createBody();
-		YAKE_ASSERT( pBody );
+		SharedPtr<physics::IActor> pActor = mPWorld->createActor( actorDesc );
 		
-		pComplexObj->setBody( pBody );
-		mBaseModel.addComplex( pComplexObj , name );
+		YAKE_ASSERT( pActor != NULL ).error( "Failed to create actor!" );
 		
-		dom::NodeList const& nodes = pBodyNode->getNodes();
+		physics::IDynamicActor* pDynActor =  dynamic_cast<physics::IDynamicActor*>( pActor.get() );
+		
+		physics::IBody* pBody = pDynActor->getBody();
+		YAKE_ASSERT( pBody != NULL );
+		
+		mBaseModel.addComplex( pActor , name );
+		
+		const dom::NodeList& nodes = pBodyNode->getNodes();
 		
 		
 		// Seek transform
@@ -381,24 +400,29 @@ namespace xode {
 		
 		if ( !bodyTransform.isIdentity() )
 		{
-			pBody->setPosition( bodyTransform.mPosition );
-			pBody->setOrientation( bodyTransform.mRotation );
+			pDynActor->setPosition( bodyTransform.mPosition );
+			pDynActor->setOrientation( bodyTransform.mRotation );
 		}
 
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>("name") );
+				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
 
 			std::cout << " body [" << name << "] has node #" << nodeName << std::endl;
 			
 			if ( nodeName == "geom" )
 			{
-				readGeom( *it, pComplexObj.get(), bodyTransform );
+				readGeom( *it, pActor.get(), bodyTransform );
 			}
 			else if ( nodeName == "mass" )
 			{
+				
 				readMass( *it, pBody, bodyTransform );
+			}
+			else if ( nodeName == "joint" )
+			{
+				readJoint( *it, name, bodyTransform );
 			}
 		}
 	}
@@ -412,24 +436,25 @@ namespace xode {
 	 * @param pGeomNode 
 	 * @param pParentObject 
 	 */
-	void XODEParser::readGeom( SharedPtr<dom::INode> const& pGeomNode, 
-				   physics::IComplexObject* pParentObject,
-				   Transform const& rParentTransform )
+	void XODEParser::readGeom( const SharedPtr<dom::INode> pGeomNode, 
+				   physics::IActor* pParentObject,
+				   const Transform& rParentTransform )
 	{
 		const String name = pGeomNode->getAttributeValueAs<String>( "name" );
 		std::cout << "readGeom() [" << name << "]" << std::endl;
 		
-		physics::ICollisionGeometry* pCollGeom = NULL;
+		physics::IShape* pShape = NULL;
 
 		if ( pParentObject == NULL )
 		{
-			// adding coll. geometry to new empty IComplexObject
-			pParentObject = mPWorld->createEmptyPhysicsObject();
-			SharedPtr<physics::IComplexObject> pCO( pParentObject );
+			// adding shape to new IStaticActor
+			physics::IStaticActor::Desc desc;
+			SharedPtr<physics::IActor> pCO = mPWorld->createActor( desc );
+			pParentObject = pCO.get();
 			mBaseModel.addComplex( pCO, name );
 		}
 
-		dom::NodeList const& nodes = pGeomNode->getNodes();
+		const dom::NodeList& nodes = pGeomNode->getNodes();
 		
 		// Looking for transform
 		NodeHunter hunter( "transform" );
@@ -437,7 +462,6 @@ namespace xode {
 		NodeListIter iTrans = 
 			std::find_if<NodeListIter,NodeHunter>( nodes.begin(), nodes.end(), hunter );
 
-			
 		Transform geomTransform;
 			
 		if ( iTrans != nodes.end() )
@@ -446,109 +470,188 @@ namespace xode {
 
 			readTransform( *iTrans, geomTransform );
 		}
+
 		
-		if ( !rParentTransform.isIdentity() )
+///FIXME We don't need derived transform here as it is automaitcally handled by concrete plugin
+/*		if ( !rParentTransform.isIdentity() )
 		{
 			geomTransform = geomTransform.getDerivedTransform( rParentTransform );
-		}
+		}*/
 		
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>("name") );
+				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
 
 			std::cout << " geom [" << name << "] has node #" << nodeName << std::endl;
 
-			//TODO Refactor this ifelse out (a map?)
-			// Refactor: map[name|func_returning_ptr_to_coll_geom]
-			// Refactor: pCollGeom = funcs[ name ]( *it )
 			if ( nodeName == "box" )
 			{
 				real sizeX, sizeY, sizeZ;
 				readBox( *it, sizeX, sizeY, sizeZ );
-				pCollGeom = mPWorld->createCollisionGeomBox( sizeX, sizeY, sizeZ );
+				
+				sizeX *= rParentTransform.mScale.x;
+				sizeY *= rParentTransform.mScale.y;
+				sizeZ *= rParentTransform.mScale.z;
+			
+				std::cout << " box with sizes: " << sizeX << ", " << sizeY << ", " << sizeZ << std::endl;
+				
+				physics::IShape::BoxDesc desc( 
+												Vector3( sizeX, sizeY, sizeZ ), 
+												NULL, 						// FIXME material
+												geomTransform.mPosition,
+												geomTransform.mRotation );
+										
+				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				
+				pParentObject->createShape( desc );
 			}
 			else if ( nodeName == "cappedCylinder" )
 			{
 				real radius, length;
 				readCappedCylinder( *it, radius, length );
-				YAKE_ASSERT( false ).error( "NOT implemented in Yake" ); //TODO
+				
+				real scale = ( rParentTransform.mScale.x 
+						+ rParentTransform.mScale.y
+						+ rParentTransform.mScale.z ) /3;
+					
+				radius *= scale;
+				length *= scale;
+				
+				physics::IShape::CapsuleDesc desc( 
+												length,
+												radius, 
+												NULL, 						// FIXME material
+												geomTransform.mPosition,
+												geomTransform.mRotation );
+										
+				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				
+				pParentObject->createShape( desc );
 			}
 			else if ( nodeName == "cone" )
 			{
 				real radius, length;
 				readCone( *it, radius, length );
+				
+				real scale = ( rParentTransform.mScale.x 
+						+ rParentTransform.mScale.y
+						+ rParentTransform.mScale.z ) /3;
+					
+				radius *= scale;
+				length *= scale;
+				
 				YAKE_ASSERT( false ).error( "NOT implemented in Yake" ); //TODO
 			}
 			else if ( nodeName == "cylinder" )
 			{
 				real radius, length;
 				readCylinder( *it, radius, length );
-				YAKE_ASSERT( false ).error( "NOT implemented in Yake" ); //TODO
+				
+				real scale = ( rParentTransform.mScale.x 
+						+ rParentTransform.mScale.y
+						+ rParentTransform.mScale.z ) /3;
+				
+				radius *= scale;
+				length *= scale;
+				
+				physics::IShape::CapsuleDesc desc( 
+												length,
+												radius, 
+												NULL, 						// FIXME material
+												geomTransform.mPosition,
+												geomTransform.mRotation );
+										
+				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				
+				pParentObject->createShape( desc );
 			}
 			else if ( nodeName == "plane" )
 			{
 				real a, b, c, d;
 				readPlane( *it, a, b, c, d );
 				
-				// FIXME Special case: not placeable geometry!
-				// This should be fixed in yake::physics interfaces
-				if ( !geomTransform.isIdentity() )
-				{
-					Vector3 normal( a, b, c );
-					
-					normal = geomTransform.mRotation*normal;
-					d += normal.dotProduct( geomTransform.mPosition );
-					
-					a = normal[0];
-					b = normal[1];
-					c = normal[2];
-				}
+				physics::IShape::PlaneDesc desc( 
+												Vector3( a, b, c ),
+												d, 
+												NULL, 						// FIXME material
+												geomTransform.mPosition,
+												geomTransform.mRotation );
+										
+				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
 				
-				pCollGeom = mPWorld->createCollisionGeomPlane( a, b, c, d );
+				pParentObject->createShape( desc );
 			}
 			else if ( nodeName == "ray" )
 			{
 				real length;
 				readRay( *it, length );
+				
+				real scale = ( rParentTransform.mScale.x 
+						+ rParentTransform.mScale.y
+						+ rParentTransform.mScale.z ) /3;
+					
+				length *= scale;
+				
 				YAKE_ASSERT( false ).error( "NOT implemented in Yake" ); //TODO
 			}
 			else if ( nodeName == "sphere" )
 			{
 				real radius;
 				readSphere( *it, radius );
-				pCollGeom = mPWorld->createCollisionGeomSphere( radius );
+				
+				real scale = ( rParentTransform.mScale.x 
+						+ rParentTransform.mScale.y
+						+ rParentTransform.mScale.z ) /3;
+					
+				radius *= scale;
+				
+				physics::IShape::SphereDesc desc( 
+												radius, 
+												NULL, 						// FIXME material
+												geomTransform.mPosition,
+												geomTransform.mRotation );
+										
+				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				
+				pParentObject->createShape( desc );
 			}
 			else if ( nodeName == "trimesh" )
 			{
-			//	readTrimesh( *it, pCollGeom );
+				physics::TriangleMeshDesc::VertexVector vertices;
+				physics::TriangleMeshDesc::IndexVector indices;
+				
+				readTrimesh( *it, vertices, indices );
+				
+				physics::TriangleMeshDesc::VertexVector scaledVertices;
+				
+				ConstVectorIterator< physics::TriangleMeshDesc::VertexVector > iV( vertices.begin(), vertices.end() );
+				
+				while ( iV.hasMoreElements() )
+				{
+					Vector3 const& vertex = iV.getNext();
+					scaledVertices.push_back( vertex * rParentTransform.mScale );
+				}
+				
+				physics::TriangleMeshDesc dataDesc( vertices, indices );
+				
+				physics::TriangleMeshId meshId = mPWorld->createTriangleMesh( dataDesc );
+				
+				physics::IShape::TriMeshDesc desc( 
+												meshId, 
+												NULL, 						// FIXME material
+												geomTransform.mPosition,
+												geomTransform.mRotation );
+										
+				YAKE_ASSERT( pParentObject != NULL ).error( "FIXME Static shapes are not supported" );
+				
+				pParentObject->createShape( desc );
 			}
 		}
-
-		if ( !geomTransform.isIdentity() )
-		{
-			// FIXME For now plane is a special case
-			if ( pCollGeom->getType() != physics::ICollisionGeometry::CGT_PLANE )
-			{
-				physics::ICollisionGeometry* pCG = pCollGeom;
-				pCollGeom = mPWorld->createCollisionGeomTransform();
-
-				std::cout << "!! Setting transform !!:" << std::endl;
-				std::cout << " 	position: " << geomTransform.mPosition[0] << "," << 
-					geomTransform.mPosition[1] << "," <<
-					geomTransform.mPosition[2] << std::endl;
-				pCollGeom->setPosition( geomTransform.mPosition );
-				pCollGeom->setOrientation( geomTransform.mRotation );
-	
-				pCollGeom->tfAttachGeom( pCG );
-			}
-		}
-		
-		pParentObject->addCollisionGeometry( pCollGeom );
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readBox( SharedPtr<dom::INode> const& pNode, real& sizeX, real& sizeY, real& sizeZ )
+	void XODEParser::readBox( const SharedPtr<dom::INode> pNode, real& sizeX, real& sizeY, real& sizeZ )
 	{
 		sizeX = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "sizex" ) );
 		sizeY = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "sizey" ) );
@@ -556,28 +659,28 @@ namespace xode {
 	}
 	
 	//------------------------------------------------------
-	void XODEParser::readCappedCylinder( SharedPtr<dom::INode> const& pNode, real& radius, real& length )
+	void XODEParser::readCappedCylinder( const SharedPtr<dom::INode> pNode, real& radius, real& length )
 	{
 		radius = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "radius" ) );
 		length = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "length" ) );
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readCone( SharedPtr<dom::INode> const& pNode, real& radius, real& length )
+	void XODEParser::readCone( const SharedPtr<dom::INode> pNode, real& radius, real& length )
 	{
 		radius = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "radius" ) );
 		length = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "length" ) );
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readCylinder( SharedPtr<dom::INode> const& pNode, real& radius, real& length )
+	void XODEParser::readCylinder( const SharedPtr<dom::INode> pNode, real& radius, real& length )
 	{
 		radius = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "radius" ) );
 		length = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "length" ) );
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readPlane( SharedPtr<dom::INode> const& pNode, real& a, real& b, real& c, real& d )
+	void XODEParser::readPlane( const SharedPtr<dom::INode> pNode, real& a, real& b, real& c, real& d )
 	{
 		a = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "a" ) );
 		b = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "b" ) );
@@ -586,23 +689,404 @@ namespace xode {
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readRay( SharedPtr<dom::INode> const& pNode, real& length )
+	void XODEParser::readRay( const SharedPtr<dom::INode> pNode, real& length )
 	{
 		length = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "length" ) );
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readSphere( SharedPtr<dom::INode> const& pNode, real& radius )
+	void XODEParser::readSphere( const SharedPtr<dom::INode> pNode, real& radius )
 	{
 		radius = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "radius" ) );
 	}
 
 	//------------------------------------------------------
-	void XODEParser::readTrimesh( SharedPtr<dom::INode> const& pNode,
-				  physics::ICollisionGeometry* pCollGeom )
+	void XODEParser::readTrimesh( const SharedPtr<dom::INode> pMeshNode,
+				      physics::TriangleMeshDesc::VertexVector& rVertices,
+				      physics::TriangleMeshDesc::IndexVector& rIndices )
 	{
-		// FIXME pointer is passed by value!!!
-		YAKE_ASSERT( false ).error( "Foul implementation" ); //TODO
+		const dom::NodeList& nodes = pMeshNode->getNodes();
+		
+		typedef dom::NodeList::const_iterator NodeListIter;
+		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it )
+		{
+			String nodeName = 
+				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+		
+			std::cout << "   Reading " << nodeName << " now..." << std::endl;
+			
+			if ( nodeName == "vertices" )
+			{
+				readVertices( *it, rVertices );
+			}
+			else if ( nodeName == "triangles" )
+			{
+				readIndices( *it, rIndices );
+			}
+		}
+	}
+
+	//------------------------------------------------------
+	void XODEParser::readVertices( const SharedPtr<dom::INode> pNode, 
+				       physics::TriangleMeshDesc::VertexVector& rVertices )
+	{
+		const dom::NodeList& nodes = pNode->getNodes();
+		
+		typedef dom::NodeList::const_iterator NodeListIter;
+		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it )
+		{
+			String nodeName = 
+				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+		
+			if ( nodeName == "v" )
+			{
+				real x = StringUtil::parseReal( (*it)->getAttributeValueAs< String >( "x" ) );
+				real y = StringUtil::parseReal( (*it)->getAttributeValueAs< String >( "y" ) );
+				real z = StringUtil::parseReal( (*it)->getAttributeValueAs< String >( "z" ) );
+			
+				rVertices.push_back( Vector3( x, y, z ) );
+			}
+		}
+	}
+
+	//------------------------------------------------------
+	void XODEParser::readIndices( const SharedPtr<dom::INode> pNode, 
+				       physics::TriangleMeshDesc::IndexVector& rIndices )
+	{
+		const dom::NodeList& nodes = pNode->getNodes();
+		
+		typedef int32 IndexT;
+		
+		typedef dom::NodeList::const_iterator NodeListIter;
+		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it )
+		{
+			String nodeName = 
+				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+		
+			if ( nodeName == "t" )
+			{
+				IndexT ia = StringUtil::parseInt( (*it)->getAttributeValueAs< String >( "ia" ) );
+				IndexT ib = StringUtil::parseInt( (*it)->getAttributeValueAs< String >( "ib" ) );
+				IndexT ic = StringUtil::parseInt( (*it)->getAttributeValueAs< String >( "ic" ) );
+			
+				rIndices.push_back( ia );
+				rIndices.push_back( ib );
+				rIndices.push_back( ic );
+			}
+		}
+	}
+	
+	//------------------------------------------------------
+	void XODEParser::readJoint(	const SharedPtr<dom::INode> pJointNode,
+								const String& rBodyName,
+								Transform& rParentTransform )
+	{
+		JointDescription desc;
+		
+		desc.mBody1Name = rBodyName;
+		desc.mJointDefNode = pJointNode;
+		desc.mParentTransform = rParentTransform;
+		
+		mJointDescriptions.push_back( desc );
+	}
+	
+	//------------------------------------------------------
+	void XODEParser::createJointsFromDescriptions()
+	{
+		for( JointDescriptions::iterator j = mJointDescriptions.begin(); j != mJointDescriptions.end(); ++j )
+			createJoint( *j );
+	} 
+	
+	//------------------------------------------------------
+	void XODEParser::createJoint( const JointDescription& rDesc )
+	{
+		
+		const dom::NodeList& nodes = rDesc.mJointDefNode->getNodes();
+		
+		String name = rDesc.mJointDefNode->getAttributeValueAs<String>( "name" ); 
+		
+		typedef dom::NodeList::const_iterator NodeListIter;
+		
+		// Looking for link2
+		NodeHunter linkHunter( "link2" );
+		NodeListIter iLink = 
+			std::find_if<NodeListIter, NodeHunter>( nodes.begin(), nodes.end(), linkHunter );
+		
+		YAKE_ASSERT( iLink != nodes.end() ).error( "2nd body name is not present in joint definition!" );
+		
+		String body2Name = (*iLink)->getAttributeValueAs<String>( "body" );
+		
+		// Looking for transform
+		NodeHunter hunter( "transform" );
+		NodeListIter iTrans = 
+			std::find_if<NodeListIter, NodeHunter>( nodes.begin(), nodes.end(), hunter );
+			
+		Transform jointTransform;
+			
+		if ( iTrans != nodes.end() )
+		{
+			std::cout << "readJoint() [" << name << "] : joint has transform " << std::endl;
+
+			readTransform( *iTrans, jointTransform );
+		}
+		
+		if ( !rDesc.mParentTransform.isIdentity() )
+		{
+			jointTransform = jointTransform.getDerivedTransform( rDesc.mParentTransform );
+		}
+		
+		SharedPtr<physics::IActor> pActor1 = mBaseModel.getComplexByName( rDesc.mBody1Name );
+		SharedPtr<physics::IActor> pActor2 = mBaseModel.getComplexByName( body2Name );
+		
+		physics::IDynamicActor* pDynActor1 = dynamic_cast<physics::IDynamicActor*>( pActor1.get() );
+		physics::IDynamicActor* pDynActor2 = dynamic_cast<physics::IDynamicActor*>( pActor2.get() );
+
+		YAKE_ASSERT( pDynActor1 != NULL && pDynActor2 != NULL ).error( "You're trying to attach joint to non-dynamic actors! That's not possible!" );
+				
+		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it )
+		{
+			String nodeName = 
+				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+		
+			std::cout << "   Reading " << nodeName << " now..." << std::endl;
+			
+			if ( nodeName == "ball" )
+			{
+				readBall( *it, pDynActor1, pDynActor2, jointTransform );
+			}
+			else if ( nodeName == "fixed" )
+			{
+				readFixed( *it, pDynActor1, pDynActor2, jointTransform );
+			}
+			else if ( nodeName == "hinge" )
+			{
+				readHinge( *it, pDynActor1, pDynActor2, jointTransform );
+			}
+			else if ( nodeName == "hinge2" )
+			{
+				readHinge2( *it, pDynActor1, pDynActor2, jointTransform );
+			}
+			else if ( nodeName == "slider" )
+			{
+				readSlider( *it, pDynActor1, pDynActor2, jointTransform );
+			}
+			else if ( nodeName == "universal" )
+			{
+				readUniversal( *it, pDynActor1, pDynActor2, jointTransform );
+			}
+			else if ( nodeName == "amotor" )
+			{
+				YAKE_ASSERT( false ).error( "amotor joint type is not supported!" );
+			}
+		}
+	}
+	
+	//------------------------------------------------------
+	void XODEParser::readBall(	const SharedPtr<dom::INode> pJointNode,
+								physics::IDynamicActor* pActor1,
+								physics::IDynamicActor* pActor2,
+								Transform& rJointTransform )
+	{
+		const dom::NodeList& nodes = pJointNode->getNodes();
+		
+		typedef dom::NodeList::const_iterator NodeListIter;
+		
+		// Looking for anchor
+		NodeHunter anchorHunter( "anchor" );
+		NodeListIter iAnchor = 
+			std::find_if<NodeListIter, NodeHunter>( nodes.begin(), nodes.end(), anchorHunter );
+		
+		YAKE_ASSERT( iAnchor != nodes.end() ).error( "Anchor was not defined for ball joint!" );
+	
+		Vector3 anchor;
+		
+		readAnchor( *iAnchor, anchor, rJointTransform );
+		
+		physics::IJoint::DescBall desc( *pActor1, *pActor2, anchor );
+		
+		mPWorld->createJoint( desc ); 
+	}
+
+	//------------------------------------------------------
+	void XODEParser::readFixed(	const SharedPtr<dom::INode> pJointNode,
+								physics::IDynamicActor* pActor1,
+								physics::IDynamicActor* pActor2,
+								Transform& rJointTransform )
+	{
+		physics::IJoint::DescFixed desc( *pActor1, *pActor2 );
+		
+		mPWorld->createJoint( desc ); 
+	}
+	
+	//------------------------------------------------------
+	void XODEParser::readHinge(	const SharedPtr<dom::INode> pJointNode,
+								physics::IDynamicActor* pActor1,
+								physics::IDynamicActor* pActor2,
+								Transform& rJointTransform )
+	{
+		const dom::NodeList& nodes = pJointNode->getNodes();
+		
+		typedef dom::NodeList::const_iterator NodeListIter;
+		
+		// Looking for anchor
+		NodeHunter anchorHunter( "anchor" );
+		NodeListIter iAnchor = 
+			std::find_if<NodeListIter, NodeHunter>( nodes.begin(), nodes.end(), anchorHunter );
+		
+		YAKE_ASSERT( iAnchor != nodes.end() ).error( "Anchor was not defined for hinge joint!" );
+		
+		// Looking for axis
+		NodeHunter axisHunter( "axis" );
+		NodeListIter iAxis = 
+			std::find_if<NodeListIter, NodeHunter>( nodes.begin(), nodes.end(), axisHunter );
+		
+		YAKE_ASSERT( iAxis != nodes.end() ).error( "Axis was not defined for hinge joint!" );
+	
+		Vector3 anchor;
+		Vector3 axis;
+		
+		readAnchor( *iAnchor, anchor, rJointTransform );
+		readAxis( *iAxis, axis, rJointTransform );
+		
+		physics::IJoint::DescHinge desc( *pActor1, *pActor2, axis, anchor );
+		
+		mPWorld->createJoint( desc ); 
+	}
+	
+	//------------------------------------------------------
+	void XODEParser::readHinge2(	const SharedPtr<dom::INode> pJointNode,
+								physics::IDynamicActor* pActor1,
+								physics::IDynamicActor* pActor2,
+								Transform& rJointTransform )
+	{
+		const dom::NodeList& nodes = pJointNode->getNodes();
+		
+		typedef dom::NodeList::const_iterator NodeListIter;
+		
+		// Looking for anchor
+		NodeHunter anchorHunter( "anchor" );
+		NodeListIter iAnchor = 
+			std::find_if<NodeListIter, NodeHunter>( nodes.begin(), nodes.end(), anchorHunter );
+		
+		YAKE_ASSERT( iAnchor != nodes.end() ).error( "Anchor was not defined for hinge joint!" );
+		
+		// Looking for axis
+		NodeHunter axisHunter( "axis" );
+		NodeListIter iAxis0 = 
+			std::find_if<NodeListIter, NodeHunter>( nodes.begin(), nodes.end(), axisHunter );
+		
+		YAKE_ASSERT( iAxis0 != nodes.end() ).error( "Axis0 was not defined for hinge2 joint!" );
+		
+		NodeListIter iAxis1 = 
+			std::find_if<NodeListIter, NodeHunter>( iAxis0 + 1, nodes.end(), axisHunter );
+		
+		YAKE_ASSERT( iAxis1 != nodes.end() ).error( "Axis1 was not defined for hinge2 joint!" );
+	
+		Vector3 anchor;
+		Vector3 axis0;
+		Vector3 axis1;
+		
+		readAnchor( *iAnchor, anchor, rJointTransform );
+		readAxis( *iAxis0, axis0, rJointTransform );
+		readAxis( *iAxis1, axis1, rJointTransform );
+		
+		physics::IJoint::DescHinge2 desc( *pActor1, *pActor2, axis0, axis1, anchor );
+		
+		mPWorld->createJoint( desc ); 
+	}
+	
+	//------------------------------------------------------
+	void XODEParser::readSlider(	const SharedPtr<dom::INode> pJointNode,
+								physics::IDynamicActor* pActor1,
+								physics::IDynamicActor* pActor2,
+								Transform& rJointTransform )
+	{
+		const dom::NodeList& nodes = pJointNode->getNodes();
+		
+		typedef dom::NodeList::const_iterator NodeListIter;
+		
+		// Looking for axis
+		NodeHunter axisHunter( "axis" );
+		NodeListIter iAxis = 
+			std::find_if<NodeListIter, NodeHunter>( nodes.begin(), nodes.end(), axisHunter );
+		
+		YAKE_ASSERT( iAxis != nodes.end() ).error( "Axis was not defined for hinge joint!" );
+	
+		Vector3 axis;
+		
+		readAxis( *iAxis, axis, rJointTransform );
+		
+		physics::IJoint::DescSlider desc( *pActor1, *pActor2, axis );
+		
+		mPWorld->createJoint( desc ); 
+	}
+	
+	//------------------------------------------------------
+	void XODEParser::readUniversal(	const SharedPtr<dom::INode> pJointNode,
+									physics::IDynamicActor* pActor1,
+									physics::IDynamicActor* pActor2,
+									Transform& rJointTransform )
+	{
+		const dom::NodeList& nodes = pJointNode->getNodes();
+		
+		typedef dom::NodeList::const_iterator NodeListIter;
+		
+		// Looking for anchor
+		NodeHunter anchorHunter( "anchor" );
+		NodeListIter iAnchor = 
+			std::find_if<NodeListIter, NodeHunter>( nodes.begin(), nodes.end(), anchorHunter );
+		
+		YAKE_ASSERT( iAnchor != nodes.end() ).error( "Anchor was not defined for hinge joint!" );
+		
+		// Looking for axis
+		NodeHunter axisHunter( "axis" );
+		NodeListIter iAxis0 = 
+			std::find_if<NodeListIter, NodeHunter>( nodes.begin(), nodes.end(), axisHunter );
+		
+		YAKE_ASSERT( iAxis0 != nodes.end() ).error( "Axis0 was not defined for hinge2 joint!" );
+		
+		NodeListIter iAxis1 = 
+			std::find_if<NodeListIter, NodeHunter>( iAxis0 + 1, nodes.end(), axisHunter );
+		
+		YAKE_ASSERT( iAxis1 != nodes.end() ).error( "Axis1 was not defined for hinge2 joint!" );
+	
+		Vector3 anchor;
+		Vector3 axis0;
+		Vector3 axis1;
+		
+		readAnchor( *iAnchor, anchor, rJointTransform );
+		readAxis( *iAxis0, axis0, rJointTransform );
+		readAxis( *iAxis1, axis1, rJointTransform );
+		
+		physics::IJoint::DescUniversal desc( *pActor1, *pActor2, axis0, axis1, anchor );
+		
+		mPWorld->createJoint( desc ); 
+	}
+	
+	//------------------------------------------------------
+	void XODEParser::readAnchor(	const SharedPtr<dom::INode> pAnchorNode,
+									Vector3& rAnchor,
+									Transform& rJointTransform )
+	{
+		rAnchor.x = StringUtil::parseReal( pAnchorNode->getAttributeValueAs<String>( "x" ) );
+		rAnchor.y = StringUtil::parseReal( pAnchorNode->getAttributeValueAs<String>( "y" ) );
+		rAnchor.z = StringUtil::parseReal( pAnchorNode->getAttributeValueAs<String>( "z" ) );
+		
+		rAnchor = rJointTransform.mPosition + rJointTransform.mRotation*( rJointTransform.mScale*rAnchor );
+	}
+	
+	//------------------------------------------------------
+	void XODEParser::readAxis(	const SharedPtr<dom::INode> pAxisNode,
+								Vector3& rAxis,
+								Transform& rJointTransform )
+	{
+		rAxis.x = StringUtil::parseReal( pAxisNode->getAttributeValueAs<String>( "x" ) );
+		rAxis.y = StringUtil::parseReal( pAxisNode->getAttributeValueAs<String>( "y" ) );
+		rAxis.z = StringUtil::parseReal( pAxisNode->getAttributeValueAs<String>( "z" ) );
+		
+		/// TODO What about all other axis params?
+		
+		rAxis = rJointTransform.mRotation*rAxis;
 	}
 
 } //xode

@@ -52,15 +52,18 @@ namespace physics {
 		JT_OTHER
 	};
 
-	class IActor;
+	class IDynamicActor;
 	class IJoint
 	{
 	public:
+		/**
+			@todo Make actor references weak ptrs!
+		*/
 		struct DescBase
 		{
 			DescBase(	const JointType type_, 
-						IActor& rFirst,
-						IActor& rSecond ) :
+						IDynamicActor& rFirst,
+						IDynamicActor& rSecond ) :
 				type( type_ ),
 				actor1( rFirst ),
 				actor2( rSecond )
@@ -70,36 +73,36 @@ namespace physics {
 			virtual ~DescBase() {}
 
 			JointType type; // not really needed...
-			IActor& actor1;
-			IActor& actor2;
+			IDynamicActor& actor1;
+			IDynamicActor& actor2;
 		};
 
 		struct DescFixed : DescBase
 		{
-			DescFixed(	IActor& rFirst,
-						IActor& rSecond ) :
+			DescFixed(	IDynamicActor& rFirst,
+						IDynamicActor& rSecond ) :
 				DescBase( JT_FIXED,rFirst,rSecond )
 			{}
 		};
 
 		struct DescHinge : DescBase
 		{
-			DescHinge(	IActor& rFirst,
-						IActor& rSecond,
-						const Vector3& rAxis0,
+			DescHinge(	IDynamicActor& rFirst,
+						IDynamicActor& rSecond,
+						const Vector3& rAxis,
 						const Vector3& rAnchor ) :
 				DescBase( JT_HINGE,rFirst,rSecond ),
-				axis0( rAxis0 ),
+				axis( rAxis ),
 				anchor( rAnchor )
 			{}
-			Vector3		axis0;
+			Vector3		axis;
 			Vector3		anchor;
 		};
 
 		struct DescHinge2 : DescBase
 		{
-			DescHinge2(	IActor& rFirst,
-						IActor& rSecond,
+			DescHinge2(	IDynamicActor& rFirst,
+						IDynamicActor& rSecond,
 						const Vector3& rAxis0, 
 						const Vector3& rAxis1,
 						const Vector3& rAnchor ) :
@@ -115,8 +118,8 @@ namespace physics {
 
 		struct DescBall : DescBase
 		{
-			DescBall(	IActor& rFirst,
-						IActor& rSecond,
+			DescBall(	IDynamicActor& rFirst,
+						IDynamicActor& rSecond,
 						const Vector3& rAnchor ) :
 				DescBase( JT_BALL, rFirst, rSecond ),
 				anchor( rAnchor )
@@ -126,8 +129,8 @@ namespace physics {
 	
 		struct DescSlider : DescBase
 		{
-			DescSlider(	IActor& rFirst,
-						IActor& rSecond,
+			DescSlider(	IDynamicActor& rFirst,
+						IDynamicActor& rSecond,
 						const Vector3& rAxis ) :
 				DescBase( JT_SLIDER, rFirst, rSecond ),
 				axis( rAxis )
@@ -137,8 +140,8 @@ namespace physics {
 	
 		struct DescUniversal : DescBase
 		{
-			DescUniversal(	IActor& rFirst,
-							IActor& rSecond,
+			DescUniversal(	IDynamicActor& rFirst,
+							IDynamicActor& rSecond,
 							const Vector3& rAxis0, 
 							const Vector3& rAxis1,
 							const Vector3& rAnchor ) :
@@ -153,8 +156,6 @@ namespace physics {
  		};
 	public:
 		virtual ~IJoint() {}
-
-		virtual IActor& getAttachedActor(bool bFirst) = 0;
 
 		virtual JointType getType() const = 0;
 		virtual size_t getNumAxis() const = 0;

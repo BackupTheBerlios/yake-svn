@@ -31,11 +31,12 @@ namespace yake {
 	using namespace base::math;
 namespace physics {
 
-	class IActor : public Movable
+	class IActor
 	{
 	public:
 		struct Desc
 		{
+			virtual ~Desc() {}
 			Deque< SharedPtr<IShape::Desc> >	shapes;
 		};
 	public:
@@ -43,21 +44,41 @@ namespace physics {
 
 		typedef Vector<IShape*> ShapePtrVector;
 
-		virtual bool hasBody() const = 0;
-		virtual bool createBody() = 0;
-		virtual IBody* getBody() const = 0;
-
 		virtual SharedPtr<IShape> createShape( const IShape::Desc& rShapeDesc ) = 0;
 		virtual void destroyShape( SharedPtr<IShape>& rShape ) = 0;
 		virtual const ShapePtrVector getShapes() const = 0;
 
-		//virtual void updateMassFromShapes() = 0;
-
-		typedef Signal0<void> SignalCollisionEntered;
-		virtual void subscribeToCollisionEnteredSignal( const SignalCollisionEntered::slot_type& rSlot ) = 0;
-		virtual void subscribeToCollisionExitedSignal( const SignalCollisionEntered::slot_type& rSlot ) = 0;
+		typedef Signal0<void> SignalCollision;
+		virtual void subscribeToCollisionEnteredSignal( const SignalCollision::slot_type& rSlot ) = 0;
+		virtual void subscribeToCollisionExitedSignal( const SignalCollision::slot_type& rSlot ) = 0;
 	};
 
+	class IStaticActor : public IActor
+	{
+	public:
+		struct Desc : IActor::Desc
+		{
+		};
+	};
+
+	class IMovableActor : public IActor, public Movable
+	{
+	public:
+		struct Desc : IActor::Desc
+		{
+		};
+	};
+	
+	class IDynamicActor : public IMovableActor
+	{
+	public:
+		struct Desc : IActor::Desc
+		{
+		};
+		
+		virtual IBody& getBody() const = 0;
+		//virtual void updateMassFromShapes() = 0;
+	};
 }
 }
 #endif
