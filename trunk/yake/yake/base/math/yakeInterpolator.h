@@ -104,7 +104,7 @@ namespace math
 				mElapsed += time;
 				real b = clamp< real >( mElapsed / mTotal, 0., 1. );
 				real a = 1 - b;
-				mVal = mStart * a * a + midVal * 2 * a * b + mEnd * b * b;
+				mVal = mStart * a * a + mMid * 2 * a * b + mEnd * b * b;
 			}
 		};
 
@@ -118,7 +118,7 @@ namespace math
 			real	mElapsed;
 			real	mTotal;
 		public:
-			CubicInterpolator( T & rval, real start, real mid1, real mid2, real end, real totalTime ) : Interpolator< T >( rval ), mStart(start),mMid(mid),mEnd(end),mElapsed(0.),mTotal(totalTime)
+			CubicInterpolator( T & rval, real start, real mid1, real mid2, real end, real totalTime ) : Interpolator< T >( rval ), mStart(start),mMid1(mid1),mMid2(mid2),mEnd(end),mElapsed(0.),mTotal(totalTime)
 			{
 			}
 
@@ -127,7 +127,7 @@ namespace math
 				mElapsed += time;
 				real b = clamp< real >( mElapsed / mTotal, 0., 1. );
 				real a = 1 - b;
-				mVal = mStart * a * a * a + midVal1 * 3 * a * a * b + midVal2 * 3 * a * b * b + mEnd * b * b * b;
+				mVal = mStart * a * a * a + mMid1 * 3 * a * a * b + mMid2 * 3 * a * b * b + mEnd * b * b * b;
 			}
 		};
 
