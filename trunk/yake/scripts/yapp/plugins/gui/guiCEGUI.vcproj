@@ -19,25 +19,25 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/OgreMain/include"
-				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_GRAPHICSCONCRETEAPI_EXPORTS"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/OgreMain/include;../../../../dependencies/cegui_mk2/include;../../../../dependencies/lua/include;../../../../dependencies/luabind"
+				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yake/plugins/graphicsOGRE/yakePCH.h"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough="yapp/gui/precompiled.h"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain_d.lib"
+				AdditionalDependencies="OgreMain_d.lib CEGUIBase_d.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ogrenew/OgreMain/lib/Debug"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ogrenew/OgreMain/lib/Debug;../../../../dependencies/cegui_mk2/lib/"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
@@ -78,7 +78,7 @@
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yake/plugins/graphicsOGRE/yakePCH.h"
+				PrecompiledHeaderThrough="yapp/gui/precompiled.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -86,7 +86,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain.lib"
+				AdditionalDependencies="OgreMain.lib CEGUIBase.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ogrenew/OgreMain/lib/Release"
@@ -127,6 +127,21 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
 				RelativePath="..\..\..\..\src\yapp\plugins\guiCEGUI\precompiled.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yapp\gui\window_base.cpp">
 			</File>
 			<Filter
 				Name="editor"
