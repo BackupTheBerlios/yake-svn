@@ -36,7 +36,7 @@
 				AdditionalDependencies="base.lib"
 				AdditionalLibraryDirectories="../../common/lib/debug"
 				GenerateDebugInformation="TRUE"
-				ImportLibrary="../../../../common/lib/debug/$(TargetName).lib"/>
+				ImportLibrary="../../common/lib/debug/$(TargetName).lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
@@ -79,7 +79,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="base.lib"
 				AdditionalLibraryDirectories="../../common/lib/release"
-				ImportLibrary="../../../../common/lib/release/$(TargetName).lib"/>
+				ImportLibrary="../../common/lib/release/$(TargetName).lib"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
