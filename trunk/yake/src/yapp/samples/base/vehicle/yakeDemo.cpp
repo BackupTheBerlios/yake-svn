@@ -55,6 +55,7 @@ private:
 	audio::ISoundData*					mpAData;
 
 	graphics::ISceneNode*				mLightOneNode;
+	graphics::IParticleSystem*			mSmoke;
 
 	struct SimpleOne {
 		graphics::ISceneNode*			pSN;
@@ -197,8 +198,8 @@ public:
 		// setup physical representation
 		mGround.pCO = mPWorld->createPlane( Vector3(0, 1, 0), 0 );
 		YAKE_ASSERT( mGround.pCO );
-		mGround.pCO->setFriction( 100 );
-		mGround.pCO->setFriction2( 10 );
+		mGround.pCO->setFriction( 2 );
+		mGround.pCO->setFriction2( 2 );
 
 		// create entity
 		mGround.pE = mGWorld->createEntity("plane_1x1.mesh");
@@ -230,6 +231,11 @@ public:
 			mGWorld.get(),
 			mpBox->getNodes(),
 			mpBox->getCtrlrs() );
+
+		//FIXME: smoke...
+		mSmoke = mGWorld->createParticleSystem("Smoke");
+		YAKE_ASSERT( mSmoke );
+		(*mpBox->getNodes().begin())->attachParticleSystem( mSmoke );
 	}
 
 	void setupSphere()
@@ -334,7 +340,8 @@ public:
 								const real suspDamping,
 								const real wheelMass,
 								Vector<graphics::ISceneNode*> & nodeList,
-								SharedMUCList & mucList )
+								SharedMUCList & mucList,
+								const String & wheelMesh = "wheel1.mesh")
 			{
 				model::complex::vehicle::Wheel* pWheel = 0;
 				physics::IComplexObject* pCO = 0;
@@ -344,13 +351,13 @@ public:
 					Vector3::kUnitY /*hingeSteeringAxis*/, Vector3::kUnitX /*hingeSuspensionAxis*/,
 					suspSpring, suspDamping, wheelMass );
 				YAKE_ASSERT( pCO );
-				pCO->setFriction( 20 );
+				pCO->setFriction( 1 );
 				pCO->setFriction2( 5 );
 				pPhysical->addJoint( pJ );
 				pPhysical->addComplex( SharedPtr<physics::IComplexObject>(pCO) );
 
 				// setup graphical representation & controllers
-				createDebugGeometryForComplexPhysical( pCO, mGWorld.get(), nodeList, mucList, "wheel1.mesh", 2. );
+				createDebugGeometryForComplexPhysical( pCO, mGWorld.get(), nodeList, mucList, wheelMesh, 2. );
 
 				return pWheel;
 			}
@@ -386,8 +393,8 @@ public:
 		const real chassisMass = 2.5; // 1.5 tonnes
 		const real wheelMass = chassisMass / 70; // realistic: 60 to 70
 		const real wheelRadius = 0.275;
-		const real frontWheelZ = 1.175;
-		const real rearWheelZ = -1.126;
+		const real frontWheelZ = 1.18;
+		const real rearWheelZ = -1.13;
 		const real wheelOffsetX = 0.5 * (carDim.x - wheelRadius) - 0.05;
 
 		// just a single chassis box (for now)
@@ -407,10 +414,10 @@ public:
 		{
 			graphics::ISceneNode* pChassisMeshNode = mGWorld->createSceneNode();
 			YAKE_ASSERT( pChassisMeshNode );
-			graphics::IEntity* pE = mGWorld->createEntity("delorean.mesh");
+			graphics::IEntity* pE = mGWorld->createEntity("fordboss.mesh");  //delorean.mesh");
 			YAKE_ASSERT( pE );
 			pChassisMeshNode->attachEntity( pE );
-			pE->setCastsShadow( false  );
+			pE->setCastsShadow( true  );
 			SharedPtr<model::MovableUpdateController> pMUC //= mucList.front();
 				( new model::MovableUpdateController() );
 			mucList.push_back( pMUC );
@@ -431,7 +438,8 @@ public:
 			suspDamping,
 			wheelMass,
 			nodeList,
-			mucList );
+			mucList,
+			"ford_lf.mesh");
 		mCar->addWheel( "lf", pWheel );
 		mCar->setWheelAffectedByBrake( 0, pWheel, 0.2 );
 
@@ -446,7 +454,8 @@ public:
 			suspDamping,
 			wheelMass,
 			nodeList,
-			mucList );
+			mucList,
+			"ford_rf.mesh");
 		mCar->addWheel( "rf", pWheel );
 		mCar->setWheelAffectedByBrake( 0, pWheel, 0.2 );
 
@@ -461,7 +470,8 @@ public:
 			suspDamping,
 			wheelMass,
 			nodeList,
-			mucList );
+			mucList,
+			"ford_lr.mesh");
 		mCar->addWheel( "lr", pWheel );
 		mCar->setWheelAffectedByBrake( 0, pWheel, 1. );
 
@@ -476,7 +486,8 @@ public:
 			suspDamping,
 			wheelMass,
 			nodeList,
-			mucList );
+			mucList,
+			"ford_rr.mesh");
 		mCar->addWheel( "rr", pWheel );
 		mCar->setWheelAffectedByBrake( 0, pWheel, 1. );
 
@@ -563,7 +574,7 @@ public:
 		if (mVPs[0].second)
 		{
 			mVPs[0].second->translate( Vector3(0,1.6,20) );
-			mVPs[0].second->pitch(-30);
+			//mVPs[0].second->pitch(-30);
 		}
 		if (mVPs.size() > 1 && mVPs[1].second)
 			mVPs[1].second->setPosition( Vector3(0,2,-80) );
