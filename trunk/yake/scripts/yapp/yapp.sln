@@ -12,6 +12,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesEvents", "samples\ba
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesDotScene", "samples\graphics\samplesDotScene.vcproj", "{8E612AD0-68D1-445E-A31E-7CB1CCA18CA0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -30,6 +34,10 @@ Global
 		{CD6F13A0-F399-411A-9766-0F8E02761D90}.Debug.Build.0 = Debug|Win32
 		{CD6F13A0-F399-411A-9766-0F8E02761D90}.Release.ActiveCfg = Release|Win32
 		{CD6F13A0-F399-411A-9766-0F8E02761D90}.Release.Build.0 = Release|Win32
+		{8E612AD0-68D1-445E-A31E-7CB1CCA18CA0}.Debug.ActiveCfg = Debug|Win32
+		{8E612AD0-68D1-445E-A31E-7CB1CCA18CA0}.Debug.Build.0 = Debug|Win32
+		{8E612AD0-68D1-445E-A31E-7CB1CCA18CA0}.Release.ActiveCfg = Release|Win32
+		{8E612AD0-68D1-445E-A31E-7CB1CCA18CA0}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
