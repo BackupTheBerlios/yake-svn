@@ -25,19 +25,15 @@
 //    IMPLEMENTATION HEADERS
 //============================================================================
 
-// VC specific headers
-#include <wchar.h>
-#include <hash_map>
-#include <xhash>
-
 // Include platform specific configuration files
 #if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
-#	if (YAKE_COMP_VER == 1200)
-#		include "yakePrerequisitesVC6.h"
-#	elif (YAKE_COMP_VER == 1300)
-#		include "yakePrerequisitesVC7.h"
-#	elif (YAKE_COMP_VER >= 1300)
-#		include "yakePrerequisitesVC71.h"
+#	if (YAKE_COMP_VER >= 1300)
+#		pragma message("Yake Platform/Compiler config: Yake.Core.Prerequisites.Vc71")
+#		include "yakePrerequisitesVC71Warnings.h"
+#		include <wchar.h>
+#		include <hash_map>
+#		include <xhash>
+#		include "yakePrerequisitesVC71Types.h"
 #	else
 #		error("Yake: No configuration file for this compiler!")
 #	endif

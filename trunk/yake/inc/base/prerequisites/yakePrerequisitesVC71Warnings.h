@@ -18,14 +18,13 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_PREREQUISITES_PREREQUISITESVC71_H
-#define YAKE_BASE_PREREQUISITES_PREREQUISITESVC71_H
+#ifndef YAKE_BASE_PREREQUISITES_PREREQUISITESVC71WARNINGS_H
+#define YAKE_BASE_PREREQUISITES_PREREQUISITESVC71WARNINGS_H
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
 // Preprocessor check
-#pragma message("Platform/Compiler config: Yake.Core.Prerequisites.Vc71")
 #if (YAKE_PLATFORM != PLATFORM_WIN32) || ( YAKE_COMP_VER < 1310 )
 #	error "Yake.Core.Prerequisites.Vc71: This file should only be included when building using Microsoft Visual C++ 7.1 on the Win32 Platform."
 #endif
@@ -48,27 +47,4 @@
 // in Visual C++ .NET 2003.
 #pragma warning( disable : 4996 )
 
-// Fixed-size numeric types.
-// Note: This naming convetion is equivalent to the C99 one. Once C99 will be supported by the compiler vendors,
-// we can just remove the following typedefs and add an #include <cstdint>.
-// SK: put it into namespace because it collided with other libs:
-namespace yake {
-typedef signed __int8           int8;
-typedef unsigned __int8         uint8;
-typedef signed __int16          int16;
-typedef unsigned __int16        uint16;
-typedef signed __int32          int32;
-typedef unsigned __int32        uint32;
-typedef signed __int64          int64;
-typedef unsigned __int64        uint64;
-typedef float										real;
-}
-
-// Stl workarounds
-#ifdef _STLP_HASH_MAP
-#	define HashMap ::std::hash_map
-#else
-#	define HashMap ::stdext::hash_map
-#endif
-
-#endif // YAKE_BASE_PREREQUISITES_PREREQUISITESVC71_H
+#endif // YAKE_BASE_PREREQUISITES_PREREQUISITESVC71WARNINGS_H

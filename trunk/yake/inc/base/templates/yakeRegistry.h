@@ -48,13 +48,13 @@ namespace templates
 #define FUNCTION( number ) \
 	YAKE_TYPES_ONE_FREE( number ) \
 	templates::Pointer< T > create( typename T::RegistryType::Id id, YAKE_ARGUMENTS_ONE_FREE( number ) ) \
-	{ return T::getRegistry().getObject( id ).create( YAKE_USE_ARGUMENTS( number ) ); }
+	{ return T::getRegistry().getObject( id )->create( YAKE_USE_ARGUMENTS( number ) ); }
 YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 #undef FUNCTION
 
 template< typename Interface_ >
 templates::Pointer< Interface_ > create()
-{ return Interface_::getDefaultCreator().create(); };
+{ return Interface_::getRegistry().getDefaultCreator()->create(); };
 
 /* Registry */
 template< class ConfigClass >
@@ -70,7 +70,7 @@ public:
  
 // Class
 public:
-	Registry() : m_pDefaultCreator( 0 ) {}
+	Registry() : m_pDefaultCreator() {}
 
 private:
   // No copy.
@@ -86,19 +86,19 @@ public:
 YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 #undef FUNCTION
 
-	ICreator& getDefaultCreator()
+	Pointer< ICreator > getDefaultCreator()
 	{
     YAKE_ASSERT( getIdentifiers().size() > 0 ).debug( "No default creator available." );
 		if( !m_pDefaultCreator ) m_pDefaultCreator = getObject( *getIdentifiers().begin() );
 		return m_pDefaultCreator;
 	}
 
-	void setDefaultCreator( const ICreator& rCreator )
-	{	m_pDefaultCreator = &rCreator; }
+	void setDefaultCreator( const Pointer< ICreator > pCreator )
+	{	m_pDefaultCreator = pCreator; }
 
 // Data
 private:
-	ICreator* m_pDefaultCreator;
+	Pointer< ICreator > m_pDefaultCreator;
 };
 
 

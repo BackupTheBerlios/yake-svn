@@ -57,6 +57,8 @@ class Pointer : public boost::shared_ptr< T >
 {
 // Class
 public:
+	Pointer(): boost::shared_ptr< T >()  {}
+
 	template< class Y >
   Pointer( Pointer<Y> const& r ): boost::shared_ptr< T >( r )  {}
 
