@@ -6,6 +6,7 @@
 // yake
 #include <yake/base/yake.h>
 #include <yake/graphics/yakeGraphicsSystem.h>
+#include <yapp/gui/renderer_adapter_base.h>
 // local
 #include "initialization.h"
 

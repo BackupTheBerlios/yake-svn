@@ -116,7 +116,7 @@
 				RelativePath="..\..\yapp\gui\default_window.h">
 			</File>
 			<File
-				RelativePath="..\..\yapp\gui\gui_system.h">
+				RelativePath="..\..\yapp\gui\gui_system_base.h">
 			</File>
 			<File
 				RelativePath="..\..\yapp\gui\multi_line_edit_box_base.h">
