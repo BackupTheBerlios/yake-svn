@@ -23,52 +23,50 @@
 #include <yake/base/math/yakeMersenneTwister.h>
 
 namespace yake {
-namespace base {
-	namespace math {
+namespace math {
 
-		//---------------------------------------------------
-		RandomNumberGeneratorMT::RandomNumberGeneratorMT()
-		{
-			mRand = new MTRand();
-			setSeed( 54738 );
-		}
+	//---------------------------------------------------
+	RandomNumberGeneratorMT::RandomNumberGeneratorMT()
+	{
+		mRand = new MTRand();
+		setSeed( 54738 );
+	}
 
-		//---------------------------------------------------
-		RandomNumberGeneratorMT::~RandomNumberGeneratorMT()
-		{
-			YAKE_SAFE_DELETE( mRand );
-		}
+	//---------------------------------------------------
+	RandomNumberGeneratorMT::~RandomNumberGeneratorMT()
+	{
+		YAKE_SAFE_DELETE( mRand );
+	}
 
-		//---------------------------------------------------
-		real RandomNumberGeneratorMT::operator()()
-		{
-			return (real) mRand->rand();
-		}
+	//---------------------------------------------------
+	real RandomNumberGeneratorMT::operator()()
+	{
+		return (real) mRand->rand();
+	}
 
-		//---------------------------------------------------
-		uint32 RandomNumberGeneratorMT::randInt()
-		{
-			return mRand->randInt();
-		}
+	//---------------------------------------------------
+	uint32 RandomNumberGeneratorMT::randInt()
+	{
+		return mRand->randInt();
+	}
 
-		//---------------------------------------------------
-		real RandomNumberGeneratorMT::randReal()
-		{
-			return (real) mRand->rand();
-		}
+	//---------------------------------------------------
+	real RandomNumberGeneratorMT::randReal()
+	{
+		return (real) mRand->rand();
+	}
 
-		//---------------------------------------------------
-		void RandomNumberGeneratorMT::setSeed( uint32 seed )
-		{
-			mSeed = seed;
-			mRand->seed( mSeed );
-		}
+	//---------------------------------------------------
+	void RandomNumberGeneratorMT::setSeed( uint32 seed )
+	{
+		mSeed = seed;
+		mRand->seed( mSeed );
+	}
 
-		//---------------------------------------------------
-		uint32 RandomNumberGeneratorMT::getSeed() const
-		{
-			return mSeed;
-		}
+	//---------------------------------------------------
+	uint32 RandomNumberGeneratorMT::getSeed() const
+	{
+		return mSeed;
 	}
 }
 }

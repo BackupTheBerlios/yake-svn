@@ -31,28 +31,24 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake 
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
 
 	const real Math::POS_INFINITY = std::numeric_limits<real>::infinity();
-  const real Math::NEG_INFINITY = -std::numeric_limits<real>::infinity();
-  const real Math::PI = real( 4.0 * atan( 1.0 ) );
-  const real Math::TWO_PI = real( 2.0 * PI );
-  const real Math::HALF_PI = real( 0.5 * PI );
+	const real Math::NEG_INFINITY = -std::numeric_limits<real>::infinity();
+	const real Math::PI = real( 4.0 * atan( 1.0 ) );
+	const real Math::TWO_PI = real( 2.0 * PI );
+	const real Math::HALF_PI = real( 0.5 * PI );
 	const real Math::fDeg2Rad = PI / real(180.0);
 	const real Math::fRad2Deg = real(180.0) / PI;
 	const real Math::EPSILON = (real) 0.0000001;
 
-  int Math::mTrigTableSize;
+	int Math::mTrigTableSize;
 	Math::AngleUnit Math::msAngleUnit;
 
-  real  Math::mTrigTableFactor;
-  real *Math::mSinTable = 0;
-  real *Math::mTanTable = 0;
+	real  Math::mTrigTableFactor;
+	real *Math::mSinTable = 0;
+	real *Math::mTanTable = 0;
 
     //-----------------------------------------------------------------------
     Math::Math( unsigned int trigTableSize )
@@ -264,5 +260,4 @@ namespace math
     }
 
 } // math
-} // base
 } // yake

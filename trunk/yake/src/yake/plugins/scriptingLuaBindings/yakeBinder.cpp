@@ -179,16 +179,16 @@ namespace lua {
 					value( "AU_RADIAN", 1 )
 				]
 				.def( constructor< unsigned int >() )
-				//,def( "IAbs", &yake::base::math::Math::IAbs )
+				//,def( "IAbs", &yake::math::Math::IAbs )
 		];
 		
 		// Vector3
 		module( YAKE_MODULE )
 		[
 			class_< Vector3 >( "Vector3" )
-				.def_readwrite( "x", &yake::base::math::Vector3::x )
-				.def_readwrite( "y", &yake::base::math::Vector3::y )
-				.def_readwrite( "z", &yake::base::math::Vector3::z )
+				.def_readwrite( "x", &yake::math::Vector3::x )
+				.def_readwrite( "y", &yake::math::Vector3::y )
+				.def_readwrite( "z", &yake::math::Vector3::z )
 				.def( constructor< real, real, real >() )
 				.def( constructor< const real* const >() )
 				.def( constructor< Vector3 const& >() )
@@ -210,17 +210,17 @@ namespace lua {
 			class_< Matrix3 >( "Matrix3" )
 				.def( constructor<>() )
 				.def( constructor< Matrix3 const& >() )
-				.def( "getColumn", &yake::base::math::Matrix3::GetColumn ) 
+				.def( "getColumn", &yake::math::Matrix3::GetColumn ) 
 		];
 		
 		// Quaternion
 		module( YAKE_MODULE )
 		[
 			class_< Quaternion >( "Quaternion" )
-				.def_readwrite( "x", &yake::base::math::Quaternion::x )
-				.def_readwrite( "y", &yake::base::math::Quaternion::y )
-				.def_readwrite( "z", &yake::base::math::Quaternion::z )
-				.def_readwrite( "w", &yake::base::math::Quaternion::w )
+				.def_readwrite( "x", &yake::math::Quaternion::x )
+				.def_readwrite( "y", &yake::math::Quaternion::y )
+				.def_readwrite( "z", &yake::math::Quaternion::z )
+				.def_readwrite( "w", &yake::math::Quaternion::w )
 				.def( constructor< real, real, real, real >() )
 				.def( constructor< Quaternion const& >() )
 		];

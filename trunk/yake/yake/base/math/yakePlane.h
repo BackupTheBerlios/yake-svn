@@ -29,7 +29,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "yakeVector3.h"
 
 namespace yake {
-namespace base {
 namespace math {
 
 	class YAKE_BASE_API Plane
@@ -43,7 +42,6 @@ namespace math {
 		real		d;
 	};
 
-}
 }
 }
 

@@ -26,7 +26,6 @@
 #endif
 
 namespace yake {
-namespace base {
 namespace math {
 
     /** 4-dimensional homogenous vector.
@@ -149,7 +148,6 @@ namespace math {
 
 
 } // math
-} // base
 } // yake
 
 #endif

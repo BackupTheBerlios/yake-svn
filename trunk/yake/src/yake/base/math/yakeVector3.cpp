@@ -26,12 +26,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
 
     const Vector3 Vector3::kZero( 0, 0, 0 );
     const Vector3 Vector3::kUnitX( 1, 0, 0 );
@@ -40,6 +36,5 @@ namespace math
     const Vector3 Vector3::kUnitScale(1, 1, 1);
 
 } // math
-} // base
 } // yake
 

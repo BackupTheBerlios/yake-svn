@@ -226,9 +226,9 @@ namespace input {
 
 		virtual int getNumButtons() const = 0;
 		virtual bool isButtonDown( int button ) const = 0;
-		virtual base::math::Vector3 getPosition() const = 0;
-		virtual void setClip( const base::math::Rectangle & rect ) = 0;
-		virtual void setScale( const base::math::Vector3 & scale ) = 0;
+		virtual math::Vector3 getPosition() const = 0;
+		virtual void setClip( const math::Rectangle & rect ) = 0;
+		virtual void setScale( const math::Vector3 & scale ) = 0;
 	};
 
 	class YAKE_INPUT_API JoystickDevice : public InputDevice

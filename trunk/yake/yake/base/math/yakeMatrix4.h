@@ -27,7 +27,6 @@
 #include <yake/base/math/yakeMatrix3.h>
 
 namespace yake {
-namespace base {
 namespace math {
 
     /** Class encapsulating a standard 4x4 homogenous matrix.
@@ -429,7 +428,6 @@ namespace math {
     }
 
 } // math
-} // base
 } // yake
 
 #endif

@@ -29,12 +29,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
 
     const real Quaternion::ms_fEpsilon = (real)1e-03;
     const Quaternion Quaternion::kZero(0.0,0.0,0.0,0.0);
@@ -446,5 +442,4 @@ namespace math
     }
 
 } // math
-} // base
 } // yake

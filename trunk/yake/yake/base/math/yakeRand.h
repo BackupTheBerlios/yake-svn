@@ -32,12 +32,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
 
 		class MTRand;
 		/** Random number generator interface. 
@@ -81,7 +77,6 @@ namespace math
 		};
 
 } // math
-} // base
 } // yake
 
 #endif // YAKE_BASE_MATH_RAND_H

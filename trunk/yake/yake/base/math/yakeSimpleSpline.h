@@ -25,7 +25,6 @@
 #include <yake/base/math/yakeMatrix4.h>
 
 namespace yake {
-namespace base {
 namespace math {
 
 	/** A very simple spline class which implements the Catmull-Rom class of splines.
@@ -115,7 +114,6 @@ namespace math {
 
 
 } // math
-} // base
 } // yake
 
 #endif

@@ -34,12 +34,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
 
 class YAKE_BASE_API Color
 {
@@ -95,7 +91,7 @@ public:
 	real getSquaredLength() const;
 
 	// The Serialization Function.
-	IOutputStream& operator << (IOutputStream& rStream) const;
+	base::IOutputStream& operator << (base::IOutputStream& rStream) const;
 
 	// The Data.
 	union
@@ -134,7 +130,6 @@ public:
 Color operator*( real fScalar, const Color& rColor );
 
 } // math
-} // base
 } // yake
 
 // Fast Inline Implementation.

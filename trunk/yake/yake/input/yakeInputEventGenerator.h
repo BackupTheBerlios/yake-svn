@@ -82,7 +82,7 @@ namespace input {
 		virtual InputDevice* detachDevice();
 
 		// mouse signals
-		typedef Signal1< void ( const base::math::Vector3 &)> MouseMovedSignal;
+		typedef Signal1< void ( const math::Vector3 &)> MouseMovedSignal;
 		typedef Signal1< void ( uint8 )> MouseButtonSignal;
 		typedef Signal1< void ( const MouseWheelEvent & )> MouseWheelSignal;
 
@@ -106,7 +106,7 @@ namespace input {
 		MouseWheelSignal	mMouseWheelUpSignal;
 
 	protected:
-		base::math::Vector3	mMousePosition;
+		math::Vector3	mMousePosition;
 		bool				mMouseButtons[3];
 		MouseDevice*		mMouse;
 	};

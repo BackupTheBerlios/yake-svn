@@ -34,12 +34,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
 
 /** Math routines.
 	Please note: The math code is taken from Ogre (www.ogre3d.org).
@@ -230,7 +226,6 @@ public:
 
 
 } // math
-} // base
 } // yake
 
 #endif // YAKE_BASE_MATH_MATH_H

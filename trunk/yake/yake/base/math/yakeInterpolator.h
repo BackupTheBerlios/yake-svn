@@ -24,12 +24,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
 
 		template < typename T >
 		real clamp( T val, T valMin, T valMax )
@@ -133,7 +129,6 @@ namespace math
 
 
 } // math
-} // base
 } // yake
 
 #endif // YAKE_BASE__MATH_INTERPOLATOR_H

@@ -30,12 +30,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
     const real Matrix3::EPSILON = (real)1e-06;
     const Matrix3 Matrix3::ZERO(0,0,0,0,0,0,0,0,0);
     const Matrix3 Matrix3::IDENTITY(1,0,0,0,1,0,0,0,1);
@@ -1512,5 +1508,4 @@ namespace math
     //-----------------------------------------------------------------------
 
 } // math
-} // base
 } // yake

@@ -54,12 +54,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
     /** A 3x3 matrix which can represent rotations around axes.
         @note
             <b>All the code is adapted from the Wild Magic 0.2 Matrix
@@ -223,7 +219,6 @@ namespace math
     };
 
 } // math
-} // base
 } // yake
 
 #endif // YAKE_BASE_MATH_MATRIX3_H

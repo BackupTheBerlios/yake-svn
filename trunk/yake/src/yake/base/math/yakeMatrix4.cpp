@@ -49,7 +49,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/base/math/yakeMatrix4.h>
 
 namespace yake {
-namespace base {
 namespace math {
 
     const Matrix4 Matrix4::ZERO(
@@ -118,5 +117,4 @@ namespace math {
     }
 
 } // math
-} // base
 } // yake

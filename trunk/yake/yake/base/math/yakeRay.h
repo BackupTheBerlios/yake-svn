@@ -30,7 +30,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "yakePlane.h"
 
 namespace yake {
-namespace base {
 namespace math {
 
 	class YAKE_BASE_API Ray
@@ -66,7 +65,6 @@ namespace math {
 		Vector3		mDirection;
 	};
 
-}
 }
 }
 

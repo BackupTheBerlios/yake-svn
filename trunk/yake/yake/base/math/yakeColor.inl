@@ -19,7 +19,6 @@
    ------------------------------------------------------------------------------------
 */
 namespace yake {
-namespace base {
 namespace math {
 
 
@@ -234,7 +233,7 @@ inline real Color::getSquaredLength() const
 	return ( r * r ) + ( g  * g ) + ( b  * b ) + ( a  * a );
 }
 
-inline IOutputStream& Color::operator << (IOutputStream& rStream) const
+inline base::IOutputStream& Color::operator << (base::IOutputStream& rStream) const
 {
 	rStream << r;
 	rStream << g;
@@ -244,5 +243,4 @@ inline IOutputStream& Color::operator << (IOutputStream& rStream) const
 }
 
 } // math
-} // base
 } // yake

@@ -42,4 +42,3 @@ using namespace yake::base::math;
 
 
 #endif
-

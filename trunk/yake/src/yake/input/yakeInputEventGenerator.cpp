@@ -84,7 +84,7 @@ namespace input {
 	//-----------------------------------------------------
 
 	//-----------------------------------------------------
-	MouseEventGenerator::MouseEventGenerator() : mMouse(0), mMousePosition( base::math::Vector3::kZero )
+	MouseEventGenerator::MouseEventGenerator() : mMouse(0), mMousePosition( math::Vector3::kZero )
 	{
 	}
 
@@ -102,7 +102,7 @@ namespace input {
 		// wheel
 
 		// movement
-		base::math::Vector3 pos = mMouse->getPosition();
+		math::Vector3 pos = mMouse->getPosition();
 		if (pos != mMousePosition)
 		{
 			mMouseMovedSignal( pos - mMousePosition ); // send delta

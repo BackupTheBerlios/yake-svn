@@ -71,12 +71,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
 
 class MTRand {
 // Data
@@ -393,7 +389,6 @@ inline std::istream& operator>>( std::istream& is, MTRand& mtrand )
 }
 
 } // math
-} // base
 } // yake
 
 #endif  // YAKE_BASE_MATH_MERSENNETWISTER_H

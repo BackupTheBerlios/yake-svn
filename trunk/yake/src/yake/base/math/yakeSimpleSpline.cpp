@@ -23,7 +23,6 @@
 #include <yake/base/math/yakeVector4.h>
 
 namespace yake {
-namespace base {
 namespace math {
 
     //---------------------------------------------------------------------
@@ -249,5 +248,4 @@ namespace math {
     }
 
 } // math
-} // base
 } // yake

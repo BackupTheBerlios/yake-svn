@@ -34,10 +34,8 @@
 
 
 namespace yake {
+	using namespace math;
 namespace graphics {
-
-using namespace yake::base::math;
-//using namespace yake::base::mpl;
 
 	/**
 	*/

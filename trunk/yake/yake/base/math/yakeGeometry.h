@@ -12,7 +12,6 @@
 #include <yake/base/math/yakeMath.h>
 
 namespace yake {
-namespace base {
 namespace math {
 
 	typedef YAKE_BASE_API Vector3 Point3;
@@ -86,7 +85,6 @@ namespace math {
 		{ return (max.y - min.y); }
 	};
 
-}
 }
 }
 #endif

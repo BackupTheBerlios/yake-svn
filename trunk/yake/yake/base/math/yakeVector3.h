@@ -35,12 +35,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace math
-{
+namespace yake {
+namespace math {
 
 	/**	A 3d vector.
 		Based on Ogre's code ( www.ogre3d.org ).
@@ -423,7 +419,6 @@ namespace math
 	}
 
 } // math
-} // base
 } // yake
 
 #endif // YAKE_BASE_MATH_VECTOR3_H

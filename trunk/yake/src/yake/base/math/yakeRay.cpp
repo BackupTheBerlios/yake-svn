@@ -23,7 +23,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <yake/base/math/yakePlane.h>
 
 namespace yake {
-namespace base {
 namespace math {
 
 	std::pair<bool, real> Ray::intersects(const Plane& plane) const
@@ -42,6 +41,5 @@ namespace math {
 		}
 	}
 
-}
 }
 }
