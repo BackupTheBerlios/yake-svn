@@ -62,7 +62,7 @@ namespace ogre3d {
 		// Destructor.
 		virtual ~GraphicsSystem();
 
-		virtual SharedPtr<IGraphicalWorld> createWorld();
+		virtual SharedPtr<IWorld> createWorld();
 		
 		virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot );
 

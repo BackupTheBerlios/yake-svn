@@ -27,7 +27,7 @@ namespace exapp {
 		typedef Vector< SharedPtr<base::Library> > LibList;
 		LibList									mLibs;
 		SharedPtr< graphics::IGraphicsSystem >	mGraphicsSystem;
-		physics::PhysicsSystem					* mPhysicsSystem;
+		physics::IPhysicsSystem					* mPhysicsSystem;
 		scripting::ScriptingSystem				* mScriptingSystem;
 		SharedPtr<scripting::IBinder>			mScriptingBindings;
 		input::InputSystem						* mInputSystem;
@@ -102,7 +102,7 @@ namespace exapp {
 			return *mScriptingSystem;
 		}
 
-		physics::PhysicsSystem& getPhysicsSystem() const
+		physics::IPhysicsSystem& getPhysicsSystem() const
 		{ return *mPhysicsSystem; }
 
 		scripting::IBinder& getScriptingBindings() const

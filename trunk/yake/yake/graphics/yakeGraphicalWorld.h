@@ -196,11 +196,11 @@ namespace graphics {
 
 	/** A graphics world.
 	*/
-	class YAKE_GRAPHICS_INTERFACE_API IGraphicalWorld
+	class YAKE_GRAPHICS_INTERFACE_API IWorld
 	{
 	//{ //: public AbstractFactory< list< ISceneNode, ILight, ICamera > >
 	public:
-		virtual ~IGraphicalWorld() {}
+		virtual ~IWorld() {}
 
 		virtual ILight* createLight() = 0;
 		virtual ICamera* createCamera() = 0;

@@ -27,7 +27,7 @@
 #include <yakeBase/yake/yakeMovable.h>
 #endif
 
-#ifndef YAKE_PHYSICSSYSTEM_H
+#ifndef YAKE_PHYSICS_PHYSICSSYSTEM_H
 #include <yakeGraphics/yake/yakeGraphicsSystem.h>
 #endif
 

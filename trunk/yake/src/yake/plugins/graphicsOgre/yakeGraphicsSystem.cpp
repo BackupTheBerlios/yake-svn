@@ -46,9 +46,9 @@ GraphicsSystem::~GraphicsSystem()
 	YAKE_SAFE_DELETE( mCore );
 }
 
-SharedPtr<IGraphicalWorld> GraphicsSystem::createWorld()
+SharedPtr<IWorld> GraphicsSystem::createWorld()
 {
-	return SharedPtr<IGraphicalWorld>( new GraphicalWorld() );
+	return SharedPtr<IWorld>( new GraphicalWorld() );
 }
 
 void GraphicsSystem::subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot )

@@ -40,7 +40,7 @@ namespace ogre3d {
 	class OgreCore;
 	/** The graphics system implementation. 
 	*/
-	class YAKE_GRAPHICS_CONCRETE_API GraphicalWorld	: public IGraphicalWorld
+	class YAKE_GRAPHICS_CONCRETE_API GraphicalWorld	: public IWorld
 	{
 	public:
 		GraphicalWorld();

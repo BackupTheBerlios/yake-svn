@@ -44,12 +44,12 @@ namespace graphics {
 /** The graphics system interface.
 */
 struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem 
-	//: public AbstractFactory< sequences::list< IGraphicalWorld > >
+	//: public AbstractFactory< sequences::list< IWorld > >
 {
 	// Destructor.
 	virtual ~IGraphicsSystem();
 
-	virtual SharedPtr<IGraphicalWorld> createWorld() = 0;
+	virtual SharedPtr<IWorld> createWorld() = 0;
 
 	typedef Signal0<void> ShutdownSignal;
 	virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot ) = 0;
