@@ -22,11 +22,11 @@
 #include <yake/input/yakeInputSystem.h>
 #include <yake/plugins/inputOgre/InputSystemOgre.h>
 
-#include <dependencies/ogrenew/OgreMain/include/OgreMemoryMacros.h>
-#include <dependencies/ogrenew/OgreMain/include/Ogre.h>
+#include <OgreMemoryMacros.h>
+#include <Ogre.h>
 #ifdef OGRE_MEMORY_MACROS
 #pragma message("disabling OGRE's memory macros")
-#	include <dependencies/ogrenew/OgreMain/include/OgreNoMemoryMacros.h>
+#	include <OgreNoMemoryMacros.h>
 #endif
 
 namespace yake {

@@ -23,8 +23,8 @@
 //============================================================================
 #include <yake/plugins/graphicsOgre/yakePCH.h>
 #include <yake/graphics/yakeGeometryAccess.h>
-#include <dependencies/ogrenew/OgreMain/include/OgreMeshManager.h>
-#include <dependencies/ogrenew/OgreMain/include/OgreNoMemoryMacros.h>
+#include <OgreMeshManager.h>
+#include <OgreNoMemoryMacros.h>
 #include <yake/plugins/graphicsOgre/yakeGraphicsSystem.h>
 #include <yake/plugins/graphicsOgre/yakeGraphicsWorld.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreNode.h>

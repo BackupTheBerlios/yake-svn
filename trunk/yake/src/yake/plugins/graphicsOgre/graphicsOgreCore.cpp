@@ -32,9 +32,9 @@
 #endif
 #ifdef OGRE_MEMORY_MACROS
 #pragma message("disabling OGRE's memory macros")
-#	include <dependencies/ogrenew/OgreMain/include/OgreNoMemoryMacros.h>
+#	include <OgreNoMemoryMacros.h>
 #endif
-#include <dependencies/ogrenew/OgreMain/include/OgreMemoryMacros.h>
+#include <OgreMemoryMacros.h>
 
 #include <yake/plugins/graphicsOgre/graphicsOgreCore.h>
 
