@@ -24,13 +24,15 @@ using namespace yake::scripting;
 class TheApp : public yake::exapp::ExampleApplication
 {
 public:
-	TheApp() : ExampleApplication( false, false, true, false )
+	TheApp() : ExampleApplication( false, false, true, false, true )
 	{
 	}
 	virtual void run()
 	{
 		yake::scripting::IVM* pVM = getScriptingSystem().createVM();
 		YAKE_ASSERT( pVM );
+
+		getScriptingBindings().bind( pVM );
 
 		// This prints 'hello from lua scripting ;)' to stdout using
 		// the Lua function print().
