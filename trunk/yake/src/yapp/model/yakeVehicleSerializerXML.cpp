@@ -23,8 +23,6 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_DATA_VEHICLE_H
-#define YAKE_DATA_VEHICLE_H
 
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
@@ -47,7 +45,7 @@ namespace yake {
 namespace data {
 namespace serializer {
 namespace vehicle {
-
+	
 	//------------------------------------------------------
 	VehicleSerializer::VehicleSerializer() : mpTpl(0)
 	{
@@ -80,11 +78,12 @@ namespace vehicle {
 	//------------------------------------------------------
 	void VehicleSerializer::readVehicle( const SharedPtr<dom::INode> & pNode )
 	{
-		const String name = varGet<String>(pNode->getValue("name"));
+		
+		const String name = pNode->getValueAs<String>( "name" );
 		COUTLN( "readVehicle() [" << name << "]" );
 		YAKE_ASSERT( pNode );
 
-		SharedPtr<dom::INode> pNodes = pNode->getNodeByName("chassis");
+		SharedPtr<dom::INode> pNodes = pNode->getNodeByName( "chassis" );
 		COUTLN( "scene: found chassis = " << (pNodes.get() ? "yes" : "no") );
 		if (pNodes.get())
 			readChassis( pNodes );
@@ -118,8 +117,8 @@ namespace vehicle {
 	//------------------------------------------------------
 	void VehicleSerializer::readEngine( const SharedPtr<dom::INode> & pNode )
 	{
-		String id = varGet<String>(pNode->getAttributeValue("id"));
-		String tag = varGet<String>(pNode->getAttributeValue("tag"));
+		String id = pNode->getAttributeValueAs<String>( "id" );
+		String tag = pNode->getAttributeValueAs<String>( "tag" );
 		COUTLN( "readEngine() [id=" << id << " tag=" << tag << "]" );
 		YAKE_ASSERT( pNode );
 
@@ -129,7 +128,7 @@ namespace vehicle {
 		const dom::NodeList & nodes = pNode->getNodes();
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
-			String childNodeName = varGet<String>((*it)->getValue("name"));
+			String childNodeName = (*it)->getValueAs<String>( "name" );
 			childNodeName = ::yake::base::StringUtil::toLowerCase(childNodeName);
 			COUTLN( "   (child: " <<  childNodeName << ")" );
 
@@ -149,9 +148,9 @@ namespace vehicle {
 		COUTLN( "  readRPM()" );
 		YAKE_ASSERT( pNode );
 
-		engineTpl.rpmMin_ = StringUtil::toReal( pNode->getAttributeValueAs<String>("min") );
-		engineTpl.rpmMax_ = StringUtil::toReal( pNode->getAttributeValueAs<String>("max") );
-		engineTpl.rpmRedline_ = StringUtil::toReal( pNode->getAttributeValueAs<String>("redline") );
+		engineTpl.rpmMin_ = StringUtil::toReal( pNode->getAttributeValueAs<String>( "min" ) );
+		engineTpl.rpmMax_ = StringUtil::toReal( pNode->getAttributeValueAs<String>( "max" ) );
+		engineTpl.rpmRedline_ = StringUtil::toReal( pNode->getAttributeValueAs<String>( "redline" ) );
 	}
 	//------------------------------------------------------
 	void VehicleSerializer::readGearbox( const SharedPtr<dom::INode> & pNode, app::model::vehicle::VehicleTemplate::EngineTemplate& engineTpl )
@@ -194,9 +193,9 @@ namespace vehicle {
 	//------------------------------------------------------
 	void VehicleSerializer::readAxle( const SharedPtr<dom::INode> & pNode )
 	{
-		String id = varGet<String>(pNode->getAttributeValue("id"));
-		String tag = varGet<String>(pNode->getAttributeValue("tag"));
-		String engineId = varGet<String>(pNode->getAttributeValue("engine"));
+		String id = pNode->getAttributeValueAs<String>( "id" );
+		String tag = pNode->getAttributeValueAs<String>( "tag" );
+		String engineId = pNode->getAttributeValueAs<String>( "engine" );
 		COUTLN( "readAxle() [id=" << id << " tag=" << tag << " engine=" << engineId << "]" );
 		YAKE_ASSERT( pNode );
 
@@ -221,17 +220,17 @@ namespace vehicle {
 	//------------------------------------------------------
 	void VehicleSerializer::readWheel( const SharedPtr<dom::INode> & pNode )
 	{
-		String id = varGet<String>(pNode->getAttributeValue("id"));
-		String tag = varGet<String>(pNode->getAttributeValue("tag"));
-		String axleId = varGet<String>(pNode->getAttributeValue("axle"));
+		String id = pNode->getAttributeValueAs<String>( "id" );
+		String tag = pNode->getAttributeValueAs<String>( "tag" );
+		String axleId = pNode->getAttributeValueAs<String>( "axle" );
 		COUTLN( "readWheel() [id=" << id << " tag=" << tag << " axle=" << axleId << "]" );
 		YAKE_ASSERT( pNode );
 
 		app::model::vehicle::VehicleTemplate::WheelTemplate wheelTpl;
 
 		// physical representation of the wheel
-		wheelTpl.radius_ = StringUtil::toReal( varGet<String>(pNode->getAttributeValue("radius")) );
-		wheelTpl.mass_ = StringUtil::toReal( varGet<String>(pNode->getAttributeValue("mass")) );
+		wheelTpl.radius_ = StringUtil::toReal( pNode->getAttributeValueAs<String>( "radius" ) );
+		wheelTpl.mass_ = StringUtil::toReal( pNode->getAttributeValueAs<String>( "mass" ) );
 		Vector3 position(0,0,0);
 		SharedPtr<dom::INode> pPosNode = pNode->getNodeByName("position");
 		if (pPosNode.get())
@@ -243,13 +242,13 @@ namespace vehicle {
 		SharedPtr<dom::INode> pGfxNode = pNode->getNodeByName("gfx");
 		if (pGfxNode.get())
 		{
-			gfxName = varGet<String>(pGfxNode->getAttributeValue("name"));
+			gfxName = pGfxNode->getAttributeValueAs<String>( "name" );
 			COUTLN( "  gfx = " << gfxName );
 		}
 
 		wheelTpl.position_ = position;
 		wheelTpl.bMassIsRelativeToChassisMass_ = 
-					(varGet<String>(pGfxNode->getAttributeValue("name")) == "relative");
+					( pGfxNode->getAttributeValueAs<String>( "name" ) == "relative");
 		wheelTpl.gfxDescriptor_ = gfxName;
 		wheelTpl.gfxDescriptorType_ = "scene";
 		wheelTpl.idxAxle_ = StringUtil::toSizeT( axleId );
@@ -290,14 +289,14 @@ namespace vehicle {
 		const dom::NodeList & nodes = pNode->getNodes();
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
-			String childNodeName = varGet<String>((*it)->getValue("name"));
+			String childNodeName = (*it)->getValueAs<String>( "name" );
 			childNodeName = ::yake::base::StringUtil::toLowerCase(childNodeName);
 			COUTLN( "   (child: " <<  childNodeName << ")" );
 
 			const SharedPtr<dom::INode> & pChild = (*it);
 			if (childNodeName == "physics")
 			{
-				chassisTpl.mass_ = StringUtil::toReal( varGet<String>( pChild->getAttributeValue("mass") ) );
+				chassisTpl.mass_ = StringUtil::toReal( pChild->getAttributeValueAs<String>( "mass" ) );
 			}
 		}
 
@@ -305,7 +304,7 @@ namespace vehicle {
 		SharedPtr<dom::INode> pGfxNode = pNode->getNodeByName("gfx");
 		if (pGfxNode.get())
 		{
-			gfxName = varGet<String>(pGfxNode->getAttributeValue("name"));
+			gfxName = pGfxNode->getAttributeValueAs<String>( "name" );
 		}
 
 		chassisTpl.gfxDescriptor_ = gfxName;
@@ -435,4 +434,3 @@ namespace vehicle {
 } // serializer
 } // data
 } // yake
-

@@ -7,7 +7,11 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include <yapp/samples/base/objects/yakePCH.h>
+//#include <yapp/samples/base/objects/yakePCH.h>
+#include <yake/rx/yakePCH.h>
+#include <yake/rx/yakeRx.h>
+
+
 #include <yapp/base/yapp.h>
 #include <yapp/base/event/yakeEvent.h>
 
@@ -186,7 +190,7 @@ namespace yake {
 					mName(name), mFnCreate(fnCreate)
 	{
 		YAKE_ASSERT( mFnCreate );
-		static sIds = 0;
+		static int sIds = 0;
 		mId = sIds++;
 	}
 	RxClass::~RxClass()

@@ -190,7 +190,7 @@ namespace vehicle {
 		}
 
 		// axles
-		for (i=0; i<tpl.getNumAxles(); ++i)
+		for (size_t i=0; i<tpl.getNumAxles(); ++i)
 		{
 			const VehicleTemplate::AxleTemplate& axleTpl = tpl.getAxle(i);
 			COUTLN("  axle " << i << " engine= " << axleTpl.idxEngine_);
@@ -206,14 +206,14 @@ namespace vehicle {
 		}
 
 		// steer groups
-		for (i=0; i<tpl.getNumSteeringGroups(); ++i)
+		for (size_t i=0; i<tpl.getNumSteeringGroups(); ++i)
 		{
 			COUTLN("  steer group " << i);
 			mSteerGroups.push_back( new SteerGroup() );
 		}
 
 		// wheels
-		for (i=0; i<tpl.getNumWheels(); ++i)
+		for (size_t i=0; i<tpl.getNumWheels(); ++i)
 		{
 			const VehicleTemplate::WheelTemplate& wheelTpl = tpl.getWheel(i);
 			COUTLN("  wheel " << i);
@@ -375,4 +375,3 @@ namespace vehicle {
 } // ns model
 } // ns app
 } // ns yake
-
