@@ -21,6 +21,7 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
+#include <inc/plugins/graphicsOgre/yakePCH.h>
 #include <inc/plugins/graphicsOgre/yakeGraphicsSystem.h>
 #include <inc/plugins/graphicsOgre/yakeGraphicsRegister.h>
 
