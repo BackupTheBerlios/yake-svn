@@ -274,6 +274,12 @@ namespace yake {
 		class YAKE_PHYSICS_API IComplexObject : public base::Movable
 		{
 		public:
+			class ISlipNormalSource
+			{
+			public:
+				virtual ~ISlipNormalSource() {}
+				virtual Vector3 getLateralSlipNormal() const = 0;
+			};
 			virtual ~IComplexObject() {}
 
 			virtual IBody* getBody() const = 0;
@@ -291,6 +297,11 @@ namespace yake {
 			virtual real getFriction() const = 0;
 			virtual real getFriction2() const = 0;
 			virtual real getSoftness() const = 0;
+
+			virtual void setLateralSlipEnabled( bool enabled ) = 0;
+			//virtual void setSlipNormal( const Vector3 & slipNormal ) = 0;
+			virtual void setSlipNormalSource( ISlipNormalSource* pSource ) = 0;
+			virtual void setSlipCoefficients( const real linear, const real angular ) = 0;
 
 		protected:
 			typedef Signal1< void, IComplexObject* > EnterCollisionSignal;

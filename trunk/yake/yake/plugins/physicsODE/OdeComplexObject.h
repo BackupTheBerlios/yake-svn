@@ -51,6 +51,11 @@ namespace yake {
 			virtual real getFriction2() const;
 			virtual real getSoftness() const;
 
+			virtual void setLateralSlipEnabled( bool enabled );
+			//virtual void setSlipNormal( const Vector3 & slipNormal );
+			virtual void setSlipNormalSource( ISlipNormalSource* pSource );
+			virtual void setSlipCoefficients( const real linear, const real angular );
+
 			// signals
 			virtual void subscribeToEnterCollision( const EnterCollisionSignal::slot_type & slot );
 			virtual void subscribeToLeaveCollision( const LeaveCollisionSignal::slot_type & slot );
@@ -73,6 +78,12 @@ namespace yake {
 			real						mSoftness;
 			real						mFriction;
 			real						mFriction2;
+
+			bool						mLateralSlip;
+			ISlipNormalSource*			mSlipNormalSource;
+			Vector3						mSlipNormal;
+			real						mSlipLinearCoeff;
+			real						mSlipAngularCoeff;
 		};
 
 	}
