@@ -188,6 +188,9 @@
 				RelativePath="..\..\yake\physics\yakePhysicsMaterial.h">
 			</File>
 			<File
+				RelativePath="..\..\yake\physics\yakePhysicsMotors.h">
+			</File>
+			<File
 				RelativePath="..\..\yake\physics\yakePhysicsPrerequisites.h">
 			</File>
 			<File
