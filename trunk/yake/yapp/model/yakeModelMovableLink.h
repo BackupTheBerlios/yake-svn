@@ -33,6 +33,10 @@ namespace yake {
 namespace app {
 namespace model {
 
+	/** A link controller designed to forward position and/or orientation to
+		to other clients using signals. Factory item id is "yake.movable".
+		@Remarks A controller only fires signals when the values have changed!
+	*/
 	class YAPP_BASE_API ModelMovableLink : public ModelLinkController< Movable >
 	{
 	protected:

@@ -35,7 +35,8 @@ namespace yake {
 namespace app {
 namespace model {
 
-	/** A graphical container model.
+	/** A graphical container model, also a submodel in a complex model.
+		@Remarks Read more about the concepts in the manual on "yapp::model".
 	*/
 	class YAPP_BASE_API Graphical : public Submodel
 	{

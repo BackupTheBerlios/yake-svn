@@ -33,6 +33,9 @@ namespace yake {
 namespace app {
 namespace model {
 
+	/** Represents a sub model in a model.
+		@Remarks Read more about this in the manual/wiki on 'dotLink' and 'yapp::model' concepts.
+	*/
 	class YAPP_BASE_API Submodel
 	{
 	public:

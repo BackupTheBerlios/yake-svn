@@ -35,7 +35,8 @@ namespace yake {
 namespace app {
 namespace model {
 
-	/** A physical container model.
+	/** A physical container model, also a submodel in a complex model.
+		@Remarks Read more about the concepts in the manual on "yapp::model".
 	*/
 	class YAPP_BASE_API Physical : public Submodel
 	{

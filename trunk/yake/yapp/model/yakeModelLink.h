@@ -34,6 +34,9 @@ namespace yake {
 namespace app {
 namespace model {
 
+	/** Represents a link between models and/or submodel of an model.
+		@Remarks Read more about this in the manual/wiki on 'dotLink' and 'yapp::model' concepts.
+	*/
 	class YAPP_BASE_API ModelLink : public IObjectController
 	{
 	public:
@@ -41,6 +44,9 @@ namespace model {
 		YAKE_DECLARE_REGISTRY_0( ModelLink, ::yake::base::String );
 	};
 
+	/** A controller that controls links. The source type and instance can be set.
+		@see ModelMovableLink
+	*/
 	template< class SourceType >
 	class ModelLinkController : public ModelLink
 	{
