@@ -28,7 +28,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/lambda.hpp>
 
-#include "yakeEmptyType.h"
+#include "yakeNullType.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -79,7 +79,7 @@ struct InheritMultiple
 	: algorithms::fold
 	< 
 			Sequence_, 
-			EmptyType, 
+			null_type, 
 			detail::InheritTransformed< Transformation_ > 
 	>
 {};

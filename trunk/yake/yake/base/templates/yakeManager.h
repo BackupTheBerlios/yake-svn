@@ -30,7 +30,7 @@
 #endif
 // Yake
 #include <yake/base/templates/yakeFastMap.h>
-#include <yake/base/mpl/yakeEmptyType.h>
+#include <yake/base/mpl/yakeNullType.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -180,7 +180,7 @@ struct RegisterFunctionsNames
 template
 < 
 	typename Identifier_, 
-	class Value_ = mpl::EmptyType,
+	class Value_ = mpl::null_type,
 	class ManagerNamingPolicy_ = DefaultFunctionsNames,
 	template< typename, class > class ManagerContainerPolicy_ = DefaultContainer,
 	template< typename, class > class ManagerErrorPolicy_ = DefaultManagerError
@@ -205,7 +205,7 @@ public:
 // Todo: nifty container, function parameters
 /* Policy Builder */
 template< typename Identifier_, class ManagerNamingPolicy_ >
-class Manager< Identifier_, mpl::EmptyType, ManagerNamingPolicy_ > : public ManagerNamingPolicy_::Vector< Identifier_ >
+class Manager< Identifier_, mpl::null_type, ManagerNamingPolicy_ > : public ManagerNamingPolicy_::Vector< Identifier_ >
 {
 // Class
 public:

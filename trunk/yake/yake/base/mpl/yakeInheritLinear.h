@@ -24,7 +24,7 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include "yakeEmptyType.h"
+#include "yakeNullType.h"
 #include "yakeAlgorithms.h"
 
 //============================================================================
@@ -37,7 +37,7 @@ namespace base
 namespace mpl
 {
 
-template< typename Types_, typename Unit_, typename Root_ = EmptyType >
+template< typename Types_, typename Unit_, typename Root_ = null_type >
 struct InheritLinear : algorithms::fold< Types_, Root_, Unit_ > 
 {}; 
 

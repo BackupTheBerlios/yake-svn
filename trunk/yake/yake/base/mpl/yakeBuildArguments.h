@@ -75,7 +75,7 @@
 #define YAKE_ARGUMENTS( number ) YAKE_ITER_ARG_##number ( YAKE_ARGUMENT )
 
 // const T2& t2, const T1& t1, const T0& t0
-#define YAKE_ARGUMENTS_ONE_FREE_0 yake::base::mpl::EmptyType Null = yake::base::mpl::EmptyType()
+#define YAKE_ARGUMENTS_ONE_FREE_0 yake::base::mpl::null_type Null = yake::base::mpl::null_type()
 #define YAKE_ARGUMENTS_ONE_FREE_1 YAKE_ITER_ARG_1( YAKE_ARGUMENT )
 #define YAKE_ARGUMENTS_ONE_FREE_2 YAKE_ITER_ARG_2( YAKE_ARGUMENT )
 #define YAKE_ARGUMENTS_ONE_FREE_3 YAKE_ITER_ARG_3( YAKE_ARGUMENT )
