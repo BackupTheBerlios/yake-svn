@@ -26,7 +26,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASEPREREQUISITES_H
-#	include "../yakePrerequisites.h"
+#	include <yake/base/yakePrerequisites.h>
 #endif
 
 #if defined( YAKE_SIGNALS_USE_BOOST )
@@ -51,8 +51,8 @@
 //
 #	include "boost/bind.hpp"
 #elif defined( YAKE_SIGNALS_USE_TTL )
-#	include "ttl/sig/signal.hpp"
-#	include "boost/bind.hpp"
+#	include <ttl/sig/signal.hpp>
+#	include <boost/bind.hpp>
 #endif
 
 #if defined( YAKE_SIGNALS_USE_BOOST )

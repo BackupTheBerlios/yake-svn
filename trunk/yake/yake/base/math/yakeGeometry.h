@@ -1,4 +1,15 @@
-#pragma once
+#ifndef YAKE_BASE_MATH_GEOMETRY_H
+#define YAKE_BASE_MATH_GEOMETRY_H
+
+//============================================================================
+//    IMPLEMENTATION HEADERS
+//============================================================================
+// Standard headers
+#ifndef YAKE_BASE_PREREQUISITES_H
+#	include <yake/base/yakePrerequisites.h>
+#endif
+// Yake
+#include <yake/base/math/yakeMath.h>
 
 namespace yake {
 namespace base {
@@ -79,3 +90,4 @@ namespace math {
 }
 }
 }
+#endif

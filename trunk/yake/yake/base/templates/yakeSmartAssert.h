@@ -26,7 +26,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASEPREREQUISITES_H
-#	include "../yakePrerequisites.h"
+#	include <yake/base/yakePrerequisites.h>
 #endif
 // Yake
 #include <yake/base/yakeString.h>
@@ -66,12 +66,13 @@ enum AssertionLevel
 struct YAKE_BASE_API SmartAssertContext
 {
 private:
-	String																		mFile;
-	int32																			mLine;
-	String																		mExpr;
-	HashMap< String, String, _StringHash >		mValueMap;
-	std::vector< String >											mMsgs;
-	AssertionLevel														mLevel;
+	String mFile;
+	int32	mLine;
+	String	mExpr;
+	typedef HashMap< String, String, _StringHash > ValueMapT;
+	ValueMapT mValueMap;
+	std::vector< String >	mMsgs;
+	AssertionLevel	mLevel;
 public:
 	SmartAssertContext( const char * strExpr );
 	void setLevel( AssertionLevel lvl ) { mLevel = lvl; }

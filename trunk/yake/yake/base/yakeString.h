@@ -26,7 +26,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include <yake/base/yakePrerequisites.h>
 #endif
 
 //============================================================================
@@ -37,7 +37,7 @@ namespace yake
 namespace base
 {
 
-typedef std::string YAKE_BASE_STRING;
+//typedef std::string YAKE_BASE_STRING;
 
 /** The YAKE string class. It's derived from the STL string and enhanced by a few useful functions.
 	NB If you need to store Unicode use the UString class.

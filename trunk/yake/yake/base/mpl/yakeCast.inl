@@ -42,9 +42,9 @@ namespace detail
     template< typename T >
     static void* execute( T* pointer )
     {
-		    void* p = static_cast< void* >( pointer );
+	void* p = static_cast< void* >( pointer );
 
-		    return p;
+	return p;
     }
   };
 
@@ -76,9 +76,9 @@ namespace detail
     template< typename T >
     static void* execute( T* pointer )
     {
-		    void* p = static_cast< void* >( pointer );
+	void* p = static_cast< void* >( pointer );
 
-		    return p;
+	return p;
     }
   };
 } // detail
@@ -86,7 +86,7 @@ namespace detail
 template< typename T >
 void* getBasePointer( T* pointer )
 {
-  return detail::getBasePointer1< boost::is_fundamental< T >::value >::execute( pointer );
+	return detail::getBasePointer1< boost::is_fundamental< T >::value >::execute( pointer );
 }
 
 
@@ -95,24 +95,27 @@ namespace detail
   template< typename T, typename U >
   struct PolymorphicCast
   {
-    template< bool isPolymorphic >
+    template< bool isPolymorphic, int dummy = 0 >
     struct Result
     {
       static U* execute( T* pointer )
       {
-      return dynamic_cast< U* >( pointer );
+      	return dynamic_cast< U* >( pointer );
       }
     };
   
-    template<>
-    struct Result< false >
+    template< int dummy >
+    struct Result< false, dummy >
     {
       static U* execute( T* pointer )
       {
-      return pointer;
+      	return pointer;
       }
     };
+  
   };
+ 
+
 } // detail
 
 template< typename U, typename T >
@@ -140,19 +143,19 @@ namespace detail
 template< typename T >
 struct swapBytesHelper1
 {
-  template< int numBytes >
+  template< int numBytes, int dummy = 0 >
   struct swapBytesHelper2;
 
-  template<>
-  struct swapBytesHelper2< 1 >
+  template< int dummy >
+  struct swapBytesHelper2< 1, dummy >
   {
     static void Execute( T& t )
     {
     }
   };
 
-  template<>
-  struct swapBytesHelper2< 2 >
+  template< int dummy >
+  struct swapBytesHelper2< 2, dummy >
   {
     static void Execute( T& t )
     {
@@ -162,8 +165,8 @@ struct swapBytesHelper1
     }
   };
 
-  template<>
-  struct swapBytesHelper2< 4 >
+  template< int dummy >
+  struct swapBytesHelper2< 4, dummy >
   {
     static void execute( T& t )
     {
@@ -176,20 +179,20 @@ struct swapBytesHelper1
     }
   };
 
-  template<>
-  struct swapBytesHelper2< 8 >
+  template< int dummy >
+  struct swapBytesHelper2< 8, dummy >
   {
     static void execute( T& t )
     {
       int64_t& i = safe_reinterpret_cast< int64_t& >( t );
 
 	    i = (i>>56) |
-		    (i>>40) & 0x000000000000ff00 |
-		    (i>>24) & 0x0000000000ff0000 |
-		    (i>> 8) & 0x00000000ff000000 |
-		    (i<< 8) & 0x000000ff00000000 |
-		    (i<<24) & 0x0000ff0000000000 |
-		    (i<<40) & 0x00ff000000000000 |
+		    (i>>40) & 0x000000000000ff00LL |
+		    (i>>24) & 0x0000000000ff0000LL |
+		    (i>> 8) & 0x00000000ff000000LL |
+		    (i<< 8) & 0x000000ff00000000LL |
+		    (i<<24) & 0x0000ff0000000000LL |
+		    (i<<40) & 0x00ff000000000000LL |
 		    (i<<56);
     }
   };
@@ -222,7 +225,7 @@ T join( const std::vector< T >& what, const T& separator )
 {
   T result;
 
-  for( std::vector< T >::const_iterator iter = what.begin(); iter != what.end(); iter++ )
+  for( typename std::vector< T >::const_iterator iter = what.begin(); iter != what.end(); iter++ )
   {
     result += *iter;
 
@@ -238,7 +241,7 @@ std::vector< T > split( const T& where, const T& separator )
 {
   std::vector< T > result;
 
-  T::size_type oldpos = 0, pos = 0;
+  typename T::size_type oldpos = 0, pos = 0;
   while( ( pos = where.find( separator, pos ) ) != T::npos )
   {
     result.push_back( where.substr( oldpos, pos - oldpos ) );

@@ -30,7 +30,7 @@
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
 const 
-class 
+class Dangler
 {
 public:
 	// non-member

@@ -30,12 +30,12 @@
 // SCRIPTINGLUA_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
 #ifdef YAKESCRIPTINGLUABINDINGS_EXPORTS
-#define SCRIPTINGBINDINGSLUA_API __declspec(dllexport)
+#define SCRIPTINGBINDINGSLUA_API DLLEXPORT
 #else
-#define SCRIPTINGBINDINGSLUA_API __declspec(dllimport)
+#define SCRIPTINGBINDINGSLUA_API DLLIMPORT
 #endif
 
-SCRIPTINGBINDINGSLUA_API yake::base::Plugin* dynlibStartPlugin(void);
+SCRIPTINGBINDINGSLUA_API extern "C" yake::base::Plugin* dynlibStartPlugin();
 
 using namespace yake::base;
 using namespace yake::base::templates;

@@ -36,12 +36,18 @@ namespace base
 
 Library::Library( const String& rFilename )
 {
-  YAKE_DECLARE_FUNCTION( Library )
+	YAKE_DECLARE_FUNCTION( Library )
 
-  mHandle = native::library_Load( rFilename.c_str() );
-
-  if( 0 == mHandle )
-      throw Exception( "Couldn't load library \"" + rFilename + "\".", YAKE_HERE );
+	mHandle = native::library_Load( rFilename.c_str() );
+	if( 0 == mHandle ) // try again with .dll if it was missing
+	{
+		yake::base::String name( rFilename );
+		if ( name.substr( name.length() - 3, 3 ) != ".dll" )
+			name += ".dll";
+		mHandle = native::library_Load( name.c_str() );
+		if( 0 == mHandle)
+			YAKE_EXCEPT( "Couldn't load library \"" + name + "\".", YAKE_HERE );
+	}
 }
 
 Library::~Library()

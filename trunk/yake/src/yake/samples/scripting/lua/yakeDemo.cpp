@@ -54,18 +54,27 @@ public:
 YAKE_DECLARE_GLOBAL
 int main()
 {
-	YAKE_DECLARE_FUNCTION( main )
-
+	try 
 	{
-		TheApp theApp;
-		theApp.initialise();
-		theApp.run();
-	}
+		YAKE_DECLARE_FUNCTION( main )
+
+		{
+			TheApp theApp;
+				theApp.initialise();
+			theApp.run();
+		}
 
 #if defined( YAKE_DEBUG_BUILD )
-	std::cout << std::endl << "Waiting for you...";
-	std::cin.get();
+		std::cout << std::endl << "Waiting for you...";
+		std::cin.get();
 #endif
+	}
+	catch ( yake::base::Exception & e )
+	{
+		std::cout << "YAKE EXCEPTION: " << e.getSource() << std::endl;
+		std::cout << "File: " << e.getFile() << " @ " << e.getLine() << std::endl;
+		std::cout << "Reason: " << e.getMessage() << std::endl << std::endl;
+	}
 
 	return 0;
 }

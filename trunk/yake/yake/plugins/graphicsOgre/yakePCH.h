@@ -20,18 +20,18 @@
 */
 #ifndef __INC_PCH_H__
 #define __INC_PCH_H__
-#pragma once
 
 #include <yake/base/yake.h>
+
 #include <yake/graphics/yakeGraphicsSystem.h>
 
-#include <dependencies/ogrenew/ogremain/include/Ogre.h>
-#include <dependencies/ogrenew/ogremain/include/OgreStringConverter.h>
-#include <dependencies/ogrenew/ogremain/include/OgreRoot.h>
-#include <dependencies/ogrenew/ogremain/include/OgreConfigFile.h>
-#include <dependencies/ogrenew/ogremain/include/OgreRenderSystem.h>
-#include <dependencies/ogrenew/ogremain/include/OgreSceneManager.h>
-#include <dependencies/ogrenew/ogremain/include/OgreNoMemoryMacros.h>
+#include <dependencies/ogrenew/OgreMain/include/Ogre.h>
+#include <dependencies/ogrenew/OgreMain/include/OgreStringConverter.h>
+#include <dependencies/ogrenew/OgreMain/include/OgreRoot.h>
+#include <dependencies/ogrenew/OgreMain/include/OgreConfigFile.h>
+#include <dependencies/ogrenew/OgreMain/include/OgreRenderSystem.h>
+#include <dependencies/ogrenew/OgreMain/include/OgreSceneManager.h>
+#include <dependencies/ogrenew/OgreMain/include/OgreNoMemoryMacros.h>
 
 #define VEC_YAKE2OGRE( YV ) Ogre::Vector3( YV.x, YV.y, YV.z )
 #define VEC_OGRE2YAKE( YV ) yake::Vector3( YV.x, YV.y, YV.z )

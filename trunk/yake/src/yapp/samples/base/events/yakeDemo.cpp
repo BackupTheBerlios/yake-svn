@@ -49,7 +49,7 @@ namespace event {
 using namespace yapp;
 using namespace yapp::event;
 
-const MSGID_FRAME = MessageIdManager::createId();
+const MessageId MSGID_FRAME = MessageIdManager::createId();
 
 class TheApp
 {

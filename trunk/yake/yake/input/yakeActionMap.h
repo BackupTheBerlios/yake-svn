@@ -25,7 +25,6 @@
 */
 #ifndef YAKE_INPUT_ACTIONMAP_H
 #define YAKE_INPUT_ACTIONMAP_H
-#pragma once
 
 #include <yake/input/yakeInput.h>
 
@@ -179,7 +178,6 @@ namespace input {
 		ActionCondition* createMouseButtonUpCondition( const KeyCode key, bool continuous, MouseDevice* device = 0 );
 		ActionCondition* createMouseButtonDownCondition( const KeyCode key, bool continuous, MouseDevice* device = 0 );
 	};
-
 
 }
 }

@@ -27,7 +27,6 @@
 #include <yake/plugins/scriptingLuaBindings/yakeBinder.h>
 #include <yake/plugins/scriptingLua/ScriptingSystemLua.h>
 
-
 namespace luabind {
 namespace converters {
 
@@ -96,6 +95,7 @@ namespace lua {
 
 		using namespace luabind;
 
+		luabind::open( pLuaVM->getLuaState() );
 		module(pLuaVM->getLuaState())
 		[
 			class_<Version>("Version")

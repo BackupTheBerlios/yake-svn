@@ -26,7 +26,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include <yake/base/yakePrerequisites.h>
 #endif
 // Yake
 
@@ -43,7 +43,7 @@ class Timer;
 namespace timer 
 {
 	Timer* createTimer();
-};
+}
 
 /** Timer interface.
 	Timers are implemented for specific platforms.

@@ -143,7 +143,8 @@ private:
 		{ \
 			static int counter = 0; \
 			if( counter++ > 0 ) return; \
-			Concrete##::Register(); \
+			typedef Concrete ConcreteT; \
+			ConcreteT::Register(); \
 		} \
 	} g_Concrete##Initor; \
 	} // nameless

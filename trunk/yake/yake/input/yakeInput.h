@@ -23,7 +23,6 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#pragma once
 
 #if defined( YAKE_INPUT_EXPORTS )
 #	define YAKE_INPUT_API DLLEXPORT

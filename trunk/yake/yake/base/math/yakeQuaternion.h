@@ -89,7 +89,8 @@ namespace math
             const Quaternion& rkQ);
         Quaternion operator- () const;
         bool operator== (const Quaternion& rhs) const;
-		bool operator!= (const Quaternion& rhs) const;
+	bool operator!= (const Quaternion& rhs) const;
+
 
         // functions of a quaternion
         real Dot (const Quaternion& rkQ) const;  // dot product

@@ -263,6 +263,7 @@ public:
 		}
 	};
 
+
 } // templates
 } // base
 } // yake

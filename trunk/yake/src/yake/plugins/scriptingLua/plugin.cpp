@@ -26,7 +26,7 @@
 
 //---------------------------------------------------------
 // This is an example of an exported function.
-yake::base::Plugin* dynlibStartPlugin(void)
+extern "C" yake::base::Plugin* dynlibStartPlugin(void)
 {
 	return new ScriptingLuaPlugin();
 }

@@ -20,7 +20,6 @@
 */
 #ifndef __INC_PCH_H__
 #define __INC_PCH_H__
-#pragma once
 
 #include <yake/base/yake.h>
 

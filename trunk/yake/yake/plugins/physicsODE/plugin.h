@@ -25,14 +25,14 @@
 // SCRIPTINGLUA_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
 #ifdef YAKEPHYSICSODE_EXPORTS
-#define PHYSICSODE_API __declspec(dllexport)
+#define PHYSICSODE_API DLLEXPORT
 #else
-#define PHYSICSODE_API __declspec(dllimport)
+#define PHYSICSODE_API DLLIMPORT
 #endif
 
-#include "PhysicsSystemOde.h"
+#include <yake/plugins/physicsODE/PhysicsSystemODE.h>
 
-PHYSICSODE_API yake::base::Plugin* dynlibStartPlugin(void);
+extern "C" yake::base::Plugin* dynlibStartPlugin(void);
 
 class OdePlugin : public yake::physics::PhysicsPlugin
 {

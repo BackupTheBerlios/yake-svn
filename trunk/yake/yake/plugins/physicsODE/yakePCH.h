@@ -20,7 +20,6 @@
 */
 #ifndef __INC_PCH_H__
 #define __INC_PCH_H__
-#pragma once
 
 #include <dependencies/ode/include/ode/ode.h>
 #include <dependencies/ode/include/ode/odecpp.h>

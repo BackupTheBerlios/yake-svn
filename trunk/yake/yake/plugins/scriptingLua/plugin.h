@@ -25,12 +25,12 @@
 // SCRIPTINGLUA_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
 #ifdef YAKESCRIPTINGLUA_EXPORTS
-#define SCRIPTINGLUA_API __declspec(dllexport)
+#define SCRIPTINGLUA_API DLLEXPORT
 #else
-#define SCRIPTINGLUA_API __declspec(dllimport)
+#define SCRIPTINGLUA_API DLLIMPORT
 #endif
 
-SCRIPTINGLUA_API yake::base::Plugin* dynlibStartPlugin(void);
+SCRIPTINGLUA_API extern "C" yake::base::Plugin* dynlibStartPlugin();
 
 #include <yake/plugins/scriptingLua/ScriptingSystemLua.h>
 

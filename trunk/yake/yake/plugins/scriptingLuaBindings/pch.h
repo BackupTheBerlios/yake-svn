@@ -27,10 +27,12 @@
 #include <yake/scripting/yakeScriptingSystem.h>
 #include <yake/plugins/scriptingLuaBindings/plugin.h>
 
-extern "C" {
+extern "C" 
+{
 #include <dependencies/lua/include/lua.h>
 #include <dependencies/lua/include/lualib.h>
 #include <dependencies/lua/include/lauxlib.h>
 }
-#define LUABIND_NO_HEADERS_ONLY
+
+//#define LUABIND_NO_HEADERS_ONLY
 #include <dependencies/luabind/luabind/luabind.hpp>

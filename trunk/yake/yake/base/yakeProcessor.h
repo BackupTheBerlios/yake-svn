@@ -27,7 +27,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include <yake/base/yakePrerequisites.h>
 #endif
 // Yake
 #include <yake/base/yakeString.h>
@@ -88,7 +88,7 @@ public:
   struct Cache
   {
     bool isPresent;
-		String size;
+    String size;
     unsigned int numAssociativeWays;
     unsigned int lineSize;
     bool isSectored;

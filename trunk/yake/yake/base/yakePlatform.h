@@ -67,8 +67,8 @@
 #   define YAKE_PLATFORM PLATFORM_APPLE
 #else
 #   define YAKE_PLATFORM PLATFORM_LINUX
-#else
-#	error("Yake: Unknown platform. Bailing out!")
+//#else
+//#	error("Yake: Unknown platform. Bailing out!")
 #endif
 
 #endif // YAKE_BASE_PLATFORM_H

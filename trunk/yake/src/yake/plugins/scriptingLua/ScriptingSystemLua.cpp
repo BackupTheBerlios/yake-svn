@@ -24,8 +24,9 @@ extern "C" {
 #include <dependencies/lua/include/lualib.h>
 #include <dependencies/lua/include/lauxlib.h>
 }
-#define LUABIND_NO_HEADERS_ONLY
-#include <dependencies/luabind/luabind/luabind.hpp>
+
+// #define LUABIND_NO_HEADERS_ONLY
+// #include <dependencies/luabind/luabind/luabind.hpp>
 
 #include <yake/plugins/scriptingLua/ScriptingSystemLua.h>
 #include <fstream>
@@ -40,7 +41,6 @@ namespace scripting {
 	LuaVM::LuaVM( ScriptingSystemLua* pSystem, uint32 libs ) : mCreator( pSystem )//, mPropInterface( this )
 	{
 		mLuaState = lua_open();
-		luabind::open( mLuaState );
 
 		if (IS_MASK_SET(libs, LUALIB_BASE))
 			luaopen_base( mLuaState );

@@ -71,7 +71,7 @@
 #define YAKE_TYPES_TWO_FREE( number ) YAKE_TYPES_TWO_FREE_##number
 
 // const T2& t2, const T1& t1, const T0& t0
-#define YAKE_ARGUMENT( number ) const T##number##& t##number
+#define YAKE_ARGUMENT( number ) const T##number& t##number
 #define YAKE_ARGUMENTS( number ) YAKE_ITER_ARG_##number ( YAKE_ARGUMENT )
 
 // const T2& t2, const T1& t1, const T0& t0
@@ -88,7 +88,7 @@
 #define YAKE_ARGUMENTS_ONE_FREE( number ) YAKE_ARGUMENTS_ONE_FREE_##number
 
 // const_cast< T2& >( t2 ), const_cast< T1& >( t1 ), const_cast< T0& >( t0 )
-#define YAKE_USE_ARGUMENT( number ) const_cast< T##number##& >( t##number )
+#define YAKE_USE_ARGUMENT( number ) const_cast< T##number& >( t##number )
 #define YAKE_USE_ARGUMENTS( number ) YAKE_ITER_ARG_##number ( YAKE_USE_ARGUMENT )
 
 // F(), F( const T0& t0 ), F( const T1& t1, const T0& t0 ), ...

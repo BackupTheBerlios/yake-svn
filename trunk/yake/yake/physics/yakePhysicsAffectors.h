@@ -58,6 +58,10 @@ namespace yake {
 		protected:
 			AccType		mAcceleration;
 		public:
+			ConstantAccelerationBodyAffector()
+			{
+			}
+			
 			ConstantAccelerationBodyAffector( const AccType & acc ) : mAcceleration( acc )
 			{ }
 

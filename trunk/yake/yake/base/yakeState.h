@@ -28,7 +28,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include <yake/base/yakePrerequisites.h>
 #endif
 // Yake
 #include <yake/base/yakeString.h>
@@ -59,6 +59,8 @@ namespace base
 	\see UpdatedState
 	\see UpdatedStateManager
 */
+
+
 class YAKE_BASE_API State
 {
 	State();

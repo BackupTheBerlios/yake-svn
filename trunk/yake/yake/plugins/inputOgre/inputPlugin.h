@@ -18,14 +18,19 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
+#ifndef YAKE_INPUT_PLUGIN_OGRE_H
+#define YAKE_INPUT_PLUGIN_OGRE_H
+
 #ifdef YAKEINPUTOGRE_EXPORTS
-#define INPUTOGRE_API __declspec(dllexport)
+#define INPUTOGRE_API DLLEXPORT
 #else
-#define INPUTOGRE_API __declspec(dllimport)
+#define INPUTOGRE_API DLLIMPORT
 #endif
 
-INPUTOGRE_API yake::base::Plugin* dynlibStartPlugin(void);
-
+INPUTOGRE_API extern "C"
+{ 
+	yake::base::Plugin* dynlibStartPlugin(void);
+}
 class OgreInputPlugin : public yake::input::InputPlugin
 {
 public:
@@ -38,3 +43,4 @@ public:
 	virtual bool shutdown();
 	virtual yake::input::InputSystem* createSystem();
 };
+#endif //YAKE_INPUT_PLUGIN_OGRE_H

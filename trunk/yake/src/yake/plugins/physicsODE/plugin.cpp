@@ -19,12 +19,12 @@
    ------------------------------------------------------------------------------------
 */
 #include <yake/plugins/physicsODE/yakePCH.h>
-#include <yake/plugins/physicsODE/PhysicsSystemOde.h>
+#include <yake/plugins/physicsODE/PhysicsSystemODE.h>
 #include <yake/plugins/physicsODE/plugin.h>
 
 //---------------------------------------------------------
 // This is an example of an exported function.
-yake::base::Plugin* dynlibStartPlugin(void)
+extern "C" yake::base::Plugin* dynlibStartPlugin(void)
 {
 	return new OdePlugin();
 }

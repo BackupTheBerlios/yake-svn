@@ -24,7 +24,7 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include "../yakeProcessor.h"
+#include <yake/base/yakeProcessor.h>
 
 #if defined( YAKE_BASE_EXPORTS )
 #	define YAKE_BASE_NATIVE_API DLLEXPORT

@@ -18,7 +18,6 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#pragma once
 
 #if defined( YAKE_GRAPHICSINTERFACE_EXPORTS )
 #	define YAKE_GRAPHICS_INTERFACE_API DLLEXPORT

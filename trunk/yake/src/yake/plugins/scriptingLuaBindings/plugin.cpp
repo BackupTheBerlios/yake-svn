@@ -33,7 +33,7 @@ using namespace yake::base::templates;
 
 //---------------------------------------------------------
 // This is an example of an exported function.
-yake::base::Plugin* dynlibStartPlugin(void)
+extern "C" yake::base::Plugin* dynlibStartPlugin()
 {
 	return new LuaBindingsPlugin();
 }

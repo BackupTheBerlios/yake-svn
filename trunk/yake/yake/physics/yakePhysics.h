@@ -1,5 +1,3 @@
-#pragma once
-
 #if defined( YAKE_PHYSICS_EXPORTS )
 #	define YAKE_PHYSICS_API DLLEXPORT
 #else

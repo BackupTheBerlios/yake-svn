@@ -26,7 +26,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "../yakePrerequisites.h"
+#	include <yakePrerequisites.h>
 #endif
 
 //============================================================================

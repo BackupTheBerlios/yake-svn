@@ -93,7 +93,10 @@ namespace ogre3d {
 	{
 		mReady = false;
 		try {
-			mRoot = new Root("yake.graphics.ogre_plugins.cfg", "yake.graphics.ogre.cfg", "yake.graphics.ogre.log");
+			mRoot = new Root(
+						"yake.graphics.ogre_plugins.cfg",
+						"yake.graphics.ogre.cfg",
+						"yake.graphics.ogre.log" );
 
 			setupResourcesFromConfigFile();
 
@@ -112,7 +115,7 @@ namespace ogre3d {
 				mRSys = (*it);
 				String str = mRSys->getName().c_str();
 				//if (str.find("3D9"))
-				if (str.find("GL"))
+				if ( str.find("GL") )
 					found = true;
 				++it;
 			}

@@ -26,10 +26,10 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASEPREREQUISITES_H
-#	include "../yakePrerequisites.h"
+#	include <yake/base/yakePrerequisites.h>
 #endif
 // Yake
-#include <yake/base/templates/yakeThreads.H>
+#include <yake/base/templates/yakeThreads.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -286,7 +286,7 @@ template
 >
 class SingletonHolder
 {
-YAKE_DECLARE_CLASS( yake::base::templates::SingletonHolder )
+YAKE_DECLARE_CLASS(yake::base::templates::SingletonHolder)
 public:
 	static T& instance();
         

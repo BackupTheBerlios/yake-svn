@@ -24,7 +24,7 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include "yakeGraphicsSystem.h"
+#include <yake/plugins/graphicsOgre/yakeGraphicsSystem.h>
 
 namespace yake 
 {

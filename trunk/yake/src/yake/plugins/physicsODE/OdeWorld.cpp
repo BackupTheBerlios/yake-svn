@@ -33,7 +33,7 @@ namespace yake {
 		//-----------------------------------------------------
 		OdeWorld::OdeWorld()
 		{
-			mStepSize = 1. / 100.;	// default: 50Hz
+			mStepSize = 1. / 60.;	// default: 50Hz
 			mOdeWorld = new dWorld();
 			mOdeSpace = new dSimpleSpace( 0 );
 			//mOdeSpace = new dHashSpace( 0 );

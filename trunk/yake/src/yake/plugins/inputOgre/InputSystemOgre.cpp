@@ -18,13 +18,13 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <yake/plugins/inputOGRE/yakePCH.h>
+#include <yake/plugins/inputOgre/yakePCH.h>
 #include <yake/input/yakeInputSystem.h>
-#include <yake/plugins/inputOGRE/InputSystemOgre.h>
+#include <yake/plugins/inputOgre/InputSystemOgre.h>
 
-#include "OgreMemoryMacros.h"
-#include "Ogre.h"
-#include "OgreNoMemoryMacros.h"
+#include <dependencies/ogrenew/OgreMain/include/OgreMemoryMacros.h>
+#include <dependencies/ogrenew/OgreMain/include/Ogre.h>
+#include <dependencies/ogrenew/OgreMain/include/OgreNoMemoryMacros.h>
 
 namespace yake {
 	namespace input {

@@ -29,7 +29,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include <yake/base/yakePrerequisites.h>
 #endif
 // Yake
 #include <yake/base/mpl/yakeCast.h>
@@ -46,7 +46,7 @@ class YAKE_BASE_API Exception : public std::exception
 {
 // Class
 public:
-  Exception() throw();
+  	Exception() throw();
 	Exception( const Exception& rException ) throw();
 	Exception( const String& rMessage ) throw();
 	Exception( const String& rMessage, const String& rSource ) throw ();

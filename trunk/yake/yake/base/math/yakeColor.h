@@ -138,6 +138,6 @@ Color operator*( float fScalar, const Color& rColor );
 } // yake
 
 // Fast Inline Implementation.
-#include <yake/base/math/yakeColor.Inl>
+#include <yake/base/math/yakeColor.inl>
 
 #endif // YAKE_BASE_MATH_COLOR_H

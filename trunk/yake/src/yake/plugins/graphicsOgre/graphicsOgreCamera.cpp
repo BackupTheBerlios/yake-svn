@@ -137,7 +137,7 @@ namespace ogre3d {
 	void OgreCamera::setFarClipDistance( real clipDistance )
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
-		mCam->setFarClipDistance(100000);
+		mCam->setFarClipDistance( clipDistance );
 	}
 
 	//------------------------------------------------------

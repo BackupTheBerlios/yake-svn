@@ -74,7 +74,7 @@ namespace assert
 	//-----------------------------------------------------
 	String SmartAssertContext::getExpression() const
 	{
-    return mExpr;
+		return mExpr;
 	}
 
 	//-----------------------------------------------------

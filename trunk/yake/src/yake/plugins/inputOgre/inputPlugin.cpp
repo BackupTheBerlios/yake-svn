@@ -18,15 +18,18 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <yake/plugins/inputOGRE/yakePCH.h>
+#include <yake/plugins/inputOgre/yakePCH.h>
 #include <yake/base/yake.h>
 #include <yake/input/yakeInputSystem.h>
-#include <yake/plugins/inputOGRE/InputSystemOgre.h>
-#include <yake/plugins/inputOGRE/inputPlugin.h>
-#include <new.h>
+#include <yake/plugins/inputOgre/InputSystemOgre.h>
+#include <yake/plugins/inputOgre/inputPlugin.h>
+#include <new>
+
+using namespace std;
+
 //---------------------------------------------------------
 // This is an example of an exported function.
-yake::base::Plugin* dynlibStartPlugin(void)
+extern "C" yake::base::Plugin* dynlibStartPlugin(void)
 {
 	return new OgreInputPlugin();
 }

@@ -8,6 +8,7 @@
 #include <yake/input/yakeInputSystem.h>
 #include <yake/input/yakeInputEventGenerator.h>
 #include <yake/audio/yakeAudio.h>
+#include <iostream>
 
 namespace yake {
 	using namespace base::templates;
@@ -117,30 +118,37 @@ namespace exapp {
 
 		virtual void initialise()
 		{
-			// scripting
-			if (mLoadScriptingSystem)
+			
+			// scripting bindings
+			if ( mLoadScriptingBindings )
 			{
-				scripting::ScriptingPlugin* pSP = loadPlugin<scripting::ScriptingPlugin>( "scriptingLua.dll" );
-				YAKE_ASSERT( pSP ).debug("Cannot load scripting plugin.");
+				scripting::ScriptingBindingsPlugin* pSBP = 
+				  loadPlugin<scripting::ScriptingBindingsPlugin>( 
+				  				"scriptingBindingsLua" );
+				YAKE_ASSERT( pSBP ).debug("Cannot load scripting bindings plugin.");
+ 
+				mScriptingBindings = pSBP->createBinder();
+				YAKE_ASSERT( mScriptingBindings ).error(
+				                              "Cannot create scripting bindings object." );
+			}
+			
+			// scripting
+			if ( mLoadScriptingSystem )
+			{
+				scripting::ScriptingPlugin* pSP = 
+					loadPlugin<scripting::ScriptingPlugin>( 
+									"scriptingLua" );
+				YAKE_ASSERT( pSP ).debug( "Cannot load scripting plugin." );
 
 				mScriptingSystem = pSP->createSystem();
-				YAKE_ASSERT( mScriptingSystem ).error("Cannot create scripting system.");
-			}
-
-			// scripting bindings
-			if (mLoadScriptingBindings)
-			{
-				scripting::ScriptingBindingsPlugin* pSBP = loadPlugin<scripting::ScriptingBindingsPlugin>( "scriptingLuaBindings.dll" );
-				YAKE_ASSERT( pSBP ).debug("Cannot load scripting bindings plugin.");
-
-				mScriptingBindings = pSBP->createBinder();
-				YAKE_ASSERT( mScriptingBindings ).error("Cannot create scripting bindings object.");
+				YAKE_ASSERT( mScriptingSystem ).error( "Cannot create scripting system." );
 			}
 
 			// graphics
 			if (mLoadGraphicsSystem)
 			{
-				Pointer<base::Library> pLib = loadLib( "graphicsOGRE.dll" );
+				Pointer<base::Library> pLib = loadLib( 
+								"graphicsOgre" );
 				YAKE_ASSERT( pLib ).debug("Cannot load graphics plugin.");
 
 				mGraphicsSystem = create< graphics::IGraphicsSystem >();
@@ -153,7 +161,7 @@ namespace exapp {
 			// physics
 			if (mLoadPhysicsSystem)
 			{
-				physics::PhysicsPlugin* pPP = loadPlugin<physics::PhysicsPlugin>( "physicsODE.dll" );
+				physics::PhysicsPlugin* pPP = loadPlugin<physics::PhysicsPlugin>( "physicsODE" );
 				YAKE_ASSERT( pPP ).debug("Cannot load physics plugin.");
 
 				mPhysicsSystem = pPP->createSystem();
@@ -163,7 +171,8 @@ namespace exapp {
 			// input
 			if (mLoadInputSystem)
 			{
-				input::InputPlugin* pIP = loadPlugin<input::InputPlugin>( "inputOGRE.dll" );
+				input::InputPlugin* pIP = loadPlugin<input::InputPlugin>( 
+									"inputOgre" );
 				YAKE_ASSERT( pIP ).debug("Cannot load input plugin.");
 
 				mInputSystem = pIP->createSystem();
@@ -175,7 +184,7 @@ namespace exapp {
 			// audio
 			if (mLoadAudioSystem)
 			{
-				Pointer<base::Library> pLib = loadLib( "audioOpenAL.dll" );
+				Pointer<base::Library> pLib = loadLib( "audioOpenAL" );
 				YAKE_ASSERT( pLib ).debug("Cannot load audio plugin.");
 
 				mAudioSystem = create< audio::IAudioSystem >();

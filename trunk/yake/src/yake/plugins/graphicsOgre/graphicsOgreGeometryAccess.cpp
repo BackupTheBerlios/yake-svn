@@ -151,7 +151,7 @@ namespace ogre3d {
 					/*(indexData.indexCount < 65536)
 						? Ogre::HardwareIndexBuffer::IndexType::IT_16BIT 
 						: Ogre::HardwareIndexBuffer::IndexType::IT_32BIT,*/
-						Ogre::HardwareIndexBuffer::IndexType::IT_32BIT,
+						Ogre::HardwareIndexBuffer::IT_32BIT,
 					indexData.indexCount,
 					mMesh->getIndexBufferUsage(),
 					mMesh->isIndexBufferShadowed()

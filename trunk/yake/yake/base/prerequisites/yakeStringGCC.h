@@ -24,6 +24,10 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
+// Standard headers
+#ifndef YAKE_BASE_PREREQUISITES_H
+#	include <yakePrerequisites.h>
+#endif
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -38,12 +42,16 @@ typedef std::string YAKE_BASE_STRING;
 } // base
 } // yake
 
+#include <ext/stl_hash_fun.h>
+
+#ifndef GNU_STD_EXTENSION_HASH_STRING
+#define GNU_STD_EXTENSION_HASH_STRING
 namespace __gnu_cxx
 {
 
-	template <> struct hash< Yake::Core::YAKE_BASE_STRING >
+template <> struct hash< yake::base::YAKE_BASE_STRING >
 {
-size_t operator()( const Yake::Core::YAKE_BASE_STRING _stringBase ) const 
+size_t operator()( const yake::base::YAKE_BASE_STRING _stringBase ) const 
 { 
 	/* This is the PRO-STL way, but it seems to cause problems with VC7.1
 	* and in some other cases (although I can't recreate it)
@@ -52,31 +60,16 @@ size_t operator()( const Yake::Core::YAKE_BASE_STRING _stringBase ) const
 	*/
 	/** This is our custom way */
 	register size_t ret = 0;
-	for( Yake::Core::YAKE_BASE_STRING::const_iterator it = _stringBase.begin(); it != _stringBase.end(); ++it )
+	for( yake::base::YAKE_BASE_STRING::const_iterator it = _stringBase.begin(); it != _stringBase.end(); ++it )
 	ret = 5 * ret + *it;
 	return ret;
 }
 };
 
 } // __gnu_cxx
+#endif //GNU_STD_EXTENSION_HASH_STRING
 
+typedef ::__gnu_cxx::hash < yake::base::YAKE_BASE_STRING > _StringHash;
 
-namespace std
-{
-	template<> size_t hash_compare < yake::YAKE_BASE_STRING, std::less< yake::YAKE_BASE_STRING > >::operator ()( const yake::YAKE_BASE_STRING& _stringBase ) const
-	{
-		register size_t ret = 0;
-		for( yake::YAKE_BASE_STRING::const_iterator it = _stringBase.begin(); it != _stringBase.end(); ++it )
-			ret = 5 * ret + *it;
-
-		return ret;
-	}
-}
-
-typedef ::__gnu_cxx::hash< YAKE_BASE_STRING > _StringHash;
-
-}
-
-#undef YAKE_BASE_STRING
 
 #endif

@@ -18,39 +18,75 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_PREREQUISITES_PREREQUISITESVC_H
-#define YAKE_BASE_PREREQUISITES_PREREQUISITESVC_H
+#ifndef YAKE_BASE_PREREQUISITES_PREREQUISITESGCC_H
+#define YAKE_BASE_PREREQUISITES_PREREQUISITESGCC_H
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-// VC specific headers
+// GCC specific headers
 #include <wchar.h>
-#include "yakeStringVC.h"
+#include "yakeStringGCC.h"
 
 // Include platform specific configuration files
-#if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
-#	if (YAKE_COMP_VER == 1200)
-#		include "yakePrerequisitesVC6.h"
-#	elif (YAKE_COMP_VER == 1300)
-#		include "yakePrerequisitesVC7.h"
-#	elif (YAKE_COMP_VER >= 1300)
-#		include "yakePrerequisitesVC71.h"
-#	else
-#		error("Yake: No configuration file for this compiler!")
-#	endif
-#else
-#	error("Yake: No configuration file set for the selected platform/compiler!")
-#endif
+#if (YAKE_PLATFORM == PLATFORM_LINUX) && (YAKE_COMPILER == COMPILER_GNUC)
+#	pragma message("Yake Platform/Compiler config: Yake.Core.Prerequisites.GCC")
+//#	include "yakePrerequisitesGCCWarnings.h"
+//#	include <wchar.h>
+#	include <ext/hash_map>
+#	include <ext/stl_hash_fun.h>
+//#	include "yakePrerequisitesGCCTypes.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-#define YAKE_VSNPRINTF _vsnprintf
 
-#define DLLEXPORT			__declspec( dllexport )
-#define DLLIMPORT			__declspec( dllimport )
-#define LIBRARY_EXTENSION	_( "dll" )
+// Fixed-size numeric types.
+// Note: This naming convetion is equivalent to the C99 one. Once C99 will be supported by the compiler vendors,
+// we can just remove the following typedefs and add an #include <cstdint>.
+// SK: put it into namespace because it collided with other libs:
+
+namespace yake 
+{
+typedef signed char           int8;
+typedef unsigned char         uint8;
+typedef signed short          int16;
+typedef unsigned short        uint16;
+typedef signed int          int32;
+typedef unsigned int        uint32;
+typedef long long		int64;
+typedef unsigned long long	uint64;
+typedef float			real;
+}
+
+// Stl workarounds
+// #ifdef _STLP_HASH_MAP
+// #	define HashMap ::std::hash_map
+// #else
+// #	define HashMap ::stdext::hash_map
+// #endif
+ 
+#else
+#	error("Yake: No configuration file set for the selected platform/compiler!")
+#endif
+
+// String specialization
+#if !defined ( _STLP_HASH_FUN_H )
+#	include "yakeStringGCC.h"
+#else
+#	include "yakeStringHashFun.h"
+#endif
+
+
+
+//============================================================================
+//    INTERFACE STRUCTURES / UTILITY CLASSES
+//============================================================================
+#define YAKE_VSNPRINTF vsnprintf
+
+#define DLLEXPORT			 
+#define DLLIMPORT			 
+#define LIBRARY_EXTENSION	_( "so" )
 
 #ifdef _DEBUG
 #	define YAKE_DEBUG_BUILD
@@ -74,8 +110,8 @@ namespace base
 } // yake
 
 // Stl workarounds
-#ifdef GCC_3_1
+//#ifdef GCC_3_1
 #  define HashMap ::__gnu_cxx::hash_map
-#endif
+//#endif
 
-#endif // YAKE_BASE_PREREQUISITES_PREREQUISITESVC_H
+#endif // YAKE_BASE_PREREQUISITES_PREREQUISITESGCC_H

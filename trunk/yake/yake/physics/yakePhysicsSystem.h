@@ -92,7 +92,7 @@ namespace yake {
 		{
 		protected:
 			IJoint() {}
-			IJoint( const & IJoint );
+			IJoint( const IJoint & );
 		public:
 			/** Type of joint.
 			*/

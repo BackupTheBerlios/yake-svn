@@ -31,36 +31,36 @@
 namespace yake {
 namespace base {
 
-Exception::Exception() : mLine(-1)
+Exception::Exception() throw () : mLine(-1)
 {
 }
 
-Exception::Exception( const Exception& rException ) : mLine(-1)
+Exception::Exception( const Exception& rException ) throw() : mLine(-1)
 {
   *this = rException;
 }
 
-Exception::Exception( const String& rMessage )
+Exception::Exception( const String& rMessage ) throw() 
 : mMessage( rMessage ), mLine(-1)
 {
 }
 
-Exception::Exception( const String& rMessage, const String& rSource )
+Exception::Exception( const String& rMessage, const String& rSource ) throw()
 : mMessage( rMessage ), mSource( rSource ), mLine(-1)
 {
 }
 
-Exception::Exception( const String& rMessage, const String& rSource, const char* file, int line )
+Exception::Exception( const String& rMessage, const String& rSource, const char* file, int line ) throw()
 : mMessage( rMessage ), mSource( rSource ), mFile(file), mLine(line)
 {
 }
 
-Exception::~Exception()
+Exception::~Exception() throw()
 {
 }
 
 
-Exception& Exception::operator=( const Exception& rException )
+Exception& Exception::operator=( const Exception& rException ) throw()
 {
   mMessage = rException.mMessage;
   mSource = rException.mSource;
@@ -70,23 +70,22 @@ Exception& Exception::operator=( const Exception& rException )
   return *this;
 }
 
-
-String Exception::getMessage() const
+String Exception::getMessage() const throw()
 {
   return mMessage;
 }
 
-String Exception::getSource() const
+String Exception::getSource() const throw()
 {
   return mSource;
 }
 
-String Exception::getFile() const
+String Exception::getFile() const throw()
 {
   return mFile;
 }
 
-int Exception::getLine() const
+int Exception::getLine() const throw()
 {
   return mLine;
 }

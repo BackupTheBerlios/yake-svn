@@ -25,7 +25,6 @@
 */
 #ifndef YAKE_DATA_DOM_XMLSERIALIZER_H
 #define YAKE_DATA_DOM_XMLSERIALIZER_H
-#pragma once
 
 #include <yake/data/yakeDataSerializer.h>
 
