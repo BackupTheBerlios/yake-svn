@@ -149,6 +149,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesPhysicsDemo", "sampl
 		{5749946B-081D-4A80-8119-2BE84F571E81} = {5749946B-081D-4A80-8119-2BE84F571E81}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reflection", "reflection.vcproj", "{215FEC33-87C9-47E1-80EF-2FC735508B57}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -259,6 +263,10 @@ Global
 		{3DA99679-404B-44C7-9267-C97D066F3D96}.Debug.Build.0 = Debug|Win32
 		{3DA99679-404B-44C7-9267-C97D066F3D96}.Release.ActiveCfg = Release|Win32
 		{3DA99679-404B-44C7-9267-C97D066F3D96}.Release.Build.0 = Release|Win32
+		{215FEC33-87C9-47E1-80EF-2FC735508B57}.Debug.ActiveCfg = Debug|Win32
+		{215FEC33-87C9-47E1-80EF-2FC735508B57}.Debug.Build.0 = Debug|Win32
+		{215FEC33-87C9-47E1-80EF-2FC735508B57}.Release.ActiveCfg = Release|Win32
+		{215FEC33-87C9-47E1-80EF-2FC735508B57}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
