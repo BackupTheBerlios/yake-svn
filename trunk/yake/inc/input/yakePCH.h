@@ -17,12 +17,18 @@
    Place - Suite 330, Boston, MA 02111-1307, USA, or go to
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
+   If you are interested in another license model contact the Yake Team via
+   E-Mail: team@yake.org.
+   For more information see the LICENSE file in the root directory of the
+   source code distribution.
+   ------------------------------------------------------------------------------------
 */
-// stdafx.cpp : source file that includes just the standard includes
-// scriptingLua.pch will be the pre-compiled header
-// stdafx.obj will contain the pre-compiled type information
-
-#include <plugins/yakeInputOgre/inc/pch.h>
-
-// TODO: reference any additional headers you need in STDAFX.H
-// and not in this file
+//============================================================================
+//    IMPLEMENTATION HEADERS
+//============================================================================
+// STL
+#include <iostream>
+// Yake
+#include <inc/base/yake.h>
+#include <inc/base/yakeDebugOutputStream.h>
+#include <inc/base/yakeLog.h>

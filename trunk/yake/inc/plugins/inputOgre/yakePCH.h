@@ -18,40 +18,19 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_PCH_H
-#define YAKE_BASE_PCH_H
+#ifndef __INC_PCH_H__
+#define __INC_PCH_H__
+#pragma once
 
-//============================================================================
-//    IMPLEMENTATION HEADERS
-//============================================================================
-#include "templates/yakeSmartAssert.h"
-#include "templates/yakeDangling.h"
-#include "templates/yakeRegistry.h"
-#include "templates/yakeVector.h"
+#include <inc/base/yake.h>
 
-#include "mpl/yakeAbstractFactory.h"
-#include "mpl/yakeSequences.h"
+#define VEC_YAKE2OGRE( YV ) Ogre::Vector3( YV.x, YV.y, YV.z )
+#define VEC_OGRE2YAKE( YV ) yake::Vector3( YV.x, YV.y, YV.z )
 
-#include "yakePrerequisites.h"
-#include "yakeVersion.h"
-#include "yakeString.h"
-#include "yakeException.h"
-#include "yakeLog.h"
-#include "yakeOutputStream.h"
-#include "yakeSerializable.h"
-#include "yakeUniqueName.h"
-#include "yakePlugin.h"
-#include "yakeDebugOutputStream.h"
-#include "yakeLibrary.h"
+#define QUAT_YAKE2OGRE( q ) Ogre::Quaternion( q.w, q.x, q.y, q.z )
+#define QUAT_OGRE2YAKE( q ) yake::Quaternion( q.w, q.x, q.y, q.z )
 
-#include "math/yakeVector3.h"
-#include "math/yakeQuaternion.h"
-#include "math/yakeMatrix3.h"
-#include "math/yakeColor.h"
-#include "math/yakeGeometry.h"
+#define COL_YAKE2OGRE( c ) Ogre::ColourValue( c.r, c.g, c.b, c.a )
+#define COL_OGRE2YAKE( c ) yake::Color( c.r, c.g, c.b, c.a )
 
-#include "yakeMovable.h"
-
-
-
-#endif // YAKE_BASE_PCH_H
+#endif

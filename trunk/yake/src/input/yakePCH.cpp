@@ -17,20 +17,10 @@
    Place - Suite 330, Boston, MA 02111-1307, USA, or go to
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
+   If you are interested in another license model contact the Yake Team via
+   E-Mail: team@yake.org.
+   For more information see the LICENSE file in the root directory of the
+   source code distribution.
+   ------------------------------------------------------------------------------------
 */
-#ifndef __INC_PCH_H__
-#define __INC_PCH_H__
-#pragma once
-
-#include <yakeBase/inc/yake.h>
-
-#define VEC_YAKE2OGRE( YV ) Ogre::Vector3( YV.x, YV.y, YV.z )
-#define VEC_OGRE2YAKE( YV ) yake::Vector3( YV.x, YV.y, YV.z )
-
-#define QUAT_YAKE2OGRE( q ) Ogre::Quaternion( q.w, q.x, q.y, q.z )
-#define QUAT_OGRE2YAKE( q ) yake::Quaternion( q.w, q.x, q.y, q.z )
-
-#define COL_YAKE2OGRE( c ) Ogre::ColourValue( c.r, c.g, c.b, c.a )
-#define COL_OGRE2YAKE( c ) yake::Color( c.r, c.g, c.b, c.a )
-
-#endif
+#include <inc/input/yakePCH.h>

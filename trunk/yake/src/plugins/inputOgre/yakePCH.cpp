@@ -18,40 +18,11 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_PCH_H
-#define YAKE_BASE_PCH_H
+// stdafx.cpp : source file that includes just the standard includes
+// scriptingLua.pch will be the pre-compiled header
+// stdafx.obj will contain the pre-compiled type information
 
-//============================================================================
-//    IMPLEMENTATION HEADERS
-//============================================================================
-#include "templates/yakeSmartAssert.h"
-#include "templates/yakeDangling.h"
-#include "templates/yakeRegistry.h"
-#include "templates/yakeVector.h"
+#include <inc/plugins/inputOGRE/yakePCH.h>
 
-#include "mpl/yakeAbstractFactory.h"
-#include "mpl/yakeSequences.h"
-
-#include "yakePrerequisites.h"
-#include "yakeVersion.h"
-#include "yakeString.h"
-#include "yakeException.h"
-#include "yakeLog.h"
-#include "yakeOutputStream.h"
-#include "yakeSerializable.h"
-#include "yakeUniqueName.h"
-#include "yakePlugin.h"
-#include "yakeDebugOutputStream.h"
-#include "yakeLibrary.h"
-
-#include "math/yakeVector3.h"
-#include "math/yakeQuaternion.h"
-#include "math/yakeMatrix3.h"
-#include "math/yakeColor.h"
-#include "math/yakeGeometry.h"
-
-#include "yakeMovable.h"
-
-
-
-#endif // YAKE_BASE_PCH_H
+// TODO: reference any additional headers you need in STDAFX.H
+// and not in this file
