@@ -80,9 +80,17 @@ namespace templates
 		template< class Y >
 		explicit SharedPtr( Y* p ): boost::shared_ptr< T >( p ) {}
 
+		template<class Y>
+		SharedPtr(SharedPtr<Y> const & r, ::boost::detail::dynamic_cast_tag d): 
+		boost::shared_ptr< T >( r, d ) {}
+
 		~SharedPtr() {}
 	};
 
+	template<class T, class U> SharedPtr<T> dynamic_pointer_cast(SharedPtr<U> const & r)
+	{
+		return SharedPtr<T>(r, ::boost::detail::dynamic_cast_tag());
+	}
 /*namespace PointerConfigs
 {
   struct Standard
