@@ -30,6 +30,11 @@
 #if defined( YAKE_OGREPLUGIN_NO_CONFIG_DIALOG )
 #include "../../rendersystems/direct3d9/include/OgreD3D9RenderSystem.h"
 #endif
+#ifdef OGRE_MEMORY_MACROS
+#pragma message("disabling OGRE's memory macros")
+#	include <dependencies/ogrenew/OgreMain/include/OgreNoMemoryMacros.h>
+#endif
+#include <dependencies/ogrenew/OgreMain/include/OgreMemoryMacros.h>
 
 #include <yake/plugins/graphicsOgre/graphicsOgreCore.h>
 
@@ -94,9 +99,9 @@ namespace ogre3d {
 		mReady = false;
 		try {
 			mRoot = new Root(
-						"yake.graphics.ogre_plugins.cfg",
-						"yake.graphics.ogre.cfg",
-						"yake.graphics.ogre.log" );
+				Ogre::String("yake.graphics.ogre_plugins.cfg"),
+				Ogre::String("yake.graphics.ogre.cfg"),
+				Ogre::String("yake.graphics.ogre.log") );
 
 			setupResourcesFromConfigFile();
 
@@ -197,7 +202,7 @@ namespace ogre3d {
 		// Go through all settings in the file
 		Ogre::ConfigFile::SettingsIterator i = cf.getSettingsIterator();
 
-		String typeName, archName;
+		Ogre::String typeName, archName;
 		while (i.hasMoreElements())
 		{
 			typeName = i.peekNextKey();
