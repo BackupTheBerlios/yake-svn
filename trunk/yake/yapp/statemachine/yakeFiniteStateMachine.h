@@ -45,6 +45,8 @@ namespace app {
 
 namespace state {
 
+	typedef Signal0<void> StepSignal;
+
 	inline std::ostream& operator << (std::ostream& lhs, const ErrorCode & rhs)
 	{
 		lhs << "ErrorCode (" << int(rhs) << "): ";
@@ -121,7 +123,7 @@ namespace state {
 		virtual ~State() {};
 
 		void enter();
-		void step(); // or executeStep() or step()
+		void step();
 		void exit();
 
 		// events
@@ -242,16 +244,18 @@ namespace state {
 		typedef std::pair<StateId,StateId> StateIdPair;
 		typedef std::map< StateIdPair, SharedTransitionPtr > TransitionMap;
 
+		StepSignal event_step;
 		const static StateId kStateNone;
 
 		ErrorCode addState( const StateIdType & rkId, SharedStatePtr & rState );
 		ErrorCode addState( const StateIdType & rkId, StatePtr rState );
+		ErrorCode addTransition( const StateId & rkFrom, const StateId & rkTo );
 		ErrorCode addTransition( const StateId & rkFrom, const StateId & rkTo, SharedTransitionPtr & rTransition );
 		ErrorCode addTransition( const StateId & rkFrom, const StateId & rkTo, TransitionPtr rTransition );
 		ErrorCode changeTo( const StateIdType & rkId, bool bStacked = false );
 		ErrorCode exitAll();
 		ErrorCode exitTopOnStack();
-		ErrorCode executeState();
+		ErrorCode step();
 		void dump(std::ostream & s) const;
 
 	private:
@@ -274,7 +278,7 @@ namespace state {
 			statePair = *itFind;
 			return true;
 		}
-		SharedTransitionPtr _getTransition( const StateIdPair & idPair )
+		bool _getTransition( const StateIdPair & idPair, SharedTransitionPtr & rTransition )
 		{
 			TransitionMap::const_iterator itFind = mTransitions.find( idPair );
 			if (itFind == mTransitions.end())
@@ -282,7 +286,15 @@ namespace state {
 			return itFind->second;
 		}
 	};
-	#include "yakeFiniteStateMachine_inc.h"
+
+	template<typename StateIdType>
+		std::ostream& operator << (std::ostream& lhs, const state::Machine<StateIdType> & m)
+	{
+		m.dump( lhs );
+		return lhs;
+	}
+
+#include "yakeFiniteStateMachine_inc.h"
 	//---------------------------------------------------------
 
 } // state

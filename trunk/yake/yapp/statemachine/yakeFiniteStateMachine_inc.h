@@ -35,6 +35,16 @@
 
 	//---------------------------------------------------------
 	template< typename StateIdType >
+		ErrorCode Machine<StateIdType>::addTransition( const StateId & rkFrom, const StateId & rkTo )
+		{
+			const StateIdPair idPair( rkFrom, rkTo );
+			SharedTransitionPtr pTmpTrans;
+			if (_getTransition( idPair, pTmpTrans ))
+				return eAlreadyRegistered; // already registered.
+			mTransitions[ idPair ] = SharedTransitionPtr();
+			return eOk;
+		}
+	template< typename StateIdType >
 		ErrorCode Machine<StateIdType>::addTransition( const StateId & rkFrom, const StateId & rkTo, SharedTransitionPtr & rTransition )
 		{
 			const StateIdPair idPair( rkFrom, rkTo );
@@ -94,8 +104,8 @@
 		StateId currentStateId = (mStack.size() > 0) ? (mStack.front().first) : kStateNone;
 
 		// find transition
-		SharedTransitionPtr pTrans = _getTransition( StateIdPair( currentStateId, rkId ) );
-		if (!pTrans.get()) // transition not found
+		SharedTransitionPtr pTrans;
+		if (!_getTransition( StateIdPair( currentStateId, rkId ), pTrans ) ) // transition not found
 			return eTransitionNotFound;
 
 		// find state
@@ -107,17 +117,25 @@
 		if (!bStacked)
 			exitTopOnStack(); // this is safe even if no state is on the stack yet.
 
-		(*pTrans)();
+		if (pTrans.get()) // transitions without a transition object is fine!
+			(*pTrans)();
 		mStack.push_front( state );
 		mStack.front().second->enter();
 
 		return eOk;
 	}
 	template< typename StateIdType >
-	ErrorCode Machine<StateIdType>::executeState()
+	ErrorCode Machine<StateIdType>::step()
 	{
+		event_step();
 		if (mStack.size() > 0)
-			mStack.front().second->step();
+		{
+			SharedStatePtr& pState = mStack.front().second;
+			if (pState.get())
+			{
+				pState->step();
+			}
+		}
 		return eOk;
 	}
 	template< typename StateIdType >
