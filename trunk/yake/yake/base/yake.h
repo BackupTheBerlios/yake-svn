@@ -25,6 +25,7 @@
 //    IMPLEMENTATION HEADERS
 //============================================================================
 // Yake
+#include "yakePrerequisites.h"
 #include "yakePCH.h"
 #include "yake/base/templates/yakeVariant.h"
 

@@ -24,6 +24,8 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
+#include "yakePrerequisites.h"
+
 #include "templates/yakeSmartAssert.h"
 #include "templates/yakeRegistry.h"
 #include "templates/yakeVector.h"
