@@ -25,14 +25,13 @@ private:
 		View(graphics::ICamera* pC, graphics::IViewport* pV) : pViewport(pV), pCamera(pC)
 		{}
 	};
-	//typedef std::pair< SharedPtr<graphics::IViewport>, SharedPtr<graphics::ICamera> > ViewportCameraPair;
 	typedef Deque< SharedPtr<graphics::ISceneNode> > SceneNodes;
 	typedef Deque< SharedPtr<graphics::IEntity> > Entities;
 	typedef Deque< SharedPtr<graphics::ILight> > Lights;
-	//typedef Deque< SharedPtr<ViewportCameraPair> > Views;
 	typedef Deque< SharedPtr<View> > Views;
 
-	physics::WeakIMaterialPtr	mBouncyPhysicsMaterial;
+	physics::WeakIMaterialPtr	mBouncyPhysicsMaterial1;
+	physics::WeakIMaterialPtr	mBouncyPhysicsMaterial2;
 
 	struct Simple
 	{
@@ -46,11 +45,13 @@ private:
 			pSN->setPosition( pActor.lock()->getPosition() );
 			pSN->setOrientation( pActor.lock()->getOrientation() );
 		}
-		Simple()
+		Simple(SharedPtr<physics::IWorld>& pPWorld_) : pPWorld( pPWorld_ )
 		{}
 		~Simple()
 		{
+			pPWorld->destroyActor( physics::WeakIActorPtr( pActor ) );
 		}
+		SharedPtr<physics::IWorld>			pPWorld;
 	};
 private:
 	// variables
@@ -63,10 +64,13 @@ private:
 
 	Deque< SharedPtr<Library> >	mLibs;
 
-	SharedPtr<physics::IPhysicsSystem>	mPhysics;
 	SharedPtr<graphics::IGraphicsSystem> mGraphics;
-	SharedPtr<physics::IWorld>	mPWorld;
 	SharedPtr<graphics::IWorld>	mGWorld;
+
+	SharedPtr<physics::IPhysicsSystem>	mPhysics1;
+	SharedPtr<physics::IPhysicsSystem>	mPhysics2;
+	SharedPtr<physics::IWorld>	mPWorld1;
+	SharedPtr<physics::IWorld>	mPWorld2;
 
 	// private methods
 	void removeSceneNode( SharedPtr<graphics::ISceneNode> & pSceneNode )
@@ -93,12 +97,13 @@ private:
 		rSimple.pSN->setPosition( rkPosition );
 		rSimple.pSN->setScale( rkScale );
 	}
-	void createSimpleActor(	Simple & rSimple, 
+	void createSimpleActor(	SharedPtr<physics::IWorld> pPWorld,
+							Simple & rSimple, 
 							physics::IShape::Desc & rkDesc,
 							const Vector3 & rkPosition,
 							const real mass = 2 )
 	{
-		rSimple.pActor = mPWorld->createDynamicActor();
+		rSimple.pActor = pPWorld->createDynamicActor();
 		YAKE_ASSERT( !rSimple.pActor.expired() );
 		rSimple.pActor.lock()->createShape( rkDesc );
 		YAKE_ASSERT( rSimple.pActor.lock()->getShapes().size() == 1 );
@@ -108,41 +113,41 @@ private:
 
 		rSimple.pActor.lock()->subscribeToCollisionEnteredSignal( boost::bind(MiniApp::onCollisionEntered,this));
 	}
-	bool createBall( Simple & rSimple, const Vector3 & rkPosition, const real radius )
+	bool createBall( SharedPtr<physics::IWorld> pPWorld, Simple & rSimple, const Vector3 & rkPosition, const real radius )
 	{
 		// graphics
 		createSimpleGraphicalObject( rSimple, "sphere_d1.mesh", Vector3(0,0,0), radius*Vector3(2,2,2) );
 
 		// physics
-		createSimpleActor( rSimple, physics::IShape::SphereDesc(real(radius), mBouncyPhysicsMaterial), rkPosition );
+		createSimpleActor( pPWorld, rSimple, physics::IShape::SphereDesc(real(radius)), rkPosition );
 
 		return true;
 	}
-	bool createCapsule( Simple & rSimple, const Vector3 & rkPosition, const real height, const real radius )
+	bool createCapsule( SharedPtr<physics::IWorld> pPWorld, Simple & rSimple, const Vector3 & rkPosition, const real height, const real radius )
 	{
 		// graphics
 		createSimpleGraphicalObject( rSimple, "box_1x1x1.mesh", Vector3(0,0,0), Vector3(radius,height,radius) );
 
 		// physics
-		createSimpleActor( rSimple, physics::IShape::CapsuleDesc(real(height), real(radius)), rkPosition );
+		createSimpleActor( pPWorld, rSimple, physics::IShape::CapsuleDesc(real(height), real(radius)), rkPosition );
 
 		return true;
 	}
-	bool createBox( Simple & rSimple, const Vector3 & rkPosition, const Vector3 & rkDimensions )
+	bool createBox( SharedPtr<physics::IWorld> pPWorld, Simple & rSimple, const Vector3 & rkPosition, const Vector3 & rkDimensions )
 	{
 		// graphics
 		createSimpleGraphicalObject( rSimple, "box_1x1x1.mesh", Vector3(0,0,0), 2*rkDimensions );
 
 		// physics
-		createSimpleActor( rSimple, physics::IShape::BoxDesc(rkDimensions, mBouncyPhysicsMaterial), rkPosition );
+		createSimpleActor( pPWorld, rSimple, physics::IShape::BoxDesc(rkDimensions), rkPosition );
 
 		return true;
 	}
-	physics::WeakIJointPtr createFixedJoint(Simple & rSimple1, Simple & rSimple2)
+	physics::WeakIJointPtr createFixedJoint(SharedPtr<physics::IWorld> pPWorld, Simple & rSimple1, Simple & rSimple2)
 	{
 		YAKE_ASSERT( !rSimple1.pActor.expired() );
 		YAKE_ASSERT( !rSimple2.pActor.expired() );
-		return mPWorld->createJoint(
+		return pPWorld->createJoint(
 			physics::IJoint::DescFixed( *rSimple1.pActor.lock(), *rSimple2.pActor.lock() ) );
 	}
 	SharedPtr<base::Library> loadLib( const base::String & file )
@@ -191,7 +196,7 @@ private:
 	void createGroundPlane()
 	{
 		createSimpleEntity("plane_1x1.mesh");
-		mSceneNodes.back()->setScale(Vector3(70,1,70));
+		mSceneNodes.back()->setScale(Vector3(30,1,30));
 		mEntities.back()->setMaterial("Examples/BumpyMetal");
 		mEntities.back()->setCastsShadow(false);
 	}
@@ -229,16 +234,27 @@ void MiniApp::init()
 {
 	mShutdownRequested = false;
 
-	// physics
+	// physics 1
 
 	SharedPtr<base::Library> pLib = loadLib("physicsNX" );
-	YAKE_ASSERT( pLib ).debug("Cannot load physics plugin.");
+	YAKE_ASSERT( pLib ).debug("Cannot load physics plugin 1.");
 
-	mPhysics = create< physics::IPhysicsSystem >();
-	YAKE_ASSERT( mPhysics ).debug("Cannot create physics system.");
+	mPhysics1 = create< physics::IPhysicsSystem >("nx");
+	YAKE_ASSERT( mPhysics1 ).debug("Cannot create physics system 1.");
 
-	mPWorld = mPhysics->createWorld();
-	YAKE_ASSERT( mPWorld ).debug("Cannot create world.");
+	mPWorld1 = mPhysics1->createWorld();
+	YAKE_ASSERT( mPWorld1 ).debug("Cannot create world 1.");
+
+	// physics 2
+
+	pLib = loadLib("physicsOde" );
+	YAKE_ASSERT( pLib ).debug("Cannot load physics plugin 2.");
+
+	mPhysics2 = create< physics::IPhysicsSystem >("ode");
+	YAKE_ASSERT( mPhysics2 ).debug("Cannot create physics system 2.");
+
+	mPWorld2 = mPhysics2->createWorld();
+	YAKE_ASSERT( mPWorld2 ).debug("Cannot create world 2.");
 
 	// graphics
 
@@ -255,72 +271,60 @@ void MiniApp::init()
 
 	mGraphics->subscribeToShutdownSignal( boost::bind(MiniApp::requestShutdown,this) );
 
-	// main 3d view
 	{
-		/*
-	SharedPtr<ViewportCameraPair> vpPair( new ViewportCameraPair );
-	vpPair->second.reset( mGWorld->createCamera() );
-	vpPair->second->setNearClipDistance( 1. );
-	vpPair->second->setFarClipDistance( 2000. );
-	vpPair->second->setPosition( Vector3(50,50,50) );
-	vpPair->second->lookAt( Vector3(0,2,0) );
-	vpPair->first.reset( mGWorld->createViewport( vpPair->second.get() ) );
-	vpPair->first->setDimensions(0,0,1,1);
-	vpPair->first->setZ( 100 );
-	mViews.push_back( vpPair );*/
-	}
-
-	//
-	{
-//#define VP_1
-#ifdef VP_1
 		graphics::ICamera* pC = mGWorld->createCamera();
 		pC->setNearClipDistance( 1 );
 		pC->setFarClipDistance( 1000 );
-		pC->setPosition( Vector3(0,4,50) );
+		pC->setPosition( Vector3(0,2,10) );
+		pC->lookAt( Vector3(0,4,0) );
+		graphics::IViewport* pV = mGWorld->createViewport( pC );
+		pV->setDimensions( 0.7, 0, 0.3, 0.3 );
+		pV->setZ( 102 );
+
+		mViews.push_back( SharedPtr<View>( new View(pC, pV) ) );
+	}
+
+#define VP_1
+#ifdef VP_1
+	{
+		graphics::ICamera* pC = mGWorld->createCamera();
+		pC->setNearClipDistance( 1 );
+		pC->setFarClipDistance( 1000 );
+		pC->setPosition( Vector3(0,10,50) );
 		pC->lookAt( Vector3(0,1,0) );
 		graphics::IViewport* pV = mGWorld->createViewport( pC );
 		pV->setDimensions( 0, 0, 0.3, 0.3 );
 		pV->setZ( 101 );
 
 		mViews.push_back( SharedPtr<View>( new View(pC, pV) ) );
-#endif
-	/*
-	SharedPtr<ViewportCameraPair> vpPair( new ViewportCameraPair );
-	vpPair->second.reset( mGWorld->createCamera() );
-	vpPair->second->setNearClipDistance( 1. );
-	vpPair->second->setFarClipDistance( 2000. );
-	vpPair->second->setPosition( Vector3(50,50,50) );
-	vpPair->second->lookAt( Vector3(0,2,0) );
-	vpPair->first.reset( mGWorld->createViewport( vpPair->second.get() ) );
-	vpPair->first->setDimensions(0,0,0.2,0.2);
-	vpPair->first->setZ( 110 );
-	mViews.push_back( vpPair );
-	*/
 	}
-	{
+#endif
+
 #define VP_2
 #ifdef VP_2
+	{
 		graphics::ICamera* pC = mGWorld->createCamera();
 		pC->setNearClipDistance( 1 );
 		pC->setFarClipDistance( 1000 );
-		pC->setPosition( Vector3(50,50,50) );
+		pC->setPosition( Vector3(25,20,25) );
 		pC->lookAt( Vector3(0,1,0) );
 		graphics::IViewport* pV = mGWorld->createViewport( pC );
 		pV->setDimensions( 0, 0, 1, 1 );
 		pV->setZ( 100 );
 
 		mViews.push_back( SharedPtr<View>( new View(pC, pV) ) );
-#endif
 	}
+#endif
 }
 void MiniApp::cleanUp()
 {
 	mLights.clear();
 	mEntities.clear();
 	mSceneNodes.clear();
-	if (!mBouncyPhysicsMaterial.expired())
-		mPWorld->destroyMaterial( mBouncyPhysicsMaterial );
+	if (!mBouncyPhysicsMaterial1.expired())
+		mPWorld1->destroyMaterial( mBouncyPhysicsMaterial1 );
+	if (!mBouncyPhysicsMaterial2.expired())
+		mPWorld1->destroyMaterial( mBouncyPhysicsMaterial2 );
 	//
 	DequeIterator<Views> it(mViews.begin(), mViews.end());
 	while (it.hasMoreElements())
@@ -332,11 +336,13 @@ void MiniApp::cleanUp()
 	}
 	mViews.clear();
 	// destroy worlds before we destroy the underlying system plugins
-	mPWorld.reset();
+	mPWorld1.reset();
+	mPWorld2.reset();
 	mGWorld.reset();
 	//
 	mGraphics.reset();
-	mPhysics.reset();
+	mPhysics1.reset();
+	mPhysics2.reset();
 	// unload plugins
 	mLibs.clear();
 }
@@ -351,20 +357,17 @@ std::ostream& operator << (std::ostream & o, const physics::IDynamicActor & rhs)
 void MiniApp::run()
 {
 	using namespace physics;
-	YAKE_ASSERT( mPWorld );
-	//
-/*	mBouncyPhysicsMaterial = mPWorld->createMaterial(
-									IMaterial::Desc( 0.1, 0.1 )
-								);
+	YAKE_ASSERT( mPWorld1 );
+	YAKE_ASSERT( mPWorld2 );
+
+	// setup physics materials
+/*	mBouncyPhysicsMaterial = mPWorld->createMaterial( IMaterial::Desc( 0.1, 0.1 ) );
 	YAKE_ASSERT( mBouncyPhysicsMaterial );
 	*/
 
-
-	// static environment
-	WeakIStaticActorPtr pStaticWorldActor = mPWorld->createStaticActor();
-	YAKE_ASSERT( pStaticWorldActor.lock() );
-//#define TRI
-#ifdef TRI
+	// create a simple static environment - world 1
+	WeakIStaticActorPtr pStaticWorldActor1 = mPWorld1->createStaticActor();
+	YAKE_ASSERT( pStaticWorldActor1.lock() );
 	/*
 	  3-2
 	  |/|
@@ -381,53 +384,27 @@ void MiniApp::run()
 	groundMeshDesc.indices.push_back( 0 ); // tri #2
 	groundMeshDesc.indices.push_back( 2 );
 	groundMeshDesc.indices.push_back( 3 );
-	TriangleMeshId groundMeshId = mPWorld->createTriangleMesh(groundMeshDesc);
+	TriangleMeshId groundMeshId = mPWorld1->createTriangleMesh(groundMeshDesc);
 	YAKE_ASSERT( kTriangleMeshIdNone != groundMeshId );
 
-	SharedPtr<IShape> pStaticWorldShape = pStaticWorldActor->createShape( IShape::TriMeshDesc( groundMeshId ) );
-#else
-	//pStaticWorldActor->createShape( IShape::PlaneDesc( Vector3(0,1,0), 0 ) );
-	pStaticWorldActor.lock()->createShape( IShape::BoxDesc( Vector3(100,1,100) ) );
-#endif
-	YAKE_ASSERT( pStaticWorldActor.lock()->getShapes().size() == 1 )(pStaticWorldActor.lock()->getShapes().size()).warning("no world shape!");
+	SharedPtr<IShape> pStaticWorldShape1 = pStaticWorldActor1.lock()->createShape( IShape::TriMeshDesc( groundMeshId ) );
+	YAKE_ASSERT( pStaticWorldActor1.lock()->getShapes().size() == 1 )(pStaticWorldActor1.lock()->getShapes().size()).warning("no world shape!");
 
-	// two very simple entities (if we dare call them that...)
-	Simple s,ball2;
-	createBall( s, Vector3(10,20,0),2 );
-	createBall( ball2, Vector3(11,40,0),2 );
-	//createCapsule( ball2, Vector3(11,40,0), 5 , 2);
-	//createBox( ball2, Vector3(10,40,0), Vector3(5,5,2) );
-
-#define BOXES
-
-//#define TEST_FIXED_JOINT
-#ifdef TEST_FIXED_JOINT
-	SharedPtr<physics::IJoint> pJ = createFixedJoint(s, ball2);
-#endif
-
-#ifdef BOXES
-	// create a line up of boxes
-	const size_t kNumBoxes = 2;
-	Simple boxes[kNumBoxes];
-	const real kBoxZ = 3;
-	for (size_t i=0; i<kNumBoxes; ++i)
-	{
-		//createBox( boxes[i], Vector3(-10,30,-kBoxZ*4*i), Vector3(4,8,kBoxZ) );
-		createBox( boxes[i], Vector3(-10,30,i*1), Vector3(4,8,kBoxZ) );
-	}
-#endif
-
-/*#ifndef TEST_FIXED_JOINT
-	// push the sphere against the line up of boxes
-	s.pActor->setPosition( Vector3(-11,2,2) );
-	s.pActor->getBody().setMass( 30 );
-	s.pActor->getBody().setLinearVelocity( Vector3(0,1,-20) );
-#endif*/
+	// create a simple static environment - world 2
+	WeakIStaticActorPtr pStaticWorldActor2 = mPWorld2->createStaticActor();
+	YAKE_ASSERT( pStaticWorldActor2.lock() );
+	pStaticWorldActor2.lock()->createShape( IShape::PlaneDesc( Vector3(0,1,0), 0 ) );
+	YAKE_ASSERT( pStaticWorldActor2.lock()->getShapes().size() == 1 )(pStaticWorldActor2.lock()->getShapes().size()).warning("no world shape!");
 
 	// eye candy :P
 	createGroundPlane();
 	//createNinja();
 	setupLights();
+
+	typedef Deque< SharedPtr<Simple> > ObjectList;
+	ObjectList	objs;
+
+	RandomNumberGeneratorMT randomiser;
 
 	real lastTime = base::native::getTime();
 	while (!mShutdownRequested)
@@ -437,21 +414,50 @@ void MiniApp::run()
 		real time = base::native::getTime();
 		real timeElapsed = time-lastTime;//timer->getSeconds();
 		lastTime = time;
-		//std::cout << "frame " << siFrame++ << " fps " << ((timeElapsed > 0) ? (1./timeElapsed) : 0) << std::endl;
 
-		//
-		mPWorld->step( timeElapsed );
-		//std::cout << "ball at " << *(s.pActor) << std::endl;
-		s.update();
-		ball2.update();
-#ifdef BOXES
-		for (size_t i=0; i<kNumBoxes; ++i)
-			boxes[i].update();
-#endif
+		// spawn randomised objects in intervals
+		// @todo add compound objects, i.e. objects with compound collision geometry.
+		static real timeSinceLastSpawn = 2;
+		timeSinceLastSpawn += timeElapsed;
+		if (timeSinceLastSpawn > 1.5)
+		{
+			timeSinceLastSpawn = 0;
 
+			// decide whether to spawn object in physics world 1 or two
+			static bool bUseWorldOne = true;
+			bUseWorldOne = !bUseWorldOne;
+			SharedPtr<physics::IWorld> pPWorld = bUseWorldOne ? mPWorld1 : mPWorld2;
+
+			// spawn the object
+			const Vector3 spawnOffset = bUseWorldOne ? Vector3(-5,0,0) : Vector3(5,0,0);
+			objs.push_back( SharedPtr<Simple>( new Simple( pPWorld ) ) );
+			if (randomiser.randReal() < 0.5)
+				createBox( pPWorld, *objs.back(), 
+								spawnOffset + Vector3(randomiser.randReal()*0.5,10,randomiser.randReal()*0.5), // position
+								Vector3(randomiser.randReal()*3,1,randomiser.randReal()*2) ); // dimensions
+			else
+				createBall( pPWorld, *objs.back(), 
+								spawnOffset + Vector3(0,10,0),  // position
+								randomiser.randReal()*2 ); //dimension/radius
+		}
+
+		// step the worlds
+		mPWorld1->step( timeElapsed );
+		mPWorld2->step( timeElapsed );
+
+		// update graphics objects
+		ConstVectorIterator< ObjectList > itObj( objs.begin(), objs.end() );
+		while (itObj.hasMoreElements())
+			itObj.getNext()->update();
+
+		// render the scene
 		mGWorld->render( timeElapsed );
 	}
-	mPWorld->destroyActor( physics::WeakIActorPtr( pStaticWorldActor ) );
+	mPWorld1->destroyActor( physics::WeakIActorPtr( pStaticWorldActor1 ) );
+	YAKE_ASSERT( pStaticWorldActor1.expired() );
+
+	mPWorld2->destroyActor( physics::WeakIActorPtr( pStaticWorldActor2 ) );
+	YAKE_ASSERT( pStaticWorldActor2.expired() );
 }
 
 int main()
@@ -459,6 +465,7 @@ int main()
 	try
 	{
 		std::cout << std::endl << "A simple demo :) provided for YAKE by Stephan Kaiser" << std::endl;
+		std::cout << "For a more sophisticated demo have a look at the Yapp demos," << std::endl << "'sync1' and 'dotLink' and 'dotModel'." << std::endl;
 
 		MiniApp app;
 		app.init();
@@ -471,6 +478,7 @@ int main()
 	}
 	catch (...)
 	{
+		//YAKE_LOG_ERROR("YAKE catched an unhandled exception");
 		std::cout << std::endl << "YAKE catched an unhandled exception." << std::endl;
 	}
 #if defined( YAKE_DEBUG_BUILD )
