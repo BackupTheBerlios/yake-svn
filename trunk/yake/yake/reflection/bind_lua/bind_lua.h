@@ -5,6 +5,7 @@
 #include "type_info.h"
 #include "construct_type_from_arbitrary_types.h"
 #include "get_type_or_null.h"
+#include "events.h"
 
 extern "C"
 {
@@ -13,17 +14,7 @@ extern "C"
 	#include "lualib.h"
 }
 
-bool dostring(lua_State* L, const char* str)
-{
-	if (luaL_loadbuffer(L, str, std::strlen(str), str) || lua_pcall(L, 0, 0, 0))
-	{
-		const char* a = lua_tostring(L, -1);
-		std::cout << a << "\n";
-		lua_pop(L, 1);
-		return true;
-	}
-	return false;
-}
+bool dostring(lua_State* L, const char* str);
 
 #define LUABIND_NO_HEADERS_ONLY
 #include <luabind/luabind.hpp>
@@ -66,7 +57,7 @@ Step 7: _now_ we can use the properties and methods within lua => "o.a=5; o:foo(
 
 // -----------------------------------------
 // lua state
-struct global_lua_state
+static struct global_lua_state
 {
 	global_lua_state() : m_L(lua_open())
 	{	// open lua
@@ -84,7 +75,7 @@ struct global_lua_state
 	{	return m_L;	}
 
 	lua_State * m_L;
-} L;
+} L; 
 
 // -----------------------------------------
 // lua class bindings

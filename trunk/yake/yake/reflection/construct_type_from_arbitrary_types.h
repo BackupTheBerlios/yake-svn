@@ -2,6 +2,7 @@
 #define _CONSTRUCT_TYPE_FROM_ARBITRARY_ARGS_H_
 
 #include <boost/mpl/if.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include "null.h"
 
 // meta functions: accepts any number of arguments and returns the according type selected by the holder

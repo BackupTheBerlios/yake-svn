@@ -68,6 +68,8 @@ struct property_observer
 	virtual void set(VALUE_TYPE value) = 0;
 };
 
+// todo: clean this up somehow, functors instead of notify_property_changed?
+// user implementations for the network observer?
 template<typename VALUE_TYPE, class CLASS_TYPE>
 struct network_observer : property_observer<VALUE_TYPE>
 {
@@ -248,17 +250,11 @@ public:\
 
 // -----------------------------------------
 // property helpers
-unsigned int getPropertyPosition(const Class & class_, const Property & prop_)
-{ 
-	unsigned int pos = 0;
-	for( Class::PropertyList::const_iterator iter = class_.getProperties().begin();
-		iter != class_.getProperties().end();	iter++ )
-	{	if( iter->getName() == prop_.getName() ) return pos; }
-	throw std::exception();
-}
+unsigned int getPropertyPosition(const Class & class_, const Property & prop_);
 
-unsigned int getPropertyPosition(const Class & class_, const char * prop_)
-{	return getPropertyPosition(class_, class_.getProperty(prop_)); }
+unsigned int getPropertyPosition(const Class & class_, const char * prop_);
+
+Property & getPropertyAt(const Class & class_, const int pos_);
 
 template< typename Value_, class Object_ >
 Value_ getPropertyValue(const Object_ obj_, const Property & prop_)
@@ -266,13 +262,6 @@ Value_ getPropertyValue(const Object_ obj_, const Property & prop_)
 	Value_ value;
 	prop_.get(value, obj_);
 	return value;
-}
-
-Property & getPropertyAt(const Class & class_, const int pos_)
-{
-	Class::PropertyList::const_iterator iter = class_.getProperties().begin();
-	std::advance(iter, pos_);
-	return const_cast<Property&>(*iter);
 }
 
 template< typename Value_, class Object_ >
@@ -404,18 +393,5 @@ public: // network methods
 private: // data
 		bool m_IsClientScopeObject;
 };
-
-// send property update to server
-TNL_IMPLEMENT_NETOBJECT_RPC(Replicatable, c2sPropertyChanged, (TNL::ByteBufferRef value_, TNL::Int<32> position_), 
-   TNL::NetClassGroupGameMask, TNL::RPCGuaranteedOrdered, TNL::RPCToGhostParent, 0)
-{
-	Property & prop = getPropertyAt(getClass(), position_);
-	if(prop.getTypeInfo() == typeid(int))
-	{
-		assert(sizeof(int) == value_.getBufferSize());
-		prop.set(this, *reinterpret_cast<const int*>(value_.getBuffer()));
-		std::cout << "c2sPropertyChanged( <int>" << *reinterpret_cast<const int*>(value_.getBuffer()) << ")" << std::endl;
-	}
-}
 
 #endif // _BIND_NETWORK_H_
