@@ -61,35 +61,39 @@ struct abstract_factory_unit_any
 
 // ---------------------------------------------------------
 // factory unit with a predefined set of constructor arguments
-template <class AbstractProduct, class Parameters, int Size = boost::mpl::size<Parameters>::value>
-struct do_create_function;
-
-template <class AbstractProduct, class Parameters>
-struct do_create_function<AbstractProduct, Parameters, 0>
+namespace // unnamed
 {
-   virtual AbstractProduct * do_create(functions::identity<AbstractProduct>) = 0;
-};
+	template <class AbstractProduct, class Parameters, int Size = boost::mpl::size<Parameters>::value>
+	struct do_create_function; // throw compile-time error
 
-template <class AbstractProduct, class Parameters>
-struct do_create_function<AbstractProduct, Parameters, 1>
-{
-   virtual AbstractProduct * do_create(functions::identity<AbstractProduct>, 
-		 typename boost::mpl::at<Parameters, boost::mpl::int_<0> >::type) = 0;
-};
+	template <class AbstractProduct, class Parameters>
+	struct do_create_function<AbstractProduct, Parameters, 0>
+	{
+		virtual AbstractProduct * do_create(functions::identity<AbstractProduct>) = 0;
+	};
 
-template <class AbstractProduct, class Parameters>
-struct do_create_function<AbstractProduct, Parameters, 2>
-{
-   virtual AbstractProduct * do_create(functions::identity<AbstractProduct>,
-	   typename boost::mpl::at<Parameters, boost::mpl::int_<0> >::type, 
-	   typename boost::mpl::at<Parameters, boost::mpl::int_<1> >::type) = 0;
-};
+	template <class AbstractProduct, class Parameters>
+	struct do_create_function<AbstractProduct, Parameters, 1>
+	{
+		virtual AbstractProduct * do_create(functions::identity<AbstractProduct>, 
+		 	typename boost::mpl::at<Parameters, boost::mpl::int_<0> >::type) = 0;
+	};
+
+	template <class AbstractProduct, class Parameters>
+	struct do_create_function<AbstractProduct, Parameters, 2>
+	{
+		virtual AbstractProduct * do_create(functions::identity<AbstractProduct>,
+			typename boost::mpl::at<Parameters, boost::mpl::int_<0> >::type, 
+			typename boost::mpl::at<Parameters, boost::mpl::int_<1> >::type) = 0;
+	};
+
+} // namespace unnamed
 
 template <class AbstractProduct, class ParametersFunction>
 struct abstract_factory_unit_pars : do_create_function<AbstractProduct, typename ParametersFunction::type>
 {
-	 BOOST_STATIC_ASSERT((boost::mpl::is_sequence<typename ParametersFunction::type>::type::value == true));
-   virtual ~abstract_factory_unit_pars() {}
+	BOOST_STATIC_ASSERT((boost::mpl::is_sequence<typename ParametersFunction::type>::type::value == true));
+	virtual ~abstract_factory_unit_pars() {}
 };
 
 // ---------------------------------------------------------
@@ -100,7 +104,6 @@ struct abstract_factory_unit_pure
 	virtual AbstractProduct * do_create(functions::identity<AbstractProduct>) = 0;
 	virtual ~abstract_factory_unit_pure() {}
 };
-
 
 // ---------------------------------------------------------
 // abstract factory with constructor arguments
@@ -172,7 +175,7 @@ struct abstract_factory :
 		FactoryUnit
 		<
 			AbstractProduct, 
-			typename find_product_parameters<Types, AbstractProduct, Parameters>::type
+			typename find_product_parameters<Types, AbstractProduct, Parameters>::type // todo: shouldn't this be find_product_parameters<Types, AbstractProduct, Parameters> like above?!
 		> & unit = *this;
 		return unit.do_create(functions::identity<AbstractProduct>(), p1, p2);
 	}
@@ -207,83 +210,74 @@ struct abstract_factory<Types, FactoryUnit, null_type> :
 
 // ---------------------------------------------------------
 // factory unit creator policy with constructor arguments
-template 
-<
-	class Base, 
-	class ConcreteProduct,
-	int ParametersSize = 
-		boost::mpl::size
-		<
-			typename boost::mpl::front<typename Base::ParameterList>::type
-		>::type::value
->
-struct op_new_factory_unit_pars_helper;
-
-template <class Base, class ConcreteProduct>
-struct op_new_factory_unit_pars_helper<Base, ConcreteProduct, 0> : Base
+namespace // unnamed
 {
-private:
-	typedef typename Base::ProductList BaseProductList;
-	typedef typename Base::ParameterList BaseParameterList;
-    
-public:
-	typedef typename sequences::pop_front<BaseProductList>::type ProductList;
-	typedef typename sequences::pop_front<BaseParameterList>::type ParameterList;
-    
-public:
-	typedef typename sequences::front<BaseProductList>::type AbstractProduct;
-	typedef typename sequences::front<BaseParameterList>::type Parameters;
+	template 
+	<
+		class Base, 
+		class ConcreteProduct,
+		int ParametersSize = boost::mpl::size< typename boost::mpl::front<typename Base::ParameterList>::type >::type::value
+	>
+	struct op_new_factory_unit_pars_helper; // throw compile-time error
 
-	ConcreteProduct * do_create(functions::identity<AbstractProduct>)
+	template <class Base, class ConcreteProduct>
+	struct op_new_factory_unit_pars_helper<Base, ConcreteProduct, 0> : Base
 	{
-		return new ConcreteProduct;
-	}
-};
-
-template <class Base, class ConcreteProduct>
-struct op_new_factory_unit_pars_helper<Base, ConcreteProduct, 1> : Base
-{
-private:
-	typedef typename Base::ProductList BaseProductList;
-	typedef typename Base::ParameterList BaseParameterList;
+	private:
+		typedef typename Base::ProductList BaseProductList;
+		typedef typename Base::ParameterList BaseParameterList;
     
-public:
-	typedef typename sequences::pop_front<BaseProductList>::type ProductList;
-	typedef typename sequences::pop_front<BaseParameterList>::type ParameterList;
+	public:
+		typedef typename sequences::pop_front<BaseProductList>::type ProductList;
+		typedef typename sequences::pop_front<BaseParameterList>::type ParameterList;
     
-public:
-	typedef typename sequences::front<BaseProductList>::type AbstractProduct;
-	typedef typename sequences::front<BaseParameterList>::type Parameters;
+		typedef typename sequences::front<BaseProductList>::type AbstractProduct;
+		typedef typename sequences::front<BaseParameterList>::type Parameters;
 
-	ConcreteProduct * do_create(functions::identity<AbstractProduct>, 
-		typename boost::mpl::at<Parameters, boost::mpl::int_<0> >::type p1)
+		ConcreteProduct * do_create(functions::identity<AbstractProduct>)
+		{ return new ConcreteProduct; }
+	};
+
+	template <class Base, class ConcreteProduct>
+	struct op_new_factory_unit_pars_helper<Base, ConcreteProduct, 1> : Base
 	{
-		return new ConcreteProduct(p1);
-	}
-};
-
-template <class Base, class ConcreteProduct>
-struct op_new_factory_unit_pars_helper<Base, ConcreteProduct, 2> : Base
-{
-public:
-	typedef typename Base::ProductList BaseProductList;
-	typedef typename Base::ParameterList BaseParameterList;
+	private:
+		typedef typename Base::ProductList BaseProductList;
+		typedef typename Base::ParameterList BaseParameterList;
     
-public:
-	typedef typename sequences::pop_front<BaseProductList>::type ProductList;
-	typedef typename sequences::pop_front<BaseParameterList>::type ParameterList;
+	public:
+		typedef typename sequences::pop_front<BaseProductList>::type ProductList;
+		typedef typename sequences::pop_front<BaseParameterList>::type ParameterList;
     
-public:
-	typedef typename sequences::front<BaseProductList>::type AbstractProduct;
-	typedef typename sequences::front<BaseParameterList>::type Parameters;
+		typedef typename sequences::front<BaseProductList>::type AbstractProduct;
+		typedef typename sequences::front<BaseParameterList>::type Parameters;
 
-	ConcreteProduct * do_create(functions::identity<AbstractProduct>,
-		typename boost::mpl::at<Parameters, boost::mpl::int_<0> >::type p1,
-		typename boost::mpl::at<Parameters, boost::mpl::int_<1> >::type p2)
+		ConcreteProduct * do_create(functions::identity<AbstractProduct>, 
+			typename boost::mpl::at<Parameters, boost::mpl::int_<0> >::type p1)
+		{ return new ConcreteProduct(p1); }
+	};
+
+	template <class Base, class ConcreteProduct>
+	struct op_new_factory_unit_pars_helper<Base, ConcreteProduct, 2> : Base
 	{
-		return new ConcreteProduct(p1, p2);
-	}
-};
+	private:
+		typedef typename Base::ProductList BaseProductList;
+		typedef typename Base::ParameterList BaseParameterList;
+	    
+	public:
+		typedef typename sequences::pop_front<BaseProductList>::type ProductList;
+		typedef typename sequences::pop_front<BaseParameterList>::type ParameterList;
+    
+		typedef typename sequences::front<BaseProductList>::type AbstractProduct;
+		typedef typename sequences::front<BaseParameterList>::type Parameters;
+
+		ConcreteProduct * do_create(functions::identity<AbstractProduct>,
+			typename boost::mpl::at<Parameters, boost::mpl::int_<0> >::type p1,
+			typename boost::mpl::at<Parameters, boost::mpl::int_<1> >::type p2)
+		{ return new ConcreteProduct(p1, p2); }
+	};
+
+} // namespace unnamed
 
 // ---------------------------------------------------------
 // factory unit creator policy without constructor arguments
@@ -312,8 +306,6 @@ struct op_new_factory_unit
 		}
 	};
 };
-
-
 
 // ---------------------------------------------------------
 // concrete factory with constructor parameters
