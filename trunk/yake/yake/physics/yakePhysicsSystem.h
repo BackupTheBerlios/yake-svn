@@ -73,16 +73,38 @@ namespace physics {
 		//@todo virtual void setRestitution(const real ...) = 0;
 	};
 
+	/**
+		YAKE         ODE          NX
+		Ball         Ball         Spherical
+		Hinge        Hinge        Revolute
+		Fixed        Fixed        [simulated] (using Prismatic ?]
+		Hinge2       Hinge2       ? (has to be simulated?)
+		Slider       Slider       Cylindrical(?)(or Slider?) (Prismatic="single translational DOF", Cylindrical="sliding joint, permits one translational and one rotational DOF")
+		Universal    Universal    ? (has to be simulated?)
+
+	*/
 	enum JointType
 	{
 		JT_BALL,
 		JT_HINGE,
 		JT_HINGE2,
 		JT_FIXED,
+		JT_SLIDER,
+		JT_UNIVERSAL,
 		JT_OTHER
-		//@todo add more common ones
 	};
 
+	/**
+		YAKE         ODE               NX
+		Plane        Plane             Plane
+		Box          Box               Box
+		Sphere       Sphere            Sphere
+		Capsule      Capped Cylinder   Capsule
+		Cylinder     ?                 ?           (could be approximated with a shorter capsule...)
+		Tri Mesh     TriMesh           Mesh
+		Voxel Set    ?                 ?
+		Transform    ?                 ?           (could be simulated)
+	*/
 	enum ShapeType
 	{
 		ST_PLANE,
@@ -90,7 +112,6 @@ namespace physics {
 		ST_SPHERE,
 		ST_CAPSULE,
 		ST_CYLINDER,
-		ST_CCYLINDER,
 		ST_TRIANGLE_MESH,
 		ST_VOXEL_SET,
 		ST_TRANSFORM_CONTAINER,
@@ -189,6 +210,12 @@ namespace physics {
 			real		height;
 			real		radius;
 		};
+		typedef Vector<Vector3> Vector3Vector;
+		typedef Vector3Vector VertexVector;
+		typedef Vector3Vector NormalVector;
+		typedef uint32 IndexType;
+		typedef Vector<IndexType> IndexVector;
+
 		struct TriMeshDesc : Desc
 		{
 			TriMeshDesc(	const String & rkMeshFilename,
@@ -199,7 +226,24 @@ namespace physics {
 				Desc( ST_TRIANGLE_MESH, rkPosition, rkOrientation ),
 				meshFilename( rkMeshFilename )
 			{}
-			String		meshFilename;
+			TriMeshDesc(	const VertexVector & rkVertices,
+							const IndexVector & rkIndices,
+							const NormalVector & rkNormals = NormalVector(),
+							// base class:
+							const Vector3 & rkPosition = Vector3::kZero, 
+							const Quaternion & rkOrientation = Quaternion::kIdentity
+						) :
+				Desc( ST_TRIANGLE_MESH, rkPosition, rkOrientation ),
+				vertices( rkVertices ),
+				indices( rkIndices ),
+				normals( rkNormals )
+			{
+			}
+			String			meshFilename;
+			// or alternatively:
+			VertexVector	vertices;
+			NormalVector	normals;
+			IndexVector		indices;
 		};
 	public:
 		virtual ~IShape() {}
