@@ -63,7 +63,7 @@ namespace model {
 			std::cout << "Searching for physical named '" << sourceModelName << "'" << std::endl;
 			Physical* pP = rModel.getPhysicalByName( sourceModelName );
 			YAKE_ASSERT( pP );
-			if (sourceMovableType == "physics.actor")
+			if (sourceMovableType == "physics.actor" || sourceMovableType == "physics.complex")
 				pMovable = dynamic_cast<physics::IMovableActor*>(pP->getActorByName( sourceMovableName ).lock().get());
 			//else if (sourceMovableType == "physics.complex")
 			//	pMovable = pP->getActorByName( sourceMovableName ).get();
