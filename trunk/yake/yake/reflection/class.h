@@ -23,11 +23,11 @@ protected: \
     typedef CLASS_NAME ClassType; \
     static const reflection::Class * getClassStaticPtr() \
 		{ \
-        static reflection::Class _class( \
+				static reflection::Class _class( \
             #CLASS_NAME, \
 						typeid(CLASS_NAME), \
 						SUPER_CLASS_NAME::getClassStaticPtr(), \
-            __instance_creator_factory__<ClassType, __IS_OBJECT__(ClassType)>::create()); \
+						reflection::__instance_creator_factory__<ClassType, __IS_OBJECT__(ClassType)>::create()); \
         return &_class; \
     } \
 public: \
@@ -406,7 +406,7 @@ private:
 class NullClass 
 {
 public:
-    static const Class *getClassStaticPtr() { return 0; }
+    static const Class * getClassStaticPtr() { return 0; }
 private:
     NullClass() {}
     ~NullClass() {}

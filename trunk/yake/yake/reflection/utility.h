@@ -84,8 +84,8 @@
 
 
 // type traits
-#define __IS_CONST__(T)       (sizeof(__const_tester__(T)) == 1)
-#define __IS_OBJECT__(T)      (sizeof(__object_tester__((T *)0)) == 1)
+#define __IS_CONST__(T)       (sizeof(reflection::__const_tester__(T)) == 1)
+#define __IS_OBJECT__(T)      (sizeof(reflection::__object_tester__((T *)0)) == 1)
 
 namespace reflection 
 {
