@@ -23,19 +23,48 @@
 
 namespace yake {
 namespace physics {
+	/*
+	template< class Base_, class ConcreteProduct_ >
+	class YakeNxFactoryUnit : public Base_
+	{
+		typedef typename Base_::ProductList BaseProductList;
+	    
+	protected:
+		typedef typename mpl::sequences::pop_front< BaseProductList >::type ProductList;
+	    
+	public:
+		typedef typename mpl::sequences::front< BaseProductList >::type AbstractProduct;
+
+		ConcreteProduct_* doCreate( mpl::functions::identity< AbstractProduct > )
+		{
+			return new ConcreteProduct_(this,this,true);
+		}
+	};*/
 
 	class ActorNx;
 	class MaterialNx;
-	class WorldNx : public IWorld, public NxUserContactReport
+	class JointNx;
+	class AvatarNx;
+	class WorldNx : 
+		//public mpl::ConcreteFactory< IWorld, YakeNxFactoryUnit, mpl::sequences::list<ActorNx,AvatarNx> >
+		public IWorld,
+		public NxUserContactReport
 	{
 	public:
 		WorldNx();
 		virtual ~WorldNx();
 
-		virtual SharedPtr<IJoint> createJoint( const IJoint::DescBase & rkJointDesc );
-		virtual SharedPtr<IActor> createActor( const IActor::Desc & rkActorDesc );
-		virtual SharedPtr<IAvatar> createAvatar( const IAvatar::Desc & rkAvatarDesc );
-		virtual SharedPtr<IMaterial> createMaterial( const IMaterial::Desc & rkMatDesc );
+		virtual WeakIJointPtr createJoint( const IJoint::DescBase & rkJointDesc );
+		virtual WeakIStaticActorPtr createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() ) ;
+		virtual WeakIMovableActorPtr createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() );
+		virtual WeakIDynamicActorPtr createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() );
+		virtual WeakPtr<ActorNx> _createActor(const IActor::Desc & rkActorDesc, bool bDynamic); // little helper
+		virtual WeakIAvatarPtr createAvatar( const IAvatar::Desc & rkAvatarDesc );
+		virtual WeakIMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc );
+		virtual void destroyJoint( WeakIJointPtr& rJoint );
+		virtual void destroyActor( WeakIActorPtr& rActor );
+		virtual void destroyAvatar( WeakIAvatarPtr& rAvatar );
+		virtual void destroyMaterial( WeakIMaterialPtr& rMaterial );
 
 		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc & rkTrimeshDesc );
 
@@ -44,12 +73,13 @@ namespace physics {
 		virtual Deque<String> getSupportedSolvers() const;
 		virtual bool useSolver( const String & rkSolver );
 		virtual String getCurrentSolver() const;
-		virtual const PropertyNameList& getCurrentSolverParams() const;
+		virtual const PropertyNameList getCurrentSolverParams() const;
 		virtual void setCurrentSolverParam( const String & rkName, const boost::any & rkValue );
 
 		virtual void step(const real timeElapsed);
 
 		//-- NxUserContactReport interface
+		virtual NxU32 onPairCreated(NxActor& s1, NxActor& s2);
 		virtual void onContactNotify (NxContactPair &pair, NxU32 events);
 
 		//-- helpers
@@ -66,6 +96,18 @@ namespace physics {
 
 		typedef AssocVector< NxActor*, ActorNx* > ContactActorMap;
 		ContactActorMap			mContactActors;
+
+		typedef Deque<SharedPtr<ActorNx> > ActorNxVector;
+		ActorNxVector			mActors;
+
+		typedef Deque<SharedPtr<JointNx> > JointNxVector;
+		JointNxVector			mJoints;
+
+		typedef Deque<SharedPtr<MaterialNx> > MaterialNxVector;
+		MaterialNxVector		mMaterials;
+
+		typedef Deque<SharedPtr<AvatarNx> > AvatarNxVector;
+		AvatarNxVector			mAvatars;
 	};
 
 }

@@ -27,10 +27,10 @@ namespace physics {
 	class BodyNx : public IBody
 	{
 	public:
-		BodyNx( NxActor & rActor, ActorNx & rActorNx );
+		BodyNx( NxActor* pActor, ActorNx* pActorNx );
 		virtual ~BodyNx();
 
-		virtual IActor& getActor() const;
+		virtual IDynamicActor& getActor() const;
 
 		virtual void setMass(const real mass);
 		virtual real getMass() const;
@@ -54,8 +54,8 @@ namespace physics {
 
 		// helpers
 	private:
-		ActorNx&	mActor;
-		NxActor&	mNxActor;
+		ActorNx*	mActor;
+		NxActor*	mNxActor;
 		NxBodyDesc	mNxDesc;
 	};
 

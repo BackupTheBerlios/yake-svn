@@ -27,23 +27,23 @@ namespace physics {
 	class BodyNx;
 	class ShapeNx;
 	class WorldNx;
-	class ActorNx : public IActor
+	class ActorNx : public IDynamicActor
 	{
+	private:
+		ActorNx(const ActorNx&);
+		ActorNx& operator=(const ActorNx&);
 	public:
-		ActorNx( NxScene & rScene, WorldNx & rWorld );
+		ActorNx( NxScene & rScene, WorldNx& rWorld, bool bDynamic );
 		virtual ~ActorNx();
 
-		virtual bool hasBody() const;
-		virtual bool createBody();
-		virtual IBody* getBody() const;
+		virtual IBody& getBody() const;
 
 		virtual SharedPtr<IShape> createShape( const IShape::Desc & rkShapeDesc );
 		virtual void destroyShape( SharedPtr<IShape> & rShape );
 		virtual const ShapePtrVector getShapes() const;
 
-		typedef Signal0<void> SignalCollisionEntered;
-		virtual void subscribeToCollisionEnteredSignal( const SignalCollisionEntered::slot_type & rkSlot );
-		virtual void subscribeToCollisionExitedSignal( const SignalCollisionEntered::slot_type & rkSlot );
+		virtual void subscribeToCollisionEnteredSignal( const SignalCollision::slot_type & rkSlot );
+		virtual void subscribeToCollisionExitedSignal( const SignalCollision::slot_type & rkSlot );
 
 		virtual void setPosition( const Vector3 & rkPosition );
 		virtual Vector3 getPosition() const;
@@ -57,11 +57,12 @@ namespace physics {
 			YAKE_ASSERT( mpNxActor );
 			return mpNxActor; 
 		}
-		SignalCollisionEntered	fireCollisionEntered;
+		SignalCollision	fireCollisionEntered;
+		SignalCollision	fireCollisionExited;
 	private:
-		NxActor*	mpNxActor;
-		NxScene&	mNxScene;
-		WorldNx&	mWorld;
+		NxActor*			mpNxActor;
+		NxScene&			mNxScene;
+		WorldNx&			mWorld;
 
 		typedef Deque< SharedPtr<ShapeNx> > Shapes;
 		Shapes		mShapes;

@@ -29,7 +29,7 @@ namespace physics {
 	class ShapeNx : public IMovableShape
 	{
 	public:
-		ShapeNx( NxActor & rActor, ActorNx & rActorNx, MaterialNx* pMaterial );
+		ShapeNx( NxActor* pActor, ActorNx* rActorNx, MaterialNx* pMaterial );
 		virtual ~ShapeNx();
 
 		virtual ShapeType getType() const;
@@ -55,8 +55,8 @@ namespace physics {
 
 		NxShape*		mpNxShape;
 
-		NxActor&		mNxActor;
-		ActorNx&		mActor;
+		NxActor*		mNxActor;
+		ActorNx*		mActor;
 
 		TriangleMeshId	mTrimeshId;
 

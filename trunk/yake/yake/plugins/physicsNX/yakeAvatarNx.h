@@ -46,15 +46,17 @@ namespace physics {
 	private:
 		bool		mJumping;
 		bool		mJumpInitiated;
+		bool		mJumpTakingOff;
 		bool		mDucking;
 		Vector3		mPosition;
 		Vector3		mTargetVelocity;
 		NxScene&	mNxScene;
+		WorldNx&	mWorld;
 		real		mTargetHeightAboveGround;
 		SignalConnection mStepSigConn;
 		real		mRadius;
 
-		SharedPtr<IActor> mBall;
+		WeakIDynamicActorPtr	mpBall;
 	};
 
 }
