@@ -165,12 +165,12 @@ namespace yake {
 		}
 
 		//-----------------------------------------------------
-		IComplexObject* OdeWorld::createPlane(real a, real b, real c, real d)
+		IComplexObject* OdeWorld::createPlane(const Vector3 & n, real d)
 		{
 			OdeComplexObject* pComplex = new OdeComplexObject( this );
 			YAKE_ASSERT( pComplex ).debug("Out of memory ?");
 
-			OdeCollisionGeomPlane* pPlane = new OdeCollisionGeomPlane( mOdeSpace, a, b, c, d );
+			OdeCollisionGeomPlane* pPlane = new OdeCollisionGeomPlane( mOdeSpace, n.x, n.y, n.z, d );
 			YAKE_ASSERT( pPlane ).debug("Out of memory ?");
 
 			pComplex->addCollisionGeometry( pPlane );

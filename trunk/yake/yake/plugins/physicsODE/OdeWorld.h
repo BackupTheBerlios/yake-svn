@@ -41,7 +41,7 @@ namespace yake {
 			virtual IJoint* createJoint(IJoint::JointType type, IJointGroup* group = 0);
 
 			// dynamics objects
-			virtual IComplexObject* createPlane(real a, real b, real c, real d);
+			virtual IComplexObject* createPlane(const Vector3 & n, real d);
 			virtual IComplexObject* createSphere(real radius);
 			virtual IComplexObject* createBox(real lx, real ly, real lz);
 			virtual IComplexObject* createMesh(const base::String & mesh);

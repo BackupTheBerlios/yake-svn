@@ -202,7 +202,7 @@ namespace yake {
 			virtual IJoint* createJoint(IJoint::JointType type, IJointGroup* group = 0) = 0;
 
 			// dynamics objects
-			virtual IComplexObject* createPlane(real a, real b, real c, real d) = 0;
+			virtual IComplexObject* createPlane(const Vector3 & n, real d) = 0;
 			virtual IComplexObject* createSphere(real radius) = 0;
 			virtual IComplexObject* createBox(real lx, real ly, real lz) = 0;
 			virtual IComplexObject* createMesh(const base::String & mesh) = 0;
@@ -238,6 +238,14 @@ namespace yake {
 			virtual ~ICollisionGeometry() {}
 			
 			virtual ICollisionGeometry::CollisonGeomType getType() const = 0;
+
+			virtual Vector3 planeGetNormal() const = 0;
+			virtual real planeGetDistance() const = 0;
+			virtual real sphereGetRadius() const = 0;
+			virtual Vector3 boxGetDimensions() const = 0;
+			//virtual base::String meshGetName() const = 0;
+			virtual Vector3 rayGetOrigin() const = 0;
+			virtual Quaternion rayGetOrientation() const = 0;
 		};
 
 		//-----------------------------------------------------
@@ -268,6 +276,7 @@ namespace yake {
 			virtual void setBody(IBody* body) = 0;
 
 			virtual void addCollisionGeometry(ICollisionGeometry* geom) = 0;
+			virtual base::templates::Vector<ICollisionGeometry*> getCollisionGeometryVector() const = 0;
 
 			//virtual void addListener(CollidableListener* listener) = 0;
 

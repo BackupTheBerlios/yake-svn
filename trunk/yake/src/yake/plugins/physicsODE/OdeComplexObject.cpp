@@ -158,6 +158,12 @@ namespace yake {
 		}
 
 		//-----------------------------------------------------
+		base::templates::Vector<ICollisionGeometry*> OdeComplexObject::getCollisionGeometryVector() const
+		{
+			return mGeoms;
+		}
+
+		//-----------------------------------------------------
 		void OdeComplexObject::setFriction(real f)
 		{
 			mFriction = f;

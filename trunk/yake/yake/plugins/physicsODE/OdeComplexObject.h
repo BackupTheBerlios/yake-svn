@@ -42,6 +42,7 @@ namespace yake {
 			virtual void setBody( IBody* body );
 
 			virtual void addCollisionGeometry( ICollisionGeometry* geom);
+			virtual base::templates::Vector<ICollisionGeometry*> getCollisionGeometryVector() const;
 
 			virtual void setFriction(real f);
 			virtual void setFriction2(real f);
@@ -66,7 +67,7 @@ namespace yake {
 
 			OdeWorld					* mWorld;
 
-			typedef std::vector< ICollisionGeometry* > GeomList;
+			typedef base::templates::Vector< ICollisionGeometry* > GeomList;
 			GeomList					mGeoms;
 
 			real						mSoftness;

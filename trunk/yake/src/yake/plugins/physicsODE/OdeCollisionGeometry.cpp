@@ -25,6 +25,25 @@ namespace yake {
 	namespace physics {
 
 		//-----------------------------------------------------
+		Vector3 OdeCollisionGeomBase::planeGetNormal() const
+		{ return Vector3::kZero; }
+		//-----------------------------------------------------
+		real OdeCollisionGeomBase::planeGetDistance() const
+		{ return 0; }
+		//-----------------------------------------------------
+		real OdeCollisionGeomBase::sphereGetRadius() const
+		{ return 0; }
+		//-----------------------------------------------------
+		Vector3 OdeCollisionGeomBase::boxGetDimensions() const
+		{ return Vector3::kZero; }
+		//-----------------------------------------------------
+		Vector3 OdeCollisionGeomBase::rayGetOrigin() const
+		{ return Vector3::kZero; }
+		//-----------------------------------------------------
+		Quaternion OdeCollisionGeomBase::rayGetOrientation() const
+		{ return Quaternion::kIdentity; }
+
+		//-----------------------------------------------------
 		OdeCollisionGeomBase::OdeCollisionGeomBase()
 		{
 			mOdeGeomID = 0;
@@ -107,6 +126,12 @@ namespace yake {
 			mOdeGeomID = mOdeGeom->id(); // don't forget!!
 		}
 
+		//-----------------------------------------------------
+		real OdeCollisionGeomSphere::sphereGetRadius() const
+		{
+			return static_cast<dSphere*>(mOdeGeom)->getRadius();
+		}
+
 		//-----------------------------------------------------			
 		OdeCollisionGeomBox::OdeCollisionGeomBox(dSpace* space, float lx, float ly, float lz)
 		{
@@ -116,6 +141,14 @@ namespace yake {
 			mType = CGT_BOX;
 			mOdeGeom = new dBox( *space, lx, ly, lz );
 			mOdeGeomID = mOdeGeom->id(); // don't forget!!
+		}
+
+		//-----------------------------------------------------
+		Vector3 OdeCollisionGeomBox::boxGetDimensions() const
+		{
+			dVector3 lengths;
+			static_cast<dBox*>(mOdeGeom)->getLengths(lengths);
+			return Vector3( lengths[0], lengths[1], lengths[2] );
 		}
 
 		//-----------------------------------------------------
@@ -133,6 +166,21 @@ namespace yake {
 
 			mOdeGeom = new dPlane( *space, normal.x, normal.y, normal.z, d );
 			mOdeGeomID = mOdeGeom->id(); // don't forget!!
+		}
+
+		//-----------------------------------------------------
+		Vector3 OdeCollisionGeomPlane::planeGetNormal() const
+		{
+			dVector4 params;
+			static_cast<dPlane*>(mOdeGeom)->getParams(params);
+			return Vector3( params[0], params[1], params[2] );
+		}
+		//-----------------------------------------------------
+		real OdeCollisionGeomPlane::planeGetDistance() const
+		{
+			dVector4 params;
+			static_cast<dPlane*>(mOdeGeom)->getParams(params);
+			return params[3];
 		}
 
 		//-----------------------------------------------------

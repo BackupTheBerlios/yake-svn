@@ -42,6 +42,13 @@ namespace yake {
 			virtual void setOrientation(const Quaternion & orientation);
 			virtual Quaternion getOrientation() const;
 
+			virtual Vector3 planeGetNormal() const;
+			virtual real planeGetDistance() const;
+			virtual real sphereGetRadius() const;
+			virtual Vector3 boxGetDimensions() const;
+			virtual Vector3 rayGetOrigin() const;
+			virtual Quaternion rayGetOrientation() const;
+
 			// Helpers
 
 			virtual dGeomID _getOdeGeomID() const
@@ -89,6 +96,8 @@ namespace yake {
 			OdeCollisionGeomPlane();
 		public:
 			OdeCollisionGeomPlane(dSpace* space, real a, real b, real c, real d);
+			virtual Vector3 planeGetNormal() const;
+			virtual real planeGetDistance() const;
 		};
 
 		//-----------------------------------------------------
@@ -98,6 +107,7 @@ namespace yake {
 			OdeCollisionGeomSphere();
 		public:
 			OdeCollisionGeomSphere(dSpace* space, real radius);
+			virtual real sphereGetRadius() const;
 		};
 
 		//-----------------------------------------------------
@@ -107,6 +117,7 @@ namespace yake {
 			OdeCollisionGeomBox();
 		public:
 			OdeCollisionGeomBox(dSpace* space, real lx, real ly, real lz);
+			virtual Vector3 boxGetDimensions() const;
 		};
 
 		//-----------------------------------------------------
