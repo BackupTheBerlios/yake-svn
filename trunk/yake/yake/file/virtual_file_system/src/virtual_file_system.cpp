@@ -159,6 +159,17 @@ virtual_archive & virtual_file_system::get_or_open_archive( const path & absolut
 	virtualfs::istream * in = new virtualfs::ifstream( absolute_archive_path );
 	// todo: if we don't use no_codecvt, boost's archive will throw an exception while
 	// trying to imbue the stream with a new locale respectively with a facet
+
+	/*I've wrestled with that.  My current thinking is that the system should not
+be changed.  The reason I did this was that I found that the default codecvt
+on wchar_t files was to narrow the character and throw away the high order
+bits.  Also UTF-8 is need for wchar_t XML. I included the ability to
+override this by specifying no_codecvt flag upon opening the archive which
+leaves the codecvt unchanged.  So I'm happy with the current method which is
+to reflects the most common user intention and permits one to suppress this
+default behavior. I've come to conclude that that the only situation where
+the codecvt can't be changed on the fly is with the old dinkumware library.
+I'm still checking for this though.*/
 	in_archive * ia = new in_archive( *in, boost::archive::no_codecvt );
 
 		virtual_archive * archive = new virtual_archive( ia, archive_string );
