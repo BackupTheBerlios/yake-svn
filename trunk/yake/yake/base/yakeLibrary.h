@@ -60,8 +60,9 @@ private:
 } // base
 } // yake
 
+// todo plattform independent library extension?
 #define YAKE_USE_LIB( dllname ) \
-	yake::base::templates::Pointer< yake::base::Library > pDynLib( new yake::base::Library( dllname ) ); \
-	YAKE_ASSERT( pDynLib ).debug( "Out of memory." );
+	yake::base::templates::Pointer< yake::base::Library > pDynLib##dllname( new yake::base::Library( ## #dllname ## ".dll" ) ); \
+	YAKE_ASSERT( pDynLib##dllname ).debug( "Out of memory." );
 
 #endif // YAKE_BASE_LIBRARY_H
