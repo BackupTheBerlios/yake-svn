@@ -26,13 +26,14 @@
 #ifndef YAPP_MODEL_COMPLEX_H
 #define YAPP_MODEL_COMPLEX_H
 
-#include <yake/graphics/yakeGraphicsSystem.h>
-#include <yake/physics/yakePhysicsSystem.h>
+#include <yapp/base/yappPrerequisites.h>
+#include <yapp/model/yakeGraphical.h>
+#include <yapp/model/yakePhysical.h>
 
-using namespace yake;
-using namespace base::templates;
 
-namespace yapp {
+namespace yake {
+	using namespace base::templates;
+namespace app {
 namespace model {
 
 	/*class YAPP_BASE_API Entity : public DynamicReflectionObject
@@ -44,49 +45,13 @@ namespace model {
 	public:
 	};*/
 
-	class YAPP_BASE_API Graphical// : public ModelBase
-	{
-	public:
-		Graphical()
-		{}
-		~Graphical();
-		void addSceneNode( graphics::ISceneNode* pSceneNode, bool bTransferOwnership = true );
-	private:
-		typedef std::map< graphics::ISceneNode*, bool > NodeMap;
-		NodeMap		mNodes;
-	};
-
-	class YAPP_BASE_API Physical// : public ModelBase
-	{
-	public:
-		Physical()
-		{}
-		~Physical()
-		{
-			mComplexObjects.clear();
-			mJoints.clear();
-		}
-		void addComplex( SharedPtr<physics::IComplexObject> & pComplex );
-		void addAffector( SharedPtr<physics::IAffector> & pAffector );
-		void addJoint( SharedPtr<physics::IJoint> & pJoint );
-		void addJointGroup( SharedPtr<physics::IJointGroup> & pJointGroup );
-		void addBody( SharedPtr<physics::IBody> & pBody );
-		void addBodyGroup( SharedPtr<physics::BodyGroup> & pBodyGroup );
-
-		void translate( const Vector3 & d );
-
-		typedef Vector< SharedPtr<physics::IComplexObject> > ComplexList;
-		ComplexList getComplexObjects() const;
-	private:
-		ComplexList		mComplexObjects;
-
-		typedef Vector< SharedPtr<physics::IJoint> > JointList;
-		JointList		mJoints;
-	};
-
 namespace complex {
 
-	//-----------------------------------------------------
+	/** Represents a complex high-level model.
+		It's both a container and a minimal controller of high-level graphical
+		and physical models.
+		@Remarks This is work-in-progress.
+	*/
 	class YAPP_BASE_API Model
 	{
 	protected:
@@ -95,7 +60,7 @@ namespace complex {
 		Model();
 		virtual ~Model();
 
-		/** @todo Exchange "Model" with "Entity" (which has dynamic properties etc)
+		/** @todo Exchange "Model" with "Entity" (which has dynamic properties etc) ?
 		*/
 		Model* getParentModel() const;
 		void addChildModel( SharedPtr<Model> & rModel );
@@ -107,8 +72,8 @@ namespace complex {
 			"graphical://model.model...model/graphicalname"
 			"physical://model.model...model/physicalname"
 		*/
-		/*SharedPtr<Physical> queryPhysical( const String & rQuery ) const;
-		SharedPtr<Graphical> executeQuery( const String & rQuery ) const;*/
+		Physical* queryPhysical( const String & rQuery ) const;
+		Graphical* executeQuery( const String & rQuery ) const;
 
 		/** Adds a "Physical" object to this model.
 			The model references it using a shared pointer.
@@ -130,7 +95,8 @@ namespace complex {
 
 		void addController( SharedPtr<IObjectController> & pController, const String & rName = "" );
 
-		void update( real timeElapsed );
+		void updatePhysics( real timeElapsed );
+		void updateControllers( real timeElapsed );
 	private:
 		typedef AssocVector< String, SharedPtr<Physical> > PhysicalMap;
 		PhysicalMap			mPhysicals;
@@ -140,14 +106,16 @@ namespace complex {
 
 		typedef Vector< SharedPtr<Model> > ModelList;
 		ModelList			mChildren;
+
 		Model*				mParent;
 
 		typedef Vector< SharedPtr<IObjectController> > CtrlrList;
 		CtrlrList			mControllers;
 	};
+} // complex
 
-}
-}
-}
+} // model
+} // app
+} // yake
 
 #endif
