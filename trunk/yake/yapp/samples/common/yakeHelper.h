@@ -31,7 +31,8 @@ using namespace yake::base;
 using namespace yake::base::math;
 using namespace yake::graphics;
 
-namespace yapp {
+namespace yake {
+namespace app {
 
 	class CameraFollowController
 	{
@@ -154,6 +155,7 @@ namespace yapp {
 		}
 	}
 
-}
+} // app
+} // yake
 
 #endif

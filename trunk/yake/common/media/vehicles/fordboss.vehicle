@@ -43,12 +43,12 @@
 		<wheel id="0" tag="lf" axle="0" radius="0.275" mass="0.03" massmode="absolute">
 			<position x="-0.6875" y="0" z="1.18" />
 			<gfx name="../../media/graphics.scenes/fordboss/fordboss_wheel_lf.scene" />
-			<suspension spring="30" damping="30" />
+			<suspension spring="30" damping="3" />
 		</wheel>
 		<wheel id="1" tag="rf" axle="0" radius="0.275" mass="0.03" massmode="absolute">
 			<position x="0.6875" y="0" z="1.18" />
 			<gfx name="../../media/graphics.scenes/fordboss/fordboss_wheel_rf.scene" />
-			<suspension spring="30" damping="30" />
+			<suspension spring="30" damping="3" />
 		</wheel>
 		<wheel id="2" tag="lr" axle="1" radius="0.275" mass="0.03" massmode="absolute">
 			<position x="-0.6875" y="0" z="-1.13" />

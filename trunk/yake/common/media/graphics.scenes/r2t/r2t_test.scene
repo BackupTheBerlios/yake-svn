@@ -12,12 +12,6 @@
         <node name="Plane01" id="1">
             <entity name="Plane01" id="1" meshfile="Plane01.mesh" static="true" />
         </node>
-        <node name="Box01" id="3">
-            <entity name="Box01" id="3" meshfile="Box01.mesh" static="true" />
-        </node>
-        <node name="Torus01" id="5">
-            <entity name="Torus01" id="5" meshfile="Torus01.mesh" static="true" />
-        </node>
         <node name="Omni01" id="10">
             <position x="-43.1161" y="36.9621" z="33.6936" />
             <light name="Omni01" id="10" type="point" visible="true">

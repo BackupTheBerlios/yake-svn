@@ -18,8 +18,14 @@
 //============================================================================
 #include <yapp/samples/base/vehicle/yakePCH.h>
 #include <yapp/base/yapp.h>
+#include <yapp/model/yakeModel.h>
+#include <yapp/model/yakeModelMovableLink.h>
+#include <yapp/loader/yakeDotLinkLoader.h>
 #include <yake/samples/data/demo/yakeDotScene.h> // temporarily
 #include <yapp/samples/common/yakeHelper.h>
+#include <yapp/common/yakePawn.h>
+#include <yapp/model/yakeVehicleSystem.h>
+
 #define PROFILER_BEGINFRAME
 #define PROFILER_ENDFRAME
 #define PROFILER_DESTROY
@@ -39,21 +45,222 @@ using namespace yake::graphics;
 using namespace yake::data;
 
 using namespace yapp;
+using namespace yake::app;
+
+namespace yake {
+	struct LocalHumanInputData
+	{
+		input::InputSystem*				pInputSystem_;
+		input::KeyboardEventGenerator*	pKeyboardEventGenerator_;
+		input::MouseEventGenerator*		pMouseEventGenerator_;
+		const input::KeyboardDevice*			pKeyboard_;
+		LocalHumanInputData(
+			input::InputSystem* pInputSystem,
+			input::KeyboardEventGenerator* pKeyboardEventGenerator,
+			input::MouseEventGenerator* pMouseEventGenerator,
+			const input::KeyboardDevice* pKeyboard ) :
+					pInputSystem_( pInputSystem ),
+					pKeyboardEventGenerator_( pKeyboardEventGenerator ),
+					pMouseEventGenerator_( pMouseEventGenerator ),
+					pKeyboard_( pKeyboard )
+		{
+		}
+		bool isValid() const
+		{
+			return (pInputSystem_ && pKeyboardEventGenerator_ && pMouseEventGenerator_ );
+		}
+	};
+	class GameControl
+	{
+	public:
+		GameControl( const LocalHumanInputData & gatherInputData ) :
+		  mLastTime( native::getTime() ),
+		  mLocalHumanInputData( gatherInputData )
+		{}
+		typedef Signal1<void(const real)> VoidRealSignal;
+		typedef Signal0<void> VoidSignal;
+
+		typedef VoidSignal SenseSignal;
+		void subscribeToSense(const SenseSignal::slot_type & slot)
+		{ mSense.connect( slot ); }
+
+		typedef VoidSignal ThinkSignal;
+		void subscribeToThink(const ThinkSignal::slot_type & slot)
+		{ mThink.connect( slot ); }
+
+		typedef VoidSignal ActStepSignal;
+		void subscribeToActStep(const ActStepSignal::slot_type & slot)
+		{ mActStep.connect( slot ); }
+
+		typedef VoidRealSignal PhysicsStepSignal;
+		void subscribeToPhysicsStep(const PhysicsStepSignal::slot_type & slot)
+		{ mPhysicsStep.connect( slot ); }
+
+		typedef VoidRealSignal PostPhysicsStepSignal;
+		void subscribeToPostPhysicsStep(const PostPhysicsStepSignal::slot_type & slot)
+		{ mPostPhysicsStep.connect( slot ); }
+
+		typedef VoidRealSignal RenderStepSignal;
+		void subscribeToRenderStep(const RenderStepSignal::slot_type & slot)
+		{ mRenderStep.connect( slot ); }
+
+		void update()
+		{
+			//sense
+			mSense();
+			//think about it, make decisions
+			mThink();
+			//act depending on decisions
+			mActStep();
+
+			//timing
+			static bool firstFrame = true;
+			real currentTime = native::getTime();
+			real timeElapsed = currentTime - mLastTime;
+			if (firstFrame)
+			{
+				firstFrame = false;
+				timeElapsed = 0.0;
+			}
+
+			//update physics
+			mPhysicsStep( timeElapsed );
+			//update graphics/audio/... from physics
+			mPostPhysicsStep( timeElapsed );
+			//render
+			mRenderStep( timeElapsed ),
+
+			// prepare for next frame
+			mLastTime = currentTime;
+		}
+		const LocalHumanInputData& getLocalHumanInputData() const
+		{ return mLocalHumanInputData; }
+	private:
+		LocalHumanInputData		mLocalHumanInputData;
+		real					mLastTime;
+		SenseSignal				mSense;
+		ThinkSignal				mThink;
+		ActStepSignal			mActStep;
+		PhysicsStepSignal		mPhysicsStep;
+		PostPhysicsStepSignal	mPostPhysicsStep;
+		RenderStepSignal		mRenderStep;
+	private:
+		task::TaskManager		mTaskMgr;
+	};
+	class PawnVisual : public model::VisualComponent
+	{
+	public:
+		void attachModel( model::complex::Model* pComplex )
+		{
+			YAKE_ASSERT( pComplex );
+			mComplex = pComplex;
+		}
+	private:
+		model::complex::Model*	mComplex;
+	};
+	class PawnLocalHumanInput : public model::InputComponent
+	{
+	public:
+		PawnLocalHumanInput( GameControl& gameCtrl ) : mpGameCtrl(&gameCtrl), mPull(false)
+		{
+		}
+		void update()
+		{
+			YAKE_ASSERT( mpGameCtrl );
+			YAKE_ASSERT( mpGameCtrl->getLocalHumanInputData().isValid() );
+			if (mpGameCtrl->getLocalHumanInputData().pKeyboard_->isKeyDown( input::KC_UP ))
+				mPull = true;
+			else
+				mPull = false;
+		}
+		bool isPulling() const
+		{ return mPull; }
+	private:
+		GameControl*	mpGameCtrl;
+		bool			mPull;
+	};
+	class PawnControl : public model::ActorControl
+	{
+	public:
+		PawnControl( PawnLocalHumanInput* pLHI ) : mLHI(pLHI)
+		{
+		}
+		void setControlledMovable( physics::IComplexObject* pMovable )
+		{
+			mMovable = pMovable;
+		}
+		void update()
+		{
+			YAKE_ASSERT( mMovable );
+			if (!mLHI)
+				return;
+			if (mLHI->isPulling())
+			{
+				mMovable->getBody()->addForce( Vector3(0,20,0) );
+			}
+		}
+	private:
+		physics::IComplexObject*		mMovable;
+		PawnLocalHumanInput*			mLHI;
+	};
+}
 
 class TheApp : public yake::exapp::ExampleApplication
 {
-private:
-	Vector<std::pair<IViewport*,ICamera*> >	mVPs;
+//private:
+public:
+	task::TaskManager					mTaskMgr;
+	//@{ tasks
+	// task: render
+	class RenderTask : public task::DefTask
+	{
+	private:
+		IGraphicalWorld*	mWorld;
+	public:
+		RenderTask( IGraphicalWorld* pWorld );
+		virtual void execute(real timeElapsed);
+	};
+	RenderTask*							mRenderTask;
+
+	// task: physics
+	class PhysicsTask : public task::DefTask
+	{
+	private:
+		physics::IWorld*	mWorld;
+	public:
+		PhysicsTask( physics::IWorld* pWorld );
+		virtual void execute(real timeElapsed);
+	};
+	PhysicsTask*						mPhysicsTask;
+
+	// task: input
+	class InputTask : public task::DefTask
+	{
+	private:
+		TheApp*	mApp;
+		//::yake::app::model::complex::vehicle::LandVehicle*	mCar;
+	public:
+		InputTask( 	TheApp* theApp/*, model::complex::vehicle::LandVehicle* theCar*/ );
+		virtual void execute(real timeElapsed);
+	};
+	InputTask*							mInputTask;
+	//@}
+
+	//@{ name worlds
 	SharedPtr< IGraphicalWorld >			mGWorld;
 	physics::IWorld*						mPWorld;
 	audio::IWorld*							mpAWorld;
+	//@}
 
-	physics::IComplexObject* dbgChassis;
+	Vector<std::pair<IViewport*,ICamera*> >	mVPs; /// Viewport / Camera pairs
 
+	//@{ audio related
 	audio::IListener*					mpAListener;
 	audio::ISource*						mpASource;
 	audio::ISoundData*					mpAData;
+	//@}
 
+	//@{ testing stuff
 	graphics::ISceneNode*				mLightOneNode;
 	graphics::IParticleSystem*			mSmoke;
 
@@ -63,83 +270,35 @@ private:
 		physics::IComplexObject*		pCO;
 		model::MovableUpdateController	updCtrl;
 	};
-	class SimpleTwo {
-	private:
-		model::Physical*				pPhysical;
-		SharedSceneNodeList				nodes;
-		SharedMUCList					ctrlrs;
-
-	public:
-		SimpleTwo() : pPhysical(0)
-		{}
-		~SimpleTwo()
-		{
-			nodes.clear();
-			ctrlrs.clear();
-			YAKE_SAFE_DELETE( pPhysical );
-		}
-		model::Physical* getPhysical()
-		{
-			if (!pPhysical)
-				pPhysical = new model::Physical();
-			YAKE_ASSERT( pPhysical );
-			return pPhysical;
-		}
-		SharedMUCList& getCtrlrs()
-		{
-			return ctrlrs;
-		}
-		SharedSceneNodeList& getNodes()
-		{
-			return nodes;
-		}
-		void update( const real timeElapsed )
-		{
-			for (SharedMUCList::const_iterator it = ctrlrs.begin();
-				it != ctrlrs.end();
-				++it)
-			{
-				(*it).get()->update( timeElapsed );
-			}
-		}
-	};
-	SimpleOne								mNinja;
-	SimpleTwo*								mpBox;
-	SimpleTwo*								mpSphere;
 	SimpleOne								mGround;
-	model::complex::Model*					mCarModel;
-	model::complex::vehicle::LandVehicle*	mCar;
+	//@}
+	//@{ name controllable entities
+	model::Pawn*							mPawn1;
+	model::vehicle::Vehicle*				mVehicle1;
+	//@}
 public:
 	TheApp() : ExampleApplication( true /*graphics*/,
 									true /*physics*/,
 									false /*scripting*/,
 									true /*input*/,
 									false /*script bindings*/,
-									true /*audio*/),
-				mCarModel(0),
-				mCar(0),
-				mpBox(0),
-				mpSphere(0),
-				mpAWorld(0),
-				mpASource(0),
-				mpAListener(0),
-				mpAData(0),
-				mLightOneNode(0)
+									false /*audio*/),
+				mLightOneNode(0),
+				mRenderTask(0),
+				mPhysicsTask(0),
+				mInputTask(0),
+				mPawn1(0),
+				mVehicle1(0)
 	{
-		mNinja.pSN = 0;
 	}
-
 	void onKey(const yake::input::KeyboardEvent & e)
 	{
-		std::cout << "KEY: " << e.keyCode << std::endl;
 		if (e.keyCode == input::KC_ESCAPE)
 			requestShutdown();
 	}
 	void onMB(uint8 btn)
 	{
-		std::cout << "MB: " << static_cast<int>(btn) << std::endl;
 	}
-
 	int createCameraViewportPair( real sx, real sy, real w, real h, int z )
 	{
 		ICamera* pC = mGWorld->createCamera();
@@ -148,13 +307,13 @@ public:
 
 		// used for shadows
 		// incase infinite far distance is not supported
-		pC->setFarClipDistance( 100000 );
+		//pC->setFarClipDistance( 2000. );
 
 		mVPs.push_back( std::pair<IViewport*,ICamera*>(mGWorld->createViewport( pC ), pC) );
 		size_t idx = mVPs.size()-1;
-		YAKE_ASSERT( mVPs[idx].first );
-		mVPs[idx].first->setDimensions( sx, sy, w, h );
-		mVPs[idx].first->setZ( z );
+		YAKE_ASSERT( mVPs.back().first );
+		mVPs.back().first->setDimensions( sx, sy, w, h );
+		mVPs.back().first->setZ( z );
 		return static_cast<int>(idx);
 	}
 
@@ -164,379 +323,53 @@ public:
 
 		// 1. read dotscene file into DOM
 
-		SharedPtr<dom::ISerializer> ser( new dom::xml::XmlSerializer() );
-		ser->parse("../../media/graphics.scenes/r2t/r2t_test.scene", false);
+		dom::xml::XmlSerializer ser;
+		ser.parse("../../media/graphics.scenes/arena0/arena0_export.scene", false);
 
 		// 2. parse DOM and create graphical scene
 
+		yake::data::serializer::dotscene::DotSceneSerializerV1 dss;
+		dss.load( ser.getDocumentNode(), mGWorld.get() );
+
+		// create a root scene node for newly loaded scene
 		graphics::ISceneNode* pSN = mGWorld->createSceneNode();
 		YAKE_ASSERT( pSN );
-		yake::data::serializer::dotscene::DotSceneSerializerV1 dss;
-		dss.load( ser->getDocumentNode(), mGWorld, pSN );
+
+		// copy free root scene nodes into a parent scene node for newly loaded scene
+		yake::data::serializer::dotscene::SceneNodeList nodes = dss.getRootLevelSceneNodes();
+		for (yake::data::serializer::dotscene::SceneNodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
+		{
+			pSN->addChildNode( *it );
+		}
 	}
-
-	void setupNinja()
-	{
-		// setup NINJA
-		mNinja.pCO = 0; // no physical representation
-
-		mNinja.pSN = mGWorld->createSceneNode();
-		YAKE_ASSERT( mNinja.pSN );
-
-		mNinja.pE = mGWorld->createEntity("ninja.mesh");
-		YAKE_ASSERT( mNinja.pE );
-		mNinja.pE->setCastsShadow( false );
-
-		mNinja.pSN->attachEntity( mNinja.pE );
-		mNinja.pSN->setPosition( Vector3(0,0,-500) );
-	}
-
 	void setupGround()
 	{
 		// setup GROUND
 
 		// setup physical representation
-		mGround.pCO = mPWorld->createPlane( Vector3(0, 1, 0), 0 );
+		mGround.pCO = mPWorld->createMesh( "../../media/graphics.scenes/arena0/arena0ground.physics" );
+		//mGround.pCO = mPWorld->createPlane( Vector3(0, 1, 0), 0 );
 		YAKE_ASSERT( mGround.pCO );
-		mGround.pCO->setFriction( 2 );
-		mGround.pCO->setFriction2( 2 );
+		mGround.pCO->setFriction( 1.5 );
+		mGround.pCO->setFriction2( 1.5 );
 
 		// create entity
+		mGround.pE = 0;
+		mGround.pSN = 0;
+
+		/*
 		mGround.pE = mGWorld->createEntity("plane_1x1.mesh");
 		YAKE_ASSERT( mGround.pE );
+		mGround.pE->setMaterial("Examples/BumpyMetal");
 		mGround.pE->setCastsShadow( false  );
 
 		// create scene node and attach entity to node
 		mGround.pSN = mGWorld->createSceneNode();
 		YAKE_ASSERT( mGround.pSN );
 		mGround.pSN->attachEntity( mGround.pE );
+		mGround.pSN->setScale(Vector3(100,1,100));
+		*/
 	}
-
-	void setupBox()
-	{
-		mpBox = new SimpleTwo();
-		YAKE_ASSERT( mpBox );
-
-		// setup physical representation
-		physics::IComplexObject* pCO = mPWorld->createBox( 2, 2, 2 );
-		YAKE_ASSERT( pCO );
-		pCO->setPosition( Vector3(0.75,10,-10) );
-
-		YAKE_ASSERT( mpBox->getPhysical() );
-		mpBox->getPhysical()->addComplex( SharedPtr<physics::IComplexObject>( pCO ) );
-
-		// setup graphical representation & update controllers
-		createDebugGeometryForComplexPhysical(
-			pCO,
-			mGWorld.get(),
-			mpBox->getNodes(),
-			mpBox->getCtrlrs() );
-
-		//FIXME: smoke...
-		mSmoke = mGWorld->createParticleSystem("Smoke");
-		YAKE_ASSERT( mSmoke );
-		(*mpBox->getNodes().begin())->attachParticleSystem( mSmoke );
-	}
-
-	void setupSphere()
-	{
-		mpSphere = new SimpleTwo();
-		YAKE_ASSERT( mpSphere );
-
-		// setup physical representation
-		physics::IComplexObject* pCO = mPWorld->createSphere( 2 );
-		YAKE_ASSERT( pCO );
-		pCO->setPosition( Vector3(0,15,-10) );
-
-		YAKE_ASSERT( mpSphere->getPhysical() );
-		mpSphere->getPhysical()->addComplex( SharedPtr<physics::IComplexObject>( pCO ) );
-
-		// setup graphical representation & update controllers
-		createDebugGeometryForComplexPhysical(
-			pCO,
-			mGWorld.get(),
-			mpSphere->getNodes(),
-			mpSphere->getCtrlrs() );
-	}
-
-	void setupAudio()
-	{
-		YAKE_ASSERT( getAudioSystem() );
-		mpAWorld = getAudioSystem()->createWorld();
-		YAKE_ASSERT( mpAWorld );
-		mpAListener = mpAWorld->createListener();
-		YAKE_ASSERT( mpAListener );
-		mpASource = mpAWorld->createSource();
-		YAKE_ASSERT( mpASource );
-		mpAData = mpAWorld->createSoundDataFromFile("bee.wav");
-		YAKE_ASSERT( mpAData );
-		//mpASource->setSoundData("bee.wav");
-		if (mpAData)
-		{
-			mpAData->setLoopMode( audio::ISoundData::SLM_LOOP_ON );
-		}
-		mpASource->setSoundData( mpAData );
-		mpASource->play();
-	}
-
-	void cleanUpAudio()
-	{
-		YAKE_SAFE_DELETE( mpASource );
-		YAKE_SAFE_DELETE( mpAData );
-		YAKE_SAFE_DELETE( mpAListener );
-	}
-
-			void createWheel(
-				model::complex::vehicle::Wheel *& pWheel,
-				physics::IComplexObject *& pCO,
-				SharedPtr<physics::IJoint> & pJ,
-				physics::IComplexObject* pCOChassis,
-				const real radius,
-				const Vector3 & position,
-				const Quaternion & orientation,
-				const Vector3 & anchorPt,
-				const Vector3 & hingeSteeringAxis,
-				const Vector3 & hingeSuspensionAxis,
-				const real suspSpring,
-				const real suspDamping,
-				const real wheelMass )
-			{
-				pWheel = new model::complex::vehicle::Wheel();
-				YAKE_ASSERT( pWheel );
-
-				// physical
-				YAKE_ASSERT( pCO == 0 );
-				pCO = mPWorld->createSphere(radius);
-				YAKE_ASSERT( pCO );
-				pCO->getBody()->setMassSphere( radius, 1 );
-				pCO->getBody()->setMass( wheelMass );
-				pCO->setPosition( position );
-				pCO->setOrientation( orientation );
-				pCO->setSoftness( 0.001 );
-
-				// joint (to connect to chassis)
-				pJ.reset( mPWorld->createJoint( physics::IJoint::JT_HINGE2 ) );
-				YAKE_ASSERT( pJ );
-				pJ->attach( pCOChassis->getBody(), pCO->getBody() );
-				pJ->setAnchor( anchorPt );
-				pJ->setAxis1( hingeSteeringAxis );
-				pJ->setAxis2( hingeSuspensionAxis );
-				pJ->setHighStop(0);
-				pJ->setLowStop(0);
-				pJ->setSpring( suspSpring );
-				pJ->setDamping( suspDamping );
-
-				//
-				pWheel->setJoint( pJ );
-				pWheel->setComplex( pCO );
-			}
-			model::complex::vehicle::Wheel* createWheel(	
-								const Vector3 & position,
-								const Quaternion & orientation,
-								physics::IComplexObject* pCOChassis,
-								SharedPtr<model::Physical> & pPhysical,
-								const real radius,
-								const real suspSpring,
-								const real suspDamping,
-								const real wheelMass,
-								Vector<graphics::ISceneNode*> & nodeList,
-								SharedMUCList & mucList,
-								const String & wheelMesh = "wheel1.mesh")
-			{
-				model::complex::vehicle::Wheel* pWheel = 0;
-				physics::IComplexObject* pCO = 0;
-				SharedPtr<physics::IJoint> pJ;
-				createWheel( pWheel, pCO, pJ, pCOChassis, radius,
-					position, orientation, position /*anchorPt*/,
-					Vector3::kUnitY /*hingeSteeringAxis*/, Vector3::kUnitX /*hingeSuspensionAxis*/,
-					suspSpring, suspDamping, wheelMass );
-				YAKE_ASSERT( pCO );
-				pCO->setFriction( 1 );
-				pCO->setFriction2( 5 );
-				pPhysical->addJoint( pJ );
-				pPhysical->addComplex( SharedPtr<physics::IComplexObject>(pCO) );
-
-				// setup graphical representation & controllers
-				createDebugGeometryForComplexPhysical( pCO, mGWorld.get(), nodeList, mucList, wheelMesh, 2. );
-
-				return pWheel;
-			}
-
-	void setupCar()
-	{
-		// setup VEHICLE
-		YAKE_ASSERT( mCar == 0 );
-		mCar = new model::complex::vehicle::LandVehicle();
-		YAKE_ASSERT( mCar );
-
-		// setup MODEL
-
-		YAKE_ASSERT( mCarModel == 0 );
-		mCarModel = new model::complex::Model();
-		YAKE_ASSERT( mCarModel );
-
-		mCar->setModel( mCarModel );
-
-		// - add physical
-		SharedPtr<model::Physical> pPhysical( new model::Physical() );
-		mCarModel->addPhysical( pPhysical );
-
-		// store scene nodes and controllers...
-		Vector<graphics::ISceneNode*> nodeList;	// for debug graphics
-		SharedMUCList mucList;
-
-		const Vector3 offset( 0, 4, 0 );
-		//const Vector3 carDim( 1.85, 1.14, 4.21 ); // original DeLorean
-		const Vector3 carDim( 1.75, 1.0, 4.21 );
-		const real suspSpring = 55;
-		const real suspDamping = 6;
-		const real chassisMass = 2.5; // 1.5 tonnes
-		const real wheelMass = chassisMass / 70; // realistic: 60 to 70
-		const real wheelRadius = 0.275;
-		const real frontWheelZ = 1.18;
-		const real rearWheelZ = -1.13;
-		const real wheelOffsetX = 0.5 * (carDim.x - wheelRadius) - 0.05;
-
-		// just a single chassis box (for now)
-		physics::IComplexObject* pCOChassis = mPWorld->createBox(0.09*carDim.x, 0.5*carDim.y, 0.09*carDim.z);
-		dbgChassis = pCOChassis;
-		YAKE_ASSERT( pCOChassis );
-		pPhysical->addComplex( SharedPtr<physics::IComplexObject>(pCOChassis) );
-		//createDebugGeometryForComplexPhysical( pCOChassis, mGWorld.get(), nodeList, mucList );
-		pCOChassis->setPosition( Vector3(0,0.33,0) );
-		pCOChassis->getBody()->setMassBox( carDim.x, carDim.y, carDim.y, 1. );
-		pCOChassis->getBody()->setMass( chassisMass );
-		pCOChassis->getBody()->translateMass( Vector3(0,-1,0) );
-		pCOChassis->setSoftness( 0.001 );
-		pCOChassis->setFriction( 5 ); // 100
-		pCOChassis->setFriction2( 0.1 ); // 2
-		//if (mucList.size() > 0)
-		{
-			graphics::ISceneNode* pChassisMeshNode = mGWorld->createSceneNode();
-			YAKE_ASSERT( pChassisMeshNode );
-			graphics::IEntity* pE = mGWorld->createEntity("fordboss.mesh");  //delorean.mesh");
-			YAKE_ASSERT( pE );
-			pChassisMeshNode->attachEntity( pE );
-			pE->setCastsShadow( true  );
-			SharedPtr<model::MovableUpdateController> pMUC //= mucList.front();
-				( new model::MovableUpdateController() );
-			mucList.push_back( pMUC );
-			pMUC->setUpdateSource( pCOChassis->getBody() );
-			pMUC->subscribeToPositionChanged( pChassisMeshNode );
-			pMUC->subscribeToOrientationChanged( pChassisMeshNode );
-			nodeList.push_back( pChassisMeshNode );
-		}
-
-		// left front wheel
-		model::complex::vehicle::Wheel* pWheel = createWheel(
-			Vector3( -wheelOffsetX, 0, frontWheelZ),
-			Quaternion::kIdentity,
-			pCOChassis,
-			pPhysical,
-			wheelRadius, // radius
-			suspSpring,
-			suspDamping,
-			wheelMass,
-			nodeList,
-			mucList,
-			"ford_lf.mesh");
-		mCar->addWheel( "lf", pWheel );
-		mCar->setWheelAffectedByBrake( 0, pWheel, 0.2 );
-
-		// right front wheel
-		pWheel = createWheel(
-			Vector3( wheelOffsetX, 0, frontWheelZ),
-			Quaternion::kIdentity,
-			pCOChassis,
-			pPhysical,
-			wheelRadius, // radius
-			suspSpring,
-			suspDamping,
-			wheelMass,
-			nodeList,
-			mucList,
-			"ford_rf.mesh");
-		mCar->addWheel( "rf", pWheel );
-		mCar->setWheelAffectedByBrake( 0, pWheel, 0.2 );
-
-		// left rear wheel
-		pWheel = createWheel(
-			Vector3( -wheelOffsetX, 0, rearWheelZ),
-			Quaternion::kIdentity,
-			pCOChassis,
-			pPhysical,
-			wheelRadius, // radius
-			suspSpring,
-			suspDamping,
-			wheelMass,
-			nodeList,
-			mucList,
-			"ford_lr.mesh");
-		mCar->addWheel( "lr", pWheel );
-		mCar->setWheelAffectedByBrake( 0, pWheel, 1. );
-
-		// right rear wheel
-		pWheel = createWheel(
-			Vector3( wheelOffsetX, 0, rearWheelZ),
-			Quaternion::kIdentity,
-			pCOChassis,
-			pPhysical,
-			wheelRadius, // radius
-			suspSpring,
-			suspDamping,
-			wheelMass,
-			nodeList,
-			mucList,
-			"ford_rr.mesh");
-		mCar->addWheel( "rr", pWheel );
-		mCar->setWheelAffectedByBrake( 0, pWheel, 1. );
-
-		// FINALIZE COMPLEX MODEL
-		// - translate physical model
-		pPhysical->translate( offset );
-		// - add all created controllers to the model
-		{
-			ConstVectorIterator<SharedMUCList> it( mucList.begin(), mucList.end() );
-			while (it.hasMoreElements())
-			{
-				SharedPtr<model::IObjectController> pMUC = it.getNext();
-				YAKE_ASSERT( pMUC.get() );
-				mCarModel->addController( SharedPtr<model::IObjectController>(pMUC) );
-			}
-		}
-		// - add graphical
-		SharedPtr<model::Graphical> pGraphical( new model::Graphical() );
-		mCarModel->addGraphical( pGraphical );
-		// - add created scene nodes to graphical
-		YAKE_ASSERT( pGraphical );
-		{
-			ConstVectorIterator<Vector<graphics::ISceneNode*> > it( nodeList.begin(), nodeList.end() );
-			while (it.hasMoreElements())
-			{
-				pGraphical->addSceneNode( it.getNext(), true );
-			}
-		}
-
-		// ENGINE
-		model::complex::vehicle::Engine* pEngine = new model::complex::vehicle::Engine();
-		YAKE_ASSERT( pEngine );
-		mCar->setEngine( AutoPtr<model::complex::vehicle::Engine>(pEngine) );
-
-		// AXLES
-		// front
-		model::complex::vehicle::Axle* pAxle = new model::complex::vehicle::Axle();
-		YAKE_ASSERT( pAxle );
-		//pEngine->attachAxle( pAxle );
-		pAxle->attachAffectedWheel( mCar->getWheel("lf") );
-		pAxle->attachAffectedWheel( mCar->getWheel("rf") );
-		// rear
-		pAxle = new model::complex::vehicle::Axle();
-		YAKE_ASSERT( pAxle );
-		pEngine->attachAxle( pAxle );
-		pAxle->attachAffectedWheel( mCar->getWheel("lr") );
-		pAxle->attachAffectedWheel( mCar->getWheel("rr") );
-	}
-
 	void setupLights()
 	{
 		if (mLightOneNode)
@@ -546,11 +379,88 @@ public:
 		graphics::ILight* pL = mGWorld->createLight();
 		YAKE_ASSERT( pL );
 		mLightOneNode->attachLight( pL );
-		pL->setType( graphics::ILight::LT_POINT );
-		pL->setCastsShadow( false  );
-		pL->setDiffuseColour( Color(1,1,1) );
+		//pL->setType( graphics::ILight::LT_POINT );
+		//pL->setType( graphics::ILight::LT_SPOT );
+		//pL->setSpotlightRange( 80, 100, 1 );
+		pL->setType( graphics::ILight::LT_DIRECTIONAL );
+		Vector3 n(-1,-1,0);
+		n.normalise();
+		pL->setDirection( n );
+		pL->setCastsShadow( true );
+		pL->setDiffuseColour( Color(0.75, 0.75, 0.78) );
 		pL->setAttenuation( 8000, 1, 0.0005, 0 );
-		pL->setSpecularColour( Color(1,1,1) );
+		pL->setSpecularColour( Color(0.9, 0.9, 1) );
+		mLightOneNode->setPosition(Vector3(0,50,0));
+	}
+
+	model::Pawn* setupPawn(GameControl & gameCtrl)
+	{
+		// - model
+		model::complex::Model* pComplex = new model::complex::Model();
+
+		// - add physical representation
+		model::Physical* pPhysical = new model::Physical();
+		pComplex->addPhysical( SharedPtr<model::Physical>( pPhysical ), "basePhysical" );
+
+		physics::IComplexObject* pCO = mPWorld->createSphere( 2 );
+		YAKE_ASSERT( pCO );
+		pCO->setPosition( Vector3(0,15,-10) );
+		pCO->getBody()->setMass( 1 );
+		pPhysical->addComplex( SharedPtr<physics::IComplexObject>( pCO ), "base" );
+
+		// - add graphical representation
+		model::Graphical* pGraphical = new model::Graphical();
+		pComplex->addGraphical( SharedPtr<model::Graphical>( pGraphical ), "baseGraphical" );
+
+		graphics::ISceneNode* pSN = mGWorld->createSceneNode();
+		graphics::IEntity* pE = mGWorld->createEntity("sphere_d1.mesh");
+		pSN->attachEntity( pE );
+		pGraphical->addSceneNode( pSN, "base", true );
+		pSN->setPosition( Vector3(0,5,0) );
+
+		// - model link
+		/*
+		//SharedPtr<app::model::ModelMovableLink> pMML = create<app::model::ModelMovableLink>("yake.movable");
+		SharedPtr<app::model::IObjectController> pMML = ::yake::createModelMovableLink( pCO, pSN, true, true );
+		pComplex->addController( pMML );
+		*/
+		app::model::DotLinkLoader dll;
+		dll.load( "../../media/dotlink_test.link", *pComplex );
+
+		// -- Pawn
+		model::Pawn* pPawn = new model::Pawn();
+
+		PawnVisual* pVis = new PawnVisual();
+		pPawn->addComponent( pVis, "defaultVis" );
+		pPawn->setModel( pComplex );
+
+		PawnLocalHumanInput* pRawInput = new PawnLocalHumanInput(gameCtrl);
+		pPawn->addComponent( pRawInput, "defaultInput" );
+
+		PawnControl* pCtrl = new PawnControl(pRawInput);
+		pPawn->addComponent( pCtrl, "defaultCtrl" );
+		pPawn->setMovable( pCO );
+		pCtrl->setControlledMovable( pCO );
+
+		gameCtrl.subscribeToPostPhysicsStep( Bind1( &model::Pawn::onPostPhysics, pPawn ) );
+		gameCtrl.subscribeToSense( boost::bind( &model::Pawn::onSense, pPawn ) );
+		gameCtrl.subscribeToThink( boost::bind( &model::Pawn::onThink, pPawn ) );
+		gameCtrl.subscribeToActStep( boost::bind( &model::Pawn::onAct, pPawn ) );
+
+		return pPawn;
+	}
+
+	void setupVehicle(GameControl & gameCtrl)
+	{
+		if (mVehicle1)
+			return;
+		SharedPtr<model::vehicle::IVehicleSystem> pVS = create<model::vehicle::IVehicleSystem>("yake.native");
+		mVehicle1 = pVS->createVehicle("../../media/vehicles/fordboss.vehicle", mPWorld, mGWorld.get() );
+		gameCtrl.subscribeToActStep( boost::bind( &model::vehicle::Vehicle::act, mVehicle1 ) );
+	}
+	void cleanupVehicle()
+	{
+		YAKE_SAFE_DELETE( mVehicle1 );
 	}
 
 	virtual void run()
@@ -563,8 +473,6 @@ public:
 		mGWorld = getGraphicsSystem().createWorld();
 		YAKE_ASSERT( mGWorld );
 
-		mGWorld->setShadowsEnabled( false );
-
 		createCameraViewportPair( 0.0, 0.0, 1, 1, 10 );
 		//createCameraViewportPair( 0.0, 0.0, 0.5, 0.5, 10 );
 		//createCameraViewportPair( 0.5, 0.0, 0.5, 0.5, 11 );
@@ -575,6 +483,7 @@ public:
 		{
 			mVPs[0].second->translate( Vector3(0,1.6,20) );
 			//mVPs[0].second->pitch(-30);
+			mVPs[0].second->lookAt( Vector3(0,0,0) );
 		}
 		if (mVPs.size() > 1 && mVPs[1].second)
 			mVPs[1].second->setPosition( Vector3(0,2,-80) );
@@ -589,218 +498,176 @@ public:
 			mVPs[3].second->pitch(-90);
 		}
 
+		mGWorld->setShadowsEnabled( false );
+
 		// physics
 		mPWorld = getPhysicsSystem().createWorld();
 		YAKE_ASSERT( mPWorld );
+		//mPWorld->setGlobalGravity( Vector3(0,-9.81,0) );
 		mPWorld->setGlobalGravity( Vector3(0,-9.81,0) );
 
 		// audio
-		setupAudio();
+		//setupAudio();
+
+		LocalHumanInputData gatherInputData( &getInputSystem(), &mKeyboardEventGenerator, &mMouseEventGenerator, getKeyboard() );
+		GameControl gameCtrl(gatherInputData);
 
 		// objects
 		setupLights();
 		//setupNinja();
 		setupGround();
-		setupBox();
-		setupSphere();
 		setupDotScene();
-		setupCar();
+		//setupCar();
+		setupVehicle(gameCtrl);
 
-		CameraFollowController cfc( mVPs[0].second, dbgChassis );
+		/*CameraFollowController cfc( mVPs[0].second, mVPs[0].second, dbgChassis );
+		mVPs[0].second->setFixedYawEnabled( true );
+		mVPs[0].second->setFixedYawAxis( Vector3(0,1,0) );
+		mVPs[0].second->setPosition( Vector3(10,2,30) );*/
+
+		// tasks
+		mRenderTask = new RenderTask( mGWorld.get() );
+		YAKE_ASSERT( mRenderTask );
+		mTaskMgr.addTask( mRenderTask );
+
+		mPhysicsTask = new PhysicsTask( mPWorld );
+		YAKE_ASSERT( mPhysicsTask );
+		mTaskMgr.addTask( mPhysicsTask );
+
+		mInputTask = new InputTask( this );
+		YAKE_ASSERT( mInputTask );
+		mTaskMgr.addTask( mInputTask );
 
 		// main loop
+		mPawn1 = setupPawn(gameCtrl);
+		//gameCtrl.subscribeToGatherInputStep( Bind1( &InputTask::execute, mInputTask ) );
+		gameCtrl.subscribeToPhysicsStep( Bind1( &PhysicsTask::execute, mPhysicsTask ) );
+		gameCtrl.subscribeToRenderStep( Bind1( &RenderTask::execute, mRenderTask ) );
 		real lastTime = base::native::getTime();
 		while (!shutdownRequested())
 		{
-			PROFILER_BEGINFRAME;
-
-			PROFILE_BEGIN( frame );
-
-			// timing
-			real time = base::native::getTime();
-			real timeElapsed = time-lastTime;//timer->getSeconds();
-			lastTime = time;
-
-			// handle input
-			PROFILE_BEGIN( input );
 			getInputSystem().update();
 			mMouseEventGenerator.update();
 			mKeyboardEventGenerator.update();
 
-			//
-			YAKE_ASSERT( getKeyboard() );
-			if (getKeyboard())
-			{
-				static iCam = 0;
-				real distance = -5. * timeElapsed;
-				if (getKeyboard()->isKeyDown(input::KC_LEFT))
-					mVPs[iCam].second->translate( Vector3(distance, 0, 0) );
-				if (getKeyboard()->isKeyDown(input::KC_RIGHT))
-					mVPs[iCam].second->translate( Vector3(-distance, 0, 0) );
-				if (getKeyboard()->isKeyDown(input::KC_UP))
-					mVPs[iCam].second->translate( Vector3(0, 0, distance) );
-				if (getKeyboard()->isKeyDown(input::KC_DOWN))
-					mVPs[iCam].second->translate( Vector3(0, 0, -distance) );
-
-				if (getKeyboard()->isKeyDown(input::KC_PGUP))
-				{
-					model::complex::vehicle::Wheel* pWheel = mCar->getWheel("lf");
-					YAKE_ASSERT( pWheel );
-					pWheel->setSuspension(
-						pWheel->getSuspensionSpring(),
-						pWheel->getSuspensionDamping() + timeElapsed );
-					pWheel = mCar->getWheel("rf");
-					YAKE_ASSERT( pWheel );
-					pWheel->setSuspension(
-						pWheel->getSuspensionSpring(),
-						pWheel->getSuspensionDamping() + timeElapsed );
-				}
-				if (getKeyboard()->isKeyDown(input::KC_PGDOWN))
-				{
-					model::complex::vehicle::Wheel* pWheel = mCar->getWheel("lf");
-					YAKE_ASSERT( pWheel );
-					pWheel->setSuspension(
-						pWheel->getSuspensionSpring(),
-						pWheel->getSuspensionDamping() - timeElapsed );
-					pWheel = mCar->getWheel("rf");
-					YAKE_ASSERT( pWheel );
-					pWheel->setSuspension(
-						pWheel->getSuspensionSpring(),
-						pWheel->getSuspensionDamping() - timeElapsed );
-					std::cout << "spring= " << pWheel->getSuspensionSpring() <<
-						"  damping= " << pWheel->getSuspensionDamping() << std::endl;
-				}
-				if (getKeyboard()->isKeyDown(input::KC_HOME))
-				{
-					model::complex::vehicle::Wheel* pWheel = mCar->getWheel("lf");
-					YAKE_ASSERT( pWheel );
-					pWheel->setSuspension(
-						pWheel->getSuspensionSpring() + timeElapsed,
-						pWheel->getSuspensionDamping() );
-					pWheel = mCar->getWheel("rf");
-					YAKE_ASSERT( pWheel );
-					pWheel->setSuspension(
-						pWheel->getSuspensionSpring() + timeElapsed,
-						pWheel->getSuspensionDamping() );
-				}
-				if (getKeyboard()->isKeyDown(input::KC_END))
-				{
-					model::complex::vehicle::Wheel* pWheel = mCar->getWheel("lf");
-					YAKE_ASSERT( pWheel );
-					pWheel->setSuspension(
-						pWheel->getSuspensionSpring() - timeElapsed,
-						pWheel->getSuspensionDamping() );
-					pWheel = mCar->getWheel("rf");
-					YAKE_ASSERT( pWheel );
-					pWheel->setSuspension(
-						pWheel->getSuspensionSpring() - timeElapsed,
-						pWheel->getSuspensionDamping() );
-					std::cout << "spring= " << pWheel->getSuspensionSpring() <<
-						"  damping= " << pWheel->getSuspensionDamping() << std::endl;
-				}
-
-				if (getKeyboard()->isKeyDown(input::KC_A))
-					mCar->setSteer( -0.7 );
-				else if (getKeyboard()->isKeyDown(input::KC_D))
-					mCar->setSteer( 0.7 );
-				else
-					mCar->setSteer( 0 );
-
-				if (getKeyboard()->isKeyDown(input::KC_W))
-				{
-					mCar->getEngine()->setThrottle(
-						mCar->getEngine()->getThrottle() + timeElapsed );
-				}
-				else
-					mCar->getEngine()->setThrottle(
-						mCar->getEngine()->getThrottle() - 2. * timeElapsed );
-				static real last = 0.;
-				last -= timeElapsed;
-				if (last < 0. && getKeyboard()->isKeyDown(input::KC_RETURN))
-				{
-					mCar->getEngine()->shiftGearUp();
-					last = 0.2;
-				}
-				if (last < 0. && getKeyboard()->isKeyDown(input::KC_RSHIFT))
-				{
-					mCar->getEngine()->shiftGearDown();
-					last = 0.2;
-				}
-				if (getKeyboard()->isKeyDown(input::KC_SPACE))
-					mCar->brake( 0, 1. );
-				else
-					mCar->brake( 0, 0. );
-			}
-			PROFILE_END( input );
-
-			// process physics
-			PROFILE_BEGIN( physics );
-			mPWorld->update( timeElapsed );
-			PROFILE_END( physics );
-
-			// update visual box representation from the physical one
-			PROFILE_BEGIN( miscUpdates );
-			PROFILE_BEGIN( box );
-			if (mpBox)
-				mpBox->update( timeElapsed );
-			PROFILE_END( box );
-			PROFILE_BEGIN( sphere );
-			if (mpSphere)
-				mpSphere->update( timeElapsed );
-			PROFILE_END( sphere );
-			PROFILE_BEGIN( car );
-			mCar->update( timeElapsed );
-			/*
-			real vel = dbgChassis->getBody()->getLinearVelocity().length();
-			std::cout << "\nRPM: " << mCar->getEngine()->getRPM() <<
-						"\n T: " << mCar->getEngine()->getThrottle() <<
-						"\n TQ:" << mCar->getEngine()->getDriveTorque() <<
-						"\n D: " << mCar->getEngine()->getGear() <<
-						//"\n S: " << mCar->getSteer();
-						"\n V: " << vel << " | " << vel * 3.6 << " km/h";
-			*/
-			//mCarModel->update( timeElapsed );
-			mLightOneNode->setPosition(
-				dbgChassis->getPosition() + Vector3(0,10,0) );
-			PROFILE_END( car );
-
-			cfc.update( timeElapsed );
-
-			PROFILE_END( miscUpdates );
-
-			// render the scene
-			PROFILE_BEGIN( graphics );
-			mGWorld->render( timeElapsed );
-			PROFILE_END( graphics );
-
-			PROFILE_END( frame );
-
-			PROFILER_ENDFRAME;
+			gameCtrl.update();
 		}
+		mRenderTask = 0;
+		mPhysicsTask = 0;
+		mInputTask = 0;
 
 		// clean up (FIXME: still incomplete)
 		// TODO: use a yake::base::State for handling all scene specific stuff...
 
+		cleanupVehicle();
+
 		YAKE_SAFE_DELETE( mLightOneNode );
 
-		YAKE_SAFE_DELETE( mCar );
+		//YAKE_SAFE_DELETE( mCar );
 		//YAKE_SAFE_DELETE( mCarModel ); is done by destructor of mCar
-
-		YAKE_SAFE_DELETE( mpBox );
-		YAKE_SAFE_DELETE( mpSphere );
-
-		YAKE_SAFE_DELETE( mNinja.pSN );
 
 		YAKE_SAFE_DELETE( mPWorld );
 		mGWorld.reset();
 
-		cleanUpAudio();
 		//profiler::ProfilerManager::instance().getProfiler("default").logToCout();
 		PROFILER_DESTROY;
 		PROFILERMANAGER_DESTROY;
 	}
 };
 
+	TheApp::RenderTask::RenderTask(IGraphicalWorld* pWorld) :
+		DefTask( -1, task::TASKPRIO_HIGH ),
+		mWorld(pWorld)
+	{
+		YAKE_ASSERT( mWorld );
+	}
+	void TheApp::RenderTask::execute(real timeElapsed)
+	{
+		YAKE_ASSERT( mWorld );
+		mWorld->render( timeElapsed );
+		//std::cout << "render(" << timeElapsed << ")!\n";
+	}
+
+	TheApp::PhysicsTask::PhysicsTask(physics::IWorld* pWorld) :
+		DefTask( -1, task::TASKPRIO_HIGH+1 ),
+		mWorld(pWorld)
+	{
+		YAKE_ASSERT( mWorld );
+	}
+	void TheApp::PhysicsTask::execute(real timeElapsed)
+	{
+		//std::cout << "physics(" << timeElapsed << ")!\n";
+		YAKE_ASSERT( mWorld );
+		mWorld->update( timeElapsed );
+	}
+
+	TheApp::InputTask::InputTask(
+			TheApp* theApp ) :
+		DefTask( -1, task::TASKPRIO_HIGH+2 ),
+		mApp(theApp)
+	{
+		YAKE_ASSERT( mApp );
+	}
+	void TheApp::InputTask::execute(real timeElapsed)
+	{
+		//std::cout << "input(" << timeElapsed << ")!\n";
+		YAKE_ASSERT( mApp );
+
+		// handle input
+		mApp->getInputSystem().update();
+		mApp->mMouseEventGenerator.update();
+		mApp->mKeyboardEventGenerator.update();
+
+		//
+		YAKE_ASSERT( mApp->getKeyboard() );
+		if (mApp->getKeyboard())
+		{
+			static iCam = 0;
+			real distance = -5. * timeElapsed;
+			if (mApp->getKeyboard()->isKeyDown(input::KC_LEFT))
+				mApp->mVPs[iCam].second->translate( Vector3(distance, 0, 0) );
+			if (mApp->getKeyboard()->isKeyDown(input::KC_RIGHT))
+				mApp->mVPs[iCam].second->translate( Vector3(-distance, 0, 0) );
+			if (mApp->getKeyboard()->isKeyDown(input::KC_UP))
+				mApp->mVPs[iCam].second->translate( Vector3(0, 0, distance) );
+			if (mApp->getKeyboard()->isKeyDown(input::KC_DOWN))
+				mApp->mVPs[iCam].second->translate( Vector3(0, 0, -distance) );
+
+/*
+			if (mApp->getKeyboard()->isKeyDown(input::KC_A))
+				mCar->setSteer( -0.7 );
+			else if (mApp->getKeyboard()->isKeyDown(input::KC_D))
+				mCar->setSteer( 0.7 );
+			else
+				mCar->setSteer( 0 );
+
+			if (mApp->getKeyboard()->isKeyDown(input::KC_W))
+			{
+				mCar->getEngine()->setThrottle(
+					mCar->getEngine()->getThrottle() + timeElapsed );
+			}
+			else
+				mCar->getEngine()->setThrottle(
+					mCar->getEngine()->getThrottle() - 2. * timeElapsed );
+			static real last = 0.;
+			last -= timeElapsed;
+			if (last < 0. && mApp->getKeyboard()->isKeyDown(input::KC_RETURN))
+			{
+				mCar->getEngine()->shiftGearUp();
+				last = 0.2;
+			}
+			if (last < 0. && mApp->getKeyboard()->isKeyDown(input::KC_RSHIFT))
+			{
+				mCar->getEngine()->shiftGearDown();
+				last = 0.2;
+			}
+			if (mApp->getKeyboard()->isKeyDown(input::KC_SPACE))
+				mCar->brake( 0, 1. );
+			else
+				mCar->brake( 0, 0. );
+			*/
+		}
+	}
 //============================================================================
 //    IMPLEMENTATION FUNCTIONS
 //============================================================================
@@ -809,7 +676,7 @@ int main()
 {
 	try
 	{
-		std::cout << std::endl << "A simple demo :) provided for YAKE by Stephan Kaiser" << std::endl;
+		std::cout << std::endl << "A simple vehicle demo :) provided for YAKE by Stephan Kaiser" << std::endl;
 		TheApp theApp;
 		theApp.initialise();
 		theApp.run();
