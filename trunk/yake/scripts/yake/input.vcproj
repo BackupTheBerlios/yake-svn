@@ -20,7 +20,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..;../../;../../dependencies/boost/;../../dependencies/ttl/"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_INPUT_EXPORTS"
+				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_INPUT_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
