@@ -114,10 +114,10 @@ namespace ogre3d {
 			pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_TEXTURE_MODULATIVE );
 			pSceneMgr->setShadowTextureSize( 512 );
 			pSceneMgr->setShadowDirectionalLightExtrusionDistance( 10000. );
-			pSceneMgr->setShadowFarDistance( 2000. );
+			pSceneMgr->setShadowFarDistance( 75. );
 			pSceneMgr->setShadowTextureCount( 3 );
 			pSceneMgr->setShadowColour( Ogre::ColourValue(0.7,0.7,0.7) );
-			pSceneMgr->setShowDebugShadows( true );
+			pSceneMgr->setShowDebugShadows( false );
 		}
 		else
 			pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_NONE );

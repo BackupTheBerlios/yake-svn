@@ -31,7 +31,7 @@ namespace ogre3d {
 	OgreEntity::OgreEntity( ::Ogre::SceneManager * sceneMgr, const base::String & mesh ) : mSceneMgr( sceneMgr ), mEntity( 0 )
 	{
 		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
-		mEntity = mSceneMgr->createEntity( yake::base::uniqueName::create("en_"), mesh );
+		mEntity = mSceneMgr->createEntity( Ogre::String(yake::base::uniqueName::create("en_").c_str()), Ogre::String(mesh.c_str()) );
 	}
 
 	//------------------------------------------------------
