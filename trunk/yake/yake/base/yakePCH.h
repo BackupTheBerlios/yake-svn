@@ -33,7 +33,7 @@
 #include <yake/base/templates/yakeDeque.h>
 
 #include "mpl/yakeAbstractFactory.h"
-#include "mpl/yakeSequences.h"
+#include "mpl/sequences.h"
 
 #include "yakePrerequisites.h"
 #include "yakeVersion.h"

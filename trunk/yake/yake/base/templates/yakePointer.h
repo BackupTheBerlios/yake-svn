@@ -37,7 +37,7 @@
 #include <yake/base/mpl/yakeCast.h>
 #include <yake/base/mpl/yakeTraits.h>
 #include <yake/base/mpl/yakeBuildArguments.h>
-#include <yake/base/mpl/yakeNullType.h>
+#include <yake/base/mpl/null_type.h>
 
 
 // todo : use loki and add create() iteration

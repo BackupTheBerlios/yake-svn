@@ -26,7 +26,7 @@
 //============================================================================
 #include "yakeFunctions.h"
 #include "yakeLambda.h"
-#include "yakeSequences.h"
+#include <yake/base/mpl/sequences.h>
 
 #include "yakeInheritLinear.h"
 #include "yakeInheritMultiple.h"

@@ -28,7 +28,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/lambda.hpp>
 
-#include "yakeNullType.h"
+#include <yake/base/mpl/null_type.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

@@ -30,7 +30,7 @@
 #endif
 // Yake
 #include <yake/base/templates/yakeFastMap.h>
-#include <yake/base/mpl/yakeNullType.h>
+#include <yake/base/mpl/null_type.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
