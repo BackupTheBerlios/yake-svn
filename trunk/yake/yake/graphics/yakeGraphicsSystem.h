@@ -35,11 +35,11 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-using namespace yake::base::mpl;
-using namespace yake::base::templates;
-
 namespace yake {
 namespace graphics {
+
+using namespace yake::base::mpl;
+using namespace yake::base::templates;
 
 	typedef ::yake::base::Exception GraphicsException;
 

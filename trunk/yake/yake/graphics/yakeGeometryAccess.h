@@ -29,12 +29,12 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-using namespace yake::base::mpl;
-using namespace yake::base::templates;
-using namespace yake::base::math;
-
 namespace yake {
 namespace graphics {
+
+//using namespace yake::base::templates;
+using namespace yake::base::math;
+
 /*
 	class IRenderOperation
 	{
