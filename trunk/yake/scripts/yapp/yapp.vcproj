@@ -317,27 +317,6 @@
 				RelativePath="..\..\yapp\model\yakeMountable.h">
 			</File>
 			<File
-				RelativePath="..\..\src\yapp\model\yakeNativeEngine.cpp">
-			</File>
-			<File
-				RelativePath="..\..\yapp\model\yakeNativeEngine.h">
-			</File>
-			<File
-				RelativePath="..\..\yapp\model\yakeNativeVehicleInputComponent.h">
-			</File>
-			<File
-				RelativePath="..\..\src\yapp\model\yakeNativeVehiclePhysicalComponent.cpp">
-			</File>
-			<File
-				RelativePath="..\..\yapp\model\yakeNativeVehiclePhysicalComponent.h">
-			</File>
-			<File
-				RelativePath="..\..\src\yapp\model\yakeNativeWheel.cpp">
-			</File>
-			<File
-				RelativePath="..\..\yapp\model\yakeNativeWheel.h">
-			</File>
-			<File
 				RelativePath="..\..\src\yapp\model\yakePhysical.cpp">
 			</File>
 			<File
@@ -351,27 +330,6 @@
 			</File>
 			<File
 				RelativePath="..\..\yapp\model\yakeVehicle.h">
-			</File>
-			<File
-				RelativePath="..\..\yapp\model\yakeVehicleInputComponent.h">
-			</File>
-			<File
-				RelativePath="..\..\src\yapp\model\yakeVehiclePhysicalComponent.cpp">
-			</File>
-			<File
-				RelativePath="..\..\yapp\model\yakeVehiclePhysicalComponent.h">
-			</File>
-			<File
-				RelativePath="..\..\src\yapp\model\yakeVehicleSerializerXML.cpp">
-			</File>
-			<File
-				RelativePath="..\..\yapp\model\yakeVehicleSerializerXML.h">
-			</File>
-			<File
-				RelativePath="..\..\src\yapp\model\yakeVehicleSystem.cpp">
-			</File>
-			<File
-				RelativePath="..\..\yapp\model\yakeVehicleSystem.h">
 			</File>
 			<File
 				RelativePath="..\..\src\yapp\model\yakeVehicleTpl.cpp">
@@ -443,10 +401,10 @@
 			Name="statemachine"
 			Filter="">
 			<File
-				RelativePath="..\..\yapp\statemachine\yakeFiniteStateMachine.h">
+				RelativePath="..\..\src\yapp\statemachine\yakeFiniteStateMachine.cpp">
 			</File>
 			<File
-				RelativePath="..\..\yapp\statemachine\yakeFiniteStateMachine_inc.h">
+				RelativePath="..\..\yapp\statemachine\yakeFiniteStateMachine.h">
 			</File>
 		</Filter>
 	</Files>
