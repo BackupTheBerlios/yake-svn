@@ -89,7 +89,7 @@
 				AdditionalDependencies="ode.lib physics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ode/lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
