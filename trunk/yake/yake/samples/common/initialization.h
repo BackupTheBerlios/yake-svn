@@ -13,32 +13,40 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/reverse.hpp>
+#include <boost/mpl/lambda.hpp>
 // yake
 #include <yake/base/mpl/inherit_linear.h>
 #include <yake/base/mpl/inherit_multiple.h>
-#include <yake/base/mpl/sequences.h>
 // local
 #include "load_libraries.h"
 
+namespace yake 
+{
+namespace samples 
+{
+namespace common 
+{
+
+// todo: fix namespace chaos, if we do "using namespace boost::mpl" ::size_t collides with boost::mpl::size_t?!
 using namespace yake::base;
 using namespace yake::base::mpl;
-using namespace yake::base::mpl::sequences;
 
-namespace yake
+// todo: del
+template <class System>
+struct create_help
 {
-namespace samples
-{
-namespace common
-{
+	static boost::shared_ptr<System> create()
+	{ return boost::shared_ptr<System>(new System()); }
+};
 
 // todo: use yake registry
 template <class System>
 boost::shared_ptr<System> create()
-{ return boost::shared_ptr<System>(new System()); }
+{ return create_help<System>::create(); }
 
 template <class System>
 boost::shared_ptr<System> create(const char * id)
-{ return boost::shared_ptr<System>(new System()); }
+{ return create_help<System>::create(); }
 
 // -----------------------------------------
 /* automatic initialization */
@@ -59,6 +67,7 @@ namespace // unnamed
 	};
 } // namespace unnamed
 
+
 // loads the libraries, initializes the systems and makes them accessable
 template <class Config = default_config>
 struct auto_init : 
@@ -66,7 +75,7 @@ struct auto_init :
 	private inherit_multiple
 	<
 		typename boost::mpl::reverse<Config>::type, // note: correcting initialization order, otherwise graphics system would be initialized after gui
-		typename lambda< auto_init_system_holder<_, auto_init> >::type
+		typename boost::mpl::lambda< auto_init_system_holder<boost::mpl::_, auto_init> >::type
 	>::type
 {
   template <class System>
@@ -84,7 +93,7 @@ public: // types
 	typedef typename inherit_multiple
 	<
 		typename boost::mpl::reverse<Config>::type, // note: correcting initialization order, otherwise graphics system would be initialized after gui
-		typename lambda< auto_init_system_holder<_, delayed_auto_init> >::type
+		typename boost::mpl::lambda< auto_init_system_holder<boost::mpl::_, delayed_auto_init> >::type
 	>::type Systems;
 
 public: // methods
@@ -130,7 +139,7 @@ struct semi_auto_init :
 	private inherit_linear
 	<
 		Config, 
-		typename lambda< semi_init_system_holder<_, _> >::type,
+		typename boost::mpl::lambda< semi_init_system_holder<boost::mpl::_, boost::mpl::_> >::type,
 		semi_init_system_holder_root
 	>::type
 {
@@ -150,7 +159,7 @@ struct semi_auto_init :
 			inherit_linear
 			< 
 				Config, 
-				typename lambda< semi_init_system_holder<_, _> >::type,
+				typename boost::mpl::lambda< semi_init_system_holder<boost::mpl::_, boost::mpl::_> >::type,
 				semi_init_system_holder_root
 			>::type & base = *this;
 			// get system
@@ -176,7 +185,7 @@ namespace // unnamed
 } // namspace unnamed
 
 template <class Systems>
-struct manual_init : private inherit_multiple<Systems, typename lambda< manual_init_system_holder<_> >::type >::type
+struct manual_init : private inherit_multiple<Systems, typename boost::mpl::lambda< manual_init_system_holder<boost::mpl::_> >::type >::type
 {
   template <class System>
   boost::shared_ptr<System> get_system()

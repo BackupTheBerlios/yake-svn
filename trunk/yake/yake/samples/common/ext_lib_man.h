@@ -7,11 +7,11 @@
 // local
 #include "library_manager.h"
 
-namespace yake
+namespace yake 
 {
-namespace samples
+namespace samples 
 {
-namespace common
+namespace common 
 {
 
 /* library manager extension */

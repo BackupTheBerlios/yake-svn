@@ -6,18 +6,21 @@
 // local
 #include "libraries.h"
 
-using namespace yake::base::mpl::sequences;
+namespace yake 
+{
+namespace graphics
+{
+	struct IGraphicsSystem;
+}
+namespace samples 
+{
+namespace common 
+{
 
-namespace yake
-{
-namespace samples
-{
-namespace common
-{
+using namespace yake::base::mpl::sequences;
 
 // -----------------------------------------
 // system forward declares
-struct graphics_system;
 struct gui_system;
 struct input_system;
 struct physics_system;
@@ -29,7 +32,7 @@ struct config_libraries;
 
 // -----------------------------------------
 // basic config
-typedef list<graphics_system, gui_system, input_system, physics_system> basic_config;
+typedef list<yake::graphics::IGraphicsSystem, gui_system, input_system, physics_system> basic_config;
 
 template <>
 struct config_libraries<basic_config>
@@ -43,7 +46,7 @@ struct config_libraries<basic_config>
 
 // -----------------------------------------
 // minimum config
-typedef list<graphics_system, input_system> minimum_config;
+typedef list<yake::graphics::IGraphicsSystem, input_system> minimum_config;
 
 template <>
 struct config_libraries<minimum_config>

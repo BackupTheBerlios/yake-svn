@@ -5,11 +5,11 @@
 #include <vector>
 #include <string>
 
-namespace yake
+namespace yake 
 {
-namespace samples
+namespace samples 
 {
-namespace common
+namespace common 
 {
 
 struct libraries

@@ -3,11 +3,11 @@
 
 #include <yake/base/mpl/null_type.h>
 
-namespace yake
+namespace yake 
 {
-namespace samples
+namespace samples 
 {
-namespace common
+namespace common 
 {
 
 /* application */

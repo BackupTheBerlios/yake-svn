@@ -9,11 +9,11 @@
 // yake
 #include <yake/base/yakeLibrary.h>
 
-namespace yake
+namespace yake 
 {
-namespace samples
+namespace samples 
 {
-namespace common
+namespace common 
 {
 
 /* library manager */

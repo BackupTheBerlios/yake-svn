@@ -1,25 +1,31 @@
 #ifndef _YAKE_SAMPLES_COMMON_INIT_GUI_H_
 #define _YAKE_SAMPLES_COMMON_INIT_GUI_H_
 
-// stl
-
 // boost
 #include <boost/shared_ptr.hpp>
 // yake
-#include <yake/base/type_info.h>
+#include <yake/base/yake.h>
+#include <yake/graphics/yakeGraphicsSystem.h>
 // local
 #include "initialization.h"
 
-using namespace yake::base;
-using namespace yake::base::mpl;
-using namespace yake::base::mpl::sequences;
+namespace yake 
+{
+namespace samples 
+{
+namespace common 
+{
 
-namespace yake
+// todo: del
+template <>
+struct create_help <yake::graphics::IGraphicsSystem>
 {
-namespace samples
-{
-namespace common
-{
+	static boost::shared_ptr<yake::graphics::IGraphicsSystem> create()
+	{ return yake::base::templates::create<yake::graphics::IGraphicsSystem>(); }
+};
+
+using namespace yake::base;
+
 	// system needs a pure virtual function get_type_info and concrete impl (plugin) needs to use return_type_info
 	// HOWEVER this is not really useful ... just define the pure virtual function within the interface and the impl
 	// within the plugin ... or?
@@ -34,7 +40,7 @@ namespace common
 	struct input_system {};
 	struct physics_system {};
 
-	struct graphics_system : return_type_info<graphics_system> {};
+	//struct graphics_system : return_type_info<graphics_system> {};
 	struct gui_system : return_type_info<gui_system>	{};
 
 	struct gui_renderer_adapter 
@@ -69,19 +75,19 @@ namespace // unnamed
 	};
 
 	template <class Parent>
-	struct auto_init_system_holder<graphics_system, Parent>
+	struct auto_init_system_holder<yake::graphics::IGraphicsSystem, Parent>
 	{
 		// the user can add an adapter for a gui/renderer combination without changing the code
 		auto_init_system_holder()
-			: m_system(create<graphics_system>())
+			: m_system(create<yake::graphics::IGraphicsSystem>())
 		{
-			std::cout << "auto_init_system_holder<graphics_system, Parent>::auto_init_system_holder()\n";
+			std::cout << "auto_init_system_holder<yake::graphics::IGraphicsSystem, Parent>::auto_init_system_holder()\n";
 		}
 
-		boost::shared_ptr<graphics_system> get_system()
+		boost::shared_ptr<yake::graphics::IGraphicsSystem> get_system()
 		{ return m_system; }
 
-		boost::shared_ptr<graphics_system> m_system;
+		boost::shared_ptr<yake::graphics::IGraphicsSystem> m_system;
 	};
 
 
@@ -95,7 +101,7 @@ namespace // unnamed
 			  m_gui_renderer_adapter(
 					create<gui_renderer_adapter>(
 						gui_renderer_adapter::identifier(
-							static_cast<Parent*>(this)->get_system<graphics_system>()->get_type_info(),
+							static_cast<Parent*>(this)->get_system<yake::graphics::IGraphicsSystem>()->get_type_info(),
 							m_system->get_type_info())))
 		{
 			std::cout << "auto_init_system_holder<gui_system, Parent>::auto_init_system_holder()\n";
