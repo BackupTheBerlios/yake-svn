@@ -41,6 +41,8 @@ namespace ogre3d {
 
 		mViewport = pWnd->addViewport( mCamera->getCamera_(), 100, 0., 0., 1., 1. );
 		YAKE_ASSERT( mViewport ).error("viewport creation failed!");
+
+		mViewport->setBackgroundColour( Ogre::ColourValue(0.2,0.2,0.3) );
 	}
 
 	//------------------------------------------------------
@@ -74,6 +76,7 @@ namespace ogre3d {
 		try
 		{
 			mViewport = pWnd->addViewport( mCamera->getCamera_(), z, left, top, width, height );
+			mViewport->setBackgroundColour( Ogre::ColourValue(0.2,0.2,0.3) );
 		}
 		catch ( Ogre::Exception& exc )
 		{
@@ -96,6 +99,7 @@ namespace ogre3d {
 	//------------------------------------------------------
 	void OgreViewport::attachCamera( ICamera* pCam )
 	{
+		YAKE_ASSERT(1==0);
 	}
 
 	//------------------------------------------------------
