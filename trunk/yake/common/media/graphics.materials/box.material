@@ -7,7 +7,10 @@ material box
 		{
 			diffuse 1.0 1.0 1.0
 
-			scene_blend modulate
+			texture_unit
+			{
+				texture RustedMetal.jpg
+			}
 		}
 	}
 }
