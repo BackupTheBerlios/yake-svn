@@ -78,7 +78,7 @@ private:
 };
 
 inline void log_warning(std::string where, std::string what)
-{	yake::base::Log::instance().log(what, yake::base::Log::WARNINGS, where); }
+{ yake::base::Log::instance().log(what, yake::base::Log::WARNINGS, where); }
 
 } // base
 } // yake
