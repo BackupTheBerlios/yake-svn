@@ -6,30 +6,50 @@
 <pre>
 <table width=100% bgcolor=#CFCFE5><tr> <td> <font face=arial size=+3>
 Buildprotokoll</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
-<h3>------- Buildvorgang wurde gestartet: Projekt: lua_test, Konfiguration: Debug|Win32 -------</h3>
+<h3>------- Buildvorgang wurde gestartet: Projekt: rx, Konfiguration: Debug|Win32 -------</h3>
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
-Befehlszeilen</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Die temporäre Datei "d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000003.rsp" wird erstellt. Inhalt:
+Befehlszeilen</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Die temporäre Datei "d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000004.rsp" wird erstellt. Inhalt:
 [
-/Od /I "../../../dependencies/boost/" /I "../../../dependencies/lua/include" /I "../../../dependencies/luabind" /I "../../../dependencies/RakNet/Source" /I "../../../" /I "../" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Gm /EHsc /RTC1 /MTd /Zc:forScope /GR /Fo"Debug/" /Fd"Debug/vc70.pdb" /W3 /c /Wp64 /ZI /TP
-.\lua_test.cpp
-]Erstellen der Befehlszeile "cl.exe @d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000003.rsp /nologo"Die temporäre Datei "d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000004.rsp" wird erstellt. Inhalt:
+/Od /I "../../../dependencies/boost/" /I "../../../dependencies/lua/include" /I "../../../dependencies/luabind" /I "../../../dependencies/RakNet/Source" /I "../../../" /I "../" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Gm /EHsc /RTC1 /MTd /Gy /Zc:forScope /GR /Fo"Debug/" /Fd"Debug/vc70.pdb" /W3 /c /Wp64 /ZI /TP
+\M2_Profil_Working\Dev\yake\yake\yake\rx2\object_registry.cpp
+\M2_Profil_Working\Dev\yake\yake\yake\rx2\meta_field.cpp
+\M2_Profil_Working\Dev\yake\yake\yake\rx2\meta_class.cpp
+\M2_Profil_Working\Dev\yake\yake\yake\rx2\instance.cpp
+\M2_Profil_Working\Dev\yake\yake\yake\rx2\class_registry.cpp
+]Erstellen der Befehlszeile "cl.exe @d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000004.rsp /nologo"Die temporäre Datei "d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000005.rsp" wird erstellt. Inhalt:
 [
-/OUT:"Debug/lua_test.exe" /INCREMENTAL /NOLOGO /LIBPATH:"../../../dependencies/luabind/lib/Debug" /LIBPATH:"../../../dependencies/raknet/lib/" /LIBPATH:"../../../dependencies/lua/lib/Debug" /LIBPATH:"../../../dependencies/boost/bin/boost/libs/serialization/build/libboost_serialization.lib/vc7.1/Debug/runtime-link-static/threading-multi/" /DEBUG /PDB:"Debug/lua_test.pdb" /SUBSYSTEM:CONSOLE /MACHINE:X86 libboost_serialization.lib RakNetLibStatic.lib ws2_32.lib lua.lib luabind.lib lualib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib .\Debug\rx.lib "\M2_Profil_Working\Dev\yake\yake\dependencies\boost\bin\boost\libs\serialization\build\libboost_serialization.lib\vc7.1\debug\runtime-link-static\threading-multi\libboost_serialization.lib"
-.\Debug\lua_test.obj
-]Erstellen der Befehlszeile "link.exe @d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000004.rsp"</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+/OUT:"Debug/rx.lib" /NOLOGO \M2_Profil_Working\Dev\yake\yake\common\lib\debug\base.lib
+.\Debug\class_registry.obj
+.\Debug\events.obj
+.\Debug\instance.obj
+.\Debug\meta_class.obj
+.\Debug\meta_field.obj
+.\Debug\object_registry.obj
+.\Debug\lua_handler_to_cpp.obj
+]Erstellen der Befehlszeile "lib.exe @d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\RSP000005.rsp"</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Ausgabefenster</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Kompilieren...
-lua_test.cpp
+meta_class.cpp
 Yake Platform/Compiler config: Yake.Core.Prerequisites.Vc71
 d:\M2_Profil_Working\Dev\yake\yake\yake\base\yakeException.h(46) : warning C4275: class 'exception' ist keine DLL-Schnittstelle und wurde als Basisklasse für die DLL-Schnittstelle class 'yake::base::Exception' verwendet
         d:\Programme\Microsoft Visual Studio .NET 2003\Vc7\include\exception(39): Siehe Deklaration von 'exception'
         d:\M2_Profil_Working\Dev\yake\yake\yake\base\yakeException.h(45): Siehe Deklaration von 'yake::base::Exception'
-Verknüpfen...
-LINK : warning LNK4098: Standardbibliothek 'LIBCMT' steht in Konflikt mit anderen Bibliotheken; /NODEFAULT:Bibliothek verwenden
-LINK : warning LNK4098: Standardbibliothek 'LIBCD' steht in Konflikt mit anderen Bibliotheken; /NODEFAULT:Bibliothek verwenden
-lua_test.obj : error LNK2019: Nicht aufgelöstes externes Symbol '"public: class rx::meta_class & __thiscall rx::meta_class::add_field<int>(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,int)" (??$add_field@H@meta_class@rx@@QAEAAV01@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z)', verwiesen in Funktion '"void __cdecl rx::lua::`anonymous namespace'::bind_mop(struct lua_State &)" (?bind_mop@?A0x8af500cf@lua@rx@@YAXAAUlua_State@@@Z)'
-Debug/lua_test.exe : fatal error LNK1120: 1 unaufgelöste externe Verweise
+instance.cpp
+Yake Platform/Compiler config: Yake.Core.Prerequisites.Vc71
+d:\M2_Profil_Working\Dev\yake\yake\yake\base\yakeException.h(46) : warning C4275: class 'exception' ist keine DLL-Schnittstelle und wurde als Basisklasse für die DLL-Schnittstelle class 'yake::base::Exception' verwendet
+        d:\Programme\Microsoft Visual Studio .NET 2003\Vc7\include\exception(39): Siehe Deklaration von 'exception'
+        d:\M2_Profil_Working\Dev\yake\yake\yake\base\yakeException.h(45): Siehe Deklaration von 'yake::base::Exception'
+class_registry.cpp
+Yake Platform/Compiler config: Yake.Core.Prerequisites.Vc71
+d:\M2_Profil_Working\Dev\yake\yake\yake\base\yakeException.h(46) : warning C4275: class 'exception' ist keine DLL-Schnittstelle und wurde als Basisklasse für die DLL-Schnittstelle class 'yake::base::Exception' verwendet
+        d:\Programme\Microsoft Visual Studio .NET 2003\Vc7\include\exception(39): Siehe Deklaration von 'exception'
+        d:\M2_Profil_Working\Dev\yake\yake\yake\base\yakeException.h(45): Siehe Deklaration von 'yake::base::Exception'
+Code wird generiert...
+Überspringen... (keine relevanten Änderungen gefunden)
+object_registry.cpp
+meta_field.cpp
+Bibliothek wird erstellt...
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Ergebnisse</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
 Das Build-Protokoll wurde unter "file://d:\M2_Profil_Working\Dev\yake\yake\yake\rx2\test\Debug\BuildLog.htm" gespeichert.
-lua_test - 2 Fehler, 3 Warnung(en)</pre></table><table   width=100% height=20 bgcolor=#CFCFE5><tr><td><font face=arial size=+2>
+rx - 0 Fehler, 3 Warnung(en)</pre></table><table   width=100% height=20 bgcolor=#CFCFE5><tr><td><font face=arial size=+2>
 </font></table></body></html>
