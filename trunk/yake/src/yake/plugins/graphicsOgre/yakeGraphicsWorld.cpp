@@ -112,9 +112,9 @@ namespace ogre3d {
 			//pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_STENCIL_ADDITIVE );
 			//pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_STENCIL_MODULATIVE );
 			pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_TEXTURE_MODULATIVE );
-			pSceneMgr->setShadowTextureSize( 512 );
-			pSceneMgr->setShadowDirectionalLightExtrusionDistance( 10000. );
-			pSceneMgr->setShadowFarDistance( 75. );
+			pSceneMgr->setShadowTextureSize( 1024 );
+			pSceneMgr->setShadowDirectionalLightExtrusionDistance( 500 );
+			pSceneMgr->setShadowFarDistance( 75 );
 			pSceneMgr->setShadowTextureCount( 3 );
 			pSceneMgr->setShadowColour( Ogre::ColourValue(0.7,0.7,0.7) );
 			pSceneMgr->setShowDebugShadows( false );
@@ -137,9 +137,10 @@ namespace ogre3d {
 		if (pMGA)
 			return 0;
 
-		Ogre::Mesh* pMesh = Ogre::Root::getSingleton().getMeshManager()->createManual( name.c_str() );
-		YAKE_ASSERT( pMesh );
-		pMesh->setManuallyDefined( true );
+		Ogre::MeshPtr pMesh = Ogre::Root::getSingleton().getMeshManager()->createManual(
+										name.c_str(), "yakeGroup" /*@todo user another group*/ );
+		YAKE_ASSERT( !pMesh.isNull() );
+		//@todo deprecated? pMesh->setManuallyDefined( true );
 		pMesh->setIndexBufferPolicy( Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false );
 		pMesh->setVertexBufferPolicy( Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false );
 
@@ -156,7 +157,7 @@ namespace ogre3d {
 	//-----------------------------------------------------
 	IMeshGeometryAccess* GraphicalWorld::getProceduralMesh(const base::String & name)
 	{
-		ProcMeshMap::const_iterator itFind = mProcMeshes.find( name );
+		ProcMeshMap::iterator itFind = mProcMeshes.find( name );
 		if (itFind == mProcMeshes.end())
 			return 0;
 		return new OgreMeshGeometryAccess(itFind->second);

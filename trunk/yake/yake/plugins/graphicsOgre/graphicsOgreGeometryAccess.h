@@ -32,12 +32,12 @@ namespace ogre3d {
 	class OgreMeshGeometryAccess : public IMeshGeometryAccess
 	{
 	private:
-		Ogre::Mesh*			mMesh;
+		Ogre::MeshPtr		mMesh;
 		typedef base::templates::AssocVector<SubmeshId, Ogre::SubMesh*> SubMeshMap;
 		SubMeshMap			mSubmeshes;
 		SubmeshId			mLastId;
 	public:
-		OgreMeshGeometryAccess( Ogre::Mesh* mesh );
+		OgreMeshGeometryAccess( Ogre::MeshPtr& mesh );
 		virtual ~OgreMeshGeometryAccess();
 
 		virtual SubmeshId createSubmesh();
@@ -50,7 +50,7 @@ namespace ogre3d {
 	{
 	private:
 		Ogre::SubMesh*		mSubmesh;
-		Ogre::Mesh*			mMesh;
+		Ogre::MeshPtr		mMesh;
 		uint8				mNumTexCoordSets;
 
 		float*				mpLockedPositions;
@@ -66,7 +66,7 @@ namespace ogre3d {
 
 		Ogre::AxisAlignedBox	mBox;
 	public:
-		OgreSubmeshAccess( Ogre::Mesh* parentMesh, Ogre::SubMesh* subMesh = 0 );
+		OgreSubmeshAccess( Ogre::MeshPtr& parentMesh, Ogre::SubMesh* subMesh = 0 );
 		virtual ~OgreSubmeshAccess();
 
 		virtual bool open();

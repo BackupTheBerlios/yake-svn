@@ -120,7 +120,7 @@ namespace ogre3d {
 
 			_chooseSceneManager();
 
-			TextureManager::getSingleton().setDefaultNumMipMaps( 0 );
+			TextureManager::getSingleton().setDefaultNumMipmaps( 0 );
 			Animation::setDefaultInterpolationMode(Animation::IM_SPLINE);
 
 			/*Overlay* o = (Overlay*)OverlayManager::getSingleton().getByName("Core/DebugOverlay");
@@ -191,15 +191,21 @@ namespace ogre3d {
 		Ogre::ConfigFile cf;
 		cf.load("yake.graphics.ogre_resources.cfg");
 
-		// Go through all settings in the file
-		Ogre::ConfigFile::SettingsIterator i = cf.getSettingsIterator();
+        // Go through all sections & settings in the file
+        ConfigFile::SectionIterator seci = cf.getSectionIterator();
 
-		Ogre::String typeName, archName;
-		while (i.hasMoreElements())
+		Ogre::String secName, typeName, archName;
+		while (seci.hasMoreElements())
 		{
-			typeName = i.peekNextKey();
-			archName = i.getNext();
-			Ogre::ResourceManager::addCommonArchiveEx(archName, typeName);
+			secName = seci.peekNextKey();
+            ConfigFile::SettingsMultiMap *settings = seci.getNext();
+            ConfigFile::SettingsMultiMap::iterator i;
+            for (i = settings->begin(); i != settings->end(); ++i)
+            {
+                typeName = i->first;
+                archName = i->second;
+				Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
+			}
 		}
 	}
 

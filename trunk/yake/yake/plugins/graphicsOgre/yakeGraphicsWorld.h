@@ -67,7 +67,7 @@ namespace ogre3d {
 		static void setCore( OgreCore* core );
 	private:
 		static OgreCore*	msCore;
-		typedef base::templates::AssocVector< String, Ogre::Mesh* > ProcMeshMap;
+		typedef base::templates::AssocVector< String, Ogre::MeshPtr > ProcMeshMap;
 		ProcMeshMap			mProcMeshes;
 	};
 

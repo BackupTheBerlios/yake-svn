@@ -36,7 +36,7 @@ namespace graphics {
 namespace ogre3d {
 
 	//-----------------------------------------------------
-	OgreMeshGeometryAccess::OgreMeshGeometryAccess(Ogre::Mesh* mesh) : mMesh(mesh), mLastId(0)
+	OgreMeshGeometryAccess::OgreMeshGeometryAccess(Ogre::MeshPtr& mesh) : mMesh(mesh), mLastId(0)
 	{
 	}
 
@@ -48,7 +48,7 @@ namespace ogre3d {
 	//-----------------------------------------------------
 	SubmeshId OgreMeshGeometryAccess::createSubmesh()
 	{
-		YAKE_ASSERT( mMesh ).error("need a mesh!");
+		YAKE_ASSERT( !mMesh.isNull() ).error("need a mesh!");
 		Ogre::SubMesh* pSM = mMesh->createSubMesh();
 		YAKE_ASSERT( pSM );
 		SubmeshId id = mLastId++;
@@ -59,7 +59,7 @@ namespace ogre3d {
 	//-----------------------------------------------------
 	ISubmeshAccess* OgreMeshGeometryAccess::getSubmesh( const SubmeshId id )
 	{
-		YAKE_ASSERT( mMesh ).error("need a mesh!");
+		YAKE_ASSERT( !mMesh.isNull() ).error("need a mesh!");
 		SubMeshMap::const_iterator itFind = mSubmeshes.find( id );
 		if (itFind == mSubmeshes.end())
 			return 0;
@@ -67,7 +67,7 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	OgreSubmeshAccess::OgreSubmeshAccess( Ogre::Mesh* parentMesh, Ogre::SubMesh* subMesh )
+	OgreSubmeshAccess::OgreSubmeshAccess( Ogre::MeshPtr& parentMesh, Ogre::SubMesh* subMesh )
 			: mMesh(parentMesh),
 				mSubmesh( subMesh ),
 				mpLockedPositions(0),
@@ -75,7 +75,7 @@ namespace ogre3d {
 				mpLockedIndices(0),
 				mpLockedNormals(0)
 	{
-		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( !mMesh.isNull() );
 		for (int i=0; i<MAX_TEX_COORDS; ++i)
 			mpLockedTexCoords[i] = 0;
 	}
@@ -107,7 +107,7 @@ namespace ogre3d {
 	//-----------------------------------------------------
 	bool OgreSubmeshAccess::open()
 	{
-		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( !mMesh.isNull() );
 		YAKE_ASSERT( mSubmesh ); // open existing one
 		mNumTexCoordSets = 0;
 		Ogre::VertexDeclaration::VertexElementList list = mSubmesh->vertexData->vertexDeclaration->getElements();
@@ -123,7 +123,7 @@ namespace ogre3d {
 	//-----------------------------------------------------
 	bool OgreSubmeshAccess::open(uint32 numVertices, uint32 numIndices, uint8 numTexSets)
 	{
-		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( !mMesh.isNull() );
 		YAKE_ASSERT( mSubmesh );
 
 		//FIXME:
@@ -242,7 +242,7 @@ namespace ogre3d {
 	//-----------------------------------------------------
 	bool OgreSubmeshAccess::close()
 	{
-		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( !mMesh.isNull() );
 		YAKE_ASSERT( mSubmesh );
 
 		unlockPositions();
@@ -259,7 +259,7 @@ namespace ogre3d {
 	//-----------------------------------------------------
 	bool OgreSubmeshAccess::setMaterial( const base::String & material )
 	{
-		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( !mMesh.isNull() );
 		YAKE_ASSERT( mSubmesh );
 		mSubmesh->setMaterialName( Ogre::String(material.c_str()) );
 		return true;
@@ -274,7 +274,7 @@ namespace ogre3d {
 			if (!unlockPositions())
 				return false;
 		}
-		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( !mMesh.isNull() );
 		YAKE_ASSERT( mSubmesh );
 
 		YAKE_ASSERT( mSubmesh->vertexData );
@@ -332,7 +332,7 @@ namespace ogre3d {
 			if (!unlockTexCoords(set))
 				return false;
 		}
-		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( !mMesh.isNull() );
 		YAKE_ASSERT( mSubmesh );
 
 		YAKE_ASSERT( mSubmesh->vertexData );
@@ -386,7 +386,7 @@ namespace ogre3d {
 			if (!unlockColours())
 				return false;
 		}
-		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( !mMesh.isNull() );
 		YAKE_ASSERT( mSubmesh );
 
 		YAKE_ASSERT( mSubmesh->vertexData );
@@ -450,7 +450,7 @@ namespace ogre3d {
 			if (!unlockIndices())
 				return false;
 		}
-		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( !mMesh.isNull() );
 		YAKE_ASSERT( mSubmesh );
 
 		YAKE_ASSERT( mSubmesh->indexData );
@@ -501,7 +501,7 @@ namespace ogre3d {
 			if (!unlockNormals())
 				return false;
 		}
-		YAKE_ASSERT( mMesh );
+		YAKE_ASSERT( !mMesh.isNull() );
 		YAKE_ASSERT( mSubmesh );
 
 		YAKE_ASSERT( mSubmesh->vertexData );
