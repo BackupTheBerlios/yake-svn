@@ -13,7 +13,7 @@ The following list includes developers who have contributed features to YAKE:
 Contributor                             Subject Areas 
 -----------                             --------------------------------------
 Nikita Buida (mj)                     : Linux port, SCons, various enhancements
-                                        and fixes and samples
+                                        and fixes and samples, rewrite of physicsODE
 ? (Poldi)                             : Linux port
 Jan Eickmann ( jeickmann )            : Fixes
 
