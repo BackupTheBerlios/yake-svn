@@ -164,15 +164,6 @@
 				RelativePath="..\..\..\..\src\yake\samples\graphics\demo\yakeGraphicsDemo.cpp">
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\..\..\..\yake\samples\graphics\Profiler.cpp">
-		</File>
-		<File
-			RelativePath="..\..\..\..\yake\samples\graphics\Profiler.h">
-		</File>
-		<File
-			RelativePath="..\..\..\..\yake\samples\graphics\RingBuffer.h">
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
