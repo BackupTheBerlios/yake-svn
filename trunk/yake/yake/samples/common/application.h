@@ -6,6 +6,7 @@ namespace yake
 namespace samples
 {
 
+/* library manager */
 struct library_manager
 {
   typedef vector< shared_ptr<base::library> > library_list;
@@ -16,35 +17,7 @@ struct library_manager
   library_list m_library_list;
 };
 
-
-namespace // unnamed
-{
-	template <class System>
-	struct manual_initialization_system_holder
-	{
-		void set_system(shared_ptr<System> system)
-		{ m_system.reset(system); }
-
-		shared_ptr<System> get_system()
-		{ return m_system; }
-
-		shared_ptr<System> m_system;
-	};
-} // namspace unnamed
-
-template <class Systems>
-struct manual_initialization : inherit_linear<Systems, lambda< manual_initialization_system_holder<_> >::type
-{
-  template <class System>
-  System & get_system()
-  { static_cast<holder<System>&>(*this)->get_system(); }
-
-  template <class System>
-  void load_system(const char * id)
-  { get_system<System>().set_system(create<System>(id)); }
-};
-
-
+/* default initialization */
 namespace // unnamed
 {
 	// holds a reference to a system and makes it accessable
@@ -102,15 +75,71 @@ struct default_config : library_manager
 
 // loads the libraries, initializes the systems and makes them accessable
 template <class Config = default_config>
-struct default_initialization : Config, typename inherit_linear<typename Config::systems, lambda< default_initialization_system_holder<_> >::type
+struct default_initialization : Config, typename inherit_linear<typename Config::systems, lambda< default_initialization_system_holder<_> >::type >::type
 {
   template <class System>
   System & get_system()
-  { static_cast<holder<System>&>(*this)->get_system(); }
+  { static_cast<default_initialization_system_holder<System>&>(*this)->get_system(); }
+};
+
+template <class Config = default_config>
+struct default_initialization_non_automatic
+{
+public: // types
+	typedef default_initialization_system_holder holder;
+	typedef typename inherit_linear
+	<
+		typename Config::systems, 
+		lambda< holder<_> >::type
+	>::type Systems;
+
+public: // methods
+	void initialize()
+	{
+		m_config.reset(new Config());
+		m_systems.reset(new Systems());
+	}
+
+	template <class System>
+	System & get_system()
+	{ static_cast<holder<System>*>(m_systems.get())->get_system(); }
+
+private: // data
+	shared_ptr<Config> m_config;
+	shared_ptr<Systems> m_systems;
 };
 
 
 
+/* manual initialization */
+namespace // unnamed
+{
+	template <class System>
+	struct manual_initialization_system_holder
+	{
+		void set_system(shared_ptr<System> system)
+		{ m_system.reset(system); }
+
+		shared_ptr<System> get_system()
+		{ return m_system; }
+
+		shared_ptr<System> m_system;
+	};
+} // namspace unnamed
+
+template <class Systems>
+struct manual_initialization : inherit_linear<Systems, lambda< manual_initialization_system_holder<_> >::type
+{
+  template <class System>
+  System & get_system()
+  { static_cast<holder<System>&>(*this)->get_system(); }
+
+  template <class System>
+  void load_system(const char * id)
+  { get_system<System>().set_system(create<System>(id)); }
+};
+
+/* application */
 template <class Initialization>
 struct application : Initialization
 {
@@ -118,6 +147,8 @@ struct application : Initialization
 };
 
 
+
+/* samples */
 class my_app : application< default_initialization<> >
 {};
 
@@ -136,6 +167,8 @@ struct minimum_config : library_manager
 
 class my_app_mini : application< default_initialization<minimum_config> >
 {};
+
+
 
 
 // todo: useful?
