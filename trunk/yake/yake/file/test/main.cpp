@@ -73,11 +73,12 @@ void create_dummy_file( filesystem::path ph )
 
 	nativefs::handle file_handle = open_file( 
 		ph, std::ios_base::out );
-	assert( write_file( file_handle, FILE_CONTENT_RAW, FILE_SIZE ) == 6 );
+	assert( write_file( file_handle, 
+		FILE_CONTENT_RAW, FILE_SIZE ) == 6 );
 	close_file( file_handle );
 	if ( !exists( ph ) ) 
 		throw(	
-			filesystem_error( "test_native_operations",
+			filesystem_error( "create_dummy_file",
 				"File does not exist." ) );
 }
 
@@ -214,8 +215,9 @@ bool test_create_archive()
 	create_dummy_file( native_files / "hello3" );
 
 	// create archive
-	virtualfs::create_archive_from( path( "virtual_test_data.vfs", no_check ), 
-		native_files );
+	virtualfs::create_archive_from( 
+		path( "virtual_test_data.vfs", no_check ), 
+			native_files );
 
 	// exists?
 	return nativefs::exists( "virtual_test_data.vfs" );
@@ -390,7 +392,8 @@ bool test_ftp_vfs_mixing()
 	using namespace filesystem::virtualfs;
 
 	// mix the virtual_file_system and ftp
-	virtualfs::ifstream file( path( FTP_DIR + "/virtual_test_data/cheeze" ) ); 
+	virtualfs::ifstream file( path( FTP_DIR 
+		+ "/virtual_test_data/cheeze" ) ); 
 	std::string data;
 	file >> data;
 	std::cout << data << std::endl;
