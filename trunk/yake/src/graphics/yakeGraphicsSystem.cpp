@@ -25,6 +25,7 @@
 #include <inc/graphics/yakeGraphicsSystem.h>
 #include <inc/graphics/yakeGraphicalWorld.h>
 #include <inc/graphics/yakeEntity.h>
+#include <inc/graphics/yakeGeometryAccess.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES

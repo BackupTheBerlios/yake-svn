@@ -133,6 +133,9 @@
 				RelativePath="..\..\..\src\plugins\graphicsOgre\graphicsOgreEntity.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\src\plugins\graphicsOgre\graphicsOgreGeometryAccess.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\src\plugins\graphicsOgre\graphicsOgreLight.cpp">
 			</File>
 			<File
@@ -178,6 +181,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\inc\plugins\graphicsOgre\graphicsOgreEntity.h">
+			</File>
+			<File
+				RelativePath="..\..\..\inc\plugins\graphicsOgre\graphicsOgreGeometryAccess.h">
 			</File>
 			<File
 				RelativePath="..\..\..\inc\plugins\graphicsOgre\graphicsOgreLight.h">
