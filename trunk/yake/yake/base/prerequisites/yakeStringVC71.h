@@ -18,58 +18,60 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_PLATFORM_H
-#define YAKE_BASE_PLATFORM_H
+#ifndef YAKE_BASE_PREQUISITES_STRINGVC71_H
+#define YAKE_BASE_PREQUISITES_STRINGVC71_H
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-// Platform/compiler-related stuff to set
-#define PLATFORM_WIN32 1
-#define PLATFORM_LINUX 2
-#define PLATFORM_APPLE 3
-
-#define COMPILER_MSVC 1
-#define COMPILER_GNUC 2
-#define COMPILER_BORL 3
-
-#define ENDIAN_LITTLE 1
-#define ENDIAN_BIG 2
-
-// Get compiler and version
-#if defined( _MSC_VER )
-#   define YAKE_COMPILER COMPILER_MSVC
-	// version:
-	// 1300 for vc7.0 (2002)
-	// 1310 for vc7.1 (2003)
-	// 1400	for vc8.0 (2005)
-#   define YAKE_COMP_VER _MSC_VER
-
-#elif defined( __GNUC__ )
-#   define YAKE_COMPILER COMPILER_GNUC
-	// version:
-	// 2097 for gcc 2.97
-	// 3002 for gcc 3.2.x
-	// 3003 for gcc 3.3.x
-#   define YAKE_COMP_VER (__GNUC__*1000+__GNUC_MINOR___)
-
-#elif defined( __BORLANDC__ )
-#   define YAKE_COMPILER COMPILER_BORL
-#   define YAKE_COMP_VER __BCPLUSPLUS__
-
-#else
-#   pragma error "Yake: Unknown compiler. Bailing out!"
+// Standard headers
+#ifndef YAKE_BASE_PREREQUISITES_H
+#	include "../yakePrerequisites.h"
 #endif
 
-// Platform
-#if defined( __WIN32__ ) || defined( _WIN32 )
-#   define YAKE_PLATFORM PLATFORM_WIN32
-#elif defined( __APPLE_CC__)
-#   define YAKE_PLATFORM PLATFORM_APPLE
-#else
-#   define YAKE_PLATFORM PLATFORM_LINUX
+// todo
+
+//============================================================================
+//    INTERFACE STRUCTURES / UTILITY CLASSES
+//============================================================================
+namespace yake
+{
+namespace base
+{
+
+typedef std::string YAKE_BASE_STRING;
+
+} // base
+} // yake
+
+namespace std
+{
+/*	template<> size_t hash_compare < yake::base::YAKE_BASE_STRING, std::less< yake::base::YAKE_BASE_STRING > >::operator ()( const yake::base::YAKE_BASE_STRING& rStringBase ) const
+	{
+		register size_t ret = 0;
+		for( yake::base::YAKE_BASE_STRING::const_iterator it = rStringBase.begin(); it != rStringBase.end(); ++it )
+			ret = 5 * ret + *it;
+
+		return ret;
+	}*/
+} // std
+
+namespace yake
+{
+namespace base
+{
+
+	
+
+//#if _DEFINE_DEPRECATED_HASH_CLASSES
+//		typedef std::hash< YAKE_BASE_STRING, std::less< YAKE_BASE_STRING > > _StringHash;
 //#else
-//#	error("Yake: Unknown platform. Bailing out!")
-#endif
+	typedef std::hash_compare< YAKE_BASE_STRING, std::less< YAKE_BASE_STRING > > _StringHash;
+//#endif
 
-#endif // YAKE_BASE_PLATFORM_H
+//#undef YAKE_BASE_STRING
+
+} // base
+} // yake
+
+#endif // YAKE_BASE_PREQUISITES_STRINGVC71_H

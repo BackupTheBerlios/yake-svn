@@ -18,58 +18,43 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_PLATFORM_H
-#define YAKE_BASE_PLATFORM_H
+#ifndef YAKE_BASE_PREREQUISITES_PREREQUISITESVC8TYPES_H
+#define YAKE_BASE_PREREQUISITES_PREREQUISITESVC8TYPES_H
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-// Platform/compiler-related stuff to set
-#define PLATFORM_WIN32 1
-#define PLATFORM_LINUX 2
-#define PLATFORM_APPLE 3
-
-#define COMPILER_MSVC 1
-#define COMPILER_GNUC 2
-#define COMPILER_BORL 3
-
-#define ENDIAN_LITTLE 1
-#define ENDIAN_BIG 2
-
-// Get compiler and version
-#if defined( _MSC_VER )
-#   define YAKE_COMPILER COMPILER_MSVC
-	// version:
-	// 1300 for vc7.0 (2002)
-	// 1310 for vc7.1 (2003)
-	// 1400	for vc8.0 (2005)
-#   define YAKE_COMP_VER _MSC_VER
-
-#elif defined( __GNUC__ )
-#   define YAKE_COMPILER COMPILER_GNUC
-	// version:
-	// 2097 for gcc 2.97
-	// 3002 for gcc 3.2.x
-	// 3003 for gcc 3.3.x
-#   define YAKE_COMP_VER (__GNUC__*1000+__GNUC_MINOR___)
-
-#elif defined( __BORLANDC__ )
-#   define YAKE_COMPILER COMPILER_BORL
-#   define YAKE_COMP_VER __BCPLUSPLUS__
-
-#else
-#   pragma error "Yake: Unknown compiler. Bailing out!"
+// Preprocessor check
+#if (YAKE_PLATFORM != PLATFORM_WIN32) || ( YAKE_COMP_VER < 1400 )
+#	error "Yake.Core.Prerequisites.Vc8: This file should only be included when building using Microsoft Visual C++ 8 on the Win32 Platform."
 #endif
 
-// Platform
-#if defined( __WIN32__ ) || defined( _WIN32 )
-#   define YAKE_PLATFORM PLATFORM_WIN32
-#elif defined( __APPLE_CC__)
-#   define YAKE_PLATFORM PLATFORM_APPLE
+//============================================================================
+//    INTERFACE STRUCTURES / UTILITY CLASSES
+//============================================================================
+
+// Fixed-size numeric types.
+// Note: This naming convetion is equivalent to the C99 one. Once C99 will be supported by the compiler vendors,
+// we can just remove the following typedefs and add an #include <cstdint>.
+// SK: put it into namespace because it collided with other libs:
+namespace yake 
+{
+typedef signed __int8           int8;
+typedef unsigned __int8         uint8;
+typedef signed __int16          int16;
+typedef unsigned __int16        uint16;
+typedef signed __int32          int32;
+typedef unsigned __int32        uint32;
+typedef signed __int64          int64;
+typedef unsigned __int64        uint64;
+typedef float										real;
+}
+
+// Stl workarounds
+#ifdef _STLP_HASH_MAP
+#	define HashMap ::std::hash_map
 #else
-#   define YAKE_PLATFORM PLATFORM_LINUX
-//#else
-//#	error("Yake: Unknown platform. Bailing out!")
+#	define HashMap ::stdext::hash_map
 #endif
 
-#endif // YAKE_BASE_PLATFORM_H
+#endif // YAKE_BASE_PREREQUISITES_PREREQUISITESVC8TYPES_H

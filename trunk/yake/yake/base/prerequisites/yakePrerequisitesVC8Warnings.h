@@ -18,58 +18,33 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_PREQUISITES_STRINGVC_H
-#define YAKE_BASE_PREQUISITES_STRINGVC_H
+#ifndef YAKE_BASE_PREREQUISITES_PREREQUISITESVC8WARNINGS_H
+#define YAKE_BASE_PREREQUISITES_PREREQUISITESVC8WARNINGS_H
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-// Standard headers
-#ifndef YAKE_BASE_PREREQUISITES_H
-#	include "../yakePrerequisites.h"
+// Preprocessor check
+#if (YAKE_PLATFORM != PLATFORM_WIN32) || ( YAKE_COMP_VER < 1400 )
+#	error "Yake.Core.Prerequisites.Vc8: This file should only be included when building using Microsoft Visual C++ 8 on the Win32 Platform."
 #endif
-
-// todo
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+// Disable several useless warnings.
 
-typedef std::string YAKE_BASE_STRING;
+// 'identifier' : class 'type' needs to have dll-interface to be used by clients of class 'type2'
+// A base class or structure must be declared with the __declspec(dllexport) keyword for a function in a derived class to be exported
+#pragma warning( disable : 4251 )
 
-} // base
-} // yake
+// Turn off 'warning C4355: 'this' : used in base member initializer list'
+#pragma warning( disable : 4355 )
 
-namespace std
-{
-/*	template<> size_t hash_compare < yake::base::YAKE_BASE_STRING, std::less< yake::base::YAKE_BASE_STRING > >::operator ()( const yake::base::YAKE_BASE_STRING& rStringBase ) const
-	{
-		register size_t ret = 0;
-		for( yake::base::YAKE_BASE_STRING::const_iterator it = rStringBase.begin(); it != rStringBase.end(); ++it )
-			ret = 5 * ret + *it;
+// Members of the <hash_map> and <hash_set> header files are not currently part 
+// of the ISO C++ standard. Therefore, these types and members have been moved from 
+// the std namespace to namespace stdext, to remain conformant with the C++ standard, 
+// in Visual C++ .NET 2003.
+#pragma warning( disable : 4996 )
 
-		return ret;
-	}*/
-} // std
-
-namespace yake
-{
-namespace base
-{
-
-//#if _DEFINE_DEPRECATED_HASH_CLASSES
-//		typedef std::hash< YAKE_BASE_STRING, std::less< YAKE_BASE_STRING > > _StringHash;
-//#else
-			typedef std::hash_compare< YAKE_BASE_STRING, std::less< YAKE_BASE_STRING > > _StringHash;
-//#endif
-
-//#undef YAKE_BASE_STRING
-
-} // base
-} // yake
-
-#endif // YAKE_BASE_PREQUISITES_STRINGVC_H
+#endif // YAKE_BASE_PREREQUISITES_PREREQUISITESVC8WARNINGS_H

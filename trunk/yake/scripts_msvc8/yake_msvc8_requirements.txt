@@ -1,0 +1,4 @@
+## Copy ( or set global msvc include paths ) Microsoft Sdks ##
+- copy platform sdk from vc7.1 to vc8
+- copy vc7/atlmfc from vc7.1 to vc8
+- add global $(VCInstallDir)atlmfc include path 

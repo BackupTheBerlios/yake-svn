@@ -27,14 +27,21 @@
 
 // Include platform specific configuration files
 #if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
-#	if (YAKE_COMP_VER >= 1300)
+#	if (YAKE_COMP_VER == 1310)
 #		pragma message("Yake Platform/Compiler config: Yake.Core.Prerequisites.Vc71")
 #		include "yakePrerequisitesVC71Warnings.h"
 #		include <wchar.h>
 #		include <hash_map>
 #		include <xhash>
 #		include "yakePrerequisitesVC71Types.h"
-#	else
+#	elif(YAKE_COMP_VER == 1400)
+#		pragma message("Yake Platform/Compiler config: Yake.Core.Prerequisites.Vc8")
+#		include "yakePrerequisitesVC8Warnings.h"
+#		include <wchar.h>
+#		include <hash_map>
+#		include <xhash>
+#		include "yakePrerequisitesVC8Types.h"
+#   else
 #		error("Yake: No configuration file for this compiler!")
 #	endif
 #else
@@ -42,11 +49,14 @@
 #endif
 
 // String specialization
-#if !defined ( _STLP_HASH_FUN_H )
-#	include "yakeStringVC.h"
+#if !defined( _STLP_HASH_FUN_H ) && ( YAKE_COMP_VER == 1310 )
+#	include "yakeStringVC71.h"
+#elif !defined ( _STLP_HASH_FUN_H ) && ( YAKE_COMP_VER == 1400 )
+#	include "yakeStringVC8.h"
 #else
 #	include "yakeStringHashFun.h"
 #endif
+
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
