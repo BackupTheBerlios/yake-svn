@@ -389,6 +389,7 @@ void SingletonHolder<T, CreationPolicy, L, M>::DestroySingleton()
 
 // Adds a singleton to the current class ClassName.
 #define YAKE_BUILD_SINGLETON( ClassName ) \
+	friend ClassName * yake::base::templates::CreateUsingNew<ClassName>::Create(); \
 	public: \
 		static ClassName& instance() \
 		{ \
