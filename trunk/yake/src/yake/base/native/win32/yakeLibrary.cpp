@@ -22,13 +22,14 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-// Stl
+// stl
 #include <cassert>
 #include <locale>
-// Yake
+// yake
 #include <yake/base/yakePCH.h>
 #include <yake/base/native/win32/yakeConfig.h>
 #include <yake/base/templates/yakeSmartAssert.h>
+#include <yake/base/yakeException.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -40,29 +41,29 @@ namespace base
 namespace native
 {
 
-YAKE_BASE_NATIVE_API LibraryHandle library_Load( const char* pFilename )
+YAKE_BASE_NATIVE_API LibraryHandle library_Load(const char * filename)
 {
-	YAKE_ASSERT( pFilename ).debug( "Invalid filename." );    
-	LibraryHandle handle = ( LibraryHandle )::LoadLibraryA( pFilename );
+	YAKE_ASSERT(filename).debug("Invalid filename.");
+	// load library
+	LibraryHandle handle = (LibraryHandle)::LoadLibraryA(filename);
+	if(handle == NULL) throw YAKE_EXCEPT("Couldn't load library.", "library_Load");
 	return handle;
 }
 
-YAKE_BASE_NATIVE_API void* library_GetSymbol( LibraryHandle library, const char* pFunction )
+YAKE_BASE_NATIVE_API void * library_GetSymbol(LibraryHandle library, const char * function)
 {
-	YAKE_ASSERT( library ).debug( "Invalid library handle." );
-	YAKE_ASSERT( pFunction ).debug( "Invalid library function." );
-
-	// Get the Procedure's Address.
-	void* address = ::GetProcAddress( ( HMODULE ) library, pFunction );
-
-  return address;
+	YAKE_ASSERT(library).debug("Invalid library handle.");
+	YAKE_ASSERT(function).debug("Invalid library function.");
+	// get the procedure's address
+	void * address = ::GetProcAddress((HMODULE) library, function);
+	return address;
 }
 
-YAKE_BASE_NATIVE_API void library_Free( LibraryHandle library )
+YAKE_BASE_NATIVE_API void library_Free(LibraryHandle library)
 {
-	YAKE_ASSERT( library ).debug( "Invalid library handle" );
-
-	::FreeLibrary( ( HMODULE ) library );
+	YAKE_ASSERT(library).debug("Invalid library handle.");
+	// free library
+	::FreeLibrary((HMODULE) library);
 }
 
 
