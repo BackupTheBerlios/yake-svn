@@ -41,17 +41,16 @@ namespace mpl
 {
 
 template <class AbstractProduct>
-class AbstractFactoryUnit
+struct abstract_factory_unit
 {
-public:
-	virtual AbstractProduct * doCreate(functions::identity<AbstractProduct>) = 0;
-	virtual ~AbstractFactoryUnit() {}
+	virtual AbstractProduct * do_create(functions::identity<AbstractProduct>) = 0;
+	virtual ~abstract_factory_unit() {}
 };
 
 template
 <
 	class Types,
-	template <class> class FactoryUnit = AbstractFactoryUnit
+	template <class> class FactoryUnit = abstract_factory_unit
 >
 class abstract_factory : 
 	public inherit_multiple
@@ -69,7 +68,7 @@ public:
 	{
 		// DoCreate functions are declared within different namespaces ...
 		FactoryUnit<AbstractProduct> & unit = *this;
-		return unit.doCreate(functions::identity<AbstractProduct>());
+		return unit.do_create(functions::identity<AbstractProduct>());
 	}
 };
 
@@ -84,7 +83,7 @@ protected:
 public:
 	typedef typename sequences::front<BaseProductList>::type AbstractProduct;
 
-	ConcreteProduct * doCreate(functions::identity<AbstractProduct>)
+	ConcreteProduct * do_create(functions::identity<AbstractProduct>)
 	{
 		return new ConcreteProduct;
 	}
