@@ -9,6 +9,7 @@
 #include <yapp/gui/control_base.h>
 #include <yapp/gui/point.h>
 #include <yapp/gui/config.h>
+#include <yapp/gui/controls.h>
 
 namespace yake
 {
