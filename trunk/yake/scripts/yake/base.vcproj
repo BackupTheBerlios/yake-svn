@@ -393,9 +393,6 @@
 					RelativePath="..\..\yake\base\templates\yakeAssociator.h">
 				</File>
 				<File
-					RelativePath="..\..\yake\base\templates\yakeDangling.h">
-				</File>
-				<File
 					RelativePath="..\..\yake\base\templates\yakeDeque.h">
 				</File>
 				<File
