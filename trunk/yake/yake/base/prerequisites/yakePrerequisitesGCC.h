@@ -30,7 +30,7 @@
 
 // Include platform specific configuration files
 #if (YAKE_PLATFORM == PLATFORM_LINUX) && (YAKE_COMPILER == COMPILER_GNUC)
-#	pragma message("Yake Platform/Compiler config: Yake.Core.Prerequisites.GCC")
+#	pragma message("YAKE platform/compiler config: yake.core.prerequisites.GCC")
 //#	include "yakePrerequisitesGCCWarnings.h"
 //#	include <wchar.h>
 #	include <ext/hash_map>
