@@ -105,8 +105,8 @@ namespace input {
 		base::math::Vector3 pos = mMouse->getPosition();
 		if (pos != mMousePosition)
 		{
+			mMouseMovedSignal( pos - mMousePosition ); // send delta
 			mMousePosition = pos;
-			mMouseMovedSignal( mMousePosition );
 		}
 
 		// buttons
