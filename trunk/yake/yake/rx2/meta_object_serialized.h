@@ -1,6 +1,7 @@
 #ifndef META_OBJECT_SERIALIZED_H
 #define META_OBJECT_SERIALIZED_H
 
+#include <boost/serialization/export.hpp>
 #include <boost/serialization/map.hpp>
 #include "meta_object.h"
 

@@ -2,14 +2,19 @@
 #define meta_class_h
 
 #include <vector>
+
 #include <yake/base/templates/yakePointer.h>
+
 #include "class_registry.h"
 #include "meta_object.h"
 #include "meta_hooks.h"
 #include "type_info.h"
+#include "object_creators.h"
 
 namespace rx
 {
+
+struct meta_object_holder;
 
 // is used for the instance an meta object resp. its typed fields
 template<class T>
@@ -17,18 +22,11 @@ struct attach_field
 {
 	typedef typed_field<T> typed;
 
-	static void attach( meta_object & obj, meta_field & field, bool clone )
+	static void attach( meta_object & obj, meta_field & field )
 	{
-		if( clone )
-		{
-			typed & this_field = dynamic_cast< typed& >( field );
-			obj.add_field< typed >( *new typed( obj, this_field.name_, this_field.value_, this_field.flags_ ) );
-		}
-		else
-		{
-			field.object_ = &obj;
-			obj.add_field< typed >( dynamic_cast< typed& >( field ) );
-		}
+		// add clone to meta object
+		typed & this_field = dynamic_cast< typed& >( field );
+		obj.add_field< T >( this_field.name_, this_field.value_, this_field.flags_ );
 	}
 };
 
@@ -42,11 +40,11 @@ public: // types
 	// objects without counting references within other meta_class copies)
 	typedef std::vector< std::pair<
 		yake::base::templates::SharedPtr< meta_field >, 
-		void(*)(meta_object&, meta_field&, bool) > > fields_list;
+		void(*)(meta_object&, meta_field&) > > fields_list;
 
 	/* event and handler traits */
 	typedef std::vector< TypeInfo > arg_types;
-	typedef std::map< std::string, arg_types > traits;
+	typedef std::vector< std::pair< std::string, arg_types > > traits;
 
 public: // constructors
 	meta_class()
@@ -135,7 +133,7 @@ public: // events and handlers
   {
 		arg_types args;
     args.push_back( typeid( T1 ) );
-    handler_traits_.insert( traits::value_type( name, args ) );
+		handler_traits_.push_back( std::make_pair( name, args ) );
 		return *this;
   }
 
@@ -144,14 +142,13 @@ public: // events and handlers
   {
 		arg_types args;
     args.push_back( typeid( T1 ) );
-    event_traits_.insert( traits::value_type( name, args ) );
+		event_traits_.push_back( std::make_pair( name, args ) );
 		return *this;
   }
 
 public: // object creation	
+	friend meta_object_holder;
 	friend meta_object & create( const meta_class & meta_class_, std::string object_name );	
-	template< typename T1, typename T2, typename T3 >
-	friend meta_object & create( const meta_class & meta_class_, std::string object_name, T1 & f1, T2 & f2, T3 & f3 );
 
 public: // info
 	std::string & get_name() const
@@ -165,29 +162,6 @@ private:
   traits handler_traits_;
   traits event_traits_;
 };
-
-// used by regular meta object instancing
-meta_object & create( const meta_class & meta_class_, std::string object_name );
-
-// used by c++ classes
-template< typename T1, typename T2, typename T3 >
-meta_object & create( const meta_class & meta_class_, std::string object_name, T1 & f1, T2 & f2, T3 & f3 )
-{
-	meta_class & non_const_class = const_cast< meta_class & >( meta_class_ );
-
-	meta_object * obj = new meta_object( object_name );
-
-	// set name
-	f1.field_name_ = non_const_class.fields_[0].first->get_name();
-	// call the according attach method for this field ( using reference )
-	( non_const_class.fields_[0].second )( *obj, f1 );
-	f1.field_name_ = non_const_class.fields_[1].first->get_name();
-	( non_const_class.fields_[1].second )( *obj, f2 );
-	f1.field_name_ = non_const_class.fields_[2].first->get_name();
-	( non_const_class.fields_[2].second )( *obj, f3 );
-
-	return *obj;
-}
 
 template< typename T >
 T define( const std::string & name )

@@ -14,13 +14,14 @@ public:
 	// they have the same order as within the meta_class
 	// field container see build_meta_class
 	cpp_class( std::string object_name ) 
-		: meta_object_( new_( 
-					meta_class_,
-					object_name, 
-					test_int, 
-					test_string, 
-					test_float ) )
 	{
+		meta_object_ = 
+			create<meta_object>( meta_class_, name )
+				.add_field( test_int )
+				.add_field( test_string )
+				.add_field( test_float )
+				.add_handler<int>( "on_click", &cpp_class::on_click, this )
+				.add_event( "clicked", &clicked )
 	}
 
 	// rx members
@@ -35,9 +36,10 @@ public:
 	static void build_meta_class()
 	{
 		// register fields
-		meta_class_.add_field<int>( "test_int" );
-		meta_class_.add_field<std::string>( "test_string" );
-		meta_class_.add_field<float>( "test_float" );      
+		meta_class_
+			.add_field<int>( "test_int" )
+		  .add_field<std::string>( "test_string" )
+			.add_field<float>( "test_float" );      
 	}	
 
 	static meta_class & get_class()

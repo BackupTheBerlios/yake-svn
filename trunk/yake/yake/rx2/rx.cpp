@@ -12,10 +12,10 @@
 #include "meta_class.h"
 #include "class_registry.h"
 // serialization
-#include "typed_field_serialized.h"
-#include "meta_object_serialized.h"
+//#include "typed_field_serialized.h"
+//#include "meta_object_serialized.h"
 // scripting
-extern "C"
+/*extern "C"
 {
 #include "lua.h"
 #include "lauxlib.h"
@@ -29,7 +29,9 @@ extern "C"
 #include "RakServerInterface.h"
 #include "RakClientInterface.h"
 #include "RakNetworkFactory.h"
-#include "BitStream.h"
+#include "BitStream.h"*/
+
+#include "event_test.h"
 
 using namespace rx;
 
@@ -44,7 +46,8 @@ int main()
 			define<meta_class>( "test_class" )
 				.add_field<bool>( "hello_bool", true )
 				.add_field<std::string>( "hello_string" )
-				.add_handler<bool>( "on_click" );
+				.add_handler<bool>( "on_click" )
+				.add_event<bool>( "click" );
 
 		// create an instance of that just defined class
 		meta_object & test_object = create( test_class,  "test_object" );
@@ -70,6 +73,18 @@ int main()
 		assert( test_object_2.field<bool>( "hello_bool" ) );
 		std::cout << "test_object_2::hello_bool=" << ( test_object_2.field<bool>( 
 			"hello_bool" ) ? "true" : "false" ) << std::endl;
+	}
+
+	// event and handler test
+	{
+		std::cout << "[ events ]" << std::endl;	
+
+    entity e( "e" );
+		// hard wiring
+		e.birth.attach_handler( &entity::on_birth, &e );
+		// hard soft wiring
+		e.birth.attach_handler( e.get_object().get_handler( "on_birth" ) );
+		e.birth( "hello e" );
 	}
 
 

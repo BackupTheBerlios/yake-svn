@@ -2,17 +2,21 @@
 #define meta_object_h
 
 #include <map>
+
 #include "typed_field.h"
 #include "meta_hooks.h"
 #include "object_registry.h"
+#include "events.h"
 
 namespace rx
 {
 
 class meta_object : public meta_object_hooks
 {
-public:
+public: // types
 	typedef std::map< std::string, meta_field * > fields_map;
+  typedef std::map< std::string, boost::function_base * > handlers;
+	typedef std::map< std::string, event_base * > events;
 
 public: // constructors
 	meta_object() 
@@ -44,7 +48,7 @@ public: // field management
 		add_field( field_name, default_value, flags );
 	}
 
-	// used by script etc.
+	// used by script
 	template< typename T >
 	void add_field( std::string field_name, T default_value = T(), int flags = none )
 	{
@@ -54,10 +58,11 @@ public: // field management
 		on_add_field( *field );
 	}
 
-
+	// used by c++ classes within the constructor
 	template< typename T >
 	void add_field( T & field )
 	{
+		field.object_ = this;
 		fields_.insert( fields_map::value_type( field.name_, &field ) );
 		on_add_field( field );
 	}
@@ -80,6 +85,34 @@ public: // field management
 		return fields_.end();
   }
 
+public: // event and handlers
+	template< class event_class >
+	meta_object & add_event( 
+	const std::string & name, 
+		const event_class & this_event )
+	{
+		events_.insert( events::value_type( name, this_event ) );
+		return *this;    
+	}
+
+	template< typename parameter1, typename class_function_ptr, typename class_this >
+	meta_object & add_handler( 
+		const std::string & name, 
+		class_function_ptr ptr, 
+		class_this cls )
+	{
+    boost::function_base * func = 
+			new boost::function< void ( parameter1 ) >( 
+				boost::bind( ptr, cls, _1 ) );
+		handlers_.insert( handlers::value_type( name, func ) );  
+		return *this;
+	}
+
+	boost::function_base & get_handler( const std::string & name )
+	{
+    return *handlers_[ name ];
+	}
+
 public: // info
 	std::string & get_name() const
 	{
@@ -89,6 +122,8 @@ public: // info
 public: // data
 	mutable std::string name_;
 	fields_map fields_; 
+	events events_;
+	handlers handlers_;
 };
 
 } // namespace rx
