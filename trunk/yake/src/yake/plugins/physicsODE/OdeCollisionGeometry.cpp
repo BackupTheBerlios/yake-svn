@@ -428,31 +428,36 @@ namespace yake {
 		{
 			SharedPtr<data::dom::INode> pPositionNode = pVertexNode->getNodeByName( "position" );
 			YAKE_ASSERT( pPositionNode->getAttributeValue( "x" ).which() == data::dom::INode::VTID_STRING );
+
 			Vector3 position;
-			data::dom::INode::ValueType x = pPositionNode->getValue( "x" );
+
+			data::dom::INode::ValueType x = pPositionNode->getAttributeValue( "x" );
 			String a = varGet<String>( x );
 			position.x = StringUtil::toReal( a );
-			data::dom::INode::ValueType y = pPositionNode->getValue( "y" );
+
+			data::dom::INode::ValueType y = pPositionNode->getAttributeValue( "y" );
 			a = varGet<String>( y );
 			position.y = StringUtil::toReal( a );
-			data::dom::INode::ValueType z = pPositionNode->getValue( "z" );
+
+			data::dom::INode::ValueType z = pPositionNode->getAttributeValue( "z" );
 			a = varGet<String>( z );
 			position.z = StringUtil::toReal( a );
+
 			mVertices.push_back( position );
 		}
 		void PhysicsMeshLoader::readNormal( const SharedPtr<data::dom::INode>& pNormalNode )
 		{
 			Vector3 normal;
 			
-			data::dom::INode::ValueType x = pNormalNode->getValue( "x" );
+			data::dom::INode::ValueType x = pNormalNode->getAttributeValue( "x" );
 			String a = varGet< String >( x );
 			normal.x = StringUtil::toReal( a );
 			
-			data::dom::INode::ValueType y = pNormalNode->getValue( "y" );
+			data::dom::INode::ValueType y = pNormalNode->getAttributeValue( "y" );
 			a = varGet< String >( y );
 			normal.y = StringUtil::toReal( a );
 			
-			data::dom::INode::ValueType z = pNormalNode->getValue( "z" );
+			data::dom::INode::ValueType z = pNormalNode->getAttributeValue( "z" );
 			a = varGet< String >( z );
 			normal.z = StringUtil::toReal( a );
 			
