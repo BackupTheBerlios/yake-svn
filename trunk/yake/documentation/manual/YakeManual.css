@@ -1,0 +1,41 @@
+body 
+{
+	font-family: Arial;
+	font-size: smaller;
+}
+p
+{
+	margin-left: 10px;
+}
+.toc
+{
+	margin-left: 10px;
+}
+.sect1
+{
+	margin-left: 20px;
+}
+.sect2
+{
+	margin-left: 10px;
+}
+h1
+{
+	font-size: large;
+}
+h2
+{
+	font-size: medium;
+}
+h3
+{
+	font-size: small;
+}
+li p
+{
+	margin-bottom: 5px;
+}
+.subtitle
+{
+	font-style: italic;
+}

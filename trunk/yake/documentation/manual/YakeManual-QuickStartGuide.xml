@@ -1,0 +1,34 @@
+<article>
+	<title>Quick Start Guide</title>
+	<articleinfo>
+		<title>Quick Start Guide</title>
+	</articleinfo>
+	<sect1>
+		<title>Building Yake</title>
+		<para>At the moment we do not provide prebuilt libraries for Yake. Also note that this chapter is just a quick introduction. We expect the developer
+		attempting to use Yake to know how to use the build tools of his choice (e.g. the VC7.1 IDE with its build options on the Win32 platform).
+		</para>
+		<sect2>
+			<title>Windows (using VC7.1)</title>
+			<orderedlist>
+				<listitem>Extract the sources into a folder of your choice, let's call it YAKEHOME.</listitem>
+				<listitem>Extract the dependencies package into YAKEHOME. Verify correct extraction (mainly that files are in the correct folders)!</listitem>
+				<listitem>Open the solution file YAKEHOME/scripts/yake.sln in the VC7.1 IDE.</listitem>
+				<listitem>Right-click on the solution in the solution explorer and choose "Build All" or "Batch build".</listitem>
+				<listitem>If the build process was successful you will find the import libraries located in YAKEHOME/common/lib/[debug|release], the dynamic link libraries as well as the sample executables in YAKEHOME/common/bin/[debug|release].</listitem>
+			</orderedlist>
+		</sect2>
+		<sect2>
+			<title>Windows (using Visual C++ 2003 Toolkit)</title>
+			<para>Makefiles are not yet available. We will look into supporting this option in the future.</para>
+		</sect2>
+		<sect2>
+			<title>Other platforms (Linux, MacOS X)</title>
+			<para>Officially supported build environments for Linux will be available soon.
+			</para>
+			<para>As no member of the Yake team has access to MacOS X we cannot provide ready-to-use build tools for the time being.
+			Contributions are welcome.
+			</para>
+		</sect2>
+	</sect1>
+</article>
