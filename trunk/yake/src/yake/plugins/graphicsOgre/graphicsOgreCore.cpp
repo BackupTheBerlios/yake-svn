@@ -135,12 +135,16 @@ namespace ogre3d {
 
 			mRoot->getRenderSystem()->_initRenderTargets();
 
+			// Initialise, parse scripts etc.
+			ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+
 			mReady = true;
 		}
 		catch (Ogre::Exception& e)
 		{
-			YAKE_LOGPRINTF("[yake.graphics.ogre] OGRE EXCEPTION\n%s\n", e.getFullDescription() );
+			//YAKE_LOGPRINTF("[yake.graphics.ogre] OGRE EXCEPTION\n%s\n", e.getFullDescription().c_str() );
 			mReady = false;
+			YAKE_EXCEPT(e.getFullDescription().c_str(), "[yake.graphics.ogre] OGRE EXCEPTION");
 		}
 	}
 
