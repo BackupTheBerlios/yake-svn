@@ -197,6 +197,7 @@ namespace yake {
 			virtual ~IWorld() {}
 
 			virtual void update( const real timeElapsed ) = 0;
+			virtual real getSimulationTime() const = 0;
 
 			/// Sets the global directional gravity acceleration. Every body
 			/// in this world is affected by it!

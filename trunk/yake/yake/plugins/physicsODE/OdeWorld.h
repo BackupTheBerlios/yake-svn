@@ -35,6 +35,7 @@ namespace yake {
 			virtual ~OdeWorld();
 
 			virtual void update( const real timeElapsed );
+			virtual real getSimulationTime() const;
 			virtual void setGlobalGravity( const Vector3 & acceleration );
 
 			virtual IBody* createBody();
@@ -84,6 +85,8 @@ namespace yake {
 			BodyList			mBodies;
 
 			PostStepSignal		mPostStepSignal;
+
+			real				mSimTime;
 		};
 
 	}
