@@ -45,11 +45,14 @@
 #include "yakeDebugOutputStream.h"
 #include "yakeLibrary.h"
 
-#include "math/yakeVector3.h"
 #include "math/yakeQuaternion.h"
+#include "math/yakeVector3.h"
+#include "math/yakeVector4.h"
 #include "math/yakeMatrix3.h"
+#include "math/yakeMatrix4.h"
 #include "math/yakeColor.h"
 #include "math/yakeGeometry.h"
+#include "math/yakeSimpleSpline.h"
 
 #include "yakeMovable.h"
 
