@@ -84,7 +84,7 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
-	void Model::addPhysical(SharedPtr<Physical> & pPhysical, const String & rName)
+	void Model::addPhysical(const SharedPtr<Physical> & pPhysical, const String & rName)
 	{
 		YAKE_ASSERT( pPhysical.get() );
 		String name = rName;
@@ -99,7 +99,7 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
-	void Model::addGraphical(SharedPtr<Graphical> & pGraphical, const String & rName)
+	void Model::addGraphical(const SharedPtr<Graphical> & pGraphical, const String & rName)
 	{
 		YAKE_ASSERT( pGraphical.get() );
 		String name = rName;
@@ -132,7 +132,7 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
-	void Model::addController(SharedPtr<IObjectController> & pController, const String & rName)
+	void Model::addController(const SharedPtr<IObjectController> & pController, const String & rName)
 	{
 		YAKE_ASSERT( pController.get() );
 		YAKE_ASSERT( rName.length() == 0 ).error("tagging not implemented!");
@@ -140,7 +140,7 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
-	void Model::addLink( SharedPtr<ModelLink> & pModelLink, const String & rName )
+	void Model::addLink( const SharedPtr<ModelLink> & pModelLink, const String & rName )
 	{
 		YAKE_ASSERT( pModelLink.get() );
 		YAKE_ASSERT( rName.length() == 0 ).error("tagging not implemented!");

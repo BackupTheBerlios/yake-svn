@@ -87,7 +87,7 @@ namespace complex {
 			A name can optionally be supplied. It can then be used for retrieving
 			objects by name.
 		*/
-		void addPhysical( SharedPtr<Physical> & pPhysical, const String & rName = ""/*, bool bManaged*/ );
+		void addPhysical( const SharedPtr<Physical> & pPhysical, const String & rName = ""/*, bool bManaged*/ );
 
 		/** Adds a "Graphical" object to this model.
 			The model references it using a shared pointer.
@@ -96,10 +96,10 @@ namespace complex {
 			A name can optionally be supplied. It can then be used for retrieving
 			objects by name.
 		*/
-		void addGraphical( SharedPtr<Graphical> & pGraphical, const String & rName = "" );
+		void addGraphical( const SharedPtr<Graphical> & pGraphical, const String & rName = "" );
 
-		void addController( SharedPtr<IObjectController> & pController, const String & rName = "" );
-		void addLink( SharedPtr<ModelLink> & pModelLink, const String & rName = "" );
+		void addController( const SharedPtr<IObjectController> & pController, const String & rName = "" );
+		void addLink( const SharedPtr<ModelLink> & pModelLink, const String & rName = "" );
 
 		void updatePhysics( real timeElapsed );
 		void updateControllers( real timeElapsed );
