@@ -35,7 +35,7 @@ namespace ogre3d {
 
 		// used for shadows
 		// incase infinite far distance is not supported
-		mCam->setFarClipDistance(100000);
+		//mCam->setFarClipDistance(100000);
 	}
 
 	//------------------------------------------------------
@@ -71,6 +71,12 @@ namespace ogre3d {
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
 		return QUAT_OGRE2YAKE( mCam->getOrientation() );
+	}
+
+	//------------------------------------------------------
+	void OgreCamera::setDirection(const Vector3 & vec)
+	{
+		Movable::setDirection( -vec );
 	}
 
 	//------------------------------------------------------

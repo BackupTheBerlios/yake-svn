@@ -39,6 +39,8 @@ namespace ogre3d {
 		virtual void setOrientation( const Quaternion & orientation );
 		virtual Quaternion getOrientation() const;
 
+		virtual void setDirection( const Vector3 & vec );
+
 		// ICamera
 		virtual void setProjectionType( const ProjectionType type );
 		virtual ProjectionType getProjectionType() const;
