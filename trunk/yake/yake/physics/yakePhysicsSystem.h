@@ -52,6 +52,38 @@ namespace physics {
 				+ operator - (pBody)
 			+ GravityZone/AffectorZone/Affectors
 	*/
+	class IBody;
+
+	class BodyGroup
+	{
+	public:
+		BodyGroup();
+		~BodyGroup();
+
+        typedef Vector<SharedPtr<IBody> > BodyVector;
+		typedef BodyVector::iterator iterator;
+		typedef BodyVector::const_iterator const_iterator;
+		typedef BodyVector::value_type value_type;
+
+		BodyGroup& operator + (SharedPtr<IBody> & rBody);
+		BodyGroup& operator += (SharedPtr<IBody> & rBody);
+		BodyGroup& operator + (BodyGroup & rBodyGroup);
+		BodyGroup& operator += (BodyGroup & rBodyGroup);
+		BodyGroup& operator - (SharedPtr<IBody> & rBody);
+		BodyGroup& operator -= (SharedPtr<IBody> & rBody);
+		BodyGroup& operator - (BodyGroup & rBodyGroup);
+		BodyGroup& operator -= (BodyGroup & rBodyGroup);
+	};
+
+	class IBodyAffector
+	{
+		YAKE_DECLARE_REGISTRY_0( IBodyAffector, String )
+	public:
+		virtual ~IBodyAffector() {}
+
+		virtual void applyTo( IBody & rBody ) = 0;
+		virtual void applyTo( BodyGroup & rGroup );
+	};
 
 	/* not used (yet?)
 	enum PhysicsErrorCode
@@ -114,7 +146,7 @@ namespace physics {
 		ST_CYLINDER,
 		ST_TRIANGLE_MESH,
 		ST_VOXEL_SET,
-		ST_TRANSFORM_CONTAINER,
+		ST_TRANSFORM_CONTAINER, //@todo superfluous?
 		ST_OTHER
 	};
 
@@ -261,6 +293,7 @@ namespace physics {
 	{
 	};
 
+	class IActor;
 	class IBody
 	{
 	public:
@@ -285,16 +318,71 @@ namespace physics {
 	public:
 		virtual ~IBody() {}
 
+		/** Returns a reference to the actor this body belongs to. A body always belongs to exactly
+			one actor.
+		*/
+		virtual IActor& getActor() const = 0;
+
+		/** Sets the mass of the body. The unit can be freely chosen by the application
+			but should be consistent within the simulation, of course.
+			@Remarks It may be that certain physics engine implementations restrict the freedom to choose a
+			unit but up to now we have no knowledge of that.
+		*/
 		virtual void setMass(const real mass) = 0;
+
+		/** Return the mass of the body. The unit can be freely chosen by the application
+			but should be consistent within the simulation, of course.
+			@Remarks It may be that certain physics engine implementations restrict the freedom to choose a
+			unit but up to now we have no knowledge of that.
+		*/
 		virtual real getMass() const = 0;
 
-		//@todo could move this into IActor... maybe more appropriate there?
+		/** Sets the linear velocity of the body/actor directly, i.e. with immediate effect. 
+		*/
 		virtual void setLinearVelocity(const Vector3 & rkVelocity) = 0;
+
+		/** Returns the current velocity of the body.
+		*/
 		virtual Vector3 getLinearVelocity() const = 0;
+
+		/** Sets the angular velocity [rad/s] of the body/actor directly, i.e. with immediate effect. 
+		*/
 		virtual void setAngularVelocity(const Vector3 & rkVelocity) = 0;
+
+		/** Returns the angular velocity of the body in [rad/s].
+		*/
 		virtual Vector3 getAngularVelocity() const = 0;
 
-		//@todo addForce, addTorque, addForceAtRel, addRelForceAtRel ...
+		/** Adds a force defined in the global reference frame. 
+		*/
+		virtual void addForce( const Vector3 & rkForce ) = 0;
+
+		/** Adds a force defined in the global reference frame, acting at a position defined
+			in the global reference frame. 
+		*/
+		virtual void addForceAtPos( const Vector3 & rkForce, const Vector3 & rkPos ) = 0;
+
+		/** Adds a force defined in the local reference frame.
+		*/
+		virtual void addLocalForce( const Vector3 & rkForce ) = 0;
+
+		/** Adds a force defined in the local reference frame, acting at a position defined
+			in the local reference frame (relative to the actor the body object belongs to).
+		*/
+		virtual void addLocalForceAtLocalPos( const Vector3 & rkForce, const Vector3 & rkPos ) = 0;
+
+		/** Adds a force defined in the local reference frame, acting at a position defined
+			in the global reference frame. 
+		*/
+		virtual void addLocalForceAtPos( const Vector3 & rkForce, const Vector3 & rkPos ) = 0;
+
+		/** Adds a torque defined in the global reference frame. 
+		*/
+		virtual void addTorque( const Vector3 & rkTorque ) = 0;
+
+		/** Adds a torque defined in the local reference frame. 
+		*/
+		virtual void addLocalTorque( const Vector3 & rkTorque ) = 0;
 	};
 
 	class IActor : public Movable
@@ -307,13 +395,15 @@ namespace physics {
 	public:
 		virtual ~IActor() {}
 
+		typedef Vector<IShape*> ShapePtrVector;
+
 		virtual bool hasBody() const = 0;
 		virtual bool createBody() = 0;
 		virtual IBody* getBody() const = 0;
 
 		virtual SharedPtr<IShape> createShape( const IShape::Desc & rkShapeDesc ) = 0;
 		virtual void destroyShape( SharedPtr<IShape> & rShape ) = 0;
-		virtual const Deque<IShape*> getShapes() const = 0;
+		virtual const ShapePtrVector getShapes() const = 0;
 
 		//virtual void updateMassFromShapes() = 0;
 
