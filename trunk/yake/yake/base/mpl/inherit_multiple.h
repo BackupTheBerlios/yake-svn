@@ -28,7 +28,7 @@
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/lambda.hpp>
 
-#include "yakeNullType.h"
+#include "null_type.h"
 #include "yakeFunctions.h"
 
 //============================================================================
