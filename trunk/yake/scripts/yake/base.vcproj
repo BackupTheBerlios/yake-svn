@@ -268,6 +268,9 @@
 					RelativePath="..\..\src\yake\base\math\yakeRand.cpp">
 				</File>
 				<File
+					RelativePath="..\..\src\yake\base\math\yakeRay.cpp">
+				</File>
+				<File
 					RelativePath="..\..\src\yake\base\math\yakeSimpleSpline.cpp">
 				</File>
 				<File
@@ -501,10 +504,16 @@
 					RelativePath="..\..\yake\base\math\yakeMersenneTwister.h">
 				</File>
 				<File
+					RelativePath="..\..\yake\base\math\yakePlane.h">
+				</File>
+				<File
 					RelativePath="..\..\yake\base\math\yakeQuaternion.h">
 				</File>
 				<File
 					RelativePath="..\..\yake\base\math\yakeRand.h">
+				</File>
+				<File
+					RelativePath="..\..\yake\base\math\yakeRay.h">
 				</File>
 				<File
 					RelativePath="..\..\yake\base\math\yakeSimpleSpline.h">
