@@ -19,7 +19,7 @@
    ------------------------------------------------------------------------------------
 */
 #include <yake/physics/yakePCH.h>
-#include <yake/physics/yakePhysicsSystem.h>
+#include <yake/physics/yakePhysics.h>
 
 namespace yake {
 namespace physics {
