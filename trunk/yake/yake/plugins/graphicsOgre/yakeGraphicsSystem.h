@@ -72,8 +72,9 @@ namespace ogre3d {
 		
 		virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot );
 
-		virtual const std::type_info & get_type_info()
-		{ return typeid(GraphicsSystem); }
+		// todo: meta: not needed, see interface
+		/*virtual const std::type_info & get_type_info()
+		{ return typeid(GraphicsSystem); } */
 
 	private: // data
 		OgreCore * mCore;
