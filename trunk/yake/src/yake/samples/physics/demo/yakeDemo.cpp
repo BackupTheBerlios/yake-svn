@@ -261,7 +261,7 @@ void MiniApp::init()
 	pLib = loadLib("graphicsOgre" );
 	YAKE_ASSERT( pLib ).debug("Cannot load graphics plugin.");
 
-	mGraphics = create< graphics::IGraphicsSystem >();
+	mGraphics = create_default< graphics::IGraphicsSystem >();
 	YAKE_ASSERT( mGraphics ).debug("Cannot create graphics system.");
 
 	mGWorld = mGraphics->createWorld();

@@ -125,7 +125,7 @@ namespace exapp {
 				SharedPtr<base::Library> pLib = loadLib("scriptingBindingsLua" );
 				YAKE_ASSERT( pLib ).debug("Cannot load scripting bindings plugin.");
 
-				mScriptingSystem = create< scripting::IScriptingSystem >();
+				mScriptingSystem = create_default< scripting::IScriptingSystem >();
 				YAKE_ASSERT( mScriptingSystem ).error("Cannot create scripting system.");
 			}
 
@@ -135,7 +135,7 @@ namespace exapp {
 				SharedPtr<base::Library> pLib = loadLib("scriptingBindingsLua" );
 				YAKE_ASSERT( pLib ).debug("Cannot load scripting bindings plugin.");
 
-				mScriptingBindings = create< scripting::IBinder >();
+				mScriptingBindings = create_default< scripting::IBinder >();
 				YAKE_ASSERT( mScriptingBindings ).error("Cannot create scripting bindings object.");
 			}
 
@@ -145,7 +145,7 @@ namespace exapp {
 				SharedPtr<base::Library> pLib = loadLib("graphicsOgre" );
 				YAKE_ASSERT( pLib ).debug("Cannot load graphics plugin.");
 
-				mGraphicsSystem = create< graphics::IGraphicsSystem >();
+				mGraphicsSystem = create_default< graphics::IGraphicsSystem >();
 				// ... or alternatively we can create a graphics system by name:
 				//mGraphicsSystem = create< graphics::IGraphicsSystem >("ogre3d");
 
@@ -158,7 +158,7 @@ namespace exapp {
 				SharedPtr<base::Library> pLib = loadLib("physicsNX" );
 				YAKE_ASSERT( pLib ).debug("Cannot load graphics plugin.");
 
-				mPhysicsSystem = create< physics::IPhysicsSystem >();
+				mPhysicsSystem = create_default< physics::IPhysicsSystem >();
 				YAKE_ASSERT( mPhysicsSystem ).error("Cannot create physics system.");
 			}
 
@@ -168,7 +168,7 @@ namespace exapp {
 				SharedPtr<base::Library> pLib = loadLib("inputOgre" );
 				YAKE_ASSERT( pLib ).debug("Cannot load input plugin.");
 
-				mInputSystem = create< input::IInputSystem >();
+				mInputSystem = create_default< input::IInputSystem >();
 				YAKE_ASSERT( mInputSystem ).error("Cannot create input system.");
 
 				setupInput();
@@ -180,7 +180,7 @@ namespace exapp {
 				SharedPtr<base::Library> pLib = loadLib( "audioOpenAL" );
 				YAKE_ASSERT( pLib ).debug("Cannot load audio plugin.");
 
-				mAudioSystem = create< audio::IAudioSystem >();
+				mAudioSystem = create_default< audio::IAudioSystem >();
 				//OR: mAudioSystem.reset( create< audio::IAudioSystem >("openalpp") );
 			}
 		}
