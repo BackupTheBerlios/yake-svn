@@ -63,10 +63,20 @@ namespace yake {
 			// helpers...
 			void _collide(OdeComplexObject* pOther, dGeomID geomA, dGeomID geomB, dJointGroup * contactJointGroup);
 			void _updateCollisionGeometry();
+			void postStep( real timeElapsed );
 
 		protected:
 			EnterCollisionSignal		mEnterCollisionSignal;
 			LeaveCollisionSignal		mLeaveCollisionSignal;
+
+			struct CollisionInfo
+			{
+				real	time;
+			};
+			typedef base::templates::AssocVector< OdeComplexObject*, CollisionInfo > CollisionList;
+			CollisionList				mCollisions;
+
+			yake::base::templates::SignalConnection	mPostStepConn;
 
 			OdeBody						* mBody;
 

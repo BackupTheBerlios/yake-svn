@@ -306,8 +306,8 @@ namespace yake {
 			virtual void setSlipCoefficients( const real linear, const real angular ) = 0;
 
 		protected:
-			typedef Signal1< void, IComplexObject* > EnterCollisionSignal;
-			typedef Signal1< void, IComplexObject* > LeaveCollisionSignal;
+			typedef Signal1< void ( IComplexObject*, IComplexObject* ) > EnterCollisionSignal;
+			typedef Signal1< void ( IComplexObject*, IComplexObject* ) > LeaveCollisionSignal;
 		public:
 			virtual void subscribeToEnterCollision( const EnterCollisionSignal::slot_type & slot ) = 0;
 			virtual void subscribeToLeaveCollision( const LeaveCollisionSignal::slot_type & slot ) = 0;

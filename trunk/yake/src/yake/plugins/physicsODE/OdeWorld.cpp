@@ -94,7 +94,11 @@ namespace yake {
 
 				// Clear contacts
 				mOdeContactGroup->empty();
+
+				//mPostStepSignal( mStepSize );
 			}
+			mPostStepSignal( timeElapsed );
+
 			overflow = t;
 		}
 

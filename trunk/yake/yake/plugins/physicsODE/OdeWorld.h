@@ -67,14 +67,22 @@ namespace yake {
 
 			real _getStepSize() const
 			{ return mStepSize; }
+
+			typedef Signal1< void(real) > PostStepSignal;
+			base::templates::SignalConnection connectToPostStep( const PostStepSignal::slot_type & slot )
+			{
+				return mPostStepSignal.connect( slot );
+			}
 		protected:
 			real				mStepSize;
-			dWorld			* mOdeWorld;
-			dJointGroup		* mOdeContactGroup;
-			dSpace			* mOdeSpace;
+			dWorld*				mOdeWorld;
+			dJointGroup*		mOdeContactGroup;
+			dSpace*				mOdeSpace;
 
 			typedef std::vector< OdeBody* > BodyList;
 			BodyList			mBodies;
+
+			PostStepSignal		mPostStepSignal;
 		};
 
 	}

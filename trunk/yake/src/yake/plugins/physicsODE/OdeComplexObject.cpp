@@ -41,6 +41,7 @@ namespace physics {
 				mSlipNormalSource(0)
 	{
 		YAKE_ASSERT( mWorld ).debug("Need a world, pal!");
+		mPostStepConn = mWorld->connectToPostStep( Bind1( &OdeComplexObject::postStep, this ) );
 	}
 
 	//-----------------------------------------------------
@@ -221,6 +222,28 @@ namespace physics {
 	}
 
 	//-----------------------------------------------------
+	void OdeComplexObject::postStep( real timeElapsed )
+	{
+		base::templates::Vector< CollisionList::iterator > its;
+		for (CollisionList::iterator it = mCollisions.begin(); it != mCollisions.end(); ++it)
+		{
+			CollisionInfo& info = it->second;
+			info.time += timeElapsed;
+			if (info.time >= 0.1)
+			{
+				mLeaveCollisionSignal( this, it->first );
+				its.push_back( it );
+			}
+		}
+		base::templates::VectorIterator< base::templates::Vector< CollisionList::iterator > > itErase(
+			its.begin(), its.end() );
+		while (itErase.hasMoreElements())
+		{
+			mCollisions.erase( itErase.getNext() );
+		}
+	}
+
+	//-----------------------------------------------------
 	void OdeComplexObject::_collide(OdeComplexObject* pOther, dGeomID geomA, dGeomID geomB, dJointGroup * contactJointGroup)
 	{
 		YAKE_ASSERT( pOther ).debug("Need the other object participating in the collision!");
@@ -240,6 +263,21 @@ namespace physics {
 
 		if (n > 0)
 		{
+			CollisionList::iterator itFind = mCollisions.find( pOther );
+			if (itFind == mCollisions.end())
+			{
+				// new collision
+				CollisionInfo info;
+				info.time = 0.;
+				mCollisions.insert( std::make_pair(pOther,info) );
+				mEnterCollisionSignal( this, pOther );
+			}
+			else
+			{
+				// still colliding
+				itFind->second.time = 0.;
+			}
+			// create contact joints
 			for (int i=0; i<n; i++) 
 			{
 				contact[i].surface.mode = //dContactSlip1
