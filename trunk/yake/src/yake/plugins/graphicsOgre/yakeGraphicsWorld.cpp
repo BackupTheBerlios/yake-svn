@@ -162,6 +162,23 @@ namespace ogre3d {
 		return new OgreMeshGeometryAccess(itFind->second);
 	}
 
+	//-----------------------------------------------------
+	real GraphicalWorld::getRenderWindowWidth() const
+	{
+		YAKE_ASSERT( msCore );
+		Ogre::RenderWindow* pWin = msCore->getRenderWindow();
+		YAKE_ASSERT( pWin );
+		return pWin->getWidth();
+	}
+
+	//-----------------------------------------------------
+	real GraphicalWorld::getRenderWindowHeight() const
+	{
+		YAKE_ASSERT( msCore );
+		Ogre::RenderWindow* pWin = msCore->getRenderWindow();
+		YAKE_ASSERT( pWin );
+		return pWin->getHeight();
+	}
 
 
 } // ogre3d

@@ -223,6 +223,9 @@ namespace graphics {
 
 		/** Render a single frame. */
 		virtual void render( real timeElapsed ) = 0;
+
+		virtual real getRenderWindowWidth() const = 0;
+		virtual real getRenderWindowHeight() const = 0;
 	};
 
 } // graphics

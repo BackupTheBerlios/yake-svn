@@ -61,6 +61,9 @@ namespace ogre3d {
 		virtual void destroyProceduralMesh(const base::String & name);
 		virtual IMeshGeometryAccess* getProceduralMesh(const String & name);
 
+		virtual real getRenderWindowWidth() const;
+		virtual real getRenderWindowHeight() const;
+
 		static void setCore( OgreCore* core );
 	private:
 		static OgreCore*	msCore;
