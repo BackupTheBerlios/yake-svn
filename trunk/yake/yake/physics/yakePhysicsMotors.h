@@ -28,6 +28,44 @@
 namespace yake {
 namespace physics {
 
+	class IAngularMotor
+	{
+	public:
+		struct Desc
+		{
+			Desc( const real velTarget, const real maxForce, bool enabled = true ) :
+				enabled_(enabled),
+				velTarget_(velTarget),
+				maxForce_(maxForce)
+			{}
+			bool	enabled_;
+			real	velTarget_;
+			real	maxForce_;
+		};
+	public:
+		virtual ~IAngularMotor() {}
+		virtual void setEnabled( bool enabled ) = 0;
+		virtual void setAffectedBody( IBody& rBody ) = 0;
+		virtual void setVelocityTarget( const real velTarget ) = 0;
+		virtual void setMaximumForce( const real maxForce ) = 0;
+		virtual void setAxis0( const Vector3& rAxis ) = 0;
+		virtual void setAxis1( const Vector3& rAxis ) = 0;
+		virtual void set( const real velTarget, const real maxForce, bool enabled = true ) = 0;
+	};
+	YAKE_PHYSICS_COMMON_POINTERS( IAngularMotor );
+
+	class ILinearMotor
+	{
+	public:
+		virtual ~ILinearMotor() {}
+		virtual void setEnabled( bool enabled ) = 0;
+		virtual void setAffectedBody( IBody& rBody ) = 0;
+		virtual void setVelocityTarget( const real velTarget ) = 0;
+		virtual void setMaximumForce( const real maxForce ) = 0;
+		virtual void setAxis( const Vector3& rAxis ) = 0;
+		virtual void set( const real velTarget, const real maxForce, bool enabled = true ) = 0;
+	};
+	YAKE_PHYSICS_COMMON_POINTERS( ILinearMotor );
 }
 }
 
