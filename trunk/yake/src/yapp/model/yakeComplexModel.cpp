@@ -150,30 +150,6 @@ namespace complex {
 	//-----------------------------------------------------
 	void Model::updatePhysics( real timeElapsed )
 	{
-		for (PhysicalMap::iterator it = mPhysicals.begin();
-			it != mPhysicals.end(); ++it)
-		{
-			SharedPtr<Physical> pPhysical = (it->second);
-			Physical::ComplexList coList = pPhysical->getComplexObjects();
-			VectorIterator< Physical::ComplexList > itCO( coList.begin(), coList.end() );
-			while (itCO.hasMoreElements())
-			{
-				SharedPtr<physics::IActor> pCO = itCO.getNext();
-				physics::IBody* pBody = pCO->getBody();
-
-				real kVel = -.2 * timeElapsed;
-				real kTorque = kVel;
-
-				Vector3 vel = pBody->getLinearVelocity();
-				vel *= kVel;
-				pBody->addForce( vel );
-
-				vel = pBody->getAngularVelocity();
-				vel *= kTorque;
-				pBody->addTorque( vel );
-
-			}
-		}
 	}
 	//-----------------------------------------------------
 	void Model::updateControllers( real timeElapsed )

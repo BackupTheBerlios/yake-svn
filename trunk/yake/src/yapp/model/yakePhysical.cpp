@@ -53,7 +53,9 @@ namespace model {
 		VectorIterator< ActorMap > itActor( mActors.begin(), mActors.end() );
 		while (itActor.hasMoreElements())
 		{
-			itActor.getNext().second->translate( d );
+			physics::IMovableActor* pMovableActor = dynamic_cast<physics::IMovableActor*>( itActor.getNext().second.get() );
+			if (pMovableActor)
+				pMovableActor->translate( d );
 		}
 	}
 	//-----------------------------------------------------
