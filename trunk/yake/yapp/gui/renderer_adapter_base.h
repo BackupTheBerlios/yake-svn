@@ -18,7 +18,7 @@ namespace gui
 // the adapter for a given renderer and gui backend
 struct YAPP_GUI_API renderer_adapter_base
 {
-	virtual renderer_adapter_base() {}
+	virtual ~renderer_adapter_base() {}
 
 	// the identifier is a combination of the type_infos of the renderer (e.g. ogre3d) and the gui (e.g. cegui)
 	typedef std::pair<base::type_info, base::type_info> identifier;
