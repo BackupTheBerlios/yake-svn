@@ -16,6 +16,14 @@
 #include <yake/base/mpl/yakeAbstractFactory.h>
 #include <yake/base/mpl/sequences.h>
 
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/ice.hpp>
+#include <boost/mpl/begin.hpp>
+#include <boost/mpl/iterator_range.hpp>
+#include <boost/mpl/find.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/next.hpp>
+
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
@@ -32,6 +40,61 @@ namespace testsuite
 namespace inheritance
 {
 
+/* linear */
+struct semi_init_system_holder_root
+{
+	void load_systems() {std::cout << "load_systems(): root" << std::endl;}
+
+	std::string get_data()
+	{ return typeid(semi_init_system_holder_root).name(); }
+};
+
+template <class Base, class System>
+struct semi_init_system_holder : Base
+{
+	void load_systems() 
+	{ std::cout << "load_systems(): " << typeid(System).name() << std::endl; Base::load_systems(); }
+
+	std::string get_data()
+	{ return typeid(System).name(); }
+};
+
+struct A {};
+struct B {};
+struct C {};
+
+typedef list<A, B, C> system_list;
+
+struct test_linear : 
+	public InheritLinear
+	< 
+		system_list, 
+		typename lambda< semi_init_system_holder<_, _> >::type,
+		semi_init_system_holder_root
+	>::type
+{
+	test_linear()
+	{	load_systems();	}
+
+	template <class System>
+	void print_name()
+	{
+		// create list of bases
+		typedef boost::mpl::find<system_list, System>::type last;
+		typedef boost::mpl::iterator_range<typename boost::mpl::begin<system_list>::type, next<last>::type>::type bases;
+		// cast to base
+		InheritLinear
+		< 
+			bases, 
+			typename lambda< semi_init_system_holder<_, _> >::type,
+			semi_init_system_holder_root
+		>::type & base = *this;
+		// print base data
+		std::cout << "print_name<" << typeid(System).name() << ">(): " << base.get_data() << std::endl;
+	}
+};
+
+/* multiple */
 struct Widget {};
 
 template< class T >
@@ -79,6 +142,13 @@ typedef ConcreteFactory< AbstractEnemyFactory, OpNewFactoryUnit,
 //============================================================================
 int main()
 {
+	// Linear
+	{
+		using namespace yake::testsuite::inheritance;	
+		test_linear linear;
+		linear.print_name<A>();
+	}
+
 	// Scattering
 	{
 		using namespace yake::testsuite::inheritance;		
@@ -105,7 +175,3 @@ int main()
 
 	return 0;
 }
-
-
-
-
