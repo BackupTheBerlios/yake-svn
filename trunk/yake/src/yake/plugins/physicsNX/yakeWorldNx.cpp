@@ -337,9 +337,7 @@ namespace physics {
 	void WorldNx::destroyActor( WeakIActorPtr& pActor )
 	{
 		YAKE_ASSERT( !pActor.expired() );
-		std::cout << "NX: actors before: " << mActors.size() << "\n";
 		mActors.erase( std::find(mActors.begin(), mActors.end(), dynamic_cast<ActorNx*>(pActor.lock().get()) ) );
-		std::cout << "NX: actors after: " << mActors.size() << "\n";
 	}
 	void WorldNx::destroyAvatar( WeakIAvatarPtr& pAvatar )
 	{
