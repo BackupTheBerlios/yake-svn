@@ -35,9 +35,9 @@ class TheApp : public yake::exapp::ExampleApplication
 {
 private:
 	Vector< std::pair<IViewport*,ICamera*> >	mVPs;
-	SharedPtr< IGraphicalWorld >			mGWorld;
+	SharedPtr< IWorld >							mGWorld;
 
-	app::model::Graphical* 				mGraphical;
+	app::model::Graphical* 						mGraphical;
 	
 	String	mSceneFilename;
 public:
