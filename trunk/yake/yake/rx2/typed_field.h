@@ -107,7 +107,7 @@ public: // prediction
 
 public: // data initialization access
 	template< typename this_field >
-	friend this_field & set_ref( this_field & field, typename this_field::value_type ref )
+	friend this_field & set_ref( this_field & field, typename this_field::value_type ref );
 
 public: // data
  	no_ref_T value_;
@@ -145,7 +145,7 @@ bool operator==( typed_field<T> & field, const char * value )
 }
 
 template< typename this_field >
-T & set_ref( this_field & field, typename this_field::value_type ref )
+this_field & set_ref( this_field & field, typename this_field::value_type ref )
 {
 	field.ptr_ = &ref;
   return field;

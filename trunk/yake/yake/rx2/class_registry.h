@@ -9,7 +9,7 @@ namespace rx
 
 class meta_class;
 
-// todo use yake registry
+// todo use yake registry and singleton
 typedef std::map< std::string, const meta_class * > classes;
 struct class_registry
 {

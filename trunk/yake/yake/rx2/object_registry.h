@@ -11,7 +11,7 @@ namespace rx
 
 class meta_object;
 
-// todo use yake registry
+// todo use yake registry and singleton
 typedef std::map< std::string, const meta_object* > objects;
 struct object_registry
 {

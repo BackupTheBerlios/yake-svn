@@ -11,14 +11,14 @@
 #include "meta_object.h"
 #include "meta_hooks.h"
 #include "type_info.h"
-#include "object_creators.h"
+#include "instance.h"
 
 namespace rx
 {
 
 struct meta_object_holder;
 
-// is used for the instance an meta object resp. its typed fields
+// This is used for attaching clones of meta_class-fields to the newly created meta object
 template<class T>
 struct attach_field
 {
