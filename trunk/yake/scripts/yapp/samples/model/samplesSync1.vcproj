@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesDotLink"
-	ProjectGUID="{1C76B4C7-8ECE-4C0D-81B4-B65707F96510}"
+	Name="samplesSync1"
+	ProjectGUID="{A2E804D9-C95C-47eb-87AB-FAA8A6CAC21B}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -130,10 +130,10 @@
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yapp\samples\model\dotLink\yakeDotLinkDemo.cpp">
+				RelativePath="..\..\..\..\src\yapp\samples\model\sync1\yakeDemo.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\yapp\samples\model\dotLink\yakePCH.cpp">
+				RelativePath="..\..\..\..\src\yapp\samples\model\sync1\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool

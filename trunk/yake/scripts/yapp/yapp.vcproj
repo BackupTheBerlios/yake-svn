@@ -328,18 +328,6 @@
 			<File
 				RelativePath="..\..\yapp\model\yakeUpdaters.h">
 			</File>
-			<File
-				RelativePath="..\..\src\yapp\model\yakeVehicle.cpp">
-			</File>
-			<File
-				RelativePath="..\..\yapp\model\yakeVehicle.h">
-			</File>
-			<File
-				RelativePath="..\..\src\yapp\model\yakeVehicleTpl.cpp">
-			</File>
-			<File
-				RelativePath="..\..\yapp\model\yakeVehicleTpl.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="messaging"
@@ -414,6 +402,28 @@
 			</File>
 			<File
 				RelativePath="..\..\yapp\statemachine\yakeFiniteStateMachine.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="vehicle"
+			Filter="">
+			<File
+				RelativePath="..\..\src\yapp\model\yakeVehicle.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeVehicle.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeVehiclePhysicalComponent.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeVehiclePhysicalComponent.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeVehicleTpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeVehicleTpl.h">
 			</File>
 		</Filter>
 	</Files>
