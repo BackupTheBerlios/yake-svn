@@ -109,9 +109,12 @@ public: // event and handlers
 	template< class event_class >
 	meta_object & add_event( 
 		const std::string & name, 
-		event_class & this_event )
+		const event_class & this_event )
 	{
-		events_.insert( events::value_type( name, &this_event ) );
+		events_.insert(
+			events::value_type( name,
+				static_cast<event_base*>(
+					const_cast<event_class*>(&this_event))));
 		return *this;    
 	}
 

@@ -47,7 +47,7 @@ void rx_init( const std::string & object_name )\
 {\
   meta_object_ =\
 	 rx::instance_holder( meta_class_, object_name )\
-			.add_event( &name1 )\
+			.add_event( name1 )\
 			.add_handler<type2>( name2, this );\
 }\
 RX_DEFINE_CLASS_OBJECT()
