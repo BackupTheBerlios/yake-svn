@@ -437,6 +437,12 @@ namespace math
         return (rhs.x == x) && (rhs.y == y) &&
             (rhs.z == z) && (rhs.w == w);
     }
+    //-----------------------------------------------------------------------
+    bool Quaternion::operator!= (const Quaternion& rhs) const
+    {
+        return (rhs.x != x) || (rhs.y != y) ||
+            (rhs.z != z) || (rhs.w != w);
+    }
 
 
 } // math
