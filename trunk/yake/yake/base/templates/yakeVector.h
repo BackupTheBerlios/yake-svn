@@ -54,6 +54,8 @@ public:
   typedef typename _MyBase::difference_type difference_type;
   typedef typename _MyBase::reverse_iterator reverse_iterator;
   typedef typename _MyBase::const_reverse_iterator const_reverse_iterator;
+  typedef typename _MyBase::pointer pointer;
+  typedef typename _MyBase::const_pointer const_pointer;
 
   typedef typename _Alloc::reference reference;
   typedef typename _Alloc::const_reference const_reference;
