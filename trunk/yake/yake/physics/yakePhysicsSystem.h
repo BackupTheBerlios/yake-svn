@@ -468,6 +468,7 @@ namespace physics {
 			IActor& actor1;
 			IActor& actor2;
 		};
+
 		struct DescFixed : DescBase
 		{
 			DescFixed(	IActor & rFirst,
@@ -475,6 +476,7 @@ namespace physics {
 				DescBase( JT_FIXED,rFirst,rSecond )
 			{}
 		};
+
 		struct DescHinge : DescBase
 		{
 			DescHinge(	IActor & rFirst,
@@ -488,6 +490,7 @@ namespace physics {
 			Vector3		axis0;
 			Vector3		anchor;
 		};
+
 		struct DescHinge2 : DescBase
 		{
 			DescHinge2(	IActor & rFirst,
