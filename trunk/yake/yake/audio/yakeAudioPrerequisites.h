@@ -23,32 +23,15 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef INC_YAKE_AUDIBLE_H
-#define INC_YAKE_AUDIBLE_H
+#ifndef YAKE_AUDIOPREREQUISITES_H
+#define YAKE_AUDIOPREREQUISITES_H
 
-#include <yake/audio/yakeAudioPrerequisites.h>
-
-namespace yake {
-	using namespace base;
-	using namespace base::templates;
-namespace audio {
-	/** High level audio object
-	*/
-	class YAKE_AUDIO_API Audible : public Movable
-	{
-	private:
-		Audible( const Audible & );
-	public:
-		Audible();
-		virtual ~Audible();
-
-		virtual void setSource( SharedPtr<audio::ISource> & pSource ) = 0;
-
-		virtual void startPlaying();
-		virtual bool isPlaying();
-		virtual void stopPlaying();
-	};
-}
-}
+#ifdef YAKE_AUDIO_EXPORTS
+#	pragma message("Exporting yake::audio")
+#	define YAKE_AUDIO_API DLLEXPORT
+#else
+#	pragma message("Importing yake::audio")
+#	define YAKE_AUDIO_API DLLIMPORT
 #endif
 
+#endif

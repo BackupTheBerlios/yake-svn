@@ -23,32 +23,16 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef INC_YAKE_AUDIBLE_H
-#define INC_YAKE_AUDIBLE_H
-
-#include <yake/audio/yakeAudioPrerequisites.h>
+#include <yake/audio/yakePCH.h>
+#include <yake/audio/yakeAudio.h>
 
 namespace yake {
-	using namespace base;
-	using namespace base::templates;
 namespace audio {
-	/** High level audio object
-	*/
-	class YAKE_AUDIO_API Audible : public Movable
+
+	YAKE_IMPLEMENT_REGISTRY( IAudioSystem )
+	IAudioSystem::~IAudioSystem()
 	{
-	private:
-		Audible( const Audible & );
-	public:
-		Audible();
-		virtual ~Audible();
+	}
 
-		virtual void setSource( SharedPtr<audio::ISource> & pSource ) = 0;
-
-		virtual void startPlaying();
-		virtual bool isPlaying();
-		virtual void stopPlaying();
-	};
 }
 }
-#endif
-
