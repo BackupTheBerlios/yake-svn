@@ -244,7 +244,7 @@ struct register_property_##NAME \
 // signature and automagically resolves the paramater types, because
 // it's a template function.
 template <int, bool, typename T1, typename T2, typename T3>
-struct signature_holder {};
+struct signature_holder; // throw compile time error
 
 template <bool Constant, typename T1, typename T2, typename T3>
 struct signature_holder<0, Constant, T1, T2, T3> 
