@@ -132,7 +132,32 @@ namespace graphics {
 		virtual real getFOV() const = 0;
 		virtual void setAspectRatio( real aspectRatio ) = 0;
 		virtual real getAspectRatio() const = 0;
+
+		inline void setDirection( const Vector3 & direction );
+		inline void rotate( const Quaternion & q );
+		inline void rotate( const Vector3 & axis, real degrees );
+		inline void lookAt( const Vector3 & pt );
+		inline void pitch( real degrees );
 	};
+
+	void ICamera::setDirection(const Vector3 & direction)
+	{
+	}
+	void ICamera::rotate(const Vector3 & axis, real degrees)
+	{
+		Quaternion q;
+		q.FromAngleAxis(Math::AngleUnitsToRadians(degrees),axis);
+		rotate(q);
+	}
+	void ICamera::rotate(const Quaternion & q)
+	{
+		setOrientation( q * getOrientation() );
+	}
+	void ICamera::pitch(real degrees)
+	{
+		Vector3 xAxis = getOrientation() * Vector3::kUnitX;
+		rotate(xAxis, degrees);
+	}
 
 	/** A concrete node in a scene graph.
 	*/
