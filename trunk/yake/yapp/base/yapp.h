@@ -26,6 +26,12 @@
 #ifndef YAPP_H
 #define YAPP_H
 
+#if !defined(YAPP_BASE_EXPORTS)
+#	if YAKE_PLATFORM == PLATFORM_WIN32
+#		pragma	comment(lib, "yapp.lib")
+#	endif
+#endif
+
 #include <yapp/base/yappPrerequisites.h>
 #include <yake/base/yake.h>
 #include <yapp/model/yakeModel.h>
