@@ -3,9 +3,13 @@
 
 #include <iostream>
 
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/bool.hpp>
+
 #include <yake/base/mpl/dispatch_arbitrary_types.h>
 #include <yake/base/type_info.h>
 
+#include "config.h"
 #include "static_init.h"
 #include "events.h"
 
@@ -22,6 +26,12 @@ bool dostring(lua_State * L, const char * str);
 
 #define LUABIND_NO_HEADERS_ONLY
 #include <luabind/luabind.hpp>
+
+#if(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC4)
+# include <luabind/operator.hpp>
+# include <luabind/detail/method_rep.hpp>
+# include "luabind_class_registration.h"
+#endif
 
 // -----------------------------------------
 // dynamic lua class bindings
@@ -109,6 +119,8 @@ static struct static_initor##CLASS_NAME \
 } static_init##CLASS_NAME;
 
 
+#if(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_6)
+
 #define DEFINE_LUA_CLASS(CLASS_NAME, SUPER_CLASS_NAME) \
 protected: \
 friend struct static_initor##CLASS_NAME;\
@@ -119,21 +131,8 @@ static void register_lua_class() \
 { \
 		/* class header with constructor */ \
 		get_lua_class().def( luabind::constructor<>() ); \
-#if(LUABIND_VER == LUABIND_6)
 		/* bind class */ \
 		luabind::module(L)[ get_lua_class() ]; \
-#else if(LUABIND_VER == LUBAIND_7RC3 || LUABIND_VER == LUBAIND_7RC4)
-		/* bind class, copied from luabind::module[] because that operator wants a copy of the class_ and that would destroy class_registration */ \
-    struct lua_pop_stack \
-    { \
-      lua_pop_stack(lua_State* L) : m_state(L) {} \
-      ~lua_pop_stack() { lua_pop(m_state, 1); } \
-      lua_State * m_state; \
-    }; \
-		lua_pushvalue(L, LUA_GLOBALSINDEX); \
-		lua_pop_stack guard(L); \
-		get_lua_class().register_(L); \
-#endif
 } \
 \
 static luabind::class_<class_type> & get_lua_class() \
@@ -156,7 +155,6 @@ static void commit_lua_methods() \
 	class_<class_type> & lua_class = get_lua_class(); \
 	detail::class_rep & lua_crep = get_lua_crep(); \
 \
-#if(LUABIND_VER == LUABIND_6)
 	/* get address of private class member of class_<> */ \
 	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
 	std::map<const char *, detail::method_rep, detail::ltstr> * class_methods = NULL; \
@@ -173,31 +171,12 @@ static void commit_lua_methods() \
 \
 	/* add to crep */ \
 	*crep_methods = *class_methods; \
-#else if(LUABIND_VER == LUBAIND_7RC3 || LUABIND_VER == LUBAIND_7RC4)
-	/* add to crep, get private registration data and copy methods to crep */ \
-	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
-	detail::class_registration * registration = NULL; \
-	__ASM_OFFSET__(registration, [lua_class], asm_lua_class_type_fix::m_registration); \
-	lua_crep.m_methods = registration->m_methods; \
-\
-	/* get address of private class member of class_rep */ \
-	std::list<detail::method_rep> * crep_methods = NULL; \
-	__ASM_OFFSET__(crep_methods, [lua_crep], detail::class_rep::m_methods); \
-\
-	/* set reference to crep and add method */ \
-	for(std::list<detail::method_rep>::iterator iter = crep_methods.begin(); \
-		iter != crep_methods.end(); ++iter) \
-	{ \
-		iter->crep = &lua_crep; \
-		lua_crep.add_method(L, *iter); \
-	} \
-#endif
 } \
 \
 /* callback this is declared as private in crep */ \
 struct luabind_callback_fix \
 {\
-	boost::function2<int/*, lua*/_State*, int> func; \
+	boost::function2<int, lua_State*, int> func; \
 	int pointer_offset; \
 }; \
 \
@@ -208,7 +187,6 @@ static void commit_lua_properties() \
 	class_<class_type> & lua_class = get_lua_class(); \
 	detail::class_rep & lua_crep = get_lua_crep(); \
 \
-#if(LUABIND_VER == LUABIND_6)
 	/* get adddress of private class member of class_<> */ \
 	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
 	std::map<const char *, luabind_callback_fix, detail::ltstr> * class_getters = NULL; \
@@ -225,7 +203,87 @@ static void commit_lua_properties() \
 	/* copy getters and setters to crep */ \
 	*crep_getters = *class_getters; \
 	*crep_setters = *class_setters; \
-#else if(LUABIND_VER == LUBAIND_7RC3 || LUABIND_VER == LUBAIND_7RC4)
+}
+
+#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUBAIND_7RC3)
+
+#define DEFINE_LUA_CLASS(CLASS_NAME, SUPER_CLASS_NAME) \
+protected: \
+friend struct static_initor##CLASS_NAME;\
+\
+typedef CLASS_NAME class_type; \
+\
+static void register_lua_class() \
+{ \
+		/* class header with constructor */ \
+		get_lua_class().def( luabind::constructor<>() ); \
+		/* bind class, copied from luabind::module[] because that operator wants a copy of the class_ and that would destroy class_registration */ \
+    struct lua_pop_stack \
+    { \
+      lua_pop_stack(lua_State * L) : m_state(L) {} \
+      ~lua_pop_stack() { lua_pop(m_state, 1); } \
+      lua_State * m_state; \
+    }; \
+		lua_pushvalue(L, LUA_GLOBALSINDEX); \
+		lua_pop_stack guard(L); \
+		get_lua_class().register_(L); \
+} \
+\
+static luabind::class_<class_type> & get_lua_class() \
+{ \
+	static luabind::class_<class_type> CLASS_NAME##_lua(#CLASS_NAME); \
+	return CLASS_NAME##_lua; \
+} \
+\
+static luabind::detail::class_rep & get_lua_crep() \
+{	\
+	luabind::detail::class_rep * crep = luabind::detail::class_registry::get_registry(L)->find_class(LUABIND_TYPEID(class_type)); \
+	assert(crep && "get_lua_crep(): invalid class rep pointer"); \
+	return *crep;	\
+} \
+\
+static void commit_lua_methods() \
+{ \
+	using namespace luabind; \
+  /* get class rep */ \
+	class_<class_type> & lua_class = get_lua_class(); \
+	detail::class_rep & lua_crep = get_lua_crep(); \
+\
+	/* get private registration data and copy methods to crep */ \
+	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
+	detail::class_registration * registration = NULL; \
+	__ASM_OFFSET__(registration, [lua_class], asm_lua_class_type_fix::m_registration); \
+\
+	/* get address of private class member of class_rep */ \
+	std::list<detail::method_rep> * crep_methods = NULL; \
+	__ASM_OFFSET__(crep_methods, [lua_crep], detail::class_rep::m_methods); \
+\
+	/* add to crep */ \
+	*crep_methods = registration->m_methods; \
+\
+	/* set reference to crep and add method */ \
+	for(std::list<detail::method_rep>::iterator iter = crep_methods->begin(); \
+		iter != crep_methods->end(); ++iter) \
+	{ \
+		iter->crep = &lua_crep; \
+		lua_crep.add_method(L, *iter); \
+	} \
+} \
+\
+/* callback this is declared as private in crep */ \
+struct luabind_callback_fix \
+{\
+	boost::function2<int, lua_State*, int> func; \
+	int pointer_offset; \
+}; \
+\
+static void commit_lua_properties() \
+{ \
+	using namespace luabind; \
+  /* get class rep */ \
+	class_<class_type> & lua_class = get_lua_class(); \
+	detail::class_rep & lua_crep = get_lua_crep(); \
+\
 	/* get private registration data */ \
 	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
 	detail::class_registration * registration = NULL; \
@@ -240,8 +298,99 @@ static void commit_lua_properties() \
 	/* copy getters and setters to crep */ \
 	*crep_getters = registration->m_getters; \
 	*crep_setters = registration->m_setters; \
-#endif
 }
+
+// todo
+//#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUBAIND_7RC4)
+#else
+
+#define DEFINE_LUA_CLASS(CLASS_NAME, SUPER_CLASS_NAME) \
+protected: \
+friend struct static_initor##CLASS_NAME;\
+\
+typedef CLASS_NAME class_type; \
+\
+static void register_lua_class() \
+{ \
+		/* class header with constructor */ \
+		get_lua_class().def( luabind::constructor<>() ); \
+		/* bind class, copied from luabind::module[] because that operator wants a copy of the class_ and that would destroy class_registration */ \
+    struct lua_pop_stack \
+    { \
+      lua_pop_stack(lua_State * L) : m_state(L) {} \
+      ~lua_pop_stack() { lua_pop(m_state, 1); } \
+      lua_State * m_state; \
+    }; \
+		lua_pushvalue(L, LUA_GLOBALSINDEX); \
+		lua_pop_stack guard(L); \
+		get_lua_class().register_(L); \
+} \
+\
+static luabind::class_<class_type> & get_lua_class() \
+{ \
+	static luabind::class_<class_type> CLASS_NAME##_lua(#CLASS_NAME); \
+	return CLASS_NAME##_lua; \
+} \
+\
+static luabind::detail::class_rep & get_lua_crep() \
+{	\
+	luabind::detail::class_rep * crep = luabind::detail::class_registry::get_registry(L)->find_class(LUABIND_TYPEID(class_type)); \
+	assert(crep && "get_lua_crep(): invalid class rep pointer"); \
+	return *crep;	\
+} \
+\
+static void commit_lua_methods() \
+{ \
+	using namespace luabind; \
+  /* get class rep */ \
+	class_<class_type> & lua_class = get_lua_class(); \
+	detail::class_rep & lua_crep = get_lua_crep(); \
+\
+	/* get private registration data and copy methods to crep */ \
+	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
+	detail::class_registration * registration = NULL; \
+	__ASM_OFFSET__(registration, [lua_class], asm_lua_class_type_fix::m_registration); \
+\
+	/* get address of private class member of class_rep */ \
+	std::list<detail::method_rep> * crep_methods = NULL; \
+	__ASM_OFFSET__(crep_methods, [lua_crep], detail::class_rep::m_methods); \
+\
+	/* add to crep */ \
+	*crep_methods = registration->m_methods; \
+\
+	/* set reference to crep and add method */ \
+	for(std::list<detail::method_rep>::iterator iter = crep_methods->begin(); \
+		iter != crep_methods->end(); ++iter) \
+	{ \
+		iter->crep = &lua_crep; \
+		lua_crep.add_method(*iter); \
+	} \
+} \
+\
+static void commit_lua_properties() \
+{ \
+	using namespace luabind; \
+  /* get class rep */ \
+	class_<class_type> & lua_class = get_lua_class(); \
+	detail::class_rep & lua_crep = get_lua_crep(); \
+\
+	/* get private registration data */ \
+	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
+	detail::class_registration * registration = NULL; \
+	__ASM_OFFSET__(registration, [lua_class], asm_lua_class_type_fix::m_registration); \
+\
+	/* get adddress of private class member of class_rep */ \
+	std::map<const char *, detail::class_rep::callback, detail::ltstr> * crep_getters = NULL; \
+	std::map<const char *, detail::class_rep::callback, detail::ltstr> * crep_setters = NULL; \
+	__ASM_OFFSET__(crep_getters, [lua_crep], detail::class_rep::m_getters); \
+	__ASM_OFFSET__(crep_setters, [lua_crep], detail::class_rep::m_setters); \
+\
+	/* copy getters and setters to crep */ \
+	*crep_getters = registration->m_getters; \
+	*crep_setters = registration->m_setters; \
+}
+
+#endif
 
 // -----------------------------------------
 // lua method bindings
@@ -283,20 +432,6 @@ struct register_property_##NAME \
 
 // -----------------------------------------
 // lua event bindings
-namespace
-{
-	static void register_lua_event_base()
-	{
-		using namespace luabind;
-		module(L)
-		[ 
-			class_<boost::function_base>("function_base"),
-			class_<reflection::lua_event_base>("lua_event_base")
-				.def("attach_handler", &reflection::lua_event_base::attach_handler)
-		];
-	}
-	STATIC_INIT(register_lua_event_base)
-}
 
 // lua operator signatures
 // The get function is returning a null pointer of a specific type,
@@ -307,6 +442,13 @@ namespace
 // it's a template function.
 template <int, bool, typename T1, typename T2, typename T3>
 struct signature_holder; // throw compile time error
+
+#if(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_6) || (YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND_7RC3)
+/* operator template type
+self() returns: class_::def(self(int())); where self::operator() returns application_operator *
+return type: application_operator<constructor<class A1, class A2, ..., class AN>, bool Is_Constant>
+example: typedef application_operator<constructor<int, int>, true> * op_type; op_type op = 0; .def(op);
+*/
 
 template <bool Constant, typename T1, typename T2, typename T3>
 struct signature_holder<0, Constant, T1, T2, T3> 
@@ -360,6 +502,48 @@ struct signature_holder<3, Constant, T1, T2, T3>
 	> * signature()
 	{ return 0; }
 };
+
+// todo
+//#elif(YAKE_REFLECTION_LUABIND_VER == YAKE_REFLECTION_LUABIND7_RC4)
+#else
+/* operator template type
+self() returns: class_::def(self(int())); where self::operator() returns call_operatorN
+return type: call_operator<self_type, class A1, class A2, ..., class AN> where self_type = self_type || const_self_type
+example: typedef operators::call_operator2<self_type, int, int> op_type; op_type op = 0; .def(op);
+*/
+
+template <bool Constant, typename T1, typename T2, typename T3>
+struct signature_holder<0, Constant, T1, T2, T3> 
+{
+	typedef typename boost::mpl::if_<boost::mpl::bool_<Constant>, luabind::const_self_type, luabind::self_type>::type const_type;
+	static luabind::operators::call_operator0<const_type> signature()
+	{ return 0; }
+};
+
+template <bool Constant, typename T1, typename T2, typename T3>
+struct signature_holder<1, Constant, T1, T2, T3> 
+{
+	typedef typename boost::mpl::if_<boost::mpl::bool_<Constant>, luabind::const_self_type, luabind::self_type>::type const_type;
+	static luabind::operators::call_operator1<const_type, T1> signature()
+	{ return 0; }
+};
+
+template <bool Constant, typename T1, typename T2, typename T3>
+struct signature_holder<2, Constant, T1, T2, T3> 
+{
+	typedef typename boost::mpl::if_<boost::mpl::bool_<Constant>, luabind::const_self_type, luabind::self_type>::type const_type;
+	static luabind::operators::call_operator2<const_type, T1, T2> signature()
+	{ return 0; }
+};
+
+template <bool Constant, typename T1, typename T2, typename T3>
+struct signature_holder<3, Constant, T1, T2, T3> 
+{
+	typedef typename boost::mpl::if_<boost::mpl::bool_<Constant>, luabind::const_self_type, luabind::self_type>::type const_type;
+	static luabind::operators::call_operator3<const_type, T1, T2, T3> signature()
+	{ return 0; }
+};
+#endif
 
 // selects a signature holding template according to the number of arguments
 template <int num_args, typename T1, typename T2, typename T3>

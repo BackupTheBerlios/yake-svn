@@ -3,6 +3,7 @@
 
 #pragma warning (disable: 4786)
 #pragma warning (disable: 4003)
+#pragma warning (disable: 4002)
 
 #include <stddef.h>
 #include <map>
@@ -12,6 +13,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "config.h"
 #include "bind.h"
 #include "exception.h"
 #include "callable.h"

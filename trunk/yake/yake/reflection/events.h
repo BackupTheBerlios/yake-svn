@@ -21,18 +21,17 @@
 #include "reflection.h"
 
 // lua
-/*
-adapt to boost 1.32 and luabind7
+#if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
 extern "C"
 {
 	#include "lua.h"
 	#include "lauxlib.h"
 	#include "lualib.h"
 }
-
-#define LUABIND_NO_HEADERS_ONLY
-#include <luabind/luabind.hpp>
-#include <luabind/functor.hpp>*/
+# define LUABIND_NO_HEADERS_ONLY
+# include <luabind/luabind.hpp>
+# include <luabind/functor.hpp>
+#endif
 
 namespace // unnamed
 {
@@ -209,22 +208,28 @@ struct rx_event_base
 	virtual void attach_handler(void * object, const reflection::Method & this_handler) = 0;
 };
 
-/* todo: adapt to luabind7
+#if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
 struct lua_event_base
 {
 	virtual ~lua_event_base() {}
 	virtual void attach_handler(const luabind::functor<void> & lua_function) = 0;
-};*/
+};
+#endif
 
 template
 < 
 	typename arg1 = null_type,
 	typename arg2 = null_type
 >
-struct event : public rx_event_base, /*public lua_event_base,*/ public ::event<arg1, arg2 /*, lua::search_for_lua_handlers_1*/> 
+struct event : 
+	public rx_event_base,
+#if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
+	public lua_event_base,
+#endif
+	public ::event<arg1, arg2 /*, lua::search_for_lua_handlers_1*/> 
 {
 	typedef ::event<arg1, arg2/*, lua::search_for_lua_handlers_1*/> base;
-	//typedef std::vector< luabind::functor<void> > lua_functor_list;
+	typedef std::vector< luabind::functor<void> > lua_functor_list;
 
 	// todo: do we have to do the same for the handlers of the base class as well?
 	event() /*: m_lua_functor_list(new lua_functor_list())*/ {}
@@ -249,24 +254,25 @@ struct event : public rx_event_base, /*public lua_event_base,*/ public ::event<a
 	// lua
 	// todo: make lua bindings optional with define (see gui wrapper)
 
-	// todo: adapt to luabind7
-
+#if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
 	// attach lua functor
-	/*void attach_handler(const luabind::functor<void> & lua_function)
+	void attach_handler(const luabind::functor<void> & lua_function)
 	{
 		m_lua_functor_list->push_back(lua_function);
-	}*/
+	}
+#endif
 
 	// fires all lua functors and the functors of the base class
 	virtual void fire(arg1 a1, arg2 a2)
 	{
 		// call handlers of the base class
 		base::fire(a1, a2);
+#if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
 		// call lua handlers
-		// todo: adapt to luabind7
-		/*for(lua_functor_list::const_iterator iter = m_lua_functor_list->begin();
+		for(lua_functor_list::const_iterator iter = m_lua_functor_list->begin();
 			iter != m_lua_functor_list->end(); iter++)
-		{ iter->operator()(a1, a2); }*/
+		{ iter->operator()(a1, a2); }
+#endif
 	}
 
 	// luabind cannot handle void as return type
@@ -276,11 +282,13 @@ struct event : public rx_event_base, /*public lua_event_base,*/ public ::event<a
 		return true;
   }
 
+#if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
 	// we need a smart pointer to the container here, because luabind calls the copy constuctor
 	// when returning a property (get) and each object would have its' own list of functors,
 	// so attach_handler would add the functor to object A and fire would call all functors of object B.
 	// but A and B should have the same list of functors, so we are sharing this list.
-	//boost::shared_ptr<lua_functor_list> m_lua_functor_list;
+	boost::shared_ptr<lua_functor_list> m_lua_functor_list;
+#endif
 };
 
 
@@ -322,10 +330,15 @@ template
 < 
 	typename arg1
 >
-struct event<arg1, null_type> : public rx_event_base, /*public lua_event_base,*/ public ::event<arg1 /*, lua::search_for_lua_handlers_1*/> 
+struct event<arg1, null_type> : 
+	public rx_event_base,
+#if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
+	public lua_event_base,
+#endif
+	public ::event<arg1 /*, lua::search_for_lua_handlers_1*/> 
 {
 	typedef ::event<arg1/*, lua::search_for_lua_handlers_1*/> base;
-	//typedef std::vector< luabind::functor<void> > lua_functor_list;
+	typedef std::vector< luabind::functor<void> > lua_functor_list;
 
 	// todo: do we have to do the same for the handlers of the base class as well?
 	event() /*: m_lua_functor_list(new lua_functor_list())*/ {}
@@ -349,27 +362,30 @@ struct event<arg1, null_type> : public rx_event_base, /*public lua_event_base,*/
 	// -----------------------------------------
 	// lua
 
+#if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
 	// attach lua functor
-	/*void attach_handler(const luabind::functor<void> & lua_function)
+	void attach_handler(const luabind::functor<void> & lua_function)
 	{
 		m_lua_functor_list->push_back(lua_function);
-	}*/
+	}
+#endif
 
 	// fires all lua functors and the functors of the base class
 	virtual void fire(arg1 a1)
 	{
 		// call handlers of the base class
 		base::fire(a1);
+#if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
 		// call lua handlers
-		// todo: adapt to luabind7
-		/*for(lua_functor_list::const_iterator iter = m_lua_functor_list->begin();
+		for(lua_functor_list::const_iterator iter = m_lua_functor_list->begin();
 			iter != m_lua_functor_list->end(); iter++)
 		{
       // luabind tries to remove the reference to an abstract classes and 
 			// instantiate it, so we have to replace the reference with a pointer,
 			// if the given type is an abstract class
 			iter->operator()(remove_ref_if_abstract_and_ref<arg1>::remove(a1));
-    }*/
+    }
+#endif
 	}
 
 	// luabind cannot handle void as return type
@@ -379,43 +395,15 @@ struct event<arg1, null_type> : public rx_event_base, /*public lua_event_base,*/
 		return true;
   }
 
+#if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)
 	// we need a smart pointer to the container here, because luabind calls the copy constuctor
 	// when returning a property (get) and each object would have its' own list of functors,
 	// so attach_handler would add the functor to object A and fire would call all functors of object B.
 	// but A and B should have the same list of functors, so we are sharing this list.
-	//boost::shared_ptr<lua_functor_list> m_lua_functor_list;
+	boost::shared_ptr<lua_functor_list> m_lua_functor_list;
+#endif
 };
 
 }
-
-/* todo for EVENT macro args:
-template< typename arg1 = Null, typename arg2 = Null, typename arg3 = Null, typename arg4 = Null, typename arg5 = Null >
-struct event : public ::event< arg1, lua::search_for_lua_handlers_1 > {};
-
-template<typename arg1>
-struct event<Null, Null, Null> ... specialization
-*/
-
-
-// todo real __event__ structs and we need the attach_handler in lua
-
-/*#define __EVENT_METHOD__(ACCESS_ATTR, VIRTUAL, RETURN_TYPE, METHOD_NAME, METHOD_ARGS) \
-private: \
-    struct __method_##METHOD_NAME##__ \
-		{ \
-        __method_##METHOD_NAME##__() \
-				{ \
-					static agm::reflection::__register_method__ reg(__create_callable__(&fire##_METHOD_NAME), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #RETURN_TYPE, #METHOD_NAME, #METHOD_ARGS, #VIRTUAL); \
-        } \
-    } __method_##METHOD_NAME##__; \
-    friend struct __method_##METHOD_NAME##__; \
-ACCESS_ATTR: \
-	  VIRTUAL RETURN_TYPE fire##_METHOD_NAME METHOD_ARGS
-
-
-#define EVENT1(ACCESS_ATTR, EVENT_NAME, ARG1, NAME1) \
-ACCESS_ATTR: \
-		__EVENT_METHOD__(ACCESS_ATTR, __NOT_VIRTUAL__, void, EVENT_NAME, (ARG1 NAME1)) { EVENT_NAME(NAME1); } \
-		rx::event<ARG1> EVENT_NAME*/
 
 #endif _EVENTS_H_
