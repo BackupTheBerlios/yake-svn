@@ -24,7 +24,10 @@
 
 #include <dependencies/ogrenew/OgreMain/include/OgreMemoryMacros.h>
 #include <dependencies/ogrenew/OgreMain/include/Ogre.h>
-#include <dependencies/ogrenew/OgreMain/include/OgreNoMemoryMacros.h>
+#ifdef OGRE_MEMORY_MACROS
+#pragma message("disabling OGRE's memory macros")
+#	include <dependencies/ogrenew/OgreMain/include/OgreNoMemoryMacros.h>
+#endif
 
 namespace yake {
 	namespace input {
