@@ -59,8 +59,9 @@ struct tnl_hook : public NetObject
 	tnl_hook() {}
 	virtual ~tnl_hook() {}
 
-	inline void on_add_field( float_field & field )
+	void on_add_field( float_field & field )
 	{
+		// todo push_back( typeid(float) ) or more generic;
 		field_types_.push_back( float_ );
 
 		if( ( field.flags_ & extrapolate ) && ( field.flags_ & server ) )

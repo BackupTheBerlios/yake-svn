@@ -11,7 +11,7 @@ namespace rx
 
 // todo inheritance
 
-class meta_class : public meta_class_hooks
+class meta_class //: public meta_class_hooks
 {
 public:
 	typedef std::vector< meta_field * > fields_list; // todo smart ptrs

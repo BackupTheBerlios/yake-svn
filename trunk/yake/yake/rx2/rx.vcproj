@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)/../boost_1_31_0/boost_1_31_0&quot;;&quot;$(ProjectDir)../lua/include&quot;;&quot;$(ProjectDir)../luabind&quot;;&quot;$(ProjectDir)/../RakNet/Source&quot;"
+				AdditionalIncludeDirectories="../../dependencies/boost/;../../dependencies/lua/include;../../dependencies/luabind;../../dependencies/RakNet/Source"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -37,9 +37,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(ProjectDir)../boost_1_31_0/boost_1_31_0/bin/boost/libs/serialization/build/libboost_serialization.lib/vc7.1/$(outdir)/runtime-link-static/threading-multi/libboost_serialization.lib $(ProjectDir)../raknet/lib/RakNetLibStatic.lib ws2_32.lib $(ProjectDir)../lua/lib/lua.lib $(ProjectDir)../luabind/bin/luabind.lib $(ProjectDir)../lua/lib/lualib.lib"
+				AdditionalDependencies="libboost_serialization.lib RakNetLibStatic.lib ws2_32.lib lua.lib luabind.lib lualib.lib"
 				OutputFile="$(OutDir)/rx.exe"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;../../dependencies/luabind/lib/$(ConfigurationName)&quot;;../../dependencies/raknet/lib/;&quot;../../dependencies/lua/lib/$(ConfigurationName)&quot;;&quot;../../dependencies/boost/bin/boost/libs/serialization/build/libboost_serialization.lib/vc7.1/$(outdir)/runtime-link-static/threading-multi/&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/rx.pdb"
 				SubSystem="1"

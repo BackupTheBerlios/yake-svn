@@ -30,14 +30,18 @@ struct typed_field : public meta_field
 	{	
 	}
 
-	T & operator=( T const & value )
+	/*T & operator=( T const & value )
 	{
-		value_ = value;   
+		value_ = value;
+		// todo get_object does not work for meta classes
+		if( object_ )
+		{
 		std::cout << get_object().get_name() << "::" << name_ 
 			<< "=" << value << std::endl; 
 		get_object().on_change_field( *this );
+		}
 		return value_;
-	}
+	}*/
 
 	void set( T const & value )
 	{

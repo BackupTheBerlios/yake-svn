@@ -205,24 +205,23 @@ int main()
 			class_<lua_hook_object>("lua_hook_object")
 				.def("add_field_int", (void(lua_hook_object::*)(std::string)) &lua_hook_object::add_field_int)
 				.def("add_field_int", (void(lua_hook_object::*)(std::string, int)) &lua_hook_object::add_field_int) 
-				.def("add_field_int", (void(lua_hook_object::*)(std::string, int, int)) &lua_hook_object::add_field_int) 
+				.def("add_field_int", (void(lua_hook_object::*)(std::string, int, int)) &lua_hook_object::add_field_int)
 				.def("field_int",	&lua_hook_object::field_int ),
 			class_<meta_object, lua_hook_object>("meta_object") 	
 				.def(constructor<std::string>()),
-			class_<lua_hook_class>("lua_hook_class")
-				.def("add_field_int", (void(lua_hook_class::*)(std::string)) &lua_hook_class::add_field_int)
-				.def("add_field_int", (void(lua_hook_class::*)(std::string, int)) &lua_hook_class::add_field_int) 
-				.def("add_field_int", (void(lua_hook_class::*)(std::string, int, int)) &lua_hook_class::add_field_int) 
-				.def("field_int",	&lua_hook_class::field_int ),
-			class_<meta_class, lua_hook_class>("meta_class") 	
+			class_<meta_class>("meta_class") 	
 				.def(constructor<std::string>())
 				.def("create_object", &meta_class::create_object )
+				.def("add_field_int", (void(meta_class::*)(std::string, int)) &meta_class::add_field<int>)
+				.def("add_field_int", (void(meta_class::*)(std::string, int, int)) &meta_class::add_field<int>)
+				.def("field_int",	(int_field&(meta_class::*)(std::string)) &meta_class::field<int> )
 		];
 
 		lua_dostring(	L, "meta_cl = meta_class('hello_class')" );
 		lua_dostring(	L, "meta_cl:add_field_int( 'hello_int', meta_field.none )" );
+		lua_dostring(	L, "meta_cl:field_int( 'hello_int' ):set( 12345 )" );
 		lua_dostring(	L, "meta_obj = meta_cl:create_object('hello_object')" );
-		lua_dostring(	L, "meta_obj:field_int( 'hello_int' ):set( 1234 )" );		
+		lua_dostring(	L, "meta_obj:field_int( 'hello_int' ):set( 1234 )" );
 
 		std::cout << get_class( "hello_class" ).get_object( 
 			"hello_object" ).field<int>( "hello_int" ).as_string() << std::endl;
