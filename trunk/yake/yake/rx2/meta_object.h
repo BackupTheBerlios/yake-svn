@@ -89,7 +89,7 @@ public: // field management
 	{
 		fields_map::iterator iter = fields_.find( name );
 		if( iter == fields_.end() ) throw exception();
-		return *static_cast< typed_field<T>* >( iter->second );
+		return static_cast< typed_field<T>& >( *iter->second );
 	}
 
 	fields_map::const_iterator begin() const

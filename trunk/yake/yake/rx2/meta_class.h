@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <boost/type_traits/remove_reference.hpp>
+
 #include <yake/base/templates/yakePointer.h>
 
 #include "class_registry.h"
@@ -81,13 +83,15 @@ public: // constructors
 
 public: // field management
 	template< typename T >
-	meta_class & add_field( std::string field_name, T default_value = T() )
+	meta_class & add_field( std::string field_name, 
+		typename boost::remove_reference<T>::type default_value = boost::remove_reference<T>::type() )
 	{
 		return add_field( field_name, default_value, none );
 	}
 
 	template< typename T, int flags >
-	meta_class & add_field( std::string field_name, T default_value = T() )
+	meta_class & add_field( std::string field_name, 
+		typename boost::remove_reference<T>::type default_value = boost::remove_reference<T>::type() )
 	{
 		return add_field( field_name, default_value, flags );
 	}

@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include "meta_class.h"
-#include "ref.h"
 
 // todo meta_object deserialization should set cpp_class members
 
@@ -41,7 +40,8 @@ public:
 	// they have the same order as within the meta_class
 	// field container see build_meta_class
 	cpp_class( std::string object_name ) 
-		:	position_wrapped( "position_wrapped", ref<int>(position_) ),
+		:	//position_wrapped( "position_wrapped", ref<int>(position_) ),
+			position_wrapped( position_, none ),			
 			meta_object_( 
 				create<meta_object>( meta_class_, object_name )
 					.add_field( test_int )
@@ -58,7 +58,7 @@ public:
 	typed_field<int> test_int;
 	typed_field<std::string> test_string;
 	typed_field<float> test_float;
-	typed_field< ref<int> > position_wrapped;
+	typed_field<int&> position_wrapped;
 	
 public:
 	static void build_meta_class()
@@ -68,7 +68,7 @@ public:
 			.add_field<int>( "test_int" )
 		  .add_field<std::string>( "test_string" )
 			.add_field<float>( "test_float" )
-			.add_field< ref<int> >( "position_wrapped" ); 
+			.add_field<int&>( "position_wrapped" ); 
 	}	
 
 	static meta_class & get_class()

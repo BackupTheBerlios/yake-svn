@@ -92,6 +92,7 @@ int main()
 		e.birth.attach_handler( e.get_object().get_handler( "on_birth" ) );
 		// soft wire
 		soft_wire( "e.birth", "e.on_birth" );
+
 		// fire
 		e.birth( "hello e" );
 	}
@@ -131,16 +132,18 @@ int main()
 		assert( meta_obj.field<int>( "test_int" ) == 123456 );
 		assert( obj.test_int == 123456 );
 
-		// pure ref test
-		int hello = 123;
-		ref<int> iref( hello );
-		assert( iref == hello );
-
 		// test wrapped values
 		obj.position_ = 1234321;
 		std::cout << meta_obj.field<int>( "position_wrapped" ).as_string() << std::endl;
-		std::cout << meta_obj.field< ref<int> >( "position_wrapped" ) << std::endl;
-		assert( meta_obj.field< ref<int> >( "position_wrapped" ) == obj.position_ );
+		std::cout << meta_obj.field<int>( "position_wrapped" ) << std::endl;
+		assert( obj.position_ == meta_obj.field<int>( "position_wrapped" ) );
+
+		meta_obj.field<int>( "position_wrapped" ) = 4321;
+		assert( meta_obj.field<int>( "position_wrapped" ) == obj.position_ );
+
+		int test( 1234589 );
+		meta_obj.field<int>( "position_wrapped" ).set( test );
+		assert( meta_obj.field<int>( "position_wrapped" ) == obj.position_ );
 
 		// output fields
 		for( meta_object::fields_map::const_iterator iter = meta_obj.begin(); 
