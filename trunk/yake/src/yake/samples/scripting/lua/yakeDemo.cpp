@@ -24,7 +24,7 @@ using namespace yake::scripting;
 class TheApp : public yake::exapp::ExampleApplication
 {
 public:
-	TheApp() : ExampleApplication( false, false, true, false, true )
+	TheApp() : ExampleApplication( false, false, true, false, true, false )
 	{
 	}
 	virtual void run()

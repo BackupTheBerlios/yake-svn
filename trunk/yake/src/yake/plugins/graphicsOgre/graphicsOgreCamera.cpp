@@ -32,6 +32,10 @@ namespace ogre3d {
 		mCam = mSceneMgr->createCamera( yake::base::uniqueName::create("sn_") );
 		YAKE_ASSERT( mCam ).warning("Couldn't create a camera!");
 		mCam->setPosition( 0, 0, 0 );
+
+		// used for shadows
+		// incase infinite far distance is not supported
+		mCam->setFarClipDistance(100000);
 	}
 
 	//------------------------------------------------------
@@ -133,7 +137,7 @@ namespace ogre3d {
 	void OgreCamera::setFarClipDistance( real clipDistance )
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
-		mCam->setFarClipDistance( clipDistance );
+		mCam->setFarClipDistance(100000);
 	}
 
 	//------------------------------------------------------

@@ -100,10 +100,11 @@ namespace ogre3d {
 		Ogre::SceneManager* pSceneMgr = msCore->getSceneMgr();;
 		YAKE_ASSERT( pSceneMgr ).debug("need a scene manager!");
 		if (enabled)
-			pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_STENCIL_ADDITIVE );
-			//pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_STENCIL_MODULATIVE );
+			//pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_STENCIL_ADDITIVE );
+			pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_STENCIL_MODULATIVE );
 		else
 			pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_NONE );
+		pSceneMgr->setShadowColour(Ogre::ColourValue(0.5, 0.5, 0.5));
 	}
 
 	//-----------------------------------------------------
