@@ -27,5 +27,6 @@
 #define YAKE_DATA_PCH_H
 
 #include <yake/base/yake.h>
+#include <yake/data/yakeDataPrerequisites.h>
 
 #endif

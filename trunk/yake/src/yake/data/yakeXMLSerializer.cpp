@@ -24,7 +24,6 @@
    ------------------------------------------------------------------------------------
 */
 #include <yake/data/yakePCH.h>
-#include <yake/data/yakeStreamSerializer.h>
 #include <yake/data/yakeXMLSerializer.h>
 #include <dependencies/tinyxml/tinyxml.h>
 
