@@ -2,12 +2,8 @@
 #define _YAPP_GUI_CONFIG_H_
 
 // todo: remove
-#include <boost/mpl/copy_if.hpp>
-#include <boost/mpl/push_back.hpp>
-#include <boost/mpl/list.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/not_equal_to.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/mpl/remove_if.hpp>
 
 #include <yake/base/mpl/sequences.h>
 #include <yake/base/mpl/compare_sequences.h>
@@ -40,7 +36,7 @@ using namespace yake::base::mpl;
 # define GUI_IMPLEMENT_CLASS(CLASS_NAME) IMPLEMENT_CLASS(CLASS_NAME)
 #endif
 
-/* implemented types */
+/* list: implemented types */
 // properties
 struct point;
 typedef sequences::list
@@ -59,138 +55,37 @@ typedef sequences::list
 	<
 		button_base,
 		static_text_base,
-		multi_line_edit_box_base	
+		multi_line_edit_box_base 
 	> implemented_widgets;
 
-
-
-
-
-// todo: use boost include iteration macros
-
-// defines a type list of widgets according to the number of arguments
-template 
-<
-	int number_of_arguments, 
-	typename T1, typename T2,	typename T3, typename T4,	typename T5,
-	typename T6, typename T7,	typename T8, typename T9,	typename T10,
-	typename T11,	typename T12,	typename T13,	typename T14,	typename T15
->
-struct list_holder
-{
-	typedef list<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>::type types;
-	typedef typename copy_if
-	<
-		types,
-		vector,
-		push_back<_1, _2>,
-		not_equal_to<size<_1>::type::value, number_of_arguments> 
-	>::type type;
-};
-
-
-
-	
-/*; // throw compile time error
-
-template 
-<
-	typename T1, typename T2,	typename T3, typename T4,	typename T5,
-	typename T6, typename T7,	typename T8, typename T9,	typename T10,
-	typename T11,	typename T12,	typename T13,	typename T14,	typename T15
->
-struct list_holder<0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>; // throw compile time error
-
-template 
-<
-	typename T1, typename T2,	typename T3, typename T4,	typename T5,
-	typename T6, typename T7,	typename T8, typename T9,	typename T10,
-	typename T11,	typename T12,	typename T13,	typename T14,	typename T15
->
-struct list_holder<1, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>
-{ 
-	typedef sequences::list<T1> type; 
-};
-
-template 
-<
-	typename T1, typename T2,	typename T3, typename T4,	typename T5,
-	typename T6, typename T7,	typename T8, typename T9,	typename T10,
-	typename T11,	typename T12,	typename T13,	typename T14,	typename T15
->
-struct list_holder<2, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>
-{ 
-	typedef sequences::list<T1, T2> type; 
-};
-
-template 
-<
-	typename T1, typename T2,	typename T3, typename T4,	typename T5,
-	typename T6, typename T7,	typename T8, typename T9,	typename T10,
-	typename T11,	typename T12,	typename T13,	typename T14,	typename T15
->
-struct list_holder<3, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>
-{ 
-	typedef sequences::list<T1, T2, T3> type; 
-};
-
-template 
-<
-	typename T1, typename T2,	typename T3, typename T4,	typename T5,
-	typename T6, typename T7,	typename T8, typename T9,	typename T10,
-	typename T11,	typename T12,	typename T13,	typename T14,	typename T15
->
-struct list_holder<4, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>
-{ 
-	typedef sequences::list<T1, T2, T3, T4> type; 
-};
-
-template 
-<
-	typename T1, typename T2,	typename T3, typename T4,	typename T5,
-	typename T6, typename T7,	typename T8, typename T9,	typename T10,
-	typename T11,	typename T12,	typename T13,	typename T14,	typename T15
->
-struct list_holder<5, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>
-{ 
-	typedef sequences::list<T1, T2, T3, T4, T5> type; 
-};
-
-template 
-<
-	typename T1, typename T2,	typename T3, typename T4,	typename T5,
-	typename T6, typename T7,	typename T8, typename T9,	typename T10,
-	typename T11,	typename T12,	typename T13,	typename T14,	typename T15
->
-struct list_holder<6, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>
-{ 
-	typedef sequences::list<T1, T2, T3, T4, T5, T6> type; 
-};
-*/
-// todo: 7,8,9,10,...
-
+/* helper: checks whether all implemented types are handled by a function or structure */
+// accepts n types and returns a list of concrete types
 template
 <
 	typename T1 = null_type, typename T2 = null_type, 
 	typename T3 = null_type, typename T4 = null_type,
 	typename T5 = null_type, typename T6 = null_type
 >
-struct get_type_list : dispatch_arbitrary_types<list_holder, T1, T2, T3> {};
+struct get_type_list 
+{
+	typedef boost::mpl::list<T1, T2, T3, T4, T5, T6> given_types;
+	typedef typename boost::mpl::remove_if< given_types, boost::is_same<boost::mpl::_, null_type> >::type type;
+};
 
-#define YAKE_STATIC_ASSERT_WIDGETS(WIDGET1, WIDGET2, WIDGET3, WIDGET4, WIDGET5, WIDGET6,
-	WIDGET7, WIDGET8, WIDGET9, WIDGET10, WIDGET11, WIDGET12, WIDGET13, WIDGET14, WIDGET15) \
-YAKE_STATIC_ASSERT( \
-   (compare_sequences \
-	 < \
-	    implemented_widgets, /* conditional types */ \
-      get_type_list /* implemented types */ \
-      < \
-        typename yake::base::mpl::get_type_or_null<WIDGET1>::type, \
-        typename yake::base::mpl::get_type_or_null<WIDGET2>::type, \
-        typename yake::base::mpl::get_type_or_null<WIDGET3>::type \
-      >::type \
-   >::type::value), \
-   conditional_and_implemented_widget_lists_do_not_match)
+// accept n widgets and checks whether all widget types are handled or not at compile time
+#define YAKE_STATIC_ASSERT_WIDGETS(WIDGET1, WIDGET2, WIDGET3, WIDGET4, WIDGET5, WIDGET6, WIDGET7, WIDGET8, WIDGET9, WIDGET10, WIDGET11, WIDGET12,	WIDGET13, WIDGET14, WIDGET15, WIDGET16) \
+	YAKE_STATIC_ASSERT( \
+		(compare_sequences /* condition */ \
+		 < \
+			 implemented_widgets, /* conditional types */ \
+			 get_type_list /* implemented types */ \
+			 < \
+					typename yake::base::mpl::get_type_or_null<WIDGET1>::type, \
+				  typename yake::base::mpl::get_type_or_null<WIDGET2>::type, \
+				  typename yake::base::mpl::get_type_or_null<WIDGET3>::type \
+			 >::type \
+     >::type::value), \
+    conditional_and_implemented_widget_lists_do_not_match) /* error */
 
 
 } // namespace gui
