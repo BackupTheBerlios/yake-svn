@@ -19,6 +19,7 @@
    ------------------------------------------------------------------------------------
 */
 #include <yapp/plugins/ceguiOgreRendererAdapter/pch.h>
+#include "OgreNoMemoryMacros.h"
 #include "CEGUI.h"
 #include <dependencies/ogrenew/OgreMain/include/Ogre.h>
 #include "renderers/OgreGUIRenderer/ogrerenderer.h"
