@@ -24,6 +24,8 @@
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="TRUE"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="yake/physics/yakePCH.h"
 				WarningLevel="3"
@@ -73,6 +75,7 @@
 				AdditionalIncludeDirectories="../../;../../dependencies/boost/;../../dependencies/ttl/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_PHYSICS_EXPORTS"
 				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="yake/physics/yakePCH.h"
 				WarningLevel="3"
@@ -136,13 +139,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\yake\physics\yakePhysical.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
+				RelativePath="..\..\src\yake\physics\yakePhysicsAffectors.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\yake\physics\yakePhysicsSystem.cpp">
@@ -153,13 +150,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{931F508C-E413-4f0f-8658-E107F95EA8B8}">
 			<File
-				RelativePath="..\..\yake\physics\yakeForceSpace.h">
+				RelativePath="..\..\yake\physics\yakeAffectorZone.h">
 			</File>
 			<File
 				RelativePath="..\..\yake\physics\yakePCH.h">
-			</File>
-			<File
-				RelativePath="..\..\yake\physics\yakePhysical.h">
 			</File>
 			<File
 				RelativePath="..\..\yake\physics\yakePhysics.h">
