@@ -34,7 +34,7 @@ namespace yake {
 			YAKE_ASSERT( mOdeBody ).error("Out of memory ?");
 			if (!mOdeBody)
 				return;
-			mOdeBody->setAutoDisableFlag( 1 );
+			mOdeBody->setAutoDisableFlag( 0 );
 			mValid = true;
 			mOdeBody->enable();
 			mOdeBody->setTorque( 0, 0, 0 );

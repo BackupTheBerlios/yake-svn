@@ -32,10 +32,10 @@ namespace physics {
 	OdeComplexObject::OdeComplexObject( OdeWorld * world ) :
 				mWorld( world ),
 				mBody(0),
-				mSoftness( 0.01 ),
+				mSoftness( 0. ),
 				mFriction( 5.0 ),
 				mFriction2( 2.0 ),
-				mLateralSlip(true),
+				mLateralSlip(false),
 				mSlipLinearCoeff(0.03),
 				mSlipAngularCoeff(0.),
 				mSlipNormalSource(0)
@@ -135,7 +135,7 @@ namespace physics {
 		OdeCollisionGeomBase* pGeomBase = static_cast<OdeCollisionGeomBase*>( geom );
 
 		int geomClass = dGeomGetClass(pGeomBase->_getOdeGeomID());
-		if (geomClass != dPlaneClass && geomClass != dGeomTransformClass) 
+		if (geomClass != dPlaneClass/* && geomClass != dGeomTransformClass*/) 
 		{
 			/*
 			// Now wrap the geometry object in a transformation object. This allows
@@ -162,7 +162,7 @@ namespace physics {
 			else
 				dGeomSetBody( pGeomBase->_getOdeGeomID(), 0 );
 		}
-		dGeomSetData( pGeomBase->_getOdeGeomID(), this );
+		pGeomBase->_setData( this );
 		mGeoms.push_back( geom );
 
 	}
@@ -289,7 +289,6 @@ namespace physics {
 										|dContactApprox1
 										//|dContactMu2
 										;
-
 				if (softness > 0)
 				{
 					contact[i].surface.mode |= dContactSoftCFM;
@@ -342,7 +341,7 @@ namespace physics {
 				contact[i].surface.motion1 = 0;
 				contact[i].surface.motion2 = 0;
 
-				contact[i].surface.soft_erp = 0.8; // 0.8
+				contact[i].surface.soft_erp = 0.9; // 0.8
 				//contact[i].surface.bounce = 0.05; //0.05
 				//contact[i].surface.bounce_vel = 0.025; //0.025
 				
