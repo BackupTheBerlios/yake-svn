@@ -34,14 +34,23 @@ namespace model {
 namespace vehicle {
 
 	/** Interface to a vehicle engine.
-		@Remarks This is work-in-progress and may be revised at any time.
+		@remarks This is work-in-progress and may be revised at any time.
 	*/
 	class YAPP_BASE_API IEngine
 	{
 	public:
 		virtual ~IEngine() 
-		{
-		}
+		{}
+	};
+
+	/** Interface to a vehicle engine.
+		@remarks This is work-in-progress and may be revised at any time.
+	*/
+	class YAPP_BASE_API ICarEngine : public IEngine
+	{
+	public:
+		virtual ~ICarEngine() 
+		{}
 
 		//virtual void setParameter( const String & name, const String & value );
 		virtual void setParamMinRPM( const real rpm ) = 0;

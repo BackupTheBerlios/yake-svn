@@ -61,6 +61,10 @@ namespace vehicle {
 		typedef Vector<GearTemplate> GearTemplateList;
 		struct EngineTemplate
 		{
+			virtual ~EngineTemplate() {}
+		};
+		struct CarEngineTemplate : public EngineTemplate
+		{
 			real				rpmMin_;
 			real				rpmMax_;
 			real				rpmRedline_;
