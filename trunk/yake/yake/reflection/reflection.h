@@ -12,10 +12,12 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "utility.h"
+#include "bind.h"
 #include "exception.h"
 #include "callable.h"
 #include "class.h"
+#include "utility.h"
+#include "object.h"
 #include "property.h"
 #include "method.h"
 #include "staticmethod.h"
@@ -23,7 +25,6 @@
 #include "event.h"
 #include "classregistry.h"
 #include "staticfield.h"
-#include "object.h"
 #include "registered.h"
 
 #endif // _REFLECTION_H_

@@ -122,8 +122,6 @@ private:
 		ar & files_;
 		// the stream position after the file headers must be the data offset
 		data_offset_ = ar.is.tellg();
-
-		// TODO DOES THIS WORK FOR VIRTUAL BUFFER?
   }
 
   BOOST_SERIALIZATION_SPLIT_MEMBER()

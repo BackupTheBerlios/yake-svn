@@ -12,7 +12,7 @@
 #define lua_CLASS_DEFAULT(CLASS_NAME, SUPER_CLASS_NAME) DEFINE_LUA_CLASS(CLASS_NAME, SUPER_CLASS_NAME)
 #define reg_CLASS_DEFAULT(CLASS_NAME, SUPER_CLASS_NAME) CLASS_NAME##(const char * name) : SUPER_CLASS_NAME##(name) {}
 
-/* define a reflected class with optional bindings and multiple inheritance */
+/* todo define a reflected class with optional bindings and multiple inheritance */
 #define CLASS_MI(CLASS_NAME, SUPER_CLASS_NAMES, BINDING1, BINDING2) \
 	enum{ value = false } multiple_inheritance; \
 	CLASS(CLASS_NAME, GET_FIRST_CLASS(SUPER_CLASS_NAMES), BINDING1, BINDING2)

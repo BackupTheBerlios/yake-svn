@@ -20,12 +20,12 @@ private: \
 		{ \
         __event_##EVENT_NAME##__() \
 				{ \
-					static __register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(rx::event< REMOVE_BRACES##ARGS >), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
+					static __register_event__ reg(__OFFSET__(ClassType, EVENT_NAME), typeid(reflection::event< REMOVE_BRACES##ARGS >), getClassStaticPtr(), ACCESS_##ACCESS_ATTR, #EVENT_NAME); \
         } \
     } __event_##EVENT_NAME##__; \
     friend struct __event_##EVENT_NAME##__; \
 ACCESS_ATTR: \
-    rx::event< REMOVE_BRACES##ARGS > EVENT_NAME
+    reflection::event< REMOVE_BRACES##ARGS > EVENT_NAME
 
 // todo typeid is wrong, should point to rx::event ...
 #define RX_CUSTOM_EVENT(ACCESS_ATTR, EVENT_CLASS, EVENT_NAME) \
@@ -90,8 +90,8 @@ public:
 		{
         if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
         if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
-				if (typeid(rx::event<Arg1>) != m_typeinfo) throw TypeMismatchError("event");
-				rx::event<Arg1> * this_event = reinterpret_cast<rx::event<Arg1>*>(((char *)object) + m_offset);
+				if (typeid(reflection::event<Arg1>) != m_typeinfo) throw TypeMismatchError("event");
+				reflection::event<Arg1> * this_event = reinterpret_cast<reflection::event<Arg1>*>(((char *)object) + m_offset);
 				this_event->operator()(arg1);
     }
 
@@ -101,7 +101,7 @@ public:
         if (m_access != ACCESS_PUBLIC) throw IllegalAccessError(m_name);
         if (!m_class->checkUpCast(object->getClass())) throw TypeMismatchError("object");
 				if (typeid(rx::event<Arg1>) != m_typeinfo) throw TypeMismatchError("event");
-				rx::event<Arg1, Arg2> * this_event = reinterpret_cast<rx::event<Arg1, Arg2>*>(((char *)object) + m_offset);
+				reflection::event<Arg1, Arg2> * this_event = reinterpret_cast<reflection::event<Arg1, Arg2>*>(((char *)object) + m_offset);
 				this_event->operator()(arg1, arg2);
     }
 

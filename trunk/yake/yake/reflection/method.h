@@ -11,9 +11,11 @@
  *****************************************************************************/
 
 //callable base class macro with return type
-#define __CALLABLE_BASE__(N)\
-template <class R __REPEAT(N, __TEMPLATE_ARG__, __COMMA__)> struct __callable_base##N##__ : public __callable__ {\
-    virtual R invoke(void *object __REPEAT(N, __ARG__, __COMMA__)) const = 0;\
+#define __CALLABLE_BASE__(N) \
+template<class R __REPEAT(N, __TEMPLATE_ARG__, __COMMA__)> \
+struct __callable_base##N##__ : public __callable__ \
+{ \
+    virtual R invoke(void *object __REPEAT(N, __ARG__, __COMMA__)) const = 0; \
 };
 
 

@@ -6,6 +6,8 @@
 namespace reflection
 {
 
+class NullClass;
+
 /** Base class for all objects that are to be used through the class registry.
     It is an abstract class.
  */

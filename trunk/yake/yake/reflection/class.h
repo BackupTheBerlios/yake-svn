@@ -16,22 +16,25 @@
     @param SUPER_CLASS_NAME fully qualified name of the super class;
            if there is no base class, pass NullClass.
  */
-#define RX_CLASS(CLASS_NAME, SUPER_CLASS_NAME)\
-protected:\
-    typedef CLASS_NAME ClassType;\
-    static const reflection::Class *getClassStaticPtr() {\
-        static reflection::Class _class(\
-            #CLASS_NAME,\
-            SUPER_CLASS_NAME::getClassStaticPtr(),\
-            __instance_creator_factory__<ClassType, __IS_OBJECT__(ClassType)>::create());\
-        return &_class;\
-    }\
-public:\
-    static const reflection::Class &getClassStatic() {\
-        return *CLASS_NAME::getClassStaticPtr();\
-    }\
-    virtual const reflection::Class &getClass() const {\
-        return *CLASS_NAME::getClassStaticPtr();\
+#define RX_CLASS(CLASS_NAME, SUPER_CLASS_NAME) \
+protected: \
+    typedef CLASS_NAME ClassType; \
+    static const reflection::Class * getClassStaticPtr() \
+		{ \
+        static reflection::Class _class( \
+            #CLASS_NAME, \
+						SUPER_CLASS_NAME::getClassStaticPtr(), \
+            __instance_creator_factory__<ClassType, __IS_OBJECT__(ClassType)>::create()); \
+        return &_class; \
+    } \
+public: \
+    static const reflection::Class & getClassStatic() \
+		{ \
+        return *CLASS_NAME::getClassStaticPtr(); \
+    } \
+    virtual const reflection::Class & getClass() const \
+		{ \
+        return *CLASS_NAME::getClassStaticPtr(); \
     }
 
 /*****************************************************************************
@@ -41,18 +44,20 @@ public:\
 namespace reflection 
 {
 
+class Object;
+
 //instance creator interface
 struct __instance_creator_base__ 
 {
     virtual ~__instance_creator_base__() {}
-    virtual Object *createInstance() const = 0;
+    virtual Object * createInstance() const = 0;
 };
 
 
 //template instance creator
 template <class T> struct __instance_creator__ : __instance_creator_base__
 {
-    virtual Object *createInstance() const 
+    virtual Object * createInstance() const 
 		{
         return new T();
     }

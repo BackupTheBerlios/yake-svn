@@ -18,6 +18,8 @@
 // using std and boost::lambda placeholders
 boost::lambda::placeholder1_type _l1;
 
+// todo move this to yake::base
+
 // abstract class without virtuals
 struct event_base
 {

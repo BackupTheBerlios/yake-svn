@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="reflection"
 	ProjectGUID="{215FEC33-87C9-47E1-80EF-2FC735508B57}"
+	RootNamespace="reflection"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -40,11 +41,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="../../../lua/lib/lua.lib ../../../lua/lib/lualib.lib ../../../luabind/bin/luabindsingle.lib ../../../boost_1_31_0/boost_1_31_0/bin/boost/libs/serialization/build/libboost_serialization.lib/vc7.1/$(outdir)/runtime-link-static/threading-multi/libboost_serialization.lib Iphlpapi.lib libtomcryptd.lib tnld.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib"
+				AdditionalDependencies="../../dependencies/lua/lib/$(ConfigurationName)/lua.lib ../../dependencies/lua/lib/$(ConfigurationName)/lualib.lib ../../dependencies/luabind/lib/$(ConfigurationName)/luabind.lib ../../dependencies/boost/bin/boost/libs/serialization/build/libboost_serialization.lib/vc7.1/$(outdir)/runtime-link-static/threading-multi/libboost_serialization.lib Iphlpapi.lib libtomcryptd.lib tnld.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib"
 				OutputFile=".\Debug/agm_reflection.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="../../../tnl/tnl/lib"
+				AdditionalLibraryDirectories="../../dependencies/tnl/lib"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"

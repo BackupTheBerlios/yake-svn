@@ -8,7 +8,6 @@
 
 #include "config.hpp"
 
-#include <boost/serialization/split_member.hpp>
 #include <boost/serialization/vector.hpp>
 
 namespace filesystem
@@ -56,7 +55,7 @@ private:
   void serialize(Archive & ar, const unsigned int version) const
   {
     // stream headers
-		ar & file_name_;
+		//ar & file_name_; done by construct_data
 		ar & data_offset_;
 		ar & compressed_size_;
 		ar & uncompressed_size_;

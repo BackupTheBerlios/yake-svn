@@ -87,8 +87,6 @@
 namespace reflection 
 {
 
-class Object;
-
 //helper signature for type traits
 char __const_tester__(const void *p);
 int __const_tester__(void *p);

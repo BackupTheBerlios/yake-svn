@@ -1,7 +1,6 @@
 #include "bind_serialization/bind_serialization.h"
 #include "bind_lua/bind_lua.h"
 #include "bind_network/bind_network.h"
-#include "bind.h"
 
 #include "reflection.h"
 #include "events.h"
