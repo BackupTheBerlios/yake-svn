@@ -27,7 +27,7 @@
 
 using namespace yake;
 using namespace yake::base::templates;
-using namespace yake::base::math;
+using namespace yake::math;
 using namespace yake::graphics;
 using namespace yake::data;
 

@@ -35,7 +35,7 @@
 using namespace yake;
 using namespace yake::graphics;
 using namespace yake::base::templates;
-using namespace yake::base::math;
+using namespace yake::math;
 using namespace yake::data;
 
 class TheApp : public yake::exapp::ExampleApplication

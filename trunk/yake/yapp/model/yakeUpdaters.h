@@ -58,8 +58,8 @@ namespace app {
 namespace model {
 
 using namespace ::yake::base;
-using namespace ::yake::base::math;
 using namespace ::yake::base::templates;
+using namespace ::yake::math;
 
 		//-----------------------------------------------------
 		typedef Deque<real> RealVector;
