@@ -39,6 +39,7 @@ namespace physics {
 		virtual size_t getNumAnchors() const;
 		virtual void setAnchor(size_t anchorIndex, const Vector3 & rkAnchor);
 		virtual void setMotor(size_t axisIndex, real velocityTarget, real maximumForce);
+		virtual void setMotorEnabled(size_t axisIndex, bool enabled);
 		virtual void setLimits(size_t axisIndex, real low, real high);
 		virtual void setBreakable(bool enabled);
 		virtual void setBreakableForce(real force);
@@ -55,6 +56,9 @@ namespace physics {
 		NxJoint*		mpNxJoint;
 		JointType		mType;
 		ActorNx*		mpActors[2];
+		real			mBreakingForce;
+		real			mBreakingTorque;
+		bool			mBreakable;
 	};
 
 }
