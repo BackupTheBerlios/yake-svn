@@ -46,6 +46,9 @@ namespace yake {
 		real OdeCollisionGeomBase::sphereGetRadius() const
 		{ return 0; }
 		//-----------------------------------------------------
+		void OdeCollisionGeomBase::sphereSetRadius(const real radius)
+		{}
+		//-----------------------------------------------------
 		Vector3 OdeCollisionGeomBase::boxGetDimensions() const
 		{ return Vector3::kZero; }
 		//-----------------------------------------------------
@@ -155,6 +158,12 @@ namespace yake {
 			return static_cast<dSphere*>(mOdeGeom)->getRadius();
 		}
 
+		//-----------------------------------------------------
+		void OdeCollisionGeomSphere::sphereSetRadius(const real radius)
+		{
+			static_cast<dSphere*>(mOdeGeom)->setRadius(radius);
+		}
+
 		//-----------------------------------------------------			
 		OdeCollisionGeomBox::OdeCollisionGeomBox(dSpace* space, float lx, float ly, float lz)
 		{
@@ -252,11 +261,6 @@ namespace yake {
 		//-----------------------------------------------------
 		ICollisionGeometry* OdeCollisionGeomTransform::tfGetAttachedGeom() const
 		{ 
-			if (mWrappedGeom)
-			{
-				Vector3 t = mWrappedGeom->getPosition();
-				Vector3 t2 = getPosition();
-			}
 			return mWrappedGeom;
 		}
 
