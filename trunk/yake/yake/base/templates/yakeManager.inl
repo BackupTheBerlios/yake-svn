@@ -77,7 +77,7 @@ void DefaultFunctionsNames::Vector< Identifier_ >::doClear()
 template< typename Identifier_, class Value_,	template< typename, class > class ManagerContainerPolicy_,	template< typename, class > class ManagerErrorPolicy_ >
 bool RegisterFunctionsNames::Map< Identifier_, Value_, ManagerContainerPolicy_, ManagerErrorPolicy_ >::doRegister( const Identifier_& rIdentifier, Value_ rValue )
 {
-	return mContainer.insert( Container::value_type( rIdentifier, rValue ) ).second;
+	return mContainer.insert( typename Container::value_type( rIdentifier, rValue ) ).second;
 }
 
 template< typename Identifier_, class Value_,	template< typename, class > class ManagerContainerPolicy_,	template< typename, class > class ManagerErrorPolicy_ >
