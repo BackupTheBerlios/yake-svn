@@ -1,0 +1,8 @@
+#ifndef YAKE_CORE_NATIVE_WIN32_UNDEFINE_H
+#define YAKE_CORE_NATIVE_WIN32_UNDEFINE_H
+
+#undef ERROR
+#undef CreateWindow
+#undef CreateWindowEx
+
+#endif // YAKE_CORE_NATIVE_WIN32_UNDEFINE_H
