@@ -158,6 +158,9 @@
 				RelativePath="..\..\yake\physics\yakePhysics.h">
 			</File>
 			<File
+				RelativePath="..\..\yake\physics\yakePhysicsActor.h">
+			</File>
+			<File
 				RelativePath="..\..\yake\physics\yakePhysicsAffectors.h">
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -170,10 +173,28 @@
 				RelativePath="..\..\yake\physics\yakePhysicsAvatar.h">
 			</File>
 			<File
+				RelativePath="..\..\yake\physics\yakePhysicsBody.h">
+			</File>
+			<File
+				RelativePath="..\..\yake\physics\yakePhysicsBodyGroup.h">
+			</File>
+			<File
+				RelativePath="..\..\yake\physics\yakePhysicsJoint.h">
+			</File>
+			<File
+				RelativePath="..\..\yake\physics\yakePhysicsMaterial.h">
+			</File>
+			<File
 				RelativePath="..\..\yake\physics\yakePhysicsPrerequisites.h">
 			</File>
 			<File
+				RelativePath="..\..\yake\physics\yakePhysicsShape.h">
+			</File>
+			<File
 				RelativePath="..\..\yake\physics\yakePhysicsSystem.h">
+			</File>
+			<File
+				RelativePath="..\..\yake\physics\yakePhysicsWorld.h">
 			</File>
 		</Filter>
 	</Files>
