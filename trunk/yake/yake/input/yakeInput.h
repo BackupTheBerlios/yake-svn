@@ -27,8 +27,10 @@
 
 #if defined( YAKE_INPUT_EXPORTS )
 #	define YAKE_INPUT_API DLLEXPORT
+#	pragma message("Exporting interfaces for yake::input")
 #else
 #	define YAKE_INPUT_API DLLIMPORT
+#	pragma message("Importing interfaces for yake::input")
 #endif
 
 #ifndef YAKE_BASE_PREREQUISITES_H
