@@ -1,0 +1,156 @@
+print """ 
+	  #################################################
+	  #						  #
+	  # 	SCons build system.........		  #
+	  #						  #
+	  #	Project Yake @ www.yake.org		  #
+	  #						  #
+	  ################################################# 
+	"""
+
+title = "Builder for Yake"
+last_modified = "on 8/10/2004 by Nikita Buida (mj)"
+
+print title
+print 'This file was last modified ', last_modified
+
+print """
+	Usage.
+		Issue 
+			% scons
+		shell command. That will build all libraries in ./build and
+		all programs in ./common/bin.
+		
+		To install libraries to /usr/local/lib type
+			# scons install
+		as root.
+		
+		That's it. Enjoy. Find some bugs, improve program, send a patch ;)
+	
+"""
+
+
+import os
+import os.path
+
+import glob
+
+cc_flags = '-DGCC_3_1 -DEXT_HASH'
+
+lib_includes = ['.', 'dependencies', 'dependencies/ttl', 
+		'/usr/local/include/OGRE', 
+		'dependencies/ode/include',
+		'dependencies/luabind' ]
+build_dir = 'build'
+bin_build_dir = 'common/bin'
+lib_dir = '/home/mj/projects/yake/build'
+lib_install_dir = '/usr/local/lib'
+
+BuildDir( build_dir, '.', duplicate = 0 )
+
+env = Environment(CCFLAGS = cc_flags )
+
+def CollectSources( path ):
+	sources = glob.glob( path + '*.cpp' )
+	sources_build = []
+	for src_name in sources:
+		sources_build.append( build_dir + '/' + src_name )
+	return sources_build 
+
+def BuildLibrary( name, path, link_to ):
+	""" Builds shared library  """
+
+	lib_sources_build = CollectSources( path )
+	lib_name = build_dir + '/' + name
+	return env.SharedLibrary( lib_name, lib_sources_build, CPPPATH = lib_includes, LIBS = link_to, LIBPATH = lib_dir )
+
+def BuildProgram( name, path, link_to ):
+	bin_src = CollectSources( path )
+	bin_name = bin_build_dir + '/' + name
+	env.Program( bin_name, bin_src, CPPPATH = lib_includes, LIBS = link_to, LIBPATH = lib_dir )
+
+#Collection of libraries to install
+yakeLibs = []
+
+yakeNative = BuildLibrary( 'yakeNative', 'src/yake/base/native/Linux/', 'dl' )
+yakeLibs.append( yakeNative )
+
+yakeTemplates = BuildLibrary( 'yakeTemplates', 'src/yake/base/templates/', '' )
+yakeLibs.append( yakeTemplates )
+
+yakeMath = BuildLibrary( 'yakeMath', 'src/yake/base/math/', '' )
+yakeLibs.append( yakeMath )
+
+base_libadd_list = [ 'yakeNative', 'yakeTemplates', 'yakeMath' ]
+yakeBase = BuildLibrary( 'yakeBase', 'src/yake/base/', base_libadd_list ) 
+yakeLibs.append( yakeBase )
+libadd_base = ['yakeBase'] + base_libadd_list
+
+
+yakeAudio = BuildLibrary( 'yakeAudio', 'src/yake/audio/', libadd_base )
+yakeLibs.append( yakeAudio )
+libadd_audio = ['yakeAudio'] + libadd_base
+
+yakeData = BuildLibrary( 'yakeData', 'src/yake/data/', libadd_base )
+yakeLibs.append( yakeData )
+libadd_data = ['yakeData'] + libadd_base
+
+yakeGraphics = BuildLibrary( 'yakeGraphics', 'src/yake/graphics/', libadd_base )
+yakeLibs.append( yakeGraphics )
+libadd_graphics = ['yakeGraphics'] + libadd_base
+
+yakeInput = BuildLibrary( 'yakeInput', 'src/yake/input/', libadd_base )
+yakeLibs.append( yakeInput )
+libadd_input = ['yakeInput'] + libadd_base
+
+yakePhysics = BuildLibrary( 'yakePhysics', 'src/yake/physics/', libadd_base )
+yakeLibs.append( yakePhysics )
+libadd_physics = ['yakePhysics'] + libadd_base
+
+yakeRx = BuildLibrary( 'yakeRx', 'src/yake/rx/', libadd_base )
+yakeLibs.append( yakeRx )
+libadd_rx = ['yakeRx'] + libadd_base
+
+audioOpenAL_libadd_list = libadd_audio + ['openalpp']
+yakeaudioOpenAL = BuildLibrary( 'yakeaudioOpenAL', 'src/yake/plugins/audioOpenAL/', audioOpenAL_libadd_list )
+yakeLibs.append( yakeaudioOpenAL )
+libadd_audioOpenAL = ['yakeaudioOpenAL'] + audioOpenAL_libadd_list
+
+graphicsOgre_libadd_list = libadd_graphics + ['OgreMain']
+yakegraphicsOgre = BuildLibrary( 'yakegraphicsOgre', 'src/yake/plugins/graphicsOgre/', graphicsOgre_libadd_list )
+yakeLibs.append( yakegraphicsOgre )
+libadd_graphicsOgre = ['yakegraphicsOgre'] + graphicsOgre_libadd_list 
+
+inputOgre_libadd_list = libadd_input + ['OgreMain']
+yakeinputOgre = BuildLibrary( 'yakeinputOgre', 'src/yake/plugins/inputOgre/', inputOgre_libadd_list )
+yakeLibs.append( yakeinputOgre )
+libadd_inputOgre = ['yakeinputOgre'] + inputOgre_libadd_list
+
+physicsODE_libadd_list = libadd_physics + ['ode']
+yakephysicsODE = BuildLibrary( 'yakephysicsODE', 'src/yake/plugins/physicsODE/', physicsODE_libadd_list )
+yakeLibs.append( yakephysicsODE )
+libadd_physicsODE = ['yakephysicsODE'] + physicsODE_libadd_list
+
+scriptingLua_libadd_list = libadd_base + [ 'lualib', 'lua' ] 
+yakescriptingLua = BuildLibrary( 'yakescriptingLua', 'src/yake/plugins/scriptingLua/', scriptingLua_libadd_list )
+yakeLibs.append( yakescriptingLua )
+libadd_scriptingLua = ['yakescriptingLua'] + scriptingLua_libadd_list
+
+scriptingBindingsLua_libadd_list = libadd_base + [ 'luabind', 'lualib', 'lua' ]
+yakescriptingBindingsLua = BuildLibrary( 'yakescriptingBindingsLua', 'src/yake/plugins/scriptingLuaBindings/', scriptingBindingsLua_libadd_list )
+yakeLibs.append( yakescriptingBindingsLua )
+libadd_scriptingBindingsLua = ['yakescriptingBindingsLua'] + scriptingBindingsLua_libadd_list
+
+
+
+############################################################
+#                   INSTALL                                #
+############################################################
+env.Install( lib_install_dir, yakeLibs )
+env.Alias( 'install', lib_install_dir ) 
+
+BuildProgram( 'DemoDebug', 'src/yake/samples/base/debug/', libadd_base )
+BuildProgram( 'GraphicsDemo', 'src/yake/samples/graphics/demo/', libadd_graphics + libadd_input + libadd_physics + libadd_audio )
+BuildProgram( 'test', 'src/yake/samples/test/', libadd_base )
+
+
