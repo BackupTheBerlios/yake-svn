@@ -174,12 +174,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\yake\base\yakeSerializable.cpp">
-			</File>
-			<File
-				RelativePath="..\..\src\yake\base\yakeState.cpp">
-			</File>
-			<File
 				RelativePath="..\..\src\yake\base\yakeString.cpp">
 			</File>
 			<File
@@ -360,12 +354,6 @@
 			</File>
 			<File
 				RelativePath="..\..\yake\base\yakeResource.h">
-			</File>
-			<File
-				RelativePath="..\..\yake\base\yakeSerializable.h">
-			</File>
-			<File
-				RelativePath="..\..\yake\base\yakeState.h">
 			</File>
 			<File
 				RelativePath="..\..\yake\base\yakeString.h">
