@@ -38,12 +38,19 @@ namespace task {
 	const TaskPriority TASKPRIO_MEDIUM	= 127;
 	const TaskPriority TASKPRIO_HIGH	= 191;
 
+	/** Represents a task. Derived classes have to override two functions.
+		@Remarks This task system is *not* a real multithreaded task system.
+			It emulates something like that in a very remote way, though.
+	*/
 	class YAPP_BASE_API ITask
 	{
 	public:
 		virtual ~ITask() {}
+
+		/** Execute this task. */
 		virtual void execute(real timeElapsed) = 0;
 
+		/** Return this tasks current priority. */
 		virtual TaskPriority getPriority() const = 0;
 
 		/** Return the frequency this task gets executed (in Hz). */
@@ -68,6 +75,7 @@ namespace task {
 		TaskPriority	mPrio;
 	};
 
+	/** Manages tasks. :) */
 	class YAPP_BASE_API TaskManager
 	{
 	public:
@@ -99,17 +107,16 @@ namespace task {
 				return ( pTask == pRhsTask );
 			}
 
-			//@{ @name Sorting
-
+			///@name Sorting
+			//@{
 			//operator > 
-
-			//@}
 			static bool sortDescending( const TaskEntry & rStart, const TaskEntry & rEnd)
 			{
 				YAKE_ASSERT( rStart.pTask );
 				YAKE_ASSERT( rEnd.pTask );
 				return (rStart.pTask->getPriority() > rEnd.pTask->getPriority());
 			}
+			//@}
 		};
 		typedef Deque<TaskEntry> TaskList;
 		TaskList		mTasks;
