@@ -1,8 +1,23 @@
 
 	Parts of the artwork contained within the media folder
-	has been taken from other projects (e.g. OGRE 3D).
+	have been taken from other projects (e.g. OGRE 3D).
 	
 	Copyright notices and licenses will be included here.
 	
 	Until then the artwork provided is intended to be used
 	with the included Yake demos only.
+	
+	If a specific item/file is not mentioned, then this license
+	applies: "Only for illustration. Do not redistribute or reuse."
+	
+	The following list of items/files may not necessarily be complete:
+
+	graphics.textures/
+		10points.png
+		cursor.png
+		nskingr.jpg
+		RustedMetal.jpg
+		smoke.png
+		smokecolors.png		: Taken unmodified from OGRE. OGRE's license applies accordingly.
+		delorean.tga		: Source unknown. Only for illustration. Do not redistribute or reuse.
+		fordboss.jpg		: Copyright by Stephan Kaiser. Only for illustration. Do not redistribute or reuse.
