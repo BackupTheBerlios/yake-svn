@@ -65,7 +65,7 @@ struct abstract_factory :
 	template <class AbstractProduct> 
 	AbstractProduct * create()
 	{
-		// DoCreate functions are declared within different namespaces ...
+		// do_create functions are declared within different namespaces ...
 		FactoryUnit<AbstractProduct> & unit = *this;
 		return unit.do_create(functions::identity<AbstractProduct>());
 	}
@@ -92,13 +92,13 @@ public:
 template
 <
 	class AbstractFactory,
-	template <class, class> class Creator = op_new_factory_unit,
-	class Types = typename AbstractFactory::ProductList
+	class Types = typename AbstractFactory::ProductList,
+	template <class, class> class Creator = op_new_factory_unit
 >
 struct concrete_factory
 	: inherit_linear
 	< 
-		Types, //typename boost::mpl::reverse< Types_ >::type, // Using fold does not require abstract and concrete product list adjustment
+		Types, //typename boost::mpl::reverse<Types>::type, // Using fold does not require abstract and concrete product list adjustment
 		typename lambda::lambda< Creator<lambda::_, lambda::_> >::type, 
 		AbstractFactory
 	>::type

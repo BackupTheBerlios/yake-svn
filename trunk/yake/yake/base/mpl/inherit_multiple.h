@@ -63,8 +63,8 @@ struct inherit_transformed
     struct apply
     {
         // first transform the type
-				typedef typename functions::apply<F, Element>::type transformed_type;
-				// OR typedef typename F::apply< Element >::type transformed_type;
+		typedef typename functions::apply<F, Element>::type transformed_type;
+		// OR typedef typename F::apply<Element>::type transformed_type;
 
         // This is the return value: we inherit from the
         // current element and everything accumulated so far
