@@ -111,6 +111,8 @@ struct sql_hook
 	}
 };
 
+// meta class and object derive from this class, because
+// luabing cannot handle template functions 
 template< class T >
 struct lua_hook
 {

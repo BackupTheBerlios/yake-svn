@@ -42,7 +42,7 @@ int main()
 		// define class with default value
 		meta_class test_class( "test_class" );
 		test_class.add_field<bool>( "hello_bool", true );
-		test_class.add_field<std::string, none>( "hello_string" );
+		test_class.add_field<std::string>( "hello_string" );
 	
 		// create an instance of that just defined class
 		meta_object & test_object = test_class.create_object( "test_object" );
@@ -54,7 +54,7 @@ int main()
 			"hello_bool" ) ? "true" : "false" ) << std::endl;		
 
 		// append the objects field list
-		test_object.add_field<bool, none>( "dead", false );
+		test_object.add_field<bool>( "dead", false );
 		assert( !test_object.field<bool>( "dead" ) );
 		test_object.field<bool>( "dead" ) = true;
 		assert( test_object.field<bool>( "dead" ) );

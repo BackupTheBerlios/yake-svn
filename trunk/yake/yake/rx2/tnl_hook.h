@@ -4,7 +4,7 @@ struct observer
 };
 
 template< typename T >
-struct tnl_extrapolation_observer : observer
+struct tnl_extrapolation_observer : public observer
 {
 	typedef typed_field<T> field_type;
 
@@ -46,6 +46,12 @@ struct tnl_hook : public NetObject
 		string_
 	};
 
+	// Let's assume that the approach adds int, float, string to the
+	// meta object, all we have to do in order to get the type informations
+	// of these three meta fields is to store the "types" in the same order.
+	// Whenever a value changes, we simply send the position of the field
+	// within objects' field container and we can lookup the according type
+	// in our field_types container. Finally we get the actual field and it's type
 	typedef std::vector< types > field_types;
 	typedef std::vector< meta_field* > dirty_fields; 
 	typedef std::map< int, observer* > observers;

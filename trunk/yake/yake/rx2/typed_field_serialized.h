@@ -20,6 +20,7 @@ void serialize(Archive & ar, rx::typed_field<T> & field, const unsigned int vers
 {
 	ar & boost::serialization::base_object<rx::meta_field>(field);
 
+		// if archive is loading and we have a loadable typed field ... same for saving
 		if( ( ( ar.is_loading::value ) &&
 			(	field.flags_ & rx::load ) ) || 
 			( ( ar.is_saving::value ) && 

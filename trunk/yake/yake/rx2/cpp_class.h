@@ -10,21 +10,32 @@ struct moveable
 struct cpp_class : public moveable
 {
 public:
+	// we can use a chain of typed_fields here, as long as
+	// they have the same order as within the meta_class
+	// field container see build_meta_class
 	cpp_class( std::string object_name ) 
-		: meta_object_( meta_class_.create_object( 
-			object_name, test_int, test_string, test_float ) )
+		: meta_object_( 
+				meta_class_.create_object( 
+					object_name, 
+					test_int, 
+					test_string, 
+					test_float ) )
 	{
 	}
 
+	// rx members
 	typed_field<int> test_int;
 	typed_field<std::string> test_string;
 	typed_field<float> test_float;
+
+	// todo we use a reference to an existing variable here, this is kind of the non-instrusive version
+	typed_field<int&> position_wrapped;
 	
 public:
 	static void build_meta_class()
 	{
 		// register fields
-		meta_class_.add_field<int&>( "test_int", position_ );
+		meta_class_.add_field<int>( "test_int" );
 		meta_class_.add_field<std::string>( "test_string" );
 		meta_class_.add_field<float>( "test_float" );      
 	}	
@@ -41,7 +52,9 @@ public:
 	}
 
 private:
+	// one c++ class needs one static meta class
 	static meta_class meta_class_;
+	// but one c++ class can have n meta objects
 	meta_object & meta_object_;
 };
 

@@ -78,24 +78,28 @@ struct typed_field : public meta_field
 		predict_max_error_ = predict_max_error;    
 	}
 
+	// used when we want to add existing type_fields (from a c++ class) to an meta object
 	void add_to_object( meta_object & object )
 	{
-		// DISPATCH TRICK ( used by meta_class) : add clone to the meta object, this way we don't loose type information
+		// DISPATCH TRICK ( used by meta_class ) : add clone to the meta object, this way we don't loose type information
 		// and obj->add_field => hook::on_add_field can use typed_field<> instead of the abstract meta_field
 		// interface, so the replication system has concrete information about the value offset and its' size
 		object_ = &object;
     object.add_field< this_type >( *this );
 	};
 
+	// used when the meta class instances an meta object
 	void add_clone_to_object( meta_object & object )
 	{
-		// DISPATCH TRICK ( used by meta_class) : add clone to the meta object, this way we don't loose type information
+		// DISPATCH TRICK ( used by meta_class ) : add clone to the meta object, this way we don't loose type information
 		// and obj->add_field => hook::on_add_field can use typed_field<> instead of the abstract meta_field
 		// interface, so the replication system has concrete information about the value offset and its' size
     object.add_field< this_type >( * new this_type( object, name_, value_, flags_ ) );
 	};
 
 	T value_;
+
+	// todo move this into observer
 	float predict_min_error_;
 	float predict_max_error_;
 };
