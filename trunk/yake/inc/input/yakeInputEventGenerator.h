@@ -17,12 +17,17 @@
    Place - Suite 330, Boston, MA 02111-1307, USA, or go to
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
+   If you are interested in another license model contact the Yake Team via
+   E-Mail: team@yake.org.
+   For more information see the LICENSE file in the root directory of the
+   source code distribution.
+   ------------------------------------------------------------------------------------
 */
 #ifndef INC_YAKE_INPUTEVENTGENERATOR_H
 #define INC_YAKE_INPUTEVENTGENERATOR_H
 
-#include <yakeInput/inc/yakeInput.h>
-#include <yakeInput/inc/yakeInputSystem.h>
+#include <inc/input/yakeInput.h>
+#include <inc/input/yakeInputSystem.h>
 
 namespace yake {
 namespace input {

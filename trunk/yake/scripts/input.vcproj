@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../common/lib/debug"
-			IntermediateDirectory="../common/obj/debug/yakeInput"
+			OutputDirectory="../common/bin/debug"
+			IntermediateDirectory="../common/obj/debug/$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -25,7 +25,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yakeInput/inc/pch.h"
+				PrecompiledHeaderThrough="inc/input/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -33,13 +33,14 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../common/bin/debug/yakeInput.dll"
+				AdditionalDependencies="base.lib"
+				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../common/lib/debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/yakeInput.pdb"
+				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
-				ImportLibrary="../common/lib/debug/yakeInput.lib"
+				ImportLibrary="../common/lib/debug/$(TargetName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -118,7 +119,16 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{B7CF984F-083F-4966-B9BD-0EB43436EE6A}">
 			<File
-				RelativePath="..\yakeInput\src\pch.cpp">
+				RelativePath="..\src\input\yakeActionMap.cpp">
+			</File>
+			<File
+				RelativePath="..\src\input\yakeInput.cpp">
+			</File>
+			<File
+				RelativePath="..\src\input\yakeInputEventGenerator.cpp">
+			</File>
+			<File
+				RelativePath="..\src\input\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -126,34 +136,25 @@
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="..\yakeInput\src\yakeActionMap.cpp">
-			</File>
-			<File
-				RelativePath="..\yakeinput\src\yakeInput.cpp">
-			</File>
-			<File
-				RelativePath="..\yakeinput\src\yakeInputEventGenerator.cpp">
-			</File>
 		</Filter>
 		<Filter
 			Name="inc"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{34D25D1F-9250-4a61-9B3D-61887B545317}">
 			<File
-				RelativePath="..\yakeInput\inc\pch.h">
+				RelativePath="..\inc\input\yakeActionMap.h">
 			</File>
 			<File
-				RelativePath="..\yakeInput\inc\yakeActionMap.h">
+				RelativePath="..\inc\input\yakeInput.h">
 			</File>
 			<File
-				RelativePath="..\yakeInput\inc\yakeInput.h">
+				RelativePath="..\inc\input\yakeInputEventGenerator.h">
 			</File>
 			<File
-				RelativePath="..\yakeInput\inc\yakeInputEventGenerator.h">
+				RelativePath="..\inc\input\yakeInputSystem.h">
 			</File>
 			<File
-				RelativePath="..\yakeInput\inc\yakeInputSystem.h">
+				RelativePath="..\inc\input\yakePCH.h">
 			</File>
 		</Filter>
 	</Files>

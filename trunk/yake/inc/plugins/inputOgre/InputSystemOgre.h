@@ -39,6 +39,10 @@ namespace input {
 		virtual int getNumButtons() const;
 		virtual bool isButtonDown( int button ) const;
 		virtual base::math::Vector3 getPosition() const;
+		virtual void setClip( const base::math::Rectangle & rect )
+		{ mClip = rect; }
+		virtual void setScale( const base::math::Vector3 & scale )
+		{ mScale = scale; }
 
 		virtual void poll();
 
@@ -46,6 +50,8 @@ namespace input {
 		Ogre::InputReader	* mInputReader;
 		bool				mButtons[3];
 		Vector3				mPosition;
+		Vector3				mScale;
+		Rectangle			mClip;
 	};
 
 	//-----------------------------------------------------------------------

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="yakeInputPluginOGRE"
+	Name="inputOGRE"
 	ProjectGUID="{A1A2FE19-7B7E-42F1-808B-8FA5B6AA697E}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -12,20 +12,20 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../common/bin/debug"
-			IntermediateDirectory="../common/obj/debug/yakeInputPluginOgre"
+			OutputDirectory="../../../common/bin/debug"
+			IntermediateDirectory="../../../common/obj/debug/$(ProjectName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..;../dependencies/ttl/"
+				AdditionalIncludeDirectories="../../../;../../../dependencies/ttl/;../../../dependencies/boost/;../../../dependencies/ogrenew/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKEINPUTOGRE_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="plugins/yakeInputOGRE/inc/pch.h"
+				PrecompiledHeaderThrough="inc/plugins/inputOGRE/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -33,15 +33,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="yakeInput.lib OgreMain.lib"
-				OutputFile="../common/bin/debug/yakeInputOGRE.dll"
+				AdditionalDependencies="base.lib input.lib OgreMain_d.lib"
+				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../common/lib/debug;../dependencies/ogrenew/OgreMain/lib/Debug"
-				ModuleDefinitionFile="../plugins/yakeInputOGRE/src/plugin.def"
+				AdditionalLibraryDirectories="../../../common/lib/debug;../../../dependencies/ogrenew/OgreMain/lib/Debug"
+				ModuleDefinitionFile="../../../src/plugins/inputOGRE/plugin.def"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/yakeInputOGRE.pdb"
+				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
-				ImportLibrary="../common/lib/debug/yakeInputOGRE.lib"
+				ImportLibrary="../../../common/lib/debug/$(TargetName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -120,13 +120,16 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{C67DED0A-2A44-4e20-AE89-F806E18528B8}">
 			<File
-				RelativePath="..\plugins\yakeInputOgre\src\inputPlugin.cpp">
+				RelativePath="..\..\..\src\plugins\inputOgre\inputPlugin.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakeInputOgre\src\InputSystemOgre.cpp">
+				RelativePath="..\..\..\src\plugins\inputOgre\InputSystemOgre.cpp">
 			</File>
 			<File
-				RelativePath="..\plugins\yakeInputOgre\src\pch.cpp">
+				RelativePath="..\..\..\src\plugins\inputOgre\plugin.def">
+			</File>
+			<File
+				RelativePath="..\..\..\src\plugins\inputOgre\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -134,22 +137,19 @@
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="..\plugins\yakeInputOgre\src\plugin.def">
-			</File>
 		</Filter>
 		<Filter
 			Name="inc"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{822EB821-5C65-4f72-8334-5A5492305603}">
 			<File
-				RelativePath="..\plugins\yakeInputOgre\inc\inputPlugin.h">
+				RelativePath="..\..\..\inc\plugins\inputOgre\inputPlugin.h">
 			</File>
 			<File
-				RelativePath="..\plugins\yakeInputOgre\inc\InputSystemOgre.h">
+				RelativePath="..\..\..\inc\plugins\inputOgre\InputSystemOgre.h">
 			</File>
 			<File
-				RelativePath="..\plugins\yakeInputOgre\inc\pch.h">
+				RelativePath="..\..\..\inc\plugins\inputOgre\yakePCH.h">
 			</File>
 		</Filter>
 	</Files>

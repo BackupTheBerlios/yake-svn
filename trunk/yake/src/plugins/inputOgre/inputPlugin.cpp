@@ -18,11 +18,11 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <plugins/yakeInputOgre/inc/pch.h>
-#include <yakeBase/inc/yake.h>
-#include <yakeInput/inc/yakeInputSystem.h>
-#include <plugins/yakeInputOgre/inc/InputSystemOgre.h>
-#include <plugins/yakeInputOgre/inc/inputPlugin.h>
+#include <inc/plugins/inputOGRE/yakePCH.h>
+#include <inc/base/yake.h>
+#include <inc/input/yakeInputSystem.h>
+#include <inc/plugins/inputOGRE/InputSystemOgre.h>
+#include <inc/plugins/inputOGRE/inputPlugin.h>
 #include <new.h>
 //---------------------------------------------------------
 // This is an example of an exported function.

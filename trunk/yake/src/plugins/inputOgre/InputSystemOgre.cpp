@@ -18,9 +18,9 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#include <plugins/yakeInputOgre/inc/pch.h>
-#include <yakeInput/inc/yakeInputSystem.h>
-#include <plugins/yakeInputOgre/inc/InputSystemOgre.h>
+#include <inc/plugins/inputOGRE/yakePCH.h>
+#include <inc/input/yakeInputSystem.h>
+#include <inc/plugins/inputOGRE/InputSystemOgre.h>
 
 #include "OgreMemoryMacros.h"
 #include "Ogre.h"

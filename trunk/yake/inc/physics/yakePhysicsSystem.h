@@ -109,9 +109,16 @@ namespace yake {
 
 			virtual void attach(IBody* body1, IBody* body2) = 0;
 
-			virtual void setAnchor(const Vector3 & anchor) = 0;
+			virtual void setAnchor(const Vector3 & anchorPoint) = 0;
 			virtual Vector3 getAnchor() const = 0;
-			//virtual Vector3 getAnchor2() const = 0;
+
+/*			virtual void setAxis(int axis, const Vector3 & axisDirection) = 0;
+			virtual Vector3 getAxis(int axis) const = 0;
+			virtual int getAxisCount() const = 0;
+
+			virtual void setMotorVelocity(int motor, real vel) = 0;
+			virtual void setMotorMaximumForce(int motor, real force) = 0;
+			virtual int getMotorCount() const = 0;*/
 
 			virtual void setAxis1(const Vector3 & axis) = 0;
 			virtual void setAxis2(const Vector3 & axis) = 0;

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="graphicsOgre"
+	Name="graphicsOGRE"
 	ProjectGUID="{A2C2A0B2-2EB0-4254-891D-FE93466809CF}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -36,12 +36,12 @@
 				AdditionalDependencies="OgreMain_d.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../..//common/lib/debug;../../../dependencies/ogrenew/OgreMain/lib/Debug"
+				AdditionalLibraryDirectories="../../../common/lib/debug;../../../dependencies/ogrenew/OgreMain/lib/Debug"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
-				ImportLibrary="../common/lib/debug/$(TargetName).lib"
+				ImportLibrary="../../../common/lib/debug/$(TargetName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>

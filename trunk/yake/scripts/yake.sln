@@ -8,7 +8,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphics", "graphics.vcproj
 		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphicsOgre", "plugins\graphics\graphicsOgre.vcproj", "{A2C2A0B2-2EB0-4254-891D-FE93466809CF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphicsOGRE", "plugins\graphics\graphicsOgre.vcproj", "{A2C2A0B2-2EB0-4254-891D-FE93466809CF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{ECC8FA24-93AC-4659-8EBD-26B6F418AC64} = {ECC8FA24-93AC-4659-8EBD-26B6F418AC64}
 		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
@@ -79,6 +79,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "physicsODE", "plugins\physi
 		{1C674F1C-7DDF-4AC5-A52A-14C31248A9D4} = {1C674F1C-7DDF-4AC5-A52A-14C31248A9D4}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "input", "input.vcproj", "{1AF3930A-4E72-4455-AFD0-6B78684105CD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "inputOGRE", "plugins\input\inputOgre.vcproj", "{A1A2FE19-7B7E-42F1-808B-8FA5B6AA697E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1AF3930A-4E72-4455-AFD0-6B78684105CD} = {1AF3930A-4E72-4455-AFD0-6B78684105CD}
+		{D29771DD-715F-452B-B71C-911BACF5956D} = {D29771DD-715F-452B-B71C-911BACF5956D}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -145,6 +156,14 @@ Global
 		{2F5124AA-56BD-4909-811A-E79901978C86}.Debug.Build.0 = Debug|Win32
 		{2F5124AA-56BD-4909-811A-E79901978C86}.Release.ActiveCfg = Release|Win32
 		{2F5124AA-56BD-4909-811A-E79901978C86}.Release.Build.0 = Release|Win32
+		{1AF3930A-4E72-4455-AFD0-6B78684105CD}.Debug.ActiveCfg = Debug|Win32
+		{1AF3930A-4E72-4455-AFD0-6B78684105CD}.Debug.Build.0 = Debug|Win32
+		{1AF3930A-4E72-4455-AFD0-6B78684105CD}.Release.ActiveCfg = Release|Win32
+		{1AF3930A-4E72-4455-AFD0-6B78684105CD}.Release.Build.0 = Release|Win32
+		{A1A2FE19-7B7E-42F1-808B-8FA5B6AA697E}.Debug.ActiveCfg = Debug|Win32
+		{A1A2FE19-7B7E-42F1-808B-8FA5B6AA697E}.Debug.Build.0 = Debug|Win32
+		{A1A2FE19-7B7E-42F1-808B-8FA5B6AA697E}.Release.ActiveCfg = Release|Win32
+		{A1A2FE19-7B7E-42F1-808B-8FA5B6AA697E}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

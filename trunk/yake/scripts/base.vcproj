@@ -454,6 +454,9 @@
 					RelativePath="..\inc\base\math\yakeColor.inl">
 				</File>
 				<File
+					RelativePath="..\inc\base\math\yakeGeometry.h">
+				</File>
+				<File
 					RelativePath="..\inc\base\math\yakeInterpolator.h">
 				</File>
 				<File
