@@ -56,7 +56,7 @@ namespace input {
 		uint32			mId;
 		base::String	mName;
 	};
-	uint32 operator + (const ActionId & lhs, const uint32 rhs)
+	inline uint32 operator + (const ActionId & lhs, const uint32 rhs)
 	{
 		return lhs.id() + rhs;
 	}
