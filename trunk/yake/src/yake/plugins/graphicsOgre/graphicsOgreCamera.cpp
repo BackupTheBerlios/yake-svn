@@ -126,6 +126,20 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
+	Matrix4 OgreCamera::getProjectionMatrix() const
+	{
+		YAKE_ASSERT( mCam ).debug("need a camera!");
+		return MATRIX4_OGRE2YAKE( mCam->getStandardProjectionMatrix() );
+	}
+
+	//------------------------------------------------------
+	Matrix4 OgreCamera::getViewMatrix() const
+	{
+		YAKE_ASSERT( mCam ).debug("need a camera!");
+		return MATRIX4_OGRE2YAKE( mCam->getViewMatrix() );
+	}
+
+	//------------------------------------------------------
 	void OgreCamera::setNearClipDistance( real clipDistance )
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");

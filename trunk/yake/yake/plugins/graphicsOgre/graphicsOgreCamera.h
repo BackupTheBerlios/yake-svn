@@ -44,6 +44,8 @@ namespace ogre3d {
 		// ICamera
 		virtual void setProjectionType( const ProjectionType type );
 		virtual ProjectionType getProjectionType() const;
+		virtual Matrix4 getProjectionMatrix() const;
+		virtual Matrix4 getViewMatrix() const;
 		virtual void setNearClipDistance( real clipDistance );
 		virtual real getNearClipDistance() const;
 		virtual void setFarClipDistance( real clipDistance );

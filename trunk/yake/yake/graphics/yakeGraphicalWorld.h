@@ -142,6 +142,11 @@ namespace graphics {
 			@param screenX, screenY position where the ray intersects the viewport, in normalised screen coords [0,1]
 		*/
 		virtual Ray createCameraToViewportRay(const real screenX, const real screenY) const;
+
+		/** Retrieve the projection matrix. The matrix conforms to the right-handed rules. 
+		*/
+		virtual Matrix4 getProjectionMatrix() const = 0;
+		virtual Matrix4 getViewMatrix() const = 0;
 	};
 
 	void ICamera::rotate(const Vector3 & axis, real degrees)
