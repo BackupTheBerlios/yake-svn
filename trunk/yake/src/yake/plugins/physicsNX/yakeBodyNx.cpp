@@ -26,7 +26,7 @@
 namespace yake {
 	using namespace base;
 	using namespace base::templates;
-	using namespace base::math;
+	using namespace math;
 namespace physics {
 
 	BodyNx::BodyNx( NxActor* pActor, ActorNx* pActorNx ) : mNxActor(pActor), mActor(pActorNx)
