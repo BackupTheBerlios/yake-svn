@@ -51,6 +51,9 @@ namespace ogre3d {
 		inline Ogre::RenderWindow* getRenderWindow() const { return mRWin; }
 		inline Ogre::ParticleSystemManager* getParticleSysMgr() const 
 		{ return Ogre::ParticleSystemManager::getSingletonPtr(); }
+
+		void subscribeToShutdownSignal( const IGraphicsSystem::ShutdownSignal::slot_type & rSlot );
+
 	protected:
 		void setupResourcesFromConfigFile();
 
@@ -67,6 +70,13 @@ namespace ogre3d {
 		Ogre::SceneManager*		mSceneMgr;
 
 		SystemFrameListener*	mSysFL;
+
+		typedef AssocVector<base::String,base::String> StringMap;
+		StringMap				mConfig;
+
+		Ogre::SceneType			mSceneType;
+
+		IGraphicsSystem::ShutdownSignal mShutdownSignal;
 	};
 
 }

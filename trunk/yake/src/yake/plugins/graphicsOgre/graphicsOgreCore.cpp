@@ -103,6 +103,7 @@ namespace ogre3d {
 				Ogre::String("yake.graphics.ogre.cfg"),
 				Ogre::String("yake.graphics.ogre.log") );
 
+			getConfig();
 			setupResourcesFromConfigFile();
 
 #if defined( YAKE_OGREPLUGIN_NO_CONFIG_DIALOG )
@@ -172,8 +173,26 @@ namespace ogre3d {
 
 	void OgreCore::_chooseSceneManager()
 	{
-		mSceneMgr = mRoot->getSceneManager( ST_GENERIC );
-		mSceneMgr->setAmbientLight( ColourValue(0.5,0.5,0.7) );
+		StringMap::const_iterator itFind = mConfig.find("scenemanager");
+		if (itFind == mConfig.end())
+			mSceneMgr = mRoot->getSceneManager( ST_GENERIC );
+		else
+		{
+			base::String val = itFind->second;
+			if (val == "exterior_close")
+				mSceneType = ST_EXTERIOR_CLOSE;
+			else if (val == "exterior_far")
+				mSceneType = ST_EXTERIOR_FAR;
+			else if (val == "exterior_real_far")
+				mSceneType = ST_EXTERIOR_REAL_FAR;
+			else
+			{
+				YAKE_ASSERT( 1==0 ).warning("unknown scene manager config option. Using fallback: generic.");
+				mSceneType = ST_GENERIC;
+			}
+			mSceneMgr = mRoot->getSceneManager( mSceneType );
+		}
+		YAKE_ASSERT( mSceneMgr );
 	}
 
 	OgreCore::~OgreCore()
@@ -211,8 +230,49 @@ namespace ogre3d {
 		}
 	}
 
+	void OgreCore::getConfig()
+	{
+		// Load resource paths from config file
+		Ogre::ConfigFile cf;
+		cf.load("yake.graphics.ogre_config.cfg");
+
+		// Go through all settings in the file
+		Ogre::ConfigFile::SettingsIterator i = cf.getSettingsIterator();
+
+		base::String key, value;
+		while (i.hasMoreElements())
+		{
+			key = i.peekNextKey();
+			value = i.getNext();
+			mConfig.insert( std::make_pair( key, value ) );
+		}
+	}
+
 	void OgreCore::update( real timeElapsed )
 	{
+		//HACK/FIXME
+		static bool bFirstTime = true;
+		if (bFirstTime)
+		{
+			bFirstTime = false;
+			if (mSceneType == ST_EXTERIOR_CLOSE)
+			{
+				// Fog
+				// NB it's VERY important to set this before calling setWorldGeometry 
+				// because the vertex program picked will be different
+				ColourValue fadeColour(0.93, 0.86, 0.76);
+				mSceneMgr->setFog( FOG_LINEAR, fadeColour, .001, 500, 1000);
+				mRWin->getViewport(0)->setBackgroundColour(fadeColour);
+
+				StringMap::const_iterator itFind = mConfig.find("world");
+				if (itFind != mConfig.end())
+				{
+					mSceneMgr->setWorldGeometry( itFind->second );
+				}
+				mSceneMgr->setAmbientLight( ColourValue(0.5,0.5,0.7) );
+			}
+		}
+
 		//if (mReady && mRWin && mRSys)
 		{
 			Ogre::FrameEvent evt;
@@ -233,7 +293,8 @@ namespace ogre3d {
 				/*mRoot->_fireFrameStarted( evt );
 				mRoot->getRenderSystem()->_updateAllRenderTargets();
 				mRoot->_fireFrameEnded();*/
-				mRoot->renderOneFrame();
+				if (!mRoot->renderOneFrame())
+					mShutdownSignal();
 			}
 			catch (Ogre::Exception& e)
 			{
@@ -241,6 +302,11 @@ namespace ogre3d {
 				mReady = false;
 			}
 		} // if (mReady && mRWin && mRSys){
+	}
+
+	void OgreCore::subscribeToShutdownSignal( const IGraphicsSystem::ShutdownSignal::slot_type & rSlot )
+	{
+		mShutdownSignal.connect( rSlot );
 	}
 
 }

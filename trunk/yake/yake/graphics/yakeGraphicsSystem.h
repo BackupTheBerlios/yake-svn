@@ -51,6 +51,9 @@ struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem
 
 	virtual SharedPtr<IGraphicalWorld> createWorld() = 0;
 
+	typedef Signal0<void> ShutdownSignal;
+	virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot ) = 0;
+
 YAKE_DECLARE_REGISTRY_0( IGraphicsSystem, yake::base::String )
 };
 

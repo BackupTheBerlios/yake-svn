@@ -51,6 +51,11 @@ SharedPtr<IGraphicalWorld> GraphicsSystem::createWorld()
 	return SharedPtr<IGraphicalWorld>( new GraphicalWorld() );
 }
 
+void GraphicsSystem::subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot )
+{
+	mCore->subscribeToShutdownSignal( rSlot );
+}
+
 } // ogre3d
 } // graphics
 } // yake

@@ -63,11 +63,13 @@ namespace ogre3d {
 		virtual ~GraphicsSystem();
 
 		virtual SharedPtr<IGraphicalWorld> createWorld();
+		
+		virtual void subscribeToShutdownSignal( const ShutdownSignal::slot_type& rSlot );
 
 	YAKE_DECLARE_CONCRETE( GraphicsSystem, "ogre3d" )
 
 	private:
-		OgreCore*	mCore;
+		OgreCore*		mCore;
 	};
 
 } // ogre3d
