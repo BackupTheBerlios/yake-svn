@@ -100,7 +100,7 @@ struct abstract_factory_unit_pars : do_create_function<AbstractProduct, typename
 
 // ---------------------------------------------------------
 // factory unit without arguments at all
-template <class AbstractProduct, class Parameters = null_type>
+template <class AbstractProduct, class ParametersFunction = null_type>
 struct abstract_factory_unit_pure
 {
 	virtual AbstractProduct * do_create(functions::identity<AbstractProduct>) = 0;
@@ -123,6 +123,18 @@ struct find_product_parameters
 		>::type type;
 };
 
+/*
+	abstract_factory
+	<
+		list<product1, product2>, // abstract products
+		abstract_factory_unit_pars, // creator declaration
+		list // lists of constructor arguments for each abstract product
+		<
+		  list<int>,
+			list<bool>
+		>
+	>
+*/
 template
 <
 	class Types,
