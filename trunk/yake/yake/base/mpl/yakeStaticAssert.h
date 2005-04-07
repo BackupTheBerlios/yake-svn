@@ -32,27 +32,32 @@ namespace mpl
 {
 
 /** Helper class for compile time checking. */
-template< bool >
+template <bool>
 struct StaticAssert
 {
     /** Constructor accepting any kind of parameters. */
-    StaticAssert( ... );
+    StaticAssert(...);
 };
 
 /** Specialized class that makes compile time checks fail if the condition is false. */
 template<>
-struct StaticAssert< false >
+struct StaticAssert <false>
 {};
 
-/** Checks the compile-time condition condition. If the condition is false, a compiler error is generated. */
+/** Helper class that simply accepts the return value of sizeof. */
+template <int>
+struct AbsorbValue
+{};
+
+/** Checks the compile-time condition using sizeof as executor. If the condition is false, a compiler error is generated. */
 #ifdef YAKE_DEBUG_BUILD
-#define YAKE_STATIC_ASSERT( condition, message ) \
+#	define YAKE_STATIC_ASSERT(condition, message) \
     { \
         class ERROR_##message {}; \
-				( void )sizeof( yake::base::mpl::functions::StaticAssert< ( condition ) != 0 >( ( ERROR_##message() ) ) ); \
+		typedef AbsorbValue<sizeof(yake::base::mpl::functions::StaticAssert<(condition) != 0>((ERROR_##message())))> AssertType##message; \
     }
 #else
-#    define YAKE_STATIC_ASSERT( condition, message ) (void(condition))
+#    define YAKE_STATIC_ASSERT(condition, message)
 #endif
 
 } // mpl
