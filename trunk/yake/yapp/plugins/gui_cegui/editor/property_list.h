@@ -43,18 +43,7 @@ public:
 namespace // unnamed
 {
 	// check whether all property types are handled or not at compile time
-	BOOST_STATIC_ASSERT((
-		compare_sequences
-		< 
-			implemented_properties, // conditional types
-			boost::mpl::list // handled/implemented (by this function) types
-			<
-				bool,
-				float,
-				const char *,
-				const point &				
-			> 
-		>::type::value));
+	YAKE_STATIC_ASSERT_PROPERTIES(bool, float, const char *, const point& );
 
 	template <typename Value, typename Object>
 	struct set_property_value_helper; // throw compile-time error

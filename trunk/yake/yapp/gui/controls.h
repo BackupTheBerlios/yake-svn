@@ -9,6 +9,7 @@
 #include <yake/base/mpl/compare_sequences.h>
 #include <yake/base/mpl/get_type_or_null.h>
 #include <yake/base/mpl/dispatch_arbitrary_types.h>
+#include <yake/base/mpl/yakeStaticAssert.h>
 // yapp
 #include <yapp/gui/button_base.h>
 #include <yapp/gui/static_text_base.h>
@@ -53,9 +54,10 @@ struct get_type_list
 	typedef typename boost::mpl::remove_if< given_types, boost::is_same<boost::mpl::_, null_type> >::type type;
 };
 
+// todo: YAKE_STATIC_ASSERT should work within global scope like BOOST_STATIC_ASSERT does
 // accept n properties and checks whether all widget types are handled or not at compile time
 #define YAKE_STATIC_ASSERT_PROPERTIES(PROP1, PROP2, PROP3, PROP4, PROP5, PROP6, PROP7, PROP8, PROP9, PROP10, PROP11, PROP12, PROP13, PROP14, PROP15, PROP16) \
-	YAKE_STATIC_ASSERT( \
+	BOOST_STATIC_ASSERT( \
 		(compare_sequences /* condition */ \
 		 < \
 			 available_properties, /* conditional types */ \
@@ -63,13 +65,11 @@ struct get_type_list
 			 < \
 				  typename yake::base::mpl::get_type_or_null<PROP1>::type, \
 				  typename yake::base::mpl::get_type_or_null<PROP2>::type, \
-				  typename yake::base::mpl::get_type_or_null<PROP3>::type \
+				  typename yake::base::mpl::get_type_or_null<PROP3>::type, \
+				  typename yake::base::mpl::get_type_or_null<PROP4>::type \
 			 >::type \
-     >::type::value), \
-    conditional_and_available_properties_lists_do_not_match) /* error */
-
-} // namespace gui
-} // namespace yake
+     >::type::value)) /*, \
+    conditional_and_available_properties_lists_do_not_match) */ /* error */
 
 // accept n widgets and checks whether all widget types are handled or not at compile time
 #define YAKE_STATIC_ASSERT_WIDGETS(WIDGET1, WIDGET2, WIDGET3, WIDGET4, WIDGET5, WIDGET6, WIDGET7, WIDGET8, WIDGET9, WIDGET10, WIDGET11, WIDGET12,	WIDGET13, WIDGET14, WIDGET15, WIDGET16) \

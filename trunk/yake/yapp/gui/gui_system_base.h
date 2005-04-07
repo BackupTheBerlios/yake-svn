@@ -50,9 +50,9 @@ struct get_widget_infos_lists
 struct YAPP_GUI_API gui_system_base 
 	: yake::base::mpl::abstract_factory
 		<
-			implemented_widgets,
-			yake::base::mpl::abstract_factory_unit_pars,
-			typename get_widget_infos_lists<available_widgets>::type
+			available_widgets, // products
+			yake::base::mpl::abstract_factory_unit_pars, // creator
+			typename get_widget_infos_lists<available_widgets>::type // constructor args
 		>
 {
 	// virtual destructor
