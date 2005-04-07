@@ -1,11 +1,6 @@
 #ifndef _YAPP_GUI_CONFIG_H_
 #define _YAPP_GUI_CONFIG_H_
 
-namespace yake
-{
-namespace gui
-{
-
 /* compile time flags */
 // dll import/export
 #if defined(YAPP_GUI_EXPORTS)
@@ -38,8 +33,5 @@ namespace gui
 #	define GUI_PROPERTY(TYPE, NAME) PROPERTY(TYPE, NAME)
 # define GUI_IMPLEMENT_CLASS(CLASS_NAME) IMPLEMENT_CLASS(CLASS_NAME)
 #endif
-
-} // namespace gui
-} // namespace yake
 
 #endif // _YAPP_GUI_CONFIG_H_
