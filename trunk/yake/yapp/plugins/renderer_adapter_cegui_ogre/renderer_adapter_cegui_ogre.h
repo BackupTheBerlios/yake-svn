@@ -36,7 +36,7 @@ struct renderer_adapter_cegui_ogre : renderer_adapter_base
 	renderer_adapter_cegui_ogre();
 	virtual ~renderer_adapter_cegui_ogre();
 
-	CEGUI::Renderer *	m_gui_renderer;
+	CEGUI::Renderer * m_gui_renderer;
 };
 
 } // namespace cegui_ogre
