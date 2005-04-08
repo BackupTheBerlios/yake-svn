@@ -10,6 +10,22 @@ namespace gui
 namespace cegui
 {
 
+#define YAKE_DEFINE_CEGUI_WIDGET_INFO(CONCRETE_WIDGET, URL_PREFIX, CLASS_NAME) \
+public: \
+	struct cegui_widget_info \
+	{ \
+		typedef CONCRETE_WIDGET widget; \
+\
+		static std::string url() \
+		{ \
+			static unsigned int current_id = 0; \
+			return std::string(URL_PREFIX + boost::lexical_cast<std::string>(current_id++)); \
+		} \
+\
+		static const char * class_name() \
+		{ return CLASS_NAME; } \
+	}
+
 template<class WidgetInfo>
 static typename WidgetInfo::widget & create_widget()
 {

@@ -6,22 +6,6 @@
 #include <yapp/gui/window_base.h>
 #include "util.h"
 
-#define YAKE_DEFINE_CEGUI_WIDGET_INFO(CONCRETE_WIDGET, URL_PREFIX, CLASS_NAME) \
-public: \
-	struct cegui_widget_info \
-	{ \
-		typedef CONCRETE_WIDGET widget; \
-\
-		static std::string url() \
-		{ \
-			static unsigned int current_id = 0; \
-			return std::string(URL_PREFIX + boost::lexical_cast<std::string>(current_id++)); \
-		} \
-\
-		static const char * class_name() \
-		{ return CLASS_NAME; } \
-	}
-
 namespace yake
 {
 namespace gui
@@ -153,7 +137,7 @@ private: // data
   CEGUI::FrameWindow & m_window;
   client_area m_client_area;
 
-	YAKE_DEFINE_CEGUI_WIDGET_INFO(CEGUI::FrameWindow, "window_url", "TaharezLook/FrameWindow");
+  YAKE_DEFINE_CEGUI_WIDGET_INFO(CEGUI::FrameWindow, "window_url", "TaharezLook/FrameWindow");
 };
 
 } // namespace cegui
