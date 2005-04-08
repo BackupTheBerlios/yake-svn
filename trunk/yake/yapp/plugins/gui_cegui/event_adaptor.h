@@ -1,9 +1,9 @@
 #ifndef _EVENT_ADAPTOR_H_
 #define _EVENT_ADAPTOR_H_
 
-#include <reflection.h>
-#include <events.h>
-#include <bind.h>
+#include <yake/reflection/reflection.h>
+#include <yake/reflection/events.h>
+#include <yake/reflection/bind.h>
 
 #include <CEGUI.h>
 
