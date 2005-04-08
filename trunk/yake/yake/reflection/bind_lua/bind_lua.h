@@ -10,9 +10,9 @@
 #include <yake/base/mpl/dispatch_arbitrary_types.h>
 #include <yake/base/type_info.h>
 
-#include "config.h"
-#include "static_init.h"
-#include "events.h"
+#include <yake/reflection/config.h>
+#include <yake/reflection/static_init.h>
+#include <yake/reflection/events.h>
 
 extern "C"
 {
@@ -359,11 +359,11 @@ static void commit_lua_methods() \
 \
 	/* get private registration data and copy methods to crep */ \
 	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
-	detail::class_registration * registration = NULL; \
+	luabind::detail::class_registration * registration = NULL; \
 	__ASM_OFFSET__(registration, [lua_class], asm_lua_class_type_fix::m_registration); \
 \
 	/* get address of private class member of class_rep */ \
-	std::list<detail::method_rep> * crep_methods = NULL; \
+	std::list<luabind::detail::method_rep> * crep_methods = NULL; \
 	__ASM_OFFSET__(crep_methods, [lua_crep], luabind::detail::class_rep::m_methods); \
 \
 	/* add to crep */ \
@@ -387,12 +387,12 @@ static void commit_lua_properties() \
 \
 	/* get private registration data */ \
 	typedef luabind::class_<class_type> asm_lua_class_type_fix; \
-	detail::class_registration * registration = NULL; \
+	luabind::detail::class_registration * registration = NULL; \
 	__ASM_OFFSET__(registration, [lua_class], asm_lua_class_type_fix::m_registration); \
 \
 	/* get adddress of private class member of class_rep */ \
-	std::map<const char *, luabind::detail::class_rep::callback, detail::ltstr> * crep_getters = NULL; \
-	std::map<const char *, luabind::detail::class_rep::callback, detail::ltstr> * crep_setters = NULL; \
+	std::map<const char *, luabind::detail::class_rep::callback, luabind::detail::ltstr> * crep_getters = NULL; \
+	std::map<const char *, luabind::detail::class_rep::callback, luabind::detail::ltstr> * crep_setters = NULL; \
 	__ASM_OFFSET__(crep_getters, [lua_crep], luabind::detail::class_rep::m_getters); \
 	__ASM_OFFSET__(crep_setters, [lua_crep], luabind::detail::class_rep::m_setters); \
 \

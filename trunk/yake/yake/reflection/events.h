@@ -18,7 +18,7 @@
 #include <yake/base/mpl/null_type.h>
 
 // rx 
-#include "reflection.h"
+#include <yake/reflection/reflection.h>
 
 // lua
 #if(YAKE_REFLECTION_LUABIND_VER != YAKE_REFLECTION_LUABIND_DISABLED)

@@ -31,6 +31,7 @@
 #include "templates/yakeVector.h"
 #include "templates/yakePointer.h"
 #include <yake/base/templates/yakeDeque.h>
+#include <yake/base/templates/delete.h>
 
 #include <yake/base/mpl/yakeAbstractFactory.h>
 #include <yake/base/mpl/sequences.h>

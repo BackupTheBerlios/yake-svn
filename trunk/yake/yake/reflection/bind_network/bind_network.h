@@ -10,7 +10,7 @@
 #include "tnlNetInterface.h"
 namespace yake { namespace net = TNL; }
 
-#include "reflection.h"
+#include <yake/reflection/reflection.h>
 using namespace yake::reflection;
 
 // todo use network wrapper, add yake rpc
