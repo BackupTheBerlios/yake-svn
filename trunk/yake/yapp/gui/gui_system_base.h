@@ -12,7 +12,7 @@
 #include <yake/base/templates/yakeRegistry.h>
 // yapp
 #include <yapp/gui/config.h>
-#include <yapp/gui/controls.h>
+#include <yapp/gui/widgets.h>
 
 namespace yake
 {
