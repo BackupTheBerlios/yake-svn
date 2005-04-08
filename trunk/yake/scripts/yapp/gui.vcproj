@@ -125,9 +125,6 @@
 				RelativePath="..\..\yapp\gui\precompiled.h">
 			</File>
 			<File
-				RelativePath="..\..\yapp\gui\renderer_adapter_base.h">
-			</File>
-			<File
 				RelativePath="..\..\yapp\gui\window_base.h">
 			</File>
 			<Filter
@@ -157,16 +154,16 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="controls"
+				Name="widgets"
 				Filter="">
 				<File
-					RelativePath="..\..\yapp\gui\button_base.h">
+					RelativePath="..\..\yapp\gui\widgets\button_base.h">
 				</File>
 				<File
-					RelativePath="..\..\yapp\gui\multi_line_edit_box_base.h">
+					RelativePath="..\..\yapp\gui\widgets\multi_line_edit_box_base.h">
 				</File>
 				<File
-					RelativePath="..\..\yapp\gui\static_text_base.h">
+					RelativePath="..\..\yapp\gui\widgets\static_text_base.h">
 				</File>
 			</Filter>
 		</Filter>
@@ -200,16 +197,16 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="controls"
+				Name="widgets"
 				Filter="">
 				<File
-					RelativePath="..\..\src\yapp\gui\button_base.cpp">
+					RelativePath="..\..\src\yapp\gui\widgets\button_base.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\yapp\gui\multi_line_edit_box_base.cpp">
+					RelativePath="..\..\src\yapp\gui\widgets\multi_line_edit_box_base.cpp">
 				</File>
 				<File
-					RelativePath="..\..\src\yapp\gui\static_text_base.cpp">
+					RelativePath="..\..\src\yapp\gui\widgets\static_text_base.cpp">
 				</File>
 			</Filter>
 		</Filter>
