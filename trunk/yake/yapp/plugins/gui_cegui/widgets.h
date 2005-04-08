@@ -4,7 +4,7 @@
 // yake
 #include <yake/base/mpl/sequences.h>
 // yapp
-#include <yapp/plugins/gui_cegui/button.h>
+#include <yapp/plugins/gui_cegui/widgets/button.h>
 
 namespace yake
 {
