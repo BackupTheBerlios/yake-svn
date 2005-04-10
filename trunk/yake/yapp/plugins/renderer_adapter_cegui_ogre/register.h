@@ -18,21 +18,13 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef _YAPP_PLUGINS_RENDERER_ADAPTER_CEGUI_OGRE_RENDERER_ADAPTER_CEGUI_OGRE_H_
-#define _YAPP_PLUGINS_RENDERER_ADAPTER_CEGUI_OGRE_RENDERER_ADAPTER_CEGUI_OGRE_H_
+#ifndef _YAPP_PLUGINS_RENDERER_ADAPTER_CEGUI_OGRE_REGISTER_H_
+#define _YAPP_PLUGINS_RENDERER_ADAPTER_CEGUI_OGRE_REGISTER_H_
 
-// yake
-#include <yake/base/yake.h>
-#include <yake/plugins/graphicsOgre/yakeGraphicsSystem.h>
-// yapp
-#include <yapp/gui_adapter/renderer_adapter_base.h>
-#include <yapp/plugins/gui_cegui/gui_system.h>
-
-#ifdef YAPP_CONCRETE_GUI_ADAPTER_EXPORTS
-#	define YAPP_CONCRETE_GUI_ADAPTER_API DLLEXPORT
-#else
-#	define YAPP_CONCRETE_GUI_ADAPTER_API DLLIMPORT
-#endif
+//============================================================================
+//    IMPLEMENTATION HEADERS
+//============================================================================
+#include <yapp/plugins/renderer_adapter_cegui_ogre/renderer_adapter_cegui_ogre.h>
 
 namespace yake
 {
@@ -41,18 +33,10 @@ namespace gui
 namespace cegui_ogre
 {
 
-struct YAPP_CONCRETE_GUI_ADAPTER_API renderer_adapter_cegui_ogre : renderer_adapter_base
-{
-	renderer_adapter_cegui_ogre();
-	virtual ~renderer_adapter_cegui_ogre();
-
-	CEGUI::OgreRenderer * m_gui_renderer;
-
-	YAKE_DECLARE_CONCRETE(renderer_adapter_cegui_ogre, identifier(typeid(yake::graphics::ogre3d::GraphicsSystem), typeid(yake::gui::cegui::gui_system)))
-};
+YAKE_REGISTER_CONCRETE(renderer_adapter_cegui_ogre)
 
 } // namespace cegui_ogre
 } // namespace gui
 } // namespace yapp
 
-#endif // _YAPP_PLUGINS_RENDERER_ADAPTER_CEGUI_OGRE_RENDERER_ADAPTER_CEGUI_OGRE_H_
+#endif // _YAPP_PLUGINS_RENDERER_ADAPTER_CEGUI_OGRE_REGISTER_H_
