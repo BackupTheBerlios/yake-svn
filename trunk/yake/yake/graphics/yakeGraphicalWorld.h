@@ -109,6 +109,11 @@ namespace graphics {
 		virtual void setSubEntityMaterial( const base::String & subEntity, const base::String & materialName ) = 0;
 		//virtual void setReceivesShadows( bool receivesShadows ) = 0;
 		virtual void setCastsShadow( bool castsShadow ) = 0;
+
+		//@todo move into base class!?
+		virtual base::String getTag() const = 0;
+		virtual void getTag(base::String& tag) = 0;
+		//virtual void setTag(const String& tag) = 0;
 	};
 
 	/** A concrete instance of a camera in a scene.
@@ -179,6 +184,11 @@ namespace graphics {
 		virtual void removeAndDestroyAllChildren() = 0;
 		virtual void setScale( const Vector3 & scale ) = 0;
 		virtual Vector3 getScale() const = 0;
+
+		//@todo move into base class!?
+		virtual base::String getTag() const = 0;
+		virtual void getTag(base::String& tag) = 0;
+		//virtual void setTag(const String& tag) = 0;
 	};
 
 	/** Viewport abstract interface.

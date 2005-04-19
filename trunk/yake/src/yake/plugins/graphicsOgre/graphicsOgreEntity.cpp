@@ -31,17 +31,21 @@ namespace ogre3d {
 	OgreEntity::OgreEntity( ::Ogre::SceneManager * sceneMgr, const base::String & mesh ) : mSceneMgr( sceneMgr ), mEntity( 0 )
 	{
 		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
-		mEntity = mSceneMgr->createEntity( Ogre::String(yake::base::uniqueName::create("en_").c_str()), Ogre::String(mesh.c_str()) );
+		YAKE_TRY
+			mEntity = mSceneMgr->createEntity( Ogre::String(yake::base::uniqueName::create("en_").c_str()), Ogre::String(mesh.c_str()) );
+		YAKE_CATCH_OGRE_RETHROW
 	}
 
 	//------------------------------------------------------
 	OgreEntity::~OgreEntity()
 	{
+		YAKE_TRY
 		if (mEntity && mSceneMgr)
 		{
 			mSceneMgr->removeEntity( mEntity );
 			mEntity = 0;
 		}
+		YAKE_CATCH_OGRE_RETHROW
 	}
 
 	//------------------------------------------------------
@@ -87,6 +91,20 @@ namespace ogre3d {
 			mEntity->setCastShadows( castsShadow );
 	}
 
+
+	//------------------------------------------------------
+	String OgreEntity::getTag() const
+	{
+		YAKE_ASSERT( mEntity ).debug( "need an entity" );
+		return String( mEntity->getName().c_str() );
+	}
+
+	//------------------------------------------------------
+	void OgreEntity::getTag(String& tag)
+	{
+		YAKE_ASSERT( mEntity ).debug( "need an entity" );
+		tag = mEntity->getName().c_str();
+	}
 }
 }
 }

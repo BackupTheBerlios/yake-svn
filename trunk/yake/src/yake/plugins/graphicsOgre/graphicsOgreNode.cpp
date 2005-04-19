@@ -151,6 +151,19 @@ namespace ogre3d {
 		mChildren.push_back( static_cast<OgreNode*>(pNode) );
 	}
 
+	//------------------------------------------------------
+	base::String OgreNode::getTag() const
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		return base::String( mSceneNode->getName().c_str() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::getTag(base::String& tag)
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		tag = mSceneNode->getName().c_str();
+	}
 }
 }
 }

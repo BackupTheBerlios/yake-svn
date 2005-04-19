@@ -47,6 +47,10 @@ namespace ogre3d {
 		virtual void attachParticleSystem( IParticleSystem* pParticleSys );
 		virtual void removeAndDestroyAllChildren();
 
+		virtual base::String getTag() const;
+		virtual void getTag(base::String& tag);
+		//virtual void setTag(const String& tag);
+
 		Ogre::SceneNode* getSceneNode_() const
 		{ return mSceneNode; }
 	protected:

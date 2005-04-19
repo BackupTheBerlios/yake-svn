@@ -48,4 +48,20 @@
 				m[2][0], m[2][1], m[2][2], m[2][3], \
 				m[3][0], m[3][1], m[3][2], m[3][3] )
 
+#define YAKE_TRY try {
+
+#define YAKE_CATCH_OGRE \
+	} catch (Ogre::Exception& e)
+
+#define YAKE_CATCH_OGRE_RETHROW \
+	} catch (Ogre::Exception& e) \
+	{ \
+		YAKE_GRAPHICS_EXCEPT( e.getFullDescription().c_str() ); \
+	}
+
+#define YAKE_CATCH_OGRE_VOID \
+	} catch (Ogre::Exception& e) \
+	{ \
+	}
+
 #endif // __INC_PCH_H__

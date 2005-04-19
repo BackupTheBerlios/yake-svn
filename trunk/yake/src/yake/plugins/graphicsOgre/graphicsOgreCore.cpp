@@ -74,10 +74,10 @@ namespace ogre3d {
 	{
 		mReady = false;
 		try {
-			getConfig();
 
 			if (!bWindowAlreadyCreated)
 			{
+				getConfig();
 
 				mRoot = new Root(
 					Ogre::String("yake.graphics.ogre_plugins.cfg"),

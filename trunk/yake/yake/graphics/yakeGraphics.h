@@ -18,11 +18,16 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
+#ifndef YAKE_GRAPHICS_H
+#define YAKE_GRAPHICS_H
 
 #if defined( YAKE_GRAPHICSINTERFACE_EXPORTS )
 #	define YAKE_GRAPHICS_INTERFACE_API DLLEXPORT
 #else
 #	define YAKE_GRAPHICS_INTERFACE_API DLLIMPORT
+#	if YAKE_PLATFORM == PLATFORM_WIN32
+#		pragma comment( lib, "graphics" )
+#	endif
 #endif
 
 #ifndef YAKE_BASE_PREREQUISITES_H
@@ -31,3 +36,5 @@
 #include <yake/graphics/yakeGraphicsSystem.h>
 #include <yake/graphics/yakeGraphicalWorld.h>
 //#include <yake/graphics/yakeGraphicsEnvironment.h>
+
+#endif

@@ -98,7 +98,9 @@ namespace ogre3d {
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
 		YAKE_ASSERT( pCamera ).debug("need a camera!");
+		YAKE_TRY
 		return new OgreViewport( msCore, static_cast<OgreCamera*>( pCamera ) );
+		YAKE_CATCH_OGRE_RETHROW
 	}
 
 	//-----------------------------------------------------
