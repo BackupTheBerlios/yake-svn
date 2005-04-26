@@ -37,12 +37,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace templates
-{
+namespace yake {
 
 template< class _Value, class _Alloc = std::allocator< _Value > >
 class Deque : private std::deque< _Value >
@@ -276,8 +271,5 @@ public:
 
 
 } // templates
-} // base
-} // yake
-
 
 #endif // YAKE_BASE_TEMPLATES_DEQUE_H

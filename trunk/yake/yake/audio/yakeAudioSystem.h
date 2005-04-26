@@ -132,7 +132,7 @@ namespace audio {
 		virtual ~IAudioSystem();
 		virtual IWorld* createWorld() = 0;
 
-		YAKE_DECLARE_REGISTRY_0( IAudioSystem, yake::base::String )
+		YAKE_DECLARE_REGISTRY_0( IAudioSystem, yake::String )
 	};
 
 }

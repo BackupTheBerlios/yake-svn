@@ -63,7 +63,7 @@ namespace scripting {
 
 	class YAKE_SCRIPTING_API IBinder
 	{
-		YAKE_DECLARE_REGISTRY_0( IBinder, base::String );
+		YAKE_DECLARE_REGISTRY_0( IBinder, String );
 	public:
 		virtual ~IBinder() {}
 
@@ -75,7 +75,7 @@ namespace scripting {
 	class YAKE_SCRIPTING_API ScriptingBindingsPlugin : public ::yake::base::Plugin
 	{
 	public:
-		virtual yake::base::templates::SharedPtr<IBinder> createBinder() = 0;
+		virtual yake::SharedPtr<IBinder> createBinder() = 0;
 	};
 
 	/** A script that can be executed by a virtual machine.
@@ -91,7 +91,7 @@ namespace scripting {
 		virtual const IScriptingSystem* getCreator() const = 0;
 
 		virtual bool isLoaded() = 0;
-		virtual void setData( const base::String & data ) = 0;
+		virtual void setData( const String & data ) = 0;
 	};
 
 	/** Scripting virtual machine.
@@ -117,7 +117,7 @@ namespace scripting {
 		/** Execute the data contained in the string.
 			\param data a string containing scripting data to execute.
 		*/
-		virtual void execute( const base::String & data ) = 0;
+		virtual void execute( const String & data ) = 0;
 
 		//virtual PropertyInterface* getPropertyInterface()
 		//{ return 0; }
@@ -130,7 +130,7 @@ namespace scripting {
 	*/
 	class YAKE_SCRIPTING_API IScriptingSystem// : public System
 	{
-		YAKE_DECLARE_REGISTRY_0( IScriptingSystem, base::String );
+		YAKE_DECLARE_REGISTRY_0( IScriptingSystem, String );
 	public:
 		//ScriptingSystem( SystemType type ) : System( type ) {}
 		enum Language
@@ -150,7 +150,7 @@ namespace scripting {
 
 		/** Get a unique name for the system (e.g. "yake.core.lua", "yake.graphicsonly.python").
 		*/
-		virtual base::String getName() const = 0;
+		virtual String getName() const = 0;
 
 		/** Create a scipting virtual machine.
 			\see IScript
@@ -161,7 +161,7 @@ namespace scripting {
 			by a virtual machine.
 			\see IVM
 		*/
-		virtual IScript* createScriptFromFile( const base::String & file ) = 0;
+		virtual IScript* createScriptFromFile( const String & file ) = 0;
 	};
 
 }

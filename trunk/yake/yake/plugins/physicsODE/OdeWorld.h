@@ -103,7 +103,7 @@ namespace physics {
 			BodyList			mBodies;
 		
 			TriangleMeshId		mNextMeshId;	
-			typedef base::templates::AssocVector< TriangleMeshId, dTriMeshDataID > MeshDataMap;
+			typedef AssocVector< TriangleMeshId, dTriMeshDataID > MeshDataMap;
 			MeshDataMap			mMeshDataMap;
 
 			PostStepSignal		mPostStepSignal;

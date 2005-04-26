@@ -28,11 +28,11 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreEntity::OgreEntity( ::Ogre::SceneManager * sceneMgr, const base::String & mesh ) : mSceneMgr( sceneMgr ), mEntity( 0 )
+	OgreEntity::OgreEntity( ::Ogre::SceneManager * sceneMgr, const String & mesh ) : mSceneMgr( sceneMgr ), mEntity( 0 )
 	{
 		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
 		YAKE_TRY
-			mEntity = mSceneMgr->createEntity( Ogre::String(yake::base::uniqueName::create("en_").c_str()), Ogre::String(mesh.c_str()) );
+			mEntity = mSceneMgr->createEntity( Ogre::String(yake::uniqueName::create("en_").c_str()), Ogre::String(mesh.c_str()) );
 		YAKE_CATCH_OGRE_RETHROW
 	}
 
@@ -56,14 +56,14 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreEntity::setMaterial( const base::String & materialName )
+	void OgreEntity::setMaterial( const String & materialName )
 	{
 		if (mEntity)
 			mEntity->setMaterialName( materialName );
 	}
 
 	//------------------------------------------------------
-	void OgreEntity::setSubEntityMaterial( const base::String & subEntity, const base::String & materialName )
+	void OgreEntity::setSubEntityMaterial( const String & subEntity, const String & materialName )
 	{
 		if (mEntity)
 		{

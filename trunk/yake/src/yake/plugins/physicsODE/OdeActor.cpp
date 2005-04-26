@@ -187,7 +187,7 @@ namespace physics {
 	//-----------------------------------------------------
 // 	void OdeActor::postStep( real timeElapsed )
 // 	{
-// 		base::templates::Vector< OdeActor* > its;
+// 		Vector< OdeActor* > its;
 // 		for (CollisionList::iterator it = mCollisions.begin(); it != mCollisions.end(); ++it)
 // 		{
 // 			CollisionInfo& info = it->second;
@@ -198,7 +198,7 @@ namespace physics {
 // 				its.push_back( it->first );
 // 			}
 // 		}
-// 		base::templates::VectorIterator< base::templates::Vector< OdeActor* > > itErase(
+// 		VectorIterator< Vector< OdeActor* > > itErase(
 // 			its.begin(), its.end() );
 // 		while (itErase.hasMoreElements())
 // 		{

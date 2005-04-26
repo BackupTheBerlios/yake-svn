@@ -34,10 +34,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 	/** Resource interface.
 	*/
@@ -196,7 +193,6 @@ namespace base
 		}
 	};
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_RESOURCE_H

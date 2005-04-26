@@ -99,6 +99,8 @@ YAKE_REGISTER_CONCRETE( NetworkDriver )
 //============================================================================
 int main()
 {
+	using namespace yake;
+	using namespace yake::base;
 	using namespace yake::testsuite;
 
 	SharedPtr< INetworkDriver > pNetDriver = create_default< INetworkDriver >();

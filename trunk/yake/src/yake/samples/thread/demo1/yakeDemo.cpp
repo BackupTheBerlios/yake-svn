@@ -66,7 +66,7 @@ int main()
 		std::cin.get();
 #endif
 	}
-	catch ( yake::base::Exception & e )
+	catch ( yake::Exception & e )
 	{
 		std::cout << "YAKE EXCEPTION: " << e.getSource() << std::endl;
 		std::cout << "File: " << e.getFile() << " @ " << e.getLine() << std::endl;

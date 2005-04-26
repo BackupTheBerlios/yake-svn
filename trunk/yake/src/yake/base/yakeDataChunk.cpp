@@ -27,10 +27,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 	DataChunk::DataChunk(uint32 size, uint8 * pData /* = 0  */) : mData( pData ), mSize( size )
 	{
@@ -120,5 +117,4 @@ namespace base
 		return mData;
 	}
 
-} // base
 } // yake

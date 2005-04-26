@@ -28,7 +28,7 @@ public:
 //============================================================================
 int main()
 {
-	yake::base::templates::Vector< int > myVector;
+	yake::Vector< int > myVector;
 
 	// Push/Pop
 	std::cout << "# Push/Pop # " << std::endl;
@@ -50,7 +50,7 @@ int main()
 
 	// Assign
 	std::cout << std::endl << "# Assign # " << std::endl;
-  yake::base::templates::Vector< int > myVector2 = myVector;
+  yake::Vector< int > myVector2 = myVector;
 	
 	myVector2.assign( 10, 111 );
 	std::cout << "Size: " << (unsigned int) myVector2.size() << std::endl;

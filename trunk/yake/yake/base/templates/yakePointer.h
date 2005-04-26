@@ -45,12 +45,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace templates
-{
+namespace yake {
+
 	template< typename T >
 	class AutoPtr : public std::auto_ptr< T >
 	{
@@ -168,7 +164,7 @@ namespace templates
 			{ 
 				YAKE_DECLARE_FUNCTION( Check ) 
 				if( 0 == instance ) 
-					throw yake::base::Exception( "Null pointer detected.", YAKE_HERE );
+					throw yake::Exception( "Null pointer detected.", YAKE_HERE );
 			}
     };
   };
@@ -358,8 +354,6 @@ YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 #undef FUNCTION*/
 
-} // templates
-} // base
 } // yake
 
 #endif // YAKE_BASE_TEMPLATES_POINTER_H

@@ -30,10 +30,14 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreNode::OgreNode( Ogre::SceneManager * sceneMgr ) : mSceneMgr( sceneMgr ), mSceneNode( 0 )
+	OgreNode::OgreNode( Ogre::SceneManager * sceneMgr, const String& tag /*= ""*/ ) : 
+		mSceneMgr( sceneMgr ), mSceneNode( 0 )
 	{
 		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
-		mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( base::uniqueName::create("sn_") ) );
+		String id = tag;
+		if (id.empty())
+			id = uniqueName::create("sn_");
+		mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( id ) );
 		YAKE_ASSERT( mSceneNode ).warning("Couldn't create a scene node!");
 		mSceneNode->setPosition( 0, 0, 0 );
 	}
@@ -152,14 +156,24 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	base::String OgreNode::getTag() const
+	ISceneNode* OgreNode::createChildNode( const String& tag /*= ""*/ )
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-		return base::String( mSceneNode->getName().c_str() );
+		OgreNode* pChild = new OgreNode( mSceneMgr, tag );
+		mSceneNode->addChild( pChild->getSceneNode_() );
+		mChildren.push_back( pChild );
+		return pChild;
 	}
 
 	//------------------------------------------------------
-	void OgreNode::getTag(base::String& tag)
+	String OgreNode::getTag() const
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		return String( mSceneNode->getName().c_str() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::getTag(String& tag)
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		tag = mSceneNode->getName().c_str();

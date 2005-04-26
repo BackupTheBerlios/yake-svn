@@ -33,10 +33,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 class CriticalSection;
 
@@ -52,7 +49,6 @@ private:
   CriticalSection& mrCriticalSection;
 };
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_LOCK_H

@@ -54,7 +54,7 @@ namespace physics {
 
 	class YAKE_PHYSICS_API IPhysicsSystem
 	{
-		YAKE_DECLARE_REGISTRY_0( IPhysicsSystem, base::String );
+		YAKE_DECLARE_REGISTRY_0( IPhysicsSystem, String );
 	public:
 		virtual ~IPhysicsSystem() {}
 		virtual SharedPtr<IWorld> createWorld() = 0;

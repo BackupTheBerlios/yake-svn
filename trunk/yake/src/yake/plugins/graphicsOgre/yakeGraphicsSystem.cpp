@@ -54,17 +54,17 @@ GraphicsSystem::GraphicsSystem(const ParamMap & params)
 	// todo: lexical_cast, polish strMapContains
 	if(strMapContains(params, "windowAlreadyCreated"))
 	{
-		bWindowAlreadyCreated = base::StringUtil::parseBool(params.find("windowAlreadyCreated")->second);
-		const base::String window_ptr = params.find("renderWindowPtr")->second;
-		pRenderWindow = reinterpret_cast<Ogre::RenderWindow*>(base::StringUtil::parseInt(window_ptr));
+		bWindowAlreadyCreated = StringUtil::parseBool(params.find("windowAlreadyCreated")->second);
+		const String window_ptr = params.find("renderWindowPtr")->second;
+		pRenderWindow = reinterpret_cast<Ogre::RenderWindow*>(StringUtil::parseInt(window_ptr));
 	}
 	if(strMapContains(params, "shutdownOgre"))
 	{
-		bShutdownOgre = base::StringUtil::parseBool(params.find("shutdownOgre")->second);
+		bShutdownOgre = StringUtil::parseBool(params.find("shutdownOgre")->second);
 	}
 	if(strMapContains(params, "parseDefaultResourceFile"))
 	{
-		bParseDefaultResourceFile = base::StringUtil::parseBool(params.find("parseDefaultResourceFile")->second);
+		bParseDefaultResourceFile = StringUtil::parseBool(params.find("parseDefaultResourceFile")->second);
 	}
 
 	mCore = new OgreCore(bWindowAlreadyCreated, bShutdownOgre, bParseDefaultResourceFile, pRenderWindow);
@@ -92,18 +92,18 @@ void GraphicsSystem::initialise(const ParamMap& rParams) throw(GraphicsException
 
 	if (strMapContains(rParams,"windowAlreadyCreated"))
 	{
-		bWindowAlreadyCreated = base::StringUtil::parseBool( rParams.find("windowAlreadyCreated")->second );
-		const base::String test = rParams.find("renderWindowPtr")->second;
-		int p = base::StringUtil::parseInt( test );
+		bWindowAlreadyCreated = StringUtil::parseBool( rParams.find("windowAlreadyCreated")->second );
+		const String test = rParams.find("renderWindowPtr")->second;
+		int p = StringUtil::parseInt( test );
 		pRenderWindow = reinterpret_cast<Ogre::RenderWindow*>(p);
 	}
 	if (strMapContains(rParams,"shutdownOgre"))
 	{
-		bShutdownOgre = base::StringUtil::parseBool( rParams.find("shutdownOgre")->second );
+		bShutdownOgre = StringUtil::parseBool( rParams.find("shutdownOgre")->second );
 	}
 	if (strMapContains(rParams,"parseDefaultResourceFile"))
 	{
-		bParseDefaultResourceFile = base::StringUtil::parseBool( rParams.find("parseDefaultResourceFile")->second );
+		bParseDefaultResourceFile = StringUtil::parseBool( rParams.find("parseDefaultResourceFile")->second );
 	}
 
 	mCore = new OgreCore(bWindowAlreadyCreated,bShutdownOgre,bParseDefaultResourceFile,pRenderWindow);

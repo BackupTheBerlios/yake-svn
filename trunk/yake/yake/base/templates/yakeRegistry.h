@@ -48,14 +48,14 @@ namespace templates
 /* Helpers */
 #define FUNCTION(number) \
 	YAKE_TYPES_ONE_FREE(number) \
-	templates::SharedPtr<T> create(typename T::RegistryType::Id id, YAKE_ARGUMENTS_ONE_FREE(number)) \
+	SharedPtr<T> create(typename T::RegistryType::Id id, YAKE_ARGUMENTS_ONE_FREE(number)) \
 	{ return T::getRegistry().getObject(id)->create(YAKE_USE_ARGUMENTS(number)); }
 YAKE_IMPLEMENT_FUNCTION(FUNCTION)
 #undef FUNCTION
 
 #define FUNCTION(number) \
 		YAKE_TYPES_ONE_FREE(number) \
-		templates::SharedPtr<T> create_default(YAKE_ARGUMENTS_ONE_FREE(number)) \
+		SharedPtr<T> create_default(YAKE_ARGUMENTS_ONE_FREE(number)) \
 		{ return T::getRegistry().getDefaultCreator()->create(YAKE_USE_ARGUMENTS(number)); }
 YAKE_IMPLEMENT_FUNCTION(FUNCTION)
 #undef FUNCTION
@@ -64,7 +64,7 @@ YAKE_IMPLEMENT_FUNCTION(FUNCTION)
 // todo: functors instead of creators
 // todo: if we cannot simplify manager template, remove it
 template <class ConfigClass>
-class Registry : public Manager< typename ConfigClass::Id, templates::SharedPtr< typename ConfigClass::ICreator >, RegisterFunctionsNames >
+class Registry : public Manager< typename ConfigClass::Id, SharedPtr< typename ConfigClass::ICreator >, RegisterFunctionsNames >
 {
 YAKE_DECLARE_CLASS( yake::base::templates::Registry )
 public: // types
@@ -83,23 +83,23 @@ private: // no copy
 public: // methods
 #define FUNCTION( number ) \
 	YAKE_TYPES( number ) \
-	templates::SharedPtr< Base > create( Id id, YAKE_ARGUMENTS_ONE_FREE( number ) ) \
+	SharedPtr< Base > create( Id id, YAKE_ARGUMENTS_ONE_FREE( number ) ) \
 	{ return getObject( id )->create( YAKE_USE_ARGUMENTS( number ) ); }
 YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 #undef FUNCTION
 
-	templates::SharedPtr<ICreator> getDefaultCreator()
+	SharedPtr< ICreator > getDefaultCreator()
 	{
 		YAKE_ASSERT( getIdentifiers().size() > 0 ).debug( "No default creator available." ); // todo: does not work in release mode, should throw exception
 		if( !m_pDefaultCreator ) m_pDefaultCreator = getObject( *getIdentifiers().begin() ); // todo: (if(!m_pDefaultCreator) m_pDefaultCreator = front();
 		return m_pDefaultCreator;
 	}
 
-	void setDefaultCreator(const templates::SharedPtr<ICreator> pCreator)
+	void setDefaultCreator( const SharedPtr< ICreator > pCreator )
 	{	m_pDefaultCreator = pCreator; }
 
 private: // data
-	templates::SharedPtr<ICreator> m_pDefaultCreator;
+	SharedPtr< ICreator > m_pDefaultCreator;
 };
 
 
@@ -129,10 +129,10 @@ private: // data
     } \
     static void Register() \
     { \
-			getRegistry().doRegister( getId(), yake::base::templates::SharedPtr< RegistryConfig::ConcreteCreator< Concrete > >( new RegistryConfig::ConcreteCreator< Concrete > ) ); \
+			getRegistry().doRegister( getId(), yake::SharedPtr< RegistryConfig::ConcreteCreator< Concrete > >( new RegistryConfig::ConcreteCreator< Concrete > ) ); \
     }
 
-// 			getRegistry().doAdd( getId(), yake::base::templates::SharedPtr< RegistryConfig::ConcreteCreator< Concrete > >::create() ); \ todo
+// 			getRegistry().doAdd( getId(), yake::SharedPtr< RegistryConfig::ConcreteCreator< Concrete > >::create() ); \ todo
 
 // Registers a concrete implementation which has been declared before.
 #define YAKE_REGISTER_CONCRETE( Concrete ) \
@@ -163,18 +163,18 @@ private: // data
 	    typedef IdClass Id; \
 	    struct ICreator \
 	    { \
-	      virtual yake::base::templates::SharedPtr< Base > create() = 0; \
+	      virtual yake::SharedPtr< Base > create() = 0; \
 	    }; \
 	    template <typename T> \
 	    struct ConcreteCreator : public ICreator \
 	    { \
-	      yake::base::templates::SharedPtr<Base> create() \
-	      { return yake::base::templates::SharedPtr<T>(new T); } \
+	      yake::SharedPtr<Base> create() \
+	      { return yake::SharedPtr<T>(new T); } \
 	    }; \
 	  }; \
   YAKE_DECLARE_REGISTRY()
 
-	// 	          return yake::base::templates::SharedPtr< T >::create(); \ Todo
+	// 	          return yake::SharedPtr< T >::create(); \ Todo
 
 
 // Declares a registry for types with a constructor that takes one parameter.
@@ -186,13 +186,13 @@ private: // data
 	    typedef IdClass Id; \
 	    struct ICreator \
 	    { \
-				virtual yake::base::templates::SharedPtr<Base> create(Param1 p1) = 0; \
+				virtual yake::SharedPtr<Base> create(Param1 p1) = 0; \
 	    }; \
 	    template <typename T> \
 	    struct ConcreteCreator : public ICreator \
 	    { \
-	      yake::base::templates::SharedPtr<Base> create(Param1 p1) \
-	      { return yake::base::templates::SharedPtr<T>(new T(p1)); } \
+	      yake::SharedPtr<Base> create(Param1 p1) \
+	      { return yake::SharedPtr<T>(new T(p1)); } \
 	    }; \
 	  }; \
   YAKE_DECLARE_REGISTRY()
@@ -206,17 +206,17 @@ private: // data
 	    typedef IdClass Id; \
 	    struct ICreator \
 	    { \
-				virtual yake::base::templates::SharedPtr<Base> create() = 0; \
-				virtual yake::base::templates::SharedPtr<Base> create(Param1 p1) = 0; \
+				virtual yake::SharedPtr<Base> create() = 0; \
+				virtual yake::SharedPtr<Base> create(Param1 p1) = 0; \
 	    }; \
 	    template <typename T> \
 	    struct ConcreteCreator : public ICreator \
 	    { \
-	      yake::base::templates::SharedPtr<Base> create() \
-	      { return yake::base::templates::SharedPtr<T>(new T()); } \
+	      yake::SharedPtr<Base> create() \
+	      { return yake::SharedPtr<T>(new T()); } \
 				\
-	      yake::base::templates::SharedPtr<Base> create(Param1 p1) \
-	      { return yake::base::templates::SharedPtr<T>(new T(p1)); } \
+	      yake::SharedPtr<Base> create(Param1 p1) \
+	      { return yake::SharedPtr<T>(new T(p1)); } \
 	    }; \
 	  }; \
   YAKE_DECLARE_REGISTRY()

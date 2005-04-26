@@ -29,10 +29,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 Lock::Lock( CriticalSection& rCriticalSection )
 : mrCriticalSection( rCriticalSection )
@@ -45,5 +42,4 @@ Lock::~Lock()
   mrCriticalSection.leave();
 }
 
-} // base
 } // yake

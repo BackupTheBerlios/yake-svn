@@ -74,7 +74,7 @@ namespace base {
 		typedef Variant<ParamTypeNone,uint32,real,String,Pointer,bool> Param;
 
 		/** A vector of strings */
-		typedef templates::Vector<String> StringVector;
+		typedef Vector<String> StringVector;
 
 		/** Returns all keys stored in the parameter holder object. */
 		StringVector getKeys() const;
@@ -99,7 +99,7 @@ namespace base {
 
 		bool has( const String & id ) const;
 	private:
-		typedef templates::AssocVector< String, Param > ParamMap;
+		typedef AssocVector< String, Param > ParamMap;
 		ParamMap	mParams;
 	};
 

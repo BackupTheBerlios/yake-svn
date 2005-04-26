@@ -163,7 +163,7 @@ namespace physics {
 		If they are attached to an MovableActor or DynamicActor, position and orientation are
 		relative to their parent.
 	*/
-	class IMovableShape : public IShape, public base::Movable
+	class IMovableShape : public IShape, public Movable
 	{
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IMovableShape );

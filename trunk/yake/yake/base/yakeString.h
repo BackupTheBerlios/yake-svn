@@ -32,10 +32,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 //typedef std::string YAKE_BASE_STRING;
 
@@ -78,7 +75,6 @@ namespace base
 
 #undef YAKE_BASE_STRING
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_STRING_H

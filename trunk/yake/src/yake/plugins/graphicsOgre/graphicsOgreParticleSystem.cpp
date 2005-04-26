@@ -30,10 +30,10 @@ namespace yake {
 namespace graphics {
 
 	//------------------------------------------------------
-	OgreParticleSystem::OgreParticleSystem( Ogre::ParticleSystemManager& rPSMgr, const base::String& rPSTempl ) : 
+	OgreParticleSystem::OgreParticleSystem( Ogre::ParticleSystemManager& rPSMgr, const String& rPSTempl ) : 
 																mParticleSysMgr( rPSMgr ), mParticleSys( NULL )
 	{
-		mParticleSys = mParticleSysMgr.createSystem( base::uniqueName::create( "ps_" ), rPSTempl );
+		mParticleSys = mParticleSysMgr.createSystem( uniqueName::create( "ps_" ), rPSTempl );
 
 		YAKE_ASSERT( mParticleSys ).debug( "Failed to create particle system!" );
 	}

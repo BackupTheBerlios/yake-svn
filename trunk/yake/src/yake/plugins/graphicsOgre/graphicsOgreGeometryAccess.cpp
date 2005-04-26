@@ -257,7 +257,7 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	bool OgreSubmeshAccess::setMaterial( const base::String & material )
+	bool OgreSubmeshAccess::setMaterial( const String & material )
 	{
 		YAKE_ASSERT( !mMesh.isNull() );
 		YAKE_ASSERT( mSubmesh );

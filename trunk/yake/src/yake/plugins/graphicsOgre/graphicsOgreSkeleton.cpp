@@ -37,7 +37,7 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreSkeleton::enableAnimation( const base::String& rAnimName, bool enable )
+	void OgreSkeleton::enableAnimation( const String& rAnimName, bool enable )
 	{
 		Ogre::AnimationState* pAnimState = mEntity.getAnimationState( rAnimName );
 		
@@ -45,7 +45,7 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreSkeleton::advanceAnimation( const base::String& rAnimName, real timeOffset )
+	void OgreSkeleton::advanceAnimation( const String& rAnimName, real timeOffset )
 	{
 		Ogre::AnimationState* pAnimState = mEntity.getAnimationState( rAnimName );
 
@@ -68,13 +68,13 @@ namespace ogre3d {
 
 
 	//------------------------------------------------------
-	void OgreSkeleton::setAnimationWeight( const base::String& rAnimName, real weight )
+	void OgreSkeleton::setAnimationWeight( const String& rAnimName, real weight )
 	{
 		YAKE_ASSERT( false ).debug( "feature NYI" );
 	}
 
 	//------------------------------------------------------
-	void OgreSkeleton::attachEntityToBone( const base::String& rBoneName, IEntity* pEntity )
+	void OgreSkeleton::attachEntityToBone( const String& rBoneName, IEntity* pEntity )
 	{
 		mEntity.attachObjectToBone( rBoneName, static_cast<OgreEntity*>( pEntity )->getEntity_() );
 	}

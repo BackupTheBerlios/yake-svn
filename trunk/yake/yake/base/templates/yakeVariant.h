@@ -27,12 +27,8 @@
 #define VariantGet boost::get
 
 namespace yake {
-namespace base {
-namespace templates {
 
 
-} // templates
-} // base
 } // yake
 
 #endif // YAKE_BASE_TEMPLATES_VARIANT_H

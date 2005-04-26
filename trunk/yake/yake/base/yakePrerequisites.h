@@ -97,7 +97,7 @@
 
 #define YAKE_THIS_CLASS                     yake_private_currentClass()
 #define YAKE_THIS_FUNCTION                  yake_private_currentFunction
-#define YAKE_HERE                           YAKE_THIS_CLASS + yake::base::String( "::" ) + YAKE_THIS_FUNCTION
-#define YAKE_NOCLASS_HERE                   "::" + yake::base::String( YAKE_THIS_FUNCTION )
+#define YAKE_HERE                           YAKE_THIS_CLASS + yake::String( "::" ) + YAKE_THIS_FUNCTION
+#define YAKE_NOCLASS_HERE                   "::" + yake::String( YAKE_THIS_FUNCTION )
 
 #endif // YAKE_BASE_PREREQUISITES_H

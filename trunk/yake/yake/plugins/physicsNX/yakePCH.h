@@ -45,18 +45,18 @@ inline NxReal toNx( const ::yake::real v )
 inline NxReal fromNx( const NxReal v )
 { return ::yake::real(v); }
 
-inline NxVec3 toNx( const ::yake::base::Vector3 & v )
+inline NxVec3 toNx( const ::yake::Vector3 & v )
 { return NxVec3( v.x, v.y, v.z ); }
-inline ::yake::base::Vector3 fromNx( const NxVec3 & v )
-{ return ::yake::base::Vector3( v.x, v.y, v.z ); }
+inline ::yake::Vector3 fromNx( const NxVec3 & v )
+{ return ::yake::Vector3( v.x, v.y, v.z ); }
 
-inline NxQuat toNx( const ::yake::base::Quaternion & v )
+inline NxQuat toNx( const ::yake::Quaternion & v )
 { 
 	NxQuat q;
 	q.setWXYZ( v.w, v.x, v.y, v.z );
 	return q;
 }
-inline ::yake::base::Quaternion fromNx( const NxQuat & v )
-{ return ::yake::base::Quaternion( v.w, v.x, v.y, v.z ); }
+inline ::yake::Quaternion fromNx( const NxQuat & v )
+{ return ::yake::Quaternion( v.w, v.x, v.y, v.z ); }
 
 #endif

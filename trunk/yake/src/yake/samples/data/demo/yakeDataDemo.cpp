@@ -6,8 +6,8 @@
 #include <yake/base/yakeLog.h>
 #include <yake/data/yakeData.h>
 
+using namespace yake;
 using namespace yake::base;
-using namespace yake::base::templates;
 using namespace yake::data;
 using namespace std;
 
@@ -74,7 +74,7 @@ int main()
 		printNode( pNode );
 	}
 	
-	catch ( yake::base::Exception const& e)
+	catch ( yake::Exception const& e)
 	{
 		std::cout << std::endl << e.what() << std::endl;
 	}

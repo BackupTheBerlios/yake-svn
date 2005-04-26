@@ -29,7 +29,7 @@ namespace ogre3d {
 	class OgreNode : public graphics::ISceneNode
 	{
 	public:
-		OgreNode( Ogre::SceneManager * sceneMgr );
+		OgreNode( Ogre::SceneManager * sceneMgr, const String& tag = "" );
 		virtual ~OgreNode();
 
 		virtual void setPosition( const Vector3 & position );
@@ -41,23 +41,24 @@ namespace ogre3d {
 		virtual Vector3 getScale() const;
 
 		virtual void addChildNode( ISceneNode* pNode );
+		virtual ISceneNode* createChildNode( const String& tag = "" );
 		virtual void attachEntity( IEntity* pEntity );
 		virtual void attachCamera( ICamera* pCamera );
 		virtual void attachLight( ILight* pLight );
 		virtual void attachParticleSystem( IParticleSystem* pParticleSys );
 		virtual void removeAndDestroyAllChildren();
 
-		virtual base::String getTag() const;
-		virtual void getTag(base::String& tag);
+		virtual String getTag() const;
+		virtual void getTag(String& tag);
 		//virtual void setTag(const String& tag);
 
 		Ogre::SceneNode* getSceneNode_() const
 		{ return mSceneNode; }
 	protected:
-		typedef base::templates::Vector< OgreNode* > NodeList;
+		typedef Vector< OgreNode* > NodeList;
 		NodeList			mChildren;
 
-		typedef base::templates::Vector< OgreEntity* > EntityList;
+		typedef Vector< OgreEntity* > EntityList;
 		EntityList			mEntities;
 
 		Ogre::SceneNode		* mSceneNode;

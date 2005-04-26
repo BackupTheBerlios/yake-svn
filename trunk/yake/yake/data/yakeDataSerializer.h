@@ -39,7 +39,7 @@ namespace dom {
 	// parser for (hierarchically) organized data.
 
 	class INode;
-	typedef YAKE_DATA_API templates::Vector< SharedPtr<INode> > NodeList;
+	typedef YAKE_DATA_API Vector< SharedPtr<INode> > NodeList;
 	class YAKE_DATA_API INode
 	{
 	public:
@@ -63,7 +63,7 @@ namespace dom {
 						int32,
 						real,
 						String> ValueType;
-		typedef templates::AssocVector< String, ValueType > AttributeMap;
+		typedef AssocVector< String, ValueType > AttributeMap;
 
 		// nodes
 		virtual void addNode( SharedPtr<INode> pNode ) = 0;

@@ -64,7 +64,7 @@ private:
 // windows : ".dll"
 // linux : ".so"
 #define YAKE_USE_LIB( dllname ) \
-	yake::base::templates::SharedPtr< yake::base::Library > pDynLib##dllname( new yake::base::Library( ## #dllname ## ".dll" ) ); \
+	yake::SharedPtr< yake::base::Library > pDynLib##dllname( new yake::base::Library( ## #dllname ## ".dll" ) ); \
 	YAKE_ASSERT( pDynLib##dllname ).debug( "Out of memory." );
 
 #endif // YAKE_BASE_LIBRARY_H

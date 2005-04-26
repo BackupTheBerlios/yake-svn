@@ -21,7 +21,6 @@
 #include <yake/base/yakePCH.h>
 
 namespace yake {
-namespace base {
 
 	Movable::Movable() : mFixedYaw(false)
 	{}
@@ -96,6 +95,4 @@ namespace base {
         // which will tip the camera	
 	}
 
-
-} // base
 } // yake

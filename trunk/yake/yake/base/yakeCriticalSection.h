@@ -34,10 +34,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 class YAKE_BASE_API CriticalSection
 {
@@ -54,10 +51,9 @@ public:
 
 // Data
 private:
-	native::CriticalSectionHandle mHandle;
+	base::native::CriticalSectionHandle mHandle;
 };
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_CRITICALSECTION_H

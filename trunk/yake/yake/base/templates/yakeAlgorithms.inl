@@ -22,12 +22,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace templates
-{
+namespace yake {
 
 template< typename Iterator, typename Operation >
 void ForEach( Iterator begin, Iterator end, Operation operation )
@@ -36,7 +31,4 @@ void ForEach( Iterator begin, Iterator end, Operation operation )
 		operation( *iter );
 }
 
-
-} // templates
-} // base
 } // yake

@@ -211,7 +211,7 @@ namespace exapp {
 	protected:
 		/** @todo deprecated so remove:
 		template< class PluginType >
-		PluginType* loadPlugin( const base::String & file )
+		PluginType* loadPlugin( const String & file )
 		{
 			yake::base::Library* pDynLib = new yake::base::Library( file );
 			YAKE_ASSERT( pDynLib ).debug("Out of memory.");
@@ -255,7 +255,7 @@ namespace exapp {
 			mLibs.clear();
 		}
 
-		SharedPtr<base::Library> loadLib( const base::String & file )
+		SharedPtr<base::Library> loadLib( const String & file )
 		{
 			SharedPtr<base::Library> pDynLib( new base::Library( file ) );
 			YAKE_ASSERT( pDynLib ).debug( "Out of memory." );

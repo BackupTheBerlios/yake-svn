@@ -140,7 +140,7 @@ namespace input {
 	}
 
 	//-----------------------------------------------------------------------
-	InputDevice* InputSystemOgre::activateDevice( const base::String & deviceName )
+	InputDevice* InputSystemOgre::activateDevice( const String & deviceName )
 	{
 		if (getDevice(deviceName))
 			return 0;
@@ -177,7 +177,7 @@ namespace input {
 	}
 
 	//-----------------------------------------------------------------------
-	InputDevice* InputSystemOgre::getDevice( const base::String & deviceName ) const
+	InputDevice* InputSystemOgre::getDevice( const String & deviceName ) const
 	{
 		for (ActiveDeviceList::const_iterator it = mActiveDevices.begin(); it != mActiveDevices.end(); ++it)
 			if ((*it).name == deviceName)

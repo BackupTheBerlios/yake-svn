@@ -85,7 +85,7 @@ namespace scripting {
 
 		LuaScript* pLuaScript = static_cast< LuaScript* > ( pScript );
 
-		const base::String& rFileName = pLuaScript->getData();
+		const String& rFileName = pLuaScript->getData();
 
 		lua_dofile( mLuaState, rFileName.c_str() ); 
 	}
@@ -144,13 +144,13 @@ namespace scripting {
 	}
 		
 	//------------------------------------------------------
-	void LuaScript::setData( const base::String& rData )
+	void LuaScript::setData( const String& rData )
 	{
 		mFileName = rData;
 	}
 
 	//------------------------------------------------------
-	const base::String& LuaScript::getData() const 
+	const String& LuaScript::getData() const 
 	{
 		return mFileName;
 	}

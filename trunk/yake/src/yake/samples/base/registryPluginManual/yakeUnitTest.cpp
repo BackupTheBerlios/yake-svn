@@ -19,6 +19,7 @@ YAKE_DECLARE_GLOBAL
 int main()
 {
 	YAKE_DECLARE_FUNCTION( main )
+	using namespace yake;
 	using namespace yake::base;
 	using namespace yake::base::templates;
 

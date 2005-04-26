@@ -51,14 +51,14 @@ namespace ogre3d {
 		void render( real timeElapsed );
 
 		virtual ISceneNode* createSceneNode();
-		virtual IEntity* createEntity(const base::String & mesh);
+		virtual IEntity* createEntity(const String & mesh);
 		virtual ILight* createLight();
-		virtual IParticleSystem* createParticleSystem( const base::String& rPSTemplateName );
+		virtual IParticleSystem* createParticleSystem( const String& rPSTemplateName );
 		virtual ICamera* createCamera();
 		virtual IViewport* createViewport(ICamera* pCamera);
 
 		virtual IMeshGeometryAccess* createProceduralMesh(const String & name);
-		virtual void destroyProceduralMesh(const base::String & name);
+		virtual void destroyProceduralMesh(const String & name);
 		virtual IMeshGeometryAccess* getProceduralMesh(const String & name);
 
 		virtual real getRenderWindowWidth() const;
@@ -67,7 +67,7 @@ namespace ogre3d {
 		static void setCore( OgreCore* core );
 	private:
 		static OgreCore*	msCore;
-		typedef base::templates::AssocVector< String, Ogre::MeshPtr > ProcMeshMap;
+		typedef AssocVector< String, Ogre::MeshPtr > ProcMeshMap;
 		ProcMeshMap			mProcMeshes;
 	};
 

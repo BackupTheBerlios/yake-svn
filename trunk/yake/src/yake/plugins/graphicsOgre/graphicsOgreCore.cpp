@@ -172,7 +172,7 @@ namespace ogre3d {
 			mSceneMgr = mRoot->getSceneManager( ST_GENERIC );
 		else
 		{
-			base::String val = itFind->second;
+			String val = itFind->second;
 			if (val == "exterior_close")
 				mSceneType = ST_EXTERIOR_CLOSE;
 			else if (val == "exterior_far")
@@ -244,7 +244,7 @@ namespace ogre3d {
 		// Go through all settings in the file
 		Ogre::ConfigFile::SettingsIterator i = cf.getSettingsIterator();
 
-		base::String key, value;
+		String key, value;
 		while (i.hasMoreElements())
 		{
 			key = i.peekNextKey();
@@ -300,7 +300,7 @@ namespace ogre3d {
 			catch (Ogre::Exception& e)
 			{
 				//YAKE_LOGPRINTF("[yake.graphics.ogre] OGRE EXCEPTION\n%s\n", e.getFullDescription() );
-				base::String rMsg = "[yake.graphics.ogre] OGRE EXCEPTION\n" + e.getFullDescription() + "\n";
+				String rMsg = "[yake.graphics.ogre] OGRE EXCEPTION\n" + e.getFullDescription() + "\n";
 				YAKE_LOG( rMsg );
 				YAKE_EXCEPT( rMsg, "yake.graphicsOGRE.core" );
 				mReady = false;

@@ -46,7 +46,7 @@ public: // class
 
 public: // methods
 	// Resolve host.
-	const yake::base::String sayHelloMyFriend() const;
+	const yake::String sayHelloMyFriend() const;
 
 	YAKE_DECLARE_CONCRETE( NetworkDriver, "winsock" )
 };
@@ -65,7 +65,7 @@ public: // class
 
 public: // methods
 	// Resolve host.
-	const yake::base::String sayHelloMyFriend() const;
+	const yake::String sayHelloMyFriend() const;
 
 	YAKE_DECLARE_CONCRETE( NetworkDriver2, "winsock2" )
 };

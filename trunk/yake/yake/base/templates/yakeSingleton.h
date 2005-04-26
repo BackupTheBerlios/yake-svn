@@ -396,7 +396,7 @@ void SingletonHolder<T, CreationPolicy, L, M>::DestroySingleton()
 		return yake::base::templates::SingletonHolder< ClassName, \
 			yake::base::templates::CreateUsingNew, \
 				yake::base::templates::DefaultLifetime, \
-					yake::base::templates::SingleThreaded >::instance(); \
+					yake::SingleThreaded >::instance(); \
 		}
 
 #define YAKE_BUILD_PHOENIX_SINGLETON( ClassName ) \

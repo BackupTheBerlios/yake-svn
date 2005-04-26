@@ -179,7 +179,7 @@ namespace physics {
  			pVertices = new dReal[ 3*rVertices.size() ];
  			uint32 elementCounter = 0;
 
- 			base::templates::ConstVectorIterator<TriangleMeshDesc::VertexVector> itV( rVertices.begin(), rVertices.end() );
+ 			ConstVectorIterator<TriangleMeshDesc::VertexVector> itV( rVertices.begin(), rVertices.end() );
  			while ( itV.hasMoreElements() )
  			{
  				Vector3 const& v = itV.getNext();
@@ -193,7 +193,7 @@ namespace physics {
 			pIndices = new uint32[ rIndices.size() ];
 			elementCounter = 0;
  			
-			base::templates::ConstVectorIterator<TriangleMeshDesc::IndexVector> itI( rIndices.begin(), rIndices.end() );
+			ConstVectorIterator<TriangleMeshDesc::IndexVector> itI( rIndices.begin(), rIndices.end() );
  			while ( itI.hasMoreElements() )
  			{
  				pIndices[ elementCounter++] = itI.getNext();
@@ -205,7 +205,7 @@ namespace physics {
  				pNormals = new dReal[ 3*rNormals.size() ];
  				elementCounter  = 0;
  				
-				base::templates::ConstVectorIterator<TriangleMeshDesc::NormalVector> itN( rNormals.begin(), rNormals.end() );
+				ConstVectorIterator<TriangleMeshDesc::NormalVector> itN( rNormals.begin(), rNormals.end() );
  				while ( itN.hasMoreElements() )
  				{
  					Vector3 const& v = itN.getNext();
@@ -422,7 +422,7 @@ namespace physics {
 // 		Vector3 OdeCollisionGeomBase::planeGetNormal() const
 // 		{ return Vector3::kZero; }
 // 		//-----------------------------------------------------
-// 		base::String OdeCollisionGeomBase::meshGetName() const
+// 		String OdeCollisionGeomBase::meshGetName() const
 // 		{ return ""; }
 // 		//-----------------------------------------------------
 // 		real OdeCollisionGeomBase::planeGetDistance() const

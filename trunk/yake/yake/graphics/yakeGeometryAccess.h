@@ -84,7 +84,7 @@ namespace graphics {
 		virtual bool setRenderVertexCount( uint32 count ) = 0;
 		virtual bool setRenderIndexCount( uint32 count ) = 0;
 
-		virtual bool setMaterial( const base::String & material ) = 0;
+		virtual bool setMaterial( const String & material ) = 0;
 
 		virtual bool lockPositions( uint32 start, uint32 count, bool bRead = false ) = 0;
 		virtual bool unlockPositions() = 0;

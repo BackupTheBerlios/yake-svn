@@ -16,7 +16,7 @@
 namespace yake {
 namespace thread {
 
-	class YAKE_THREAD_API ThreadException : public ::yake::base::Exception
+	class YAKE_THREAD_API ThreadException : public ::yake::Exception
 	{
 	};
 
@@ -39,7 +39,7 @@ namespace thread {
 	YAKE_THREAD_COMMON_POINTERS( IRunnable );
 
 
-	using ::yake::base::templates::SharedPtr;
+	using ::yake::SharedPtr;
 
 	class YAKE_THREAD_API Task : SharedIRunnablePtr
 	{
@@ -73,7 +73,7 @@ namespace thread {
 	class YAKE_THREAD_API IThread
 	{
 	public:
-		YAKE_DECLARE_REGISTRY_0(IThread, ::yake::base::String)
+		YAKE_DECLARE_REGISTRY_0(IThread, ::yake::String)
 		virtual ~IThread() {}
 
 		virtual void yield() throw( ThreadException ) = 0;

@@ -33,35 +33,35 @@
 namespace luabind {
 namespace converters {
 
-	yes_t is_user_defined(by_value<yake::base::String>);
-	yes_t is_user_defined(by_const_reference<yake::base::String>);
+	yes_t is_user_defined(by_value<yake::String>);
+	yes_t is_user_defined(by_const_reference<yake::String>);
 
-	void convert_cpp_to_lua(lua_State* L, const yake::base::String& s)
+	void convert_cpp_to_lua(lua_State* L, const yake::String& s)
 	{
 		lua_pushstring(L, s.c_str());
 	}
 
-	yake::base::String convert_lua_to_cpp(
-	lua_State* L, by_value<yake::base::String>, int index)
+	yake::String convert_lua_to_cpp(
+	lua_State* L, by_value<yake::String>, int index)
 	{
-		return yake::base::String(lua_tostring(L, index));
+		return yake::String(lua_tostring(L, index));
 	}
 
-	yake::base::String convert_lua_to_cpp(
-	lua_State* L, by_const_reference<yake::base::String>, int index)
+	yake::String convert_lua_to_cpp(
+	lua_State* L, by_const_reference<yake::String>, int index)
 	{
-		return yake::base::String(lua_tostring(L, index));
+		return yake::String(lua_tostring(L, index));
 	}
 
 	int match_lua_to_cpp(
-	lua_State* L, by_value<yake::base::String>, int index)
+	lua_State* L, by_value<yake::String>, int index)
 	{
 		if (lua_type(L, index) == LUA_TSTRING) return 0;
 		else return -1;
 	}
 
 	int match_lua_to_cpp(
-	lua_State* L, by_const_reference<yake::base::String>, int index)
+	lua_State* L, by_const_reference<yake::String>, int index)
 	{
 		if (lua_type(L, index) == LUA_TSTRING) return 0;
 		else return -1;

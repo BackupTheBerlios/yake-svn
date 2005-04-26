@@ -33,10 +33,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 	using namespace math;
 /** Interface for movable objects and basic implementation of
@@ -50,7 +47,7 @@ namespace base
 */
 class YAKE_BASE_API Movable
 {
-YAKE_DECLARE_CLASS( yake::base::Movable )
+YAKE_DECLARE_CLASS( yake::Movable )
 protected:
 	Movable();
 // Class
@@ -78,7 +75,6 @@ private:
 	bool		mFixedYaw;
 };
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_MOVABLE_H

@@ -33,12 +33,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace templates
-{
+namespace yake {
 
 /** A template class for managing names which are associated with object pointers.
 */
@@ -89,8 +84,6 @@ protected:
 	ObjectNameMap	mObjectNames;
 };
 
-} // templates
-} // base
 } // yake
 
 #endif // YAKE_BASE_TEMPLATES_ASSOCIATOR_H

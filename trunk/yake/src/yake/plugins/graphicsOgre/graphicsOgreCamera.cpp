@@ -29,7 +29,7 @@ namespace ogre3d {
 	OgreCamera::OgreCamera( Ogre::SceneManager * sceneMgr ) : mSceneMgr( sceneMgr ), mCam( 0 )
 	{
 		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
-		mCam = mSceneMgr->createCamera( yake::base::uniqueName::create("sn_") );
+		mCam = mSceneMgr->createCamera( yake::uniqueName::create("sn_") );
 		YAKE_ASSERT( mCam ).warning("Couldn't create a camera!");
 		mCam->setPosition( 0, 0, 0 );
 

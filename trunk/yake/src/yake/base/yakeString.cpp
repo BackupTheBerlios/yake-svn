@@ -27,10 +27,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 	//-----------------------------------------------------
 	// The following implementation is based on Ogre::String.
@@ -143,5 +140,4 @@ namespace base
 		return static_cast<int32>(atoi( rString.c_str() ));
 	}
 
-} // base
 } // yake

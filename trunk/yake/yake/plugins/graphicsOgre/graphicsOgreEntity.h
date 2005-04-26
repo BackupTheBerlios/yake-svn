@@ -30,18 +30,18 @@ namespace ogre3d {
 		OgreEntity();
 		OgreEntity( const OgreEntity & );
 	public:
-		OgreEntity( ::Ogre::SceneManager * sceneMgr, const base::String & mesh );
+		OgreEntity( ::Ogre::SceneManager * sceneMgr, const String & mesh );
 		virtual ~OgreEntity();
 
 		virtual ISkeleton* getSkeleton() const;
 
 		virtual void setVisible( bool visible );
-		virtual void setMaterial( const base::String & materialName );
-		virtual void setSubEntityMaterial( const base::String & subEntity, const base::String & materialName );
+		virtual void setMaterial( const String & materialName );
+		virtual void setSubEntityMaterial( const String & subEntity, const String & materialName );
 		virtual void setCastsShadow( bool castsShadow );
 
-		virtual base::String getTag() const;
-		virtual void getTag(base::String& tag);
+		virtual String getTag() const;
+		virtual void getTag(String& tag);
 		//virtual void setTag(const String& tag);
 
 		Ogre::Entity* getEntity_() const

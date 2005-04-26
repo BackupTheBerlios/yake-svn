@@ -79,18 +79,18 @@ namespace input {
 
 		virtual void update();
 		virtual DeviceEntryList getAvailableDevices();
-		virtual InputDevice* activateDevice( const base::String & deviceName );
-		virtual InputDevice* getDevice( const base::String & deviceName ) const;
+		virtual InputDevice* activateDevice( const String & deviceName );
+		virtual InputDevice* getDevice( const String & deviceName ) const;
 		virtual void getActiveDevices( std::vector< InputDevice* > & devices ) const;
 
 	protected:
 		// devices
 		struct ActiveDevice {
-			base::String	name;
+			String	name;
 			InputDevice*	device;
 			InputDeviceType	type;
 		};
-		typedef base::templates::Vector< ActiveDevice >	ActiveDeviceList;
+		typedef Vector< ActiveDevice >	ActiveDeviceList;
 		ActiveDeviceList	mActiveDevices;
 
 		// Ogre stuff

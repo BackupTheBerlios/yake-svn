@@ -54,7 +54,7 @@ namespace input {
 		{ return mId; }
 	private:
 		uint32			mId;
-		base::String	mName;
+		String	mName;
 	};
 	inline uint32 operator + (const ActionId & lhs, const uint32 rhs)
 	{
@@ -153,7 +153,7 @@ namespace input {
 		void subscribeToActionId( const ActionId & actionId, const ActionSignal::slot_type & slot );
 		void update();
 	private:
-		typedef base::templates::Vector< ActionId > ActionIdList;
+		typedef Vector< ActionId > ActionIdList;
 		struct ActionMapEntry {
 			ActionMapEntry() : condition(0), actionId(ACTIONID_USER)
 			{
@@ -162,7 +162,7 @@ namespace input {
 			ActionId			actionId;
 			ActionSignal		signal;
 		};
-		typedef base::templates::Vector< ActionMapEntry* > ActionList;
+		typedef Vector< ActionMapEntry* > ActionList;
 		ActionList	mEntries;
 	};
 

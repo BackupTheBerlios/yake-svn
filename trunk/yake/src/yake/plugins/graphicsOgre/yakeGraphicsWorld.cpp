@@ -66,7 +66,7 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	IEntity* GraphicalWorld::createEntity( const base::String & mesh )
+	IEntity* GraphicalWorld::createEntity( const String & mesh )
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
 		return new OgreEntity( msCore->getSceneMgr(), mesh );
@@ -80,7 +80,7 @@ namespace ogre3d {
  	}
 
 	//-----------------------------------------------------
-	IParticleSystem* GraphicalWorld::createParticleSystem( const base::String& rPSTemplateName )
+	IParticleSystem* GraphicalWorld::createParticleSystem( const String& rPSTemplateName )
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
 		return new OgreParticleSystem( *msCore->getParticleSysMgr(), rPSTemplateName );
@@ -152,12 +152,12 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	void GraphicalWorld::destroyProceduralMesh(const base::String & name)
+	void GraphicalWorld::destroyProceduralMesh(const String & name)
 	{
 	}
 
 	//-----------------------------------------------------
-	IMeshGeometryAccess* GraphicalWorld::getProceduralMesh(const base::String & name)
+	IMeshGeometryAccess* GraphicalWorld::getProceduralMesh(const String & name)
 	{
 		ProcMeshMap::iterator itFind = mProcMeshes.find( name );
 		if (itFind == mProcMeshes.end())

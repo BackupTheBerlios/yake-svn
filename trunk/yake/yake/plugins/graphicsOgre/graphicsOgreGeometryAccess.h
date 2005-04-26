@@ -33,7 +33,7 @@ namespace ogre3d {
 	{
 	private:
 		Ogre::MeshPtr		mMesh;
-		typedef base::templates::AssocVector<SubmeshId, Ogre::SubMesh*> SubMeshMap;
+		typedef AssocVector<SubmeshId, Ogre::SubMesh*> SubMeshMap;
 		SubMeshMap			mSubmeshes;
 		SubmeshId			mLastId;
 	public:
@@ -73,7 +73,7 @@ namespace ogre3d {
 		virtual bool open( uint32 numVertices, uint32 numIndices, uint8 numTexSets );
 		virtual bool close();
 
-		virtual bool setMaterial( const base::String & material );
+		virtual bool setMaterial( const String & material );
 
 		virtual bool setRenderVertexCount( uint32 count );
 		virtual bool setRenderIndexCount( uint32 count );

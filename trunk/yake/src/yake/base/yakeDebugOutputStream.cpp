@@ -45,14 +45,14 @@ int DebugOutputStream::seek( int offset, SeekBase base )
 {
   YAKE_DECLARE_FUNCTION( seek )
 
-  throw yake::base::Exception( "Can't seek in debug output streams.", YAKE_HERE );
+  throw yake::Exception( "Can't seek in debug output streams.", YAKE_HERE );
 }
 
 int DebugOutputStream::tell() const
 {
   YAKE_DECLARE_FUNCTION( tell )
 
-  throw yake::base::Exception( "Can't retrieve debug output stream position.", YAKE_HERE );
+  throw yake::Exception( "Can't retrieve debug output stream position.", YAKE_HERE );
 }
 
 bool DebugOutputStream::isEos() const

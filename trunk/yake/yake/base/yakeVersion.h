@@ -29,10 +29,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 /** Holds version information.
 */
@@ -47,7 +44,6 @@ struct Version
 	uint16 mSub;
 };
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_VERSION_H

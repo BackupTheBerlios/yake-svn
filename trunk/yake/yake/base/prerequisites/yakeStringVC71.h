@@ -34,22 +34,18 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 typedef std::string YAKE_BASE_STRING;
 
-} // base
 } // yake
 
 namespace std
 {
-/*	template<> size_t hash_compare < yake::base::YAKE_BASE_STRING, std::less< yake::base::YAKE_BASE_STRING > >::operator ()( const yake::base::YAKE_BASE_STRING& rStringBase ) const
+/*	template<> size_t hash_compare < yake::YAKE_BASE_STRING, std::less< yake::YAKE_BASE_STRING > >::operator ()( const yake::YAKE_BASE_STRING& rStringBase ) const
 	{
 		register size_t ret = 0;
-		for( yake::base::YAKE_BASE_STRING::const_iterator it = rStringBase.begin(); it != rStringBase.end(); ++it )
+		for( yake::YAKE_BASE_STRING::const_iterator it = rStringBase.begin(); it != rStringBase.end(); ++it )
 			ret = 5 * ret + *it;
 
 		return ret;

@@ -22,7 +22,7 @@
 #define YAKE_BASE_EXCEPTION_H
 
 
-#define YAKE_EXCEPT(message, source) throw( yake::base::Exception(message, source,__FILE__,__LINE__) )
+#define YAKE_EXCEPT(message, source) throw( yake::Exception(message, source,__FILE__,__LINE__) )
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
@@ -37,10 +37,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 class YAKE_BASE_API Exception : public std::exception
 {
@@ -73,7 +70,6 @@ private:
 	int    mLine;
 };
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_EXCEPTION_H

@@ -77,7 +77,7 @@ namespace ogre3d {
 
 		SystemFrameListener *	mSysFL;
 
-		typedef AssocVector<base::String,base::String> StringMap;
+		typedef AssocVector<String,String> StringMap;
 		StringMap	mConfig;
 
 		Ogre::SceneType	mSceneType;

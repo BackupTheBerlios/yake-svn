@@ -45,7 +45,7 @@ void MimeTypeManager::add( const String& rMimeType, const String& rExtension )
   YAKE_DECLARE_FUNCTION( add )
 
   if( mMapping.find( rExtension ) != mMapping.end() )
-    throw yake::base::Exception( "Extension \"" + rExtension + "\" already registered.", YAKE_HERE );
+    throw yake::Exception( "Extension \"" + rExtension + "\" already registered.", YAKE_HERE );
 
   mMapping[ rExtension ] = rMimeType;
 }

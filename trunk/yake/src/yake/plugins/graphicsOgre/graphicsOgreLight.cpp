@@ -30,7 +30,7 @@ namespace ogre3d {
 	OgreLight::OgreLight( Ogre::SceneManager* pSceneMgr ) : mSceneMgr( pSceneMgr ), mLight( NULL )
 	{
 		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
-		mLight = mSceneMgr->createLight( yake::base::uniqueName::create("sn_") );
+		mLight = mSceneMgr->createLight( yake::uniqueName::create("sn_") );
 		YAKE_ASSERT( mLight ).warning("Couldn't create a light!");
 	}
 

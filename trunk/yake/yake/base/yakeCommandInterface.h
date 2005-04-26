@@ -37,8 +37,8 @@ namespace base {
 			String	name;
 			String	description;
 		};
-		typedef templates::Vector<Cmd> CmdVector;
-		typedef templates::Vector<String> StringVector;
+		typedef Vector<Cmd> CmdVector;
+		typedef Vector<String> StringVector;
 	public:
 		virtual ~ICommandInterface() {}
 

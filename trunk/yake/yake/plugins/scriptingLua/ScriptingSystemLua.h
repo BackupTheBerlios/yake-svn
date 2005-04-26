@@ -144,12 +144,12 @@ namespace scripting {
 		virtual const IScriptingSystem* getCreator() const;
 
 		virtual bool isLoaded();
-		virtual void setData( const base::String& rData );
+		virtual void setData( const String& rData );
 
-		const base::String& getData() const;
+		const String& getData() const;
 
 	private:
-		base::String			mFileName;
+		String			mFileName;
 		const IScriptingSystem*	mCreator;
 	};
 

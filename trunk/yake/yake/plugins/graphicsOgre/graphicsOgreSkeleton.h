@@ -31,11 +31,11 @@ namespace ogre3d {
 		OgreSkeleton( Ogre::Entity& rEntity );
 		virtual ~OgreSkeleton();
 
-		virtual void enableAnimation( const base::String& rAnimName, bool enable );
-		virtual void advanceAnimation( const base::String& rAnimName, real timeDelta );
+		virtual void enableAnimation( const String& rAnimName, bool enable );
+		virtual void advanceAnimation( const String& rAnimName, real timeDelta );
 		virtual void advanceAllAnimations( real timeDelta );
-		virtual void setAnimationWeight( const base::String& rAnimName, real weight );
-		virtual void attachEntityToBone( const base::String& rBoneName, IEntity* pEntity );
+		virtual void setAnimationWeight( const String& rAnimName, real weight );
+		virtual void attachEntityToBone( const String& rBoneName, IEntity* pEntity );
 	
 	protected:
 		Ogre::Entity& mEntity;

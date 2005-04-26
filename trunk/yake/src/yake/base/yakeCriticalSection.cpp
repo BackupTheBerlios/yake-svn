@@ -31,36 +31,32 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 CriticalSection::CriticalSection()
 {
-  YAKE_DECLARE_FUNCTION( CriticalSection )
-  mHandle = native::criticalSection_Create();
+	YAKE_DECLARE_FUNCTION( CriticalSection )
+	mHandle = base::native::criticalSection_Create();
 
-  if( 0 == mHandle )
-    throw Exception( "Couldn't create critical section.", YAKE_HERE );
+	if( 0 == mHandle )
+		throw Exception( "Couldn't create critical section.", YAKE_HERE );
 }
 
 CriticalSection::~CriticalSection()
 {
-  if( 0 != mHandle )
-		native::criticalSection_Delete( mHandle );
+	if( 0 != mHandle )
+		base::native::criticalSection_Delete( mHandle );
 }
 
 
 void CriticalSection::enter()
 {
-  yake::base::native::criticalSection_Enter( mHandle );
+	yake::base::native::criticalSection_Enter( mHandle );
 }
 
 void CriticalSection::leave()
 {
-  yake::base::native::criticalSection_Leave( mHandle );
+	yake::base::native::criticalSection_Leave( mHandle );
 }
 
-} // base
 } // yake

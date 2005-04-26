@@ -42,9 +42,9 @@ struct YAKE_REGISTRY_PLUGIN_INTERFACE_API INetworkDriver
 	virtual ~INetworkDriver() {}
 
 	// Resolve host.
-	virtual const yake::base::String sayHelloMyFriend() const = 0;
+	virtual const yake::String sayHelloMyFriend() const = 0;
 
-	YAKE_DECLARE_REGISTRY_0(INetworkDriver, yake::base::String)
+	YAKE_DECLARE_REGISTRY_0(INetworkDriver, yake::String)
 };
 
 struct YAKE_REGISTRY_PLUGIN_INTERFACE_API INetworkDriver2
@@ -53,9 +53,9 @@ struct YAKE_REGISTRY_PLUGIN_INTERFACE_API INetworkDriver2
 	virtual ~INetworkDriver2() {}
 
 	// Resolve host.
-	virtual const yake::base::String sayHelloMyFriend() const = 0;
+	virtual const yake::String sayHelloMyFriend() const = 0;
 
-	YAKE_DECLARE_REGISTRY_01(INetworkDriver2, yake::base::String, int)
+	YAKE_DECLARE_REGISTRY_01(INetworkDriver2, yake::String, int)
 };
 
 #endif // INTERFACE_H

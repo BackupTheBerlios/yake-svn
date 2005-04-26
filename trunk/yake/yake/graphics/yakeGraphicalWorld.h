@@ -51,11 +51,11 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API ISkeleton : public GraphicsEntity
 	{
 	public:
-		virtual void enableAnimation( const base::String & rAnimName, bool enable = true ) = 0;
-		virtual void advanceAnimation( const base::String& rAnimName, real timeDelta ) = 0;
+		virtual void enableAnimation( const String & rAnimName, bool enable = true ) = 0;
+		virtual void advanceAnimation( const String& rAnimName, real timeDelta ) = 0;
 		virtual void advanceAllAnimations( real timeDelta ) = 0;
-		virtual void setAnimationWeight( const base::String & rAnimName, real weight ) = 0;
-		virtual void attachEntityToBone( const base::String & bone, IEntity* pEntity ) = 0;
+		virtual void setAnimationWeight( const String & rAnimName, real weight ) = 0;
+		virtual void attachEntityToBone( const String & bone, IEntity* pEntity ) = 0;
 	};
 
 	/**
@@ -105,20 +105,20 @@ namespace graphics {
 	public:
 		virtual ISkeleton* getSkeleton() const = 0;
 		virtual void setVisible( bool visible ) = 0;
-		virtual void setMaterial( const base::String & materialName ) = 0;
-		virtual void setSubEntityMaterial( const base::String & subEntity, const base::String & materialName ) = 0;
+		virtual void setMaterial( const String & materialName ) = 0;
+		virtual void setSubEntityMaterial( const String & subEntity, const String & materialName ) = 0;
 		//virtual void setReceivesShadows( bool receivesShadows ) = 0;
 		virtual void setCastsShadow( bool castsShadow ) = 0;
 
 		//@todo move into base class!?
-		virtual base::String getTag() const = 0;
-		virtual void getTag(base::String& tag) = 0;
+		virtual String getTag() const = 0;
+		virtual void getTag(String& tag) = 0;
 		//virtual void setTag(const String& tag) = 0;
 	};
 
 	/** A concrete instance of a camera in a scene.
 	*/
-	class YAKE_GRAPHICS_INTERFACE_API ICamera : public GraphicsEntity, public base::Movable
+	class YAKE_GRAPHICS_INTERFACE_API ICamera : public GraphicsEntity, public Movable
 	{
 	public:
 		enum ProjectionType
@@ -173,10 +173,11 @@ namespace graphics {
 
 	/** A concrete node in a scene graph.
 	*/
-	class YAKE_GRAPHICS_INTERFACE_API ISceneNode : public GraphicsEntity, public base::Movable
+	class YAKE_GRAPHICS_INTERFACE_API ISceneNode : public GraphicsEntity, public Movable
 	{
 	public:
 		virtual void addChildNode( ISceneNode* pNode ) = 0;
+		virtual ISceneNode* createChildNode( const String& tag = "" ) = 0;
 		virtual void attachEntity( IEntity* pEntity ) = 0;
 		virtual void attachCamera( ICamera* pCamera ) = 0;
 		virtual void attachLight( ILight* pLight ) = 0;
@@ -186,8 +187,8 @@ namespace graphics {
 		virtual Vector3 getScale() const = 0;
 
 		//@todo move into base class!?
-		virtual base::String getTag() const = 0;
-		virtual void getTag(base::String& tag) = 0;
+		virtual String getTag() const = 0;
+		virtual void getTag(String& tag) = 0;
 		//virtual void setTag(const String& tag) = 0;
 	};
 
@@ -218,16 +219,16 @@ namespace graphics {
 
 		virtual ISceneNode* createSceneNode() = 0;
 
-		virtual IParticleSystem* createParticleSystem( const base::String& rPSTemplateName ) = 0;
+		virtual IParticleSystem* createParticleSystem( const String& rPSTemplateName ) = 0;
 
 		/** Create an (placeable) instance of a mesh.
 			\param mesh Can either be a mesh file loaded from a resource or a procedural mesh.
 		*/
-		virtual IEntity* createEntity( const base::String & mesh ) = 0;
+		virtual IEntity* createEntity( const String & mesh ) = 0;
 
-		virtual IMeshGeometryAccess* createProceduralMesh(const base::String & name) = 0;
-		virtual void destroyProceduralMesh(const base::String & name) = 0;
-		virtual IMeshGeometryAccess* getProceduralMesh(const base::String & name) = 0;
+		virtual IMeshGeometryAccess* createProceduralMesh(const String & name) = 0;
+		virtual void destroyProceduralMesh(const String & name) = 0;
+		virtual IMeshGeometryAccess* getProceduralMesh(const String & name) = 0;
 
 		/** Creates viewport and assigns camera *pCamera to it.
 				Viewport start offset and dimensions are in normalized window-relative coords [0..1].

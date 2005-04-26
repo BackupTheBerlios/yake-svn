@@ -41,7 +41,7 @@ namespace graphics {
 using namespace yake::base::mpl;
 using namespace yake::base::templates;
 
-	typedef ::yake::base::Exception GraphicsException;
+	typedef ::yake::Exception GraphicsException;
 
 #define YAKE_GRAPHICS_EXCEPT( MSG ) \
 	throw GraphicsException( MSG, "yake::graphics", __FILE__, __LINE__ );
@@ -53,9 +53,9 @@ using namespace yake::base::templates;
 	struct YAKE_GRAPHICS_INTERFACE_API IGraphicsSystem 
 		//: public AbstractFactory< sequences::list< IWorld > >
 	{
-		typedef base::templates::AssocVector<base::String, base::String> ParamMap;
+		typedef AssocVector<String, String> ParamMap;
 
-		YAKE_DECLARE_REGISTRY_01(IGraphicsSystem, base::String, ParamMap)		
+		YAKE_DECLARE_REGISTRY_01(IGraphicsSystem, String, ParamMap)		
 	
 		virtual ~IGraphicsSystem();
 

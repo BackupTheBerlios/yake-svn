@@ -33,17 +33,14 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
+
 namespace uniqueName 
 {
 
 YAKE_BASE_API String create( const String& rPre = "", const String& rPost = "" );
 
 } // uniqueName
-} // base
 } // yake
 
 #endif // YAKE_BASE_UNIQUENAME_H

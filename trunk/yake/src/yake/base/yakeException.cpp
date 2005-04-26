@@ -29,7 +29,6 @@
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
 namespace yake {
-namespace base {
 
 Exception::Exception() throw () : mLine(-1)
 {
@@ -109,6 +108,4 @@ const char* Exception::what() const throw()
 	return mAsciiWhat.c_str();
 }
 
-
-} // base
 } // yake

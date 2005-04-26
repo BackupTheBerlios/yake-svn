@@ -32,12 +32,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace templates
-{
+namespace yake {
 
 template< class _Value, class _Alloc = std::allocator< _Value > >
 class Vector : private std::vector< _Value >
@@ -205,6 +200,10 @@ public:
 			mCurrent( start ), mEnd( end )
 		{
 		}
+		VectorIterator(typename T& container) :
+			mCurrent( container.begin() ), mEnd( container.end() )
+		{
+		}
 		bool hasMoreElements()
 		{
 			return mCurrent != mEnd;
@@ -242,6 +241,10 @@ public:
 			mCurrent( start ), mEnd( end )
 		{
 		}
+		ConstVectorIterator(typename T& container) :
+			mCurrent( container.begin() ), mEnd( container.end() )
+		{
+		}
 		bool hasMoreElements()
 		{
 			return mCurrent != mEnd;
@@ -268,9 +271,6 @@ public:
 		}
 	};
 
-
-} // templates
-} // base
 } // yake
 
 

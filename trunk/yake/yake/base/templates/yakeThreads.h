@@ -18,12 +18,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace templates
-{
+namespace yake {
 
     template <class Host>
     class SingleThreaded
@@ -192,9 +187,6 @@ namespace templates
     
 #endif   
 
-
-} // templates
-} // base
 } // yake
 
 #endif

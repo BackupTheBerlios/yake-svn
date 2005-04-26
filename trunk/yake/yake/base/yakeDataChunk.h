@@ -33,10 +33,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
+namespace yake {
 
 /**
 */
@@ -71,7 +68,6 @@ protected:
 	size_t	mPos;
 };
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_DATACHUNK_H

@@ -52,6 +52,7 @@ int main()
 {
 	YAKE_DECLARE_FUNCTION( main )
 
+	using namespace yake;
 	using namespace yake::testsuite;
 
 	// Catch exception

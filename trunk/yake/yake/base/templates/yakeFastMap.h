@@ -32,12 +32,7 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace templates
-{
+namespace yake {
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template AssocVectorCompare
@@ -336,8 +331,6 @@ namespace templates
     void swap(AssocVector<K, V, C, A>& lhs, AssocVector<K, V, C, A>& rhs)
     { lhs.swap(rhs); }
     
-} // templates
-} // base
 } // yake
 
 #endif // YAKE_BASE_TEMPLATESFASTMAP_H

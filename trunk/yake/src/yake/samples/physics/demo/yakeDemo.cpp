@@ -150,7 +150,7 @@ private:
 		return pPWorld->createJoint(
 			physics::IJoint::DescFixed( *rSimple1.pActor.lock(), *rSimple2.pActor.lock() ) );
 	}
-	SharedPtr<base::Library> loadLib( const base::String & file )
+	SharedPtr<base::Library> loadLib( const String & file )
 	{
 		SharedPtr<base::Library> pDynLib( new base::Library( file ) );
 		YAKE_ASSERT( pDynLib ).debug( "Out of memory." );
@@ -475,7 +475,7 @@ int main()
 		app.run();
 		app.cleanUp();
 	}
-	catch (const yake::base::Exception & e)
+	catch (const yake::Exception & e)
 	{
 		std::cout << std::endl << e.what() << std::endl;
 	}

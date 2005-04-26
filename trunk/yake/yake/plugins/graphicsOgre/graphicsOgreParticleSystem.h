@@ -32,7 +32,7 @@ namespace graphics {
 	class OgreParticleSystem : public graphics::IParticleSystem
 	{
 	public:
-		OgreParticleSystem( Ogre::ParticleSystemManager& rPSMgr, const base::String& rPSTemplateName );
+		OgreParticleSystem( Ogre::ParticleSystemManager& rPSMgr, const String& rPSTemplateName );
 		virtual ~OgreParticleSystem();
 
 		virtual void setVisible( bool visible );

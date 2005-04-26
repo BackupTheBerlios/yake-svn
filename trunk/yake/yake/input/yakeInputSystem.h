@@ -283,14 +283,14 @@ namespace input {
 	*/
 	class YAKE_INPUT_API IInputSystem// : public System
 	{
-		YAKE_DECLARE_REGISTRY_0( IInputSystem, base::String )
+		YAKE_DECLARE_REGISTRY_0( IInputSystem, String )
 	public:
 		virtual ~IInputSystem();
 
 		/** Used for enumerating devices. */
 		struct DeviceListEntry
 		{
-			base::String		name;
+			String		name;
 			InputDeviceType		type;
 		};
 		typedef std::vector< DeviceListEntry > DeviceEntryList;
@@ -298,8 +298,8 @@ namespace input {
 	public:
 		virtual void update() = 0;
 		virtual DeviceEntryList getAvailableDevices() = 0;
-		virtual InputDevice* activateDevice( const base::String & deviceName ) = 0;
-		virtual InputDevice* getDevice( const base::String & deviceName ) const = 0;
+		virtual InputDevice* activateDevice( const String & deviceName ) = 0;
+		virtual InputDevice* getDevice( const String & deviceName ) const = 0;
 		virtual void getActiveDevices( std::vector< InputDevice* > & devices ) const = 0;
 	};
 

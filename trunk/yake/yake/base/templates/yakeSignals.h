@@ -102,12 +102,8 @@
 #	define Signal2 ttl::sig::signal
 #	define Signal3 ttl::sig::signal
 namespace yake {
-namespace base {
-namespace templates {
 	typedef ttl::sig::connection SignalConnection;
-}
-}
-}
+} // namespace yake
 #else
 #	error("Yake signal error: No signals provider.")
 #endif

@@ -35,8 +35,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 
 /** A unique id.
 	\see ClassId
@@ -93,7 +91,6 @@ YAKE_BASE_API bool operator != (const GUID& lhs, const GUID& rhs);
 */
 YAKE_BASE_API typedef GUID ClassId;
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_UNIQUEID_H

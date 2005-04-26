@@ -49,9 +49,9 @@ typedef std::string YAKE_BASE_STRING;
 namespace __gnu_cxx
 {
 
-template <> struct hash< yake::base::YAKE_BASE_STRING >
+template <> struct hash< yake::YAKE_BASE_STRING >
 {
-size_t operator()( const yake::base::YAKE_BASE_STRING _stringBase ) const 
+size_t operator()( const yake::YAKE_BASE_STRING _stringBase ) const 
 { 
 	/* This is the PRO-STL way, but it seems to cause problems with VC7.1
 	* and in some other cases (although I can't recreate it)
@@ -60,7 +60,7 @@ size_t operator()( const yake::base::YAKE_BASE_STRING _stringBase ) const
 	*/
 	/** This is our custom way */
 	register size_t ret = 0;
-	for( yake::base::YAKE_BASE_STRING::const_iterator it = _stringBase.begin(); it != _stringBase.end(); ++it )
+	for( yake::YAKE_BASE_STRING::const_iterator it = _stringBase.begin(); it != _stringBase.end(); ++it )
 	ret = 5 * ret + *it;
 	return ret;
 }
@@ -69,7 +69,7 @@ size_t operator()( const yake::base::YAKE_BASE_STRING _stringBase ) const
 } // __gnu_cxx
 #endif //GNU_STD_EXTENSION_HASH_STRING
 
-typedef ::__gnu_cxx::hash < yake::base::YAKE_BASE_STRING > _StringHash;
+typedef ::__gnu_cxx::hash < yake::YAKE_BASE_STRING > _StringHash;
 
 
 #endif

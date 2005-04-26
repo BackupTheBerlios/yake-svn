@@ -26,12 +26,8 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace uniqueName 
-{
+namespace yake {
+namespace uniqueName  {
 
 String create( const String& rPre, const String& rPost )
 {
@@ -43,6 +39,5 @@ String create( const String& rPre, const String& rPost )
 
 
 } // uniqueName
-} // base
 } // yake
 

@@ -33,19 +33,12 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake
-{
-namespace base
-{
-namespace templates
-{
+namespace yake {
 
 /** Performs an operation operation for each element in a container [ begin, end - 1 ]. */
 template< typename Iterator, typename Operation >
 YAKE_API void ForEach( Iterator begin, Iterator end, Operation operation );
 
-} // templates
-} // base
 } // yake
 
 /** Include inline implementation. */
