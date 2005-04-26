@@ -374,9 +374,6 @@
 				Name="templates"
 				Filter="">
 				<File
-					RelativePath="..\..\yake\base\templates\yakeAffector.h">
-				</File>
-				<File
 					RelativePath="..\..\yake\base\templates\yakeAlgorithms.h">
 				</File>
 				<File
@@ -404,9 +401,6 @@
 					RelativePath="..\..\yake\base\templates\yakeNiftyContainer.h">
 				</File>
 				<File
-					RelativePath="..\..\yake\base\templates\yakeObjectLink.h">
-				</File>
-				<File
 					RelativePath="..\..\yake\base\templates\yakePointer.h">
 				</File>
 				<File
@@ -426,9 +420,6 @@
 				</File>
 				<File
 					RelativePath="..\..\yake\base\templates\yakeThreads.h">
-				</File>
-				<File
-					RelativePath="..\..\yake\base\templates\yakeValueObserver.h">
 				</File>
 				<File
 					RelativePath="..\..\yake\base\templates\yakeVariant.h">
