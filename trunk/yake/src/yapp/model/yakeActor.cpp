@@ -52,7 +52,7 @@ namespace model {
 		YAKE_ASSERT( pComponent );
 		String tag = rTag;
 		if (tag.length() == 0)
-			tag = yake::base::uniqueName::create("co_");
+			tag = uniqueName::create("co_");
 		mComponents[tag] = pComponent;
 	}
 	Component* Actor::getComponent( const String & rTag ) const

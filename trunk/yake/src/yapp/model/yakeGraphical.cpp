@@ -53,7 +53,7 @@ namespace model {
 		SceneNodeEntry e;
 		e.bOwned = bTransferOwnership;
 		e.pSN = pSceneNode;
-		String name = (rName.length() > 0) ? rName : (base::uniqueName::create("graphical_sn_"));
+		String name = (rName.length() > 0) ? rName : (uniqueName::create("graphical_sn_"));
 		mNodes.insert( std::make_pair(name,e) );
 	}
 	//-----------------------------------------------------
@@ -101,7 +101,7 @@ namespace model {
 			graphics::ISceneNode* pSN = it.getNext();
 			String name = dss.getNameForSceneNode( pSN );
 			if ( name.length() < 0 ) 
-				name = yake::base::uniqueName::create("dotScene_sn_");
+				name = uniqueName::create("dotScene_sn_");
 			this->addSceneNode( pSN, name, true );
 			std::cout << "Graphical: node added - '" << name << "'" << std::endl; 
 		}

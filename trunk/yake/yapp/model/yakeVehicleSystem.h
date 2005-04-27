@@ -40,9 +40,9 @@ namespace vehicle {
 	{
 	public:
 		YAKE_DECLARE_CLASS( IVehicleSystem );
-		YAKE_DECLARE_REGISTRY_0( IVehicleSystem, ::yake::base::String );
+		YAKE_DECLARE_REGISTRY_0( IVehicleSystem, ::yake::String );
 
-		virtual Vehicle* createVehicle( const ::yake::base::String & rTemplate,
+		virtual Vehicle* createVehicle( const ::yake::String & rTemplate,
 										physics::IWorld* pPWorld, 
 										graphics::IWorld* pGWorld ) = 0;
 	};
@@ -53,13 +53,13 @@ namespace vehicle {
 		YAKE_DECLARE_CLASS( NativeVehicleSystem );
 		YAKE_DECLARE_CONCRETE( NativeVehicleSystem, "yake.native" );
 
-		virtual Vehicle* createVehicle( const ::yake::base::String & rTemplate, 
+		virtual Vehicle* createVehicle( const ::yake::String & rTemplate, 
 										physics::IWorld* pWorld, 
 										graphics::IWorld* pGWorld )
 		{ return 0; }
 	private:
 		bool _loadModelFromDotVehicle(::yake::app::model::complex::Model* pModel,
-									const ::yake::base::String & rFN, 
+									const ::yake::String & rFN, 
 									physics::IWorld* pPWorld,
 									graphics::IWorld* pGWorld,
 									IPhysicalVehicleComponent* pPC

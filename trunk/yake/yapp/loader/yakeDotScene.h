@@ -35,7 +35,7 @@ namespace data {
 namespace serializer {
 namespace dotscene {
 
-	typedef ::yake::base::templates::Vector< graphics::ISceneNode* > SceneNodeList;
+	typedef ::yake::Vector< graphics::ISceneNode* > SceneNodeList;
 
 	/** DotSceneReader base class providing default implementation for DOM parsing of dotScene files.
 	* \todo read environment, external references ..
@@ -94,7 +94,7 @@ namespace dotscene {
 		graphics::IWorld*				mGWorld;
 		SceneNodeList							mRootNodes;
 
-		typedef templates::AssocVector<graphics::ISceneNode*, String> SceneNodeNameMap;
+		typedef AssocVector<graphics::ISceneNode*, String> SceneNodeNameMap;
 		SceneNodeNameMap						mNodeNames;
 	};
 
@@ -170,7 +170,7 @@ namespace dotscene {
 		const dom::NodeList & nodes = pNode->getNodes();
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
-			String childNodeName = ::yake::base::StringUtil::toLowerCase((*it)->getValueAs<String>("name"));
+			String childNodeName = ::yake::StringUtil::toLowerCase((*it)->getValueAs<String>("name"));
 			std::cout << "node child: " <<  childNodeName << std::endl;
 
 			const SharedPtr<dom::INode> & pChild = (*it);
@@ -209,7 +209,7 @@ namespace dotscene {
 		YAKE_ASSERT( pParentSN );
 		String name = (pNode->getAttributeValueAs<String>("name"));
 		String meshName = (pNode->getAttributeValueAs<String>("meshFile"));
-		String castsShadow = ::yake::base::StringUtil::toLowerCase(pNode->getAttributeValueAs<String>("castsShadow"));
+		String castsShadow = ::yake::StringUtil::toLowerCase(pNode->getAttributeValueAs<String>("castsShadow"));
 		graphics::IEntity* pEnt = mGWorld->createEntity( meshName );
 		YAKE_ASSERT( pEnt );
 		pEnt->setCastsShadow( (castsShadow == "yes") );
@@ -334,7 +334,7 @@ namespace dotscene {
 		{
 			String childNodeName = (*it)->getValueAs<String>( "name" );
 			
-			childNodeName = ::yake::base::StringUtil::toLowerCase( childNodeName );
+			childNodeName = ::yake::StringUtil::toLowerCase( childNodeName );
 			std::cout << "node child: " <<  childNodeName << std::endl;
 
 			const SharedPtr<dom::INode>& pChild = *it;

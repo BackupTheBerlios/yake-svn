@@ -105,7 +105,7 @@ namespace xode {
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				yake::base::StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+				yake::StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
 			
 			if ( nodeName == "body" )
 			{

@@ -237,7 +237,7 @@ int main( int argc, char** argv )
 		theApp.initialise();
 		theApp.run();
 	}
-	catch (const yake::base::Exception& rException)
+	catch (const yake::Exception& rException)
 	{
 		std::cout << std::endl << rException.what() << std::endl;
 	}

@@ -144,7 +144,7 @@ namespace model {
 		{}
 		//@}
 	private:
-		typedef ::yake::base::templates::AssocVector< String, Component* > ComponentList;
+		typedef ::yake::AssocVector< String, Component* > ComponentList;
 		ComponentList	mComponents;
 	};
 

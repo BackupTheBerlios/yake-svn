@@ -41,7 +41,7 @@ namespace vehicle {
 	{
 	public:
 		YAKE_DECLARE_CLASS( IPhysicalVehicleComponent );
-		YAKE_DECLARE_REGISTRY_1( IPhysicalVehicleComponent, ::yake::base::String, ::yake::physics::IWorld* );
+		YAKE_DECLARE_REGISTRY_1( IPhysicalVehicleComponent, ::yake::String, ::yake::physics::IWorld* );
 		//VehiclePhysicalCaps getCaps() const = 0;
 
 		virtual bool createFromTemplate( const VehicleTemplate & tpl ) = 0;

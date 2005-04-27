@@ -67,7 +67,7 @@ namespace model {
 		YAKE_ASSERT( !pActor.expired() );
 		if (pActor.expired())
 			return;
-		String name = (rName.length() > 0) ? rName : (base::uniqueName::create("physical_actor_"));
+		String name = (rName.length() > 0) ? rName : (uniqueName::create("physical_actor_"));
 		mActors.insert( std::make_pair(name,pActor) );
 	}
 	//-----------------------------------------------------

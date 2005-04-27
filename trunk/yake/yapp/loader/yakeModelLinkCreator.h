@@ -36,7 +36,7 @@ namespace model {
 	class YAPP_BASE_API ModelLinkCreator
 	{
 	public:
-		YAKE_DECLARE_REGISTRY_0( ModelLinkCreator, ::yake::base::String );
+		YAKE_DECLARE_REGISTRY_0( ModelLinkCreator, ::yake::String );
 
 		virtual ModelLink* createLink(	complex::Model & rModel,
 										const data::dom::INode& rSourceNode,

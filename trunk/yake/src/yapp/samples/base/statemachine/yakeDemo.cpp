@@ -218,7 +218,7 @@ int main()
 		std::cout << std::endl << "Demo provided for YAKE by Stephan Kaiser" << std::endl << std::endl;
 		test_fsm();
 	}
-	catch (const yake::base::Exception & e)
+	catch (const yake::Exception & e)
 	{
 		std::cout << std::endl << e.what() << std::endl;
 	}

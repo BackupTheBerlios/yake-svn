@@ -41,7 +41,7 @@ namespace model {
 	{
 	public:
 		YAKE_DECLARE_CLASS( ModelLink );
-		YAKE_DECLARE_REGISTRY_0( ModelLink, ::yake::base::String );
+		YAKE_DECLARE_REGISTRY_0( ModelLink, ::yake::String );
 	};
 
 	/** A controller that controls links. The source type and instance can be set.

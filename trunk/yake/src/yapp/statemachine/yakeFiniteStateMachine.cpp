@@ -54,7 +54,7 @@ namespace state {
 	//---------------------------------------------------------
 	void Transition::operator()()
 	{
-		base::templates::ConstVectorIterator<TransitionFnList> it(mTransitionFns.begin(), mTransitionFns.end());
+		ConstVectorIterator<TransitionFnList> it(mTransitionFns.begin(), mTransitionFns.end());
 		while (it.hasMoreElements())
 			it.getNext()();
 	}

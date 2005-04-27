@@ -31,7 +31,7 @@
 	// State
 	//---------------------------------------------------------
 
-	template<> const base::String Machine<base::String>::kStateNone = "NONE";
+	template<> const String Machine<String>::kStateNone = "NONE";
 
 	//---------------------------------------------------------
 	template< typename StateIdType >
@@ -147,14 +147,14 @@
 		s << "\t" << "id of 'none' state: " << kStateNone << std::endl;
 
 		s << "\t" << unsigned int(mStates.size()) << " registered states" << std::endl;
-		::yake::base::templates::ConstVectorIterator<StateMap> itState( mStates.begin(), mStates.end() );
+		::yake::ConstVectorIterator<StateMap> itState( mStates.begin(), mStates.end() );
 		while (itState.hasMoreElements())
 		{
 			s << "\t\t" << itState.getNext().first << std::endl;
 		}
 
 		s << "\t" << unsigned int(mTransitions.size()) << " registered transitions" << std::endl;
-		::yake::base::templates::ConstVectorIterator<TransitionMap> itTrans( mTransitions.begin(), mTransitions.end() );
+		::yake::ConstVectorIterator<TransitionMap> itTrans( mTransitions.begin(), mTransitions.end() );
 		while (itTrans.hasMoreElements())
 		{
 			const StateIdPair & idPair = itTrans.getNext().first;
@@ -165,7 +165,7 @@
 		if (mStack.size() > 0)
 		{
 			s << "\t\t(from top to bottom:)" << std::endl;
-			::yake::base::templates::ConstVectorIterator<StateStack> itStack( mStack.begin(), mStack.end() );
+			::yake::ConstVectorIterator<StateStack> itStack( mStack.begin(), mStack.end() );
 			while (itStack.hasMoreElements())
 			{
 				s << "\t\t" << itStack.getNext().first << std::endl;

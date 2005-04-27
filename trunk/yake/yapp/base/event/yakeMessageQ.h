@@ -28,6 +28,7 @@
 
 #include <yake/base/yakeParamHolder.h>
 
+using namespace yake;
 using namespace yake::base;
 using namespace yake::base::templates;
 

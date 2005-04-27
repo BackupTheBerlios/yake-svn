@@ -41,8 +41,8 @@ namespace model {
 		bool load( const String & rDotLinkFilename, complex::Model & rModel );
 		bool load( const data::dom::INode & rLinksNode, complex::Model & rModel );
 
-		typedef base::templates::SharedPtr<ModelLink> SharedModelLinkPtr;
-		typedef base::templates::Deque< SharedModelLinkPtr > SharedModelLinkList;
+		typedef SharedPtr<ModelLink> SharedModelLinkPtr;
+		typedef Deque< SharedModelLinkPtr > SharedModelLinkList;
 	private:
 		void parseLink( const data::dom::INode & rLinkNode );
 		complex::Model*		mpModel;

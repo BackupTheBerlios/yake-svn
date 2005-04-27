@@ -94,7 +94,7 @@ namespace complex {
 			YAKE_ASSERT( itFind == mPhysicals.end() ).debug("submodel needs a unique name! name already taken!");
 		}
 		else
-			name = yake::base::uniqueName::create("auto_");
+			name = uniqueName::create("auto_");
 		mPhysicals.insert( std::make_pair(name,pPhysical) );
 	}
 
@@ -109,7 +109,7 @@ namespace complex {
 			YAKE_ASSERT( itFind == mGraphicals.end() ).debug("submodel needs a unique name! name already taken!");
 		}
 		else
-			name = yake::base::uniqueName::create("auto_");
+			name = uniqueName::create("auto_");
 		mGraphicals.insert( std::make_pair(name,pGraphical) );
 	}
 
