@@ -59,10 +59,10 @@ namespace ogre3d {
 	}
 	
 	//-----------------------------------------------------
-	ISceneNode* GraphicalWorld::createSceneNode()
+	ISceneNode* GraphicalWorld::createSceneNode( const String& tag /*= ""*/ )
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
-		return new OgreNode( msCore->getSceneMgr() );
+		return new OgreNode( msCore->getSceneMgr(), tag );
 	}
 
 	//-----------------------------------------------------

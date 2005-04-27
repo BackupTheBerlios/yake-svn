@@ -50,7 +50,7 @@ namespace ogre3d {
 		/** Render a single frame. */
 		void render( real timeElapsed );
 
-		virtual ISceneNode* createSceneNode();
+		virtual ISceneNode* createSceneNode( const String& tag = "" );
 		virtual IEntity* createEntity(const String & mesh);
 		virtual ILight* createLight();
 		virtual IParticleSystem* createParticleSystem( const String& rPSTemplateName );

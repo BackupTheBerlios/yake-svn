@@ -97,6 +97,8 @@ namespace ogre3d {
 	//------------------------------------------------------
 	void OgreNode::removeAndDestroyAllChildren()
 	{
+		YAKE_ASSERT( 0 );
+		//isn't enough: mSceneNode->removeAndDestroyAllChildren();
 	}
 
 	//------------------------------------------------------
@@ -152,7 +154,7 @@ namespace ogre3d {
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		mSceneNode->addChild( static_cast<OgreNode*>(pNode)->getSceneNode_() );
-		mChildren.push_back( static_cast<OgreNode*>(pNode) );
+		mChildren.push_back( pNode );
 	}
 
 	//------------------------------------------------------
@@ -163,6 +165,12 @@ namespace ogre3d {
 		mSceneNode->addChild( pChild->getSceneNode_() );
 		mChildren.push_back( pChild );
 		return pChild;
+	}
+
+	//------------------------------------------------------
+	void OgreNode::getChildren( SceneNodePtrList& ret ) const
+	{
+		ret = mChildren;
 	}
 
 	//------------------------------------------------------

@@ -47,6 +47,7 @@ namespace ogre3d {
 		virtual void attachLight( ILight* pLight );
 		virtual void attachParticleSystem( IParticleSystem* pParticleSys );
 		virtual void removeAndDestroyAllChildren();
+		virtual void getChildren( SceneNodePtrList& ret ) const;
 
 		virtual String getTag() const;
 		virtual void getTag(String& tag);
@@ -55,7 +56,7 @@ namespace ogre3d {
 		Ogre::SceneNode* getSceneNode_() const
 		{ return mSceneNode; }
 	protected:
-		typedef Vector< OgreNode* > NodeList;
+		typedef SceneNodePtrList NodeList;
 		NodeList			mChildren;
 
 		typedef Vector< OgreEntity* > EntityList;

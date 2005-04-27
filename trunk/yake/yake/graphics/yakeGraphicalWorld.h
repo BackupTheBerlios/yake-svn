@@ -171,6 +171,8 @@ namespace graphics {
 		rotate(xAxis, degrees);
 	}
 
+	class ISceneNode;
+	typedef std::deque<ISceneNode*> SceneNodePtrList;
 	/** A concrete node in a scene graph.
 	*/
 	class YAKE_GRAPHICS_INTERFACE_API ISceneNode : public GraphicsEntity, public Movable
@@ -185,6 +187,9 @@ namespace graphics {
 		virtual void removeAndDestroyAllChildren() = 0;
 		virtual void setScale( const Vector3 & scale ) = 0;
 		virtual Vector3 getScale() const = 0;
+		virtual void getChildren( SceneNodePtrList& ret ) const = 0;
+		SceneNodePtrList getChildren() const
+		{ SceneNodePtrList ret; getChildren(ret); return ret; }
 
 		//@todo move into base class!?
 		virtual String getTag() const = 0;
@@ -217,7 +222,7 @@ namespace graphics {
 		virtual ILight* createLight() = 0;
 		virtual ICamera* createCamera() = 0;
 
-		virtual ISceneNode* createSceneNode() = 0;
+		virtual ISceneNode* createSceneNode( const String& tag = "" ) = 0;
 
 		virtual IParticleSystem* createParticleSystem( const String& rPSTemplateName ) = 0;
 
