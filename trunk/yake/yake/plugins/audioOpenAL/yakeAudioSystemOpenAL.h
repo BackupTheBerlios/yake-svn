@@ -37,7 +37,7 @@
 namespace yake {
 	using namespace base;
 	using namespace base::templates;
-	using namespace base::math;
+	using namespace math;
 namespace audio {
 
 	class SoundDataOpenALBase : public ISoundData

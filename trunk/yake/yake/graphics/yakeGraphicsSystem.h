@@ -72,7 +72,7 @@ using namespace yake::base::templates;
 
 
 		// todo: meta: not needed, typeid(ptr) returns the concrete type info (see abstract factory sample code) 
-		//virtual const std::type_info & get_type_info() = 0;
+		virtual const std::type_info & get_type_info() = 0;
 	};
 
 } // graphics
