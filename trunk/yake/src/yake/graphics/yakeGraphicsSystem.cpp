@@ -39,6 +39,7 @@ namespace graphics {
 	{
 	}
 
+	/** @Remarks Code has been taken more or less directly from Ogre's OgreCamera.cpp. */
 	Ray ICamera::createCameraToViewportRay(const real screenX, const real screenY) const
 	{
 		real centeredScreenX = (screenX - 0.5f);
@@ -50,14 +51,27 @@ namespace graphics {
 		real viewportYToWorldY = normalizedSlope * nearDist * 2;
 		real viewportXToWorldX = viewportYToWorldY * getAspectRatio();
 
-		Vector3 rayDirection(centeredScreenX * viewportXToWorldX,
-			centeredScreenY * viewportYToWorldY,
-			-nearDist);
-		rayDirection = getOrientation() * rayDirection; //getDerivedOrientation() * rayDirection;
-		rayDirection.normalise();
-
-		//return Ray(getDerivedPosition(), rayDirection);
-		return Ray( getPosition(), rayDirection );
+		Vector3 rayOrigin, rayDirection;
+		if (getProjectionType() == PT_PERSPECTIVE)
+		{
+			rayOrigin = getPosition(); //@todo fixme should be: getDerivedPosition()
+			rayDirection.x = centeredScreenX * viewportXToWorldX;
+			rayDirection.y = centeredScreenY * viewportYToWorldY;
+			rayDirection.z = -nearDist;
+			rayDirection = getOrientation() * rayDirection; //@todo fixme should be: getDerivedOrientation() * rayDirection;
+			rayDirection.normalise();
+		}
+		else
+		{
+			// Ortho always parallel to point on screen
+			rayOrigin.x = centeredScreenX * viewportXToWorldX;
+			rayOrigin.y = centeredScreenY * viewportYToWorldY;
+			rayOrigin.z = 0.0f;
+			rayOrigin = getOrientation() * rayOrigin; //@todo fixme should be: getDerivedOrientation() * rayOrigin;
+			rayOrigin = getPosition() + rayOrigin; //@todo fixme should be: getDerivedPosition() + rayOrigin;
+			rayDirection = getOrientation() * Vector3::kUnitZ; //@todo fixme should be: getDerivedDirection();
+		}
+		return Ray( rayOrigin, rayDirection );
 	}
 
 } // graphics

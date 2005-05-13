@@ -70,7 +70,7 @@ public:
 	virtual void setFixedYawAxis( const Vector3 & yawAxis );
 	virtual void lookAt( const Vector3 & target );
 	virtual void setDirection( const Vector3 & vec );
-private:
+protected:
 	Vector3		mYawAxis;
 	bool		mFixedYaw;
 };

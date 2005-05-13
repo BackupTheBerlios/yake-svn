@@ -53,9 +53,16 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	GraphicalWorld::GraphicalWorld()
+	GraphicalWorld::GraphicalWorld() : mpRaySceneQuery(0)
 	{
 		YAKE_ASSERT( msCore );
+	}
+
+	GraphicalWorld::~GraphicalWorld()
+	{
+		if (mpRaySceneQuery && msCore->getSceneMgr())
+			msCore->getSceneMgr()->destroyQuery( mpRaySceneQuery );
+		mpRaySceneQuery = 0;
 	}
 	
 	//-----------------------------------------------------
@@ -69,7 +76,9 @@ namespace ogre3d {
 	IEntity* GraphicalWorld::createEntity( const String & mesh )
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
-		return new OgreEntity( msCore->getSceneMgr(), mesh );
+		OgreEntity* pEntity = new OgreEntity( msCore->getSceneMgr(), mesh );
+		mEntityMap[ pEntity->getEntity_() ] = pEntity;
+		return pEntity;
 	}
 
 	//-----------------------------------------------------
@@ -181,6 +190,41 @@ namespace ogre3d {
 		Ogre::RenderWindow* pWin = msCore->getRenderWindow();
 		YAKE_ASSERT( pWin );
 		return pWin->getHeight();
+	}
+
+	//-----------------------------------------------------
+	IEntity* GraphicalWorld::pickEntity(const Ray& ray)
+	{
+		YAKE_ASSERT( msCore );
+
+		const unsigned long mask = 0xFFFFFFFF;
+		Ogre::Ray ogreRay( VEC_YAKE2OGRE(ray.getOrigin()), VEC_YAKE2OGRE(ray.getDirection()) );
+		if (!mpRaySceneQuery)
+		{
+			mpRaySceneQuery = msCore->getSceneMgr()->createRayQuery( ogreRay, mask );
+			mpRaySceneQuery->setSortByDistance( true, 1 ); // sort and return max 1 object
+		}
+		else
+			mpRaySceneQuery->setRay( ogreRay );
+
+		Ogre::RaySceneQueryResult &result = mpRaySceneQuery->execute();
+		Ogre::RaySceneQueryResult::iterator it = result.begin();
+		if (it != result.end())
+		{
+			//it->distance
+			//if (it->worldFragment)
+			if (it->movable)
+			{
+				//Ogre::UserDefinedObject* udo = Ogre::MovableObject::getUserObject();
+				if (it->movable->getMovableType() == "Entity")
+				{
+					EntityMap::const_iterator itFind = mEntityMap.find( static_cast<Ogre::Entity*>( it->movable ) );
+					if (itFind != mEntityMap.end())
+						return itFind->second;
+				}
+			}
+		}
+		return 0;
 	}
 
 

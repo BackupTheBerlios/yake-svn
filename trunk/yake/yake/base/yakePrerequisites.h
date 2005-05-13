@@ -53,6 +53,8 @@
 // Include platform specific configuration files
 #if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
 #	include <yake/base/prerequisites/yakePrerequisitesVC.h>
+#elif (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_GNUC)
+#	include <yake/base/prerequisites/yakePrerequisitesGCCWin.h>
 #elif (YAKE_PLATFORM == PLATFORM_LINUX) && (YAKE_COMPILER == COMPILER_GNUC)
 #	include <yake/base/prerequisites/yakePrerequisitesGCC.h>
 #else

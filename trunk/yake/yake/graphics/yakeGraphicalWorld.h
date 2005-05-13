@@ -141,7 +141,8 @@ namespace graphics {
 
 		inline void rotate( const Quaternion & q );
 		inline void rotate( const Vector3 & axis, real degrees );
-		inline void pitch( real degrees );
+		inline void pitch( const real degrees );
+		inline void yaw( const real degrees );
 
 		/** Return a ray in world space coordinates as cast from the camera through a viewport
 			position.
@@ -165,10 +166,18 @@ namespace graphics {
 	{
 		setOrientation( q * getOrientation() );
 	}
-	void ICamera::pitch(real degrees)
+	void ICamera::pitch( const real degrees )
 	{
-		Vector3 xAxis = getOrientation() * Vector3::kUnitX;
+		const Vector3 xAxis = getOrientation() * Vector3::kUnitX;
 		rotate(xAxis, degrees);
+	}
+	void ICamera::yaw( const real degrees )
+	{
+		//const Vector3 yAxis = (mFixedYaw ? mYawAxis : (getOrientation() * Vector3::kUnitY));
+		if (mFixedYaw)
+			rotate( mYawAxis, degrees );
+		else
+			rotate( getOrientation() * Vector3::kUnitY, degrees );
 	}
 
 	class ISceneNode;
@@ -248,6 +257,8 @@ namespace graphics {
 
 		virtual real getRenderWindowWidth() const = 0;
 		virtual real getRenderWindowHeight() const = 0;
+
+		virtual IEntity* pickEntity(const Ray& ray) = 0;
 	};
 
 } // graphics

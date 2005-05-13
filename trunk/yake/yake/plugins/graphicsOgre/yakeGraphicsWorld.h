@@ -38,12 +38,14 @@ namespace graphics {
 namespace ogre3d {
 
 	class OgreCore;
+	class OgreEntity;
 	/** The graphics system implementation. 
 	*/
 	class YAKE_GRAPHICS_CONCRETE_API GraphicalWorld	: public IWorld
 	{
 	public:
 		GraphicalWorld();
+		virtual ~GraphicalWorld();
 		/** Globally activates the default shadowing method, often stencil shadows.	*/
 		void setShadowsEnabled( bool enabled );
 
@@ -64,11 +66,17 @@ namespace ogre3d {
 		virtual real getRenderWindowWidth() const;
 		virtual real getRenderWindowHeight() const;
 
+		virtual IEntity* pickEntity(const Ray& ray);
+
 		static void setCore( OgreCore* core );
 	private:
-		static OgreCore*	msCore;
+		static OgreCore*		msCore;
 		typedef AssocVector< String, Ogre::MeshPtr > ProcMeshMap;
-		ProcMeshMap			mProcMeshes;
+		ProcMeshMap				mProcMeshes;
+		Ogre::RaySceneQuery*	mpRaySceneQuery;
+
+		typedef std::map< Ogre::Entity*, OgreEntity* > EntityMap;
+		EntityMap				mEntityMap;
 	};
 
 } // ogre3d
