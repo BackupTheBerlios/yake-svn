@@ -47,7 +47,7 @@ YAKE_BASE_NATIVE_API LibraryHandle library_Load(const char * filename)
 	// load library
 	LibraryHandle handle = (LibraryHandle)::LoadLibraryA(filename);
 	// todo: http://yake.org/forum/viewtopic.php?t=340
-	if(handle == NULL) YAKE_EXCEPT("Couldn't load library.", "library_Load");
+	if(handle == NULL) YAKE_EXCEPT("Couldn't load library " + String(filename) + ".", "library_Load");
 	return handle;
 }
 
