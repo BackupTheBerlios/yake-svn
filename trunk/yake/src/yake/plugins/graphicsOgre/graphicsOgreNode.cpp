@@ -50,6 +50,8 @@ namespace ogre3d {
 			mSceneNode->removeAllChildren();
 			mSceneMgr->destroySceneNode( mSceneNode->getName() );
 		}
+		mLights.clear();
+		mEntities.clear();
 	}
 
 	//------------------------------------------------------
@@ -123,6 +125,7 @@ namespace ogre3d {
 			return;
 		
 		mSceneNode->attachObject( static_cast<OgreLight*>( pLight )->getLight_() );
+		mLights.push_back( pLight );
 	}
 
 	//------------------------------------------------------
@@ -135,6 +138,7 @@ namespace ogre3d {
 			return;
 
 		mSceneNode->attachObject( static_cast<OgreEntity*>(pEntity)->getEntity_() );
+		mEntities.push_back( pEntity );
 	}
 
 	//------------------------------------------------------
@@ -186,6 +190,39 @@ namespace ogre3d {
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		tag = mSceneNode->getName().c_str();
 	}
+
+	//------------------------------------------------------
+	const EntityPtrList& OgreNode::getAttachedEntities() const
+	{
+		return mEntities;
+	}
+
+	//------------------------------------------------------
+	const LightPtrList& OgreNode::getAttachedLights() const
+	{
+		return mLights;
+	}
+
+	//------------------------------------------------------
+	void OgreNode::detach( IEntity* pEntity )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		YAKE_ASSERT( pEntity ).warning("passed a null ptr!");
+		if (!pEntity)
+			return;
+		mSceneNode->detachObject( static_cast<OgreEntity*>(pEntity)->getEntity_() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::detach( ILight* pLight )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		YAKE_ASSERT( pLight ).warning("passed a null ptr!");
+		if (!pLight)
+			return;
+		mSceneNode->detachObject( static_cast<OgreLight*>(pLight)->getLight_() );
+	}
+
 }
 }
 }
