@@ -130,6 +130,7 @@ namespace lua {
 		// Timer
 		module( YAKE_MODULE )
 		[
+			//def("createTimer", &yake::base::timer::createTimer())
 			class_< Timer >( "Timer" )
 				.def( "reset", &yake::base::Timer::reset )
 				.def( "getMilliseconds", &yake::base::Timer::getMilliseconds )
