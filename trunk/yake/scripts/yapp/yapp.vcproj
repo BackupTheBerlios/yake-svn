@@ -513,6 +513,13 @@
 				RelativePath="..\..\yapp\model\yakeVehicleTpl.h">
 			</File>
 		</Filter>
+		<Filter
+			Name="trigger"
+			Filter="">
+			<File
+				RelativePath="..\..\yapp\trigger\yakeTrigger.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

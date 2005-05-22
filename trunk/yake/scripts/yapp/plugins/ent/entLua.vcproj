@@ -142,6 +142,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\..\..\..\src\yapp\plugins\entLua\yakeEvent_lua.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\src\yapp\plugins\entLua\yakeLuaBinder.cpp">
 			</File>
 		</Filter>
