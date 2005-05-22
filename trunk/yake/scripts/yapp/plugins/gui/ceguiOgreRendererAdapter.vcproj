@@ -73,7 +73,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/;../../../../dependencies/ogrenew/OgreMain/include;../../../../dependencies/cegui_mk2/include;../../../../dependencies/ogrenew/CEGUIRenderer/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_GRAPHICSCONCRETEAPI_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_CEGUIRENDERERADAPTER_OGRE_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="yapp/plugins/ceguiOgreRendererAdapter/pch.h"
