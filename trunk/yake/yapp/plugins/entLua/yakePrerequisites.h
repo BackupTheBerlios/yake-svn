@@ -26,18 +26,17 @@
 #ifndef YAKE_ENT_LUA_PREREQUISITES_H
 #define YAKE_ENT_LUA_PREREQUISITES_H
 
-#if !defined(YAKE_ENTLUA_EXPORTS)
-#	if YAKE_PLATFORM == PLATFORM_WIN32
+#if YAKE_PLATFORM == PLATFORM_WIN32
+#	if defined(YAKE_ENTLUA_EXPORTS)
+#		define YAKE_ENTLUA_API DLLEXPORT
+#		pragma message("Exporting yake::entlua")
+#	else
+#		define YAKE_ENTLUA_API DLLIMPORT
+#		pragma message("Importing yake::entlua")
 #		pragma comment(lib, "entLua.lib")
 #	endif
-#endif
-
-#if defined(YAKE_ENTLUA_EXPORTS)
-#	define YAKE_ENTLUA_API DLLEXPORT
-#	pragma message("Exporting yake::entlua")
 #else
-#	define YAKE_ENTLUA_API DLLIMPORT
-#	pragma message("Importing yake::entlua")
+#	define YAKE_ENTLUA_API
 #endif
 
 namespace yake {
