@@ -26,7 +26,7 @@
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/event/yakeMessageInstance.h>
 
-namespace yapp {
+namespace yake {
 namespace event {
 
 	MessageInstance::MessageInstance(const MessageId id, ParamHolder* pParams, const void* pOrigin, bool bOwnParamObject) :

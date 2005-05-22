@@ -33,7 +33,7 @@
 using namespace yake::base;
 using namespace yake::base::templates;
 
-namespace yapp {
+namespace yake {
 namespace event {
 
 	class MessageListener;
@@ -89,10 +89,13 @@ namespace event {
 		*/
 		void postQueue( MessageQueue* pQueue );
 
+		typedef boost::function<MsgResultCode(const MessageId, ParamHolder*)> MessageListenerFn;;
+
 		/** Connect a listener to messages of certain type (id). If pOrigin is set then
 			the listener listens only to message instances from that origin.
 		*/
 		void connect( MessageListener* pListener, const MessageId id, const void* pOrigin = 0 );
+		void connect( const MessageListenerFn& fn, const MessageId id, const void* pOrigin = 0 );
 
 		/** Disconnect a listener from messages (no matter which id/type).
 			If pOrigin is 0, then the listener will be disconnected from all message types,
@@ -100,6 +103,7 @@ namespace event {
 			origin.
 		*/
 		void disconnect( MessageListener* pListener, const void* pOrigin = 0 );
+		void disconnect( const MessageListenerFn& fn, const void* pOrigin = 0 );
 
 		/** Disconnect a listener from a specific message type.
 			If pOrigin is 0, then the listener will be disconnected from all message types,
@@ -107,6 +111,7 @@ namespace event {
 			origin.
 		*/
 		void disconnect( MessageListener* pListener, const MessageId id, const void* pOrigin = 0 );
+		void disconnect( const MessageListenerFn& fn, const MessageId id, const void* pOrigin = 0 );
 
 		/** Disconnected all listeners for a specific message id.
 			If pOrigin is specified (non-0) then only listeners sharing that origin will be removed,

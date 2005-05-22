@@ -32,7 +32,7 @@ using namespace yake;
 using namespace yake::base;
 using namespace yake::base::templates;
 
-namespace yapp {
+namespace yake {
 namespace event {
 
 	class MessageInstance;

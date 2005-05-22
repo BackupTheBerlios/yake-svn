@@ -28,7 +28,7 @@
 #include <yapp/base/event/yakeMessageInstance.h>
 #include <yapp/base/event/yakeMessageQ.h>
 
-namespace yapp {
+namespace yake {
 namespace event {
 
 	MessageQueue::MessageQueue()

@@ -26,7 +26,7 @@
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/event/yakeMessageId.h>
 
-namespace yapp {
+namespace yake {
 namespace event {
 
 	MessageId MessageIdManager::msLastId = 0;

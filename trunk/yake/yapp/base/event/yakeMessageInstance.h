@@ -31,7 +31,7 @@
 
 using namespace yake::base;
 
-namespace yapp {
+namespace yake {
 namespace event {
 
 	enum MsgResultCode {

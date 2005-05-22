@@ -26,7 +26,7 @@
 #ifndef YAKE_YAPP_BASE_EVENT_MESSAGEID_H
 #define YAKE_YAPP_BASE_EVENT_MESSAGEID_H
 
-namespace yapp {
+namespace yake {
 namespace event {
 
 	typedef YAPP_BASE_API  yake::uint32 MessageId;

@@ -29,7 +29,7 @@
 #include <yapp/base/event/yakeMessageInstance.h>
 #include <yapp/base/event/yakeMessageListener.h>
 
-namespace yapp {
+namespace yake {
 namespace event {
 
 #define MSGMGR_COUT( x ) \

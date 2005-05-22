@@ -26,7 +26,7 @@
 #ifndef YAKE_YAPP_BASE_EVENT_MESSAGELISTENER_H
 #define YAKE_YAPP_BASE_EVENT_MESSAGELISTENER_H
 
-namespace yapp {
+namespace yake {
 namespace event {
 
 	/** Base class for message listeners.
@@ -39,6 +39,7 @@ namespace event {
 	class YAPP_BASE_API MessageListener
 	{
 	public:
+		virtual ~MessageListener() {}
 		/** React on messages.
 			Return kMsgHandled if message has been handled and other listeners may use this message, too.
 			Return kMsgHandledExclusively if other listeners shouldn't receive this message.
