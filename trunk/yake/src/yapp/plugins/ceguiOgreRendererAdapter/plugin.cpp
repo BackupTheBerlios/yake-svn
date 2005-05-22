@@ -45,29 +45,34 @@ ThePlugin::~ThePlugin()
 }
 
 //---------------------------------------------------------
-yake::base::String ThePlugin::getName() const
+yake::String ThePlugin::getName() const
 {
-	return yake::base::String("yake.misc.ceguiadapter");
+	return yake::String("yake.misc.ceguiadapter");
 }
 
 //---------------------------------------------------------
-yake::base::Version ThePlugin::getVersion() const
+yake::Version ThePlugin::getVersion() const
 {
-	return yake::base::Version( 0, 1, 0 );
+	return yake::Version( 0, 1, 0 );
 }
 
 //---------------------------------------------------------
 bool ThePlugin::initialise()
 {
-	Ogre::RenderWindow* pWin = Ogre::Root::getSingleton().getAutoCreatedWindow();
-	YAKE_ASSERT( pWin ).error("Need a valid render window!");
-	mGUIRenderer = new CEGUI::OgreCEGUIRenderer(
-		pWin, 
-		Ogre::RENDER_QUEUE_OVERLAY, 
-		true, 
-		3000,
-		Ogre::ST_GENERIC );
-		//Ogre::Root::getSingleton()._getCurrentSceneManager());
+	try {
+		Ogre::RenderWindow* pWin = Ogre::Root::getSingleton().getAutoCreatedWindow();
+		YAKE_ASSERT( pWin ).error("Need a valid render window!");
+		mGUIRenderer = new CEGUI::OgreCEGUIRenderer(
+			pWin, 
+			Ogre::RENDER_QUEUE_OVERLAY, 
+			true, 
+			3000,
+			Ogre::ST_GENERIC );
+			//Ogre::Root::getSingleton()._getCurrentSceneManager());
+	} catch (Ogre::Exception& e)
+	{
+		YAKE_EXCEPT("Failed to initialise CEGUI adapter!\n" + yake::String(e.getFullDescription().c_str()), "initialise");
+	}
 	YAKE_ASSERT( mGUIRenderer );
 	return (mGUIRenderer != 0);
 }

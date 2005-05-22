@@ -34,8 +34,8 @@ public:
 	ThePlugin();
 	virtual ~ThePlugin();
 
-	virtual yake::base::String getName() const;
-	virtual yake::base::Version getVersion() const;
+	virtual yake::String getName() const;
+	virtual yake::Version getVersion() const;
 	virtual bool initialise();
 	virtual bool shutdown();
 	virtual CEGUI::Renderer* getRenderer();
