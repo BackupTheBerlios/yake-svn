@@ -1,3 +1,4 @@
+-- a flickering light
 events.server.onSpawn = function()
 	time = getSim():getTime()
 	lowLimit = 0.05
