@@ -1,7 +1,7 @@
 events.server.onSpawn = function()
 	time = getSim():getTime()
 	lowLimit = 0.05
-	highLimit = 1.2
+	highLimit = 1.1
 	timeLeft = -1
 end
 events.server.onTick = function()
