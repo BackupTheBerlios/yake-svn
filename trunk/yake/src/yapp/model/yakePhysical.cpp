@@ -55,36 +55,35 @@ namespace model {
 		VectorIterator< ActorMap > itActor( mActors.begin(), mActors.end() );
 		while (itActor.hasMoreElements())
 		{
-			physics::WeakIMovableActorPtr pMovableActor = 
-				boost::dynamic_pointer_cast<physics::IMovableActor>( itActor.getNext().second.lock() );
-			if (!pMovableActor.expired())
-				pMovableActor.lock()->translate( d );
+			physics::IActor* pActor = itActor.getNext().second;
+			if (pActor)
+				pActor->translate( d );
 		}
 	}
 	//-----------------------------------------------------
-	void Physical::addActor( physics::WeakIActorPtr& pActor, const String & rName )
+	void Physical::addActor( physics::IActorPtr pActor, const String & rName )
 	{
-		YAKE_ASSERT( !pActor.expired() );
-		if (pActor.expired())
+		YAKE_ASSERT( pActor );
+		if (!pActor)
 			return;
 		String name = (rName.length() > 0) ? rName : (uniqueName::create("physical_actor_"));
 		mActors.insert( std::make_pair(name,pActor) );
 	}
 	//-----------------------------------------------------
-	void Physical::addJoint(physics::WeakIJointPtr& pJoint )
+	void Physical::addJoint(physics::IJointPtr pJoint )
 	{
-		YAKE_ASSERT( !pJoint.expired() );
-		if (pJoint.expired())
+		YAKE_ASSERT( pJoint );
+		if (!pJoint)
 			return;
 		mJoints.push_back( pJoint );
 	}
 	//-----------------------------------------------------
-	physics::WeakIActorPtr Physical::getActorByName( const String & rName ) const
+	physics::IActorPtr Physical::getActorByName( const String & rName ) const
 	{
 		ActorMap::const_iterator itFind = mActors.find( rName );
 		YAKE_ASSERT( itFind != mActors.end() )( rName ).warning("couldn't find the object!");
 		if (itFind == mActors.end())
-			return SharedPtr<physics::IActor>();
+			return 0;
 		else
 			return itFind->second;
 	}

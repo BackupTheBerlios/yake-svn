@@ -109,12 +109,12 @@ using namespace yake::app; // model::Physical
 		virtual void readMassAdjust( const SharedPtr<dom::INode> pMAdjustNode, physics::IBody& rBody ); 
 		virtual void readJoint( const SharedPtr<dom::INode> pJointNode, const String& rBodyName, Transform& rParentTransform );
 		
-		virtual void readBall( const SharedPtr<dom::INode> pJointNode, physics::IDynamicActor* pActor1, physics::IDynamicActor* pActor2, Transform& rJointTransform );
-		virtual void readFixed( const SharedPtr<dom::INode> pJointNode, physics::IDynamicActor* pActor1, physics::IDynamicActor* pActor2, Transform& rJointTransform );
-		virtual void readHinge( const SharedPtr<dom::INode> pJointNode, physics::IDynamicActor* pActor1, physics::IDynamicActor* pActor2, Transform& rJointTransform );
-		virtual void readHinge2( const SharedPtr<dom::INode> pJointNode, physics::IDynamicActor* pActor1, physics::IDynamicActor* pActor2, Transform& rJointTransform );
-		virtual void readSlider( const SharedPtr<dom::INode> pJointNode, physics::IDynamicActor* pActor1, physics::IDynamicActor* pActor2, Transform& rJointTransform );
-		virtual void readUniversal( const SharedPtr<dom::INode> pJointNode, physics::IDynamicActor* pActor1, physics::IDynamicActor* pActor2, Transform& rJointTransform );
+		virtual void readBall( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readFixed( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readHinge( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readHinge2( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readSlider( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readUniversal( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
 		
 		virtual void readAnchor( const SharedPtr<dom::INode> pAnchorNode, Vector3& rAnchor, Transform& rJointTransform );
 		virtual void readAxis( const SharedPtr<dom::INode> pAxisNode, Vector3& rAxis, Transform& rJointTransform );

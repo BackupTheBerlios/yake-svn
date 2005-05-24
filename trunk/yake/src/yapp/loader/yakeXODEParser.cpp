@@ -367,12 +367,10 @@ namespace xode {
 		const String name = pBodyNode->getAttributeValueAs<String>( "name" );
 		std::cout << "readBody() [" << name << "]" << std::endl;
 		
-		physics::IDynamicActor::Desc actorDesc;
+		physics::IActorPtr pDynActor = mPWorld->createActor( physics::ACTOR_DYNAMIC );
+		YAKE_ASSERT( pDynActor ).error( "Failed to create actor!" );
 		
-		physics::WeakIDynamicActorPtr pDynActor = mPWorld->createDynamicActor( actorDesc );
-		YAKE_ASSERT( !pDynActor.expired() ).error( "Failed to create actor!" );
-		
-		mBaseModel.addActor( physics::WeakIActorPtr( pDynActor ), name );
+		mBaseModel.addActor( physics::IActorPtr( pDynActor ), name );
 		
 		const dom::NodeList& nodes = pBodyNode->getNodes();
 		
@@ -394,8 +392,8 @@ namespace xode {
 		
 		if ( !bodyTransform.isIdentity() )
 		{
-			pDynActor.lock()->setPosition( bodyTransform.mPosition );
-			pDynActor.lock()->setOrientation( bodyTransform.mRotation );
+			pDynActor->setPosition( bodyTransform.mPosition );
+			pDynActor->setOrientation( bodyTransform.mRotation );
 		}
 
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
@@ -407,12 +405,12 @@ namespace xode {
 			
 			if ( nodeName == "geom" )
 			{
-				readGeom( *it, pDynActor.lock().get(), bodyTransform );
+				readGeom( *it, pDynActor, bodyTransform );
 			}
 			else if ( nodeName == "mass" )
 			{
 				
-				readMass( *it, pDynActor.lock()->getBody(), bodyTransform );
+				readMass( *it, pDynActor->getBody(), bodyTransform );
 			}
 			else if ( nodeName == "joint" )
 			{
@@ -444,9 +442,9 @@ namespace xode {
 			YAKE_LOG("XODE::readGeom() creating static actor...");
 			// adding shape to new IStaticActor
 			//physics::IStaticActor::Desc desc;
-			physics::WeakIStaticActorPtr pStaticActor( mPWorld->createStaticActor() );
-			pParentObject = pStaticActor.lock().get();
-			mBaseModel.addActor( physics::WeakIActorPtr( pStaticActor ), name );
+			physics::IActorPtr pStaticActor( mPWorld->createActor(physics::ACTOR_STATIC) );
+			pParentObject = pStaticActor;
+			mBaseModel.addActor( pStaticActor, name );
 		}
 
 		const dom::NodeList& nodes = pGeomNode->getNodes();
@@ -493,7 +491,7 @@ namespace xode {
 				
 				physics::IShape::BoxDesc desc( 
 												Vector3( sizeX, sizeY, sizeZ ), 
-												physics::WeakIMaterialPtr(), 						// FIXME material
+												0, 						// FIXME material
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
@@ -516,7 +514,7 @@ namespace xode {
 				physics::IShape::CapsuleDesc desc( 
 												length,
 												radius, 
-												physics::WeakIMaterialPtr(), 						// FIXME material
+												0, 						// FIXME material
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
@@ -553,7 +551,7 @@ namespace xode {
 				physics::IShape::CapsuleDesc desc( 
 												length,
 												radius, 
-												physics::WeakIMaterialPtr(), 						// FIXME material
+												0, 						// FIXME material
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
@@ -569,7 +567,7 @@ namespace xode {
 				physics::IShape::PlaneDesc desc( 
 												Vector3( a, b, c ),
 												d, 
-												physics::WeakIMaterialPtr(), 						// FIXME material
+												0, 						// FIXME material
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
@@ -603,7 +601,7 @@ namespace xode {
 				
 				physics::IShape::SphereDesc desc( 
 												radius, 
-												physics::WeakIMaterialPtr(), 						// FIXME material
+												0, 						// FIXME material
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
@@ -634,7 +632,7 @@ namespace xode {
 				
 				physics::IShape::TriMeshDesc desc( 
 												meshId, 
-												physics::WeakIMaterialPtr(), 						// FIXME material
+												0, 						// FIXME material
 												geomTransform.mPosition,
 												geomTransform.mRotation );
 										
@@ -830,13 +828,10 @@ namespace xode {
 			jointTransform = jointTransform.getDerivedTransform( rDesc.mParentTransform );
 		}
 		
-		physics::WeakIActorPtr pActor1 = mBaseModel.getActorByName( rDesc.mBody1Name );
-		physics::WeakIActorPtr pActor2 = mBaseModel.getActorByName( body2Name );
+		physics::IActorPtr pActor1 = mBaseModel.getActorByName( rDesc.mBody1Name );
+		physics::IActorPtr pActor2 = mBaseModel.getActorByName( body2Name );
 		
-		physics::IDynamicActor* pDynActor1 = dynamic_cast<physics::IDynamicActor*>( pActor1.lock().get() );
-		physics::IDynamicActor* pDynActor2 = dynamic_cast<physics::IDynamicActor*>( pActor2.lock().get() );
-
-		YAKE_ASSERT( pDynActor1 && pDynActor2 ).error( "You're trying to attach joint to non-dynamic actors! That's not possible!" );
+		YAKE_ASSERT( pActor1 && pActor2 ).error( "You're trying to attach joint to non-dynamic actors! That's not possible!" );
 				
 		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it )
 		{
@@ -847,27 +842,27 @@ namespace xode {
 			
 			if ( nodeName == "ball" )
 			{
-				readBall( *it, pDynActor1, pDynActor2, jointTransform );
+				readBall( *it, pActor1, pActor2, jointTransform );
 			}
 			else if ( nodeName == "fixed" )
 			{
-				readFixed( *it, pDynActor1, pDynActor2, jointTransform );
+				readFixed( *it, pActor1, pActor2, jointTransform );
 			}
 			else if ( nodeName == "hinge" )
 			{
-				readHinge( *it, pDynActor1, pDynActor2, jointTransform );
+				readHinge( *it, pActor1, pActor2, jointTransform );
 			}
 			else if ( nodeName == "hinge2" )
 			{
-				readHinge2( *it, pDynActor1, pDynActor2, jointTransform );
+				readHinge2( *it, pActor1, pActor2, jointTransform );
 			}
 			else if ( nodeName == "slider" )
 			{
-				readSlider( *it, pDynActor1, pDynActor2, jointTransform );
+				readSlider( *it, pActor1, pActor2, jointTransform );
 			}
 			else if ( nodeName == "universal" )
 			{
-				readUniversal( *it, pDynActor1, pDynActor2, jointTransform );
+				readUniversal( *it, pActor1, pActor2, jointTransform );
 			}
 			else if ( nodeName == "amotor" )
 			{
@@ -878,8 +873,8 @@ namespace xode {
 	
 	//------------------------------------------------------
 	void XODEParser::readBall(	const SharedPtr<dom::INode> pJointNode,
-								physics::IDynamicActor* pActor1,
-								physics::IDynamicActor* pActor2,
+								physics::IActor* pActor1,
+								physics::IActor* pActor2,
 								Transform& rJointTransform )
 	{
 		const dom::NodeList& nodes = pJointNode->getNodes();
@@ -897,26 +892,26 @@ namespace xode {
 		
 		readAnchor( *iAnchor, anchor, rJointTransform );
 		
-		physics::IJoint::DescBall desc( *pActor1, *pActor2, anchor );
+		physics::IJoint::DescBall desc( pActor1, pActor2, anchor );
 		
 		mPWorld->createJoint( desc ); 
 	}
 
 	//------------------------------------------------------
 	void XODEParser::readFixed(	const SharedPtr<dom::INode> pJointNode,
-								physics::IDynamicActor* pActor1,
-								physics::IDynamicActor* pActor2,
+								physics::IActor* pActor1,
+								physics::IActor* pActor2,
 								Transform& rJointTransform )
 	{
-		physics::IJoint::DescFixed desc( *pActor1, *pActor2 );
+		physics::IJoint::DescFixed desc( pActor1, pActor2 );
 		
 		mPWorld->createJoint( desc ); 
 	}
 	
 	//------------------------------------------------------
 	void XODEParser::readHinge(	const SharedPtr<dom::INode> pJointNode,
-								physics::IDynamicActor* pActor1,
-								physics::IDynamicActor* pActor2,
+								physics::IActor* pActor1,
+								physics::IActor* pActor2,
 								Transform& rJointTransform )
 	{
 		const dom::NodeList& nodes = pJointNode->getNodes();
@@ -943,15 +938,15 @@ namespace xode {
 		readAnchor( *iAnchor, anchor, rJointTransform );
 		readAxis( *iAxis, axis, rJointTransform );
 		
-		physics::IJoint::DescHinge desc( *pActor1, *pActor2, axis, anchor );
+		physics::IJoint::DescHinge desc( pActor1, pActor2, axis, anchor );
 		
 		mPWorld->createJoint( desc ); 
 	}
 	
 	//------------------------------------------------------
 	void XODEParser::readHinge2(	const SharedPtr<dom::INode> pJointNode,
-								physics::IDynamicActor* pActor1,
-								physics::IDynamicActor* pActor2,
+								physics::IActor* pActor1,
+								physics::IActor* pActor2,
 								Transform& rJointTransform )
 	{
 		const dom::NodeList& nodes = pJointNode->getNodes();
@@ -985,15 +980,15 @@ namespace xode {
 		readAxis( *iAxis0, axis0, rJointTransform );
 		readAxis( *iAxis1, axis1, rJointTransform );
 		
-		physics::IJoint::DescHinge2 desc( *pActor1, *pActor2, axis0, axis1, anchor );
+		physics::IJoint::DescHinge2 desc( pActor1, pActor2, axis0, axis1, anchor );
 		
 		mPWorld->createJoint( desc ); 
 	}
 	
 	//------------------------------------------------------
 	void XODEParser::readSlider(	const SharedPtr<dom::INode> pJointNode,
-								physics::IDynamicActor* pActor1,
-								physics::IDynamicActor* pActor2,
+								physics::IActor* pActor1,
+								physics::IActor* pActor2,
 								Transform& rJointTransform )
 	{
 		const dom::NodeList& nodes = pJointNode->getNodes();
@@ -1011,15 +1006,15 @@ namespace xode {
 		
 		readAxis( *iAxis, axis, rJointTransform );
 		
-		physics::IJoint::DescSlider desc( *pActor1, *pActor2, axis );
+		physics::IJoint::DescSlider desc( pActor1, pActor2, axis );
 		
 		mPWorld->createJoint( desc ); 
 	}
 	
 	//------------------------------------------------------
 	void XODEParser::readUniversal(	const SharedPtr<dom::INode> pJointNode,
-									physics::IDynamicActor* pActor1,
-									physics::IDynamicActor* pActor2,
+									physics::IActor* pActor1,
+									physics::IActor* pActor2,
 									Transform& rJointTransform )
 	{
 		const dom::NodeList& nodes = pJointNode->getNodes();
@@ -1053,7 +1048,7 @@ namespace xode {
 		readAxis( *iAxis0, axis0, rJointTransform );
 		readAxis( *iAxis1, axis1, rJointTransform );
 		
-		physics::IJoint::DescUniversal desc( *pActor1, *pActor2, axis0, axis1, anchor );
+		physics::IJoint::DescUniversal desc( pActor1, pActor2, axis0, axis1, anchor );
 		
 		mPWorld->createJoint( desc ); 
 	}

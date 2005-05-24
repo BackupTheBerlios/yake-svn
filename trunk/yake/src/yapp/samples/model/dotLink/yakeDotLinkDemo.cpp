@@ -124,10 +124,6 @@ public:
 		
 		app::model::DotLinkLoader dotLinkLoader;
 		dotLinkLoader.load( mfnLink, *mModel.get() );
-
-		//
-		//physics::WeakIStaticActorPtr pSA = mPWorld->createStaticActor( physics::IActor::Desc() );
-		//pSA.lock()->createShape( physics::IShape::PlaneDesc( Vector3(0,1,0), -200 ) );
 	}
 
 	virtual void run()
