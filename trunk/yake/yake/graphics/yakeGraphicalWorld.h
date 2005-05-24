@@ -182,6 +182,8 @@ namespace graphics {
 
 	class ISceneNode;
 	typedef std::deque<ISceneNode*> SceneNodePtrList;
+	typedef std::deque<IEntity*> EntityPtrList;
+	typedef std::deque<ILight*> LightPtrList;
 	/** A concrete node in a scene graph.
 	*/
 	class YAKE_GRAPHICS_INTERFACE_API ISceneNode : public GraphicsEntity, public Movable
@@ -199,6 +201,10 @@ namespace graphics {
 		virtual void getChildren( SceneNodePtrList& ret ) const = 0;
 		SceneNodePtrList getChildren() const
 		{ SceneNodePtrList ret; getChildren(ret); return ret; }
+		virtual const EntityPtrList& getAttachedEntities() const = 0;
+		virtual const LightPtrList& getAttachedLights() const = 0;
+		virtual void detach( IEntity* pEntity ) = 0;
+		virtual void detach( ILight* pLight ) = 0;
 
 		//@todo move into base class!?
 		virtual String getTag() const = 0;
