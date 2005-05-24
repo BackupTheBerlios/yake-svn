@@ -25,8 +25,8 @@ extern "C" {
 #include <lauxlib.h>
 }
 
-// #define LUABIND_NO_HEADERS_ONLY
-// #include <dependencies/luabind/luabind/luabind.hpp>
+#define LUABIND_NO_HEADERS_ONLY
+#include <dependencies/luabind/luabind/luabind.hpp>
 
 #include <yake/plugins/scriptingLua/ScriptingSystemLua.h>
 #include <fstream>
@@ -57,6 +57,8 @@ namespace scripting {
 			luaopen_math( mLuaState );
 		if (IS_MASK_SET(libs, LUALIB_DEBUG))
 			luaopen_debug( mLuaState );
+
+		luabind::open( mLuaState );
 	}
 
 	//------------------------------------------------------
