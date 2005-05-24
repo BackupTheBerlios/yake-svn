@@ -36,7 +36,7 @@ namespace base {
 }
 }
 
-namespace yapp {
+namespace yake {
 namespace event {
 
 	class MessageListenerNode : public MessageListener, public INode
@@ -47,8 +47,8 @@ namespace event {
 }
 }
 
-using namespace yapp;
-using namespace yapp::event;
+using namespace yake;
+using namespace yake::event;
 
 const MessageId MSGID_FRAME = MessageIdManager::createId();
 
