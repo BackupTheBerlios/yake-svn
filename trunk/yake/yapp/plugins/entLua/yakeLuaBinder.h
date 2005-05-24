@@ -38,6 +38,12 @@ namespace lua {
 	public:
 		virtual void bind( scripting::IVM* pVM );
 	};
+	struct YAKE_ENTLUA_API MathBinder : public scripting::IBinder
+	{
+		YAKE_DECLARE_CONCRETE(Binder,"yake::math")
+	public:
+		virtual void bind( scripting::IVM* pVM );
+	};
 
 } // namespace lua
 } // namespace ent
