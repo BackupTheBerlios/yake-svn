@@ -95,7 +95,7 @@
 #	define Bind2( METHOD, OBJECT ) boost::bind( METHOD, OBJECT, _1, _2 )
 #	define BindRef1( METHOD, REFOBJECT ) boost::bind( METHOD, boost::ref( REFOBJECT ), _1 )
 #	define BindRef0( METHOD, REFOBJECT ) boost::bind( METHOD, boost::ref( REFOBJECT ) )
-
+#	define SignalX ttl::sig::signal
 //#	define Signal ttl::sig::signal // can't use this macro as it collides with some MS COM method named "Signal"
 #	define Signal0 ttl::sig::signal
 #	define Signal1 ttl::sig::signal
@@ -113,5 +113,32 @@ namespace yake
 
 
 } // yake
+
+
+#define YAKE_MEMBERSIGNAL_VIRTUALIMPL( ACCESS, SIGNATURE, NAME ) \
+ACCESS: \
+	virtual SignalConnection subscribeTo##NAME##(const Sig##NAME##Type::slot_type& slot ) \
+	{ return mSig##NAME.connect(slot); } \
+private: \
+	Sig##NAME##Type	mSig##NAME; \
+ACCESS:
+
+#define YAKE_MEMBERSIGNAL_FIRE_FN0(ACCESS, NAME) \
+ACCESS: \
+	void fire##NAME##() \
+	{ mSig##NAME##(); }
+
+#define YAKE_MEMBERSIGNAL_FIRE_FN1(ACCESS, NAME, PARAMS, PARAMSCALL) \
+ACCESS: \
+	void fire##NAME##(PARAMS) \
+	{ mSig##NAME##(PARAMSCALL); }
+
+#define YAKE_MEMBERSIGNAL( ACCESS, SIGNATURE, NAME ) \
+ACCESS: \
+	typedef SignalX<SIGNATURE> Sig##NAME##Type; \
+	SignalConnection subscribeTo##NAME##(const Sig##NAME##Type::slot_type& slot ) \
+	{ return mSig##NAME.connect(slot); } \
+private: \
+	Sig##NAME##Type	mSig##NAME;
 
 #endif

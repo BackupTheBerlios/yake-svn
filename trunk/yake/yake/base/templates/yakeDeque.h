@@ -206,6 +206,10 @@ public:
 			mCurrent( start ), mEnd( end )
 		{
 		}
+		DequeIterator(typename T& container) :
+			mCurrent( container.begin() ), mEnd( container.end() )
+		{
+		}
 		bool hasMoreElements()
 		{
 			return mCurrent != mEnd;
@@ -241,6 +245,10 @@ public:
 	public:
 		ConstDequeIterator(typename T::const_iterator start, typename T::const_iterator end) :
 			mCurrent( start ), mEnd( end )
+		{
+		}
+		ConstDequeIterator(typename T& container) :
+			mCurrent( container.begin() ), mEnd( container.end() )
 		{
 		}
 		bool hasMoreElements()
