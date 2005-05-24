@@ -33,16 +33,40 @@ namespace physics {
 	//-----------------------------------------------------
 	
 	//-----------------------------------------------------
-	OdeActor::OdeActor( OdeWorld* pWorld ) :
-				mOdeWorld( pWorld )
+	//-----------------------------------------------------
+	OdeActor::OdeActor( OdeWorld* pWorld, bool bDynamic ) :
+			mOdeWorld(pWorld),
+			mBody(0)
 	{
+		if (bDynamic)
+		{
+			mBody = new OdeBody( mOdeWorld, *this );
+			YAKE_ASSERT( mBody ).error( "Failed to create body!" );
+			mBody->setPosition( Vector3::kZero );
+			mBody->setOrientation( Quaternion::kIdentity );
+		}
+		this->setPosition( Vector3::kZero );
+		this->setOrientation( Quaternion::kIdentity );
 	}
 
 	//-----------------------------------------------------
 	OdeActor::~OdeActor()
 	{
+		YAKE_SAFE_DELETE( mBody );
 		// destroy all shapes
 		mShapes.clear();
+	}
+
+	//-----------------------------------------------------
+	void OdeActor::setEnabled(const bool enabled)
+	{
+		YAKE_ASSERT( 0 && "NOT IMPLEMENTED" );
+	}
+
+	//-----------------------------------------------------
+	bool OdeActor::isEnabled() const
+	{
+		return true;
 	}
 	
 	//-----------------------------------------------------
@@ -67,7 +91,7 @@ namespace physics {
 	{
 		IShape::Desc* pShapeDesc = &const_cast<IShape::Desc&>( rShapeDesc );
 		
-		IMaterial* pMaterial = pShapeDesc->pMaterial.lock().get();
+		IMaterial* pMaterial = pShapeDesc->pMaterial;
 		OdeMaterial* pOdeMaterial = 0;
 		
 		if (pMaterial)
@@ -132,57 +156,34 @@ namespace physics {
 		if ( pOdeMaterial != 0 )
 			result->setMaterial( *pOdeMaterial );
 
+		if (result)
+			mShapes.push_back( SharedPtr<OdeGeom>(result) );
+
 		return result;
 	}
 
-	//-----------------------------------------------------
-	/*SharedPtr<IShape> OdeActor::createShape( IShape::Desc const& rShapeDesc )
-	{
-		IShape* pShape = createShapeFromDesc( rShapeDesc );
-		// TODO Check if it works with OdeGeom
-		OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( pShape );
-		
-		mShapes.push_back( pShape );
-		mOdeShapes.insert( OdeShapesMap::value_type( pGeom->_getOdeGeomID(), pGeom ) ); 
-		
-		return SharedPtr<IShape>( pShape );
-	}*/
-	
 	//-----------------------------------------------------
 	bool operator == (const SharedPtr<OdeGeom>& lhs, const OdeGeom* rhs)
 	{
 		return (lhs.get() == rhs);
 	}
-	void OdeActor::destroyShape_( IShape* pShape )
+	void OdeActor::destroyShape( IShape* pShape )
 	{
 		OdeGeom* pGeom = dynamic_cast<OdeGeom*>( pShape );
 		ShapeList::iterator victim = std::find( mShapes.begin(), mShapes.end(), pGeom );
-		
 		mShapes.erase( victim );
 	}
 
 	//-----------------------------------------------------
-	const IActor::ShapePtrVector OdeActor::getShapes_() const
+	IShapePtrList OdeActor::getShapes() const
 	{
-		IActor::ShapePtrVector ret;
-		ret.reserve( mShapes.size() );
+		IShapePtrList ret;
+		//ret.reserve( mShapes.size() );
 		//std::copy( mShapes.begin(), mShapes.end(), std::back_inserter( mShapes ) );
 		for (ShapeList::const_iterator it = mShapes.begin(); it != mShapes.end(); ++it)
 			ret.push_back( dynamic_cast<IShape*>(it->get()) );
 		return ret;
 	}
-
- 	//-----------------------------------------------------
- 	void OdeActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
- 		mEnterCollisionSignal.connect( slot );
- 	}
-
-	//-----------------------------------------------------
- 	void OdeActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
- 		mExitCollisionSignal.connect( slot );
- 	}
 
 	//-----------------------------------------------------
 // 	void OdeActor::postStep( real timeElapsed )
@@ -352,215 +353,79 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	//	OdeStaticActor
-	//-----------------------------------------------------
-	
-	//-----------------------------------------------------
-	OdeStaticActor::OdeStaticActor( OdeWorld* pWorld ) :
-				OdeActor( pWorld )
+	IShape* OdeActor::createShape( const IShape::Desc& rShapeDesc )
 	{
-	}
-
-	//-----------------------------------------------------
-	OdeStaticActor::~OdeStaticActor()
-	{
-	}
-	
-	//-----------------------------------------------------
-	IShape* OdeStaticActor::createShape( const IShape::Desc& rShapeDesc )
-	{
-		OdeGeom* pShape = createShapeFromDesc( rShapeDesc );
-		OdeGeom* pGeom = dynamic_cast<OdeGeom*>( pShape );
-		
-		mShapes.push_back( SharedPtr<OdeGeom>(pShape) );
-		
-		return dynamic_cast<IShape*>( mShapes.back().get() );
-	}
-
- 	//-----------------------------------------------------
- 	void OdeStaticActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
-		OdeActor::subscribeToCollisionEnteredSignal( slot );
- 	}
-
-	//-----------------------------------------------------
- 	void OdeStaticActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
-		OdeActor::subscribeToCollisionExitedSignal( slot );
- 	}
-
-	//-----------------------------------------------------
-	//	OdeMovableActor
-	//-----------------------------------------------------
-	
-	//-----------------------------------------------------
-	OdeMovableActor::OdeMovableActor( OdeWorld* pWorld ) :
-				OdeActor( pWorld )
-	{
-	}
-	
-	//-----------------------------------------------------
-	OdeMovableActor::~OdeMovableActor()
-	{
-	}
-	
-	//-----------------------------------------------------
-	IShape* OdeMovableActor::createShape( const IShape::Desc& rShapeDesc )
-	{
-		if ( const IShape::PlaneDesc* pPlaneDesc = dynamic_cast<const IShape::PlaneDesc*>( &rShapeDesc ) )
-			YAKE_ASSERT( false ).error( "Attempted to attach immovable plane shape to movable actor!" );
-			
-		OdeGeom* pShape = createShapeFromDesc( rShapeDesc );
-		
-		OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( pShape );
-		
-		mShapes.push_back( SharedPtr<OdeGeom>(pShape) );
-		
-		return dynamic_cast<IShape*>( mShapes.back().get() );
-	}
-	
-	//-----------------------------------------------------
-	void OdeMovableActor::setPosition( const Vector3& rPosition )
-	{
-		mPosition = rPosition;
-		
-		for( ShapeList::iterator i = mShapes.begin(); i != mShapes.end(); ++i )
-		{
-			OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( i->get() );
-			
-			pGeom->setPosition( mPosition );
-		}
-	}
-	
-	//-----------------------------------------------------
-	void OdeMovableActor::setOrientation( const Quaternion& rOrientation )
-	{
-		mOrientation = rOrientation;
-		
-		for( ShapeList::iterator i = mShapes.begin(); i != mShapes.end(); ++i )
-		{
-			OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( i->get() );
-			
-			pGeom->setOrientation( mOrientation );
-		}
-	}
-	
-	//-----------------------------------------------------
-	Vector3 OdeMovableActor::getPosition() const
-	{
-		return mPosition;
-	}
-	
-	//-----------------------------------------------------
-	Quaternion OdeMovableActor::getOrientation() const
-	{
-		return mOrientation;
-	}
-	
- 	//-----------------------------------------------------
- 	void OdeMovableActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
-		OdeActor::subscribeToCollisionEnteredSignal( slot );
- 	}
-
-	//-----------------------------------------------------
- 	void OdeMovableActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
-		OdeActor::subscribeToCollisionExitedSignal( slot );
- 	}
-
-	//-----------------------------------------------------
-	//	OdeDynamicActor
-	//-----------------------------------------------------
-	
-	//-----------------------------------------------------
-	OdeDynamicActor::OdeDynamicActor( OdeWorld* pWorld ) :
-				OdeActor( pWorld )
-	{
-		mBody = new OdeBody( mOdeWorld, *this );
-		
-		YAKE_ASSERT( mBody ).error( "Failed to create body!" );
-		mBody->setPosition( Vector3::kZero );
-		mBody->setOrientation( Quaternion::kIdentity );
-	}
-
-	//-----------------------------------------------------
-	OdeDynamicActor::~OdeDynamicActor()
-	{
-		YAKE_SAFE_DELETE( mBody );
-	}
-	
-	//-----------------------------------------------------
-	IBody& OdeDynamicActor::getBody() const
-	{
-		YAKE_ASSERT( mBody );
-		return *mBody;
-	}
-	
-	//-----------------------------------------------------
-	void OdeDynamicActor::setPosition( Vector3 const& rPosition )
-	{
-		//@todo is this necessary? or is it implicitely done by mBody->setPosition() below?
-		/*
-		for( ShapeList::iterator i = mShapes.begin(); i != mShapes.end(); ++i )
-		{
-			OdeMovableGeom* pGeom = dynamic_cast<OdeMovableGeom*>( i->get() );
-			pGeom->setPosition( rPosition );
-		}
-		*/
-
-		YAKE_ASSERT( mBody );
-		mBody->setPosition( rPosition );
-	}
-	
-	//-----------------------------------------------------
-	void OdeDynamicActor::setOrientation( Quaternion const& rOrientation )
-	{
-		YAKE_ASSERT( mBody );
-		mBody->setOrientation( rOrientation );
-	}
-	
-	//-----------------------------------------------------
-	Vector3 OdeDynamicActor::getPosition() const
-	{
-		YAKE_ASSERT( mBody );
-		return mBody->getPosition();
-	}
-	
-	//-----------------------------------------------------
-	Quaternion OdeDynamicActor::getOrientation() const
-	{
-		YAKE_ASSERT( mBody );
-		return mBody->getOrientation();
-	}
-	
-	//-----------------------------------------------------
-	IShape* OdeDynamicActor::createShape( const IShape::Desc& rShapeDesc )
-	{
-		YAKE_ASSERT( mBody );
-		if ( const IShape::PlaneDesc* pPlaneDesc = dynamic_cast<const IShape::PlaneDesc*>( &rShapeDesc ) )
+		if ( mBody && dynamic_cast<const IShape::PlaneDesc*>( &rShapeDesc ) )
 			YAKE_ASSERT( false ).error( "Attempted to attach immovable plane shape to movable actor!" );
 			
 		OdeGeom* pShape = createShapeFromDesc( rShapeDesc );
 		YAKE_ASSERT( pShape );
 		
-		mShapes.push_back( SharedPtr<OdeGeom>(pShape) );
+		if (mBody)
+			dGeomSetBody( pShape->_getOdeGeomID(), mBody->_getOdeBody()->id() );
 		
-		dGeomSetBody( pShape->_getOdeGeomID(), mBody->_getOdeBody()->id() );
-		
-		return dynamic_cast<IShape*>( mShapes.back().get() );
+		return pShape;
 	}
 	
- 	//-----------------------------------------------------
- 	void OdeDynamicActor::subscribeToCollisionEnteredSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
-		OdeActor::subscribeToCollisionEnteredSignal( slot );
- 	}
-
 	//-----------------------------------------------------
- 	void OdeDynamicActor::subscribeToCollisionExitedSignal( const IActor::SignalCollision::slot_type & slot )
- 	{
-		OdeActor::subscribeToCollisionExitedSignal( slot );
- 	}
+	void OdeActor::setPosition( const Vector3& rPosition )
+	{
+		mPosition = rPosition;
+		if (mBody)
+			mBody->setPosition( rPosition );
+		else
+		{
+			for( ShapeList::iterator i = mShapes.begin(); i != mShapes.end(); ++i )
+			{
+				i->get()->setPosition( mPosition );
+			}
+		}
+	}
+	
+	//-----------------------------------------------------
+	void OdeActor::setOrientation( const Quaternion& rOrientation )
+	{
+		mOrientation = rOrientation;
+		
+		if (mBody)
+			mBody->setOrientation( rOrientation );
+		else
+		{
+			for( ShapeList::iterator i = mShapes.begin(); i != mShapes.end(); ++i )
+			{
+				i->get()->setOrientation( mOrientation );
+			}
+		}
+	}
+	
+	//-----------------------------------------------------
+	Vector3 OdeActor::getPosition() const
+	{
+		if (mBody)
+			return mBody->getPosition();
+		return mPosition;
+	}
+	
+	//-----------------------------------------------------
+	Quaternion OdeActor::getOrientation() const
+	{
+		if (mBody)
+			return mBody->getOrientation();
+		return mOrientation;
+	}
+	
+	//-----------------------------------------------------
+	IBody& OdeActor::getBody() const
+	{
+		YAKE_ASSERT( mBody );
+		return *mBody;
+	}
+		
+	//-----------------------------------------------------
+	IBody* OdeActor::getBodyPtr() const
+	{
+		return mBody;
+	}
+
 } // physics
 } // yake

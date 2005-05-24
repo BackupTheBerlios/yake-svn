@@ -27,69 +27,69 @@
 
 namespace yake {
 	using namespace base;
-	using namespace base::templates;
 	using namespace math;
 namespace physics {
 
-	class IActor
+	class IActorListener
+	{
+	public:
+		virtual ~IActorListener() {}
+
+		virtual void onCollision(IActor* pThis, IActor* pOther);
+		virtual void onSleeping(const bool sleeping);
+		virtual void onAddShape(IShape* pShape);
+	};
+
+	struct ActorCollisionInfo
+	{
+		IActor*	pThis;
+		IActor*	pOther;
+		ActorCollisionInfo( IActor* pThisActor = 0, IActor* pOtherActor = 0) :
+			pThis( pThisActor ),
+			pOther( pOtherActor )
+		{}
+	};
+
+	enum ActorType {
+		ACTOR_STATIC,
+		ACTOR_MOVABLE,
+		ACTOR_DYNAMIC
+	};
+	class IActor : public ListenerManager<IActorListener>
 	{
 	public:
 		struct Desc
 		{
-			Desc() {}
+			Desc(const ActorType t) : type(t) {}
 			explicit Desc(const Desc& desc) {}
 			virtual ~Desc() {}
-			Deque< SharedPtr<IShape::Desc> >	shapes;
+			Deque< SharedPtr<IShape::Desc> >		shapes;
+			ActorType								type;
 		};
 	public:
 		virtual ~IActor() {}
 
-		typedef Vector<IShape*> ShapePtrVector;
-
 		virtual IShape* createShape( const IShape::Desc& rShapeDesc ) = 0;
 		virtual void destroyShape( IShape* pShape ) = 0;
-		virtual const ShapePtrVector getShapes() const = 0;
+		virtual IShapePtrList getShapes() const = 0;
 
-		typedef Signal0<void> SignalCollision;
-		virtual void subscribeToCollisionEnteredSignal( const SignalCollision::slot_type& rSlot ) = 0;
-		virtual void subscribeToCollisionExitedSignal( const SignalCollision::slot_type& rSlot ) = 0;
+		virtual IBody* getBodyPtr() const = 0;
+		virtual IBody& getBody() const = 0;
+
+		virtual void setPosition(const Vector3& position) = 0;
+		virtual Vector3 getPosition() const = 0;
+
+		virtual void setOrientation( const Quaternion & rkOrientation ) = 0;
+		virtual Quaternion getOrientation() const = 0;
+
+		virtual void setEnabled(const bool enabled) = 0;
+		virtual bool isEnabled() const = 0;
+
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(ActorCollisionInfo&), CollisionEntered )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(ActorCollisionInfo&), CollisionExited )
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IActor );
 
-	class IStaticActor : public IActor
-	{
-	public:
-		struct Desc : IActor::Desc
-		{
-			explicit Desc(const Desc& desc);
-		};
-	};
-	YAKE_PHYSICS_COMMON_POINTERS( IStaticActor );
-
-	class IMovableActor : public IStaticActor, public Movable
-	{
-	public:
-		struct Desc : IActor::Desc
-		{
-			Desc() {}
-			explicit Desc(const Desc& desc) {}
-		};
-	};
-	YAKE_PHYSICS_COMMON_POINTERS( IMovableActor );
-
-	class IDynamicActor : public IMovableActor
-	{
-	public:
-		struct Desc : IActor::Desc
-		{
-			Desc() {}
-			explicit Desc(const Desc& desc) {}
-		};
-		
-		virtual IBody& getBody() const = 0;
-		//virtual void updateMassFromShapes() = 0;
-	};
-	YAKE_PHYSICS_COMMON_POINTERS( IDynamicActor );
 }
 }
 #endif

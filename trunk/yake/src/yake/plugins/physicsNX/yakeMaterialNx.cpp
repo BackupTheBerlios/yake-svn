@@ -49,6 +49,12 @@ namespace physics {
 		YAKE_ASSERT( nxMat.isValid() );
 		mNxMatIndex = getNxSDK()->addMaterial( nxMat );
 	}
+	void MaterialNx::setBounciness(const real bounciness)
+	{
+	}
+	void MaterialNx::setSoftness(const real softness)
+	{
+	}
 	void MaterialNx::setRollingFriction(const real friction)
 	{
 	}

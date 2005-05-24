@@ -41,7 +41,7 @@ namespace physics {
 	BodyNx::~BodyNx()
 	{
 	}
-	IDynamicActor& BodyNx::getActor() const
+	IActor& BodyNx::getActor() const
 	{
 		YAKE_ASSERT( mActor );
 		return *mActor;
@@ -75,6 +75,16 @@ namespace physics {
 	{
 		YAKE_ASSERT( mNxActor );
 		return fromNx( mNxActor->getAngularVelocity() );
+	}
+	void BodyNx::addForce( const Force& force )
+	{
+		//@todo duration should be handled differently, i.e. by applying smaller amounts of force
+		//		over a number of steps.
+		YAKE_ASSERT( mNxActor );
+		if (force.frameType == RF_GLOBAL)
+			mNxActor->addForce( toNx( force.force * force.duration ) );
+		else
+			mNxActor->addLocalForce( toNx( force.force * force.duration ) );
 	}
 	void BodyNx::addForce( const Vector3 & rkForce )
 	{

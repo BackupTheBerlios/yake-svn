@@ -31,8 +31,18 @@ namespace yake {
 	using namespace math;
 namespace physics {
 
+	class IAvatarListener
+	{
+	public:
+		virtual ~IAvatarListener() {}
+
+		virtual void onJump(const bool jumping) = 0;
+		virtual void onDuck(const bool ducking) = 0;
+		virtual void onCollision(IActor* pOther) = 0;
+	};
+
 	/** An avatar in a physical world. */
-	class IAvatar : public Movable
+	class IAvatar : public Movable, public ListenerManager<IAvatarListener>
 	{
 	public:
 		struct Desc
@@ -50,13 +60,15 @@ namespace physics {
 		};
 	public:
 
-		//virtual void setDimensions( const Vector3 & rkDimensions ) = 0;
-
-		//virtual void setInfluenceByDynamics( const real ratio ) = 0;
+		virtual void setDimensions( const Vector3 & rkDimensions ) = 0;
+		virtual void setInfluenceByDynamics( const real ratio ) = 0;
 
 		virtual void setTargetVelocity( const Vector3 & rkTargetVelocity ) = 0;
 		virtual void jump() = 0;
 		virtual void duck() = 0;
+
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(bool), OnJump )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(bool), OnDuck )
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IAvatar );
 

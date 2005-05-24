@@ -40,20 +40,18 @@ namespace physics {
 			OdeWorld();
 			virtual ~OdeWorld();
 
-			virtual WeakIJointPtr createJoint( const IJoint::DescBase & rkJointDesc );
-			virtual WeakIStaticActorPtr createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() ) ;
-			virtual WeakIMovableActorPtr createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() );
-			virtual WeakIDynamicActorPtr createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() );
-			virtual WeakIAvatarPtr createAvatar( const IAvatar::Desc & rkAvatarDesc )
+			virtual IJointPtr createJoint( const IJoint::DescBase & rkJointDesc );
+			virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc(ACTOR_MOVABLE) );
+			virtual IAvatarPtr createAvatar( const IAvatar::Desc & rkAvatarDesc )
 			{
 				YAKE_ASSERT( 0 ).warning("not supported.");
-				return WeakIAvatarPtr();
+				return IAvatarPtr();
 			}
-			virtual WeakIMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc );
-			virtual void destroyJoint( WeakIJointPtr& rJoint );
-			virtual void destroyActor( WeakIActorPtr& rActor );
-			virtual void destroyAvatar( WeakIAvatarPtr& rAvatar );
-			virtual void destroyMaterial( WeakIMaterialPtr& rMaterial );
+			virtual IMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc );
+			virtual void destroyJoint( IJointPtr pJoint );
+			virtual void destroyActor( IActorPtr pActor );
+			virtual void destroyAvatar( IAvatarPtr pAvatar );
+			virtual void destroyMaterial( IMaterialPtr pMaterial );
 			
 			virtual TriangleMeshId createTriangleMesh( TriangleMeshDesc const& rTrimeshDesc );
 
@@ -62,12 +60,18 @@ namespace physics {
 			virtual Deque<String> getSupportedSolvers() const;
 			virtual bool useSolver( String const& rSolver );
 			virtual String getCurrentSolver() const;
-			virtual const PropertyNameList getCurrentSolverParams() const;
+			virtual const StringVector getCurrentSolverParams() const;
 			virtual void setCurrentSolverParam( String const& rName, boost::any const& rValue );
 
 			virtual void step( const real timeElapsed );
-			virtual void setGlobalGravity( Vector3 const& rAcceleration );
+			virtual void setGlobalGravity( const Vector3& g );
+			virtual Vector3 getGlobalGravity() const;
 
+			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PreStep )
+			YAKE_MEMBERSIGNAL_FIRE_FN0( public, PreStep )
+			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PostStep )
+			YAKE_MEMBERSIGNAL_FIRE_FN0( public, PostStep )
+		public:
 
 			///TODO what are these for?
 			// helpers
@@ -85,12 +89,6 @@ namespace physics {
 			real _getStepSize() const
 			{ return mStepSize; }
 
-			virtual void subscribeToPostStep(const PostStepSignal::slot_type& slot)
-			{
-				mPostStepSignal.connect( slot );
-			}
-
-			
 			dTriMeshDataID getMeshDataById(  TriangleMeshId id ) const;
 		
 		protected:
@@ -106,8 +104,7 @@ namespace physics {
 			typedef AssocVector< TriangleMeshId, dTriMeshDataID > MeshDataMap;
 			MeshDataMap			mMeshDataMap;
 
-			PostStepSignal		mPostStepSignal;
-			PropertyNameList	mCurrentSolverParams;
+			StringVector		mCurrentSolverParams;
 
 			typedef Deque<SharedPtr<OdeActor> > OdeActorVector;
 			OdeActorVector			mActors;

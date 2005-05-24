@@ -68,19 +68,19 @@ namespace physics {
 		mPosition( 0,1.0,0 ),
 		mRadius(real(0.2))
 	{
-		mStepSigConn = rWorldNx.stepSignal.connect( boost::bind(AvatarNx::update_, this, _1) );
+		mStepSigConn = rWorldNx.subscribeToPreStepInternal( boost::bind(AvatarNx::update_, this, _1) );
 
-		mpBall = rWorldNx.createDynamicActor();
-		YAKE_ASSERT( !mpBall.expired() );
-		mpBall.lock()->setPosition( mPosition );
-		mpBall.lock()->createShape( IShape::SphereDesc(mRadius) );
-		mpBall.lock()->getBody().setMass( 1 );
+		mpBall = rWorldNx.createActor(IActor::Desc(ACTOR_DYNAMIC));
+		YAKE_ASSERT( mpBall );
+		mpBall->setPosition( mPosition );
+		mpBall->createShape( IShape::SphereDesc(mRadius) );
+		mpBall->getBody().setMass( 1 );
 	}
 	AvatarNx::~AvatarNx()
 	{
-		YAKE_ASSERT( !mpBall.expired() );
-		mWorld.destroyActor( WeakIActorPtr( mpBall ) );
-		YAKE_ASSERT( mpBall.expired() );
+		YAKE_ASSERT( mpBall );
+		mWorld.destroyActor( mpBall );
+		mpBall = 0;
 
 		mStepSigConn.disconnect();
 	}
@@ -90,8 +90,8 @@ namespace physics {
 	}
 	Vector3 AvatarNx::getPosition() const
 	{
-		if (!mpBall.expired())
-			return mpBall.lock()->getPosition();
+		if (mpBall)
+			return mpBall->getPosition();
 		else
 			return mPosition;
 	}
@@ -120,13 +120,13 @@ namespace physics {
 	}
 	void AvatarNx::update_(const real timeElapsed)
 	{
-		YAKE_ASSERT( !mpBall.expired() );
+		YAKE_ASSERT( mpBall );
 
 		NxRaycastHit hit;
 
 		const Vector3 rayOffset(0,-mRadius*real(1.5),0);
 
-		mPosition = mpBall.lock()->getPosition();
+		mPosition = mpBall->getPosition();
 
 		// origin shoud be the lowest point of the "body"/capsule/...
 		const NxRay ray( toNx( mPosition + rayOffset ), NxVec3(0,-1,0) );
@@ -142,7 +142,7 @@ namespace physics {
 		{
 			YAKE_ASSERT( pFirstHitShape );
 			YAKE_LOG( "NX: falling..." );
-			std::cout << "ball: " << mpBall.lock()->getPosition().x << ", " << mpBall.lock()->getPosition().y << ", " << mpBall.lock()->getPosition().z << "\n";
+			std::cout << "ball: " << mpBall->getPosition().x << ", " << mpBall->getPosition().y << ", " << mpBall->getPosition().z << "\n";
 			//return; // uh oh.. no ground below us.
 		}
 		else
@@ -154,7 +154,7 @@ namespace physics {
 			distanceToImpact = fromNx( hit.distance );
 		}
 
-		//std::cout << "ball: " << mpBall.lock()->getPosition().x << ", " << mpBall.lock()->getPosition().y << ", " << mpBall.lock()->getPosition().z << "\n";
+		//std::cout << "ball: " << mpBall->getPosition().x << ", " << mpBall->getPosition().y << ", " << mpBall->getPosition().z << "\n";
 
 		mTargetVelocity.y = 0.; // !!!
 
@@ -171,7 +171,7 @@ namespace physics {
 			if (!mJumpInitiated)
 			{
 				YAKE_LOG( "initiating...\n" );
-				mpBall.lock()->getBody().addForce( Vector3(0,200,0) );
+				mpBall->getBody().addForce( Vector3(0,200,0) );
 				mJumpInitiated = true;
 				mJumpTakingOff = true;
 			}
@@ -179,7 +179,7 @@ namespace physics {
 			{
 				YAKE_LOG( "taking off...\n" );
 				if (distanceToImpact < mTargetHeightAboveGround)
-					mpBall.lock()->getBody().addForce( Vector3(0,200,0) );
+					mpBall->getBody().addForce( Vector3(0,200,0) );
 				else
 					mJumpTakingOff = false;
 			}
@@ -201,12 +201,12 @@ namespace physics {
 		}
 
 		// gravity
-		//mpBall.lock()->getBody().addForce(Vector3(0,-10,0));
+		//mpBall->getBody().addForce(Vector3(0,-10,0));
 
 		// move the ball
 		if (timeElapsed > 0.)
 		{
-			Vector3 linVel = mpBall.lock()->getBody().getLinearVelocity();
+			Vector3 linVel = mpBall->getBody().getLinearVelocity();
 			if (mJumping)
 				linVel.y = 0; // !!!
 			Vector3 velocityDifference = mTargetVelocity - linVel;
@@ -226,9 +226,9 @@ namespace physics {
 			// => F = m * (v/t)
 
 			Vector3 n = (velocityDifference).normalisedCopy();
-			Vector3 force = mpBall.lock()->getBody().getMass() * n * (velocityDifference.length() / timeElapsed);
+			Vector3 force = mpBall->getBody().getMass() * n * (velocityDifference.length() / timeElapsed);
 
-			mpBall.lock()->getBody().addForce( force );
+			mpBall->getBody().addForce( force );
 		}
 	}
 

@@ -53,7 +53,20 @@ namespace physics {
 		JT_OTHER
 	};
 
-	class IDynamicActor;
+	struct Limit
+	{
+		size_t axis;
+		real low;
+		real high;
+		Limit(const size_t a = 0, const real l = real(-1), const real h = real(1)) :
+			axis(a),
+			low(l),
+			high(h)
+		{}
+	};
+	typedef Deque<Limit> LimitList;
+
+	class IActor;
 	class IAngularMotor;
 	class IJoint
 	{
@@ -64,36 +77,44 @@ namespace physics {
 		struct DescBase
 		{
 			DescBase(	const JointType type_, 
-						IDynamicActor& rFirst,
-						IDynamicActor& rSecond ) :
+						IActor* pFirst,
+						IActor* pSecond ) :
 				type( type_ ),
-				actor1( rFirst ),
-				actor2( rSecond )
+				actor0( pFirst ),
+				actor1( pSecond ),
+				breakable( false ),
+				breakingForce( real(0) ),
+				breakingTorque( real(0) )
 			{
+				YAKE_ASSERT( pFirst || pSecond ).warning("need at least one actor!");
 			}
 
 			virtual ~DescBase() {}
 
 			JointType type; // not really needed...
-			IDynamicActor& actor1;
-			IDynamicActor& actor2;
+			IActor* actor0;
+			IActor* actor1;
+			bool breakable;
+			real breakingForce;
+			real breakingTorque;
+			LimitList limits;
 		};
 
 		struct DescFixed : DescBase
 		{
-			DescFixed(	IDynamicActor& rFirst,
-						IDynamicActor& rSecond ) :
-				DescBase( JT_FIXED,rFirst,rSecond )
+			DescFixed(	IActor* pFirst,
+						IActor* pSecond ) :
+				DescBase( JT_FIXED,pFirst,pSecond )
 			{}
 		};
 
 		struct DescHinge : DescBase
 		{
-			DescHinge(	IDynamicActor& rFirst,
-						IDynamicActor& rSecond,
+			DescHinge(	IActor* pFirst,
+						IActor* pSecond,
 						const Vector3& rAxis,
 						const Vector3& rAnchor ) :
-				DescBase( JT_HINGE,rFirst,rSecond ),
+				DescBase( JT_HINGE,pFirst,pSecond ),
 				axis( rAxis ),
 				anchor( rAnchor )
 			{}
@@ -103,12 +124,12 @@ namespace physics {
 
 		struct DescHinge2 : DescBase
 		{
-			DescHinge2(	IDynamicActor& rFirst,
-						IDynamicActor& rSecond,
+			DescHinge2(	IActor* pFirst,
+						IActor* pSecond,
 						const Vector3& rAxis0, 
 						const Vector3& rAxis1,
 						const Vector3& rAnchor ) :
-				DescBase( JT_HINGE2,rFirst,rSecond ),
+				DescBase( JT_HINGE2,pFirst,pSecond ),
 				axis0( rAxis0 ),
 				axis1( rAxis1 ),
 				anchor( rAnchor )
@@ -120,10 +141,10 @@ namespace physics {
 
 		struct DescBall : DescBase
 		{
-			DescBall(	IDynamicActor& rFirst,
-						IDynamicActor& rSecond,
+			DescBall(	IActor* pFirst,
+						IActor* pSecond,
 						const Vector3& rAnchor ) :
-				DescBase( JT_BALL, rFirst, rSecond ),
+				DescBase( JT_BALL, pFirst, pSecond ),
 				anchor( rAnchor )
 			{}
 			Vector3		anchor;
@@ -131,10 +152,10 @@ namespace physics {
 	
 		struct DescSlider : DescBase
 		{
-			DescSlider(	IDynamicActor& rFirst,
-						IDynamicActor& rSecond,
+			DescSlider(	IActor* pFirst,
+						IActor* pSecond,
 						const Vector3& rAxis ) :
-				DescBase( JT_SLIDER, rFirst, rSecond ),
+				DescBase( JT_SLIDER, pFirst, pSecond ),
 				axis( rAxis )
 			{}
 			Vector3		axis;
@@ -142,12 +163,12 @@ namespace physics {
 	
 		struct DescUniversal : DescBase
 		{
-			DescUniversal(	IDynamicActor& rFirst,
-							IDynamicActor& rSecond,
+			DescUniversal(	IActor* pFirst,
+							IActor* pSecond,
 							const Vector3& rAxis0, 
 							const Vector3& rAxis1,
 							const Vector3& rAnchor ) :
-				DescBase( JT_UNIVERSAL, rFirst, rSecond ),
+				DescBase( JT_UNIVERSAL, pFirst, pSecond ),
 				axis0( rAxis0 ),
 				axis1( rAxis1 ),
 				anchor( rAnchor )
@@ -158,6 +179,9 @@ namespace physics {
  		};
 	public:
 		virtual ~IJoint() {}
+
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void, OnBreaking )
+	public:
 
 		virtual JointType getType() const = 0;
 		virtual size_t getNumAxis() const = 0;
@@ -171,6 +195,8 @@ namespace physics {
 		virtual void setBreakableForce(real force) = 0;
 		virtual void setBreakableTorque(real torque) = 0;
 		virtual void setConnectedBodiesCollide(bool enabled) = 0;
+		//virtual void addForce(const size_t axisIndex, const real force, const real duration = real(-1)) = 0;
+		//virtual void addTorque(const size_t axisIndex, const real torque, const real duration = real(-1)) = 0;
 		///setLow/HiStop
 		//setSpring/Damper
 	};

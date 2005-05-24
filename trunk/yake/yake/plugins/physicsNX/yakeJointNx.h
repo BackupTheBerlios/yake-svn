@@ -33,6 +33,9 @@ namespace physics {
 
 		virtual IActor& getAttachedActor(bool bFirst);
 
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, OnBreaking )
+		YAKE_MEMBERSIGNAL_FIRE_FN0( public, OnBreaking )
+
 		virtual JointType getType() const;
 		virtual size_t getNumAxis() const;
 		virtual void setAxis(size_t axisIndex, const Vector3 & rkAxis);
@@ -45,6 +48,8 @@ namespace physics {
 		virtual void setBreakableForce(real force);
 		virtual void setBreakableTorque(real torque);
 		virtual void setConnectedBodiesCollide(bool enabled);
+		//virtual void addForce(const size_t axisIndex, const real force, const real duration = real(-1));
+		//virtual void addTorque(const size_t axisIndex, const real torque, const real duration = real(-1));
 		//
 		static JointNx* createFromDesc_( NxScene & rScene, const IJoint::DescBase & rkJointDesc );
 		static const Deque<JointType>& getSupportedTypes_();

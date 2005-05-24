@@ -26,7 +26,7 @@ namespace physics {
 
 	class ActorNx;
 	class MaterialNx;
-	class ShapeNx : public IMovableShape
+	class ShapeNx : public IShape
 	{
 	public:
 		ShapeNx( NxActor* pActor, ActorNx* rActorNx, MaterialNx* pMaterial );

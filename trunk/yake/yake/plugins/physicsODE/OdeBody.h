@@ -24,15 +24,17 @@ http://www.gnu.org/copyleft/lesser.txt.
 namespace yake {
 namespace physics {
 
-		class OdeDynamicActor;
+		class OdeActor;
 		
 		class OdeBody : public IBody
 		{
 		public:
-			OdeBody( OdeWorld* pWorld, OdeDynamicActor& rOwner );
+			OdeBody( OdeWorld* pWorld, OdeActor& rOwner );
 			virtual ~OdeBody();
 
-			virtual IDynamicActor& getActor() const;
+			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, bool, OnSleeping )
+
+			virtual IActor& getActor() const;
 
 			virtual void setMass( const real mass );
 			virtual real getMass() const;
@@ -46,6 +48,7 @@ namespace physics {
 			virtual void setAngularVelocity( Vector3 const& rVelocity);
 			virtual Vector3 getAngularVelocity() const;
 			
+			virtual void addForce( const Force& force );
 			virtual void addForce( Vector3 const& rForce );
 			virtual void addForceAtPos( Vector3 const& rForce, Vector3 const& rPos );
 			virtual void addForceAtLocalPos( const Vector3& rForce, const Vector3& rPos );
@@ -80,7 +83,7 @@ namespace physics {
 			//bool _isValid() const { return mValid; }*/
 		protected:
 			OdeWorld* 				mOdeWorld;
-			OdeDynamicActor&		mOwner;
+			OdeActor&				mOwner;
 			dBody* 					mOdeBody;
 			dMass					mMass;
 //			MassType		mMassType;

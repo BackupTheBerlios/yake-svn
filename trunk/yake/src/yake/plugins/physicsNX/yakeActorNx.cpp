@@ -27,7 +27,6 @@
 
 namespace yake {
 	using namespace base;
-	using namespace base::templates;
 	using namespace math;
 namespace physics {
 
@@ -100,18 +99,22 @@ namespace physics {
 		mpNxActor = 0;
 		mpNxDefaultShape = 0;
 	}
+	void ActorNx::setEnabled(const bool enabled)
+	{
+		YAKE_ASSERT( 0 && "NOT IMPLEMENTED!" );
+	}
+	bool ActorNx::isEnabled() const
+	{
+		return true;
+	}
 	IBody& ActorNx::getBody() const
 	{
 		YAKE_ASSERT( mpBody );
 		return *mpBody;
 	}
-	void ActorNx::subscribeToCollisionEnteredSignal( const SignalCollision::slot_type & rkSlot )
+	IBody* ActorNx::getBodyPtr() const
 	{
-		fireCollisionEntered.connect( rkSlot );
-	}
-	void ActorNx::subscribeToCollisionExitedSignal( const SignalCollision::slot_type & rkSlot )
-	{
-		fireCollisionExited.connect( rkSlot );
+		return mpBody;
 	}
 	void ActorNx::destroyShape( IShape* pShape )
 	{
@@ -129,9 +132,9 @@ namespace physics {
 		mpNxDefaultShape = mpNxActor->createShape( boxDesc );
 		YAKE_ASSERT( mpNxDefaultShape );
 	}
-	const IActor::ShapePtrVector ActorNx::getShapes() const
+	IShapePtrList ActorNx::getShapes() const
 	{
-		ShapePtrVector out;
+		IShapePtrList out;
 		ConstDequeIterator<Deque<SharedPtr<ShapeNx> > > it(mShapes.begin(), mShapes.end());
 		while (it.hasMoreElements())
 		{
@@ -146,9 +149,9 @@ namespace physics {
 			return 0;
 
 		MaterialNx* pMaterial = 0;
-		if (!rkShapeDesc.pMaterial.expired())
+		if (rkShapeDesc.pMaterial)
 		{
-			pMaterial = dynamic_cast<MaterialNx*>(rkShapeDesc.pMaterial.lock().get());
+			pMaterial = dynamic_cast<MaterialNx*>(rkShapeDesc.pMaterial);
 			YAKE_ASSERT( pMaterial ).debug("Specified material is invalid! => using default material!");
 		}
 		YAKE_ASSERT( pMaterial ).warning("No material specified => using default material!");

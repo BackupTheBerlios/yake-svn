@@ -28,7 +28,7 @@ namespace physics {
 
 		class OdeActor;
 		class OdeTransformGeom;
-		class OdeGeom
+		class OdeGeom : public IShape
 		{
 			friend class OdeTransformGeom;
 			OdeGeom();
@@ -47,6 +47,11 @@ namespace physics {
 			OdeActor* getOwner() const
 			{ return mOwner; }
 
+			virtual void setPosition( Vector3 const& rPosition);
+			virtual Vector3 getPosition() const;
+			virtual void setOrientation( Quaternion const& rOrientation );
+			virtual Quaternion getOrientation() const;
+
 		protected:
 			virtual void _setData( void* pData );
 			virtual void* _getData() const;
@@ -59,27 +64,7 @@ namespace physics {
 			OdeActor*			mOwner;
 		};
 		
-		class OdeStaticGeom : public OdeGeom, public IShape
-		{
-		protected:
-			OdeStaticGeom( OdeActor* pOwner ) : OdeGeom( pOwner )
-			{}
-		public:
-		};
-		
-		class OdeMovableGeom : public OdeGeom, public IMovableShape
-		{
-		protected:
-			OdeMovableGeom( OdeActor* pOwner ) : OdeGeom( pOwner )
-			{}
-		public:
-			virtual void setPosition( Vector3 const& rPosition);
-			virtual Vector3 getPosition() const;
-			virtual void setOrientation( Quaternion const& rOrientation );
-			virtual Quaternion getOrientation() const;
-		};
-		
-		class OdeTransformGeom : public OdeMovableGeom
+		class OdeTransformGeom : public OdeGeom
 		{
 		public:
 			OdeTransformGeom( dSpace* pSpace, OdeActor* pOwner );
@@ -93,7 +78,7 @@ namespace physics {
 			OdeGeom*	mAttachedGeom;
 		};
 		
-		class OdePlane : public OdeStaticGeom
+		class OdePlane : public OdeGeom
 		{
 		public:
 			OdePlane( dSpace* pSpace, OdeActor* pOwner, real a, real b, real c, real d );
@@ -101,7 +86,7 @@ namespace physics {
 			virtual ShapeType getType() const;
 		};
 		
-		class OdeSphere :  public OdeMovableGeom
+		class OdeSphere :  public OdeGeom
 		{
 		public:
 			OdeSphere::OdeSphere( dSpace* pSpace, OdeActor* pOwner, real radius );
@@ -109,7 +94,7 @@ namespace physics {
 			virtual ShapeType getType() const;
 		};
 		
-		class OdeBox : public OdeMovableGeom
+		class OdeBox : public OdeGeom
 		{
 		public:
 			OdeBox( dSpace* pSpace, OdeActor* pOwner, real sizex, real sizey, real sizez);
@@ -117,7 +102,7 @@ namespace physics {
 			virtual ShapeType getType() const;
 		};
 		
-		class OdeCCylinder : public OdeMovableGeom
+		class OdeCCylinder : public OdeGeom
 		{
 		public:
 			OdeCCylinder( dSpace* pSpace, OdeActor* pOwner, real radius, real length );
@@ -125,7 +110,7 @@ namespace physics {
 			virtual ShapeType getType() const;
 		};
 		
-		class OdeTriMesh : public OdeMovableGeom
+		class OdeTriMesh : public OdeGeom
 		{
 		public:
 			OdeTriMesh::OdeTriMesh( dSpace* pSpace, OdeActor* pOwner, dTriMeshDataID meshDataId ); 

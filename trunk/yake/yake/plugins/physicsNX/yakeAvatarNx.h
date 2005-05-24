@@ -35,9 +35,17 @@ namespace physics {
 		virtual void setOrientation( const Quaternion & rkOrientation );
 		virtual Quaternion getOrientation() const;
 
+		virtual void setDimensions( const Vector3 & rkDimensions ) {}
+		virtual void setInfluenceByDynamics( const real ratio ) {}
+
 		virtual void setTargetVelocity( const Vector3 & rkTargetVelocity );
 		virtual void jump();
 		virtual void duck();
+
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, OnJump )
+		YAKE_MEMBERSIGNAL_FIRE_FN1( public, OnJump, bool fire, fire )
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, OnDuck )
+		YAKE_MEMBERSIGNAL_FIRE_FN1( public, OnDuck, bool fire, fire )
 
 		// helper
 
@@ -56,7 +64,7 @@ namespace physics {
 		SignalConnection mStepSigConn;
 		real		mRadius;
 
-		WeakIDynamicActorPtr	mpBall;
+		IActorPtr	mpBall;
 	};
 
 }

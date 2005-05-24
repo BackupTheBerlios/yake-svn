@@ -27,7 +27,7 @@ namespace yake {
 namespace physics {
 
 		//---------------------------------------------------
-		OdeBody::OdeBody( OdeWorld* pOdeWorld, OdeDynamicActor& rOwner ) : 
+		OdeBody::OdeBody( OdeWorld* pOdeWorld, OdeActor& rOwner ) : 
 								mOdeWorld( pOdeWorld ),
 								mOdeBody( 0 ),
 //								mValid( false ),
@@ -58,7 +58,7 @@ namespace physics {
 		}
 		
 		//---------------------------------------------------
-		IDynamicActor& OdeBody::getActor() const
+		IActor& OdeBody::getActor() const
 		{
 			return mOwner;
 		}
@@ -74,9 +74,20 @@ namespace physics {
 		//---------------------------------------------------
 		real OdeBody::getMass() const
 		{
- 			return mMass.mass;
+ 			return real(mMass.mass);
 		}
 		
+		//---------------------------------------------------
+		void OdeBody::addForce( const Force& force )
+		{
+			//@todo apply force over several time steps according to duration.
+			const Vector3 totalForce = force.force * force.duration;
+			if (force.frameType == RF_GLOBAL)
+				mOdeBody->addForce( totalForce.x, totalForce.y, totalForce.z );
+			else
+				mOdeBody->addRelForce( totalForce.x, totalForce.y, totalForce.z );
+		}
+
 		//---------------------------------------------------
 		void OdeBody::addForce( Vector3 const& rForce )
 		{
@@ -135,7 +146,7 @@ namespace physics {
 		Vector3 OdeBody::getLinearVelocity() const
 		{
 			const dReal* v = mOdeBody->getLinearVel();
-			return Vector3( v[0], v[1], v[2] );
+			return Vector3( real(v[0]), real(v[1]), real(v[2]) );
 		}
 		
 		//---------------------------------------------------
@@ -148,7 +159,7 @@ namespace physics {
 		Vector3 OdeBody::getAngularVelocity() const
 		{
 			const dReal* v = mOdeBody->getAngularVel();
-			return Vector3( v[0], v[1], v[2] );
+			return Vector3( real(v[0]), real(v[1]), real(v[2]) );
 		}
 
 		//---------------------------------------------------
@@ -161,7 +172,7 @@ namespace physics {
 		Vector3 OdeBody::getPosition() const
 		{
 			const dReal* pos = mOdeBody->getPosition();
-			return Vector3( pos[0], pos[1], pos[2] );
+			return Vector3( real(pos[0]), real(pos[1]), real(pos[2]) );
 		}
 		
 		//---------------------------------------------------
@@ -175,7 +186,7 @@ namespace physics {
 		Quaternion OdeBody::getOrientation() const
 		{
 			const dReal* q = mOdeBody->getQuaternion();
-			return Quaternion( q[0], q[1], q[2], q[3] );
+			return Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) );
 		}
 		
 		

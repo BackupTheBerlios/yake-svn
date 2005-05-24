@@ -31,6 +31,8 @@ namespace physics {
 		MaterialNx();
 		~MaterialNx();
 
+		virtual void setBounciness(const real bounciness);
+		virtual void setSoftness(const real softness);
 		virtual void setRollingFriction(const real friction);
 		virtual void setRestitution(const real restitution);
 		virtual void setStaticFriction(const real friction);

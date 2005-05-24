@@ -37,45 +37,45 @@
 #ifndef YAKE_PHYSICS_MOTORS_H
 #	include <yake/physics/yakePhysicsMotors.h>
 #endif
-//#include <yake/base/mpl/yakeAbstractFactory.h>
 
 namespace yake {
 	using namespace base;
-	using namespace base::templates;
 	using namespace math;
 namespace physics {
 
-	class IWorld	//: public mpl::AbstractFactory< mpl::sequences::list< IActor, IAvatar > >
-					//: public IPropertyQueryHandler
+	class IWorld
 	{
 	public:
 		virtual ~IWorld() {}
 
-		virtual WeakIJointPtr createJoint( const IJoint::DescBase& rkJointDesc ) = 0;
-		virtual WeakIStaticActorPtr createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() ) = 0;
-		virtual WeakIMovableActorPtr createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() ) = 0;
-		virtual WeakIDynamicActorPtr createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() ) = 0;
-		virtual WeakIAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc ) = 0;
-		virtual WeakIMaterialPtr createMaterial( const IMaterial::Desc& rkMatDesc ) = 0;
-		virtual void destroyJoint( WeakIJointPtr& rJoint ) = 0;
-		virtual void destroyActor( WeakIActorPtr& rActor ) = 0;
-		virtual void destroyAvatar( WeakIAvatarPtr& rAvatar ) = 0;
-		virtual void destroyMaterial( WeakIMaterialPtr& rMaterial ) = 0;
+		virtual IJointPtr createJoint( const IJoint::DescBase& rkJointDesc ) = 0;
+		virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc(ACTOR_MOVABLE) ) = 0;
+		IActorPtr createActor( const ActorType type = ACTOR_MOVABLE )
+		{ return createActor( IActor::Desc(type) ); }
+		virtual IAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc ) = 0;
+		virtual IMaterialPtr createMaterial( const IMaterial::Desc& rkMatDesc ) = 0;
+		virtual void destroyJoint( IJointPtr pJoint ) = 0;
+		virtual void destroyActor( IActorPtr pActor ) = 0;
+		virtual void destroyAvatar( IAvatarPtr pAvatar ) = 0;
+		virtual void destroyMaterial( IMaterialPtr pMaterial ) = 0;
 
 		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc& rTrimeshDesc ) = 0;
 
 		virtual Deque<ShapeType> getSupportedShapes( bool bStatic = true, bool bDynamic = true ) const = 0;
 		virtual Deque<JointType> getSupportedJoints() const = 0;
-		virtual Deque<String> getSupportedSolvers() const = 0;
+		virtual StringVector getSupportedSolvers() const = 0;
 		virtual bool useSolver( const String& rSolver ) = 0;
 		virtual String getCurrentSolver() const = 0;
-		virtual const PropertyNameList getCurrentSolverParams() const = 0;
+		virtual const StringVector getCurrentSolverParams() const = 0;
 		virtual void setCurrentSolverParam( const String& rName, const boost::any& rValue ) = 0;
+
+		virtual void setGlobalGravity( const Vector3& g ) = 0;
+		virtual Vector3 getGlobalGravity() const = 0;
 
 		virtual void step(const real timeElapsed) = 0;
 
-		typedef Signal0<void> PostStepSignal;
-		virtual void subscribeToPostStep(const PostStepSignal::slot_type& slot) = 0;
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void, PreStep )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void, PostStep )
 	};
 
 }

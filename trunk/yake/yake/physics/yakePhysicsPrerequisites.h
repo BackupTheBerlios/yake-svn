@@ -34,12 +34,44 @@
 #include <boost/any.hpp>
 
 #define YAKE_PHYSICS_COMMON_POINTERS( CLASS ) \
-	typedef WeakPtr<CLASS> Weak##CLASS##Ptr; \
-	typedef SharedPtr<CLASS> Shared##CLASS##Ptr;
+	typedef CLASS* ##CLASS##Ptr; \
+	typedef Deque<##CLASS##Ptr> ##CLASS##PtrList;
+
+/** @todo move into yakeSignal.h in yake::base */
+#define YAKE_MEMBERSIGNAL_PUREINTERFACE( ACCESS, SIGNATURE, NAME ) \
+ACCESS: \
+	typedef SignalX<SIGNATURE> Sig##NAME##Type; \
+	virtual SignalConnection subscribeTo##NAME##( const Sig##NAME##Type::slot_type& slot ) = 0; \
+private:
 
 namespace yake {
+	/** @todo move out */
+	template<class ListenerType>
+		class ListenerManager
+		{
+		private:
+			typedef Deque<ListenerType*> ListenerPtrList;
+			ListenerPtrList	mListeners;
+		public:
+			virtual ~ListenerManager()
+			{
+				ConstDequeIterator<ListenerPtrList> it(mListeners);
+				while (it.hasMoreElements())
+					delete it.getNext();
+			}
+
+			void pushListener(ListenerType* pListener)
+			{
+				if (pListener)
+					mListeners.push_back( pListener );
+			}
+			void removeListener(ListenerType* pListener)
+			{
+				mListeners.remove( pListener );
+			}
+		};
+
 	using namespace base;
-	using namespace base::templates;
 	using namespace math;
 namespace physics {
 	typedef ::yake::uint32 TriangleMeshId;
@@ -64,13 +96,13 @@ namespace physics {
 		String		name;
 		boost::any	value;
 	};
-	typedef Deque<String> PropertyNameList;
+	typedef Deque<String> StringVector;
 
 	class YAKE_PHYSICS_API IPropertyQueryHandler
 	{
 	public:
 		virtual ~IPropertyQueryHandler() {}
-		virtual const PropertyNameList& getPropertyNames() const = 0;
+		virtual StringVector getPropertyNames() const = 0;
 		virtual void setProperty( const String& rName, const boost::any& rValue ) = 0;
 	};
 

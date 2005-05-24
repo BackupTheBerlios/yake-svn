@@ -35,6 +35,14 @@ namespace physics {
 		mSlipAngularCoeff(0)
 	{
 	}
+	void OdeMaterial::setBounciness(const real bounciness)
+	{
+		//@todo
+	}
+	void OdeMaterial::setSoftness(const real softness)
+	{
+		mSoftness = softness;
+	}
 	void OdeMaterial::setRollingFriction( const real friction )
 	{
 		//@todo

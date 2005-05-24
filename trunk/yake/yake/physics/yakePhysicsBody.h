@@ -31,8 +31,57 @@ namespace yake {
 	using namespace math;
 namespace physics {
 
-	class IDynamicActor;
-	class IBody
+	enum ReferenceFrame {
+		RF_LOCAL,
+		RF_GLOBAL
+	};
+
+	struct Force
+	{
+		Vector3			force;
+		real				duration;
+		ReferenceFrame	frameType;
+
+		Force() :
+			duration(0)
+		{}
+		Force( const Vector3& f, const real t, const ReferenceFrame rf = RF_GLOBAL ) :
+			force(f),
+			duration(t),
+			frameType(rf)
+		{}
+
+		Force& operator = (const Force& rhs)
+		{
+			if (&rhs == this)
+				return *this;
+			force = rhs.force;
+			duration = rhs.duration;
+			frameType = rhs.frameType;
+			return *this;
+		}
+		Force& operator += (const Force& rhs)
+		{
+			force += rhs.force;
+			duration += rhs.duration;
+			return *this;
+		}
+		bool operator == (const Force& rhs)
+		{
+			return (frameType == rhs.frameType && force == rhs.force && duration == rhs.duration);
+		}
+	};
+
+	class IBodyListener
+	{
+	public:
+		virtual ~IBodyListener() {}
+		
+		virtual void onSleeping(const bool sleeping);
+	};
+
+	class IActor;
+	class IBody : public ListenerManager<IBodyListener>
 	{
 	public:
 		struct Desc
@@ -130,10 +179,13 @@ namespace physics {
 	public:
 		virtual ~IBody() {}
 
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, bool, OnSleeping )
+	public:
+
 		/** Returns a reference to the actor this body belongs to. A body always belongs to exactly
 			one actor.
 		*/
-		virtual IDynamicActor& getActor() const = 0;
+		virtual IActor& getActor() const = 0;
 
 		/** Sets the mass of the body. The unit can be freely chosen by the application
 			but should be consistent within the simulation, of course.
@@ -172,6 +224,10 @@ namespace physics {
 		/** Returns the angular velocity of the body in [rad/s].
 		*/
 		virtual Vector3 getAngularVelocity() const = 0;
+
+		/** Adds a force. The specifics are detailed in the Force object.
+		*/
+		virtual void addForce( const Force& force ) = 0;
 
 		/** Adds a force defined in the global reference frame. 
 		*/

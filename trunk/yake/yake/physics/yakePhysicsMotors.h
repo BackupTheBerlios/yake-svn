@@ -28,13 +28,26 @@
 namespace yake {
 namespace physics {
 
-	class IAngularMotor
+	class IMotor
 	{
 	public:
 		struct Desc
 		{
+			Desc( bool enabled = true ) : enabled_(enabled)
+			{}
+			bool enabled_;
+		};
+	public:
+		virtual ~IMotor() {}
+	};
+
+	class IAngularMotor : public IMotor
+	{
+	public:
+		struct Desc : public IMotor::Desc
+		{
 			Desc( const real velTarget, const real maxForce, bool enabled = true ) :
-				enabled_(enabled),
+				IMotor::Desc(enabled),
 				velTarget_(velTarget),
 				maxForce_(maxForce)
 			{}
@@ -54,7 +67,7 @@ namespace physics {
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IAngularMotor );
 
-	class ILinearMotor
+	class ILinearMotor : public IMotor
 	{
 	public:
 		virtual ~ILinearMotor() {}

@@ -55,6 +55,8 @@ namespace physics {
 			virtual void setBreakableTorque( real torque );
 			virtual void setConnectedBodiesCollide( bool enabled );
 		
+			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, OnBreaking )
+			YAKE_MEMBERSIGNAL_FIRE_FN0( public, OnBreaking )
 		protected:
 			void _applySpring();
 			real _getCFMFromSpring() const;

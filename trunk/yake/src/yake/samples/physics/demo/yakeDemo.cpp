@@ -2,8 +2,9 @@
 #include <yake/graphics/yakeGraphicsSystem.h>
 #include <yake/physics/yakePhysics.h>
 
+#define USE_SECOND_PHYSICS_PLUGIN
+
 using namespace yake;
-using namespace yake::base::templates;
 using namespace yake::math;
 
 class MiniApp
@@ -30,26 +31,27 @@ private:
 	typedef Deque< SharedPtr<graphics::ILight> > Lights;
 	typedef Deque< SharedPtr<View> > Views;
 
-	physics::WeakIMaterialPtr	mBouncyPhysicsMaterial1;
-	physics::WeakIMaterialPtr	mBouncyPhysicsMaterial2;
+	physics::IMaterialPtr	mBouncyPhysicsMaterial1;
+	physics::IMaterialPtr	mBouncyPhysicsMaterial2;
 
 	struct Simple
 	{
 		SharedPtr<graphics::ISceneNode>		pSN;
 		SharedPtr<graphics::IEntity>		pE;
-		physics::WeakIDynamicActorPtr		pActor;
+		physics::IActorPtr					pActor;
 		void update()
 		{
 			YAKE_ASSERT( pSN.get() );
-			YAKE_ASSERT( !pActor.expired() );
-			pSN->setPosition( pActor.lock()->getPosition() );
-			pSN->setOrientation( pActor.lock()->getOrientation() );
+			YAKE_ASSERT( pActor );
+			pSN->setPosition( pActor->getPosition() );
+			pSN->setOrientation( pActor->getOrientation() );
 		}
 		Simple(SharedPtr<physics::IWorld>& pPWorld_) : pPWorld( pPWorld_ )
 		{}
 		~Simple()
 		{
-			pPWorld->destroyActor( physics::WeakIActorPtr( pActor ) );
+			pPWorld->destroyActor( pActor );
+			pActor = 0;
 		}
 		SharedPtr<physics::IWorld>			pPWorld;
 	};
@@ -68,9 +70,11 @@ private:
 	SharedPtr<graphics::IWorld>	mGWorld;
 
 	SharedPtr<physics::IPhysicsSystem>	mPhysics1;
+	SharedPtr<physics::IWorld>			mPWorld1;
+#ifdef USE_SECOND_PHYSICS_PLUGIN
 	SharedPtr<physics::IPhysicsSystem>	mPhysics2;
-	SharedPtr<physics::IWorld>	mPWorld1;
-	SharedPtr<physics::IWorld>	mPWorld2;
+	SharedPtr<physics::IWorld>			mPWorld2;
+#endif
 
 	// private methods
 	void removeSceneNode( SharedPtr<graphics::ISceneNode> & pSceneNode )
@@ -103,15 +107,15 @@ private:
 							const Vector3 & rkPosition,
 							const real mass = 2 )
 	{
-		rSimple.pActor = pPWorld->createDynamicActor();
-		YAKE_ASSERT( !rSimple.pActor.expired() );
-		rSimple.pActor.lock()->createShape( rkDesc );
-		YAKE_ASSERT( rSimple.pActor.lock()->getShapes().size() == 1 );
+		rSimple.pActor = pPWorld->createActor(physics::ACTOR_DYNAMIC);
+		YAKE_ASSERT( rSimple.pActor );
+		rSimple.pActor->createShape( rkDesc );
+		YAKE_ASSERT( rSimple.pActor->getShapes().size() == 1 );
 
-		rSimple.pActor.lock()->getBody().setMass( mass );
-		rSimple.pActor.lock()->setPosition( rkPosition );
+		rSimple.pActor->getBody().setMass( mass );
+		rSimple.pActor->setPosition( rkPosition );
 
-		rSimple.pActor.lock()->subscribeToCollisionEnteredSignal( boost::bind(MiniApp::onCollisionEntered,this));
+		rSimple.pActor->subscribeToCollisionEntered( boost::bind(MiniApp::onCollisionEntered,this));
 	}
 	bool createBall( SharedPtr<physics::IWorld> pPWorld, Simple & rSimple, const Vector3 & rkPosition, const real radius )
 	{
@@ -143,12 +147,12 @@ private:
 
 		return true;
 	}
-	physics::WeakIJointPtr createFixedJoint(SharedPtr<physics::IWorld> pPWorld, Simple & rSimple1, Simple & rSimple2)
+	physics::IJointPtr createFixedJoint(SharedPtr<physics::IWorld> pPWorld, Simple & rSimple1, Simple & rSimple2)
 	{
-		YAKE_ASSERT( !rSimple1.pActor.expired() );
-		YAKE_ASSERT( !rSimple2.pActor.expired() );
+		YAKE_ASSERT( rSimple1.pActor );
+		YAKE_ASSERT( rSimple2.pActor );
 		return pPWorld->createJoint(
-			physics::IJoint::DescFixed( *rSimple1.pActor.lock(), *rSimple2.pActor.lock() ) );
+			physics::IJoint::DescFixed( rSimple1.pActor, rSimple2.pActor ) );
 	}
 	SharedPtr<base::Library> loadLib( const String & file )
 	{
@@ -246,7 +250,7 @@ void MiniApp::init()
 	YAKE_ASSERT( mPWorld1 ).debug("Cannot create world 1.");
 
 	// physics 2
-
+#ifdef USE_SECOND_PHYSICS_PLUGIN
 	pLib = loadLib("physicsOde" );
 	YAKE_ASSERT( pLib ).debug("Cannot load physics plugin 2.");
 
@@ -255,7 +259,7 @@ void MiniApp::init()
 
 	mPWorld2 = mPhysics2->createWorld();
 	YAKE_ASSERT( mPWorld2 ).debug("Cannot create world 2.");
-
+#endif
 	// graphics
 
 	pLib = loadLib("graphicsOgre" );
@@ -321,9 +325,9 @@ void MiniApp::cleanUp()
 	mLights.clear();
 	mEntities.clear();
 	mSceneNodes.clear();
-	if (!mBouncyPhysicsMaterial1.expired())
+	if (mBouncyPhysicsMaterial1)
 		mPWorld1->destroyMaterial( mBouncyPhysicsMaterial1 );
-	if (!mBouncyPhysicsMaterial2.expired())
+	if (mBouncyPhysicsMaterial2)
 		mPWorld1->destroyMaterial( mBouncyPhysicsMaterial2 );
 	//
 	DequeIterator<Views> it(mViews.begin(), mViews.end());
@@ -337,17 +341,21 @@ void MiniApp::cleanUp()
 	mViews.clear();
 	// destroy worlds before we destroy the underlying system plugins
 	mPWorld1.reset();
+#ifdef USE_SECOND_PHYSICS_PLUGIN
 	mPWorld2.reset();
+#endif
 	mGWorld.reset();
 	//
 	mGraphics.reset();
 	mPhysics1.reset();
+#ifdef USE_SECOND_PHYSICS_PLUGIN
 	mPhysics2.reset();
+#endif
 	// unload plugins
 	mLibs.clear();
 }
 
-std::ostream& operator << (std::ostream & o, const physics::IDynamicActor & rhs)
+std::ostream& operator << (std::ostream & o, const physics::IActor & rhs)
 {
 	Vector3 pos = rhs.getPosition();
 	o << "(" << pos.x << ", " << pos.y << ", " << pos.z << ")";
@@ -358,7 +366,9 @@ void MiniApp::run()
 {
 	using namespace physics;
 	YAKE_ASSERT( mPWorld1 );
+#ifdef USE_SECOND_PHYSICS_PLUGIN
 	YAKE_ASSERT( mPWorld2 );
+#endif
 
 	// setup physics materials
 /*	mBouncyPhysicsMaterial = mPWorld->createMaterial( IMaterial::Desc( 0.1, 0.1 ) );
@@ -366,8 +376,8 @@ void MiniApp::run()
 	*/
 
 	// create a simple static environment - world 1
-	WeakIStaticActorPtr pStaticWorldActor1 = mPWorld1->createStaticActor();
-	YAKE_ASSERT( pStaticWorldActor1.lock() );
+	IActorPtr pStaticWorldActor1 = mPWorld1->createActor(ACTOR_STATIC);
+	YAKE_ASSERT( pStaticWorldActor1 );
 	/*
 	  3-2
 	  |/|
@@ -387,15 +397,16 @@ void MiniApp::run()
 	TriangleMeshId groundMeshId = mPWorld1->createTriangleMesh(groundMeshDesc);
 	YAKE_ASSERT( kTriangleMeshIdNone != groundMeshId );
 
-	IShape* pStaticWorldShape1 = pStaticWorldActor1.lock()->createShape( IShape::TriMeshDesc( groundMeshId ) );
-	YAKE_ASSERT( pStaticWorldActor1.lock()->getShapes().size() == 1 )(pStaticWorldActor1.lock()->getShapes().size()).warning("no world shape!");
+	IShape* pStaticWorldShape1 = pStaticWorldActor1->createShape( IShape::TriMeshDesc( groundMeshId ) );
+	YAKE_ASSERT( pStaticWorldActor1->getShapes().size() == 1 )(pStaticWorldActor1->getShapes().size()).warning("no world shape!");
 
+#ifdef USE_SECOND_PHYSICS_PLUGIN
 	// create a simple static environment - world 2
-	WeakIStaticActorPtr pStaticWorldActor2 = mPWorld2->createStaticActor();
-	YAKE_ASSERT( pStaticWorldActor2.lock() );
-	pStaticWorldActor2.lock()->createShape( IShape::PlaneDesc( Vector3(0,1,0), 0 ) );
-	YAKE_ASSERT( pStaticWorldActor2.lock()->getShapes().size() == 1 )(pStaticWorldActor2.lock()->getShapes().size()).warning("no world shape!");
-
+	IActorPtr pStaticWorldActor2 = mPWorld2->createActor(ACTOR_STATIC);
+	YAKE_ASSERT( pStaticWorldActor2 );
+	pStaticWorldActor2->createShape( IShape::PlaneDesc( Vector3(0,1,0), 0 ) );
+	YAKE_ASSERT( pStaticWorldActor2->getShapes().size() == 1 )(pStaticWorldActor2->getShapes().size()).warning("no world shape!");
+#endif
 	// eye candy :P
 	createGroundPlane();
 	//createNinja();
@@ -426,9 +437,12 @@ void MiniApp::run()
 
 			// decide whether to spawn object in physics world 1 or two
 			static bool bUseWorldOne = true;
+#ifdef USE_SECOND_PHYSICS_PLUGIN
 			bUseWorldOne = !bUseWorldOne;
 			SharedPtr<physics::IWorld> pPWorld = bUseWorldOne ? mPWorld1 : mPWorld2;
-
+#else
+			SharedPtr<physics::IWorld> pPWorld = mPWorld1;
+#endif
 			// spawn the object
 			const Vector3 spawnOffset = bUseWorldOne ? Vector3(-5,0,0) : Vector3(5,0,0);
 			const Vector3 spawnPos = spawnOffset + Vector3(randomiser.randReal()*0.5,10,randomiser.randReal()*0.5);
@@ -446,7 +460,9 @@ void MiniApp::run()
 
 		// step the worlds
 		mPWorld1->step( timeElapsed );
+#ifdef USE_SECOND_PHYSICS_PLUGIN
 		mPWorld2->step( timeElapsed );
+#endif
 
 		// update graphics objects
 		ConstVectorIterator< ObjectList > itObj( objs.begin(), objs.end() );
@@ -456,11 +472,13 @@ void MiniApp::run()
 		// render the scene
 		mGWorld->render( timeElapsed );
 	}
-	mPWorld1->destroyActor( physics::WeakIActorPtr( pStaticWorldActor1 ) );
-	YAKE_ASSERT( pStaticWorldActor1.expired() );
+	mPWorld1->destroyActor( pStaticWorldActor1 );
+	pStaticWorldActor1 = 0;
 
-	mPWorld2->destroyActor( physics::WeakIActorPtr( pStaticWorldActor2 ) );
-	YAKE_ASSERT( pStaticWorldActor2.expired() );
+#ifdef USE_SECOND_PHYSICS_PLUGIN
+	mPWorld2->destroyActor( pStaticWorldActor2 );
+	pStaticWorldActor2 = 0;
+#endif
 }
 
 int main()

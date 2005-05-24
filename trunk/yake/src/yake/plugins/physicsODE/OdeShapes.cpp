@@ -93,38 +93,43 @@ namespace physics {
 		{
 			mMaterial = rMaterial;
 		}
-			
-		//-----------------------------------------------------
-		//	OdeMovableGeom
-		//-----------------------------------------------------
 		
 		//-----------------------------------------------------
-		 void OdeMovableGeom::setPosition( Vector3 const& rPosition )
+		 void OdeGeom::setPosition( Vector3 const& rPosition )
 		 {
- 			dGeomSetPosition( mOdeGeomID, rPosition.x, rPosition.y, rPosition.z );
+			if (getType() == ST_PLANE)
+				return;
+			dGeomSetPosition( mOdeGeomID, rPosition.x, rPosition.y, rPosition.z );
 		 }
 		 
 		//-----------------------------------------------------
-		Vector3 OdeMovableGeom::getPosition() const
+		Vector3 OdeGeom::getPosition() const
 		{
+			if (getType() == ST_PLANE)
+				return Vector3::kZero;
 			const dReal* pos = dGeomGetPosition( mOdeGeomID );
-			return Vector3( pos[0], pos[1], pos[2] );
+			return Vector3( real(pos[0]), real(pos[1]), real(pos[2]) );
 		}
 		
 		//-----------------------------------------------------
-		void OdeMovableGeom::setOrientation( Quaternion const& rOrientation )
+		void OdeGeom::setOrientation( Quaternion const& rOrientation )
 		{
+			if (getType() == ST_PLANE)
+				return;
 			const dQuaternion q = { rOrientation.w, rOrientation.x, rOrientation.y, rOrientation.z };
 			dGeomSetQuaternion( mOdeGeomID, q );
 		}
 		
 		//-----------------------------------------------------
-		Quaternion OdeMovableGeom::getOrientation() const
+		Quaternion OdeGeom::getOrientation() const
 		{
+			if (getType() == ST_PLANE)
+				return Quaternion::kIdentity;
+
 			dQuaternion q;
 			dGeomGetQuaternion( mOdeGeomID, q );
 			
-			return Quaternion( q[0], q[1], q[2], q[3] );
+			return Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) );
 		}
 
 		//-----------------------------------------------------
@@ -133,7 +138,7 @@ namespace physics {
 		
 		//-----------------------------------------------------
 		OdeTriMesh::OdeTriMesh( dSpace* pSpace, OdeActor* pOwner, dTriMeshDataID meshDataId ) :
-			OdeMovableGeom( pOwner )
+			OdeGeom( pOwner )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 			
@@ -254,7 +259,7 @@ namespace physics {
 
 		//-----------------------------------------------------
 		OdeSphere::OdeSphere( dSpace* pSpace, OdeActor* pOwner, real radius ) :
-			OdeMovableGeom( pOwner )
+			OdeGeom( pOwner )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 
@@ -280,7 +285,7 @@ namespace physics {
 
 		//-----------------------------------------------------			
 		OdeCCylinder::OdeCCylinder( dSpace* pSpace, OdeActor* pOwner, real radius, real length ) :
-			OdeMovableGeom( pOwner )
+			OdeGeom( pOwner )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 			
@@ -308,7 +313,7 @@ namespace physics {
 		
 		//-----------------------------------------------------			
 		OdeBox::OdeBox( dSpace* pSpace, OdeActor* pOwner, real sizex, real sizey, real sizez) : 
-			OdeMovableGeom( pOwner )
+			OdeGeom( pOwner )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 			
@@ -333,7 +338,7 @@ namespace physics {
 		
 		//-----------------------------------------------------
 		OdePlane::OdePlane( dSpace* pSpace, OdeActor* pOwner, real a, real b, real c, real d ) :
-			OdeStaticGeom( pOwner )
+			OdeGeom( pOwner )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );
 			
@@ -367,7 +372,7 @@ namespace physics {
 		
 		//-----------------------------------------------------
 		OdeTransformGeom::OdeTransformGeom( dSpace* pSpace, OdeActor* pOwner ) : 
-			OdeMovableGeom( pOwner ),
+			OdeGeom( pOwner ),
 			mAttachedGeom( NULL )
 		{
 			YAKE_ASSERT( pSpace ).debug( "Need a valid space!" );

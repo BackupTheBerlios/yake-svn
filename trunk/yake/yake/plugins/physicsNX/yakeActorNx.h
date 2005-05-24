@@ -27,7 +27,7 @@ namespace physics {
 	class BodyNx;
 	class ShapeNx;
 	class WorldNx;
-	class ActorNx : public IDynamicActor
+	class ActorNx : public IActor
 	{
 	private:
 		ActorNx(const ActorNx&);
@@ -36,19 +36,28 @@ namespace physics {
 		ActorNx( NxScene & rScene, WorldNx& rWorld, bool bDynamic );
 		virtual ~ActorNx();
 
-		virtual IBody& getBody() const;
-
 		virtual IShape* createShape( const IShape::Desc & rkShapeDesc );
 		virtual void destroyShape( IShape* pShape );
-		virtual const ShapePtrVector getShapes() const;
+		virtual IShapePtrList getShapes() const;
 
-		virtual void subscribeToCollisionEnteredSignal( const SignalCollision::slot_type & rkSlot );
-		virtual void subscribeToCollisionExitedSignal( const SignalCollision::slot_type & rkSlot );
+		virtual void setEnabled(const bool enabled);
+		virtual bool isEnabled() const;
+
+		virtual IBody* getBodyPtr() const;
+		virtual IBody& getBody() const;
 
 		virtual void setPosition( const Vector3 & rkPosition );
 		virtual Vector3 getPosition() const;
+
 		virtual void setOrientation( const Quaternion & rkOrientation );
 		virtual Quaternion getOrientation() const;
+
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL(public, void(ActorCollisionInfo&), CollisionEntered)
+		YAKE_MEMBERSIGNAL_FIRE_FN1(public, CollisionEntered, ActorCollisionInfo& info, info)
+
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL(public, void(ActorCollisionInfo&), CollisionExited)
+		YAKE_MEMBERSIGNAL_FIRE_FN1(public, CollisionExited, ActorCollisionInfo& info, info)
+			
 
 		// helpers
 		void onLastShapeIsAboutToDestroy();
@@ -57,8 +66,6 @@ namespace physics {
 			YAKE_ASSERT( mpNxActor );
 			return mpNxActor; 
 		}
-		SignalCollision	fireCollisionEntered;
-		SignalCollision	fireCollisionExited;
 	private:
 		NxActor*			mpNxActor;
 		NxScene&			mNxScene;

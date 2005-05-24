@@ -30,7 +30,11 @@ namespace physics {
 		BodyNx( NxActor* pActor, ActorNx* pActorNx );
 		virtual ~BodyNx();
 
-		virtual IDynamicActor& getActor() const;
+		virtual IActor& getActor() const;
+
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, bool, OnSleeping )
+		//YAKE_MEMBERSIGNAL_FIRE_FN1( public, OnSleeping, bool sleeping, sleeping )
+		YAKE_MEMBERSIGNAL_FIRE_FN0( public, OnSleeping )
 
 		virtual void setMass(const real mass);
 		virtual real getMass() const;
@@ -44,6 +48,7 @@ namespace physics {
 		virtual void setAngularVelocity(const Vector3 & rkVelocity);
 		virtual Vector3 getAngularVelocity() const;
 
+		virtual void addForce( const Force& force );
 		virtual void addForce( const Vector3 & rkForce );
 		virtual void addForceAtPos( const Vector3 & rkForce, const Vector3 & rkPos );
 		virtual void addForceAtLocalPos( const Vector3& rForce, const Vector3& rPos );

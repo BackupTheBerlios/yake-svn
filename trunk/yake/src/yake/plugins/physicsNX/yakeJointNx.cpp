@@ -59,15 +59,18 @@ namespace physics {
 	}
 	JointNx* JointNx::createFromDesc_( NxScene & rScene, const IJoint::DescBase & rkJointDesc )
 	{
+		//@todo handle case for "actor <-> static environment"
 		//@todo in debug: dynamic cast, in release: static cast
-		ActorNx & rActor1 = dynamic_cast<ActorNx&>(rkJointDesc.actor1);
-		ActorNx & rActor2 = dynamic_cast<ActorNx&>(rkJointDesc.actor2);
+		if (!rkJointDesc.actor0 || !rkJointDesc.actor1)
+			return 0;
+		ActorNx & rActor1 = dynamic_cast<ActorNx&>(*rkJointDesc.actor0);
+		ActorNx & rActor2 = dynamic_cast<ActorNx&>(*rkJointDesc.actor1);
 
 		const Deque<JointType>& jointTypes = getSupportedTypes_();
 		Deque<JointType>::const_iterator itFind = std::find(jointTypes.begin(), jointTypes.end(), rkJointDesc.type );
 		YAKE_ASSERT(jointTypes.end() != itFind);
 		if (jointTypes.end() == itFind)
-			return false; // unsupported type
+			return 0; // unsupported type
 
 		JointNx* pJoint = new JointNx(rScene);
 		YAKE_ASSERT( pJoint );

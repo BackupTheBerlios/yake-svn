@@ -54,17 +54,15 @@ namespace physics {
 		WorldNx();
 		virtual ~WorldNx();
 
-		virtual WeakIJointPtr createJoint( const IJoint::DescBase & rkJointDesc );
-		virtual WeakIStaticActorPtr createStaticActor( const IActor::Desc& rActorDesc = IActor::Desc() ) ;
-		virtual WeakIMovableActorPtr createMovableActor( const IMovableActor::Desc& rActorDesc = IMovableActor::Desc() );
-		virtual WeakIDynamicActorPtr createDynamicActor( const IDynamicActor::Desc& rActorDesc = IDynamicActor::Desc() );
-		virtual WeakPtr<ActorNx> _createActor(const IActor::Desc & rkActorDesc, bool bDynamic); // little helper
-		virtual WeakIAvatarPtr createAvatar( const IAvatar::Desc & rkAvatarDesc );
-		virtual WeakIMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc );
-		virtual void destroyJoint( WeakIJointPtr& rJoint );
-		virtual void destroyActor( WeakIActorPtr& rActor );
-		virtual void destroyAvatar( WeakIAvatarPtr& rAvatar );
-		virtual void destroyMaterial( WeakIMaterialPtr& rMaterial );
+		virtual IJointPtr createJoint( const IJoint::DescBase & rkJointDesc );
+		virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc(ACTOR_MOVABLE) );
+		virtual ActorNx* _createActor(const IActor::Desc & rkActorDesc);
+		virtual IAvatarPtr createAvatar( const IAvatar::Desc & rkAvatarDesc );
+		virtual IMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc );
+		virtual void destroyJoint( IJointPtr pJoint );
+		virtual void destroyActor( IActorPtr pActor );
+		virtual void destroyAvatar( IAvatarPtr pAvatar );
+		virtual void destroyMaterial( IMaterialPtr pMaterial );
 
 		virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc & rkTrimeshDesc );
 
@@ -73,14 +71,18 @@ namespace physics {
 		virtual Deque<String> getSupportedSolvers() const;
 		virtual bool useSolver( const String & rkSolver );
 		virtual String getCurrentSolver() const;
-		virtual const PropertyNameList getCurrentSolverParams() const;
+		virtual const StringVector getCurrentSolverParams() const;
 		virtual void setCurrentSolverParam( const String & rkName, const boost::any & rkValue );
+
+		virtual void setGlobalGravity( const Vector3& g );
+		virtual Vector3 getGlobalGravity() const;
 
 		virtual void step(const real timeElapsed);
 
-		PostStepSignal postStepSignal_;
-		virtual void subscribeToPostStep(const PostStepSignal::slot_type& slot)
-		{ postStepSignal_.connect( slot ); }
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PreStep )
+		YAKE_MEMBERSIGNAL_FIRE_FN0( public, PreStep )
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PostStep )
+		YAKE_MEMBERSIGNAL_FIRE_FN0( public, PostStep )
 
 		//-- NxUserContactReport interface
 		virtual NxU32 onPairCreated(NxActor& s1, NxActor& s2);
@@ -91,8 +93,8 @@ namespace physics {
 		void regActor_(NxActor* pNxActor, ActorNx* pActor);
 		void unregActor_(NxActor* pNxActor);
 
-		typedef Signal1<void(const real)> StepSignal;
-		StepSignal	stepSignal;
+		YAKE_MEMBERSIGNAL( public, void(const real), PreStepInternal )
+		YAKE_MEMBERSIGNAL_FIRE_FN1( public, PreStepInternal, const real dt, dt )
 
 	private:
 		String					mCurrentSolver;
@@ -101,16 +103,26 @@ namespace physics {
 		typedef AssocVector< NxActor*, ActorNx* > ContactActorMap;
 		ContactActorMap			mContactActors;
 
-		typedef Deque<SharedPtr<ActorNx> > ActorNxVector;
+		template<class VectorContainerType>
+		struct Deleter
+		{
+			void operator()(typename VectorContainerType::value_type pObj)
+			{
+				if (pObj)
+					delete pObj;
+			}
+		};
+
+		typedef std::list<ActorNx*> ActorNxVector;
 		ActorNxVector			mActors;
 
-		typedef Deque<SharedPtr<JointNx> > JointNxVector;
+		typedef std::list<JointNx*> JointNxVector;
 		JointNxVector			mJoints;
 
-		typedef Deque<SharedPtr<MaterialNx> > MaterialNxVector;
+		typedef std::list<MaterialNx*> MaterialNxVector;
 		MaterialNxVector		mMaterials;
 
-		typedef Deque<SharedPtr<AvatarNx> > AvatarNxVector;
+		typedef std::list<AvatarNx*> AvatarNxVector;
 		AvatarNxVector			mAvatars;
 	};
 

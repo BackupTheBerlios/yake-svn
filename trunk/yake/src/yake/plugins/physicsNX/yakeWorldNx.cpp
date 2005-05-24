@@ -38,10 +38,18 @@ namespace physics {
 	}
 	WorldNx::~WorldNx()
 	{
+		std::for_each( mAvatars.begin(), mAvatars.end(), Deleter<AvatarNxVector>() );
 		mAvatars.clear();
-		mJoints.clear();
+
+		std::for_each( mActors.begin(), mActors.end(), Deleter<ActorNxVector>() );
 		mActors.clear();
+
+		std::for_each( mJoints.begin(), mJoints.end(), Deleter<JointNxVector>() );
+		mJoints.clear();
+
+		std::for_each( mMaterials.begin(), mMaterials.end(), Deleter<MaterialNxVector>() );
 		mMaterials.clear();
+
 		TrimeshNxManager::destroyAll();
 		getNxSDK()->releaseScene( *mpScene );
 		mpScene = 0;
@@ -77,25 +85,46 @@ namespace physics {
 	void WorldNx::onContactNotify(NxContactPair &pair, NxU32 events)
 	{
 		//YAKE_LOG("WorldNx::onContactNotify()");
-		ContactActorMap::iterator it = mContactActors.find( pair.actors[0] );
-		if (it != mContactActors.end())
+		ContactActorMap::iterator it0 = mContactActors.find( pair.actors[0] );
+		ContactActorMap::iterator it1 = mContactActors.find( pair.actors[1] );
+		ActorCollisionInfo cInfo;
+		if (it0 != mContactActors.end())
 		{
-			YAKE_ASSERT( it->second );
-			if (NX_NOTIFY_ON_START_TOUCH & events)
-				it->second->fireCollisionEntered();
-			else if (NX_NOTIFY_ON_END_TOUCH & events)
-				it->second->fireCollisionExited();
+			YAKE_ASSERT( it0->second );
+			cInfo.pThis = it0->second;
 		}
-
-		it = mContactActors.find( pair.actors[1] );
-		if (it != mContactActors.end())
+		if (it1 != mContactActors.end())
 		{
-			YAKE_ASSERT( it->second );
-			if (NX_NOTIFY_ON_START_TOUCH & events)
-				it->second->fireCollisionEntered();
-			else if (NX_NOTIFY_ON_END_TOUCH & events)
-				it->second->fireCollisionExited();
+			YAKE_ASSERT( it1->second );
+			cInfo.pOther = it1->second;
 		}
+		if (cInfo.pThis)
+		{
+			if (NX_NOTIFY_ON_START_TOUCH & events)
+				it0->second->fireCollisionEntered(cInfo);
+			else if (NX_NOTIFY_ON_END_TOUCH & events)
+				it0->second->fireCollisionExited(cInfo);
+		}
+		if (cInfo.pOther)
+		{
+			YAKE_ASSERT( it1->second );
+			if (NX_NOTIFY_ON_START_TOUCH & events)
+				it1->second->fireCollisionEntered(cInfo);
+			else if (NX_NOTIFY_ON_END_TOUCH & events)
+				it1->second->fireCollisionExited(cInfo);
+		}
+	}
+	void WorldNx::setGlobalGravity( const Vector3& g )
+	{
+		YAKE_ASSERT( mpScene );
+		mpScene->setGravity( toNx( g ) );
+	}
+	Vector3 WorldNx::getGlobalGravity() const
+	{
+		YAKE_ASSERT( mpScene );
+		NxVec3 g;
+		mpScene->getGravity(g);
+		return fromNx( g );
 	}
 	bool WorldNx::init_()
 	{
@@ -137,11 +166,12 @@ namespace physics {
 			return;
 		if (timeElapsed < 0.0001)
 			return;
-		stepSignal( timeElapsed );
+		firePreStep();
+		firePreStepInternal( timeElapsed );
 		mpScene->simulate( timeElapsed );
 		mpScene->flushStream();
 		mpScene->fetchResults(NX_RIGID_BODY_FINISHED, true);
-		postStepSignal_();
+		firePostStep();
 	}
 	/*
 	WeakPtr<IMaterial> WorldNx::createMaterial( const IMaterial::Desc & rkMatDesc )
@@ -232,34 +262,34 @@ namespace physics {
 		mMaterials.erase( std::find(mMaterials.begin(), mMaterials.end(), rMaterial.lock() ) );
 	}
 	*/
-	WeakIMaterialPtr WorldNx::createMaterial( const IMaterial::Desc & rkMatDesc )
+	IMaterialPtr WorldNx::createMaterial( const IMaterial::Desc & rkMatDesc )
 	{
 		MaterialNx* pMaterial = new MaterialNx();
 		YAKE_ASSERT( pMaterial );
 		if (!pMaterial)
-			return WeakIMaterialPtr();
+			return 0;
 		pMaterial->_createFromDesc( rkMatDesc );
 
-		mMaterials.push_back( SharedPtr<MaterialNx>(pMaterial) );
-		return mMaterials.back();
+		mMaterials.push_back( pMaterial );
+		return pMaterial;
 	}
-	WeakIJointPtr WorldNx::createJoint( const IJoint::DescBase & rkJointDesc )
+	IJointPtr WorldNx::createJoint( const IJoint::DescBase & rkJointDesc )
 	{
 		YAKE_ASSERT( mpScene );
 		if (!mpScene)
-			return WeakIJointPtr();
+			return 0;
 		JointNx* pJoint = JointNx::createFromDesc_( *mpScene, rkJointDesc );
 		if (!pJoint)
-			return WeakIJointPtr();
-		mJoints.push_back( SharedPtr<JointNx>(pJoint) );
-		return mJoints.back();
+			return 0;
+		mJoints.push_back( pJoint );
+		return pJoint;
 	}
-	WeakPtr<ActorNx> WorldNx::_createActor(const IActor::Desc & rkActorDesc, bool bDynamic)
+	ActorNx* WorldNx::_createActor(const IActor::Desc & rkActorDesc)
 	{
-		ActorNx* pActor = new ActorNx( *mpScene, *this, bDynamic );
+		ActorNx* pActor = new ActorNx( *mpScene, *this, (rkActorDesc.type == ACTOR_DYNAMIC) );
 		YAKE_ASSERT( pActor );
 		if (!pActor)
-			return WeakPtr<ActorNx>();
+			return 0;
 
 		ConstDequeIterator< Deque< SharedPtr< IShape::Desc > > > itShape( rkActorDesc.shapes.begin(), rkActorDesc.shapes.end() );
 		while (itShape.hasMoreElements())
@@ -271,37 +301,19 @@ namespace physics {
 			pActor->createShape( *pShapeDesc );
 		}
 
-		mActors.push_back( SharedPtr<ActorNx>(pActor) );
-		return mActors.back();
+		mActors.push_back( pActor );
+		return pActor;
 	}
-	WeakIStaticActorPtr WorldNx::createStaticActor( const IActor::Desc & rkActorDesc )
+	IActorPtr WorldNx::createActor( const IActor::Desc& rActorDesc /*= IActor::Desc(ACTOR_MOVABLE)*/ )
 	{
 		YAKE_ASSERT( mpScene );
 		if (!mpScene)
-			return WeakIStaticActorPtr();
+			return 0;
 
 		std::cout << "NX: new static actor\n";
-		return _createActor(rkActorDesc,false);
+		return _createActor(rActorDesc);
 	}
-	WeakIMovableActorPtr WorldNx::createMovableActor( const IMovableActor::Desc & rkActorDesc )
-	{
-		YAKE_ASSERT( mpScene );
-		if (!mpScene)
-			return WeakIMovableActorPtr();
-
-		std::cout << "NX: new movable actor\n";
-		return _createActor(rkActorDesc,false);
-	}
-	WeakIDynamicActorPtr WorldNx::createDynamicActor( const IDynamicActor::Desc & rkActorDesc )
-	{
-		YAKE_ASSERT( mpScene );
-		if (!mpScene)
-			return WeakIDynamicActorPtr();
-
-		std::cout << "NX: new dynamic actor\n";
-		return _createActor(rkActorDesc,true);
-	}
-	WeakIAvatarPtr WorldNx::createAvatar( const IAvatar::Desc & rkAvatarDesc )
+	IAvatarPtr WorldNx::createAvatar( const IAvatar::Desc & rkAvatarDesc )
 	{
 		YAKE_ASSERT( mpScene );
 		AvatarNx* pAvatar = new AvatarNx(*mpScene, *this);
@@ -310,8 +322,8 @@ namespace physics {
 		pAvatar->setPosition( rkAvatarDesc.position );
 		pAvatar->setOrientation( rkAvatarDesc.orientation );
 
-		mAvatars.push_back( SharedPtr<AvatarNx>(pAvatar) );
-		return mAvatars.back();
+		mAvatars.push_back( pAvatar );
+		return pAvatar;
 	}
 	bool operator ==(const SharedPtr<JointNx>& lhs, const JointNx* rhs)
 	{
@@ -329,25 +341,29 @@ namespace physics {
 	{
 		return (lhs.get() == rhs);
 	}
-	void WorldNx::destroyJoint( WeakIJointPtr& pJoint )
+	void WorldNx::destroyJoint( IJointPtr pJoint )
 	{
-		YAKE_ASSERT( !pJoint.expired() );
-		mJoints.erase( std::find(mJoints.begin(), mJoints.end(), dynamic_cast<JointNx*>(pJoint.lock().get()) ) );
+		YAKE_ASSERT( pJoint );
+		mJoints.remove( static_cast<JointNx*>(pJoint) );
+		delete pJoint;
 	}
-	void WorldNx::destroyActor( WeakIActorPtr& pActor )
+	void WorldNx::destroyActor( IActorPtr pActor )
 	{
-		YAKE_ASSERT( !pActor.expired() );
-		mActors.erase( std::find(mActors.begin(), mActors.end(), dynamic_cast<ActorNx*>(pActor.lock().get()) ) );
+		YAKE_ASSERT( pActor );
+		mActors.remove( static_cast<ActorNx*>(pActor) );
+		delete pActor;
 	}
-	void WorldNx::destroyAvatar( WeakIAvatarPtr& pAvatar )
+	void WorldNx::destroyAvatar( IAvatarPtr pAvatar )
 	{
-		YAKE_ASSERT( !pAvatar.expired() );
-		mAvatars.erase( std::find(mAvatars.begin(), mAvatars.end(), dynamic_cast<AvatarNx*>(pAvatar .lock().get()) ) );
+		YAKE_ASSERT( pAvatar );
+		mAvatars.remove( static_cast<AvatarNx*>(pAvatar) );
+		delete pAvatar;
 	}
-	void WorldNx::destroyMaterial( WeakIMaterialPtr& pMaterial )
+	void WorldNx::destroyMaterial( IMaterialPtr pMaterial )
 	{
-		YAKE_ASSERT( !pMaterial.expired() );
-		mMaterials.erase( std::find(mMaterials.begin(), mMaterials.end(), dynamic_cast<MaterialNx*>(pMaterial.lock().get()) ) );
+		YAKE_ASSERT( pMaterial );
+		mMaterials.remove( static_cast<MaterialNx*>(pMaterial) );
+		delete pMaterial;
 	}
 	TriangleMeshId WorldNx::createTriangleMesh( const TriangleMeshDesc & rkTrimeshDesc )
 	{
@@ -391,9 +407,9 @@ namespace physics {
 	{
 		return mCurrentSolver;
 	}
-	const PropertyNameList WorldNx::getCurrentSolverParams() const
+	const StringVector WorldNx::getCurrentSolverParams() const
 	{
-		static PropertyNameList propNames;
+		static StringVector propNames;
 		return propNames;
 	}
 	void WorldNx::setCurrentSolverParam( const String & rkName, const boost::any & rkValue )
