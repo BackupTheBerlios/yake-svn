@@ -55,7 +55,7 @@ namespace physics {
 		ACTOR_MOVABLE,
 		ACTOR_DYNAMIC
 	};
-	class IActor : public ListenerManager<IActorListener>
+	class IActor : public Movable, public ListenerManager<IActorListener>
 	{
 	public:
 		struct Desc
@@ -76,11 +76,11 @@ namespace physics {
 		virtual IBody* getBodyPtr() const = 0;
 		virtual IBody& getBody() const = 0;
 
-		virtual void setPosition(const Vector3& position) = 0;
-		virtual Vector3 getPosition() const = 0;
+		//virtual void setPosition(const Vector3& position) = 0;
+		//virtual Vector3 getPosition() const = 0;
 
-		virtual void setOrientation( const Quaternion & rkOrientation ) = 0;
-		virtual Quaternion getOrientation() const = 0;
+		//virtual void setOrientation( const Quaternion & rkOrientation ) = 0;
+		//virtual Quaternion getOrientation() const = 0;
 
 		virtual void setEnabled(const bool enabled) = 0;
 		virtual bool isEnabled() const = 0;
