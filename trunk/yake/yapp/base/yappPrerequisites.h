@@ -38,4 +38,12 @@
 #	define YAPP_GUI_API DLLIMPORT
 #endif
 
+#define YAKE_MEMBER_SIGNAL( NAME, TYPE, ACCESS ) \
+	private: \
+		typedef ttl::sig::signal< TYPE > SigType##NAME; \
+		SigType##NAME	mSig##NAME; \
+	ACCESS: \
+		yake::SignalConnection connectTo##NAME( const SigType##NAME::slot_type& slot ) \
+		{ return mSig##NAME.connect(slot); }
+
 #endif
