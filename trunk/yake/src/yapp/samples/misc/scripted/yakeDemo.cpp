@@ -84,6 +84,7 @@ public:
 		YAKE_ASSERT( mEntLuaBinder );
 		if (mEntLuaBinder)
 			theSim.addEntityVMBinder( mEntLuaBinder.get(), false );
+		theSim.addEntityVMBinder( new yake::ent::lua::MathBinder() );
 		// add special callback (no direct deps on lua via interface!)
 		theSim.getEvent_onEntitySpawned().addCallback( ent::lua::createEntitySpawnedCb() );
 		theSim.getEvent_onEntityVMCreated().addCallback( ent::lua::createEntityVMCreatedCb() );
