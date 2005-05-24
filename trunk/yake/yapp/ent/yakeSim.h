@@ -43,6 +43,9 @@ namespace ent {
 		void addEntityVMBinder( scripting::IBinder* pBinder, const bool bTransferOwnership = true );
 		entity* createEntity( const EntityClassId& id, const String& scriptFile );
 
+		graphics::IWorld* getGraphicsWorld() const
+		{ return mpGWorld; }
+
 		// temp
 		static sim& getSim();
 		

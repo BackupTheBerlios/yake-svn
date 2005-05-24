@@ -141,10 +141,13 @@ namespace ent {
 	{
 	public:
 		void setGraphical( GraphicalModel* pModel );
+		GraphicalModel* getGraphical() const;
 
 		DECLARE_ENTITY(pawn)
 	protected:
 		pawn();
+	private:
+		SharedPtr<GraphicalModel>	mGraphical;
 	};
 
 	class YAKE_ENT_API light : public entity
