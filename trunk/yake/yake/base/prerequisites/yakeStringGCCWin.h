@@ -18,53 +18,55 @@
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_BASE_PCH_H
-#define YAKE_BASE_PCH_H
+#ifndef YAKE_BASE_PLATTFORM_STRINGGCC_H
+#define YAKE_BASE_PLATTFORM_STRINGGCC_H
 
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
-#include "yakePrerequisites.h"
+// Standard headers
+#ifndef YAKE_BASE_PREREQUISITES_H
+#	include <yakePrerequisites.h>
+#endif
 
-#include "templates/yakeSmartAssert.h"
-#include "templates/yakeRegistry.h"
-#include "templates/yakeVector.h"
-#include "templates/yakePointer.h"
-#include <yake/base/templates/yakeDeque.h>
-#include <yake/base/templates/delete.h>
+//============================================================================
+//    INTERFACE STRUCTURES / UTILITY CLASSES
+//============================================================================
+namespace yake
+{
 
-#include <yake/base/mpl/yakeAbstractFactory.h>
-#include <yake/base/mpl/sequences.h>
+typedef std::string YAKE_BASE_STRING;
 
-#include "yakePrerequisites.h"
-#include "yakeVersion.h"
-#include "yakeString.h"
-#include "yakeException.h"
-#include "yakeLog.h"
-#include "yakeOutputStream.h"
-#include "yakeUniqueName.h"
-#include "yakePlugin.h"
-//#include "yakeDebugOutputStream.h"
-#include "yakeLibrary.h"
-#include <yake/base/type_info.h>
+} // yake
 
-#include "math/yakeQuaternion.h"
-#include "math/yakeVector3.h"
-#include "math/yakeVector4.h"
-#include "math/yakeMatrix3.h"
-#include "math/yakeMatrix4.h"
-#include "math/yakeColor.h"
-#include "math/yakeGeometry.h"
-#include "math/yakeSimpleSpline.h"
-#include "math/yakePlane.h"
-#include "math/yakeRay.h"
+#include <ext/hash_fun.h>
 
-#include "yakeParamHolder.h"
-#include "yakeMovable.h"
-#include "yakeCommandInterface.h"
+#ifndef GNU_STD_EXTENSION_HASH_STRING
+#define GNU_STD_EXTENSION_HASH_STRING
+namespace __gnu_cxx
+{
 
-#include "yakeTimer.h"
+template <> struct hash< yake::YAKE_BASE_STRING >
+{
+size_t operator()( const yake::YAKE_BASE_STRING _stringBase ) const 
+{ 
+	/* This is the PRO-STL way, but it seems to cause problems with VC7.1
+	* and in some other cases (although I can't recreate it)
+	* hash<const char*> H;
+	* return H(_stringBase.c_str());
+	*/
+	/** This is our custom way */
+	register size_t ret = 0;
+	for( yake::YAKE_BASE_STRING::const_iterator it = _stringBase.begin(); it != _stringBase.end(); ++it )
+	ret = 5 * ret + *it;
+	return ret;
+}
+};
+
+} // __gnu_cxx
+#endif //GNU_STD_EXTENSION_HASH_STRING
+
+typedef ::__gnu_cxx::hash < yake::YAKE_BASE_STRING > _StringHash;
 
 
-
-#endif // YAKE_BASE_PCH_H
+#endif

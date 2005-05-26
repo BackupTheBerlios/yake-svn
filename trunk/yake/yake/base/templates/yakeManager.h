@@ -185,7 +185,7 @@ template
 	template< typename, class > class ManagerContainerPolicy_ = DefaultContainer,
 	template< typename, class > class ManagerErrorPolicy_ = DefaultManagerError
 >
-class Manager : public ManagerNamingPolicy_::Map< Identifier_, Value_, ManagerContainerPolicy_, DefaultManagerError >
+class Manager : public ManagerNamingPolicy_::template Map< Identifier_, Value_, ManagerContainerPolicy_, DefaultManagerError >
 {
 // Class
 public:
@@ -196,16 +196,16 @@ public:
 	typedef typename Container::iterator iterator;
 
 	iterator begin() 
-	{ return mContainer.begin(); }
+	{ return ManagerContainerPolicy_< Identifier_, Value_ >::mContainer.begin(); }
 
 	iterator end() 
-	{ return mContainer.end(); }
+	{ return ManagerContainerPolicy_< Identifier_, Value_ >::mContainer.end(); }
 };
 
 // Todo: nifty container, function parameters
 /* Policy Builder */
 template< typename Identifier_, class ManagerNamingPolicy_ >
-class Manager< Identifier_, mpl::null_type, ManagerNamingPolicy_ > : public ManagerNamingPolicy_::Vector< Identifier_ >
+class Manager< Identifier_, mpl::null_type, ManagerNamingPolicy_ > : public ManagerNamingPolicy_::template Vector< Identifier_ >
 {
 // Class
 public:

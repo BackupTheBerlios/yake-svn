@@ -29,6 +29,14 @@
 #include <ctime>
 #include <math.h>
 #include <cmath>
+#if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_GNUC)
+	#ifdef min
+		   #undef min
+	#endif
+	#ifdef max
+		   #undef max
+	#endif
+#endif
 #include <limits>
 #include <cstdio>
 #include <stdio.h>
@@ -84,8 +92,11 @@
 #define _STLP_USE_DYNAMIC_LIB
 
 // Boost / TTL
-//#define YAKE_SIGNALS_USE_BOOST
-#define YAKE_SIGNALS_USE_TTL
+#if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_GNUC)
+	#define YAKE_SIGNALS_USE_BOOST
+#else
+	#define YAKE_SIGNALS_USE_TTL
+#endif
 
 // Helper macros
 // todo: remove, deprecated, use safe_delete(_array)

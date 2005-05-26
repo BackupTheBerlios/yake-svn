@@ -56,11 +56,7 @@
 #endif
 
 #if defined( YAKE_SIGNALS_USE_BOOST )
-/*
-#	define SIG boost
-#	define FUNC boost
-//#	define Bind boost::bind
-#	define Ref( REFOBJECT ) boost::ref( REFOBJECT )
+#	pragma message("Yake signal config: yake.base.templates.signals.boost")
 #	if YAKE_COMPILER == COMPILER_MSVC && YAKE_COMP_VER > 1300
 #		define Bind0( METHOD, OBJECT ) boost::bind( METHOD, OBJECT, _1 )
 #	else
@@ -72,17 +68,21 @@
 #	define BindRef0( METHOD, REFOBJECT ) boost::bind( METHOD, boost::ref( REFOBJECT ) )
 	// We're using the portable/compatible syntax for Signal even though some compilers
 	// would be able to process what boost calls the 'preferred' syntax.
-#	define Signal0 SIG::signal0
-#	define Signal1 SIG::signal1
-#	define Signal2 SIG::signal2
-#	define Signal3 SIG::signal3
-#	define Function0 FUNC::function0
-#	define Function1 FUNC::function1
-#	define Function2 FUNC::function2
-#	define Function3 FUNC::function3
-	typedef SIG::signals::connection SignalConnection;
+#	define Signal0 boost::signal
+#	define Signal1 boost::signal
+#	define Signal2 boost::signal
+#	define Signal3 boost::signal
+#	define Function0 boost::function0
+#	define Function1 boost::function1
+#	define Function2 boost::function2
+#	define Function3 boost::function3
+	typedef boost::signals::connection SignalConnection;
+/*
+#	define SIG boost
+#	define FUNC boost
+//#	define Bind boost::bind
+#	define Ref( REFOBJECT ) boost::ref( REFOBJECT )
 */
-#	error("Yake signal error: Boost as signals provider not longer supported")
 #elif defined( YAKE_SIGNALS_USE_TTL )
 #	pragma message("Yake signal config: yake.base.templates.signals.ttl")
 

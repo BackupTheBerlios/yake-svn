@@ -48,16 +48,6 @@ namespace detail
     }
   };
 
-  template<>
-  struct getBasePointer1< false >
-  {
-    template< typename T >
-    static void* execute( T* pointer )
-    {
-      return getBasePointer2< IsPolymorphic< T >::value >::execute( pointer );
-    }
-  };
-
   template< bool bIsPolymorphic >
   struct getBasePointer2
   {
@@ -79,6 +69,16 @@ namespace detail
 	void* p = static_cast< void* >( pointer );
 
 	return p;
+    }
+  };
+
+  template<>
+  struct getBasePointer1< false >
+  {
+    template< typename T >
+    static void* execute( T* pointer )
+    {
+      return getBasePointer2< IsPolymorphic< T >::value >::execute( pointer );
     }
   };
 } // detail

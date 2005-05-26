@@ -65,17 +65,19 @@ T join( const std::vector< T >& what, const T& separator );
 template< typename T >
 std::vector< T > split( const T& where, const T& separator );
 
+/*
 template< typename From, typename To >
 To safe_reinterpret_cast( From from )
 {
 	COMPILE_TIME_CHECK( sizeof(From) <= sizeof(To), Destination_Type_Too_Narrow );
 	return reinterpret_cast< To >( from );
 }
+*/
 
 } // mpl
 } // base
 } // yake
 
-#include "yakeCast.inl"
+//#include "yakeCast.inl"
 
 #endif // YAKE_BASE_MPL_CAST_H

@@ -206,7 +206,7 @@ public:
 			mCurrent( start ), mEnd( end )
 		{
 		}
-		DequeIterator(typename T& container) :
+		DequeIterator(T& container) :
 			mCurrent( container.begin() ), mEnd( container.end() )
 		{
 		}
@@ -247,7 +247,7 @@ public:
 			mCurrent( start ), mEnd( end )
 		{
 		}
-		ConstDequeIterator(typename T& container) :
+		ConstDequeIterator(T& container) :
 			mCurrent( container.begin() ), mEnd( container.end() )
 		{
 		}
