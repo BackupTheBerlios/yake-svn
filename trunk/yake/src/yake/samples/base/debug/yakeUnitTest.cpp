@@ -62,13 +62,13 @@ int main()
 	catch( const Exception & ex )
 	{
 		YAKE_LOG_ERROR( "Yet another dilemma!" )
-		DebugOutputStream::instance() << ex.what();
+		std::cout << ex.what();
 	}
 
 	// Print some stuff
 	YAKE_LOG_INFORMATION( native::getApplicationDir() )
 	YAKE_LOG_WARNING( "Alert!" )
-	DebugOutputStream::instance() << "hello, I am a your friendly debug stream!";
+	std::cout << "hello, I am a your friendly debug stream!";
 
 	// Smart assert
 	YAKE_ASSERT( false == true ).debug( "Smart assert is working, obviously!" );
