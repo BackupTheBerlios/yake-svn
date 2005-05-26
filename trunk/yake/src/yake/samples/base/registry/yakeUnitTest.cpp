@@ -105,7 +105,7 @@ int main()
 
 	SharedPtr< INetworkDriver > pNetDriver = create_default< INetworkDriver >();
 
-	DebugOutputStream::instance() << pNetDriver->resolveHost();
+	std::cout << pNetDriver->resolveHost();
 
 	// Wait for a keystroke (in debug builds only).
 #if defined( YAKE_DEBUG_BUILD )

@@ -31,13 +31,13 @@ int main()
 	YAKE_LOG_INFORMATION("Creating concrete implementation...")
 	SharedPtr<INetworkDriver> pNetDriver = create_default<INetworkDriver>();
 	// Huhu my new friend
-	DebugOutputStream::instance() << pNetDriver->sayHelloMyFriend();
+	std::cout << pNetDriver->sayHelloMyFriend();
 
 	// Get the concrete implementation
 	YAKE_LOG_INFORMATION("Creating second concrete implementation...")
 	SharedPtr<INetworkDriver2> pNetDriver2 = create_default<INetworkDriver2>(12345);
 	// Huhu my new friend
-	DebugOutputStream::instance() << pNetDriver2->sayHelloMyFriend();
+	std::cout << pNetDriver2->sayHelloMyFriend();
 
 	// Wait for a keystroke (in debug builds only).
 #if defined( YAKE_DEBUG_BUILD )

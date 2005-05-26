@@ -33,7 +33,7 @@ int main()
 	SharedPtr< INetworkDriver > pNetDriver = create_default< INetworkDriver >();
 
 	// Huhu my new friend
-	DebugOutputStream::instance() << pNetDriver->sayHelloMyFriend();
+	YAKE_LOG_INFORMATION( pNetDriver->sayHelloMyFriend() );
 
 	// Destroy the object BEFORE the dll is unloaded, otherwise 
 	// the destructor code would be not available
