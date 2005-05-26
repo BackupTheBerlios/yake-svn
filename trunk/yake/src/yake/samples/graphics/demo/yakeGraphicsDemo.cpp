@@ -30,7 +30,7 @@ private:
 	SharedPtr< IWorld >					mGWorld;
 
 	graphics::ISceneNode*				mLightOneNode;
-	graphics::ISceneNode*				mLightTwoNode;
+	graphics::ILight*					mLightOne;
 
 	struct SimpleOne {
 		graphics::ISceneNode*			pSN;
@@ -42,6 +42,9 @@ private:
 	SharedPtr<graphics::ISceneNode>		mSunLightNode;
 
 	SimpleSpline						mCamPath;
+
+	graphics::StringVector				mTechniques;
+	size_t								mCurrentTechnique;
 public:
 	TheApp() : ExampleApplication( true /*graphics*/,
 					false /*physics*/,
@@ -50,17 +53,73 @@ public:
 					false /*script bindings*/,
 					false /*audio*/),
 				mLightOneNode(0),
-				mLightTwoNode(0)
+				mCurrentTechnique(0)
 	{
 		mNinja.pSN = 0;
 		mGround.pSN = 0;
 	}
 
+	void changeShadowTechnique()
+	{
+		if (mTechniques.empty())
+			return;
+
+		mCurrentTechnique = ++mCurrentTechnique % mTechniques.size();
+		const String& name = mTechniques[mCurrentTechnique];
+		graphics::StringMap params;
+		//if (name == "texture_modulative")
+		{
+			params["tex_size"] = "1024";
+			params["tex_count"] = "3";
+			params["far_distance"] = "1000";
+			params["directional_light_extrusion_distance"] = "1000";
+		}
+		mGWorld->selectShadowTechnique( mTechniques[mCurrentTechnique], params );
+		if (name == "stencil_additive")
+		{
+			mSunLight->setCastsShadows( true );
+
+            mLightOne->setType(ILight::LT_POINT);
+            mLightOne->setCastsShadows(true);
+			mLightOne->setDiffuseColour( Color(0.9,0.7,0.7) );
+			mLightOne->setSpecularColour( Color(1,1,1) );
+            mLightOne->setAttenuation(8000,1,0.0005,0);
+		}
+		else if (name == "stencil_modulative")
+		{
+			// use only one light.
+			mSunLight->setCastsShadows( false );
+
+			mLightOne->setType(ILight::LT_POINT);
+            mLightOne->setCastsShadows( true );
+			mLightOne->setDiffuseColour( Color(0.9,0.7,0.7) );
+			mLightOne->setSpecularColour( Color(1,1,1) );
+            mLightOne->setAttenuation(8000,1,0.0005,0);
+		}
+		else if (name == "texture_modulative")
+		{
+			mSunLight->setCastsShadows( true );
+
+			// Change fixed point light to spotlight
+            mLightOne->setType(ILight::LT_SPOT);
+            mLightOne->setDirection(-Vector3::kUnitZ);
+            mLightOne->setCastsShadows(true);
+			mLightOne->setDiffuseColour( Color(0.9,0.7,0.7) );
+			mLightOne->setSpecularColour( Color(1,1,1) );
+            mLightOne->setAttenuation(8000,1,0.0005,0);
+            mLightOne->setSpotlightRange(80,90,1);
+		}
+		std::cout << "SHADOW TECHNIQUE: " << name.c_str() << "\n";
+	}
+
 	void onKey(const yake::input::KeyboardEvent & e)
 	{
-		std::cout << "KEY: " << e.keyCode << std::endl;
 		if (e.keyCode == input::KC_ESCAPE)
 			requestShutdown();
+		else if (e.keyCode == input::KC_T)
+		{
+			changeShadowTechnique();
+		}
 	}
 	void onMB(uint8 btn)
 	{
@@ -72,8 +131,8 @@ public:
 		ICamera* pC = mGWorld->createCamera();
 		YAKE_ASSERT( pC );
 		pC->setNearClipDistance( 1. );
-
-		pC->setFarClipDistance( 2000 );
+        // incase infinite far distance is not supported
+        pC->setFarClipDistance(100000);
 
 		mVPs.push_back( std::pair<IViewport*,ICamera*>(mGWorld->createViewport( pC ), pC) );
 		size_t idx = mVPs.size()-1;
@@ -119,56 +178,33 @@ public:
 		mSunLightNode.reset( mGWorld->createSceneNode() );
 		mSunLightNode->attachLight( mSunLight.get() );
 
-		//mSunLight->setType(ILight::LT_SPOT);
-		mSunLight->setType(ILight::LT_DIRECTIONAL);
-        mSunLightNode->setPosition(Vector3(-1000,1250,500));
-        Vector3 dir;
-        dir = -mSunLightNode->getPosition();
-        dir.normalise();
-        mSunLight->setDirection(dir);
+		mSunLight->setType(ILight::LT_SPOT);
+		//mSunLight->setType(ILight::LT_DIRECTIONAL);
+        mSunLightNode->setPosition(Vector3(1000,1250,500));
+		mSunLight->setSpotlightRange(30,50,1);
+        Vector3 dir = -mSunLightNode->getPosition();
+        mSunLight->setDirection(dir.normalisedCopy());
         mSunLight->setDiffuseColour(Color(0.35, 0.35, 0.38));
         mSunLight->setSpecularColour(Color(0.9, 0.9, 1));
-		mSunLight->setCastsShadow( true );
-		//mSunLight->setSpotlightRange(80,90,1);
 
 		// movable light 1
 		YAKE_ASSERT(0==mLightOneNode);
 		mLightOneNode = mGWorld->createSceneNode();
 		YAKE_ASSERT( mLightOneNode );
-		graphics::ILight* pL = mGWorld->createLight();
-		YAKE_ASSERT( pL );
-		mLightOneNode->attachLight( pL );
-		pL->setDiffuseColour( Color(0.6,0.7,0.8) );
-		pL->setSpecularColour( Color(1,1,1) );
-		pL->setAttenuation( 8000, 1, 0.0005, 0 );
+		mLightOne = mGWorld->createLight();
+		YAKE_ASSERT( mLightOne );
+		mLightOneNode->attachLight( mLightOne );
+		mLightOne->setType( graphics::ILight::LT_POINT );
+		//mLightOne->setType( graphics::ILight::LT_SPOT );
+		mLightOne->setDiffuseColour( Color(0.6,0.7,0.8) );
+		mLightOne->setSpecularColour( Color(1,1,1) );
+		mLightOne->setAttenuation( 8000, 1, 0.0005, 0 );
 
-//		pL->setType( graphics::ILight::LT_POINT );
-		pL->setType( graphics::ILight::LT_SPOT );
-		pL->setDirection( Vector3(0,0,1) );
-		pL->setSpotlightRange(80,100,1);
-		pL->setCastsShadow( true );
+		//mLightOne->setDirection( Vector3(0,0,1) );
+		//mLightOne->setSpotlightRange(80,100,1);
+		//mLightOne->setCastsShadows( true );
 
         mLightOneNode->setPosition(Vector3(300,250,-300));
-
-		// movable light 2
-		YAKE_ASSERT(0==mLightTwoNode);
-		mLightTwoNode = mGWorld->createSceneNode();
-		YAKE_ASSERT( mLightTwoNode );
-		pL = mGWorld->createLight();
-		YAKE_ASSERT( pL );
-		mLightTwoNode->attachLight( pL );
-		pL->setDiffuseColour( Color(0.6,0.7,0.8) );
-		pL->setSpecularColour( Color(1,1,1) );
-		pL->setAttenuation( 8000, 1, 0.0005, 0 );
-
-		pL->setType( graphics::ILight::LT_SPOT );
-		Vector3 n(0,-1,-1);
-		n.normalise();
-		pL->setDirection( n );
-		pL->setSpotlightRange(80,100,1);
-		pL->setCastsShadow( true );
-
-        mLightTwoNode->setPosition(Vector3(0,150,0));
 	}
 
 	void setupScene()
@@ -258,8 +294,6 @@ public:
 		//createCameraViewportPair( 0.0, 0.5, 0.5, 0.5, 12 );
 		//createCameraViewportPair( 0.5, 0.5, 0.5, 0.5, 13 );
 
-		mGWorld->setShadowsEnabled( true );
-
 		if (mVPs[0].second)
 		{
 			mVPs[0].second->translate( Vector3(0,100,700) );
@@ -291,6 +325,10 @@ public:
 		setupNinja();
 		setupGround();
 		setupScene();
+
+		mTechniques = mGWorld->getShadowTechniques();
+		changeShadowTechnique();
+		mGWorld->setShadowsEnabled( true );
 
 		// main loop
 		real lastTime = base::native::getTime();
@@ -336,16 +374,6 @@ public:
 			mLightOneNode->setFixedYawAxis( Vector3(0,1,0) );
 			mLightOneNode->lookAt( Vector3(0,0,0) );
 
-			std::cout << p1 << " | " << mLightOneNode->getPosition().x << ", " << mLightOneNode->getPosition().y << ", " << mLightOneNode->getPosition().z << "\n";
-
-			/*static real l1v = 200;
-			Vector3 v(l1v * timeElapsed, 0, 0);
-			mLightOneNode->translate( v );
-			if (fabs(mLightOneNode->getPosition().x) > 800)
-			{
-				l1v *= -1;
-				mLightOneNode->translate( -v );
-			}*/
 			static real sunv = 100;
 			Vector3 v(0, 0, sunv * timeElapsed);
 			mSunLightNode->translate( v );
@@ -354,8 +382,6 @@ public:
 				sunv *= -1;
 				mSunLightNode->translate( -v );
 			}
-
-			mLightTwoNode->setPosition( mVPs[0].second->getPosition() + Vector3(100,100,0) );
 
 			// render the scene
 			if (!shutdownRequested())

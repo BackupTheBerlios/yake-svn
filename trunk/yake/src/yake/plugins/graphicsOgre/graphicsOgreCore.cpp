@@ -274,8 +274,8 @@ namespace ogre3d {
 				{
 					mSceneMgr->setWorldGeometry( itFind->second );
 				}
-				mSceneMgr->setAmbientLight( ColourValue(0.5,0.5,0.7) );
 			}
+			mSceneMgr->setAmbientLight( ColourValue(0.2,0.2,0.2) );
 		}
 
 		//if (mReady && mRWin && mRSys)

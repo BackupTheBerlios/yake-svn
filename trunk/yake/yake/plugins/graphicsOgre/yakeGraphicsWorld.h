@@ -46,6 +46,9 @@ namespace ogre3d {
 	public:
 		GraphicalWorld();
 		virtual ~GraphicalWorld();
+
+		virtual StringVector getShadowTechniques() const;
+		virtual bool selectShadowTechnique(const String& name, const StringMap& params);
 		/** Globally activates the default shadowing method, often stencil shadows.	*/
 		void setShadowsEnabled( bool enabled );
 
@@ -77,6 +80,9 @@ namespace ogre3d {
 
 		typedef std::map< Ogre::Entity*, OgreEntity* > EntityMap;
 		EntityMap				mEntityMap;
+
+		String					mCurrentShadowTechnique;
+		StringMap				mCurrentShadowTechniqueParams;
 	};
 
 } // ogre3d

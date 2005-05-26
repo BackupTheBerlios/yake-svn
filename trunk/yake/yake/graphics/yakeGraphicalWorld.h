@@ -74,7 +74,7 @@ namespace graphics {
 		virtual LightType getType() const = 0;
 
 		virtual void setEnabled( bool enabled ) = 0;
- 		virtual void setCastsShadow( bool enabled ) = 0;
+ 		virtual void setCastsShadows( bool enabled ) = 0;
 
 		virtual void setDiffuseColour( const Color & colour ) = 0;
 		virtual void setSpecularColour( const Color & colour ) = 0;
@@ -226,6 +226,9 @@ namespace graphics {
 
 	class IMeshGeometryAccess;
 
+	typedef Deque<String> StringVector;
+	typedef std::map<String,String> StringMap;
+
 	/** A graphics world.
 	*/
 	class YAKE_GRAPHICS_INTERFACE_API IWorld
@@ -255,6 +258,8 @@ namespace graphics {
 		*/
 		virtual IViewport* createViewport( ICamera * pCamera ) = 0;
 
+		virtual StringVector getShadowTechniques() const = 0;
+		virtual bool selectShadowTechnique(const String& name, const StringMap& params) = 0;
 		/** Globally activates the default shadowing method, often stencil shadows.	*/
 		virtual void setShadowsEnabled( bool enabled ) = 0;
 

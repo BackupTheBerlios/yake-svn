@@ -56,6 +56,16 @@ namespace ogre3d {
 	GraphicalWorld::GraphicalWorld() : mpRaySceneQuery(0)
 	{
 		YAKE_ASSERT( msCore );
+
+		StringMap params;
+		params["tex_size"] = "1024";
+		params["tex_count"] = "3";
+		params["colour.r"] = "0.7";
+		params["colour.g"] = "0.7";
+		params["colour.b"] = "0.7";
+		params["far_distance"] = "75";
+		params["directional_light_extrusion_distance"] = "500";
+		selectShadowTechnique("texture_modulative", params);
 	}
 
 	GraphicalWorld::~GraphicalWorld()
@@ -113,6 +123,43 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
+	StringVector GraphicalWorld::getShadowTechniques() const
+	{
+		YAKE_ASSERT( msCore ).debug("need a core!");
+		static StringVector s_availableTechniques;
+		if (s_availableTechniques.empty())
+		{
+			s_availableTechniques.push_back("stencil_additive");
+			s_availableTechniques.push_back("stencil_modulative");
+			s_availableTechniques.push_back("texture_modulative");
+		}
+		return s_availableTechniques;
+	}
+	//-----------------------------------------------------
+	bool GraphicalWorld::selectShadowTechnique(const String& name, const StringMap& params)
+	{
+		mCurrentShadowTechniqueParams.clear();
+		mCurrentShadowTechnique = "";
+		StringVector techniques = getShadowTechniques();
+		if (techniques.end() == std::find(techniques.begin(), techniques.end(), name))
+		{
+			return false;
+		}
+		mCurrentShadowTechnique = name;
+		mCurrentShadowTechniqueParams = params;
+		if (msCore->getSceneMgr())
+		{
+			if (msCore->getSceneMgr()->getShadowTechnique() != Ogre::SHADOWTYPE_NONE)
+				setShadowsEnabled( true );
+		}
+		return true;
+	}
+
+	template<class T>
+		bool contains(const T& mapContainer, const typename T::key_type& key)
+	{ return (mapContainer.end() != mapContainer.find(key)); }
+
+	//-----------------------------------------------------
 	void GraphicalWorld::setShadowsEnabled( bool enabled )
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
@@ -120,14 +167,57 @@ namespace ogre3d {
 		YAKE_ASSERT( pSceneMgr ).debug("need a scene manager!");
 		if (enabled)
 		{
-			//pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_STENCIL_ADDITIVE );
-			//pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_STENCIL_MODULATIVE );
-			pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_TEXTURE_MODULATIVE );
-			pSceneMgr->setShadowTextureSize( 1024 );
-			pSceneMgr->setShadowDirectionalLightExtrusionDistance( 500 );
-			pSceneMgr->setShadowFarDistance( 75 );
-			pSceneMgr->setShadowTextureCount( 3 );
-			pSceneMgr->setShadowColour( Ogre::ColourValue(0.7,0.7,0.7) );
+			if (mCurrentShadowTechnique.empty())
+			{
+				pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_NONE );
+				YAKE_GRAPHICS_EXCEPT("No shadowing technique selected!");
+			}
+
+			StringMap& params = mCurrentShadowTechniqueParams;
+			int texSize = 1024;
+			if (contains(params,"tex_size"))
+				texSize = StringUtil::parseInt(params["tex_size"]);
+
+			int texCount = 3;
+			if (contains(params,"tex_count"))
+				texCount = StringUtil::parseInt(params["tex_count"]);
+
+			Color colour(0.6f,0.6f,0.6f,1.0f);
+			if (contains(params,"colour.r"))
+				colour.r = StringUtil::parseReal(params["colour.r"]);
+			if (contains(params,"colour.g"))
+				colour.g = StringUtil::parseReal(params["colour.g"]);
+			if (contains(params,"colour.b"))
+				colour.b = StringUtil::parseReal(params["colour.b"]);
+
+			real farDistance = 100;
+			if (contains(params,"far_distance"))
+				farDistance = StringUtil::parseReal(params["far_distance"]);
+
+			real directionalLightExtrusionDistance = 100;
+			if (contains(params,"directional_light_extrusion_distance"))
+				directionalLightExtrusionDistance = StringUtil::parseReal(params["directional_light_extrusion_distance"]);
+
+			if (mCurrentShadowTechnique == "texture_modulative")
+			{
+				pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_TEXTURE_MODULATIVE );
+				pSceneMgr->setShadowTextureSize( texSize );
+				pSceneMgr->setShadowTextureCount( texCount );
+			}
+			else if (mCurrentShadowTechnique == "stencil_additive")
+			{
+				pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_STENCIL_ADDITIVE );
+			}
+			else if (mCurrentShadowTechnique == "stencil_modulative")
+			{
+				pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_STENCIL_MODULATIVE );
+			}
+			else
+				pSceneMgr->setShadowTechnique( Ogre::SHADOWTYPE_NONE );
+
+			pSceneMgr->setShadowDirectionalLightExtrusionDistance( directionalLightExtrusionDistance );
+			pSceneMgr->setShadowFarDistance( farDistance );
+			pSceneMgr->setShadowColour( Ogre::ColourValue(colour.r,colour.g,colour.b,colour.a) );
 			pSceneMgr->setShowDebugShadows( false );
 		}
 		else

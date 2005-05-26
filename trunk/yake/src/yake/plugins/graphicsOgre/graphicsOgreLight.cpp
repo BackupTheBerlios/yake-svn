@@ -108,7 +108,7 @@ namespace ogre3d {
 	}
 	
 	//------------------------------------------------------
-	void OgreLight::setCastsShadow( bool enabled )
+	void OgreLight::setCastsShadows( bool enabled )
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
 		mLight->setCastShadows( enabled );
