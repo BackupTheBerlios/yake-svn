@@ -195,7 +195,7 @@ private:
         pL->setDiffuseColour(Color(0.35, 0.35, 0.38));
         pL->setSpecularColour(Color(0.9, 0.9, 1));
 		pL->setAttenuation( 8000, 1, 0.0005, 0 );
-		pL->setCastsShadow( true );
+		pL->setCastsShadows( true );
 	}
 	void createGroundPlane()
 	{
@@ -231,7 +231,7 @@ private:
         pL->setDirection(dir);
         pL->setDiffuseColour(Color(0.35, 0.35, 0.38));
         pL->setSpecularColour(Color(0.9, 0.9, 1));
-		pL->setCastsShadow( true );
+		pL->setCastsShadows( true );
 	}
 };
 void MiniApp::init()
