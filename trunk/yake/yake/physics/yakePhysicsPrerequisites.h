@@ -34,14 +34,14 @@
 #include <boost/any.hpp>
 
 #define YAKE_PHYSICS_COMMON_POINTERS( CLASS ) \
-	typedef CLASS* ##CLASS##Ptr; \
-	typedef Deque<##CLASS##Ptr> ##CLASS##PtrList;
+	typedef CLASS* CLASS##Ptr; \
+	typedef Deque<CLASS##Ptr> CLASS##PtrList;
 
 /** @todo move into yakeSignal.h in yake::base */
 #define YAKE_MEMBERSIGNAL_PUREINTERFACE( ACCESS, SIGNATURE, NAME ) \
 ACCESS: \
 	typedef SignalX<SIGNATURE> Sig##NAME##Type; \
-	virtual SignalConnection subscribeTo##NAME##( const Sig##NAME##Type::slot_type& slot ) = 0; \
+	virtual SignalConnection subscribeTo##NAME( const Sig##NAME##Type::slot_type& slot ) = 0; \
 private:
 
 namespace yake {

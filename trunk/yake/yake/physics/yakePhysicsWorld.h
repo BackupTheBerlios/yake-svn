@@ -51,7 +51,7 @@ namespace physics {
 		virtual IJointPtr createJoint( const IJoint::DescBase& rkJointDesc ) = 0;
 		virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc(ACTOR_MOVABLE) ) = 0;
 		IActorPtr createActor( const ActorType type = ACTOR_MOVABLE )
-		{ return createActor( IActor::Desc(type) ); }
+		{ return createActor( type ); }
 		virtual IAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc ) = 0;
 		virtual IMaterialPtr createMaterial( const IMaterial::Desc& rkMatDesc ) = 0;
 		virtual void destroyJoint( IJointPtr pJoint ) = 0;
@@ -74,8 +74,8 @@ namespace physics {
 
 		virtual void step(const real timeElapsed) = 0;
 
-		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void, PreStep )
-		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void, PostStep )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(void), PreStep )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(void), PostStep )
 	};
 
 }

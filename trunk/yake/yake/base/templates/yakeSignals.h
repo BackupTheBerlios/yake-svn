@@ -68,6 +68,7 @@
 #	define BindRef0( METHOD, REFOBJECT ) boost::bind( METHOD, boost::ref( REFOBJECT ) )
 	// We're using the portable/compatible syntax for Signal even though some compilers
 	// would be able to process what boost calls the 'preferred' syntax.
+#	define SignalX boost::signal
 #	define Signal0 boost::signal
 #	define Signal1 boost::signal
 #	define Signal2 boost::signal
@@ -125,13 +126,13 @@ ACCESS:
 
 #define YAKE_MEMBERSIGNAL_FIRE_FN0(ACCESS, NAME) \
 ACCESS: \
-	void fire##NAME##() \
-	{ mSig##NAME##(); }
+	void fire##NAME() \
+	{ mSig##NAME(); }
 
 #define YAKE_MEMBERSIGNAL_FIRE_FN1(ACCESS, NAME, PARAMS, PARAMSCALL) \
 ACCESS: \
-	void fire##NAME##(PARAMS) \
-	{ mSig##NAME##(PARAMSCALL); }
+	void fire##NAME(PARAMS) \
+	{ mSig##NAME(PARAMSCALL); }
 
 #define YAKE_MEMBERSIGNAL( ACCESS, SIGNATURE, NAME ) \
 ACCESS: \

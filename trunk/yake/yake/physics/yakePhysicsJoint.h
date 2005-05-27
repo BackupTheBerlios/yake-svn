@@ -180,7 +180,7 @@ namespace physics {
 	public:
 		virtual ~IJoint() {}
 
-		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void, OnBreaking )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(void), OnBreaking )
 	public:
 
 		virtual JointType getType() const = 0;

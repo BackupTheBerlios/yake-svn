@@ -179,7 +179,7 @@ namespace physics {
 	public:
 		virtual ~IBody() {}
 
-		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, bool, OnSleeping )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(bool), OnSleeping )
 	public:
 
 		/** Returns a reference to the actor this body belongs to. A body always belongs to exactly
