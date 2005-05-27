@@ -38,6 +38,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
+				AdditionalLibraryDirectories="../../dependencies/lib"
 				GenerateDebugInformation="TRUE"
 				ImportLibrary="../../common/lib/debug/$(ProjectName).lib"/>
 			<Tool
@@ -85,6 +86,7 @@
 				AdditionalDependencies="winmm.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../../dependencies/lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -130,6 +132,18 @@
 			</File>
 			<File
 				RelativePath="..\..\src\yake\base\yakeDebugOutputStream.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\yake\base\yakeException.cpp">

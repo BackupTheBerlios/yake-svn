@@ -37,7 +37,7 @@
 				AdditionalDependencies="OgreMain_d.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ogrenew/OgreMain/lib/Debug"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ogrenew/OgreMain/lib/Debug;../../../../dependencies/lib"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
@@ -89,7 +89,7 @@
 				AdditionalDependencies="OgreMain.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ogrenew/OgreMain/lib/Release"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ogrenew/OgreMain/lib/Release;../../../../dependencies/lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -130,6 +130,15 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\graphicsOgre\graphicsOgreCore.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\plugins\graphicsOgre\graphicsOgreDotSceneSerializer.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\..\src\yake\plugins\graphicsOgre\graphicsOgreEntity.cpp">
@@ -183,6 +192,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\graphicsOgre\graphicsOgreCore.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\plugins\graphicsOgre\graphicsOgreDotSceneSerializer.h">
 			</File>
 			<File
 				RelativePath="..\..\..\..\yake\plugins\graphicsOgre\graphicsOgreEntity.h">
