@@ -128,8 +128,8 @@ namespace input {
 		void update( real timeElapsed );
 
 		// joystick signals
-		typedef Signal1< void, JoystickEvent > JoystickSignal;
-		typedef Signal1< void, JoystickAxisEvent > JoystickAxisSignal;
+		typedef Signal1< void( const JoystickEvent& ) > JoystickSignal;
+		typedef Signal1< void( const JoystickAxisEvent& ) > JoystickAxisSignal;
 
 	public:
 		// signals

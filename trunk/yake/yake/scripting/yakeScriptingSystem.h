@@ -50,7 +50,7 @@ namespace scripting {
 	class YAKE_SCRIPTING_API ScriptingRegistrationManager
 	{
 	protected:
-		typedef Signal1< void, scripting::IVM* > RegisterScriptBindingsSignal;
+		typedef Signal1< void(scripting::IVM*) > RegisterScriptBindingsSignal;
 	public:
 		void subscribeToRegisterScriptBindingsSignal( const RegisterScriptBindingsSignal::slot_type & slot );
 		void registerScriptBindings( scripting::IVM* pVM );
