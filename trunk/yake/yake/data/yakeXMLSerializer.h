@@ -76,8 +76,8 @@ namespace xml {
 
 	private:
 		TiXmlElement*			mElem;
-		NodeList			mNodes;
-		ValueType			mValue;
+		NodeList				mNodes;
+		ValueType				mValue;
 		INode::AttributeMap		mAttributes;
 	};
 

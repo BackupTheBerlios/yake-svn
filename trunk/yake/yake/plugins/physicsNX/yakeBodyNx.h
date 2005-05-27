@@ -32,9 +32,9 @@ namespace physics {
 
 		virtual IActor& getActor() const;
 
-		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, bool, OnSleeping )
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void(bool), OnSleeping )
 		//YAKE_MEMBERSIGNAL_FIRE_FN1( public, OnSleeping, bool sleeping, sleeping )
-		YAKE_MEMBERSIGNAL_FIRE_FN0( public, OnSleeping )
+		YAKE_MEMBERSIGNAL_FIRE_FN1( public, OnSleeping, bool sleeping, sleeping )
 
 		virtual void setMass(const real mass);
 		virtual real getMass() const;
