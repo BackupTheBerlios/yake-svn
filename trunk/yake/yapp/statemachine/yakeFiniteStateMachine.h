@@ -46,7 +46,7 @@ namespace app {
 
 namespace state {
 
-	typedef Signal0<void> StepSignal;
+	typedef Signal0<void(void)> StepSignal;
 
 	inline std::ostream& operator << (std::ostream& lhs, const ErrorCode & rhs)
 	{
@@ -130,9 +130,9 @@ namespace state {
 		void exit();
 
 		// events
-		typedef Signal0<void> event_enter_sig;
-		typedef Signal0<void> event_step_sig;
-		typedef Signal0<void> event_exit_sig;
+		typedef Signal0<void(void)> event_enter_sig;
+		typedef Signal0<void(void)> event_step_sig;
+		typedef Signal0<void(void)> event_exit_sig;
 		event_enter_sig	event_enter;
 		event_step_sig	event_step;
 		event_exit_sig	event_exit;
