@@ -95,7 +95,8 @@
 #if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_GNUC)
 	#define YAKE_SIGNALS_USE_BOOST
 #else
-	#define YAKE_SIGNALS_USE_TTL
+	#define YAKE_SIGNALS_USE_BOOST
+	//#define YAKE_SIGNALS_USE_TTL
 #endif
 
 // Helper macros
