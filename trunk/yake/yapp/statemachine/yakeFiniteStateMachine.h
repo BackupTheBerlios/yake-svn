@@ -207,6 +207,12 @@ namespace state {
 	typedef boost::shared_ptr<Transition> SharedTransitionPtr;
 
 	//---------------------------------------------------------
+	enum TransitionHandling
+	{
+		TH_SCRICT,
+		TH_RELAXED
+	};
+	//---------------------------------------------------------
 	/** A stacked state machine.
 		States and transitions must be added to a machine before they can be used.
 		The type of state ids can be chosen as a template parameter.
@@ -234,7 +240,7 @@ namespace state {
 				mTransitions(rkOther.mTransitions)
 		{}
 	public:
-		Machine() {}
+		Machine( const TransitionHandling th = TH_SCRICT );
 		virtual ~Machine()
 		{ exitAll(); }
 
@@ -262,10 +268,18 @@ namespace state {
 		void dump(std::ostream & s) const;
 
 	private:
-		StateMap		mStates;
-		StateStack		mStack;
-		TransitionMap	mTransitions;
+		TransitionHandling	mTransitionHandling;
+		StateMap			mStates;
+		StateStack			mStack;
+		TransitionMap		mTransitions;
 
+	protected:
+		const StateMap& getStateMap() const
+		{ return mStates; }
+		const StateStack& getStateStack() const
+		{ return mStack; }
+
+	private:
 		SharedStatePtr _getStateById( const StateId & rkId )
 		{
 			StateMap::const_iterator itFind = mStates.find( rkId );
@@ -287,6 +301,11 @@ namespace state {
 			if (itFind == mTransitions.end())
 				return SharedTransitionPtr();
 			return itFind->second;
+		}
+		bool _hasTransition( const StateIdPair & idPair )
+		{
+			TransitionMap::const_iterator itFind = mTransitions.find( idPair );
+			return (itFind != mTransitions.end());
 		}
 	};
 

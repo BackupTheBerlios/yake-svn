@@ -35,6 +35,11 @@
 
 	//---------------------------------------------------------
 	template< typename StateIdType >
+		Machine<StateIdType>::Machine( const TransitionHandling th = TH_SCRICT ) :
+			mTransitionHandling(th)
+	{
+	}
+	template< typename StateIdType >
 		ErrorCode Machine<StateIdType>::addTransition( const StateId & rkFrom, const StateId & rkTo )
 		{
 			const StateIdPair idPair( rkFrom, rkTo );
@@ -48,7 +53,7 @@
 		ErrorCode Machine<StateIdType>::addTransition( const StateId & rkFrom, const StateId & rkTo, SharedTransitionPtr & rTransition )
 		{
 			const StateIdPair idPair( rkFrom, rkTo );
-			if (_getTransition( idPair ).get())
+			if (_hasTransition( idPair ))
 				return eAlreadyRegistered; // already registered.
 			mTransitions[ idPair ] = rTransition;
 			return eOk;
@@ -57,8 +62,7 @@
 		ErrorCode Machine<StateIdType>::addTransition( const StateId & rkFrom, const StateId & rkTo, TransitionPtr rTransition )
 		{
 			const StateIdPair idPair( rkFrom, rkTo );
-			SharedTransitionPtr transPtr;
-			if (_getTransition( idPair, transPtr ))
+			if (_hasTransition( idPair ))
 				return eAlreadyRegistered; // already registered.
 			mTransitions[ idPair ] = SharedTransitionPtr(rTransition);
 			return eOk;
@@ -107,7 +111,10 @@
 		// find transition
 		SharedTransitionPtr pTrans;
 		if (!_getTransition( StateIdPair( currentStateId, rkId ), pTrans ) ) // transition not found
-			return eTransitionNotFound;
+		{
+			if (mTransitionHandling == yake::app::state::TH_SCRICT)
+				return eTransitionNotFound;
+		}
 
 		// find state
 		IdStatePair state;
