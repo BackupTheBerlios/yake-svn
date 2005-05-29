@@ -51,7 +51,10 @@ namespace physics {
 		virtual IJointPtr createJoint( const IJoint::DescBase& rkJointDesc ) = 0;
 		virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc(ACTOR_MOVABLE) ) = 0;
 		IActorPtr createActor( const ActorType type = ACTOR_MOVABLE )
-		{ return createActor( type ); }
+		{ 
+			IActor::Desc desc(type);
+			return createActor( desc ); 
+		}
 		virtual IAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc ) = 0;
 		virtual IMaterialPtr createMaterial( const IMaterial::Desc& rkMatDesc ) = 0;
 		virtual void destroyJoint( IJointPtr pJoint ) = 0;
