@@ -27,6 +27,7 @@
 #define YAKE_DATA_DOM_SERIALIZER_H
 
 #include <yake/data/yakeDataPrerequisites.h>
+#include <yake/base/templates/yakeVariant.h>
 
 namespace yake {
 	using namespace base::templates;

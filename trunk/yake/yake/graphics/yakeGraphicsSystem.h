@@ -32,14 +32,32 @@
 #include <yake/graphics/yakeGraphics.h>
 #include <yake/graphics/yakeGraphicalWorld.h>
 
+#pragma warning(disable: 4290) // C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
 namespace yake {
 namespace graphics {
 
-using namespace yake::base::mpl;
-using namespace yake::base::templates;
+	using namespace yake::base::mpl;
+	using namespace yake::base::templates;
+
+	//struct SceneSerializer
+	//{
+	//	typedef std::deque<graphics::ISceneNode*> NodeList;
+	//	struct SceneInfo
+	//	{
+	//		NodeList	rootNodes;
+	//		//Env		globalEnv;
+	//	};
+	//	virtual ~SceneLoader() {}
+
+	//	virtual String getName() const = 0;
+
+	//	virtual SceneInfo loadFromFile(const String& filename, const graphics::IWorld& world) = 0;
+	//	virtual void writeToFile(const String& filename, const SceneInfo& scene) = 0;
+	//};
 
 	typedef ::yake::Exception GraphicsException;
 
@@ -67,9 +85,10 @@ using namespace yake::base::templates;
 
 		virtual SharedPtr<IWorld> createWorld() = 0;
 
-		typedef Signal0<void> ShutdownSignal;
+		typedef Signal0<void(void)> ShutdownSignal;
 		virtual void subscribeToShutdownSignal(const ShutdownSignal::slot_type & rSlot) = 0;
 
+		//virtual SceneSerializer* createSerializer(const String& type) = 0;
 
 		// todo: meta: not needed, typeid(ptr) returns the concrete type info (see abstract factory sample code) 
 		virtual const std::type_info & get_type_info() = 0;
@@ -79,4 +98,3 @@ using namespace yake::base::templates;
 } // yake
 
 #endif // YAKE_GRAPHICSSYSTEM_H
-

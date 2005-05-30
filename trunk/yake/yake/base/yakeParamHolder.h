@@ -27,51 +27,20 @@
 #define YAKE_BASE_PARAMHOLDER_H
 
 #include "yakePrerequisites.h"
-#include <yake/base/templates/yakeVariant.h>
 
 namespace yake {
-namespace base {
 
 	/** ParamHolder holds any amount of parameters. A parameter is a key-value pair where
-		the key is a String and the value is stored in a Variant.
-		The amount of values such a variant can hold is limited to a few common types.
-		Pointers are wrapped within a ParamHolder::Pointer object because several
-		templates fail when trying to use the variant with (void*) as a type or similar types.
+		the key is a String and the value is stored in a boost::any object.
 	*/
 	class YAKE_BASE_API ParamHolder
 	{
 	public:
 		ParamHolder();
 		~ParamHolder();
-		enum ParamType {
-			kNone=0,
-			kUint32=1,
-			kReal=2,
-			kString=3,
-			kPointer=4,
-			kBool=5
-		};
-		typedef uint8 ParamTypeNone;
 
-		/** Wrapper class for (void*) pointers.
-		*/
-		class Pointer {
-		public:
-			Pointer( void* p ) : p_(p)
-			{}
-			void* get() const
-			{ return p_; }
-			operator void*()
-			{ return p_; }
-			Pointer& operator= (const Pointer & rhs)
-			{ p_ = rhs.p_; }
-			Pointer& operator= (void* p)
-			{ p_ = p; }
-		private:
-			void*	p_;
-		};
 		/** Parameter value */
-		typedef Variant<ParamTypeNone,uint32,real,String,Pointer,bool> Param;
+		typedef boost::any Value;
 
 		/** A vector of strings */
 		typedef Vector<String> StringVector;
@@ -80,29 +49,20 @@ namespace base {
 		StringVector getKeys() const;
 
 		/** Returns the parameter value for a given key (id). */
-		Param get( const String & id ) const;
+		const Value& get( const String & id ) const;
 
 		/** Returns the parameter value for a given key (id). */
-		Param operator [] ( const String & id ) const;
+		Value operator [] ( const String & id ) const;
 
 		/** Sets the value of a given parameter identified by a key (id) to an uint32. */
-		bool set( const String & id, const uint32 value );
-
-		/** Sets the value of a given parameter identified by a key (id) to a String. */
-		bool set( const String & id, const String & value );
-
-		/** Sets the value of a given parameter identified by a key (id) to a real. */
-		bool set( const String & id, const real value );
-
-		/** Sets the value of a given parameter identified by a key (id) to a Pointer wrapper object. */
-		bool set( const String & id, Pointer & value );
+		bool set( const String & id, const Value& value );
 
 		bool has( const String & id ) const;
 	private:
-		typedef AssocVector< String, Param > ParamMap;
-		ParamMap	mParams;
+		typedef AssocVector< String, Value > ParamMap;
+		ParamMap		mParams;
+		Value			mParamNone;
 	};
 
-}
 }
 #endif

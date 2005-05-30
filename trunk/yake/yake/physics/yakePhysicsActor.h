@@ -60,7 +60,7 @@ namespace physics {
 	public:
 		struct Desc
 		{
-			Desc(const ActorType t) : type(t) {}
+			explicit Desc(const ActorType t) : type(t) {}
 			explicit Desc(const Desc& desc) {}
 			virtual ~Desc() {}
 			Deque< SharedPtr<IShape::Desc> >		shapes;

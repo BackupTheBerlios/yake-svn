@@ -27,9 +27,8 @@
 #include <yake/base/yakeParamHolder.h>
 
 namespace yake {
-namespace base {
 
-	ParamHolder::ParamHolder()
+	ParamHolder::ParamHolder() : mParamNone( bool(false) )
 	{
 	}
 	ParamHolder::~ParamHolder()
@@ -47,49 +46,24 @@ namespace base {
 			keys.push_back( it->first );
 		return keys;
 	}
-	ParamHolder::Param ParamHolder::get( const String & id ) const
+	const ParamHolder::Value& ParamHolder::get( const String & id ) const
 	{
 		ParamMap::const_iterator itFind = mParams.find( id );
 		if (itFind != mParams.end())
 			return itFind->second;
-		return ParamTypeNone(0);
+		return mParamNone;
 	}
-	ParamHolder::Param ParamHolder::operator [] ( const String & id ) const
+	ParamHolder::Value ParamHolder::operator [] ( const String & id ) const
 	{
 		return get( id );
 	}
-	bool ParamHolder::set( const String & id, const uint32 value )
+	bool ParamHolder::set( const String & id, const Value& value )
 	{
-		YAKE_ASSERT( id != "" );
-		if (id == "")
-			return false;
-		mParams[ id ] = value;
-		return true;
-	}
-	bool ParamHolder::set( const String & id, const String & value )
-	{
-		YAKE_ASSERT( id != "" );
-		if (id == "")
-			return false;
-		mParams[ id ] = value;
-		return true;
-	}
-	bool ParamHolder::set( const String & id, const real value )
-	{
-		YAKE_ASSERT( id != "" );
-		if (id == "")
-			return false;
-		mParams[ id ] = value;
-		return true;
-	}
-	bool ParamHolder::set( const String & id, Pointer & value )
-	{
-		YAKE_ASSERT( id != "" );
-		if (id == "")
+		YAKE_ASSERT( !id.empty() );
+		if (id.empty())
 			return false;
 		mParams[ id ] = value;
 		return true;
 	}
 
-}
 }
