@@ -141,7 +141,7 @@ namespace msg {
 		if (pMessage->canBeDeleted())
 			delete pMessage;
 	}
-	void MessageManager::postMesssage(Message* pMessage)
+	void MessageManager::postMessage(Message* pMessage)
 	{
 		YAKE_ASSERT( mCacheQ );
 		YAKE_ASSERT( pMessage ).warning("valid message pointer expected");
