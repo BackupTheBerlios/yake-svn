@@ -85,7 +85,7 @@ namespace msg {
 		/** Posts a message instance.
 			@Remarks Messages are not instantly processed. They are queued until execute is called.
 		*/
-		void postMesssage(Message* pMessage);
+		void postMessage(Message* pMessage);
 
 		/** Processes all mqueued (read: posted) messages.
 			@Remarks It is safe to post messages while the manager is executing them.

@@ -23,8 +23,8 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_ENT_H
-#define YAKE_ENT_H
+#ifndef YAKE_MSG_H
+#define YAKE_MSG_H
 
 #include <yake/base/yake.h>
 #include <yapp/base/yapp.h>
