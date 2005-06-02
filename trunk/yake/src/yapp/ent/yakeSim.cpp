@@ -26,6 +26,8 @@
 #include <yapp/ent/yakePCH.h>
 #include <yapp/ent/yakeCommon.h>
 #include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
+#include <yapp/ent/yakeObject.h>
 #include <yapp/ent/yakeEntity.h>
 #include <yapp/ent/yakeSim.h>
 
@@ -59,8 +61,8 @@ namespace ent {
 	{
 		mNonOwnedBinders.clear();
 		mBinders.clear();
-		mEntityCreators.clear();
-		mEntities.clear();
+		mObjectCreators.clear();
+		mObjects.clear();
 		private_::g_sim = 0;
 	}
 	Event& sim::getEvent_onEntitySpawned()
@@ -84,20 +86,23 @@ namespace ent {
 		mCurrTickTime += timeElapsed;
 		while (mCurrTickTime > 0)
 		{
-			ConstVectorIterator<EntityList> itEntity( mEntities );
+			mMsgMgr.execute();
+
+			ConstVectorIterator<ObjectList> itEntity( mObjects );
 			while (itEntity.hasMoreElements())
 			{
 				itEntity.getNext()->tick();
 			}
+
 			// prepare for next step
 			++mSimTime;
 			mCurrTickTime -= mTickTime;
 			mSimTimeInSecs += mTickTime;
 		}
 	}
-	void sim::regEntityCreator( const EntityClassId& id, const EntityCreatorFn& creatorFn )
+	void sim::regEntityCreator( const ObjectClassId& id, const ObjectCreatorFn& creatorFn )
 	{
-		mEntityCreators[ id ] = creatorFn;
+		mObjectCreators[ id ] = creatorFn;
 	}
 	void sim::addEntityVMBinder( scripting::IBinder* pBinder, const bool bTransferOwnership )
 	{
@@ -134,17 +139,22 @@ namespace ent {
 
 		return pVM;
 	}
-	entity* sim::createEntity( const EntityClassId& id, const String& scriptFile )
+	Entity* sim::createEntity( const ObjectClassId& id, const String& scriptFile )
 	{
-		entity* pEntity = mEntityCreators[ id ]();
+		Object* pObject = mObjectCreators[ id ]();
+		Entity* pEntity = Entity::cast( pObject );
 		YAKE_ASSERT( pEntity );
 		if (!pEntity)
+		{
+			delete pObject;
 			return 0;
+		}
 
 		// create VM
 		pEntity->setVM( createEntityVM() );
 
 		ParamList params;
+		params["object"] = pObject;
 		params["entity"] = pEntity;
 		params["vm"] = pEntity->getVM();
 		mEvtEntityVMCreated.fire(params);
@@ -159,21 +169,39 @@ namespace ent {
 		}
 
 		// minimal first time setup
-		entity_creation_context ctx;
+		object_creation_context ctx;
 		ctx.mpGWorld = mpGWorld;
 		pEntity->initialise( ctx );
 
 		// store entity & fire events
-		mEntities.push_back( SharedPtr<entity>(pEntity) );
+		mObjects.push_back( SharedPtr<Entity>(pEntity) );
 
 		params.clear();
+		params["object"] = pObject;
 		params["entity"] = pEntity;
 		params["vm"] = pEntity->getVM();
 		mEvtEntitySpawned.fire(params);
 
 		pEntity->spawn();
 
+		ObjectMessage* pMsg = pEntity->createMessage( MSGID_EntitySpawned );
+		pMsg->set("entity", pEntity );
+		mMsgMgr.postMessage( pMsg );
+
 		return pEntity;
+	}
+	void sim::postMessage(ObjectMessage* pMessage, Object* target)
+	{
+		YAKE_ASSERT( pMessage ).warning("null message");
+		if (!pMessage)
+			return;
+		YAKE_ASSERT( target ).warning("null target");
+		if (!target)
+			return;
+		// filter
+
+		// forward/post
+		target->postMessage( pMessage );
 	}
 
 } // namespace yake

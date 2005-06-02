@@ -26,94 +26,95 @@
 #include <yapp/ent/yakePCH.h>
 #include <yapp/ent/yakeCommon.h>
 #include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
+#include <yapp/ent/yakeObject.h>
 #include <yapp/ent/yakeEntity.h>
+#include <yapp/ent/yakeSim.h>
 
 namespace yake {
 namespace ent {
 
-	DEFINE_ENTITY_BASIC( entity )
+	DEFINE_OBJECT( Entity )
 
-	entity::entity() : mAge(0), mEvtSpawn("onSpawn"), mEvtTick("onTick")
+	Entity::Entity() : mAge(0)
 	{
-		static EntityId lastId = 1;
-		mId = lastId++;
+	}
+	void Entity::onInitialise(object_creation_context& creationCtx)
+	{
+		//getMsgMgr().addMessageHandler( CMDID_MachineEnterState, boost::bind(&Entity::onCmdMachineEnterState,this,_1) );
+		//getMsgMgr().addMessageHandler( CMDID_MachineExitState, boost::bind(&Entity::onCmdMachineExitState,this,_1) );
+		getMsgMgr().addMessageHandler( CMDID_MachineChangeTo, boost::bind(&Entity::onCmdMachineChangeTo,this,_1) );
+		mDefaultMachine.reset( new EntityMachine(*this) );
+	}
+	MsgResultCode Entity::onCmdMachineChangeTo(const Message& msg)
+	{
+		const ObjectMessage& omsg = static_cast<const ObjectMessage&>(msg);
+		try {
+			const String machine = boost::any_cast<String>(omsg.get("machine"));
+			const String targetState = boost::any_cast<String>(omsg.get("to"));
 
-		regEvent(&mEvtSpawn);
-		regEvent(&mEvtTick);
+			EntityMachine* pMachine = (machine == "default") ? getDefaultMachine() : getMachine(machine);
+			YAKE_ASSERT( pMachine )(machine)(targetState).warning("machine not found");
+			if (pMachine)
+			{
+				app::ErrorCode err = pMachine->changeTo( targetState );
+				YAKE_ASSERT( err == app::eOk )(err).warning("failed to change state");
+				if (err != app::eOk)
+				{
+					std::cout << "ERROR: Failed to change state. Error: " << err << "\n";
+				}
+			}
+		} catch(...)
+		{
+		}
+		return msg::kHandled;
 	}
-	void entity::initialise(entity_creation_context& creationCtx)
+	void Entity::onTick()
 	{
-		//
-		onInitialise(creationCtx);
-	}
-	bool entity::fireEvent(const String& name)
-	{
-		YAKE_ASSERT( !name.empty() ).warning("need a name");
-		if (name.empty())
-			return false;
-		Event* pEvent = getEventByName(name);
-		YAKE_ASSERT( pEvent )(name).warning("entity does not have this event");
-		if (!pEvent)
-			return false;
-		pEvent->fire( getDefaultEventParams() );
-		return true;
-	}
-
-	ParamList entity::getDefaultEventParams()
-	{
-		ParamList params;
-		params["entity"] = this;
-		return params;
-	}
-	void entity::spawn()
-	{
-		onSpawn();
-		mEvtSpawn.fire(getDefaultEventParams());
-	}
-
-	void entity::tick()
-	{
-		onTick();
-		mEvtTick.fire(getDefaultEventParams());
 		++mAge;
 	}
-
-	simtime entity::getAge() const
+	void Entity::onGetDefaultEventParams(ParamList& params)
+	{
+		params["entity"] = this;
+	}
+	simtime Entity::getAge() const
 	{
 		return mAge;
 	}
-
-	EntityId entity::getId() const
-	{
-		return mId;
-	}
-
-	void entity::setVM(scripting::IVM* pVM)
+	void Entity::setVM(scripting::IVM* pVM)
 	{
 		mpVM = pVM;
 	}
-
-	Event* entity::getEventByName(const String& name) const
+	EntityMachine* Entity::ceateMachine(const String& id)
 	{
-		EventMap::const_iterator itFind = mEvents.find(name);
-		if (mEvents.end() == itFind)
+		YAKE_ASSERT( !id.empty() );
+		if (id.empty())
 			return 0;
-		return itFind->second;
-	}
+		const bool bMachineExists = (mMachines.find(id) == mMachines.end());
+		YAKE_ASSERT( !bMachineExists );
+		if (bMachineExists)
+			return 0;
+		EntityMachine* pMachine = new EntityMachine(*this);
+		YAKE_ASSERT( pMachine );
+		mMachines[ id ] = SharedPtr<EntityMachine>(pMachine);
 
-	void entity::addEvent(Event* pEvent)
-	{
-		if (pEvent->getName().empty() || !pEvent)
-			return;
-		mEvents[ pEvent->getName() ] = pEvent;
-		mDynEvents.push_back( SharedPtr<Event>(pEvent) );
+		return pMachine;
 	}
-
-	void entity::regEvent(Event* pEvent)
+	EntityMachine* Entity::getDefaultMachine() const
 	{
-		if (pEvent->getName().empty() || !pEvent)
-			return;
-		mEvents[ pEvent->getName() ] = pEvent;
+		return mDefaultMachine.get();
+	}
+	EntityMachine* Entity::getMachine(const String& id)
+	{
+		YAKE_ASSERT( !id.empty() );
+		if (id.empty())
+			return 0;
+		MachineMap::const_iterator itFind = mMachines.find(id);
+		const bool bMachineExists = (itFind != mMachines.end());
+		YAKE_ASSERT( bMachineExists );
+		if (!bMachineExists)
+			return 0;
+		return itFind->second.get();
 	}
 
 } // namespace yake

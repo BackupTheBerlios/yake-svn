@@ -26,6 +26,7 @@
 #include <yapp/ent/yakePCH.h>
 #include <yapp/ent/yakeCommon.h>
 #include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
 
 namespace yake {
 namespace ent {

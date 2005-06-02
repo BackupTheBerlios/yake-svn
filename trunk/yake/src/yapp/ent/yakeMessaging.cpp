@@ -23,27 +23,20 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_ENT_COMMON_H
-#define YAKE_ENT_COMMON_H
-
-#if YAKE_PLATFORM == PLATFORM_WIN32
-#	if defined(YAKE_ENT_EXPORTS)
-#		define YAKE_ENT_API DLLEXPORT
-#	else
-#		define YAKE_ENT_API DLLIMPORT
-#		pragma comment(lib, "ent.lib")
-#	endif
-#else
-#	define YAKE_ENT_API
-#endif
+#include <yapp/ent/yakePCH.h>
+#include <yapp/ent/yakeCommon.h>
+#include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
 
 namespace yake {
 namespace ent {
 
-	//struct entity;
-	typedef uint32 simtime;
+	const MessageId MSGID_EntitySpawned = MessageIdManager::newId("ent::onSpawned");
+	const MessageId CMDID_MachineEnterState = MessageIdManager::newId("ent::cmdMachineEnterState");
+	const MessageId CMDID_MachineExitState = MessageIdManager::newId("ent::cmdMachineExitState");
+	const MessageId CMDID_MachineChangeTo = MessageIdManager::newId("ent::cmdMachineChangeTo");
+	const MessageId MSGID_MachineStateEntered = MessageIdManager::newId("ent::onMachineStateEntered");
+	const MessageId MSGID_MachineStateLeft = MessageIdManager::newId("ent::onMachineStateLeft");
 
 } // namespace yake
 } // namespace ent
-
-#endif

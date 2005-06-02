@@ -28,26 +28,42 @@
 #include <yapp/plugins/entLua/yakeLuaBinder.h>
 #include <yapp/plugins/entLua/yakeEvent_lua.h>
 #include <yapp/plugins/entLua/yakeEntLua.h>
+#include <yapp/plugins/entLua/yakeStateCb_lua.h>
 #include <luabind/luabind.hpp>
 
 namespace yake {
 namespace ent {
 namespace lua {
 
-	bool executeEntityEvent(ent::Entity* pEntity, scripting::IVM* pVM, lua_State* L, const String& evtName)
+	bool executeEntityStateMachineCb(ent::Entity* pEntity, scripting::IVM* pVM, lua_State* L,
+									const String& machineName,
+									const String& stateName,
+									const String& fn)
 	{
 		try {
 			//std::cout << "executeEntityEvent(\"" << evtName.c_str() << "\")\n";
-			luabind::object evtTbl = luabind::get_globals(L)["events"];
-			if (!evtTbl.is_valid())
-				throw "event table is not valid";
+			luabind::object machineTbl = (machineName == "default") ? luabind::get_globals(L) : luabind::get_globals(L)["machine_"+machineName];
+			if (!machineTbl.is_valid() || machineTbl.type() != LUA_TTABLE)
+				throw "machine table is not valid";
 
-			luabind::object fnTbl = pEntity->isServer() ? evtTbl.at("server") : evtTbl.at("client");
-			//luabind::object fnTbl = evtTbl["server"];
-			if (!fnTbl.is_valid())
-				throw "server event functions table is not valid";
+			luabind::object statesTbl = machineTbl["states"];
+			if (!statesTbl.is_valid() || statesTbl.type() != LUA_TTABLE)
+				throw "states table is not valid";
 
-			luabind::call_member<void>( fnTbl, evtName.c_str() );
+			luabind::object stateTbl = statesTbl[stateName];
+			if (!stateTbl.is_valid() || stateTbl.type() != LUA_TTABLE)
+				throw "state table is not valid";
+
+			//luabind::object fnTbl = pEntity->isServer() ? stateTbl.at("server") : stateTbl.at("client");
+			luabind::object fnTbl = stateTbl["server"];
+			if (!fnTbl.is_valid() || fnTbl.type() != LUA_TTABLE)
+				throw "state functions table is not valid";
+
+			luabind::object fnObj = fnTbl[ fn.c_str() ];
+			if (!fnObj.is_valid() || fnObj.type() != LUA_TFUNCTION) // function defined?
+				return true;
+
+			luabind::call_member<void>( fnTbl, fn.c_str() );
 			return true;
 		}
 		catch (luabind::error& e)
@@ -61,23 +77,23 @@ namespace lua {
 			return false;
 		}
 	}
-
-	LuaEntityEventCallback::LuaEntityEventCallback(yake::scripting::LuaVM* pVM) :
-				mpVM(pVM)
-	{}
-	void LuaEntityEventCallback::onFire( const ent::EventData& evtData )
+	void EntityMachineStateCallbackLua::onEnter()
 	{
-		ent::Entity* pEntity = 0;
-		try {
-			pEntity = boost::any_cast<ent::Entity*>( evtData.params.find("entity")->second );
-		} catch (...)
-		{
-			std::cout << "LuaEntityEventCallback::onFire() ERROR\n";
-			std::cout << "   Could not extract entity!\n";
-		}
-		YAKE_ASSERT( pEntity );
-		if (pEntity && mpVM)
-			executeEntityEvent( pEntity, mpVM, mpVM->getLuaState(), evtData.evt->getName() );
+		YAKE_ASSERT( mOwnerEntity && !mOwnerMachine.empty() && mpVM );
+		if (mOwnerEntity && mpVM && !mOwnerMachine.empty())
+			executeEntityStateMachineCb( mOwnerEntity, mpVM, mpVM->getLuaState(), mOwnerMachine, mId, "enter" );
+	}
+	void EntityMachineStateCallbackLua::onExit()
+	{
+		YAKE_ASSERT( mOwnerEntity && !mOwnerMachine.empty() && mpVM );
+		if (mOwnerEntity && mpVM && !mOwnerMachine.empty())
+			executeEntityStateMachineCb( mOwnerEntity, mpVM, mpVM->getLuaState(), mOwnerMachine, mId, "exit" );
+	}
+	void EntityMachineStateCallbackLua::onStep()
+	{
+		YAKE_ASSERT( mOwnerEntity && !mOwnerMachine.empty() && mpVM );
+		if (mOwnerEntity && mpVM && !mOwnerMachine.empty())
+			executeEntityStateMachineCb( mOwnerEntity, mpVM, mpVM->getLuaState(), mOwnerMachine, mId, "step" );
 	}
 
 } // namespace lua

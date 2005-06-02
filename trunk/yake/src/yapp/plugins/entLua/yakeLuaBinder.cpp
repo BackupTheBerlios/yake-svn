@@ -28,6 +28,8 @@
 #include <yapp/plugins/entLua/yakeLuaBinder.h>
 #include <yapp/plugins/entLua/yakeEvent_lua.h>
 #include <yapp/plugins/entLua/yakeEntLua.h>
+#include <yapp/plugins/entLua/yakeStateCb_lua.h>
+#include <luabind/luabind.hpp>
 
 namespace yake {
 namespace ent {
@@ -48,9 +50,9 @@ namespace lua {
 			}
 			YAKE_ASSERT( pVM );
 
-			ent::entity* pEntity = 0;
+			ent::Entity* pEntity = 0;
 			try {
-				pEntity = boost::any_cast<ent::entity*>( evtData.params.find("entity")->second );
+				pEntity = boost::any_cast<ent::Entity*>( evtData.params.find("entity")->second );
 			} catch (...)
 			{
 				std::cout << "myLuaScripting::EntitySpawnedCb::onFire() ERROR\n";
@@ -87,9 +89,9 @@ namespace lua {
 			}
 			YAKE_ASSERT( pVM );
 
-			ent::entity* pEntity = 0;
+			ent::Entity* pEntity = 0;
 			try {
-				pEntity = boost::any_cast<ent::entity*>( evtData.params.find("entity")->second );
+				pEntity = boost::any_cast<ent::Entity*>( evtData.params.find("entity")->second );
 			} catch (...)
 			{
 				std::cout << "myLuaScripting::EntityVMCreatedCb::onFire() ERROR\n";
@@ -141,42 +143,46 @@ namespace lua {
 		return new EntityVMCreatedCb();
 	}
 
-	bool createEvent(ent::entity* pEntity, const String& name)
+	bool createEvent(ent::Object* pObject, const String& name)
 	{
-		YAKE_ASSERT( pEntity );
+		YAKE_ASSERT( pObject );
 		YAKE_ASSERT( !name.empty() );
-		if (!pEntity || name.empty())
-			return false;
-		YAKE_ASSERT( pEntity->getVM() );
-		if (!pEntity->getVM())
+		if (!pObject || name.empty())
 			return false;
 
 		ent::Event* pEvent = new ent::Event(name);
-		pEntity->addEvent(pEvent);
-		pEvent->addCallback( new LuaEntityEventCallback( static_cast<scripting::LuaVM*>(pEntity->getVM()) ) );
+		pObject->addEvent(pEvent);
+
+		if (ent::Entity* pEntity = Entity::cast(pObject))
+		{
+			YAKE_ASSERT( pEntity->getVM() );
+			if (!pEntity->getVM())
+				return false;
+			pEvent->addCallback( new LuaEntityEventCallback( static_cast<scripting::LuaVM*>(pEntity->getVM()) ) );
+		}
 
 		return true;
 	}
-	bool fireEvent(ent::entity* pEntity, const String& name)
+	bool fireEvent(ent::Object* pObject, const String& name)
 	{
-		YAKE_ASSERT( pEntity );
+		YAKE_ASSERT( pObject );
 		YAKE_ASSERT( !name.empty() );
-		if (!pEntity || name.empty())
+		if (!pObject || name.empty())
 			return false;
 
-		return pEntity->fireEvent(name);
+		return pObject->fireEvent(name);
 	}
 
-	template<class ConcreteEntityClass>
-	ConcreteEntityClass* getCasted(ent::entity* pEntity)
+	template<class ConcreteClass>
+	ConcreteClass* getCasted(ent::Object* pObject)
 	{
-		ConcreteEntityClass* ret = 0;
+		ConcreteClass* ret = 0;
 		try {
-			ret = dynamic_cast<ConcreteEntityClass*>(pEntity);
+			ret = dynamic_cast<ConcreteClass*>(pObject);
 		} catch ( std::exception& e )
 		{
-			std::cout << "EXCEPTION: getCasted() failed for casting a " << pEntity->isA()->getName().c_str();
-			std::cout << "  to a " << ConcreteEntityClass::getClass()->getName().c_str() << ".\n";
+			std::cout << "EXCEPTION: getCasted() failed for casting a " << pObject->isA()->getName().c_str();
+			std::cout << "  to a " << ConcreteClass::getClass()->getName().c_str() << ".\n";
 			std::cout << "Cause: " << e.what() << "\n";
 		}
 		return  ret;
@@ -215,6 +221,56 @@ namespace lua {
 		pPawn->setGraphical( pModel );
 		pModel->fromDotScene( fn, sim::getSim().getGraphicsWorld() );
 	}
+	void entity_machineChangeTo(Entity* pEntity, const String& machine, const String& targetState)
+	{
+		YAKE_ASSERT( pEntity ).warning("null entity");
+		if (!pEntity)
+			return;
+		ObjectMessage* pMsg = pEntity->createMessage(CMDID_MachineChangeTo);
+		YAKE_ASSERT( pMsg ).warning("could not create message!");
+		if (!pMsg)
+			return;
+		pMsg->set("machine",machine);
+		pMsg->set("to",targetState);
+		sim::getSim().postMessage( pMsg, pEntity );
+	}
+	void entity_machineChangeTo_default(Entity* pEntity, const String& targetState)
+	{
+		entity_machineChangeTo(pEntity,"default",targetState);
+	}
+
+	void entity_machineAddState(Entity* pEntity, const String& machine, const String& state)
+	{
+		YAKE_ASSERT( pEntity ).warning("null entity");
+		if (!pEntity)
+			return;
+		EntityMachine* pMachine = (machine == "default") ? pEntity->getDefaultMachine() : pEntity->getMachine(state);
+		YAKE_ASSERT( pMachine )(machine)(state).warning("machine not found");
+		if (!pMachine)
+			return;
+		EntityMachineState* pState = new EntityMachineState();
+		pMachine->addState(state,pState);
+		pState->addCallback(
+			new EntityMachineStateCallbackLua(
+				state,pEntity,machine,static_cast<scripting::LuaVM*>(pEntity->getVM())
+				)
+			);
+	}
+	void entity_machineAddState_default(Entity* pEntity, const String& state)
+	{
+		entity_machineAddState(pEntity, "default", state);
+	}
+	String entity_machineGetState_default(Entity* pEntity)
+	{
+		YAKE_ASSERT( pEntity ).warning("null entity");
+		if (!pEntity)
+			return String();
+		EntityMachine* pMachine = pEntity->getDefaultMachine();
+		YAKE_ASSERT( pMachine ).warning("machine not found");
+		if (!pMachine)
+			return String();
+		return pMachine->getCurrentStateId();
+	}
 
 	void Binder::bind( scripting::IVM* pVM )
 	{
@@ -233,27 +289,41 @@ namespace lua {
 		];
 		module( pL->getLuaState() )
 		[
+			class_<EntityMachine>("EntityMachine")
+				.def("getCurrentState", &EntityMachine::getCurrentStateId)
+		];
+		module( pL->getLuaState() )
+		[
 			class_<Event>("event")
 				.def("getName", &Event::getName)
 		];
 		module( pL->getLuaState() )
 		[
-			def("getAs_entity", &getCasted<entity>),
-			class_<entity>("entity")
-				//.def("cast", &entity::cast)
-				.def("getAge", &entity::getAge)
-				.def("getId", &entity::getId)
-				.def("getEventByName", &entity::getEventByName)
-				.def("addEvent", &entity::addEvent)
+			def("getAs_object", &getCasted<Object>),
+			class_<Object>("object")
+				.def("getId", &Object::getId)
+				.def("getEventByName", &Object::getEventByName)
+				.def("addEvent", &Object::addEvent)
 				.def("createEvent",&createEvent)
 				.def("fireEvent",&fireEvent)
 		];
 		module( pL->getLuaState() )
 		[
+			def("getAs_entity", &getCasted<Entity>),
+			class_<Entity,Object>("entity")
+				.def("getAge", &Entity::getAge)
+				.def("addState", &entity_machineAddState_default)
+				.def("changeStateTo", &entity_machineChangeTo_default)
+				.def("getState", &entity_machineGetState_default)
+				.def("getMachine", &Entity::getDefaultMachine)
+				.def("getMachineByName", &Entity::getMachine)
+		];
+		module( pL->getLuaState() )
+		[
 			def("getAs_light", &getCasted<light>),
-			class_<light,entity>("light")
-				.def("cast", (light*(*)(entity*))&light::cast)
-				.def("cast", (const light*(*)(const entity*))&light::cast)
+			class_<light,Entity>("light")
+				.def("cast", (light*(*)(Object*))&light::cast)
+				.def("cast", (const light*(*)(const Object*))&light::cast)
 				.def("enable", &light::enableLight)
 				.def("isEnabled", &light::isLightEnabled)
 		];
@@ -265,7 +335,7 @@ namespace lua {
 		module( pL->getLuaState() )
 		[
 			def("getAs_pawn", &getCasted<pawn>),
-			class_<pawn,entity>("pawn")
+			class_<pawn,Entity>("pawn")
 				.def("setGraphical", &pawn::setGraphical)
 				.def("getGraphical", &pawn::getGraphical)
 				.def("createGraphical", &pawn_loadGraphical)

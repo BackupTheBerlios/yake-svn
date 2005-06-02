@@ -29,137 +29,150 @@
 namespace yake {
 namespace ent {
 
-	class Event;
-	class entity;
-	class sim;
+	class Entity;
+	class EntityMachine;
 
 	typedef YAKE_ENT_API yake::app::model::Graphical GraphicalModel;
 
-	typedef YAKE_ENT_API yake::String EntityClassId;
-	typedef YAKE_ENT_API uint32 EntityId;
-	typedef YAKE_ENT_API boost::function<entity*(void)> EntityCreatorFn;
-
-	struct YAKE_ENT_API entity_creation_context
-	{
-		graphics::IWorld*		mpGWorld;
-		String					mScript;
-	};
-
-	struct YAKE_ENT_API entity_class
+	/** An entity state used by EntityMachines.
+	*/
+	class EntityMachineState : public yake::app::state::State
 	{
 	public:
-		entity_class(const String& name) : mName(name) {}
-		bool operator == (const entity_class& rhs)
-		{ return mName == rhs.getName(); }
-		String getName() const
-		{ return mName; }
-	private:
-		String	mName;
+		EntityMachineState()
+		{}
+		virtual ~EntityMachineState()
+		{
+			ConstDequeIterator<CbList> itCb(mCallbacks);
+			while (itCb.hasMoreElements())
+				delete itCb.getNext();
+		}
+		struct ICallback
+		{
+			virtual ~ICallback() {}
+			virtual void onEnter() {}
+			virtual void onExit() {}
+			virtual void onStep() {}
+		};
+		void addCallback(ICallback* pCb)
+		{
+			if (pCb)
+				mCallbacks.push_back(pCb);
+		}
+		ICallback* removeCallback(ICallback* pCb)
+		{
+			if (pCb)
+			{
+				CbList::iterator it = std::find( mCallbacks.begin(), mCallbacks.end(), pCb);
+				if (it != mCallbacks.end())
+					mCallbacks.erase(it);
+			}
+			return pCb;
+		}
+	protected:
+		typedef std::deque<ICallback*> CbList;
+		CbList		mCallbacks;
+		virtual void onEnter()
+		{
+			ConstDequeIterator<CbList> itCb(mCallbacks);
+			while (itCb.hasMoreElements())
+				itCb.getNext()->onEnter();
+		}
+		virtual void onExit()
+		{
+			ConstDequeIterator<CbList> itCb(mCallbacks);
+			while (itCb.hasMoreElements())
+				itCb.getNext()->onExit();
+		}
+		virtual void onStep()
+		{
+			ConstDequeIterator<CbList> itCb(mCallbacks);
+			while (itCb.hasMoreElements())
+				itCb.getNext()->onStep();
+		}
 	};
 
-	#define DECLARE_ENTITY_BASIC(CLASSNAME) \
-	public: \
-		static entity_class* getClass(); \
-		virtual entity_class* isA() const;
+	/** A state machine for entities.
+		@todo remove from public header?
+	*/
+	class YAKE_ENT_API EntityMachine : public yake::app::state::Machine<String>
+	{
+	public:
+		typedef yake::app::state::Machine<String> BaseMachine;
+
+		EntityMachine(Entity& owner);
+		String getCurrentStateId() const;
+		Entity* getOwner() const
+		{ return mOwner; }
+	private:
+		Entity*		mOwner;
+	};
+
 
 	/**
-	@todo use yake::reflection instead of custom entity_class stuff.
+	@todo use yake::reflection instead of custom object_class stuff.
 	*/
-	class YAKE_ENT_API entity
+	class YAKE_ENT_API Entity : public Object
 	{
 		friend class sim;
-		DECLARE_ENTITY_BASIC(entity)
+		DECLARE_OBJECT(Entity)
 	private:
-		entity(const entity&);
+		Entity(const Entity&);
 	protected:
-		entity();
+		Entity();
 		void setVM(scripting::IVM* pVM);
-		void initialise(entity_creation_context& creationCtx);
-		virtual void onInitialise(entity_creation_context& creationCtx) {}
+		virtual void onInitialise(object_creation_context& creationCtx);
+		virtual void onTick();
+		virtual void onGetDefaultEventParams(ParamList& params);
 	public:
 		simtime getAge() const;
-		EntityId getId() const;
-		bool isServer() const
-		{ return true; }
-
-		void spawn();
-		void tick();
-
-		Event* getEventByName(const String& name) const;
-		void addEvent(Event* pEvent);
-		void regEvent(Event* pEvent);
-		bool fireEvent(const String& name);
 
 		scripting::IVM* getVM() const
 		{ return mpVM; }
-	protected:
-		virtual void onSpawn() {}
-		virtual void onTick() {}
-		ParamList getDefaultEventParams();
-	private:
-		EntityId		mId;
-		simtime			mAge;
 
-		Event			mEvtSpawn;
-		Event			mEvtTick;
+		EntityMachine* ceateMachine(const String& id);
+		EntityMachine* getDefaultMachine() const;
+		EntityMachine* getMachine(const String& id);
+
+		//YAKE_MEMBERSIGNAL( public, void(Entity*,EntityMachine*,EntityMachineState*), StateAdded)
+		//YAKE_MEMBERSIGNAL( public, void(Entity*,EntityMachine*,const String&), ExitState)
+		//YAKE_MEMBERSIGNAL( public, void(Entity*,EntityMachine*,const String&), EnterState)
+	private:
+		//MsgResultCode onCmdMachineEnterState(const Message& msg);
+		MsgResultCode onCmdMachineChangeTo(const Message& msg);
+	private:
+		simtime			mAge;
 
 		scripting::IVM*	mpVM;
 
-		typedef std::map<String,Event*> EventMap;
-		EventMap		mEvents;
-		typedef std::list<SharedPtr<Event> > EventHolderList;
-		EventHolderList	mDynEvents;
+		typedef std::map<String,SharedPtr<EntityMachine> > MachineMap;
+		MachineMap		mMachines;
+		SharedPtr<EntityMachine>	mDefaultMachine;
 	};
 
-	#define DECLARE_ENTITY(CLASSNAME) \
-		DECLARE_ENTITY_BASIC(CLASSNAME) \
-	private: \
-		static entity* create() \
-		{ return new CLASSNAME(); } \
-	public: \
-		static void reg( sim& theSim ); \
-		static CLASSNAME* cast( entity* other ) \
-		{  return dynamic_cast<CLASSNAME*>(other); } \
-		static const CLASSNAME* cast( const entity* other ) \
-		{  return dynamic_cast<const CLASSNAME*>(other); }
-
-	#define DEFINE_ENTITY_BASIC(CLASSNAME) \
-		entity_class* CLASSNAME::getClass() \
-		{ \
-			static entity_class g_class(#CLASSNAME); \
-			return &g_class; \
-		} \
-		entity_class* CLASSNAME::isA() const \
-		{ return CLASSNAME::getClass(); }
-
-	#define DEFINE_ENTITY(CLASSNAME) \
-		DEFINE_ENTITY_BASIC(CLASSNAME) \
-		void CLASSNAME::reg( sim& theSim ) \
-		{ theSim.regEntityCreator(#CLASSNAME, &CLASSNAME::create); }
-
-	class YAKE_ENT_API pawn : public entity
+	class YAKE_ENT_API pawn : public Entity
 	{
 	public:
 		void setGraphical( GraphicalModel* pModel );
 		GraphicalModel* getGraphical() const;
 
-		DECLARE_ENTITY(pawn)
+		DECLARE_OBJECT(pawn)
 	protected:
 		pawn();
 	private:
 		SharedPtr<GraphicalModel>	mGraphical;
 	};
 
-	class YAKE_ENT_API light : public entity
+	class YAKE_ENT_API light : public Entity
 	{
 	public:
 		void enableLight( bool yes );
 		bool isLightEnabled() const;
 
-		DECLARE_ENTITY(light)
+		DECLARE_OBJECT(light)
 	protected:
 		light();
-		virtual void onInitialise(entity_creation_context& creationCtx);
+		virtual void onInitialise(object_creation_context& creationCtx);
 	private:
 		SharedPtr<graphics::ISceneNode>		mpSN;
 		graphics::ILight*					mpLight;

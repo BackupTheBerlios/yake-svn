@@ -26,13 +26,15 @@
 #include <yapp/ent/yakePCH.h>
 #include <yapp/ent/yakeCommon.h>
 #include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
+#include <yapp/ent/yakeObject.h>
 #include <yapp/ent/yakeEntity.h>
 #include <yapp/ent/yakeSim.h>
 
 namespace yake {
 namespace ent {
 
-	DEFINE_ENTITY( pawn )
+	DEFINE_OBJECT( pawn )
 
 	pawn::pawn()
 	{

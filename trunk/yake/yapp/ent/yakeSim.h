@@ -39,9 +39,9 @@ namespace ent {
 		simtime getTime() const;
 		real getTimeAsSeconds() const;
 		void tick(const real timeElapsed);
-		void regEntityCreator( const EntityClassId& id, const EntityCreatorFn& creatorFn );
+		void regEntityCreator( const ObjectClassId& id, const ObjectCreatorFn& creatorFn );
 		void addEntityVMBinder( scripting::IBinder* pBinder, const bool bTransferOwnership = true );
-		entity* createEntity( const EntityClassId& id, const String& scriptFile );
+		Entity* createEntity( const ObjectClassId& id, const String& scriptFile );
 
 		graphics::IWorld* getGraphicsWorld() const
 		{ return mpGWorld; }
@@ -49,18 +49,21 @@ namespace ent {
 		// temp
 		static sim& getSim();
 		
-		event::MessageManager& getMessageMgr();
+		msg::MessageManager& getMessageMgr();
+
+		// post message to another object
+		void postMessage(ObjectMessage* pMessage, Object* target);
 
 		Event& getEvent_onEntitySpawned();
 		Event& getEvent_onEntityVMCreated();
 	private:
 		scripting::IVM* createEntityVM();
 	private:
-		typedef std::map<EntityClassId,EntityCreatorFn> EntityCreatorMap;
-		typedef std::list<SharedPtr<entity> > EntityList;
+		typedef std::map<ObjectClassId,ObjectCreatorFn> ObjectCreateMap;
+		typedef std::list<SharedPtr<Object> > ObjectList;
 
-		EntityCreatorMap	mEntityCreators;
-		EntityList			mEntities;
+		ObjectCreateMap	mObjectCreators;
+		ObjectList			mObjects;
 
 		real				mSimTimeInSecs;
 		simtime				mSimTime;
@@ -79,7 +82,7 @@ namespace ent {
 
 		graphics::IWorld*	mpGWorld;
 
-		event::MessageManager		mMsgMgr;
+		msg::MessageManager	mMsgMgr;
 	};
 
 } // namespace yake

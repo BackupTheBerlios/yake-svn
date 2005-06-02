@@ -35,8 +35,11 @@
 #include <yake/base/yake.h>
 #include <yapp/base/yapp.h>
 #include <yake/scripting/yakeScriptingSystem.h>
+#include <yapp/msg/yakeMsg.h>
 #include <yapp/ent/yakeCommon.h>
 #include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
+#include <yapp/ent/yakeObject.h>
 #include <yapp/ent/yakeEntity.h>
 #include <yapp/ent/yakeSim.h>
 

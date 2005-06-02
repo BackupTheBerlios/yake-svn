@@ -25,6 +25,6 @@
 */
 #include <yake/base/yake.h>
 #include <yapp/base/yapp.h>
-#include <yapp/plugins/entLua/yakePrerequisites.h>
 #include <yapp/ent/yakeEnt.h>
-#include <luabind/luabind.hpp>
+#include <yapp/plugins/entLua/yakePrerequisites.h>
+//#include <luabind/luabind.hpp> <= doesn't behave to well in a precompiled header! problems: objects in luabind namespace cannot be found!

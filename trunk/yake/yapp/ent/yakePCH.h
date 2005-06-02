@@ -29,5 +29,6 @@
 #include <yake/base/yake.h>
 #include <yapp/base/yapp.h>
 #include <yake/scripting/yakeScriptingSystem.h>
+#include <yapp/msg/yakeMsg.h>
 
 #endif

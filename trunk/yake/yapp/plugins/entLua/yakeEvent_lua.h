@@ -32,7 +32,7 @@ namespace yake {
 namespace ent {
 namespace lua {
 
-	bool executeEntityEvent(ent::entity* pEntity, scripting::IVM* pVM, lua_State* L, const String& evtName);
+	bool executeEntityEvent(ent::Entity* pEntity, scripting::IVM* pVM, lua_State* L, const String& evtName);
 
 	struct LuaEntityEventCallback : public ent::EventCallback
 	{

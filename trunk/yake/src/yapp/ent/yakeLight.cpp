@@ -26,19 +26,22 @@
 #include <yapp/ent/yakePCH.h>
 #include <yapp/ent/yakeCommon.h>
 #include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
+#include <yapp/ent/yakeObject.h>
 #include <yapp/ent/yakeEntity.h>
 #include <yapp/ent/yakeSim.h>
 
 namespace yake {
 namespace ent {
 
-	DEFINE_ENTITY( light )
+	DEFINE_OBJECT( light )
 
 	light::light() : mpLight(0), mLightEnabled(false)
 	{
 	}
-	void light::onInitialise(entity_creation_context& creationCtx)
+	void light::onInitialise(object_creation_context& creationCtx)
 	{
+		Entity::onInitialise(creationCtx);
 		//if (!isServer())
 		{
 			YAKE_ASSERT( creationCtx.mpGWorld );

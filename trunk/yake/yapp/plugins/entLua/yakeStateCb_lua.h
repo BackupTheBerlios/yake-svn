@@ -23,27 +23,42 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_ENT_COMMON_H
-#define YAKE_ENT_COMMON_H
+#ifndef YAKE_ENTLUA_STATE_LUA_H
+#define YAKE_ENTLUA_STATE_LUA_H
 
-#if YAKE_PLATFORM == PLATFORM_WIN32
-#	if defined(YAKE_ENT_EXPORTS)
-#		define YAKE_ENT_API DLLEXPORT
-#	else
-#		define YAKE_ENT_API DLLIMPORT
-#		pragma comment(lib, "ent.lib")
-#	endif
-#else
-#	define YAKE_ENT_API
-#endif
+#include <yapp/plugins/entLua/yakePrerequisites.h>
 
 namespace yake {
 namespace ent {
+namespace lua {
 
-	//struct entity;
-	typedef uint32 simtime;
+	bool executeEntityStateMachineCb(ent::Entity* pEntity, scripting::IVM* pVM, lua_State* L,
+									const String& machineName,
+									const String& stateName,
+									const String& fn);
 
-} // namespace yake
+	struct EntityMachineStateCallbackLua : public EntityMachineState::ICallback
+	{
+	private:
+		Entity*						mOwnerEntity;
+		String						mOwnerMachine;
+		String						mId;
+		yake::scripting::LuaVM*		mpVM;
+	public:
+		EntityMachineStateCallbackLua(const String& id, Entity* ownerEntity, const String& machineName, yake::scripting::LuaVM* pVM) :
+			mId(id),
+			mOwnerEntity(ownerEntity),
+			mOwnerMachine(machineName),
+			mpVM(pVM)
+		{}
+		virtual ~EntityMachineStateCallbackLua() {}
+		virtual void onEnter();
+		virtual void onExit();
+		virtual void onStep();
+	};
+
+} // namespace lua
 } // namespace ent
+} // namespace yake
 
 #endif

@@ -23,27 +23,28 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_ENT_COMMON_H
-#define YAKE_ENT_COMMON_H
-
-#if YAKE_PLATFORM == PLATFORM_WIN32
-#	if defined(YAKE_ENT_EXPORTS)
-#		define YAKE_ENT_API DLLEXPORT
-#	else
-#		define YAKE_ENT_API DLLIMPORT
-#		pragma comment(lib, "ent.lib")
-#	endif
-#else
-#	define YAKE_ENT_API
-#endif
+#include <yapp/ent/yakePCH.h>
+#include <yapp/ent/yakeCommon.h>
+#include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
+#include <yapp/ent/yakeObject.h>
+#include <yapp/ent/yakeEntity.h>
+#include <yapp/ent/yakeSim.h>
 
 namespace yake {
 namespace ent {
 
-	//struct entity;
-	typedef uint32 simtime;
+	EntityMachine::EntityMachine(Entity& owner) : 
+			BaseMachine(yake::app::state::TH_RELAXED),
+			mOwner(&owner)
+	{
+	}
+	String EntityMachine::getCurrentStateId() const
+	{
+		EntityMachine::StateId currentStateId =
+			(!getStateStack().empty()) ? (getStateStack().front().first) : kStateNone;
+		return currentStateId;
+	}
 
 } // namespace yake
 } // namespace ent
-
-#endif
