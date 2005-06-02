@@ -44,6 +44,7 @@ namespace msg {
 		{
 			msgIdEntry.handlerFns.push_back( fn );
 		}
+		YAKE_ASSERT( mIdEntries.find( id ) != mIdEntries.end() );
 	}
 	void MessageManager::addMessageHandler(const void* source, const MessageHandlerFn& fn)
 	{

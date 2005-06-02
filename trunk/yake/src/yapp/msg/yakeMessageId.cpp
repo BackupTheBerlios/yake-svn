@@ -29,6 +29,8 @@
 namespace yake {
 namespace msg {
 
+	const MessageId MSGID_Invalid = MessageIdManager::idInvalid();
+	const MessageId MSGID_Any = MessageIdManager::idAny();
 
 } // namespace msg
 } // namespace yake
