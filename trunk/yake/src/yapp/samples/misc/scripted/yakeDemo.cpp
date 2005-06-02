@@ -92,8 +92,8 @@ public:
 		// init done!
 
 		// create entities
-		ent::entity* e1 = theSim.createEntity("pawn", "../../media/samples/scripted/ent_pawn_basic.lua");
-		ent::entity* eLight1 = theSim.createEntity("light", "../../media/samples/scripted/ent_light.lua");
+		ent::Entity* e1 = theSim.createEntity("pawn", "../../media/samples/scripted/ent_pawn_basic.lua");
+		ent::Entity* eLight1 = theSim.createEntity("light", "../../media/samples/scripted/ent_light.lua");
 	}
 
 	virtual void run()

@@ -133,10 +133,19 @@
 				RelativePath="..\..\src\yapp\ent\yakeEntity.cpp">
 			</File>
 			<File
+				RelativePath="..\..\src\yapp\ent\yakeEntityMachine.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\yapp\ent\yakeEvent.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\yapp\ent\yakeLight.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\ent\yakeMessaging.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\ent\yakeObject.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\yapp\ent\yakePawn.cpp">
@@ -175,6 +184,12 @@
 			</File>
 			<File
 				RelativePath="..\..\yapp\ent\yakeEvent.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\ent\yakeMessaging.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\ent\yakeObject.h">
 			</File>
 			<File
 				RelativePath="..\..\yapp\ent\yakePCH.h">

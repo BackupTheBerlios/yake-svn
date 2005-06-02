@@ -147,6 +147,9 @@
 			<File
 				RelativePath="..\..\..\..\src\yapp\plugins\entLua\yakeLuaBinder.cpp">
 			</File>
+			<File
+				RelativePath="..\..\..\..\src\yapp\plugins\entLua\yakeStateCb_lua.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="inc"
@@ -166,6 +169,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\yapp\plugins\entLua\yakePrerequisites.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yapp\plugins\entLua\yakeStateCb_lua.h">
 			</File>
 		</Filter>
 	</Files>
