@@ -100,7 +100,7 @@ namespace model {
 		{
 			graphics::ISceneNode* pSN = it.getNext();
 			String name = dss.getNameForSceneNode( pSN );
-			if ( name.length() < 0 ) 
+			if ( name.empty() ) 
 				name = uniqueName::create("dotScene_sn_");
 			this->addSceneNode( pSN, name, true );
 			std::cout << "Graphical: node added - '" << name << "'" << std::endl; 
