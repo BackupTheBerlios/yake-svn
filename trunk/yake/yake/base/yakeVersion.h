@@ -36,9 +36,9 @@ namespace yake {
 struct Version
 {
 	Version( uint16 maj, uint16 min, uint16 sub ) : mMajor( maj ), mMinor( min ), mSub( sub ) {}
-	inline uint16 major() const { return mMajor; }
-	inline uint16 minor() const { return mMinor; }
-	inline uint16 sub() const { return mSub; }
+	inline uint16 getMajor() const { return mMajor; }
+	inline uint16 getMinor() const { return mMinor; }
+	inline uint16 getSub() const { return mSub; }
 	uint16 mMajor;
 	uint16 mMinor;
 	uint16 mSub;

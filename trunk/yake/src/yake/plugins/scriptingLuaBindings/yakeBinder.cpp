@@ -114,7 +114,9 @@ namespace lua {
 		[
 			class_< Version >( "Version" )
 				.def(constructor<uint16,uint16,uint16>())
-//				.def("major", &yake::base::Version::major)
+				.def("getMajor", &yake::Version::getMajor)
+				.def("getMinor", &yake::Version::getMinor)
+				.def("getSub", &yake::Version::getSub)
 		];
 
 		// yake::base bindings
