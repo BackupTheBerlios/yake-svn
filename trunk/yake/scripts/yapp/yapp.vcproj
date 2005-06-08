@@ -460,6 +460,9 @@
 				RelativePath="..\..\yapp\loader\yakeDotLinkLoader.h">
 			</File>
 			<File
+				RelativePath="..\..\src\yapp\loader\yakeDotScene.cpp">
+			</File>
+			<File
 				RelativePath="..\..\yapp\loader\yakeDotScene.h">
 			</File>
 			<File
