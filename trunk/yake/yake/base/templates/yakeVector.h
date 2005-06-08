@@ -241,7 +241,7 @@ public:
 			mCurrent( start ), mEnd( end )
 		{
 		}
-		ConstVectorIterator(T& container) :
+		ConstVectorIterator(const T& container) :
 			mCurrent( container.begin() ), mEnd( container.end() )
 		{
 		}
