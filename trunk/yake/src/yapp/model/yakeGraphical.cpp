@@ -34,18 +34,15 @@ namespace model {
 	//-----------------------------------------------------
 	Graphical::~Graphical()
 	{
-		for (NodeList::iterator it = mNodes.begin(); it != mNodes.end(); ++it)
+		VectorIterator<NodeList> it(mNodes);
+		while (it.hasMoreElements())
 		{
-			if (it->second.pSN)
-			{
-				YAKE_ASSERT( it->second.pSN );
-				delete (it->second.pSN);
-			}
+			delete it.getNext().pSN;
 		}
 		mNodes.clear();
 	}
 	//-----------------------------------------------------
-	void Graphical::addSceneNode( graphics::ISceneNode* pSceneNode, const String & rName, bool bTransferOwnership )
+	void Graphical::addSceneNode( graphics::ISceneNode* pSceneNode, bool bTransferOwnership )
 	{
 		YAKE_ASSERT( pSceneNode );
 		if (!pSceneNode)
@@ -53,25 +50,43 @@ namespace model {
 		SceneNodeEntry e;
 		e.bOwned = bTransferOwnership;
 		e.pSN = pSceneNode;
-		String name = (rName.length() > 0) ? rName : (uniqueName::create("graphical_sn_"));
-		mNodes.insert( std::make_pair(name,e) );
+		mNodes.push_back( e );
 	}
 	//-----------------------------------------------------
-	Graphical::SceneNodeList Graphical::getRootSceneNodes() const
+	Graphical::SceneNodeList Graphical::getSceneNodes() const
 	{
 		SceneNodeList nodes;
-		ConstVectorIterator< AssocVector<String,SceneNodeEntry> > it(mNodes.begin(), mNodes.end());
+		ConstVectorIterator< NodeList > it(mNodes);
 		while (it.hasMoreElements())
-			nodes.push_back( it.getNext().second.pSN );
+			nodes.push_back( it.getNext().pSN );
 		return nodes;
 	}
 	//-----------------------------------------------------
 	graphics::ISceneNode* Graphical::getSceneNodeByName(const String & rName)
 	{
-		AssocVector<String,SceneNodeEntry>::const_iterator itFind = mNodes.find( rName );
-		if (itFind == mNodes.end())
-			return 0;
-		return itFind->second.pSN;
+		VectorIterator< NodeList > it(mNodes);
+		while (it.hasMoreElements())
+		{
+			graphics::ISceneNode* pNode = it.getNext().pSN;
+			if (pNode->getName() == rName)
+				return pNode;
+		}
+		return 0;
+	}
+	//-----------------------------------------------------
+	graphics::ISceneNode* Graphical::getAnySceneNodeByName(const String & rName)
+	{
+		VectorIterator< NodeList > it(mNodes);
+		while (it.hasMoreElements())
+		{
+			graphics::ISceneNode* pNode = it.getNext().pSN;
+			if (pNode->getName() == rName)
+				return pNode;
+			pNode = pNode->getChildByName(rName);
+			if (pNode)
+				return pNode;
+		}
+		return 0;
 	}
 	//-----------------------------------------------------
 	void Graphical::fromDotScene(const String & fn, graphics::IWorld* pGWorld)
@@ -99,10 +114,10 @@ namespace model {
 		while (it.hasMoreElements())
 		{
 			graphics::ISceneNode* pSN = it.getNext();
-			String name = dss.getNameForSceneNode( pSN );
+			String name = pSN->getName();
 			if ( name.empty() ) 
 				name = uniqueName::create("dotScene_sn_");
-			this->addSceneNode( pSN, name, true );
+			this->addSceneNode( pSN, true );
 			std::cout << "Graphical: node added - '" << name << "'" << std::endl; 
 		}
 	}

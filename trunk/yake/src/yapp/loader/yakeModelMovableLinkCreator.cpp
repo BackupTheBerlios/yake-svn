@@ -56,7 +56,7 @@ namespace model {
 			std::cout << "Searching for graphical named '" << sourceModelName << "'" << std::endl;
 			Graphical* pG = rModel.getGraphicalByName( sourceModelName );
 			YAKE_ASSERT( pG );
-			pMovable = pG->getSceneNodeByName( sourceMovableName );
+			pMovable = pG->getAnySceneNodeByName( sourceMovableName );
 		}
 		else if (sourceType == "physical")
 		{

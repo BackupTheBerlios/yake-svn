@@ -199,7 +199,7 @@ namespace lua {
 		if (!pModel)
 			return;
 		const Vector3 pos(x,y,z);
-		GraphicalModel::SceneNodeList nodes = pModel->getRootSceneNodes();
+		GraphicalModel::SceneNodeList nodes = pModel->getSceneNodes();
 		ConstVectorIterator<GraphicalModel::SceneNodeList> it(nodes);
 		while (it.hasMoreElements())
 		{

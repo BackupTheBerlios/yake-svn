@@ -46,22 +46,28 @@ namespace model {
 		virtual ~Graphical();
 		typedef Vector<graphics::ISceneNode*> SceneNodeList;
 
-		/** Adds a scene node to this model::Graphical object and tags it with a name.
+		/** Adds a scene node to this model::Graphical object.
 			By default ownership of the scene node is transferred to this object.
 			@param pSceneNode pointer to the scene node to add
-			@param rName name tag for later retrieval of the added object
 			@param bTransferOwnership self-explanatory
 		*/
-		void addSceneNode( graphics::ISceneNode* pSceneNode, const String & rName, bool bTransferOwnership = true );
+		void addSceneNode( graphics::ISceneNode* pSceneNode, bool bTransferOwnership = true );
 
-		/** Returns a list of all registerd scene nodes.
+		/** Returns a list of all root scene nodes added to this object.
 		*/
-		SceneNodeList getRootSceneNodes() const;
+		SceneNodeList getSceneNodes() const;
 
-		/** Returns a scene node given the name tag it has been registered with earlier.
+		/** Returns a scene node given its name.
+			Handles only the nodes that have been directly added to this Graphical!
 			@param rName name tag of the scene node
 		*/
 		graphics::ISceneNode* getSceneNodeByName( const String & rName );
+
+		/** Returns a scene node given its name.
+			Handles the whole hierarchy of nodes as added to this Graphical.
+			@param rName name tag of the scene node
+		*/
+		graphics::ISceneNode* getAnySceneNodeByName( const String & rName );
 
 		/** Loads a complete scene from a dotScene (.scene) file and adds
 			all appropriate objects to this model::Graphical.
@@ -73,7 +79,7 @@ namespace model {
 			graphics::ISceneNode*	pSN;
 			bool					bOwned;
 		};
-		typedef AssocVector< String, SceneNodeEntry > NodeList;
+		typedef Vector< SceneNodeEntry > NodeList;
 		NodeList		mNodes;
 	};
 
