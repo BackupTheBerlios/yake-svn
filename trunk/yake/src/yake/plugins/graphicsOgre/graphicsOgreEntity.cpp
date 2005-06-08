@@ -93,17 +93,17 @@ namespace ogre3d {
 
 
 	//------------------------------------------------------
-	String OgreEntity::getTag() const
+	String OgreEntity::getName() const
 	{
 		YAKE_ASSERT( mEntity ).debug( "need an entity" );
 		return String( mEntity->getName().c_str() );
 	}
 
 	//------------------------------------------------------
-	void OgreEntity::getTag(String& tag)
+	void OgreEntity::getName(String& name)
 	{
 		YAKE_ASSERT( mEntity ).debug( "need an entity" );
-		tag = mEntity->getName().c_str();
+		name = mEntity->getName().c_str();
 	}
 }
 }

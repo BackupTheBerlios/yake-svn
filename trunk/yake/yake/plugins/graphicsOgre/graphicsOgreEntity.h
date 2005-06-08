@@ -40,9 +40,9 @@ namespace ogre3d {
 		virtual void setSubEntityMaterial( const String & subEntity, const String & materialName );
 		virtual void setCastsShadow( bool castsShadow );
 
-		virtual String getTag() const;
-		virtual void getTag(String& tag);
-		//virtual void setTag(const String& tag);
+		virtual String getName() const;
+		virtual void getName(String& name);
+		//virtual void setName(const String& name);
 
 		Ogre::Entity* getEntity_() const
 		{ return mEntity; }

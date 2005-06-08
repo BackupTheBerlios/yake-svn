@@ -30,11 +30,11 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreNode::OgreNode( Ogre::SceneManager * sceneMgr, const String& tag /*= ""*/ ) : 
+	OgreNode::OgreNode( Ogre::SceneManager * sceneMgr, const String& name /*= ""*/ ) : 
 		mSceneMgr( sceneMgr ), mSceneNode( 0 )
 	{
 		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
-		String id = tag;
+		String id = name;
 		if (id.empty())
 			id = uniqueName::create("sn_");
 		mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( id ) );
@@ -162,10 +162,10 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	ISceneNode* OgreNode::createChildNode( const String& tag /*= ""*/ )
+	ISceneNode* OgreNode::createChildNode( const String& name /*= ""*/ )
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-		OgreNode* pChild = new OgreNode( mSceneMgr, tag );
+		OgreNode* pChild = new OgreNode( mSceneMgr, name );
 		mSceneNode->addChild( pChild->getSceneNode_() );
 		mChildren.push_back( pChild );
 		return pChild;
@@ -178,17 +178,31 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	String OgreNode::getTag() const
+	ISceneNode* OgreNode::getChildByName( const String& name )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		VectorIterator<NodeList> it(mChildren);
+		while (it.hasMoreElements())
+		{
+			ISceneNode* pNode = it.getNext();
+			if (pNode->getName() == name)
+				return pNode;
+		}
+		return 0;
+	}
+
+	//------------------------------------------------------
+	String OgreNode::getName() const
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		return String( mSceneNode->getName().c_str() );
 	}
 
 	//------------------------------------------------------
-	void OgreNode::getTag(String& tag)
+	void OgreNode::getName(String& name)
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-		tag = mSceneNode->getName().c_str();
+		name = mSceneNode->getName().c_str();
 	}
 
 	//------------------------------------------------------

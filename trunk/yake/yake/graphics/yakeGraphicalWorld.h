@@ -111,9 +111,8 @@ namespace graphics {
 		virtual void setCastsShadow( bool castsShadow ) = 0;
 
 		//@todo move into base class!?
-		virtual String getTag() const = 0;
-		virtual void getTag(String& tag) = 0;
-		//virtual void setTag(const String& tag) = 0;
+		virtual String getName() const = 0;
+		virtual void getName(String& name) = 0;
 	};
 
 	/** A concrete instance of a camera in a scene.
@@ -190,7 +189,7 @@ namespace graphics {
 	{
 	public:
 		virtual void addChildNode( ISceneNode* pNode ) = 0;
-		virtual ISceneNode* createChildNode( const String& tag = "" ) = 0;
+		virtual ISceneNode* createChildNode( const String& name = "" ) = 0;
 		virtual void attachEntity( IEntity* pEntity ) = 0;
 		virtual void attachCamera( ICamera* pCamera ) = 0;
 		virtual void attachLight( ILight* pLight ) = 0;
@@ -201,15 +200,16 @@ namespace graphics {
 		virtual void getChildren( SceneNodePtrList& ret ) const = 0;
 		SceneNodePtrList getChildren() const
 		{ SceneNodePtrList ret; getChildren(ret); return ret; }
+		virtual ISceneNode* getChildByName( const String& name ) = 0;
 		virtual const EntityPtrList& getAttachedEntities() const = 0;
 		virtual const LightPtrList& getAttachedLights() const = 0;
 		virtual void detach( IEntity* pEntity ) = 0;
 		virtual void detach( ILight* pLight ) = 0;
 
 		//@todo move into base class!?
-		virtual String getTag() const = 0;
-		virtual void getTag(String& tag) = 0;
-		//virtual void setTag(const String& tag) = 0;
+		virtual String getName() const = 0;
+		virtual void getName(String& name) = 0;
+		//virtual void setName(const String& name) = 0;
 	};
 
 	/** Viewport abstract interface.
@@ -240,7 +240,7 @@ namespace graphics {
 		virtual ILight* createLight() = 0;
 		virtual ICamera* createCamera() = 0;
 
-		virtual ISceneNode* createSceneNode( const String& tag = "" ) = 0;
+		virtual ISceneNode* createSceneNode( const String& name = "" ) = 0;
 
 		virtual IParticleSystem* createParticleSystem( const String& rPSTemplateName ) = 0;
 

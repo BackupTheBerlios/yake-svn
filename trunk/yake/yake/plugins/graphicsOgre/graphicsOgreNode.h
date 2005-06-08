@@ -29,7 +29,7 @@ namespace ogre3d {
 	class OgreNode : public graphics::ISceneNode
 	{
 	public:
-		OgreNode( Ogre::SceneManager * sceneMgr, const String& tag = "" );
+		OgreNode( Ogre::SceneManager * sceneMgr, const String& name = "" );
 		virtual ~OgreNode();
 
 		virtual void setPosition( const Vector3 & position );
@@ -41,21 +41,22 @@ namespace ogre3d {
 		virtual Vector3 getScale() const;
 
 		virtual void addChildNode( ISceneNode* pNode );
-		virtual ISceneNode* createChildNode( const String& tag = "" );
+		virtual ISceneNode* createChildNode( const String& name = "" );
 		virtual void attachEntity( IEntity* pEntity );
 		virtual void attachCamera( ICamera* pCamera );
 		virtual void attachLight( ILight* pLight );
 		virtual void attachParticleSystem( IParticleSystem* pParticleSys );
 		virtual void removeAndDestroyAllChildren();
 		virtual void getChildren( SceneNodePtrList& ret ) const;
+		virtual ISceneNode* getChildByName( const String& name );
 		virtual const EntityPtrList& getAttachedEntities() const;
 		virtual const LightPtrList& getAttachedLights() const;
 		virtual void detach( IEntity* pEntity );
 		virtual void detach( ILight* pLight );
 
-		virtual String getTag() const;
-		virtual void getTag(String& tag);
-		//virtual void setTag(const String& tag);
+		virtual String getName() const;
+		virtual void getName(String& name);
+		//virtual void setName(const String& name);
 
 		Ogre::SceneNode* getSceneNode_() const
 		{ return mSceneNode; }
