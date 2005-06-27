@@ -197,34 +197,113 @@ namespace graphics {
 			TS_PARENT,
 			TS_WORLD
 		};
+		/** Adds a node as a child to this node.
+		*/
 		virtual void addChildNode( ISceneNode* pNode ) = 0;
+
+		/** Creates a new scene (optionally named) node as a child to this node. 
+			@param name Optional name of the new child scene node.
+		*/
 		virtual ISceneNode* createChildNode( const String& name = "" ) = 0;
+
+		/** Attaches an entity to this node.
+			Ownership is transferred to this node.
+		*/
 		virtual void attachEntity( IEntity* pEntity ) = 0;
+
+		/** Attaches a camera to this node.
+			Ownership is transferred to this node.
+		*/
 		virtual void attachCamera( ICamera* pCamera ) = 0;
+
+		/** Attaches a light to this node.
+			Ownership is transferred to this node.
+		*/
 		virtual void attachLight( ILight* pLight ) = 0;
+
+		/** Attaches a particle system to this node.
+			Ownership is transferred to this node.
+		*/
 		virtual void attachParticleSystem( IParticleSystem* pParticleSys ) = 0;
+
+		/** Removes and destroys all child scene nodes and all their attached objects
+			like cameras, entities, lights and particle systems.
+		*/
 		virtual void removeAndDestroyAllChildren() = 0;
+
+		/** Set the scale for this node relative to the local coordinate system.
+		*/
 		virtual void setScale( const Vector3 & scale ) = 0;
+
 		virtual Vector3 getScale() const = 0;
+
+		/** Returns a list of all child scene nodes of this scene node.
+		*/
 		virtual void getChildren( SceneNodePtrList& ret ) const = 0;
+
+		/** Returns a list of all child scene nodes of this scene node.
+		*/
 		SceneNodePtrList getChildren() const
 		{ SceneNodePtrList ret; getChildren(ret); return ret; }
+
+		/** Find & return a child scene node by its name. 
+		*/
 		virtual ISceneNode* getChildByName( const String& name ) = 0;
+
+		/** Return a list of all attached entities. 
+		*/
 		virtual const EntityPtrList& getAttachedEntities() const = 0;
+
+		/** Return a list of all attached lights. 
+		*/
 		virtual const LightPtrList& getAttachedLights() const = 0;
+
+		/** Detaches a previously attached entity.
+			Ownership of the object is transferred to the caller.
+		*/
 		virtual void detach( IEntity* pEntity ) = 0;
+
+		/** Detaches a previously attached light.
+			Ownership of the object is transferred to the caller.
+		*/
 		virtual void detach( ILight* pLight ) = 0;
 
-		//@todo move into base class!?
+		/** Return the name of this scene node.
+		*/
 		virtual String getName() const = 0;
+
+		/** Return the name of this scene node.
+		*/
 		virtual void getName(String& name) = 0;
+
 		//virtual void setName(const String& name) = 0;
 
+		/** Return the position as transformed through the hierarchy of nodes.
+		*/
 		virtual Vector3 getDerivedPosition() const = 0;
+
+		/** Return the position as transformed through the hierarchy of nodes.
+		*/
 		virtual void getDerivedPosition( Vector3& retPos ) const = 0;
+
+		/** Return the orientation as transformed through the hierarchy of nodes.
+		*/
 		virtual Quaternion getDerivedOrientation() const = 0;
+
+		/** Return the orientation as transformed through the hierarchy of nodes.
+		*/
 		virtual void getDerivedOrientation( Quaternion& retRot ) const = 0;
+
+		/** Translate this scene node by a given amount.
+			@param rDelta amount of translation.
+			@param relativeTo TransformSpace to use for the translation.
+		*/
 		virtual void translate( const Vector3& rDelta, const TransformSpace relativeTo = TS_PARENT ) = 0;
+
+		/** Rotate this scene node by a given amount.
+			@param rDelta amount of rotation.
+			@param relativeTo TransformSpace to use for the rotation.
+		*/
 		virtual void rotate( const Quaternion& rDelta, const TransformSpace relativeTo = TS_PARENT ) = 0;
 	};
 
