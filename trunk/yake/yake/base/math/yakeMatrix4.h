@@ -1,4 +1,5 @@
-/**------------------------------------------------------------------------------------
+/*
+   ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
    For the latest information visit http://www.yake.org 
@@ -16,6 +17,11 @@
    this program; if not, write to the Free Software Foundation, Inc., 59 Temple
    Place - Suite 330, Boston, MA 02111-1307, USA, or go to
    http://www.gnu.org/copyleft/lesser.txt.
+   ------------------------------------------------------------------------------------
+   If you are interested in another license model contact the Yake Team via
+   E-Mail: team@yake.org.
+   For more information see the LICENSE file in the root directory of the
+   source code distribution.
    ------------------------------------------------------------------------------------
 */
 #ifndef YAKE_MATH_MATRIX4_H

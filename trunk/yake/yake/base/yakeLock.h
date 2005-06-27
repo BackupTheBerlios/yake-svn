@@ -1,4 +1,5 @@
-/**------------------------------------------------------------------------------------
+/*
+   ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
    For the latest information visit http://www.yake.org 
@@ -17,7 +18,12 @@
    Place - Suite 330, Boston, MA 02111-1307, USA, or go to
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
- */
+   If you are interested in another license model contact the Yake Team via
+   E-Mail: team@yake.org.
+   For more information see the LICENSE file in the root directory of the
+   source code distribution.
+   ------------------------------------------------------------------------------------
+*/
 #ifndef YAKE_BASE_LOCK_H
 #define YAKE_BASE_LOCK_H
 
