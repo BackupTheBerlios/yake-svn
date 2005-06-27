@@ -97,6 +97,46 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
+	Vector3 OgreNode::getDerivedPosition() const
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		return VEC_OGRE2YAKE( mSceneNode->_getDerivedPosition() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::getDerivedPosition( Vector3& retPos ) const
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		retPos = VEC_OGRE2YAKE( mSceneNode->_getDerivedPosition() );
+	}
+
+	//------------------------------------------------------
+	Quaternion OgreNode::getDerivedOrientation() const
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		return QUAT_OGRE2YAKE( mSceneNode->_getDerivedOrientation() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::getDerivedOrientation( Quaternion& retRot ) const
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		retRot = QUAT_OGRE2YAKE( mSceneNode->_getDerivedOrientation() );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::translate( const Vector3& rDelta, const TransformSpace relativeTo /*= TS_PARENT*/ )
+	{
+		mSceneNode->translate( VEC_YAKE2OGRE(rDelta), TS_YAKE2OGRE(relativeTo) );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::rotate( const Quaternion& rDelta, const TransformSpace relativeTo /*= TS_PARENT*/ )
+	{
+		mSceneNode->rotate( QUAT_YAKE2OGRE(rDelta), TS_YAKE2OGRE(relativeTo) );
+	}
+
+	//------------------------------------------------------
 	void OgreNode::removeAndDestroyAllChildren()
 	{
 		YAKE_ASSERT( 0 );

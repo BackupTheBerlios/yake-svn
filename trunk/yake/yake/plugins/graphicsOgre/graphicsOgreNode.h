@@ -40,6 +40,13 @@ namespace ogre3d {
 		virtual void setScale( const Vector3 & scale );
 		virtual Vector3 getScale() const;
 
+		virtual Vector3 getDerivedPosition() const;
+		virtual void getDerivedPosition( Vector3& retPos ) const;
+		virtual Quaternion getDerivedOrientation() const;
+		virtual void getDerivedOrientation( Quaternion& retRot ) const;
+		virtual void translate( const Vector3& rDelta, const TransformSpace relativeTo = TS_PARENT );
+		virtual void rotate( const Quaternion& rDelta, const TransformSpace relativeTo = TS_PARENT );
+
 		virtual void addChildNode( ISceneNode* pNode );
 		virtual ISceneNode* createChildNode( const String& name = "" );
 		virtual void attachEntity( IEntity* pEntity );

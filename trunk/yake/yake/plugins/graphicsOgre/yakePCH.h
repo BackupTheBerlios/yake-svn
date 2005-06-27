@@ -42,6 +42,8 @@
 #define COL_YAKE2OGRE( c ) Ogre::ColourValue( c.r, c.g, c.b, c.a )
 #define COL_OGRE2YAKE( c ) yake::math::Color( c.r, c.g, c.b, c.a )
 
+#define TS_YAKE2OGRE( ts ) Ogre::Node::TransformSpace(ts)
+
 #define MATRIX4_OGRE2YAKE( m ) yake::math::Matrix4( \
 				m[0][0], m[0][1], m[0][2], m[0][3], \
 				m[1][0], m[1][1], m[1][2], m[1][3], \

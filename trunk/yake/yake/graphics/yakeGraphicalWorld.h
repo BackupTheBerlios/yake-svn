@@ -188,6 +188,15 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API ISceneNode : public GraphicsEntity, public Movable
 	{
 	public:
+		virtual ~ISceneNode() {}
+
+		// Shamelessly ripped from Ogre...
+		enum TransformSpace
+		{
+			TS_LOCAL,
+			TS_PARENT,
+			TS_WORLD
+		};
 		virtual void addChildNode( ISceneNode* pNode ) = 0;
 		virtual ISceneNode* createChildNode( const String& name = "" ) = 0;
 		virtual void attachEntity( IEntity* pEntity ) = 0;
@@ -210,6 +219,13 @@ namespace graphics {
 		virtual String getName() const = 0;
 		virtual void getName(String& name) = 0;
 		//virtual void setName(const String& name) = 0;
+
+		virtual Vector3 getDerivedPosition() const = 0;
+		virtual void getDerivedPosition( Vector3& retPos ) const = 0;
+		virtual Quaternion getDerivedOrientation() const = 0;
+		virtual void getDerivedOrientation( Quaternion& retRot ) const = 0;
+		virtual void translate( const Vector3& rDelta, const TransformSpace relativeTo = TS_PARENT ) = 0;
+		virtual void rotate( const Quaternion& rDelta, const TransformSpace relativeTo = TS_PARENT ) = 0;
 	};
 
 	/** Viewport abstract interface.
