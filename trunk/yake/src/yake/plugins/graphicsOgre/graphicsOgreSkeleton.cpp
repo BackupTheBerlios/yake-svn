@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -61,15 +61,16 @@ namespace ogre3d {
 	//------------------------------------------------------
 	void OgreSkeleton::advanceAllAnimations( real timeOffset )
 	{
-		Ogre::AnimationStateSet* pAnimStates = mEntity.getAllAnimationStates();
-
-		for ( Ogre::AnimationStateSet::iterator i = pAnimStates->begin(); i != pAnimStates->end(); ++i )
+/*		Ogre::AnimationStateSet* pAnimStates = mEntity.getAllAnimationStates();
+		Ogre::AnimationStateIterator i = pAnimStates->getAnimationStateIterator();
+		
+		while( i.hasMoreElements() )
 		{
-			Ogre::AnimationState* pAnimState = &i->second;
+			Ogre::AnimationState* pAnimState = i.getNext();
 			
 			if ( pAnimState->getEnabled() )
 				pAnimState->addTime( timeOffset );
-		}
+		}*/
 	}
 
 

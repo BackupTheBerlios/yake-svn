@@ -40,6 +40,7 @@ namespace ogre3d {
 		virtual void enableAnimation( const String& rAnimName, bool enable );
 		virtual void advanceAnimation( const String& rAnimName, real timeDelta );
 		virtual void advanceAllAnimations( real timeDelta );
+
 		virtual void setAnimationWeight( const String& rAnimName, real weight );
 		virtual void attachEntityToBone( const String& rBoneName, IEntity* pEntity );
 	
@@ -51,4 +52,4 @@ namespace ogre3d {
 }// graphics
 }// yake
 
-#endif 
+#endif

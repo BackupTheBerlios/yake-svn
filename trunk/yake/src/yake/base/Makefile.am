@@ -5,13 +5,15 @@ INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/dependencies/ttl $(all_includes)
 SUBDIRS = native math templates
 
 
-AM_CXXFLAGS = -rdynamic
+
 
 METASOURCES = AUTO
 lib_LTLIBRARIES = libyakeBase.la
 libyakeBase_la_SOURCES = yakeDataChunk.cpp yakeDebugLogAppender.cpp \
-			yakeDebugOutputStream.cpp yakeException.cpp yakeInputStream.cpp yakeLock.cpp yakeLog.cpp \
-			yakeMimeTypeManager.cpp yakeOutputStream.cpp yakePCH.cpp yakeSerializable.cpp yakeState.cpp \
-			yakeString.cpp yakeUniqueId.cpp yakeUniqueName.cpp yakeMovable.cpp \
-		yakeCriticalSection.cpp yakeLibrary.cpp yakeParamHolder.cpp
-libyakeBase_la_LIBADD = $(top_builddir)/src/yake/base/native/Linux/libyakeNativeLinux.la $(top_builddir)/src/yake/base/templates/libyakeTemplates.la $(top_builddir)/src/yake/base/math/libyakeMath.la
+	yakeDebugOutputStream.cpp yakeException.cpp yakeInputStream.cpp yakeLock.cpp yakeLog.cpp \
+	yakeMimeTypeManager.cpp yakeOutputStream.cpp yakePCH.cpp yakeString.cpp yakeUniqueId.cpp \
+	yakeUniqueName.cpp yakeMovable.cpp yakeCriticalSection.cpp yakeLibrary.cpp \
+	yakeParamHolder.cpp
+libyakeBase_la_LIBADD = \
+	$(top_builddir)/src/yake/base/native/Linux/libyakeNativeLinux.la $(top_builddir)/src/yake/base/templates/libyakeTemplates.la \
+	$(top_builddir)/src/yake/base/math/libyakeMath.la -lboost_signals

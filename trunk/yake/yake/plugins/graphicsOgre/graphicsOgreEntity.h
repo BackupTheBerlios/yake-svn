@@ -34,16 +34,16 @@ namespace ogre3d {
 	class OgreEntity : public graphics::IEntity
 	{
 		OgreEntity();
-		OgreEntity( const OgreEntity & );
+		OgreEntity( const OgreEntity& );
 	public:
-		OgreEntity( ::Ogre::SceneManager * sceneMgr, const String & mesh );
+		OgreEntity( ::Ogre::SceneManager* sceneMgr, const String& mesh );
 		virtual ~OgreEntity();
 
 		virtual ISkeleton* getSkeleton() const;
 
 		virtual void setVisible( bool visible );
-		virtual void setMaterial( const String & materialName );
-		virtual void setSubEntityMaterial( const String & subEntity, const String & materialName );
+		virtual void setMaterial( const String& materialName );
+		virtual void setSubEntityMaterial( const String& subEntity, const String& materialName );
 		virtual void setCastsShadow( bool castsShadow );
 
 		virtual String getName() const;

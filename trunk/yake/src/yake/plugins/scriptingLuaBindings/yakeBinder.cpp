@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -79,17 +79,6 @@ namespace lua {
 
 	YAKE_REGISTER_CONCRETE( Binder );
 
-	struct Player
-	{
-		String	mName;
-
-		void setName( const String & name )
-		{ mName = name; }
-		String getName() const
-		{ return mName; }
-	};
-
-
 	/**
 	 *        Bind classes to script engine
 	 * @param pVM - pointer to script engine Virtual Machine
@@ -107,10 +96,9 @@ namespace lua {
 		YAKE_ASSERT( engineState );
 		
 		using namespace luabind;
-
+		
 		#define YAKE_MODULE engineState, "yake"
 		
-		luabind::open( engineState );
 		module( YAKE_MODULE )
 		[
 			class_< Version >( "Version" )

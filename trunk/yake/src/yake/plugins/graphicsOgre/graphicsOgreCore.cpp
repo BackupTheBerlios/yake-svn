@@ -1,8 +1,8 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   Copyright  2004 The YAKE Team
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -72,8 +72,8 @@ namespace ogre3d {
 	};
 
 
-	OgreCore::OgreCore(const bool bWindowAlreadyCreated /*= false*/, 
-				const bool bShutdownOgre /*= true*/, 
+	OgreCore::OgreCore(const bool bWindowAlreadyCreated /*= false*/,
+				const bool bShutdownOgre /*= true*/,
 				const bool bParseDefaultResourceFile /*= true*/,
 				Ogre::RenderWindow* pRenderWindow /*= 0*/) :
 		mShutdownOgre( bShutdownOgre )
@@ -269,7 +269,7 @@ namespace ogre3d {
 			if (mSceneType == ST_EXTERIOR_CLOSE)
 			{
 				// Fog
-				// NB it's VERY important to set this before calling setWorldGeometry 
+				// NB it's VERY important to set this before calling setWorldGeometry
 				// because the vertex program picked will be different
 				ColourValue fadeColour(0.93, 0.86, 0.76);
 				mSceneMgr->setFog( FOG_LINEAR, fadeColour, .001, 500, 1000);

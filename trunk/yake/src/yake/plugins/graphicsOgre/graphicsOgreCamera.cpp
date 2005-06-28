@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -36,7 +36,12 @@ namespace ogre3d {
 	{
 		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
 		mCam = mSceneMgr->createCamera( yake::uniqueName::create("sn_") );
+		
 		YAKE_ASSERT( mCam ).warning("Couldn't create a camera!");
+		
+		// we want free look as default
+		mCam->setFixedYawAxis( false );
+		
 		mCam->setPosition( 0, 0, 0 );
 
 		// used for shadows
@@ -80,11 +85,72 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreCamera::setDirection(const Vector3 & vec)
+	void OgreCamera::setDetailLevel( SceneDetailLevel sd )
 	{
-		Movable::setDirection( -vec );
+		mCam->setDetailLevel( Ogre::SceneDetailLevel( sd ) );
+	}
+	
+	//------------------------------------------------------
+	ICamera::SceneDetailLevel OgreCamera::getDetailLevel() const
+	{
+		return SceneDetailLevel( mCam->getDetailLevel() );
+	}
+	
+	//------------------------------------------------------
+	void OgreCamera::setDirection( const Vector3& rVec )
+	{
+		//@todo cleaner implementation
+		mCam->setDirection( VEC_YAKE2OGRE( rVec ) );
+	}
+	
+	//------------------------------------------------------
+	Vector3 OgreCamera::getDirection() const
+	{
+		return VEC_OGRE2YAKE( mCam->getDirection() );
+	}
+	
+	//------------------------------------------------------
+	Vector3 OgreCamera::getUp() const
+	{
+		return VEC_OGRE2YAKE( mCam->getUp() );
+	}
+	
+	//------------------------------------------------------
+	Vector3 OgreCamera::getRight() const
+	{
+		return VEC_OGRE2YAKE( mCam->getRight() );
+	}
+	
+	//------------------------------------------------------
+	void OgreCamera::setFixedYawEnabled( bool enabled )
+	{
+		mCam->setFixedYawAxis( enabled );
+	}
+	
+	//------------------------------------------------------
+	void OgreCamera::setFixedYawAxis( const Vector3& yawAxis )
+	{
+		mCam->setFixedYawAxis( true, VEC_YAKE2OGRE( yawAxis ) );
+	}
+	
+	//------------------------------------------------------
+	void OgreCamera::moveRelative( const Vector3& rVec )
+	{
+		mCam->moveRelative( VEC_YAKE2OGRE( rVec ) );
+	}
+	
+	//------------------------------------------------------
+	void OgreCamera::lookAt( const Vector3& target )
+	{
+		mCam->lookAt( VEC_YAKE2OGRE( target ) );
 	}
 
+	//------------------------------------------------------
+	void OgreCamera::yaw( const real degrees )
+	{
+		mCam->yaw( Ogre::Degree( degrees ) );
+	}
+	
 	//------------------------------------------------------
 	Ogre::ProjectionType yake2Ogre( const ICamera::ProjectionType type )
 	{

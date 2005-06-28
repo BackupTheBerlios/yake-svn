@@ -122,8 +122,8 @@ namespace exapp {
 			// scripting
 			if ( mLoadScriptingSystem )
 			{
-				SharedPtr<base::Library> pLib = loadLib("scriptingBindingsLua" );
-				YAKE_ASSERT( pLib ).debug("Cannot load scripting bindings plugin.");
+				SharedPtr<base::Library> pLib = loadLib("scriptingLua" );
+				YAKE_ASSERT( pLib ).debug("Cannot load scripting system");
 
 				mScriptingSystem = create_default< scripting::IScriptingSystem >();
 				YAKE_ASSERT( mScriptingSystem ).error("Cannot create scripting system.");

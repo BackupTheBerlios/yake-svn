@@ -34,7 +34,7 @@ namespace ogre3d {
 	class OgreLight : public graphics::ILight
 	{
 	public:
-		OgreLight( Ogre::SceneManager * sceneMgr );
+		OgreLight( Ogre::SceneManager* sceneMgr );
 		virtual ~OgreLight();
 
 		virtual void setType( const LightType type );
@@ -47,13 +47,13 @@ namespace ogre3d {
 		virtual real getAttenuationQuadraticFactor() const;
 
 		virtual void setSpotlightRange( real innerAngle, real outerAngle, real falloff );
-		virtual real getSpotlightInnerAngle() const; 
-		virtual real getSpotlightOuterAngle() const;			
+		virtual real getSpotlightInnerAngle() const;
+		virtual real getSpotlightOuterAngle() const;
 		virtual real getSpotlightFalloff() const;
 
 		virtual void setDiffuseColour( const Color& colour );
 		virtual void setSpecularColour( const Color& colour );
-		
+
 		virtual void setEnabled( bool enabled );
 		virtual void setCastsShadows( bool enabled );
 

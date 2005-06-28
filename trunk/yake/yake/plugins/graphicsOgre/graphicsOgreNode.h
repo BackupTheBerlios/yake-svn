@@ -80,8 +80,8 @@ namespace ogre3d {
 		EntityPtrList		mEntities;
 		LightPtrList		mLights;
 
-		Ogre::SceneNode		* mSceneNode;
-		Ogre::SceneManager	* mSceneMgr;
+		Ogre::SceneNode* 	mSceneNode;
+		Ogre::SceneManager*	mSceneMgr;
 	};
 
 }

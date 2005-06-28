@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -57,8 +57,8 @@ YAKE_BASE_NATIVE_API LibraryHandle library_Load( const char* pFilename )
 	YAKE_ASSERT( pFilename ).debug( "Invalid filename." );    
 
 	// Due to Linux libraries naming we decided to add some "brand" prefix
-	yake::base::String yakeLibPrefix( "libyake" );
-	yake::base::String name( pFilename );
+	String yakeLibPrefix( "libyake" );
+	String name( pFilename );
 	
 	// We're adding Linux port prefix to every library name
 	name = yakeLibPrefix + name;        

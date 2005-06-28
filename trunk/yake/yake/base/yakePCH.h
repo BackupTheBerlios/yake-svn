@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -38,6 +38,7 @@
 #include "templates/yakePointer.h"
 #include <yake/base/templates/yakeDeque.h>
 #include <yake/base/templates/delete.h>
+#include <yake/base/templates/yakeVariant.h>
 
 #include <yake/base/mpl/yakeAbstractFactory.h>
 #include <yake/base/mpl/sequences.h>

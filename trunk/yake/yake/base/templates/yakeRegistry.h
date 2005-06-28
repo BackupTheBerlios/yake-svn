@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -97,7 +97,7 @@ YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 	SharedPtr< ICreator > getDefaultCreator()
 	{
 		YAKE_ASSERT( getIdentifiers().size() > 0 ).debug( "No default creator available." ); // todo: does not work in release mode, should throw exception
-		if( !m_pDefaultCreator ) m_pDefaultCreator = getObject( *getIdentifiers().begin() ); // todo: (if(!m_pDefaultCreator) m_pDefaultCreator = front();
+		if( !m_pDefaultCreator ) m_pDefaultCreator = getObject( *Manager< typename ConfigClass::Id, SharedPtr< typename ConfigClass::ICreator >, RegisterFunctionsNames >::getIdentifiers().begin() ); // todo: (if(!m_pDefaultCreator) m_pDefaultCreator = front();
 		return m_pDefaultCreator;
 	}
 

@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -124,33 +124,33 @@ namespace yake
 
 #define YAKE_MEMBERSIGNAL_VIRTUALIMPL( ACCESS, SIGNATURE, NAME ) \
 ACCESS: \
-	virtual SignalConnection subscribeTo##NAME##(const Sig##NAME##Type::slot_type& slot ) \
-	{ return mSig##NAME.connect(slot); } \
+	virtual SignalConnection subscribeTo ## NAME (const Sig ## NAME ## Type::slot_type& slot ) \
+	{ return mSig ## NAME.connect(slot); } \
 private: \
-	Sig##NAME##Type	mSig##NAME; \
+	Sig ## NAME ## Type	mSig ## NAME; \
 ACCESS:
 
 #define YAKE_MEMBERSIGNAL_FIRE_FN0(ACCESS, NAME) \
 ACCESS: \
-	void fire##NAME() \
-	{ mSig##NAME(); }
+	void fire ## NAME() \
+	{ mSig ## NAME(); }
 
 #define YAKE_MEMBERSIGNAL_FIRE_FN1(ACCESS, NAME, PARAMS, PARAMSCALL) \
 ACCESS: \
-	void fire##NAME(PARAMS) \
-	{ mSig##NAME(PARAMSCALL); }
+	void fire ## NAME(PARAMS) \
+	{ mSig ## NAME(PARAMSCALL); }
 
 #define YAKE_MEMBERSIGNAL_FIRE_FN2(ACCESS, NAME, PARAM0, PARAM0TYPE, PARAM1, PARAM1TYPE) \
 ACCESS: \
-	void fire##NAME(PARAM0TYPE PARAM0,PARAM1TYPE PARAM1) \
-	{ mSig##NAME(PARAM0CALL,PARAM1CALL); }
+	void fire ## NAME(PARAM0TYPE PARAM0,PARAM1TYPE PARAM1) \
+	{ mSig ## NAME(PARAM0CALL,PARAM1CALL); }
 
 #define YAKE_MEMBERSIGNAL( ACCESS, SIGNATURE, NAME ) \
 ACCESS: \
-	typedef SignalX<SIGNATURE> Sig##NAME##Type; \
-	SignalConnection subscribeTo##NAME##(const Sig##NAME##Type::slot_type& slot ) \
-	{ return mSig##NAME.connect(slot); } \
+	typedef SignalX<SIGNATURE> Sig ## NAME ## Type; \
+	SignalConnection subscribeTo ## NAME ( const Sig ## NAME ## Type::slot_type& slot ) \
+	{ return mSig ## NAME.connect(slot); } \
 private: \
-	Sig##NAME##Type	mSig##NAME;
+	Sig ## NAME ## Type	mSig ## NAME;
 
 #endif

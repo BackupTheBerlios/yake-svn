@@ -1,8 +1,8 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   Copyright  2004 The YAKE Team
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -111,29 +111,29 @@ namespace physics {
 
 		struct MassDesc
 		{
-			MassDesc( real shapeDensity, const Vector3& rOffset = Vector3::kZero ) : 
-					density( shapeDensity ), 
+			MassDesc( real shapeDensity, const Vector3& rOffset = Vector3::kZero ) :
+					density( shapeDensity ),
 					offset( rOffset )
 			{}
-			
+
 			virtual ~MassDesc() {}
-			
+
 			real 			density; /// For all of them. You can set total mass via setMass
 			Vector3		offset; /// Mass can be offseted. TODO Add rotation "offset"?
 		};
-		
+
 		struct SphereMassDesc : public MassDesc
 		{
 			SphereMassDesc(	real radiusValue,
-								real shapeDensity, 
+								real shapeDensity,
 								const Vector3& rOffset = Vector3::kZero ) :
 									MassDesc( shapeDensity, rOffset ),
 							 		radius( radiusValue )
 			{}
-			
+
 			real radius;
 		};
-		
+
 		struct BoxMassDesc : public MassDesc
 		{
 			BoxMassDesc(	real boxSizeX,
@@ -146,12 +146,12 @@ namespace physics {
 								sizeY( boxSizeY ),
 								sizeZ( boxSizeZ )
 			{}
-			
+
 			real	sizeX;
 			real sizeY;
 			real sizeZ;
 		};
-		
+
 		struct CapsuleMassDesc : public MassDesc /// Corresponds to ODE CappedCylinder
 		{
 			CapsuleMassDesc(	real capRadius,
@@ -162,11 +162,11 @@ namespace physics {
 									radius( capRadius ),
 									length( capLength )
 			{}
-			
+
 			real radius;
 			real length;
 		};
-		
+
 		struct CylinderMassDesc : public MassDesc
 		{
 			CylinderMassDesc(	real cylRadius,
@@ -177,7 +177,7 @@ namespace physics {
 									radius( cylRadius ),
 									length( cylLength )
 			{}
-			
+
 			real radius;
 			real length;
 		};
@@ -199,12 +199,12 @@ namespace physics {
 			unit but up to now we have no knowledge of that.
 		*/
 		virtual void setMass( const real mass ) = 0;
-		
-		/** Sets the mass of the body based on appropriate MassDesc. 
+
+		/** Sets the mass of the body based on appropriate MassDesc.
 		*/
 		virtual void setMass( const MassDesc& rDesc ) = 0;
-		
-		/** Adds the mass to the body based on appropriate MassDesc. 
+
+		/** Adds the mass to the body based on appropriate MassDesc.
 		*/
 		virtual void addMass( const MassDesc& rDesc ) = 0;
 
@@ -215,7 +215,7 @@ namespace physics {
 		*/
 		virtual real getMass() const = 0;
 
-		/** Sets the linear velocity of the body/actor directly, i.e. with immediate effect. 
+		/** Sets the linear velocity of the body/actor directly, i.e. with immediate effect.
 		*/
 		virtual void setLinearVelocity( const Vector3& rVelocity ) = 0;
 
@@ -223,7 +223,7 @@ namespace physics {
 		*/
 		virtual Vector3 getLinearVelocity() const = 0;
 
-		/** Sets the angular velocity [rad/s] of the body/actor directly, i.e. with immediate effect. 
+		/** Sets the angular velocity [rad/s] of the body/actor directly, i.e. with immediate effect.
 		*/
 		virtual void setAngularVelocity( const Vector3& rVelocity ) = 0;
 
@@ -240,12 +240,12 @@ namespace physics {
 		virtual void addForce( const Vector3& rForce ) = 0;
 
 		/** Adds a force defined in the global reference frame, acting at a position defined
-			in the global reference frame. 
+			in the global reference frame.
 		*/
 		virtual void addForceAtPos( const Vector3& rForce, const Vector3& rPos ) = 0;
 
 		/** Adds a force defined in the global reference frame, acting at a position defined
-			in the local reference frame. 
+			in the local reference frame.
 		*/
 		virtual void addForceAtLocalPos( const Vector3& rForce, const Vector3& rPos ) = 0;
 
@@ -259,15 +259,15 @@ namespace physics {
 		virtual void addLocalForceAtLocalPos( const Vector3& rForce, const Vector3& rPos ) = 0;
 
 		/** Adds a force defined in the local reference frame, acting at a position defined
-			in the global reference frame. 
+			in the global reference frame.
 		*/
 		virtual void addLocalForceAtPos( const Vector3& rForce, const Vector3& rPos ) = 0;
 
-		/** Adds a torque defined in the global reference frame. 
+		/** Adds a torque defined in the global reference frame.
 		*/
 		virtual void addTorque( const Vector3& rTorque ) = 0;
 
-		/** Adds a torque defined in the local reference frame. 
+		/** Adds a torque defined in the local reference frame.
 		*/
 		virtual void addLocalTorque( const Vector3& rTorque ) = 0;
 	};

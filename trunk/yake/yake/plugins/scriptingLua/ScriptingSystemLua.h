@@ -36,7 +36,6 @@
 struct lua_State;
 
 namespace yake {
-	using namespace base;
 namespace scripting {
 
 	class YAKE_SCRIPTINLUA_API ScriptingSystemLua : public scripting::IScriptingSystem

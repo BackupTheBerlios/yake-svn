@@ -61,8 +61,8 @@ namespace ogre3d {
 		sequences::list< GraphicalWorld > 
 	>*/
 	{
-		YAKE_DECLARE_CLASS( yake::graphics::ogre3d::GraphicsSystem )
-		YAKE_DECLARE_CONCRETE(GraphicsSystem, "ogre3d")
+		YAKE_DECLARE_CLASS( yake::graphics::ogre3d::GraphicsSystem );
+		YAKE_DECLARE_CONCRETE(GraphicsSystem, "ogre3d");
 
 	public: // class
 		GraphicsSystem();

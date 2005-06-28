@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -28,77 +28,66 @@
 
 namespace yake {
 
-	Movable::Movable() : mFixedYaw(false)
+	Movable::Movable()
 	{}
 
 	Movable::~Movable()
 	{}
 
-	void Movable::setFixedYawEnabled( bool enabled )
-	{
-		mFixedYaw = enabled;
-	}
-
-	void Movable::setFixedYawAxis(const Vector3 & yawAxis)
-	{
-		mYawAxis = yawAxis;
-		YAKE_ASSERT( mYawAxis.length() > 0 );
-	}
+	/// @remarks Another shameless rip from OGRE (http://www.ogre3d.org)
+// 	void Movable::lookAt( const Vector3 & target )
+// 	{
+// 		this->setDirection(target - getPosition() /*FIXME:*//*mDerivedPosition*/);
+// 	}
 
 	/// @remarks Another shameless rip from OGRE (http://www.ogre3d.org)
-	void Movable::lookAt( const Vector3 & target )
-	{
-		this->setDirection(target - getPosition() /*FIXME:*//*mDerivedPosition*/);
-	}
-
-	/// @remarks Another shameless rip from OGRE (http://www.ogre3d.org)
-	void Movable::setDirection( const Vector3 & vec )
-	{
-		if (vec == Vector3::kZero)
-			return;
-
-        Vector3 zAdjustVec = vec;
-        zAdjustVec.normalise();
-
-        if( mFixedYaw )
-        {
-            Vector3 xVec = mYawAxis.crossProduct( zAdjustVec );
-            xVec.normalise();
-
-            Vector3 yVec = zAdjustVec.crossProduct( xVec );
-            yVec.normalise();
-
-			Quaternion orientation;
-            orientation.FromAxes( xVec, yVec, zAdjustVec );
-			setOrientation( orientation );
-        }
-        else
-        {
-
-            // Get axes from current quaternion
-            Vector3 axes[3];
-            Quaternion derivedOrientation = getOrientation(); //FIXME
-			derivedOrientation.ToAxes(axes[0],axes[1],axes[2]);
-            Quaternion rotQuat;
-            if (-zAdjustVec == axes[2])
-            {
-                // Oops, a 180 degree turn (infinite possible rotation axes)
-                // Default to yaw i.e. use current UP
-                rotQuat.FromAngleAxis(Math::PI, axes[1]);
-            }
-            else
-            {
-                // Derive shortest arc to new direction
-                rotQuat = axes[2].getRotationTo(zAdjustVec);
-
-            }
-            setOrientation( rotQuat * getOrientation() );
-        }
-
-
-        // TODO If we have a fixed yaw axis, we mustn't break it by using the
-        // shortest arc because this will sometimes cause a relative yaw
-        // which will tip the camera	
-	}
+// 	void Movable::setDirection( const Vector3 & vec )
+// 	{
+// 		if (vec == Vector3::kZero)
+// 			return;
+// 
+//         Vector3 zAdjustVec = vec;
+//         zAdjustVec.normalise();
+// 
+//         if( mFixedYaw )
+//         {
+//             Vector3 xVec = mYawAxis.crossProduct( zAdjustVec );
+//             xVec.normalise();
+// 
+//             Vector3 yVec = zAdjustVec.crossProduct( xVec );
+//             yVec.normalise();
+// 
+// 			Quaternion orientation;
+//             orientation.FromAxes( xVec, yVec, zAdjustVec );
+// 			setOrientation( orientation );
+//         }
+//         else
+//         {
+// 
+//             // Get axes from current quaternion
+//             Vector3 axes[3];
+//             Quaternion derivedOrientation = getOrientation(); //FIXME
+// 			derivedOrientation.ToAxes(axes[0],axes[1],axes[2]);
+//             Quaternion rotQuat;
+//             if (-zAdjustVec == axes[2])
+//             {
+//                 // Oops, a 180 degree turn (infinite possible rotation axes)
+//                 // Default to yaw i.e. use current UP
+//                 rotQuat.FromAngleAxis(Math::PI, axes[1]);
+//             }
+//             else
+//             {
+//                 // Derive shortest arc to new direction
+//                 rotQuat = axes[2].getRotationTo(zAdjustVec);
+// 
+//             }
+//             setOrientation( rotQuat * getOrientation() );
+//         }
+// 
+// 
+//         // TODO If we have a fixed yaw axis, we mustn't break it by using the
+//         // shortest arc because this will sometimes cause a relative yaw
+//         // which will tip the camera	
+// 	}
 
 } // yake

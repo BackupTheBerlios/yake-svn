@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -75,7 +75,7 @@ std::vector< T > split( const T& where, const T& separator );
 template< typename From, typename To >
 To safe_reinterpret_cast( From from )
 {
-	COMPILE_TIME_CHECK( sizeof(From) <= sizeof(To), Destination_Type_Too_Narrow );
+	//COMPILE_TIME_CHECK( sizeof(From) <= sizeof(To), Destination_Type_Too_Narrow );
 	return reinterpret_cast< To >( from );
 }
 */
@@ -84,6 +84,6 @@ To safe_reinterpret_cast( From from )
 } // base
 } // yake
 
-//#include "yakeCast.inl"
+#include "yakeCast.inl"
 
 #endif // YAKE_BASE_MPL_CAST_H

@@ -7,4 +7,5 @@ lib_LTLIBRARIES = libyakeNativeLinux.la
 libyakeNativeLinux_la_SOURCES =  yakeApplication.cpp yakeCriticalSection.cpp yakeDebug.cpp yakeLibrary.cpp yakeTime.cpp
 
 AM_CXXFLAGS = -rdynamic
+
 libyakeNativeLinux_la_LIBADD = -ldl

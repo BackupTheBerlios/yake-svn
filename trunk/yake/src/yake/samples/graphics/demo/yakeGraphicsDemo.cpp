@@ -114,6 +114,8 @@ public:
 
 	void onKey(const yake::input::KeyboardEvent & e)
 	{
+		std::cout << "Key pressed: " << e.keyCode << "\n";
+		
 		if (e.keyCode == input::KC_ESCAPE)
 			requestShutdown();
 		else if (e.keyCode == input::KC_T)
@@ -370,9 +372,9 @@ public:
 			while (p1 > max)
 				p1 -= max;
 			mLightOneNode->setPosition( mCamPath.interpolate(p1) );
-			mLightOneNode->setFixedYawEnabled( true );
-			mLightOneNode->setFixedYawAxis( Vector3(0,1,0) );
-			mLightOneNode->lookAt( Vector3(0,0,0) );
+// 			mLightOneNode->setFixedYawEnabled( true );
+// 			mLightOneNode->setFixedYawAxis( Vector3(0,1,0) );
+// 			mLightOneNode->lookAt( Vector3(0,0,0) );
 
 			static real sunv = 100;
 			Vector3 v(0, 0, sunv * timeElapsed);

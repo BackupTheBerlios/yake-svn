@@ -65,10 +65,10 @@ namespace math {
 			y = rkQ.y;
 			z = rkQ.z;
 		}
-		inline Quaternion ( real angle, const Vector3 & axis )
-		{
-			this->FromAngleAxis( angle, axis );
-		}
+	inline Quaternion ( real angle, const Vector3 & axis )
+	{
+		this->FromAngleAxis( angle, axis );
+	}
 
         void FromRotationMatrix (const Matrix3& kRot);
         void ToRotationMatrix (Matrix3& kRot) const;

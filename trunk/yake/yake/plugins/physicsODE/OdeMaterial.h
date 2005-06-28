@@ -45,6 +45,7 @@ namespace physics
 
 		real					mSoftness;
 		real					mFriction;
+		real					mRestitution;
 		real					mFriction2;
 		bool					mLateralSlip;
 //		ISlipNormalSource*		mSlipNormalSource;

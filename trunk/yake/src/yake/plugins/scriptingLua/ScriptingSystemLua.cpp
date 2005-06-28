@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -32,7 +32,7 @@ extern "C" {
 }
 
 #define LUABIND_NO_HEADERS_ONLY
-#include <dependencies/luabind/luabind/luabind.hpp>
+#include <luabind/luabind.hpp>
 
 #include <yake/plugins/scriptingLua/ScriptingSystemLua.h>
 #include <fstream>

@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -124,11 +124,11 @@ namespace detail
 
 } // detail
 
-template< typename U, typename T >
-U* PolymorphicCast< U, T >::execute( T* pointer )
-{
-	return detail::PolymorphicCast< T, U >::Result< IsPolymorphic< U >::value >::execute( pointer );
-}
+//template< typename U, typename T >
+//U* PolymorphicCast< U, T >::execute( T* pointer )
+//{
+//	return detail::PolymorphicCast< T, U >::Result< IsPolymorphic< U >::value >::execute( pointer );
+//}
 
 
 template< typename OutType, typename InType >
@@ -145,7 +145,7 @@ OutType streamCast( const InType& rFrom )
 
 namespace detail
 {
-
+/*
 template< typename T >
 struct swapBytesHelper1
 {
@@ -206,12 +206,12 @@ struct swapBytesHelper1
   static void execute( T& t)
   {
     swapBytesHelper2< sizeof( T ) >::execute( t );
-  }
+	}
 };
-
+*/
 }// detail
 
-
+/*
 template< typename T >
 void swapBytes( T& t )
 {
@@ -224,7 +224,7 @@ void swapBytes( T* buffer, int count )
   for( int i = 0; i < count; i++ )
     swapBytes( buffer[ i ] );
 }
-
+*/
 
 template< typename T >
 T join( const std::vector< T >& what, const T& separator )

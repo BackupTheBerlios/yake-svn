@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -53,7 +53,7 @@ namespace yake {
 */
 class YAKE_BASE_API Movable
 {
-YAKE_DECLARE_CLASS( yake::Movable )
+	YAKE_DECLARE_CLASS( yake::Movable );
 protected:
 	Movable();
 // Class
@@ -71,14 +71,6 @@ public:
 	{
 		setPosition( getPosition() + rDelta );
 	}
-	// move this out of here
-	void setFixedYawEnabled( bool enabled );
-	virtual void setFixedYawAxis( const Vector3 & yawAxis );
-	virtual void lookAt( const Vector3 & target );
-	virtual void setDirection( const Vector3 & vec );
-protected:
-	Vector3		mYawAxis;
-	bool		mFixedYaw;
 };
 
 } // yake

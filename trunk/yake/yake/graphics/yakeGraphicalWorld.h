@@ -1,8 +1,8 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   Copyright  2004 The YAKE Team
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -41,6 +41,7 @@
 
 namespace yake {
 	using namespace math;
+	using namespace base::templates;
 namespace graphics {
 
 	/**
@@ -57,11 +58,11 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API ISkeleton : public GraphicsEntity
 	{
 	public:
-		virtual void enableAnimation( const String & rAnimName, bool enable = true ) = 0;
+		virtual void enableAnimation( const String& rAnimName, bool enable = true ) = 0;
 		virtual void advanceAnimation( const String& rAnimName, real timeDelta ) = 0;
 		virtual void advanceAllAnimations( real timeDelta ) = 0;
-		virtual void setAnimationWeight( const String & rAnimName, real weight ) = 0;
-		virtual void attachEntityToBone( const String & bone, IEntity* pEntity ) = 0;
+		virtual void setAnimationWeight( const String& rAnimName, real weight ) = 0;
+		virtual void attachEntityToBone( const String& bone, IEntity* pEntity ) = 0;
 	};
 
 	/**
@@ -69,7 +70,7 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API ILight : public GraphicsEntity
 	{
 	public:
-		enum LightType 
+		enum LightType
 		{
 			LT_POINT,
 			LT_DIRECTIONAL,
@@ -94,10 +95,10 @@ namespace graphics {
 		/** Spotlight spatial configuration
 		*/
 		virtual void setSpotlightRange( real innerAngle, real outerAngle, real falloff ) = 0;
-		virtual real getSpotlightInnerAngle() const = 0; 
-		virtual real getSpotlightOuterAngle() const = 0;			
+		virtual real getSpotlightInnerAngle() const = 0;
+		virtual real getSpotlightOuterAngle() const = 0;
 		virtual real getSpotlightFalloff() const = 0;
-		
+
 		/** Synonims for set/getOrientation.  Meaningful only for directional and spot lights
 		*/
 		virtual void setDirection( const Vector3& rDirection ) = 0;
@@ -126,6 +127,16 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API ICamera : public GraphicsEntity, public Movable
 	{
 	public:
+		enum SceneDetailLevel
+		{
+		/// Only points are rendered.
+			SDL_POINTS = 1,
+		/// Wireframe models are rendered.
+			SDL_WIREFRAME = 2,
+		/// Solid polygons are rendered.
+			SDL_SOLID = 3
+		};
+
 		enum ProjectionType
 		{
 			PT_ORTHOGRAPHIC,
@@ -135,6 +146,20 @@ namespace graphics {
 		virtual void setProjectionType( const ProjectionType type ) = 0;
 		virtual ProjectionType getProjectionType() const = 0;
 
+        /** Sets the level of rendering detail required from this camera.
+		@remarks
+		Each camera is set to render at full detail by default, that is
+		with full texturing, lighting etc. This method lets you change
+		that behaviour, allowing you to make the camera just render a
+		wireframe view, for example.
+		 */
+		void setDetailLevel(SceneDetailLevel sd);
+
+        /** Retrieves the level of detail that the camera will render.
+		 */
+		SceneDetailLevel getDetailLevel(void) const;
+
+		
 		virtual void setNearClipDistance( real clipDistance ) = 0;
 		virtual real getNearClipDistance() const = 0;
 		virtual void setFarClipDistance( real clipDistance ) = 0;
@@ -143,11 +168,38 @@ namespace graphics {
 		virtual real getFOV() const = 0;
 		virtual void setAspectRatio( real aspectRatio ) = 0;
 		virtual real getAspectRatio() const = 0;
+		
+        /** Sets the camera's direction vector.
+		@remarks
+		Note that the 'up' vector for the camera will automatically be recalculated based on the
+		current 'up' vector (i.e. the roll will remain the same).
+		 */
+		virtual void setDirection( const Vector3& rVec ) = 0;
 
-		inline void rotate( const Quaternion & q );
-		inline void rotate( const Vector3 & axis, real degrees );
+        /** Gets the camera's direction.
+		*/
+		virtual Vector3 getDirection() const = 0;
+
+        /** Gets the camera's up vector.
+		 */
+		virtual Vector3 getUp() const = 0;
+
+        /** Gets the camera's right vector.
+		 */
+		virtual Vector3 getRight() const = 0;
+		
+		virtual void setFixedYawEnabled( bool enabled ) = 0;
+		virtual void setFixedYawAxis( const Vector3& yawAxis ) = 0;
+	
+		/** Moves movable's position by the vector offset provided along it's own axes (relative to orientation).
+	 	*/
+		virtual void moveRelative( const Vector3& rVec ) = 0;
+		virtual void lookAt( const Vector3& target ) = 0;
+
+		inline void rotate( const Quaternion& q );
+		inline void rotate( const Vector3& axis, real degrees );
 		inline void pitch( const real degrees );
-		inline void yaw( const real degrees );
+		virtual void yaw( const real degrees ) = 0;
 
 		/** Return a ray in world space coordinates as cast from the camera through a viewport
 			position.
@@ -155,7 +207,7 @@ namespace graphics {
 		*/
 		virtual Ray createCameraToViewportRay(const real screenX, const real screenY) const;
 
-		/** Retrieve the projection matrix. The matrix conforms to the right-handed rules. 
+		/** Retrieve the projection matrix. The matrix conforms to the right-handed rules.
 		*/
 		virtual Matrix4 getProjectionMatrix() const = 0;
 		virtual Matrix4 getViewMatrix() const = 0;
@@ -175,14 +227,6 @@ namespace graphics {
 	{
 		const Vector3 xAxis = getOrientation() * Vector3::kUnitX;
 		rotate(xAxis, degrees);
-	}
-	void ICamera::yaw( const real degrees )
-	{
-		//const Vector3 yAxis = (mFixedYaw ? mYawAxis : (getOrientation() * Vector3::kUnitY));
-		if (mFixedYaw)
-			rotate( mYawAxis, degrees );
-		else
-			rotate( getOrientation() * Vector3::kUnitY, degrees );
 	}
 
 	class ISceneNode;
@@ -348,16 +392,16 @@ namespace graphics {
 		/** Create an (placeable) instance of a mesh.
 			\param mesh Can either be a mesh file loaded from a resource or a procedural mesh.
 		*/
-		virtual IEntity* createEntity( const String & mesh ) = 0;
+		virtual IEntity* createEntity( const String& mesh ) = 0;
 
-		virtual IMeshGeometryAccess* createProceduralMesh(const String & name) = 0;
-		virtual void destroyProceduralMesh(const String & name) = 0;
-		virtual IMeshGeometryAccess* getProceduralMesh(const String & name) = 0;
+		virtual IMeshGeometryAccess* createProceduralMesh(const String& name) = 0;
+		virtual void destroyProceduralMesh(const String& name) = 0;
+		virtual IMeshGeometryAccess* getProceduralMesh(const String& name) = 0;
 
 		/** Creates viewport and assigns camera *pCamera to it.
 				Viewport start offset and dimensions are in normalized window-relative coords [0..1].
 		*/
-		virtual IViewport* createViewport( ICamera * pCamera ) = 0;
+		virtual IViewport* createViewport( ICamera* pCamera ) = 0;
 
 		virtual StringVector getShadowTechniques() const = 0;
 		virtual bool selectShadowTechnique(const String& name, const StringMap& params) = 0;

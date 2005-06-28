@@ -43,7 +43,7 @@ namespace math {
 		Plane( const Vector3 & rkNormal, const real kD ) : normal( rkNormal ), d( kD )
 		{
 		}
-		
+
 		Vector3		normal;
 		real		d;
 	};

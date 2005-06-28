@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -52,9 +52,9 @@ namespace base
 // todo: replace macros with inline functions
 #define YAKE_LOGPRINTF yake::base::Log::instance().logPrintf
 #define YAKE_LOG_INFORMATION( what ) yake::base::Log::instance().log( what, yake::base::Log::INFORMATIONS, YAKE_HERE );
-#define YAKE_LOG_WARNING( what )     yake::base::Log::instance().log( what, yake::base::Log::WARNINGS,     YAKE_HERE );
-#define YAKE_LOG_ERROR( what )   	   yake::base::Log::instance().log( what, yake::base::Log::ERRORS,       YAKE_HERE );
-#define YAKE_LOG( what )   	         yake::base::Log::instance().log( what, yake::base::Log::INFORMATIONS );
+#define YAKE_LOG_WARNING( what ) yake::base::Log::instance().log( what, yake::base::Log::WARNINGS, YAKE_HERE );
+#define YAKE_LOG_ERROR( what ) yake::base::Log::instance().log( what, yake::base::Log::ERRORS, YAKE_HERE );
+#define YAKE_LOG( what ) yake::base::Log::instance().log( what, yake::base::Log::INFORMATIONS );
 
 class YAKE_BASE_API Log
 {
