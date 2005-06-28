@@ -9,12 +9,12 @@
 			<include>dependencies</include>
 			<include>.</include>
 			<include>dependencies/ttl</include>
-			<include>/usr/local/include/OGRE</include>
+			<include>dependencies/OGRE</include>
 			<include>dependencies/ode/include</include>
 			<include>dependencies/luabind</include>
 	</Common>
 
-	<!-- One can define lists of strings to be used later -->
+	<!-- One can define lists of strings to be used later  -->
 	<List name="dynamic_loader" >
 		<item>dl</item>
 	</List>
@@ -45,6 +45,7 @@
 		<libadd>yakeNative</libadd>
 		<libadd>yakeTemplates</libadd>
 		<libadd>yakeMath</libadd>
+		<libadd>boost_signals</libadd>
 
 	</BuildSharedLibrary>	
 
@@ -91,13 +92,23 @@
 		<libadd>yakeBase</libadd>
 	</BuildSharedLibrary>
 
+        <BuildSharedLibrary
+                name="yakeScripting"
+                src="src/yake/scripting"
+        >
+                <libadd>yakeBase</libadd>
+        </BuildSharedLibrary>
+
+
+<!--
 	<BuildSharedLibrary
 		name="yakeRx"
 		src="src/yake/rx"
 	>
 		<libadd>yakeBase</libadd>
 	</BuildSharedLibrary>
-
+-->
+<!--
 	<BuildSharedLibrary
 		name="yakeaudioOpenAL"
 		src="src/yake/plugins/audioOpenAL"
@@ -105,7 +116,7 @@
 		<libadd>openalpp</libadd>
 		<libadd>yakeAudio</libadd>
 	</BuildSharedLibrary>
-
+-->
 	<BuildSharedLibrary
 		name="yakegraphicsOgre"
 		src="src/yake/plugins/graphicsOgre"
@@ -121,7 +132,7 @@
 		<libadd>yakeInput</libadd>
 		<libadd>OgreMain</libadd>
 	</BuildSharedLibrary>
-
+<!--
 	<BuildSharedLibrary
 		name="yakephysicsODE"
 		src="src/yake/plugins/physicsODE"
@@ -129,7 +140,7 @@
 		<libadd>yakePhysics</libadd>
 		<libadd>ode</libadd>
 	</BuildSharedLibrary>
-
+-->
 	<BuildSharedLibrary
 		name="yakescriptingLua"
 		src="src/yake/plugins/scriptingLua"
@@ -163,18 +174,19 @@
 		<libadd>yappEvents</libadd>
 	</BuildSharedLibrary>
 
+       <BuildSharedLibrary
+                name="yappLoader"
+                src="src/yapp/loader"
+        >
+                <libadd>yappBase</libadd>
+        </BuildSharedLibrary>
+
 	<BuildSharedLibrary
 		name="yappModel"	
 		src="src/yapp/model"
 	>
 		<libadd>yappBase</libadd>
-	</BuildSharedLibrary>
-
-	<BuildSharedLibrary
-		name="yappLoader"
-		src="src/yapp/loader"
-	>
-		<libadd>yappBase</libadd>
+		<libadd>yappLoader</libadd>
 	</BuildSharedLibrary>
 
 	<List name="common_libs">
@@ -183,6 +195,7 @@
 		<item>yakeInput</item>
 		<item>yakePhysics</item>
 		<item>yakeData</item>
+		<item>yakeScripting</item>
 	</List>
 
 	<BuildProgram
