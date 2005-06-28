@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -44,8 +44,6 @@ namespace yake
 typedef std::string YAKE_BASE_STRING;
 
 } // yake
-
-#include <ext/stl_hash_fun.h>
 
 #ifndef GNU_STD_EXTENSION_HASH_STRING
 #define GNU_STD_EXTENSION_HASH_STRING

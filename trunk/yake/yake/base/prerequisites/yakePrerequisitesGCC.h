@@ -32,7 +32,6 @@
 //============================================================================
 // GCC specific headers
 #include <wchar.h>
-#include "yakeStringGCC.h"
 
 // Include platform specific configuration files
 #if (YAKE_PLATFORM == PLATFORM_LINUX) && (YAKE_COMPILER == COMPILER_GNUC)
@@ -49,6 +48,8 @@
 #        include <ext/hash_fun.h>
 #    endif
 #endif
+
+#include "yakeStringGCC.h"
 //#	include "yakePrerequisitesGCCTypes.h"
 
 //============================================================================
