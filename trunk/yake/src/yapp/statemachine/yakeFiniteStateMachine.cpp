@@ -31,7 +31,9 @@ namespace yake {
 namespace app {
 namespace state {
 
+#if YAKE_COMPILER == COMPILER_GNUC
 	template<> const String Machine<String>::kStateNone = "NONE";
+#endif
 
 	//---------------------------------------------------------
 	// State

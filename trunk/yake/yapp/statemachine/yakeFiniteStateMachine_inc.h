@@ -31,6 +31,10 @@
 	// State
 	//---------------------------------------------------------
 
+#if YAKE_COMPILER == COMPILER_MSVC
+	template<> const String Machine<String>::kStateNone = "NONE";
+#endif
+
 	//---------------------------------------------------------
 	template< typename StateIdType >
 		Machine<StateIdType>::Machine( const TransitionHandling th ) :
