@@ -1,4 +1,4 @@
-<scene formatversion=0.0 >
+<scene formatVersion=0.0 >
 	<nodes>
 		<node name="Box01-vis" id="1" >
 			<position x="5.90406" y="-8.11808" z="-6.63944" />
@@ -7,8 +7,8 @@
 			<entity
 				name="Box01-vis"
 				id="2"
-				meshfile ="Box01-vis.mesh"
-				materialfile="DotScene1.material"
+				meshFile ="Box01-vis.mesh"
+				materialFile="DotScene1.material"
 			/>
 		</node>
 		<node name="Sphere01-vis" id="3" >
@@ -18,8 +18,8 @@
 			<entity
 				name="Sphere01-vis"
 				id="4"
-				meshfile ="Sphere01-vis.mesh"
-				materialfile="DotScene1.material"
+				meshFile ="Sphere01-vis.mesh"
+				materialFile="DotScene1.material"
 			/>
 		</node>
 		<node name="Omni01" id="5" >
@@ -32,9 +32,9 @@
 				type="point"
 				visible="true" >
 				<position x="0.0" y="0.0" z="0.0" />
-				<colour_diffuse r="1.0" g="1.0" b="1.0" />
-				<colour_specular r="1.0" g="1.0" b="1.0" />
-				<light_attenuation
+				<colourDiffuse r="1.0" g="1.0" b="1.0" />
+				<colourSpecular r="1.0" g="1.0" b="1.0" />
+				<lightAttenuation
 					range="300.0"
 					constant="1.0"
 					linear="0.0"
@@ -49,8 +49,8 @@
 			<entity
 				name="Sphere02-vis"
 				id="8"
-				meshfile ="Sphere02-vis.mesh"
-				materialfile="DotScene1.material"
+				meshFile ="Sphere02-vis.mesh"
+				materialFile="DotScene1.material"
 			/>
 		</node>
 		<node name="Box02-vis" id="9" >
@@ -60,8 +60,8 @@
 			<entity
 				name="Box02-vis"
 				id="10"
-				meshfile ="Box02-vis.mesh"
-				materialfile="DotScene1.material"
+				meshFile ="Box02-vis.mesh"
+				materialFile="DotScene1.material"
 			/>
 		</node>
 	</nodes>
