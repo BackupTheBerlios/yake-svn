@@ -60,8 +60,8 @@ namespace ogre3d {
 		virtual void attachLight( ILight* pLight );
 		virtual void attachParticleSystem( IParticleSystem* pParticleSys );
 		virtual void removeAndDestroyAllChildren();
-		virtual void getChildren( SceneNodePtrList& ret ) const;
-		virtual ISceneNode* getChildByName( const String& name );
+		virtual void getChildren( SceneNodePtrList& ret, bool bRecursive = false ) const;
+		virtual ISceneNode* getChildByName( const String& name, bool bRecursive = false );
 		virtual const EntityPtrList& getAttachedEntities() const;
 		virtual const LightPtrList& getAttachedLights() const;
 		virtual void detach( IEntity* pEntity );

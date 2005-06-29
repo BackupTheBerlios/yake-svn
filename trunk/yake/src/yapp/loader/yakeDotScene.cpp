@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -31,285 +31,384 @@
 
 namespace yake {
 namespace data {
-namespace serializer {
+namespace parser {
 namespace dotscene {
 
-
+	String DotSceneParser::ROOT_NODE_NAME = "root_node";
+	
 	//------------------------------------------------------
-	SceneNodeList DotSceneSerializer::getRootLevelSceneNodes() const
+	void DotSceneParser::reset()
 	{
-		return mRootNodes;
-	}
-	//------------------------------------------------------
-	void DotSceneSerializer::reset()
-	{
+		//FIXME state is more that just doc node
 		mDocNode.reset();
 	}
 
 	//------------------------------------------------------
-	bool DotSceneSerializer::load(
-							const SharedPtr<dom::INode> & docNode,
-							graphics::IWorld* pGWorld)
+	bool DotSceneParser::load( const SharedPtr<dom::INode>& docNode )
 	{
-		std::cout << "load()" << std::endl;
+		YAKE_LOG( "load()" );
+		
 		YAKE_ASSERT( docNode.get() );
+		
 		if (!docNode.get())
 			return false;
-		YAKE_ASSERT( pGWorld );
-		if (!pGWorld)
-			return false;
+		
 		mDocNode = docNode;
-		mGWorld = pGWorld;
-		//
-		std::cout << "parsing scene..." << std::endl;
-		readScene( mDocNode, 0 );
+		
+		YAKE_LOG( "parsing scene..." );
+		
+		readScene( mDocNode );
 
-		//
 		return true;
 	}
 
 	//------------------------------------------------------
-	void DotSceneSerializer::readScene( const SharedPtr<dom::INode> & pNode, graphics::ISceneNode* pParentSN )
+	void DotSceneParser::readScene( const SharedPtr<dom::INode>& pNode )
 	{
 		const String name = pNode->getAttributeValueAs<String>( "name" );
-		std::cout << "readScene() [" << name << "]" << std::endl;
+		
+		YAKE_LOG( "readScene() [" + name + "]" );
+		
 		YAKE_ASSERT( pNode );
+		
 		SharedPtr<dom::INode> pNodes = pNode->getNodeByName("nodes");
-		std::cout << "scene: found nodes = " << (pNodes.get() ? "yes" : "no") << std::endl;
-		if (pNodes.get())
-			readNodes( pNodes, pParentSN );
+		YAKE_LOG( "scene: found nodes = " + String( pNodes.get() ? "yes" : "no" ) );
+		
+		if ( pNodes.get() )
+			readNodes( pNodes );
 	}
 
 	//------------------------------------------------------
-	void DotSceneSerializer::readNodes( const SharedPtr<dom::INode> & pNodes, graphics::ISceneNode* pParentSN )
+	void DotSceneParser::readNodes( const SharedPtr<dom::INode>& pNodes )
 	{
-		std::cout << "readNodes()" << std::endl;
+		YAKE_LOG( "readNodes()" );
 		YAKE_ASSERT( pNodes );
-		const dom::NodeList & nodes = pNodes->getNodes();
-		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
+		
+		const dom::NodeList& nodes = pNodes->getNodes();
+		for( dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it )
 		{
-			readNode( (*it), pParentSN );
+			readNode( (*it), ROOT_NODE_NAME );
 		}
 	}
 
 	//------------------------------------------------------
-	void DotSceneSerializer::readNode( const SharedPtr<dom::INode> & pNode, graphics::ISceneNode* pParentSN )
+	void DotSceneParser::readNode( const SharedPtr<dom::INode>& pNode, String parentNodeName )
 	{
-		String nodeName = pNode->getAttributeValueAs<String>("name");
-		std::cout << "readNode() [name=" << nodeName << "]" << std::endl;
+		String nodeName = pNode->getAttributeValueAs<String>( "name" );
+		
+		YAKE_LOG( "readNode() [name=" + nodeName + "]" );
 		YAKE_ASSERT( pNode );
-		if (nodeName.empty())
-			nodeName = uniqueName::create(nodeName);
-		graphics::ISceneNode* pChildSN = mGWorld->createSceneNode(nodeName);
-		YAKE_ASSERT( pChildSN );
-		mNodeNames.insert( std::make_pair( pChildSN, nodeName ) );
-		if (pParentSN)
-			pParentSN->addChildNode( pChildSN );
-		else
-			mRootNodes.push_back( pChildSN );
-		const dom::NodeList & nodes = pNode->getNodes();
-		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
+		
+		if ( nodeName.empty() )
+			nodeName = uniqueName::create( nodeName );
+		
+		NodeDesc currentSceneNode;
+		
+		currentSceneNode.name = nodeName;
+		currentSceneNode.parentNodeName = parentNodeName;
+		
+		// Implementing top-bottom parsing. So we have to read full info about the top-most node 
+		// and then descend to lower levels "root---->children". 
+		// That's why XML nodes for scene nodes should be saved at first. XML nodes for all entities, cameras,
+		// lights, etc. of the current scene node should also be saved and be parsed after the current node.
+		// Saved XML nodes for child scene nodes are parsed in the last turn.
+		dom::NodeList childNodes;
+		dom::NodeList attachedObjects; // for entities, cameras, lights, etc.
+		
+		const dom::NodeList& nodes = pNode->getNodes();
+		for ( dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it )
 		{
-			String tag = ::yake::StringUtil::toLowerCase((*it)->getValueAs<String>("name"));
+			String tag = StringUtil::toLowerCase((*it)->getValueAs<String>("name"));
 
 			const SharedPtr<dom::INode> & pChild = (*it);
-			if (tag == "entity")
-				readEntity( pChild, pChildSN );
-			else if (tag == "position")
+			if (tag == "position")
 			{
-				Vector3 position;
-				readPosition( pChild, position );
-				pChildSN->setPosition( position );
+				readPosition( pChild, currentSceneNode.transform.position );
 			}
 			else if (tag == "rotation")
 			{
-				Quaternion rotation;
-				readRotation( pChild, rotation );
-				pChildSN->setOrientation( rotation );
+				readRotation( pChild, currentSceneNode.transform.rotation );
 			}
 			else if (tag == "scale")
 			{
-				Vector3 scale;
-				readScale( pChild, scale );
-				pChildSN->setScale( scale );
+				readScale( pChild, currentSceneNode.transform.scale );
 			}
 			else if (tag == "node" )
-				readNode( pChild, pChildSN );
-			else if (tag == "light" )
-				readLight( pChild, pChildSN );
+				childNodes.push_back( *it );
+			else if (	tag == "light" ||
+						tag == "entity" ||
+						tag == "camera" )
+				attachedObjects.push_back( *it );
+		}
+		
+		// Now firing signal as new node was parsed
+		mSigNode( currentSceneNode );
+		// And placing it to the map
+		mSNDescriptions[ nodeName ] = currentSceneNode;
+		
+		// Now it's time to read attached objects
+		for ( dom::NodeList::const_iterator it = attachedObjects.begin(); it != attachedObjects.end(); ++it )
+		{
+			String tag = StringUtil::toLowerCase((*it)->getValueAs<String>("name"));
+
+			const SharedPtr<dom::INode>& pChild = (*it);
+			if ( tag == "entity" )
+			{
+				readEntity( pChild, nodeName );
+			}
+			else if ( tag == "camera" )
+			{
+				readCamera( pChild, nodeName );
+			}
+			else if ( tag == "light" )
+			{
+				readLight( pChild, nodeName );
+			}
+		}
+		
+		// Next, reading child scene nodes
+		// descending the node tree...
+		for ( dom::NodeList::const_iterator it = childNodes.begin(); it != childNodes.end(); ++it )
+		{
+				readNode( *it, nodeName );
 		}
 	}
 
 	//------------------------------------------------------
-	void DotSceneSerializer::readEntity( const SharedPtr<dom::INode> & pNode, graphics::ISceneNode* pParentSN )
+	void DotSceneParser::readEntity( const SharedPtr<dom::INode>& pNode, String parentNodeName )
 	{
-		std::cout << "readEntity() [name=" << (pNode->getAttributeValueAs<String>("name")) << "]" << std::endl;
 		YAKE_ASSERT( pNode );
-		YAKE_ASSERT( pParentSN );
+		
+		EntityDesc desc;
+		
 		String name = (pNode->getAttributeValueAs<String>("name"));
-		String meshName = (pNode->getAttributeValueAs<String>("meshFile"));
-		String castsShadow = ::yake::StringUtil::toLowerCase(pNode->getAttributeValueAs<String>("castsShadow"));
-		graphics::IEntity* pEnt = mGWorld->createEntity( meshName );
-		YAKE_ASSERT( pEnt );
-		pEnt->setCastsShadow( (castsShadow == "yes") );
-		pParentSN->attachEntity( pEnt );
+		
+		desc.name = name;
+		desc.parentNodeName = parentNodeName;
+		
+		YAKE_LOG( "readEntity() [name = " + name + "]" );
+		
+		desc.meshFile = pNode->getAttributeValueAs<String>( "meshFile" );
+		
+		String castsShadows = StringUtil::toLowerCase(pNode->getAttributeValueAs<String>("castsShadow"));
+		desc.castsShadows = castsShadows == "yes";
+
+		// Entity description ready. Fire!
+		mSigEntity( desc );
+		
+		// Storing...
+		mEntityDescriptions[ name ] = desc;
 	}
 	
 	//------------------------------------------------------
-	void DotSceneSerializer::readVector( const SharedPtr<dom::INode>& pNode, Vector3& rVec )
+	void DotSceneParser::readVector( const SharedPtr<dom::INode>& pNode, Vector3& rVec )
 	{
 		YAKE_ASSERT( pNode );
-		rVec.x = atof( pNode->getAttributeValueAs<String>("x").c_str() );
-		rVec.y = atof( pNode->getAttributeValueAs<String>("y").c_str() );
-		rVec.z = atof( pNode->getAttributeValueAs<String>("z").c_str() );
+		rVec.x = StringUtil::parseReal( pNode->getAttributeValueAs<String>("x") );
+		rVec.y = StringUtil::parseReal( pNode->getAttributeValueAs<String>("y") );
+		rVec.z = StringUtil::parseReal( pNode->getAttributeValueAs<String>("z") );
 	}
 
 	//------------------------------------------------------
-	void DotSceneSerializer::readPosition( const SharedPtr<dom::INode> & pNode, Vector3 & position )
+	void DotSceneParser::readPosition( const SharedPtr<dom::INode> & pNode, Vector3 & position )
 	{
 		readVector( pNode, position );
 	}
 
 	//------------------------------------------------------
-	void DotSceneSerializer::readScale( const SharedPtr<dom::INode>& pNode, Vector3& rScale )
+	void DotSceneParser::readScale( const SharedPtr<dom::INode>& pNode, Vector3& rScale )
 	{
 		readVector( pNode, rScale );
 	}
 	
 	//------------------------------------------------------
-	void DotSceneSerializer::readRotation( const SharedPtr<dom::INode> & pNode, Quaternion & rotation )
+	void DotSceneParser::readRotation( const SharedPtr<dom::INode>& pNode, Quaternion & rotation )
 	{
 		YAKE_ASSERT( pNode );
 		if (pNode->getAttributeValueAs<String>("qx") != "")
 		{
-			rotation.x = atof( pNode->getAttributeValueAs<String>("qx").c_str() );
-			rotation.y = atof( pNode->getAttributeValueAs<String>("qy").c_str() );
-			rotation.z = atof( pNode->getAttributeValueAs<String>("qz").c_str() );
-			rotation.w = atof( pNode->getAttributeValueAs<String>("qw").c_str() );
+			rotation.x = StringUtil::parseReal( pNode->getAttributeValueAs<String>("qx") );
+			rotation.y = StringUtil::parseReal( pNode->getAttributeValueAs<String>("qy") );
+			rotation.z = StringUtil::parseReal( pNode->getAttributeValueAs<String>("qz") );
+			rotation.w = StringUtil::parseReal( pNode->getAttributeValueAs<String>("qw") );
 		}
 		if (pNode->getAttributeValueAs<String>("axisX") != "")
 		{
 			Vector3 axis;
-			axis.x = atof( pNode->getAttributeValueAs<String>("axisX").c_str() );
-			axis.y = atof( pNode->getAttributeValueAs<String>("axisY").c_str() );
-			axis.z = atof( pNode->getAttributeValueAs<String>("axisZ").c_str() );
+			axis.x = StringUtil::parseReal( pNode->getAttributeValueAs<String>("axisX") );
+			axis.y = StringUtil::parseReal( pNode->getAttributeValueAs<String>("axisY") );
+			axis.z = StringUtil::parseReal( pNode->getAttributeValueAs<String>("axisZ") );
 			rotation.FromAxes( &axis );
 		}
 		if (pNode->getAttributeValueAs<String>("angleX") != "")
 		{
 			Vector3 axis;
-			axis.x = atof( pNode->getAttributeValueAs<String>("angleX").c_str() );
-			axis.y = atof( pNode->getAttributeValueAs<String>("angleY").c_str() );
-			axis.z = atof( pNode->getAttributeValueAs<String>("angleZ").c_str() );
-			real angle = atof( pNode->getAttributeValueAs<String>("angle").c_str() );;
+			axis.x = StringUtil::parseReal( pNode->getAttributeValueAs<String>("angleX") );
+			axis.y = StringUtil::parseReal( pNode->getAttributeValueAs<String>("angleY") );
+			axis.z = StringUtil::parseReal( pNode->getAttributeValueAs<String>("angleZ") );
+			real angle = StringUtil::parseReal( pNode->getAttributeValueAs<String>("angle") );
 			rotation.FromAngleAxis( angle, axis );
 		}
 	}
 	//------------------------------------------------------
-	void DotSceneSerializer::readColour( const SharedPtr<dom::INode>& pNode, Color& colour )
+	void DotSceneParser::readColour( const SharedPtr<dom::INode>& pNode, Color& colour )
 	{
 		YAKE_ASSERT( pNode );
 		
-		/// TODO we shouldn't use atof directly... Maybe some wrapper?
-		colour.r = atof( pNode->getAttributeValueAs<String>("r").c_str() );
-		colour.g = atof( pNode->getAttributeValueAs<String>("g").c_str() );
-		colour.b = atof( pNode->getAttributeValueAs<String>("b").c_str() );
+		String r = pNode->getAttributeValueAs<String>("r");
+		String g = pNode->getAttributeValueAs<String>("g");
+		String b = pNode->getAttributeValueAs<String>("b");
+		
+		YAKE_LOG( "readColour: r=" + r + ", g=" + g + ", b=" + b );
+		
+		colour.r = StringUtil::parseReal( r );
+		colour.g = StringUtil::parseReal( g );
+		colour.b = StringUtil::parseReal( b );
 	}
 
 	//------------------------------------------------------
-	void DotSceneSerializer::readLightRange( const SharedPtr<dom::INode>& pNode, graphics::ILight* pLight )
+	void DotSceneParser::readLightRange( const SharedPtr<dom::INode>& pNode, LightDesc& desc )
 	{
 		YAKE_ASSERT( pNode );
-		YAKE_ASSERT( pLight );
 		
-		real innerAngle = atof( pNode->getAttributeValueAs<String>( "inner" ).c_str() );
-		real outerAngle = atof( pNode->getAttributeValueAs<String>( "outer" ).c_str() );
-		real falloff = atof( pNode->getAttributeValueAs<String>( "falloff" ).c_str() );
-	
-		pLight->setSpotlightRange( innerAngle, outerAngle, falloff );
+		desc.range.inner = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "inner" ) );
+		desc.range.outer = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "outer" ) );
+		desc.range.falloff = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "falloff" ) );
 	}
 
 	//------------------------------------------------------
-	void DotSceneSerializer::readLightAttenuation( const SharedPtr<dom::INode>& pNode, graphics::ILight* pLight )
+	void DotSceneParser::readLightAttenuation( const SharedPtr<dom::INode>& pNode, LightDesc& desc )
 	{
 		YAKE_ASSERT( pNode );
-		YAKE_ASSERT( pLight );
 		
-		real range = atof( pNode->getAttributeValueAs<String>( "range" ).c_str() );
-		real constant = atof( pNode->getAttributeValueAs<String>( "constant" ).c_str() );
-		real linear = atof( pNode->getAttributeValueAs<String>( "linear" ).c_str() );
-		real quadratic = atof( pNode->getAttributeValueAs<String>( "quadratic" ).c_str() );
-		
-		pLight->setAttenuation( range, constant, linear, quadratic );
+		desc.attenuation.range = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "range" ) );
+		desc.attenuation.constant = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "constant" ) );
+		desc.attenuation.linear = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "linear" ) );
+		desc.attenuation.quadratic = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "quadratic" ) );
 	}
 	
 	//------------------------------------------------------
-	void DotSceneSerializer::readLight( const SharedPtr<dom::INode>& pNode, graphics::ISceneNode* pParentSN )
+	void DotSceneParser::readLight( const SharedPtr<dom::INode>& pNode, String parentNodeName )
 	{
 		String name = pNode->getAttributeValueAs<String>( "name" );
 
-		std::cout << "readLight() [name=" << name << "]" << std::endl;
+		LightDesc desc;
+		
+		desc.name = name;
+		desc.parentNodeName = parentNodeName;
+		
+		YAKE_LOG( "readLight() [name=" + name + "]" );
 		YAKE_ASSERT( pNode );
-		YAKE_ASSERT( pParentSN );
 		
 		String lightType = pNode->getAttributeValueAs<String>( "type" );
 				
-		graphics::ILight* pLight = mGWorld->createLight();
-		YAKE_ASSERT( pLight );
-		
-		graphics::ILight::LightType lightTypeID = graphics::ILight::LT_POINT;
+		desc.type = graphics::ILight::LT_POINT;
 		
 		if ( lightType == "spot" )
-			lightTypeID = graphics::ILight::LT_SPOT;
+			desc.type = graphics::ILight::LT_SPOT;
 		else if ( lightType == "directional" )
-			lightTypeID = graphics::ILight::LT_DIRECTIONAL;
+			desc.type = graphics::ILight::LT_DIRECTIONAL;
 		
-		pLight->setType( lightTypeID );
-				
-		pParentSN->attachLight( pLight );
-
 		const dom::NodeList& nodes = pNode->getNodes();
-		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
+		for ( dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it )
 		{
 			String childNodeName = (*it)->getValueAs<String>( "name" );
 			
-			childNodeName = ::yake::StringUtil::toLowerCase( childNodeName );
-			std::cout << "node child: " <<  childNodeName << std::endl;
+			YAKE_LOG( "node child: " + StringUtil::toLowerCase( childNodeName ) );
 
 			const SharedPtr<dom::INode>& pChild = *it;
 			
-			if (childNodeName == "normal")
+			if ( childNodeName == "normal" )
 			{
-				Vector3 normal;
-				readPosition( pChild, normal );
-				pLight->setDirection( normal );
+				readVector( pChild, desc.normal );
 			}
-			else if (childNodeName == "colourDiffuse")
+			else if ( childNodeName == "colourDiffuse" )
 			{
-				Color colour_diffuse;
-				readColour( pChild, colour_diffuse );
-				pLight->setDiffuseColour( colour_diffuse );
+				readColour( pChild, desc.diffuseColor );
 			}
-			else if (childNodeName == "colourSpecular")
+			else if ( childNodeName == "colourSpecular" )
 			{
-				Color colour_specular;
-				readColour( pChild, colour_specular );
-				pLight->setSpecularColour( colour_specular );
+				readColour( pChild, desc.specularColor );
 			}
-			else if (childNodeName == "lightRange")
+			else if ( childNodeName == "lightRange" )
 			{
-				readLightRange( pChild, pLight );
+				readLightRange( pChild, desc );
 			}
-			else if (childNodeName == "lightAttenuation")
+			else if ( childNodeName == "lightAttenuation" )
 			{
-				readLightAttenuation( pChild, pLight );
+				readLightAttenuation( pChild, desc );
 			}
-
 		}
+		
+		// Light description ready. Fire!
+		mSigLight( desc );
+		
+		// Store
+		mLightDescriptions[ name ] = desc;
+	}
+	
+	//------------------------------------------------------
+	void DotSceneParser::readCameraClipping( const SharedPtr<dom::INode>& pNode, CameraDesc& desc )
+	{
+		YAKE_ASSERT( pNode );
+		
+		desc.clipping.near = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "near" ) );
+		desc.clipping.far = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "far" ) );
+	}
+	
+	//------------------------------------------------------
+	void DotSceneParser::readCamera( const SharedPtr<dom::INode>& pNode, String parentNodeName )
+	{
+		String name = pNode->getAttributeValueAs<String>( "name" );
+
+		CameraDesc desc;
+		
+		desc.name = name;
+		desc.parentNodeName = parentNodeName;
+		
+		YAKE_LOG( "readCamera() [name=" + name + "]" );
+		YAKE_ASSERT( pNode );
+		
+		String projectionType = pNode->getAttributeValueAs<String>( "projectionType" );
+				
+		desc.projectionType = graphics::ICamera::PT_PERSPECTIVE;
+		
+		if ( projectionType == "orthographic" )
+			desc.projectionType = graphics::ICamera::PT_ORTHOGRAPHIC;
+		
+		desc.fov = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "fov" ) );
+		
+		const dom::NodeList& nodes = pNode->getNodes();
+		for ( dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it )
+		{
+			String childNodeName = (*it)->getValueAs<String>( "name" );
+			
+			YAKE_LOG( "node child: " + StringUtil::toLowerCase( childNodeName ) );
+
+			const SharedPtr<dom::INode>& pChild = *it;
+			
+			if ( childNodeName == "normal" )
+			{
+				readVector( pChild, desc.normal );
+			}
+			else if ( childNodeName == "clipping" )
+			{
+				readCameraClipping( pChild, desc );
+			}
+			else if ( childNodeName == "trackTarget" )
+			{
+				desc.trackTargetName = pChild->getAttributeValueAs<String>( "nodeName" );
+			}
+		}
+		
+		// Camera description ready. Fire!
+		mSigCamera( desc );
+		
+		// Store
+		mCameraDescriptions[ name ] = desc;
 	}
 
-
 } // dotscene
-} // serializer
+} // parser
 } // data
 } // yake

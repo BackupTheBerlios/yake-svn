@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -33,18 +33,91 @@
 
 namespace yake {
 namespace data {
-namespace serializer {
+namespace parser {
 namespace dotscene {
 
-	typedef ::yake::Vector< graphics::ISceneNode* > SceneNodeList;
-
-	/** DotSceneReader base class providing default implementation for DOM parsing of dotScene files.
+	/** DotSceneParser base class providing default implementation for DOM parsing of dotScene files.
 	* \todo read environment, external references ..
 	*/
-	class DotSceneSerializer
+	class DotSceneParser
 	{
 	public:
-		virtual ~DotSceneSerializer() {}
+		
+		struct Desc
+		{
+			String		name;
+			String		id;
+			String		parentNodeName;
+		};
+		
+		struct Transform
+		{
+			Vector3		position;
+			Quaternion	rotation;
+			Vector3		scale; 
+		};
+		
+		struct NodeDesc : public Desc
+		{
+			Transform transform;
+		};
+		
+		struct EntityDesc : public Desc
+		{
+			String		meshFile;
+			String		materialFile;
+			bool		castsShadows;
+			bool		isStatic;
+		};
+		
+		struct CameraDesc : public Desc
+		{
+			real								fov;
+			real								aspectRatio;
+			graphics::ICamera::ProjectionType	projectionType;
+			String								trackTargetName;
+			Vector3								normal;
+			
+			struct Clipping
+			{
+				real near;
+				real far;
+			}									clipping;
+		};
+		
+		struct LightDesc : public Desc
+		{
+			graphics::ILight::LightType	type;
+			bool						visible;
+			bool						castsShadows;
+			Color						diffuseColor;
+			Color						specularColor;
+			Vector3						normal;
+			
+			struct Range
+			{
+				real inner;
+				real outer;
+				real falloff;
+			} 							range;
+			
+			struct Attenuation
+			{
+				real range;
+				real constant;
+				real linear;
+				real quadratic;
+			}							attenuation;
+		};
+		
+		typedef AssocVector< String, NodeDesc > SceneNodeDescMap;
+		typedef AssocVector< String, EntityDesc > EntityDescMap;
+		typedef AssocVector< String, CameraDesc > CameraDescMap;
+		typedef AssocVector< String, LightDesc > LightDescMap;
+
+		static String	ROOT_NODE_NAME;
+		
+		virtual ~DotSceneParser() {}
 
 		String getName() const
 		{ return "yake.data.dotScene"; }
@@ -55,60 +128,89 @@ namespace dotscene {
 			\param file 
 			\return 
 		*/
-		virtual bool load(	const SharedPtr<dom::INode> & docNode,
-							graphics::IWorld* pGWorld);
-
-		SceneNodeList getRootLevelSceneNodes() const;
-		String getNameForSceneNode( graphics::ISceneNode* pSceneNode ) const
-		{
-			SceneNodeNameMap::const_iterator itFind = mNodeNames.find( pSceneNode );
-			if (itFind == mNodeNames.end())
-				return String("");
-			return itFind->second;
-		}
+		virtual bool load(	const SharedPtr<dom::INode>& docNode );
 
 		/** Prepare for next run of load/store.
 		*/
 		virtual void reset();
-	protected:
-		/// Default implementations for common functions.
+		
+		const SceneNodeDescMap& getSceneNodeDescriptions() { return mSNDescriptions; }
+		const EntityDescMap& getEntityDescriptions() { return mEntityDescriptions; }
+		const CameraDescMap& getCameraDescriptions() { return mCameraDescriptions; }
+		const LightDescMap& getLightDescriptions() { return mLightDescriptions; }
+		
+		typedef SignalX< void(const NodeDesc) > NodeSignal;
+		typedef SignalX< void(const EntityDesc) > EntitySignal;
+		typedef SignalX< void(const CameraDesc) > CameraSignal;
+		typedef SignalX< void(const LightDesc) > LightSignal;
+		
+		
+		SignalConnection subscribeToNodeSignal( const NodeSignal::slot_type& slot )
+		{ return mSigNode.connect(slot); } 
+		
+		SignalConnection subscribeToEntitySignal( const EntitySignal::slot_type& slot )
+		{ return mSigEntity.connect(slot); } 
+	
+		SignalConnection subscribeToCameraSignal( const CameraSignal::slot_type& slot )
+		{ return mSigCamera.connect(slot); } 
+	
+		SignalConnection subscribeToLightSignal( const LightSignal::slot_type& slot )
+		{ return mSigLight.connect(slot); } 
+		
+	private:
+		NodeSignal		mSigNode;
+		EntitySignal	mSigEntity;
+		CameraSignal	mSigCamera;
+		LightSignal		mSigLight;
 
-		//virtual void readWorld( const SharedPtr<dom::INode>& pNode, graphics::ISceneNode* pParen );
-		virtual void readScene( const SharedPtr<dom::INode>& pNode, graphics::ISceneNode* pParentSN);
+	protected:
+		/// Default implementations for common functions
+
+		virtual void readScene( const SharedPtr<dom::INode>& pNode );
 		
-		virtual void readNodes( const SharedPtr<dom::INode> & pNodes, graphics::ISceneNode* pParentSN );
-		virtual void readNode( const SharedPtr<dom::INode> & pNode, graphics::ISceneNode* pParentSN );
-		virtual void readEntity( const SharedPtr<dom::INode> & pNode, graphics::ISceneNode* pParentSN );
-		virtual void readRotation( const SharedPtr<dom::INode> & pNode, Quaternion & rotation );
-		virtual void readPosition( const SharedPtr<dom::INode> & pNode, Vector3 & position );
-		virtual void readScale( const SharedPtr<dom::INode> & pNode, Vector3& rScale );
-		virtual void readVector( const SharedPtr<dom::INode> & pNode, Vector3& rVec );
+		virtual void readNodes( const SharedPtr<dom::INode>& pNodes );
 		
-		/// Lights (! :P )
-		virtual void readLight( const SharedPtr<dom::INode>& pNode, graphics::ISceneNode* pParentSN );
+		virtual void readNode( const SharedPtr<dom::INode>& pNode, String parentNodeName );
+		virtual void readEntity( const SharedPtr<dom::INode>& pNode, String parentNodeName );
+		
+		virtual void readRotation( const SharedPtr<dom::INode>& pNode, Quaternion& rotation );
+		virtual void readPosition( const SharedPtr<dom::INode>& pNode, Vector3& position );
+		virtual void readScale( const SharedPtr<dom::INode>& pNode, Vector3& rScale );
+		virtual void readVector( const SharedPtr<dom::INode>& pNode, Vector3& rVec );
+		
+		virtual void readLight( const SharedPtr<dom::INode>& pNode, String parentNodeName );
+		
 		virtual void readColour( const SharedPtr<dom::INode>& pNode, Color& colour );
-		virtual void readLightRange( const SharedPtr<dom::INode>& pNode, graphics::ILight* pLight );
-		virtual void readLightAttenuation( const SharedPtr<dom::INode>& pNode, graphics::ILight* pLight );
+		virtual void readLightRange( const SharedPtr<dom::INode>& pNode, LightDesc& );
+		virtual void readLightAttenuation( const SharedPtr<dom::INode>& pNode, LightDesc& );
+		
+		virtual void readCamera( const SharedPtr<dom::INode>& pNode, String parentNodeName );
+		
+		virtual void readCameraClipping( const SharedPtr<dom::INode>& pNode, CameraDesc& );
 
 	private:
-		SharedPtr<dom::INode>					mDocNode;
-		graphics::IWorld*				mGWorld;
-		SceneNodeList							mRootNodes;
+		SharedPtr<dom::INode>	mDocNode;
 
-		typedef AssocVector<graphics::ISceneNode*, String> SceneNodeNameMap;
-		SceneNodeNameMap						mNodeNames;
+		SceneNodeDescMap		mSNDescriptions;
+		EntityDescMap			mEntityDescriptions;
+		CameraDescMap			mCameraDescriptions;
+		LightDescMap			mLightDescriptions;
+		
+		
 	};
 
-	class DotSceneSerializerV1 : public DotSceneSerializer
+	class DotSceneParserV1 : public DotSceneParser
 	{
 	public:
 		virtual Version getVersion() const
-		{ return Version(0,1,0); }
+		{ return Version( 0, 1, 2 ); }
 	};
 
+	///HACK It is here for backwards compatibility
+	typedef DotSceneParserV1 DotSceneSerializerV1;
 
 } // dotscene
-} // serializer
+} // parser
 } // data
 } // yake
 

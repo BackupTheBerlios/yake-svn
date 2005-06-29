@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -33,9 +33,8 @@ namespace yake {
 namespace data {
 namespace parser {
 namespace xode {
-
+	
 	using namespace yake::app;
-	using namespace yake::base;
 	
 	//------------------------------------------------------
 	XODEParser::XODEParser( model::Physical& rBaseModel ) : mBaseModel( rBaseModel )
@@ -43,7 +42,7 @@ namespace xode {
 	}
 
 	//------------------------------------------------------
-	bool XODEParser::load(  const SharedPtr<dom::INode> docNode, physics::IWorld* pPWorld )
+	bool XODEParser::load( const SharedPtr<dom::INode> docNode, physics::IWorld* pPWorld )
 	{
 		std::cout << "load()" << std::endl;
 		

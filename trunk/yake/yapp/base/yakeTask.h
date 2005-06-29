@@ -1,8 +1,8 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   Copyright  2004 The YAKE Team
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -111,7 +111,7 @@ namespace task {
 
 			///@name Sorting
 			//@{
-			//operator > 
+			//operator >
 			static bool sortDescending( const TaskEntry & rStart, const TaskEntry & rEnd)
 			{
 				YAKE_ASSERT( rStart.pTask );

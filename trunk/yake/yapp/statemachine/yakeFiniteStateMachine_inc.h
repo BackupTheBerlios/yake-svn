@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -27,21 +27,18 @@
 //---------------------------------------------------------
 // NOTE: Do not include this file directly!
 //---------------------------------------------------------
-
 	//---------------------------------------------------------
 	// State
 	//---------------------------------------------------------
 
-	template<> const String Machine<String>::kStateNone = "NONE";
-
 	//---------------------------------------------------------
 	template< typename StateIdType >
-		Machine<StateIdType>::Machine( const TransitionHandling th = TH_SCRICT ) :
+		Machine<StateIdType>::Machine( const TransitionHandling th ) :
 			mTransitionHandling(th)
 	{
 	}
 	template< typename StateIdType >
-		ErrorCode Machine<StateIdType>::addTransition( const StateId & rkFrom, const StateId & rkTo )
+		ErrorCode Machine<StateIdType>::addTransition( const StateId& rkFrom, const StateId& rkTo )
 		{
 			const StateIdPair idPair( rkFrom, rkTo );
 			SharedTransitionPtr pTmpTrans;
@@ -105,7 +102,7 @@
 		return eOk;
 	}
 	template< typename StateIdType >
-		ErrorCode Machine<StateIdType>::changeTo( const StateIdType & rkId, bool bStacked = false )
+		ErrorCode Machine<StateIdType>::changeTo( const StateIdType & rkId, bool bStacked )
 	{
 		StateId currentStateId = (mStack.size() > 0) ? (mStack.front().first) : kStateNone;
 
@@ -154,22 +151,24 @@
 
 		s << "\t" << "id of 'none' state: " << kStateNone << std::endl;
 
-		s << "\t" << unsigned int(mStates.size()) << " registered states" << std::endl;
+		s << "\t" << ( unsigned int )mStates.size() << " registered states" << std::endl;
 		::yake::ConstVectorIterator<StateMap> itState( mStates.begin(), mStates.end() );
+		
 		while (itState.hasMoreElements())
 		{
 			s << "\t\t" << itState.getNext().first << std::endl;
 		}
 
-		s << "\t" << unsigned int(mTransitions.size()) << " registered transitions" << std::endl;
+		s << "\t" << ( unsigned int )mTransitions.size() << " registered transitions" << std::endl;
 		::yake::ConstVectorIterator<TransitionMap> itTrans( mTransitions.begin(), mTransitions.end() );
+		
 		while (itTrans.hasMoreElements())
 		{
 			const StateIdPair & idPair = itTrans.getNext().first;
 			s << "\t\t" << idPair.first << " -> " << idPair.second << std::endl;
 		}
 
-		s << "\t" << unsigned int(mStack.size()) << " states on the stack" << std::endl;
+		s << "\t" << ( unsigned int )mStack.size() << " states on the stack" << std::endl;
 		if (mStack.size() > 0)
 		{
 			s << "\t\t(from top to bottom:)" << std::endl;

@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -231,7 +231,7 @@ namespace state {
 		active state).
 	*/
 	template< typename StateIdType >
-	class Machine : public clonableT<Machine>
+	class Machine : public clonableT<Machine<StateIdType> >
 	{
 		YAKE_DECLARE_CLONABLE( Machine, Machine );
 	protected:
@@ -283,14 +283,14 @@ namespace state {
 	private:
 		SharedStatePtr _getStateById( const StateId & rkId )
 		{
-			StateMap::const_iterator itFind = mStates.find( rkId );
+			typename StateMap::const_iterator itFind = mStates.find( rkId );
 			if (itFind == mStates.end())
 				return SharedStatePtr();
 			return itFind->second;
 		}
 		bool _getStateById( const StateId & rkId, IdStatePair & statePair )
 		{
-			StateMap::const_iterator itFind = mStates.find( rkId );
+			typename StateMap::const_iterator itFind = mStates.find( rkId );
 			if (itFind == mStates.end())
 				return false;
 			statePair = *itFind;
@@ -298,14 +298,14 @@ namespace state {
 		}
 		bool _getTransition( const StateIdPair & idPair, SharedTransitionPtr & rTransition )
 		{
-			TransitionMap::const_iterator itFind = mTransitions.find( idPair );
+			typename TransitionMap::const_iterator itFind = mTransitions.find( idPair );
 			if (itFind == mTransitions.end())
 				return SharedTransitionPtr();
 			return itFind->second;
 		}
-		bool _hasTransition( const StateIdPair & idPair )
+		bool _hasTransition( const StateIdPair& idPair )
 		{
-			TransitionMap::const_iterator itFind = mTransitions.find( idPair );
+			typename TransitionMap::const_iterator itFind = mTransitions.find( idPair );
 			return (itFind != mTransitions.end());
 		}
 	};

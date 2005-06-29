@@ -24,8 +24,8 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_DATA_DOTSCENE_H
-#define YAKE_DATA_DOTSCENE_H
+#ifndef YAKE_DATA_XODEPARSER_H
+#define YAKE_DATA_XODEPARSER_H
 
 #include <yake/data/yakeData.h>
 #include <yapp/model/yakePhysical.h>
@@ -182,7 +182,7 @@ using namespace yake::app; // model::Physical
 	};
 
 } // dotscene
-} // serializer
+} // parser
 } // data
 } // yake
 

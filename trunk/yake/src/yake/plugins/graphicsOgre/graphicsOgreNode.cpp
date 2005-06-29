@@ -218,21 +218,35 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreNode::getChildren( SceneNodePtrList& ret ) const
+	void OgreNode::getChildren( SceneNodePtrList& ret, bool bRecursive /*= false*/ ) const
 	{
-		ret = mChildren;
+		std::copy( mChildren.begin(), mChildren.end(), std::back_inserter( ret ) );
+		if (bRecursive)
+		{
+			ConstVectorIterator<NodeList> it(mChildren);
+			while (it.hasMoreElements())
+			{
+				ISceneNode* pNode = it.getNext();
+				pNode->getChildren( ret, bRecursive );
+			}
+		}
 	}
 
 	//------------------------------------------------------
-	ISceneNode* OgreNode::getChildByName( const String& name )
+	ISceneNode* OgreNode::getChildByName( const String& name, bool bRecursive /*= false*/ )
 	{
-		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		VectorIterator<NodeList> it(mChildren);
 		while (it.hasMoreElements())
 		{
 			ISceneNode* pNode = it.getNext();
 			if (pNode->getName() == name)
 				return pNode;
+			if (bRecursive)
+			{
+				pNode = pNode->getChildByName( name, bRecursive );
+				if (pNode)
+					return pNode;
+			}
 		}
 		return 0;
 	}

@@ -289,16 +289,16 @@ namespace graphics {
 
 		/** Returns a list of all child scene nodes of this scene node.
 		*/
-		virtual void getChildren( SceneNodePtrList& ret ) const = 0;
+		virtual void getChildren( SceneNodePtrList& ret, bool bRecursive = false ) const = 0;
 
 		/** Returns a list of all child scene nodes of this scene node.
 		*/
-		SceneNodePtrList getChildren() const
-		{ SceneNodePtrList ret; getChildren(ret); return ret; }
+		SceneNodePtrList getChildren(bool bRecursive = false) const
+		{ SceneNodePtrList ret; getChildren(ret, bRecursive); return ret; }
 
 		/** Find & return a child scene node by its name. 
 		*/
-		virtual ISceneNode* getChildByName( const String& name ) = 0;
+		virtual ISceneNode* getChildByName( const String& name, bool bRecursive = false ) = 0;
 
 		/** Return a list of all attached entities. 
 		*/

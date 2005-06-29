@@ -6,9 +6,9 @@
 #include <reflection.h>
 #include <bind_lua/bind_lua.h>
 #undef free // todo: find conflict with tnl and move to bind_network.h
-#include <bind_network/bind_network.h> // todo: remove
+//#include <bind_network/bind_network.h> // todo: remove
 
-#include <OgreRoot.h>
+#include <Ogre.h>
 
 #include "default_window.h"
 #include "forward_buffer.h"
