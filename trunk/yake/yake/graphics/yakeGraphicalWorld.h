@@ -153,11 +153,11 @@ namespace graphics {
 		that behaviour, allowing you to make the camera just render a
 		wireframe view, for example.
 		 */
-		void setDetailLevel(SceneDetailLevel sd);
+		virtual void setDetailLevel(SceneDetailLevel sd) = 0;
 
         /** Retrieves the level of detail that the camera will render.
 		 */
-		SceneDetailLevel getDetailLevel(void) const;
+		virtual SceneDetailLevel getDetailLevel(void) const = 0;
 
 		
 		virtual void setNearClipDistance( real clipDistance ) = 0;
