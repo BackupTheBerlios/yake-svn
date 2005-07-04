@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="scriptingBindingsLua"
+	Name="graphicsBindingsLua"
 	ProjectGUID="{CA63F621-0912-4551-B51A-7BD18F491181}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -24,7 +24,8 @@
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="3"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="yake/plugins/scriptingLuaBindings/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -77,7 +78,8 @@
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/lua/include;../../../../dependencies/luabind;../../../../dependencies/ttl/;../../../../dependencies/boost/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKESCRIPTINGLUA_EXPORTS"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="3"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="yake/plugins/scriptingLuaBindings/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -125,32 +127,17 @@
 			Name="src"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx">
 			<File
-				RelativePath="..\..\..\..\src\yake\plugins\scriptingLuaBindings\pch.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yake\plugins\scriptingLuaBindings\yakeBinder.cpp">
+				RelativePath="..\..\..\..\src\yake\plugins\graphicsLuaBindings\yakeLuaBinder.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="inc"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd">
 			<File
-				RelativePath="..\..\..\..\yake\plugins\scriptingLuaBindings\pch.h">
+				RelativePath="..\..\..\..\yake\plugins\graphicsLuaBindings\yakeLuaBinder.h">
 			</File>
 			<File
-				RelativePath="..\..\..\..\yake\plugins\scriptingLuaBindings\yakeBinder.h">
+				RelativePath="..\..\..\..\yake\plugins\graphicsLuaBindings\yakePrerequisites.h">
 			</File>
 		</Filter>
 	</Files>
