@@ -47,8 +47,8 @@ namespace base
 namespace mpl
 {
 
-template< typename T >
-void* getBasePointer( T* pointer );
+// template< typename T >
+// void* getBasePointer( T* pointer );
 
 template< typename U, typename T >
 struct PolymorphicCast

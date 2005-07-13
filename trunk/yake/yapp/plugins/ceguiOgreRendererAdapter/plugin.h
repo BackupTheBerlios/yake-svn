@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -25,12 +25,15 @@
    ------------------------------------------------------------------------------------
 */
 #ifdef YAKE_CEGUIRENDERERADAPTER_OGRE_EXPORTS
-#define CEGUIADAPTEROGRE_API __declspec(dllexport)
+#define CEGUIADAPTEROGRE_API DLLEXPORT
 #else
-#define CEGUIADAPTEROGRE_API __declspec(dllimport)
+#define CEGUIADAPTEROGRE_API DLLIMPORT
 #endif
 
-CEGUIADAPTEROGRE_API yake::base::Plugin* dynlibStartPlugin(void);
+extern "C"
+{
+	CEGUIADAPTEROGRE_API yake::base::Plugin* dynlibStartPlugin(void);
+}
 
 class ThePlugin : public yake::ceguiadapter::RendererAdapterPlugin
 {

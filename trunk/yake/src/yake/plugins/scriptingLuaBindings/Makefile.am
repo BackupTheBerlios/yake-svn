@@ -1,5 +1,5 @@
-INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/dependencies/ttl \
-	-I$(top_srcdir)/dependencies/luabind $(all_includes)
+INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/dependencies/luabind \
+	-I$(top_srcdir)/dependencies/ttl $(all_includes)
 METASOURCES = AUTO
 
 

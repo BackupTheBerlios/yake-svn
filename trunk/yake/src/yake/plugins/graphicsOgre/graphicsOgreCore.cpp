@@ -261,6 +261,7 @@ namespace ogre3d {
 
 	void OgreCore::update( real timeElapsed )
 	{
+		YAKE_DECLARE_FUNCTION( update );
 		//HACK/FIXME
 		static bool bFirstTime = true;
 		if (bFirstTime)
@@ -308,7 +309,7 @@ namespace ogre3d {
 				//YAKE_LOGPRINTF("[yake.graphics.ogre] OGRE EXCEPTION\n%s\n", e.getFullDescription() );
 				String rMsg = "[yake.graphics.ogre] OGRE EXCEPTION\n" + e.getFullDescription() + "\n";
 				YAKE_LOG( rMsg );
-				YAKE_EXCEPT( rMsg, "yake.graphicsOGRE.core" );
+				YAKE_EXCEPT( rMsg );
 				mReady = false;
 			}
 		} // if (mReady && mRWin && mRSys){

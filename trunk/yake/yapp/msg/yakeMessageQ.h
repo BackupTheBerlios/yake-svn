@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -38,6 +38,8 @@ namespace msg {
 	*/
 	class YAKE_MSG_API MessageQ
 	{
+		YAKE_DECLARE_CLASS( MessageQ );
+
 		MessageQ(const MessageQ&);
 		MessageQ& operator = (const MessageQ&);
 	public:

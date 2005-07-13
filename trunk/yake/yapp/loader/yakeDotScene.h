@@ -41,6 +41,7 @@ namespace dotscene {
 	*/
 	class DotSceneParser
 	{
+		YAKE_DECLARE_CLASS( DotSceneParser );
 	public:
 		
 		struct Desc
@@ -201,6 +202,7 @@ namespace dotscene {
 
 	class DotSceneParserV1 : public DotSceneParser
 	{
+		YAKE_DECLARE_CLASS( DotSceneParserV1 );
 	public:
 		virtual Version getVersion() const
 		{ return Version( 0, 1, 2 ); }

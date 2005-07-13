@@ -89,7 +89,7 @@ void DefaultFunctionsNames::Vector< Identifier_ >::doDelete( const Identifier_& 
 	YAKE_DECLARE_FUNCTION( doDelete )
 
 	if( std::find( mContainer.begin(), mContainer.end(), rIdentifier ) == mContainer.end() )
-		throw yake::Exception( "Unknown Identifier_.", YAKE_HERE );
+		YAKE_EXCEPT( "Unknown Identifier_." );
 
 	mContainer.erase( std::find( mContainer.begin(), mContainer.end(), rIdentifier ) );
 }

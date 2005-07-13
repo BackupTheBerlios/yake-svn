@@ -115,9 +115,4 @@
 #define YAKE_DECLARE_GLOBAL                 YAKE_DECLARE_CLASS( global )
 #define YAKE_DECLARE_FUNCTION(name)         static const char * yake_private_currentFunction = #name "()";
 
-#define YAKE_THIS_CLASS                     yake_private_currentClass()
-#define YAKE_THIS_FUNCTION                  yake_private_currentFunction
-#define YAKE_HERE                           YAKE_THIS_CLASS + yake::String( "::" ) + YAKE_THIS_FUNCTION
-#define YAKE_NOCLASS_HERE                   "::" + yake::String( YAKE_THIS_FUNCTION )
-
 #endif // YAKE_BASE_PREREQUISITES_H

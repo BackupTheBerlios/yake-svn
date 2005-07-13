@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -44,6 +44,7 @@ namespace ogre3d {
 	class SystemFrameListener;
 	class OgreCore
 	{
+		YAKE_DECLARE_CLASS( OgreCore );
 	public:
 		OgreCore(const bool bWindowAlreadyCreated = false,
 				const bool bShutdownOgre = true,

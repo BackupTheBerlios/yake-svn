@@ -248,6 +248,8 @@ namespace model {
 	//-----------------------------------------------------
 	void Graphical::DotSceneListener::processSceneNode( const SceneNodeDesc desc )
 	{
+		YAKE_DECLARE_FUNCTION( processSceneNode );
+		
 		YAKE_LOG( "Processing scene node " + desc.name + " with parent node " + desc.parentNodeName );
 				
 		graphics::ISceneNode* pSN = mGWorld->createSceneNode( desc.name );
@@ -271,6 +273,8 @@ namespace model {
 	//-----------------------------------------------------
 	void Graphical::DotSceneListener::processEntity( const EntityDesc desc )
 	{
+		YAKE_DECLARE_FUNCTION( processEntity );
+		
 		YAKE_LOG( "Processing entity " + desc.name + " with parent node " + desc.parentNodeName );
 		
 		graphics::IEntity* pEntity = mGWorld->createEntity( desc.meshFile );
@@ -295,6 +299,8 @@ namespace model {
 	//-----------------------------------------------------
 	void Graphical::DotSceneListener::processCamera( const CameraDesc desc )
 	{
+		YAKE_DECLARE_FUNCTION( processCamera );
+		
 		YAKE_LOG( "Processing camera " + desc.name + " with parent node " + desc.parentNodeName );
 		
 		graphics::ICamera* pCamera = mGWorld->createCamera();
@@ -324,6 +330,8 @@ namespace model {
 	//-----------------------------------------------------
 	void Graphical::DotSceneListener::processLight( const LightDesc desc )
 	{
+		YAKE_DECLARE_FUNCTION( processLight );
+		
 		YAKE_LOG( "Processing light " + desc.name + " with parent node " + desc.parentNodeName );
 		
 		graphics::ILight* pLight = mGWorld->createLight();

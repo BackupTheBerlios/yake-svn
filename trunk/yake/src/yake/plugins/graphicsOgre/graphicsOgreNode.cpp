@@ -159,6 +159,7 @@ namespace ogre3d {
 			return;
 		
 		mSceneNode->attachObject( static_cast<OgreCamera*>( pCamera )->getCamera_() );
+		mCameras.push_back( pCamera );
 	}
 
 	//------------------------------------------------------
@@ -197,6 +198,8 @@ namespace ogre3d {
 			return;
 
 		mSceneNode->attachObject( static_cast<OgreParticleSystem*>( pParticleSys )->getParticleSystem_() );
+
+		mParticleSystems.push_back( pParticleSys );
 	}
 
 	//------------------------------------------------------
@@ -266,15 +269,27 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	const EntityPtrList& OgreNode::getAttachedEntities() const
+	const EntityPtrList& OgreNode::getEntities() const
 	{
 		return mEntities;
 	}
 
 	//------------------------------------------------------
-	const LightPtrList& OgreNode::getAttachedLights() const
+	const LightPtrList& OgreNode::getLights() const
 	{
 		return mLights;
+	}
+
+	//------------------------------------------------------
+	const CameraPtrList& OgreNode::getCameras() const
+	{
+		return mCameras;
+	}
+
+	//------------------------------------------------------
+	const ParticleSystemPtrList& OgreNode::getParticleSystems() const
+	{
+		return mParticleSystems;
 	}
 
 	//------------------------------------------------------
@@ -285,6 +300,12 @@ namespace ogre3d {
 		if (!pEntity)
 			return;
 		mSceneNode->detachObject( static_cast<OgreEntity*>(pEntity)->getEntity_() );
+		
+		// removing from list
+		EntityPtrList::iterator victim = std::find( mEntities.begin(), mEntities.end(), pEntity );
+		YAKE_ASSERT( victim != mEntities.end() ).error( "entity was NOT attached!" );
+
+		mEntities.erase( victim );
 	}
 
 	//------------------------------------------------------
@@ -295,8 +316,45 @@ namespace ogre3d {
 		if (!pLight)
 			return;
 		mSceneNode->detachObject( static_cast<OgreLight*>(pLight)->getLight_() );
+
+		// removing from list
+		LightPtrList::iterator victim = std::find( mLights.begin(), mLights.end(), pLight );
+		YAKE_ASSERT( victim != mLights.end() ).error( "light was NOT attached!" );
+
+		mLights.erase( victim );
 	}
 
+	//------------------------------------------------------
+	void OgreNode::detach( ICamera* pCamera )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		YAKE_ASSERT( pCamera ).warning("passed a null ptr!");
+		if (!pCamera)
+			return;
+		mSceneNode->detachObject( static_cast<OgreCamera*>(pCamera)->getCamera_() );
+
+		// removing from list
+		CameraPtrList::iterator victim = std::find( mCameras.begin(), mCameras.end(), pCamera );
+		YAKE_ASSERT( victim != mCameras.end() ).error( "camera was NOT attached!" );
+
+		mCameras.erase( victim );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::detach( IParticleSystem* pPS )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+		YAKE_ASSERT( pPS ).warning("passed a null ptr!");
+		if (!pPS)
+			return;
+		mSceneNode->detachObject( static_cast<OgreParticleSystem*>(pPS)->getParticleSystem_() );
+
+		// removing from list
+		ParticleSystemPtrList::iterator victim = std::find( mParticleSystems.begin(), mParticleSystems.end(), pPS );
+		YAKE_ASSERT( victim != mParticleSystems.end() ).error( "particle system was NOT attached!" );
+
+		mParticleSystems.erase( victim );
+	}
 }
 }
 }

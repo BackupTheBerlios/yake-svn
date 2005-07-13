@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -42,6 +42,8 @@ using namespace yake::app; // model::Physical
 	*/
 	class YAPP_BASE_API XODEParser
 	{
+		YAKE_DECLARE_CLASS( XODEParser );
+
 	public:
 		XODEParser( model::Physical& rBaseModel );
 		virtual ~XODEParser() {}
@@ -171,6 +173,7 @@ using namespace yake::app; // model::Physical
 	
 	class YAPP_BASE_API XODEParserV1 : public XODEParser
 	{
+		YAKE_DECLARE_CLASS( XODEParserV1 );
 	public:
 		XODEParserV1( model::Physical& rBaseModel ):XODEParser( rBaseModel ) {}
 		virtual ~XODEParserV1() {}

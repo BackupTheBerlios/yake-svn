@@ -52,8 +52,10 @@ YAKE_BASE_NATIVE_API LibraryHandle library_Load(const char * filename)
 	YAKE_ASSERT(filename).debug("Invalid filename.");
 	// load library
 	LibraryHandle handle = (LibraryHandle)::LoadLibraryA(filename);
+
 	// todo: http://yake.org/forum/viewtopic.php?t=340
-	if(handle == NULL) YAKE_EXCEPT("Couldn't load library " + String(filename) + ".", "library_Load");
+	if (!handle) 
+		YAKE_EXCEPT("Couldn't load library " + String(filename) + ".");
 	return handle;
 }
 

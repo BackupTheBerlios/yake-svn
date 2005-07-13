@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -37,4 +37,4 @@
 #include <yake/samples/common/yakeExampleApplication.h>
 #include <yake/data/yakeData.h>
 
-#include <dependencies/ogrenew/OgreMain/include/Ogre.h>
+#include <Ogre.h>

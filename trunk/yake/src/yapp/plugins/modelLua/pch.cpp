@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright  2004 The YAKE Team
+   Copyright © 2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -24,39 +24,4 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#include <yapp/msg/yakePCH.h>
-#include <yapp/msg/yakeMsg.h>
-
-namespace yake {
-namespace msg {
-
-	MessageQ::MessageQ()
-	{}
-	MessageQ::~MessageQ()
-	{
-		YAKE_DECLARE_FUNCTION( ~MessageQ );
-		if (!empty())
-		{
-			YAKE_LOG("MessageQ destructed but queue was not empty!");
-		}
-	}
-	void MessageQ::push( Message* pMessage )
-	{ 
-		if (pMessage)
-			mQ.push( pMessage );
-	}
-	Message* MessageQ::pop()
-	{
-		if (mQ.empty())
-			return 0;
-		Message* ret = mQ.front();
-		mQ.pop();
-		return ret;
-	}
-	bool MessageQ::empty() const
-	{
-		return mQ.empty();
-	}
-
-} // namespace msg
-} // namespace yake
+#include <yapp/plugins/modelLua/pch.h>

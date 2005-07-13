@@ -59,13 +59,13 @@ YAKE_DECLARE_CLASS( yake::base::templates::DefaultManagerError<> )
     static Value_ OnUnknownType( Identifier_ )
     {
       YAKE_DECLARE_FUNCTION( OnUnknownType )
-      throw yake::Exception( "Unknown Type.", YAKE_HERE );
+      YAKE_EXCEPT( "Unknown Type." );
     }
 
     static void OnNotFound( Identifier_ )
     {
       YAKE_DECLARE_FUNCTION( OnNotFound )
-      throw yake::Exception( "Unkown Identifier_.", YAKE_HERE );
+      YAKE_EXCEPT( "Unkown Identifier_." );
     }
 };
 

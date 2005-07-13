@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -62,10 +62,17 @@ namespace ogre3d {
 		virtual void removeAndDestroyAllChildren();
 		virtual void getChildren( SceneNodePtrList& ret, bool bRecursive = false ) const;
 		virtual ISceneNode* getChildByName( const String& name, bool bRecursive = false );
-		virtual const EntityPtrList& getAttachedEntities() const;
-		virtual const LightPtrList& getAttachedLights() const;
+
+		virtual const EntityPtrList& getEntities() const;
+		virtual const LightPtrList& getLights() const;
+		virtual const CameraPtrList& getCameras() const;
+		virtual const ParticleSystemPtrList& getParticleSystems() const;
+
 		virtual void detach( IEntity* pEntity );
 		virtual void detach( ILight* pLight );
+		virtual void detach( ICamera* pCamera );
+		virtual void detach( IParticleSystem* pPS );
+
 
 		virtual String getName() const;
 		virtual void getName(String& name);
@@ -76,9 +83,10 @@ namespace ogre3d {
 	protected:
 		typedef SceneNodePtrList NodeList;
 		NodeList			mChildren;
-
 		EntityPtrList		mEntities;
 		LightPtrList		mLights;
+		CameraPtrList		mCameras;
+		ParticleSystemPtrList	mParticleSystems;
 
 		Ogre::SceneNode* 	mSceneNode;
 		Ogre::SceneManager*	mSceneMgr;

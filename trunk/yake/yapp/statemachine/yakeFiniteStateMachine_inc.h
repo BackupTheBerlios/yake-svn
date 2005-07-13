@@ -33,6 +33,8 @@
 
 #if YAKE_COMPILER == COMPILER_MSVC
 	template<> const String Machine<String>::kStateNone = "NONE";
+#else
+	template<> const String Machine<String>::kStateNone;
 #endif
 
 	//---------------------------------------------------------

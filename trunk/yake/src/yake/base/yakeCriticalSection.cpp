@@ -45,7 +45,7 @@ CriticalSection::CriticalSection()
 	mHandle = base::native::criticalSection_Create();
 
 	if( 0 == mHandle )
-		throw Exception( "Couldn't create critical section.", YAKE_HERE );
+		YAKE_EXCEPT( "Couldn't create critical section." );
 }
 
 CriticalSection::~CriticalSection()

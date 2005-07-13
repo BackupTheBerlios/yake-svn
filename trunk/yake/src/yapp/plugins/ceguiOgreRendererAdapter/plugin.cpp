@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -27,7 +27,7 @@
 #include <yapp/plugins/ceguiOgreRendererAdapter/pch.h>
 #include "OgreNoMemoryMacros.h"
 #include "CEGUI.h"
-#include <dependencies/ogrenew/OgreMain/include/Ogre.h>
+#include <Ogre.h>
 #include "OgreCEGUIRenderer.h"
 #include <yapp/common/yakeCEGUIRendererAdapter.h>
 #include <yapp/plugins/ceguiOgreRendererAdapter/plugin.h>
@@ -35,9 +35,12 @@
 
 //---------------------------------------------------------
 // This is an example of an exported function.
-yake::base::Plugin* dynlibStartPlugin(void)
+extern "C"
 {
-	return new ThePlugin();
+	yake::base::Plugin* dynlibStartPlugin(void)
+	{
+		return new ThePlugin();
+	}
 }
 
 //---------------------------------------------------------
@@ -66,6 +69,7 @@ yake::Version ThePlugin::getVersion() const
 bool ThePlugin::initialise()
 {
 	try {
+		//HACK FIXME getAutoCreatedWindow assumes window was autocreated!
 		Ogre::RenderWindow* pWin = Ogre::Root::getSingleton().getAutoCreatedWindow();
 		YAKE_ASSERT( pWin ).error("Need a valid render window!");
 		mGUIRenderer = new CEGUI::OgreCEGUIRenderer(
@@ -89,6 +93,7 @@ bool ThePlugin::shutdown()
 	YAKE_SAFE_DELETE(mGUIRenderer);
 	return true;
 }
+
 //---------------------------------------------------------
 CEGUI::Renderer* ThePlugin::getRenderer()
 {

@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -39,8 +39,41 @@
 namespace yake {
 namespace graphics {
 
-	YAKE_IMPLEMENT_REGISTRY( IGraphicsSystem )
+	YAKE_IMPLEMENT_REGISTRY( IGraphicsSystem );
 
+	// these destructors are here for rtti to work
+	IParticleSystem::~IParticleSystem()
+	{
+	}
+	
+	ISkeleton::~ISkeleton()
+	{
+	}
+	
+	ILight::~ILight()
+	{
+	}
+	
+	ICamera::~ICamera()
+	{
+	}
+	
+	IEntity::~IEntity()
+	{
+	}
+	
+	ISceneNode::~ISceneNode()
+	{
+	}
+	
+	IViewport::~IViewport()
+	{
+	}
+	
+	IWorld::~IWorld()
+	{
+	}
+	
 	IGraphicsSystem::~IGraphicsSystem()
 	{
 	}

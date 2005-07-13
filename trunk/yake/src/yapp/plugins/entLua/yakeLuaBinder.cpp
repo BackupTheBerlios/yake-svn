@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -273,6 +273,8 @@ namespace lua {
 		return pMachine->getCurrentStateId();
 	}
 
+	YAKE_REGISTER_CONCRETE( Binder );
+			
 	void Binder::bind( scripting::IVM* pVM )
 	{
 		scripting::LuaVM* pL = static_cast<scripting::LuaVM*>(pVM);
@@ -350,6 +352,8 @@ namespace lua {
 		];
 	}
 
+	YAKE_REGISTER_CONCRETE( MathBinder );
+	
 	void MathBinder::bind( scripting::IVM* pVM )
 	{
 		scripting::LuaVM* pL = static_cast<scripting::LuaVM*>(pVM);

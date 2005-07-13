@@ -52,26 +52,48 @@ namespace base
 namespace native
 {
 
+YAKE_DECLARE_GLOBAL;
 YAKE_BASE_NATIVE_API LibraryHandle library_Load( const char* pFilename )
 {
-	YAKE_ASSERT( pFilename ).debug( "Invalid filename." );    
+	YAKE_DECLARE_FUNCTION( yake::base::native::library_Load );
+	YAKE_ASSERT( pFilename ).debug( "Invalid filename." );
 
 	// Due to Linux libraries naming we decided to add some "brand" prefix
 	String yakeLibPrefix( "libyake" );
-	String name( pFilename );
+	String yappLibPrefix( "libyapp" );
 	
-	// We're adding Linux port prefix to every library name
-	name = yakeLibPrefix + name;        
+	String yakeName( yakeLibPrefix + String( pFilename ) );
+	String yappName( yappLibPrefix + String( pFilename ) );
 	
 	// dlopen() does not add .so to the filename, like windows does for .dll
-	if ( name.substr( name.length() - 3, 3 ) != ".so" )
-		name += ".so";
-
+	if ( yakeName.substr( yakeName.length() - 3, 3 ) != ".so" )
+		yakeName += ".so";
+	
+	// the same for other prefix
+	if ( yappName.substr( yappName.length() - 3, 3 ) != ".so" )
+		yappName += ".so";
+	
+	String name = yakeName;
+	
+	YAKE_LOG( "Trying to load " + name );
 	LibraryHandle handle = ( LibraryHandle )dlopen( name.c_str(), RTLD_LAZY );
 	
-	if ( handle == 0 )
-		throw Exception( "Failed to load " + name + String("due to ") + String( dlerror() ) , "native::Linux::library_Load" );
+	// trying to load library with libyapp prefix
+	if ( handle == NULL )
+	{
+		YAKE_LOG( "dlerror returned:" + String( dlerror() ) );
+		
+		name = yappName;
+		
+		YAKE_LOG( "Now trying to load " + name );
+		handle = ( LibraryHandle )dlopen( name.c_str(), RTLD_LAZY );
+	}
+	
+	if ( handle == NULL )
+		throw Exception( "Failed to load " + String( pFilename ) + String( " with both libyake and libyapp prefixes due to " ) + String( dlerror() ) , "native::Linux::library_Load" );
 
+	YAKE_LOG( "successfully loaded " + name );
+	
 	return handle;
 }
 

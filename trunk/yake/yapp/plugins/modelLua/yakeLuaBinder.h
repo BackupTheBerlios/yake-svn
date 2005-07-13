@@ -1,5 +1,4 @@
-/*
-   ------------------------------------------------------------------------------------
+/**------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
@@ -18,45 +17,26 @@
    Place - Suite 330, Boston, MA 02111-1307, USA, or go to
    http://www.gnu.org/copyleft/lesser.txt.
    ------------------------------------------------------------------------------------
-   If you are interested in another license model contact the Yake Team via
-   E-Mail: team@yake.org.
-   For more information see the LICENSE file in the root directory of the
-   source code distribution.
-   ------------------------------------------------------------------------------------
 */
-#include <yapp/msg/yakePCH.h>
-#include <yapp/msg/yakeMsg.h>
+#ifndef YAKE_MODEL_LUA_BINDER_H
+#define YAKE_MODEL_LUA_BINDER_H
 
 namespace yake {
-namespace msg {
+namespace app {
+namespace model {
+namespace lua {
 
-	MessageQ::MessageQ()
-	{}
-	MessageQ::~MessageQ()
-	{
-		YAKE_DECLARE_FUNCTION( ~MessageQ );
-		if (!empty())
+		struct Binder : public scripting::IBinder
 		{
-			YAKE_LOG("MessageQ destructed but queue was not empty!");
-		}
-	}
-	void MessageQ::push( Message* pMessage )
-	{ 
-		if (pMessage)
-			mQ.push( pMessage );
-	}
-	Message* MessageQ::pop()
-	{
-		if (mQ.empty())
-			return 0;
-		Message* ret = mQ.front();
-		mQ.pop();
-		return ret;
-	}
-	bool MessageQ::empty() const
-	{
-		return mQ.empty();
-	}
+			YAKE_DECLARE_CONCRETE( Binder, "yapp::model" );
+			
+			public:
+				virtual void bind( scripting::IVM* pVM );
+		};
 
-} // namespace msg
+} // namespace lua
+} // namespace model
+} // namespace app
 } // namespace yake
+
+#endif

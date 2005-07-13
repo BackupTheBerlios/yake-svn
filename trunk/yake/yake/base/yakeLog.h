@@ -47,18 +47,9 @@ namespace yake
 namespace base
 {
 
-// todo: printf sucks <= no it doesn't! <= it does, use templates for type safety
-
-// todo: replace macros with inline functions
-#define YAKE_LOGPRINTF yake::base::Log::instance().logPrintf
-#define YAKE_LOG_INFORMATION( what ) yake::base::Log::instance().log( what, yake::base::Log::INFORMATIONS, YAKE_HERE );
-#define YAKE_LOG_WARNING( what ) yake::base::Log::instance().log( what, yake::base::Log::WARNINGS, YAKE_HERE );
-#define YAKE_LOG_ERROR( what ) yake::base::Log::instance().log( what, yake::base::Log::ERRORS, YAKE_HERE );
-#define YAKE_LOG( what ) yake::base::Log::instance().log( what, yake::base::Log::INFORMATIONS );
-
 class YAKE_BASE_API Log
 {
-YAKE_DECLARE_CLASS( yake::base::Log )
+	YAKE_DECLARE_CLASS( yake::base::Log );
 // Types
 public:
 	enum Severity { INFORMATIONS, WARNINGS, ERRORS };
@@ -83,8 +74,33 @@ private:
 	YAKE_BUILD_PHOENIX_SINGLETON(Log)
 };
 
-inline void log_warning(std::string where, std::string what)
-{ yake::base::Log::instance().log(what, yake::base::Log::WARNINGS, where); }
+inline void log_information( const String& what, const String& file, const int line )
+{
+	String where("File: ");
+	where << file.c_str() << "@" << line;
+	yake::base::Log::instance().log( what, yake::base::Log::INFORMATIONS, where );
+}
+
+inline void log_warning( const String& what, const String& file, const int line )
+{
+	String where("File: ");
+	where << file.c_str() << "@" << line;
+	yake::base::Log::instance().log( what, yake::base::Log::WARNINGS, where );
+}
+
+inline void log_error( const String& what, const String& file, const int line )
+{
+	String where("File: ");
+	where << file.c_str() << "@" << line;
+	yake::base::Log::instance().log( what, yake::base::Log::ERRORS, where );
+}
+
+// todo: printf sucks <= no it doesn't! <= it does, use templates for type safety
+#define YAKE_LOGPRINTF yake::base::Log::instance().logPrintf
+#define YAKE_LOG_INFORMATION( what ) yake::base::log_information( what, __FILE__, __LINE__ );
+#define YAKE_LOG_WARNING( what ) yake::base::log_warning( what, __FILE__, __LINE__ );
+#define YAKE_LOG_ERROR( what ) yake::base::log_error( what, __FILE__, __LINE__ );
+#define YAKE_LOG( what ) yake::base::log_information( what, __FILE__, __LINE__ );
 
 } // base
 } // yake

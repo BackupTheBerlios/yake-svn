@@ -60,7 +60,7 @@ void* Library::getSymbol( const String& rFunction )
   void* pAddress = native::library_GetSymbol( mHandle, rFunction.c_str() );
 
   if( 0 == pAddress )
-      throw Exception( "Couldn't get address for function \"" + rFunction + "\"", YAKE_HERE );
+      YAKE_EXCEPT( "Couldn't get address for function \"" + rFunction + "\"" );
 
   return pAddress;
 }

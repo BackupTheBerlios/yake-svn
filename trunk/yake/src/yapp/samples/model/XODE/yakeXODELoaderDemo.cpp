@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -34,11 +34,11 @@
 
 using namespace yake;
 using namespace yake::base::templates;
-using namespace yake::base::math;
 using namespace yake::data;
 
 class TheApp : public yake::exapp::ExampleApplication
 {
+	YAKE_DECLARE_CLASS( TheApp );
 private:
 	SharedPtr<physics::IWorld>			mPWorld;
 
@@ -72,6 +72,7 @@ public:
 
 	virtual void run()
 	{
+		YAKE_DECLARE_FUNCTION( run );
 		// physics
 		mPWorld = getPhysicsSystem().createWorld();
 		YAKE_ASSERT( mPWorld );
@@ -79,6 +80,7 @@ public:
 		// objects
 		setupWorld();
 
+		std::cout << "World was all set up!" << std::endl;
 		YAKE_LOG("Running simulation...");
 
 		// main loop
@@ -99,6 +101,8 @@ public:
 				mPWorld->step( timeElapsed );
 		}
 		YAKE_LOG("...done!");
+
+		std::cout << "Simulation complete. Cleaning up..." << std::endl;
 
 		YAKE_SAFE_DELETE( mPhysical );
 
@@ -127,7 +131,7 @@ int main( int argc, char** argv )
 		theApp.initialise();
 		theApp.run();
 	}
-	catch (const yake::base::Exception& rException)
+	catch (const yake::Exception& rException)
 	{
 		std::cout << std::endl << rException.what() << std::endl;
 	}

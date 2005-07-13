@@ -86,14 +86,14 @@ namespace exapp {
 		graphics::IGraphicsSystem& getGraphicsSystem() const
 		{
 			if (!mGraphicsSystem)
-				YAKE_EXCEPT( "Don't have a graphics system!", "getGraphicsSystem()" );
+				YAKE_EXCEPT( "Don't have a graphics system!");
 			return *mGraphicsSystem;
 		}
 
 		scripting::IScriptingSystem& getScriptingSystem() const
 		{
 			if (!mScriptingSystem)
-				YAKE_EXCEPT( "Don't have a scripting system!", "getScriptingSystem()" );
+				YAKE_EXCEPT( "Don't have a scripting system!" );
 			return *mScriptingSystem;
 		}
 
@@ -103,7 +103,7 @@ namespace exapp {
 		scripting::IBinder& getScriptingBindings() const
 		{
 			if (!mScriptingBindings)
-				YAKE_EXCEPT( "Don't have scripting bindings!", "getScriptingBindings()" );
+				YAKE_EXCEPT( "Don't have scripting bindings!" );
 			return *mScriptingBindings;
 		}
 

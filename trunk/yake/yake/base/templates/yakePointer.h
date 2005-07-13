@@ -170,7 +170,7 @@ namespace yake {
 			{ 
 				YAKE_DECLARE_FUNCTION( Check ) 
 				if( 0 == instance ) 
-					throw yake::Exception( "Null pointer detected.", YAKE_HERE );
+					YAKE_EXCEPT( "Null pointer detected." );
 			}
     };
   };

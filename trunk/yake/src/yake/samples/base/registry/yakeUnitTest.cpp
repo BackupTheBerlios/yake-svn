@@ -53,8 +53,7 @@ public:
 	// Resolve host.
 	const String resolveHost() const
 	{
-		YAKE_DECLARE_FUNCTION( ResolveHost )
-		return String( YAKE_HERE + ": Hello, its me - the win32 implementation :)" );
+		return String( "Hello, its me - the win32 implementation :)" );
 	}
 
 YAKE_DECLARE_CONCRETE( NetworkDriver, "win32" )
@@ -80,8 +79,7 @@ public:
 	// Resolve host.
 	const String resolveHost() const
 	{
-		YAKE_DECLARE_FUNCTION( ResolveHost )
-		return String( YAKE_HERE + ": Hello, its me - the Linux implementation ;)" );
+		return String( "Hello, its me - the Linux implementation ;)" );
 	}
 
 YAKE_DECLARE_CONCRETE( NetworkDriver, "linux" )

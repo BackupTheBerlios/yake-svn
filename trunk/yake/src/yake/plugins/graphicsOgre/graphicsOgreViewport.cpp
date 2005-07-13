@@ -90,7 +90,7 @@ namespace ogre3d {
 				setZ( z );
 			else
 				//FIXME: decide what to do. throw exception? just fail, log error & return?
-				throw;
+				YAKE_GRAPHICS_EXCEPT(exc.getFullDescription().c_str());
 		}
 	}
 

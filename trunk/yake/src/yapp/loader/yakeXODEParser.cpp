@@ -437,6 +437,8 @@ namespace xode {
 				   physics::IActor* pParentObject,
 				   const Transform& rParentTransform )
 	{
+		YAKE_DECLARE_FUNCTION( readGeom );
+
 		const String name = pGeomNode->getAttributeValueAs<String>( "name" );
 		std::cout << "readGeom() [" << name << "]" << std::endl;
 		

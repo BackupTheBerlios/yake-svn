@@ -36,7 +36,7 @@ public:
 	Dilemma()
 	{
 		YAKE_DECLARE_FUNCTION( Dilemma )
-		throw Exception( "Oh my god!", YAKE_HERE );
+		YAKE_EXCEPT( "Oh my god!" );
 	}
 };
 

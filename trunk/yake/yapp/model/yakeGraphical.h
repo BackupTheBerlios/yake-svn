@@ -42,6 +42,7 @@ namespace model {
 	*/
 	class YAPP_BASE_API Graphical : public Submodel
 	{
+		YAKE_DECLARE_CLASS( Graphical );
 	public:
 		Graphical()
 		{}
@@ -149,6 +150,7 @@ namespace model {
 
 			Graphical&		mOwner;
 		};
+
 	};
 
 } // model

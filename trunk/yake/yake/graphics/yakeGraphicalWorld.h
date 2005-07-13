@@ -49,6 +49,7 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API IParticleSystem : public GraphicsEntity
 	{
 	public:
+		virtual ~IParticleSystem();
 		virtual void setVisible( bool visible ) = 0;
 	};
 
@@ -58,6 +59,7 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API ISkeleton : public GraphicsEntity
 	{
 	public:
+		virtual ~ISkeleton();
 		virtual void enableAnimation( const String& rAnimName, bool enable = true ) = 0;
 		virtual void advanceAnimation( const String& rAnimName, real timeDelta ) = 0;
 		virtual void advanceAllAnimations( real timeDelta ) = 0;
@@ -77,6 +79,8 @@ namespace graphics {
 			LT_SPOT
 		};
 
+		virtual ~ILight();
+		
 		virtual void setType( const LightType type ) = 0;
 		virtual LightType getType() const = 0;
 
@@ -110,6 +114,8 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API IEntity : public GraphicsEntity
 	{
 	public:
+		virtual ~IEntity();
+		
 		virtual ISkeleton* getSkeleton() const = 0;
 		virtual void setVisible( bool visible ) = 0;
 		virtual void setMaterial( const String & materialName ) = 0;
@@ -143,6 +149,8 @@ namespace graphics {
 			PT_PERSPECTIVE
 		};
 
+		virtual ~ICamera();
+		
 		virtual void setProjectionType( const ProjectionType type ) = 0;
 		virtual ProjectionType getProjectionType() const = 0;
 
@@ -233,12 +241,14 @@ namespace graphics {
 	typedef std::deque<ISceneNode*> SceneNodePtrList;
 	typedef std::deque<IEntity*> EntityPtrList;
 	typedef std::deque<ILight*> LightPtrList;
+	typedef std::deque<ICamera*> CameraPtrList;
+	typedef std::deque<IParticleSystem*> ParticleSystemPtrList;
 	/** A concrete node in a scene graph.
 	*/
 	class YAKE_GRAPHICS_INTERFACE_API ISceneNode : public GraphicsEntity, public Movable
 	{
 	public:
-		virtual ~ISceneNode() {}
+		virtual ~ISceneNode();
 
 		// Shamelessly ripped from Ogre...
 		enum TransformSpace
@@ -302,11 +312,19 @@ namespace graphics {
 
 		/** Return a list of all attached entities. 
 		*/
-		virtual const EntityPtrList& getAttachedEntities() const = 0;
+		virtual const EntityPtrList& getEntities() const = 0;
 
 		/** Return a list of all attached lights. 
 		*/
-		virtual const LightPtrList& getAttachedLights() const = 0;
+		virtual const LightPtrList& getLights() const = 0;
+
+		/** Return a list of all attached cameras. 
+		*/
+		virtual const CameraPtrList& getCameras() const = 0;
+
+		/** Return a list of all attached particle systems 
+		*/
+		virtual const ParticleSystemPtrList& getParticleSystems() const = 0;
 
 		/** Detaches a previously attached entity.
 			Ownership of the object is transferred to the caller.
@@ -317,6 +335,16 @@ namespace graphics {
 			Ownership of the object is transferred to the caller.
 		*/
 		virtual void detach( ILight* pLight ) = 0;
+
+		/** Detaches a previously attached camera.
+			Ownership of the object is transferred to the caller.
+		*/
+		virtual void detach( ICamera* pCamera ) = 0;
+
+		/** Detaches a previously attached particle system.
+			Ownership of the object is transferred to the caller.
+		*/
+		virtual void detach( IParticleSystem* pPS ) = 0;
 
 		/** Return the name of this scene node.
 		*/
@@ -362,7 +390,7 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API IViewport
 	{
 	public:
-		virtual ~IViewport() {}
+		virtual ~IViewport();
 		virtual void attachCamera( ICamera* pCamera ) = 0;
 		virtual ICamera* getAttachedCamera() const = 0;
 		virtual void setDimensions( real left, real top, real width, real height ) = 0;
@@ -380,7 +408,7 @@ namespace graphics {
 	{
 	//{ //: public AbstractFactory< list< ISceneNode, ILight, ICamera > >
 	public:
-		virtual ~IWorld() {}
+		virtual ~IWorld();
 
 		virtual ILight* createLight() = 0;
 		virtual ICamera* createCamera() = 0;
