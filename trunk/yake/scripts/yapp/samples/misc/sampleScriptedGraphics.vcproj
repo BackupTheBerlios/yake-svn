@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesDotScene"
-	ProjectGUID="{8E612AD0-68D1-445E-A31E-7CB1CCA18CA0}"
+	Name="sampleScriptedGraphics"
+	ProjectGUID="{B85C2435-267A-461C-AD9E-FE28EE7DCC12}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -19,14 +19,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/;../../../../dependencies/lua/include/;../../../../dependencies/luabind/"
 				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yapp/samples/graphics/dotScene/yakePCH.h"
+				PrecompiledHeaderThrough="yapp/samples/graphics/scripted/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -34,10 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib"
+				AdditionalDependencies="base.lib input.lib data.lib graphics.lib yapp.lib audio.lib physics.lib scripting.lib scriptingLua.lib scriptingBindingsLua.lib luabindd.lib luad.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/luabind/lib;../../../../dependencies/lua/lib;../../../../dependencies/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
@@ -71,11 +71,11 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/;../../../../dependencies/lua/include/;../../../../dependencies/luabind/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yapp/samples/graphics/dotScene/yakePCH.h"
+				PrecompiledHeaderThrough="yapp/samples/graphics/scripted/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -83,7 +83,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib"
+				AdditionalDependencies="base.lib input.lib data.lib graphics.lib yapp.lib audio.lib physics.lib scripting.lib scriptingLua.lib scriptingBindingsLua.lib luabind.lib lua.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
@@ -121,23 +121,19 @@
 			Name="inc"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\yapp\samples\graphics\dotscene\yakePCH.h">
+				RelativePath="..\..\..\..\yapp\samples\graphics\scripted\yakePCH.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yapp\samples\graphics\dotScene\yakeDotSceneDemo.cpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\src\yapp\samples\graphics\dotScene\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-						PrecompiledHeaderThrough="yapp/samples/graphics/dotScene/yakePCH.h"/>
+						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32">
@@ -145,6 +141,22 @@
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yapp\samples\graphics\scripted\yakeScriptedGraphicsDemo.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="entity scripts"
+			Filter="">
+			<File
+				RelativePath="..\..\..\..\common\media\samples\scripted\ent_light.lua">
+			</File>
+			<File
+				RelativePath="..\..\..\..\common\media\samples\scripted\ent_pawn_basic.lua">
+			</File>
+			<File
+				RelativePath="..\..\..\..\common\media\samples\scripted\ent_pawn_eventtest.lua">
 			</File>
 		</Filter>
 	</Files>

@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesDotScene"
-	ProjectGUID="{8E612AD0-68D1-445E-A31E-7CB1CCA18CA0}"
+	Name="baseBindingsLua"
+	ProjectGUID="{3867E9A4-41F3-4969-B0A8-40757BCB6C29}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -14,19 +14,19 @@
 			Name="Debug|Win32"
 			OutputDirectory="../../../../common/bin/debug"
 			IntermediateDirectory="../../../../common/obj/debug/$(ProjectName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
-				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/lua/include;../../../../dependencies/luabind;../../../../dependencies/ttl/;../../../../dependencies/boost/"
+				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKESCRIPTINGLUA_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yapp/samples/graphics/dotScene/yakePCH.h"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough="yake/plugins/baseLuaBindings/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -34,13 +34,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib"
-				OutputFile="$(OutDir)/$(ProjectName).exe"
+				AdditionalDependencies="scriptingLua.lib scripting.lib luad.lib luabindd.lib"
+				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies\lua\lib;../../../../dependencies\luabind\lib;../../../../dependencies/lib"
+				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
-				SubSystem="1"
+				SubSystem="2"
+				ImportLibrary="../../../../common/lib/debug/$(TargetName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -67,15 +69,18 @@
 			Name="Release|Win32"
 			OutputDirectory="../../../../common/bin/release"
 			IntermediateDirectory="../../../../common/obj/release/$(ProjectName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				Optimization="3"
+				GlobalOptimizations="TRUE"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/lua/include;../../../../dependencies/luabind;../../../../dependencies/ttl/;../../../../dependencies/boost/"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKESCRIPTINGLUA_EXPORTS"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yapp/samples/graphics/dotScene/yakePCH.h"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough="yake/plugins/baseLuaBindings/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -83,14 +88,15 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib"
-				OutputFile="$(OutDir)/$(ProjectName).exe"
+				AdditionalDependencies="scriptingLua.lib scripting.lib lua.lib luabind.lib"
+				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
-				GenerateDebugInformation="FALSE"
-				SubSystem="1"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies\lua\lib;../../../../dependencies\luabind\lib;../../../../dependencies/lib"
+				ModuleDefinitionFile=""
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
+				ImportLibrary="../../../../common/lib/release/$(TargetName).lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -118,33 +124,20 @@
 	</References>
 	<Files>
 		<Filter
-			Name="inc"
-			Filter="">
+			Name="src"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx">
 			<File
-				RelativePath="..\..\..\..\yapp\samples\graphics\dotscene\yakePCH.h">
+				RelativePath="..\..\..\..\src\yake\plugins\baseLuaBindings\yakeLuaBinder.cpp">
 			</File>
 		</Filter>
 		<Filter
-			Name="src"
-			Filter="">
+			Name="inc"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd">
 			<File
-				RelativePath="..\..\..\..\src\yapp\samples\graphics\dotScene\yakeDotSceneDemo.cpp">
+				RelativePath="..\..\..\..\yake\plugins\baseLuaBindings\yakeLuaBinder.h">
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\yapp\samples\graphics\dotScene\yakePCH.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-						PrecompiledHeaderThrough="yapp/samples/graphics/dotScene/yakePCH.h"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
+				RelativePath="..\..\..\..\yake\plugins\baseLuaBindings\yakePrerequisites.h">
 			</File>
 		</Filter>
 	</Files>
