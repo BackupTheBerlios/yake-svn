@@ -74,33 +74,26 @@ private:
 	YAKE_BUILD_PHOENIX_SINGLETON(Log)
 };
 
-inline void log_information( const String& what, const String& file, const int line )
-{
-	String where("File: ");
-	where << file.c_str() << "@" << line;
-	yake::base::Log::instance().log( what, yake::base::Log::INFORMATIONS, where );
-}
+void YAKE_BASE_API log_information( const String& what, const String& where );
+void YAKE_BASE_API log_warning( const String& what, const String& where );
+void YAKE_BASE_API log_error( const String& what, const String& where );
 
-inline void log_warning( const String& what, const String& file, const int line )
-{
-	String where("File: ");
-	where << file.c_str() << "@" << line;
-	yake::base::Log::instance().log( what, yake::base::Log::WARNINGS, where );
-}
+// the simplest form of logging. Adds nothing to "what".
+// Useful in scripts where you just want to log something without "where"
+void YAKE_BASE_API log( const String& what );
 
-inline void log_error( const String& what, const String& file, const int line )
-{
-	String where("File: ");
-	where << file.c_str() << "@" << line;
-	yake::base::Log::instance().log( what, yake::base::Log::ERRORS, where );
-}
+// todo: printf sucks <= no it doesn't! <= IT DOES, use boost::format for
+// typesafe string formatting
 
-// todo: printf sucks <= no it doesn't! <= it does, use templates for type safety
-#define YAKE_LOGPRINTF yake::base::Log::instance().logPrintf
-#define YAKE_LOG_INFORMATION( what ) yake::base::log_information( what, __FILE__, __LINE__ );
-#define YAKE_LOG_WARNING( what ) yake::base::log_warning( what, __FILE__, __LINE__ );
-#define YAKE_LOG_ERROR( what ) yake::base::log_error( what, __FILE__, __LINE__ );
-#define YAKE_LOG( what ) yake::base::log_information( what, __FILE__, __LINE__ );
+// some preprocessor magic for __LINE__ stringification
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY (x)
+
+#define YAKE_LOG_INFORMATION( what ) yake::base::log_information( what, "File: "__FILE__"@"TOSTRING(__LINE__) );
+#define YAKE_LOG_WARNING( what ) yake::base::log_warning( what, "File: "__FILE__"@"TOSTRING(__LINE__) );
+#define YAKE_LOG_ERROR( what ) yake::base::log_error( what, "File: "__FILE__"@"TOSTRING(__LINE__) );
+#define YAKE_LOG( what ) yake::base::log_information( what, "File: "__FILE__"@"TOSTRING(__LINE__) );
+
 
 } // base
 } // yake

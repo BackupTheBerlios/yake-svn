@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -74,6 +74,26 @@ void Log::logPrintf( char * fmt, ... )
     YAKE_VSNPRINTF( szBuffer, 4096, fmt, list );
 	mOnLog( szBuffer, INFORMATIONS, "" );
     va_end( list );
+}
+
+void log_information( const String& what, const String& where )
+{
+	Log::instance().log( what, Log::INFORMATIONS, where );
+}
+
+void log_warning( const String& what, const String& where )
+{
+	Log::instance().log( what, Log::WARNINGS, where );
+}
+
+void log_error( const String& what, const String& where )
+{
+	Log::instance().log( what, Log::ERRORS, where );
+}
+
+void log( const String& what )
+{
+	Log::instance().log( what, Log::INFORMATIONS );
 }
 
 } // base

@@ -212,7 +212,7 @@ namespace ogre3d {
 		}
 		catch (Ogre::Exception& e)
 		{
-			YAKE_LOGPRINTF("[yake.graphics.ogre] OGRE EXCEPTION\n%s\n", e.getFullDescription() );
+			YAKE_LOG( "[yake.graphics.ogre] OGRE EXCEPTION\n" + e.getFullDescription() + "\n");
 			mReady = false;
 		}
 	}
