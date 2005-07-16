@@ -50,11 +50,11 @@ namespace vehicle {
 			static_cast<IPhysicalVehicleComponent*>(getComponent("core"));
 		if (!pPC)
 			return;
-		pPC->update(0.01); //@todo use elapsed time!
+		pPC->update(real(0.01)); //@todo use elapsed time!
 
 		YAKE_ASSERT( mComplex );
-		mComplex->updatePhysics( 0.01 ); //@todo use elapsed time!
-		mComplex->updateControllers( 0.01 ); //@todo use elapsed time!
+		mComplex->updatePhysics( real(0.01) ); //@todo use elapsed time!
+		mComplex->updateControllers( real(0.01) ); //@todo use elapsed time!
 	}
 	//-----------------------------------------------------
 	void Vehicle::setModel( complex::Model* pComplex )
