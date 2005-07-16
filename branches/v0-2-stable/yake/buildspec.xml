@@ -1,0 +1,243 @@
+<BuildSpec>
+	<Common	
+		LibInstallDir="/usr/local/lib"
+		ProgramInstallDir="common/bin" 	
+		ObjectDir="build"
+		LibDir="build"
+	>	
+		
+			<include>dependencies</include>
+			<include>.</include>
+			<include>dependencies/ttl</include>
+			<include>dependencies/OGRE</include>
+			<include>dependencies/ode/include</include>
+			<include>dependencies/luabind</include>
+	</Common>
+
+	<!-- One can define lists of strings to be used later  -->
+	<List name="dynamic_loader" >
+		<item>dl</item>
+	</List>
+
+	<BuildSharedLibrary 
+		name="yakeNative"
+		src="src/yake/base/native/Linux" 
+	>	
+		<libadd>dynamic_loader</libadd> 
+	
+	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yakeTemplates"
+		src="src/yake/base/templates"
+	>
+	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yakeMath"
+		src="src/yake/base/math"
+	/>
+
+	<BuildSharedLibrary
+		name="yakeBase"
+		src="src/yake/base"
+	>
+		<libadd>yakeNative</libadd>
+		<libadd>yakeTemplates</libadd>
+		<libadd>yakeMath</libadd>
+		<libadd>boost_signals</libadd>
+
+	</BuildSharedLibrary>	
+
+
+	<BuildSharedLibrary
+		name="yakeAudio"
+		src="src/yake/audio"
+	>
+		<libadd>yakeBase</libadd>
+	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="depTinyXML"
+		src="dependencies/tinyxml"
+	>
+	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yakeData"
+		src="src/yake/data"
+	>
+		<libadd>yakeBase</libadd>
+		<libadd>depTinyXML</libadd>
+	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yakeGraphics"
+		src="src/yake/graphics"
+	>
+		<libadd>yakeBase</libadd>
+	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yakeInput"
+		src="src/yake/input"
+	>
+		<libadd>yakeBase</libadd>
+	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yakePhysics"
+		src="src/yake/physics"
+	>
+		<libadd>yakeBase</libadd>
+	</BuildSharedLibrary>
+
+        <BuildSharedLibrary
+                name="yakeScripting"
+                src="src/yake/scripting"
+        >
+                <libadd>yakeBase</libadd>
+        </BuildSharedLibrary>
+
+
+<!--
+	<BuildSharedLibrary
+		name="yakeRx"
+		src="src/yake/rx"
+	>
+		<libadd>yakeBase</libadd>
+	</BuildSharedLibrary>
+-->
+<!--
+	<BuildSharedLibrary
+		name="yakeaudioOpenAL"
+		src="src/yake/plugins/audioOpenAL"
+	>
+		<libadd>openalpp</libadd>
+		<libadd>yakeAudio</libadd>
+	</BuildSharedLibrary>
+-->
+	<BuildSharedLibrary
+		name="yakegraphicsOgre"
+		src="src/yake/plugins/graphicsOgre"
+	>
+		<libadd>yakeGraphics</libadd>
+		<libadd>OgreMain</libadd>	
+	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yakeinputOgre"
+		src="src/yake/plugins/inputOgre"
+	>
+		<libadd>yakeInput</libadd>
+		<libadd>OgreMain</libadd>
+	</BuildSharedLibrary>
+<!--
+	<BuildSharedLibrary
+		name="yakephysicsODE"
+		src="src/yake/plugins/physicsODE"
+	>
+		<libadd>yakePhysics</libadd>
+		<libadd>ode</libadd>
+	</BuildSharedLibrary>
+-->
+	<BuildSharedLibrary
+		name="yakescriptingLua"
+		src="src/yake/plugins/scriptingLua"
+	>
+		<libadd>yakeBase</libadd>
+		<libadd>lualib</libadd>
+		<libadd>lua</libadd>
+	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yakescriptingBindingsLua"
+		src="src/yake/plugins/scriptingLuaBindings"
+	>
+		<libadd>yakeBase</libadd>
+		<libadd>luabind</libadd>
+		<libadd>lualib</libadd>
+		<libadd>lua</libadd>
+
+	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yappEvents"
+		src="src/yapp/base/event"
+	/>
+
+	<BuildSharedLibrary
+		name="yappBase"
+		src="src/yapp/base"
+	>
+		<libadd>yakeBase</libadd>
+		<libadd>yappEvents</libadd>
+	</BuildSharedLibrary>
+
+       <BuildSharedLibrary
+                name="yappLoader"
+                src="src/yapp/loader"
+        >
+                <libadd>yappBase</libadd>
+        </BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yappModel"	
+		src="src/yapp/model"
+	>
+		<libadd>yappBase</libadd>
+		<libadd>yappLoader</libadd>
+	</BuildSharedLibrary>
+
+	<List name="common_libs">
+		<item>yakeAudio</item>
+		<item>yakeGraphics</item>
+		<item>yakeInput</item>
+		<item>yakePhysics</item>
+		<item>yakeData</item>
+		<item>yakeScripting</item>
+	</List>
+
+	<BuildProgram
+		name="DemoDebug"
+		src="src/yake/samples/base/debug"
+	>
+		<libadd>common_libs</libadd>
+	</BuildProgram>
+
+	<BuildProgram
+		name="GraphicsDemo"
+		src="src/yake/samples/graphics/demo"
+	>
+		<libadd>common_libs</libadd>
+	</BuildProgram>
+
+	<BuildProgram
+		name="DotSceneGraphicsDemo"
+		src="src/yapp/samples/graphics/dotScene"
+	>
+		<libadd>common_libs</libadd>
+		<libadd>yappModel</libadd>
+	</BuildProgram>
+
+	<BuildProgram 
+		name="XODELoaderDemo"
+		src="src/yapp/samples/model/XODE"
+	>
+		<libadd>common_libs</libadd>
+		<libadd>yappModel</libadd>
+		<libadd>yappLoader</libadd>
+	</BuildProgram>
+
+	<BuildProgram 
+		name="dotLinkLoaderDemo"
+		src="src/yapp/samples/model/dotLink"
+	>
+
+		<libadd>common_libs</libadd>
+		<libadd>yappModel</libadd>
+		<libadd>yappLoader</libadd>
+	</BuildProgram>
+
+</BuildSpec>
+

@@ -1,0 +1,140 @@
+material Dirt
+{
+	technique
+	{
+		pass
+		{
+			ambient 1.0 1.0 1.0
+			diffuse 1.0 1.0 1.0
+			specular 0.0 0.0 0.0 0
+			emissive 0.0 0.0 0.0
+			scene_blend one zero
+			depth_check on
+			depth_func less_equal
+			depth_write on
+			depth_bias 0
+			cull_software back
+			lighting on
+			fog_override false
+			shading gouraud
+			colour_write on
+
+			texture_unit
+			{
+				texture Dirt.jpg 2d
+				tex_address_mode wrap
+				filtering linear linear point
+				colour_op modulate
+				scroll 0.0 0.0
+				scale 1.0 1.0
+				rotate 0.0
+			}
+		}
+	}
+}
+
+material Metal
+{
+	technique
+	{
+		pass
+		{
+			ambient 1.0 1.0 1.0
+			diffuse 1.0 1.0 1.0
+			specular 0.0 0.0 0.0 0
+			emissive 0.0 0.0 0.0
+			scene_blend one zero
+			depth_check on
+			depth_func less_equal
+			depth_write on
+			depth_bias 0
+			cull_software back
+			lighting on
+			fog_override false
+			shading gouraud
+			colour_write on
+
+			texture_unit
+			{
+				texture MtlPlat2.jpg 2d
+				tex_address_mode wrap
+				filtering linear linear point
+				colour_op modulate
+				scroll 0.0 0.0
+				scale 1.0 1.0
+				rotate 0.0
+			}
+		}
+	}
+}
+
+material Ball
+{
+	technique
+	{
+		pass
+		{
+			ambient 1.0 1.0 1.0
+			diffuse 1.0 1.0 1.0
+			specular 0.972549 0.972549 0.972549 0
+			emissive 0.0 0.0 0.0
+			scene_blend one zero
+			depth_check on
+			depth_func less_equal
+			depth_write on
+			depth_bias 0
+			cull_software back
+			lighting on
+			fog_override false
+			shading gouraud
+			colour_write on
+
+			texture_unit
+			{
+				texture WeirdEye.png 2d
+				tex_address_mode wrap
+				filtering linear linear point
+				colour_op modulate
+				scroll 0.0 0.0
+				scale 1.0 1.0
+				rotate 0.0
+			}
+		}
+	}
+}
+
+material Wood
+{
+	technique
+	{
+		pass
+		{
+			ambient 1.0 1.0 1.0
+			diffuse 1.0 1.0 1.0
+			specular 0.0 0.0 0.0 0
+			emissive 0.0 0.0 0.0
+			scene_blend one zero
+			depth_check on
+			depth_func less_equal
+			depth_write on
+			depth_bias 0
+			cull_software back
+			lighting on
+			fog_override false
+			shading gouraud
+			colour_write on
+
+			texture_unit
+			{
+				texture RustedMetal.jpg 2d
+				tex_address_mode wrap
+				filtering linear linear point
+				colour_op modulate
+				scroll 0.0 0.0
+				scale 1.0 1.0
+				rotate 0.0
+			}
+		}
+	}
+}
+

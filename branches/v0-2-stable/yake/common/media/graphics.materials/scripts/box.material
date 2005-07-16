@@ -1,0 +1,32 @@
+material box
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			diffuse 1.0 1.0 1.0
+
+			texture_unit
+			{
+				texture RustedMetal.jpg
+			}
+		}
+	}
+}
+material sphere
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			diffuse 1.0 1.0 1.0
+
+			texture_unit
+			{
+				texture RustedMetal.jpg
+			}
+		}
+	}
+}

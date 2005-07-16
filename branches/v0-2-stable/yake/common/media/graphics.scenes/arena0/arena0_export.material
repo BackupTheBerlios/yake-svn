@@ -1,0 +1,16 @@
+
+material arena0default
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			diffuse 1 1 1
+			texture_unit
+			{
+				texture RustedMetal.jpg
+			}
+		}
+	}
+}
