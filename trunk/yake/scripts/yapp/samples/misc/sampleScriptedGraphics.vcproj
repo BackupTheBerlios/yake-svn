@@ -128,7 +128,7 @@
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yapp\samples\graphics\dotScene\yakePCH.cpp">
+				RelativePath="..\..\..\..\src\yapp\samples\graphics\scripted\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
