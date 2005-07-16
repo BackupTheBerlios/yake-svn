@@ -1,0 +1,42 @@
+// Example particle systems
+
+// smoke
+Smoke
+{
+    	material        	Smoke
+    	particle_width  	1
+    	particle_height 	1
+    	cull_each       	true
+    	quota           	75
+    	billboard_type  	point
+    
+    	// Area emitter
+    	emitter Point
+    	{
+			angle               		11
+        	emission_rate       		15
+        	time_to_live        		3
+        	direction           		0 1 0
+        	velocity_min        		1
+        	velocity_max        		3    	
+	}
+
+	affector ColourImage
+	{
+		image		smokecolors.png
+	}
+
+   	affector Rotator
+   	{
+        	rotation_range_start  		0
+        	rotation_range_end   	 	360
+        	rotation_speed_range_start  	-6
+        	rotation_speed_range_end    	20
+   	}
+
+   	affector Scaler
+   	{
+       	rate 	2
+   	}
+
+}

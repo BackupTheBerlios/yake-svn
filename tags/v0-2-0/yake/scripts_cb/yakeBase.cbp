@@ -1,0 +1,716 @@
+<?xml version="1.0"?>
+<!DOCTYPE Code::Blocks_project_file>
+<Code::Blocks_project_file>
+	<FileVersion major="1" minor="1"/>
+	<Project>
+		<Option title="yakeBase"/>
+		<Option makefile="Makefile"/>
+		<Option makefile_is_custom="0"/>
+		<Option compiler="0"/>
+		<Build>
+			<Target title="release">
+				<Option output="yakebase.dll"/>
+				<Option working_dir="."/>
+				<Option object_output=".objs"/>
+				<Option deps_output=".deps"/>
+				<Option external_deps=""/>
+				<Option type="3"/>
+				<Option compiler="0"/>
+				<Option createStaticLib="1"/>
+				<Compiler>
+					<Add option="-W"/>
+					<Add directory="..\..\yake"/>
+					<Add directory="..\dependencies\boost"/>
+					<Add directory="..\dependencies\ttl"/>
+					<Add directory="..\dependencies"/>
+				</Compiler>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-fpermissive"/>
+			<Add option="-DBUILD_DLL"/>
+		</Compiler>
+		<Linker>
+			<Add library="C:\Dev-Cpp\lib\libgdi32.a"/>
+			<Add library="F:\dep.gcc\boost_1_32_0\stage\lib\libboost_signals-mgw-mt.lib"/>
+		</Linker>
+		<Unit filename="..\src\yake\base\math\yakeMath.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\math\yakeMatrix3.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\math\yakeMatrix4.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\math\yakeQuaternion.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\math\yakeRand.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\math\yakeRay.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\math\yakeSimpleSpline.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\math\yakeVector3.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\native\win32\yakeApplication.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\native\win32\yakeConfig.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\native\win32\yakeCriticalSection.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\native\win32\yakeDebug.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\native\win32\yakeLibrary.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\native\win32\yakeProcessor.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeCriticalSection.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeDataChunk.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeDebugLogAppender.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeDebugOutputStream.cpp">
+			<Option compilerVar="CPP"/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeException.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeInputStream.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeLibrary.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeLock.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeLog.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeMimeTypeManager.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeMovable.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeOutputStream.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakePCH.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeParamHolder.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeString.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeUniqueId.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\base\yakeUniqueName.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeAsmMath.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeColor.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeColor.inl">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeGeometry.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeInterpolator.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeMath.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeMatrix3.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeMatrix4.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeMersenneTwister.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakePlane.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeQuaternion.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeRand.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeRay.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeSimpleSpline.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeVector3.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\math\yakeVector4.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\compare_sequences.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\dispatch_arbitrary_types.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\get_type_or_null.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\inherit_linear.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\inherit_multiple.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\lambda.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\null_type.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\sequences.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeAbstractFactory.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeAlgorithms.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeBuildArguments.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeBuildIteration.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeCast.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeCast.inl">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeFunctions.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeInheritLinear.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeInheritMultiple.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeLambda.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeSelect.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeStaticAssert.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\mpl\yakeTraits.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\prerequisites\yakePrerequisitesGCC.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\prerequisites\yakePrerequisitesGCCWin.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\prerequisites\yakeStringGCC.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\prerequisites\yakeStringGCCWin.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\prerequisites\yakeStringHashFun.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeAlgorithms.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeAlgorithms.inl">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeAssociator.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeDeque.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeFastMap.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeFunctor.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeManager.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeManager.inl">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeNiftyContainer.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakePointer.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeProperties.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeRegistry.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeSignals.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeSingleton.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeSmartAssert.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeThreads.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeVariant.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\templates\yakeVector.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\type_info.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yake.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeByteSwapInputStreamDecorator.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeByteSwapOutputStreamDecorator.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeCommandInterface.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeConfigFile.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeCriticalSection.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeDataChunk.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeDebugLogAppender.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeDebugOutputStream.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeException.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeInputStream.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeInputStreamDecorator.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeLibrary.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeLock.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeLog.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeMimeTypeManager.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeMovable.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeOutputStream.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeOutputStreamDecorator.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakePCH.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeParamHolder.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakePlatform.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakePlugin.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakePrerequisites.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeProcessor.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeResource.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeString.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeTimer.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeUniqueId.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeUniqueName.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\base\yakeVersion.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+	</Project>
+</Code::Blocks_project_file>

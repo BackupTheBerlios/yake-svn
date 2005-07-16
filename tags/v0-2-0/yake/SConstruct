@@ -1,0 +1,110 @@
+print """ 
+	  #################################################
+	  #						  #
+	  # 	SCons build system.........		  #
+	  #						  #
+	  #	Project Yake @ www.yake.org		  #
+	  #						  #
+	  ################################################# 
+	"""
+
+title = "Builder for Yake"
+last_modified = "on 22/10/2004 by Nikita Buida (mj)"
+
+print title
+print 'This file was last modified ', last_modified
+
+print """
+	Usage.
+		Issue 
+			% scons
+		shell command. That will build all targets 
+		defined in buildspec.xml
+		
+		To install libraries to LibInstallDir (see buildspec.xml) type
+			# scons install
+		as root.
+		
+		That's it. Enjoy. Find some bugs, improve program, send a patch ;)
+	
+"""
+
+import build
+
+import os
+import os.path
+
+import glob
+
+cc_flags = '-DGCC_3_1 -DEXT_HASH'
+
+lib_includes = build.commonIncludes
+build_dir = build.commonPaths['ObjectDir']
+bin_build_dir = build.commonPaths['ProgramInstallDir']
+lib_dir = build.commonPaths['LibDir']
+lib_install_dir = build.commonPaths['LibInstallDir']
+
+print 'Common object dir is:', build.commonPaths['ObjectDir']
+print 'Build dir is', build_dir
+
+BuildDir( build_dir, '.', duplicate = 0 )
+
+env = Environment( CCFLAGS = cc_flags )
+
+def CollectSources( path ):
+	sources = glob.glob( path + '/' + '*.cpp' )
+	sources_build = []
+	for src_name in sources:
+		sources_build.append( build_dir + '/' + src_name )
+	return sources_build 
+
+def BuildLibrary( name, path, link_to ):
+	""" Builds shared library  """
+
+	lib_sources_build = CollectSources( path )
+	lib_name = build_dir + '/' + name
+	return env.SharedLibrary( lib_name, lib_sources_build, CPPPATH = lib_includes, LIBS = link_to, LIBPATH = lib_dir )
+
+def BuildProgram( name, path, link_to ):
+	bin_src = CollectSources( path )
+	bin_name = bin_build_dir + '/' + name
+	return env.Program( bin_name, bin_src, CPPPATH = lib_includes, LIBS = link_to, LIBPATH = lib_dir )
+
+#Library add handling
+libadds = {}
+
+def processLibadds( ent_libadd ):
+	result = []
+	for la in ent_libadd:
+		if libadds.has_key( la ):
+			result = result + libadds[ la ]
+		else:
+			result.append( la )
+	return result
+			
+
+#Collection of libraries to install
+yakeLibs = []
+
+
+#reading shared libs
+for name, buildentity in build.sharedLibs.iteritems():
+	libadd = processLibadds( buildentity.libadd )
+	ent_name = str(name)
+	yakeLibs.append( BuildLibrary( ent_name, str(buildentity.src), libadd ))
+	libadds[ ent_name ] = libadd + [ ent_name ]
+
+#reading programs libs
+for name, buildentity in build.programs.iteritems():
+	print name, buildentity, buildentity.src, buildentity.libadd
+	libadd = processLibadds( buildentity.libadd )
+	ent_name = str(name)
+	BuildProgram( ent_name, str(buildentity.src), libadd )
+
+############################################################
+#                   INSTALL                                #
+############################################################
+env.Install( lib_install_dir, yakeLibs )
+env.Alias( 'install', lib_install_dir ) 
+
+

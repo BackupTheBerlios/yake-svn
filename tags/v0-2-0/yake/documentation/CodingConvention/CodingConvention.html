@@ -1,0 +1,373 @@
+<html>
+	<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Yake Coding Guidelines</title>
+		<style type="text/css">
+			body, td, th, h1, h2, h3, h4, h5
+			{
+				font-family : Verdana;
+				font-size : 9pt;
+				font-weight : normal;
+				color : black;
+			}
+
+			.all
+			{
+				background-color : black;
+			}
+
+			.menu a.current:link, .menu a.current:active, .menu a.current:visited, .menu a.current:hover
+			{
+				color : White;
+			}
+
+			a:link, a:active, a:visited
+			{
+				color : black;
+				font-weight : bold;
+				text-decoration : underline;
+			}
+
+			a:hover
+			{
+				text-decoration : none;
+			}
+
+			th
+			{
+				background-color : black;
+				color : white;
+			}
+
+			h1
+			{
+				font-size : 12pt;
+				font-weight : bold;
+				text-align : center;
+			}
+
+			h2
+			{
+				font-size : 10pt;
+				font-weight : bold;
+			}
+
+			.header
+			{
+				color : white;
+				background-color : black;
+				font-size : 20pt;
+			}
+
+			.footer
+			{
+				text-align : center;
+			}
+
+			.menu, .footer
+			{
+				background-color : black;
+				color : white;
+			}
+
+			.menu a:link, .menu a:active, .menu a:visited, .footer a:link, .footer a:active, .footer a:visited
+			{
+				color : white;
+				text-decoration : none;
+			}
+
+			.menu a:hover, .footer a:hover
+			{
+				text-decoration : underline;
+			}
+		</style>
+	</head>
+	<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%" height="100%" class="all">
+			<tr>
+				<td width="100%" height="80" class="header">
+				Yake::Convention
+				</td>
+			</tr>
+			<tr>
+				<td width="100%" height="20" class="menu">
+					<a href="CodingConvention.html" class="current">Physical Organization</a>
+					&nbsp;|&nbsp;
+					<a href="CodingConvention2.html">Logical Organization</a>
+				</td>
+			</tr>
+			<tr>
+				<td width="100%" valign="top" bgcolor="white">
+					<table border="0" cellspacing="0" cellpadding="5" width="100%" height="100%">
+						<tr>
+							<td valign="top">
+								<h1>Physical Organization</h1>
+
+
+								<h2>Namespaces</h2>
+
+								<ol>
+								    <li>
+								        Namespaces(similar to the directory structure) reflect the module structure.
+								        For instance, a class SmartPointer contained in module yake.core will be
+								        placed in a namespace yake::core.
+								    </li>
+								    <li>
+								        The class or code in general encapsulated by namespaces should not be displaced
+									with tabs or spaces, this would consume too much horizontal space.
+								    </li>
+								</ol>
+
+								<h2>Naming conventions</h2>
+
+								<ol>
+								    <li>
+    								    Namespaces are always lowercase. Example:
+										
+										<pre><code>namespace yake {}</code></pre>
+    								</li>
+
+								    <li>
+    								    In names which consist of more than one word, the words are written
+    								    together and each word that follows the first is begun with an uppercase
+    								    letter.
+    								</li>
+
+    								<li>
+    								    Do not use identifiers which begin with one or two underscores, since these
+    								    are reserved by the C++ environment (compiler, standard headers, ...).
+    								</li>
+
+    								<li>
+    								    Do not use identifier names which differ only by the use of uppercase or
+    								    lowercase letters.
+								    </li>
+
+								    <li>
+								        Use only generally accepted abbreviations.
+								    </li>
+
+								    <li>
+								        Variable names should suggest usage.
+								    </li>
+
+								    <li>
+								        The names of user-defined types start with an uppercase letter. Example:
+
+								        <pre><code>class NasaSpaceShip;</code></pre>
+								        <pre><code>enum SpaceShipVendors { NASA, ESA };</code></pre>
+								    </li>
+
+								    <li>
+								        The names of interfaces (abstract classes) start with "I" and follow the
+								        same naming convention as other user-defined types do. Example:
+
+								        <pre><code>class ISpaceShip;</code></pre>
+								    </li>
+
+								    <li>
+								        The names of functions start with an lowercase letter. Example:
+
+								        <pre><code>void takeOff();</code></pre>
+								    </li>
+
+								    <li>
+								        The names of variables start with a lowercase letter. Example:
+
+								        <pre><code>int numVertices;</code></pre>
+								    </li>
+
+								    <li>
+								        Pointer variables start with a lowercase p. Example:
+
+								        <pre><code>int* pVertices;</code></pre>
+								    </li>
+								    <li>
+								        References start with a lowercase r. Example:
+
+								        <pre><code>foo& rFoo;</code></pre>
+								    </li>
+								    <li>
+								        The names of member variables start with an additional letter m. Example:
+
+								        <pre><code>int mNumVertices;</code></pre>
+								    </li>
+
+								    <li>
+								        The names of constants, enumeration values and #defines are uppercase-only
+								        with each word separated by an underscore. Example:
+
+								        <pre><code>const int NUM_VERTICES = 100;</code></pre>
+										
+										In addition enumeration values may look like this example:
+										
+										<pre><code>enum EngineState { kRunning, kOff };</code></pre>
+
+										There's one exception. Error status codes in Yake look like this:
+
+										<pre><code>enum ErrorCode { eOk, eUnknown, eFileOpen };</code></pre>
+								    </li>
+
+								    <li>
+								        As an exception to the preceding rule, static member constants and
+								        enumerations in covariant classes like TypeTraits<> are to be written
+								        in the same way as variables are written to express their variability
+								        (for instance, the value of TypeTraits< T >::isPointer depends on the
+								        type T). Example:
+
+								        <pre><code>static const bool isPointer = true;</code></pre>
+								    </li>
+								</ol>
+
+								<h2>Style - Classes</h2>
+
+								<ol>
+								    <li>
+								        The class should be splitted in sections identified with "//Class", "//Methods", "//Data"
+									comments. Example:
+									<pre><code>class YAKE_CORE_API Log
+{
+DECLARE_CLASS( Yake::Core::Log )
+// Types
+public:
+  enum Severity { INFORMATIONS, WARNINGS, ERRORS };
+
+// Class
+public:
+  Log();
+  virtual ~Log();
+
+// Methods
+public:
+  void toLog( const String& rWhat, Severity severity, const String& rSource );
+
+// Data
+public:
+  Signal2< void, Severity, String& > onLog;
+private:
+  YAKE_MAKE_SINGLETON( Log )
+};
+</code></pre></li>
+
+								    <li>
+								        Avoid inlining functions in the class definition.
+								    </li>
+								</ol>
+
+								<h2>Style - Functions</h2>
+
+								<ol>
+								    <li>
+								        When declaring functions, the entire function header (i.e. return type,
+								        function name, parameters and additional specifiers like inline and
+								        const) is to be written in one line.
+								    </li>
+
+								    <li>
+								        If there isn't enough space to put the entire function header into one line,
+								        put each parameter onto a new line. Example:
+								        <pre><code>int addFourSheep(
+    int sheepId,
+    const Sheep& rSheep1,
+    const Sheep& rSheep2,
+    const Sheep& rSheep3,
+    const Sheep& rSheep4 );
+                                        </code></pre>
+
+                                        Generally, though, you should try to avoid an excessive amount of function
+                                        parameters.<br>&nbsp;
+								    </li>
+
+								    <li>
+								        The left parenthsis is to be written directly after the function name.
+								        After the left parenthsis and in front of the right parenthsis, a space
+								        should be inserted. ( Same for conditions etc. ) Example:
+
+								        <pre><code>int addSheep( int sheepId, const Sheep& sheepObject );</code></pre>
+								    </li>
+								</ol>
+
+								<h2>Style - Compound statements</h2>
+
+								<ol>
+								    <li>
+                                        Braces ("{" ... "}") which enclose a block are to be placed in the same column, on separate lines directly before and after the block
+								        Exception: An empty body of a function that is inline implemented in the
+								        class declaration should be placed in one line (like in "{}").
+								    </li>
+								</ol>
+
+								<h2>Style - Flow control statements</h2>
+
+								<ol>
+								    <li>
+								        The flow control primitives <code>if</code>, <code>else</code>,
+								        <code>while</code>, <code>for</code>, <code>do</code>, <code>try</code> and
+								        <code>catch</code> should be followed by a block, even if the block
+								        is empty.
+								    </li>
+								    
+								    <li>
+								    	When comparing a l-value with a r-value, always try to put the r-value on the
+								    	left to avoid errors (when you forget a <code>=</code>). Example:
+								    	
+								    	<pre><code>if( 0 == value )								    	
+								    	</code></pre>
+								    </li>
+
+								    <li>
+								        All empty blocks have to be either commented as such, or the two braces have
+								        to be on the same line. Example:
+
+								        <pre><code>while( i-- > 0 )
+{}
+                                        </code></pre>
+
+                                        and
+
+								        <pre><code>while( i-- > 0 )
+{
+    // Empty loop.
+}
+                                        </code></pre>
+                                        are both valid.<br>&nbsp;
+								    </li>
+								</ol>
+
+								<h2>Style - Pointers and references</h2>
+
+								<ol>
+								    <li>
+								        The dereference operator ("*") and the address-of-operator ("&") should
+								        be directly connected with the type names in declarations and definitions
+								        in order to emphasize that they are part of the type definition. Example:
+
+								        <pre><code>Sheep* pFavoriteSheep;</code></pre>
+								        <pre><code>Sheep& rBlackSheep;</code></pre>
+								    </li>
+
+								    <li>
+								        Declaration of multiple variables in one line is to be avoided, since it
+								        leads to mistakes especially in relation to pointers and references.
+								        Example:
+
+								        <pre><code>// Do not do this!
+int* pFirstInt, pSecondInt;
+                                        </code></pre>
+
+								        In this example, pFirstInt is a pointer to int, whereas pSecondInt is an
+								        integer value.<br>&nbsp;
+								    </li>
+								</ol>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+				<td width="100%" height="20" class="footer">
+				<a class="footer"></a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
