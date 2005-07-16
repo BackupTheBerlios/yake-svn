@@ -34,6 +34,7 @@ namespace yake
 	{
 		namespace lua
 		{
+			YAKE_REGISTER_CONCRETE( Binder );
 
 			void Binder::bind( scripting::IVM* pVM )
 			{
@@ -160,8 +161,12 @@ namespace yake
 				    .def( "getChildByName", &ISceneNode::getChildByName )
 				    .def( "getEntities", &ISceneNode::getEntities )
 				    .def( "getLights", &ISceneNode::getLights )
+				    .def( "getCameras", &ISceneNode::getCameras )
+				    .def( "getParticleSystems", &ISceneNode::getParticleSystems )
 				    .def( "detachEntity", (void(ISceneNode::*)(IEntity*))&ISceneNode::detach )
 				    .def( "detachLight", (void(ISceneNode::*)(ILight*))&ISceneNode::detach )
+				    .def( "detachCamera", (void(ISceneNode::*)(ICamera*))&ISceneNode::detach )
+				    .def( "detachParticleSystem", (void(ISceneNode::*)(IParticleSystem*))&ISceneNode::detach )
 				    .def( "getName", (String(ISceneNode::*)()const)&ISceneNode::getName )
 				];
 
