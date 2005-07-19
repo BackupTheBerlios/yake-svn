@@ -63,6 +63,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleScriptedGraphics", "s
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleGuiConsole", "samples\misc\sampleGuiConsole.vcproj", "{6B6A5F65-AA92-4ABF-A95A-4AC302CB44E9}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -129,6 +133,10 @@ Global
 		{B85C2435-267A-461C-AD9E-FE28EE7DCC12}.Debug.Build.0 = Debug|Win32
 		{B85C2435-267A-461C-AD9E-FE28EE7DCC12}.Release.ActiveCfg = Release|Win32
 		{B85C2435-267A-461C-AD9E-FE28EE7DCC12}.Release.Build.0 = Release|Win32
+		{6B6A5F65-AA92-4ABF-A95A-4AC302CB44E9}.Debug.ActiveCfg = Debug|Win32
+		{6B6A5F65-AA92-4ABF-A95A-4AC302CB44E9}.Debug.Build.0 = Debug|Win32
+		{6B6A5F65-AA92-4ABF-A95A-4AC302CB44E9}.Release.ActiveCfg = Release|Win32
+		{6B6A5F65-AA92-4ABF-A95A-4AC302CB44E9}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
