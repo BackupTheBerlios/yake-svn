@@ -59,8 +59,8 @@ namespace ent {
 			if (pMachine)
 			{
 				app::ErrorCode err = pMachine->changeTo( targetState );
-				YAKE_ASSERT( err == app::eOk )(err).warning("failed to change state");
-				if (err != app::eOk)
+				YAKE_ASSERT( err == eOk )(err).warning("failed to change state");
+				if (err != eOk)
 				{
 					std::cout << "ERROR: Failed to change state. Error: " << err << "\n";
 				}

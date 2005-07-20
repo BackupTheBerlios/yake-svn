@@ -36,7 +36,7 @@ namespace yake {
 namespace ent {
 
 	EntityMachine::EntityMachine(Entity& owner) : 
-			BaseMachine(yake::app::state::TH_RELAXED),
+			BaseMachine(yake::state::TH_RELAXED),
 			mOwner(&owner)
 	{
 	}

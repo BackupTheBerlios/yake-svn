@@ -37,7 +37,7 @@ namespace ent {
 
 	/** An entity state used by EntityMachines.
 	*/
-	class EntityMachineState : public yake::app::state::State
+	class EntityMachineState : public yake::state::State
 	{
 	public:
 		EntityMachineState()
@@ -96,10 +96,10 @@ namespace ent {
 	/** A state machine for entities.
 		@todo remove from public header?
 	*/
-	class YAKE_ENT_API EntityMachine : public yake::app::state::Machine<String>
+	class YAKE_ENT_API EntityMachine : public yake::state::Machine<String>
 	{
 	public:
-		typedef yake::app::state::Machine<String> BaseMachine;
+		typedef yake::state::Machine<String> BaseMachine;
 
 		EntityMachine(Entity& owner);
 		String getCurrentStateId() const;

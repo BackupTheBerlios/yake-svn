@@ -28,7 +28,6 @@
 #include <yapp/statemachine/yakeFiniteStateMachine.h>
 
 namespace yake {
-namespace app {
 namespace state {
 
 #if YAKE_COMPILER == COMPILER_GNUC
@@ -68,6 +67,5 @@ namespace state {
 		mTransitionFns.push_back( fn );
 	}
 
-}
 }
 }

@@ -30,7 +30,6 @@
 #include <yapp/base/yappPrerequisites.h>
 
 namespace yake {
-namespace app {
 
 	enum ErrorCode {
 		eInvalidParam,
@@ -321,7 +320,6 @@ namespace state {
 	//---------------------------------------------------------
 
 } // state
-} // app
 } // yake
 
 #endif

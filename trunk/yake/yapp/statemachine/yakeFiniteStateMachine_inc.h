@@ -116,7 +116,7 @@
 		SharedTransitionPtr pTrans;
 		if (!_getTransition( StateIdPair( currentStateId, rkId ), pTrans ) ) // transition not found
 		{
-			if (mTransitionHandling == yake::app::state::TH_SCRICT)
+			if (mTransitionHandling == yake::state::TH_SCRICT)
 				return eTransitionNotFound;
 		}
 
