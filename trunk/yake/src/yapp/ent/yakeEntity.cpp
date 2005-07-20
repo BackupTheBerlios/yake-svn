@@ -58,7 +58,7 @@ namespace ent {
 			YAKE_ASSERT( pMachine )(machine)(targetState).warning("machine not found");
 			if (pMachine)
 			{
-				app::ErrorCode err = pMachine->changeTo( targetState );
+				ErrorCode err = pMachine->changeTo( targetState );
 				YAKE_ASSERT( err == eOk )(err).warning("failed to change state");
 				if (err != eOk)
 				{
