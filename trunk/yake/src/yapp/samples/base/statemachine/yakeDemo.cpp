@@ -32,7 +32,7 @@ using namespace app;
 //---------------------------------------------------------
 // Types / Classes
 
-typedef ::yake::app::state::Machine<String> EntityStateMachine;
+typedef ::yake::state::Machine<String> EntityStateMachine;
 
 //---------------------------------------------------------
 // Sample entity base class providing a state machine
