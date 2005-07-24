@@ -48,7 +48,7 @@ namespace physics {
 
 inline NxReal toNx( const ::yake::real v )
 { return NxReal(v); }
-inline NxReal fromNx( const NxReal v )
+inline ::yake::real fromNx( const NxReal v )
 { return ::yake::real(v); }
 
 inline NxVec3 toNx( const ::yake::Vector3 & v )
