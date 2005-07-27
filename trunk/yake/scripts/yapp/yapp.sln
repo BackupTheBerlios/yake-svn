@@ -67,6 +67,23 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleGuiConsole", "samples
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "raf", "raf.vcproj", "{6D6DD5E8-3B81-4C98-B460-B434DEE23EE2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7EB6A55E-D262-4C82-862C-33E831DDF04C} = {7EB6A55E-D262-4C82-862C-33E831DDF04C}
+		{B145E9A0-2656-4481-972A-39A6A0568F14} = {B145E9A0-2656-4481-972A-39A6A0568F14}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleRafMinimal", "samples\raf\sampleRafMinimal.vcproj", "{9B57BE31-B084-4AB4-AFEF-E45A0FFD220D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6D6DD5E8-3B81-4C98-B460-B434DEE23EE2} = {6D6DD5E8-3B81-4C98-B460-B434DEE23EE2}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleRafDemo1", "samples\raf\sampleRafDemo1.vcproj", "{BAA11C61-DA21-4E6F-8B5C-16A062720F1C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B145E9A0-2656-4481-972A-39A6A0568F14} = {B145E9A0-2656-4481-972A-39A6A0568F14}
+		{6D6DD5E8-3B81-4C98-B460-B434DEE23EE2} = {6D6DD5E8-3B81-4C98-B460-B434DEE23EE2}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -137,6 +154,18 @@ Global
 		{6B6A5F65-AA92-4ABF-A95A-4AC302CB44E9}.Debug.Build.0 = Debug|Win32
 		{6B6A5F65-AA92-4ABF-A95A-4AC302CB44E9}.Release.ActiveCfg = Release|Win32
 		{6B6A5F65-AA92-4ABF-A95A-4AC302CB44E9}.Release.Build.0 = Release|Win32
+		{6D6DD5E8-3B81-4C98-B460-B434DEE23EE2}.Debug.ActiveCfg = Debug|Win32
+		{6D6DD5E8-3B81-4C98-B460-B434DEE23EE2}.Debug.Build.0 = Debug|Win32
+		{6D6DD5E8-3B81-4C98-B460-B434DEE23EE2}.Release.ActiveCfg = Release|Win32
+		{6D6DD5E8-3B81-4C98-B460-B434DEE23EE2}.Release.Build.0 = Release|Win32
+		{9B57BE31-B084-4AB4-AFEF-E45A0FFD220D}.Debug.ActiveCfg = Debug|Win32
+		{9B57BE31-B084-4AB4-AFEF-E45A0FFD220D}.Debug.Build.0 = Debug|Win32
+		{9B57BE31-B084-4AB4-AFEF-E45A0FFD220D}.Release.ActiveCfg = Release|Win32
+		{9B57BE31-B084-4AB4-AFEF-E45A0FFD220D}.Release.Build.0 = Release|Win32
+		{BAA11C61-DA21-4E6F-8B5C-16A062720F1C}.Debug.ActiveCfg = Debug|Win32
+		{BAA11C61-DA21-4E6F-8B5C-16A062720F1C}.Debug.Build.0 = Debug|Win32
+		{BAA11C61-DA21-4E6F-8B5C-16A062720F1C}.Release.ActiveCfg = Release|Win32
+		{BAA11C61-DA21-4E6F-8B5C-16A062720F1C}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
