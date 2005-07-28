@@ -86,8 +86,19 @@ void YAKE_BASE_API log( const String& what );
 // typesafe string formatting
 
 // some preprocessor magic for __LINE__ stringification
+// Unfortunately it doesn't produce correct results on VC7.1.
 #define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY (x)
+#if YAKE_PLATFORM == PLATFORM_WIN32
+	inline String TOSTRING2FN(int i)
+	{
+		std::stringstream ss;
+		ss << i;
+		return String( ss.str().c_str() );
+	}
+#	define TOSTRING(x) +TOSTRING2FN(x)
+#else
+#	define TOSTRING(x) STRINGIFY (x)
+#endif
 
 #define YAKE_LOG_INFORMATION( what ) yake::base::log_information( what, "File: "__FILE__"@"TOSTRING(__LINE__) );
 #define YAKE_LOG_WARNING( what ) yake::base::log_warning( what, "File: "__FILE__"@"TOSTRING(__LINE__) );
