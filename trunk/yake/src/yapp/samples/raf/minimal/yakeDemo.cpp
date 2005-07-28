@@ -1,4 +1,5 @@
 #include <yapp/samples/raf/minimal/yakePCH.h>
+#include <yake/audio/yakeAudio.h>
 #include <yapp/raf/yakeRaf.h>
 
 using namespace yake;
