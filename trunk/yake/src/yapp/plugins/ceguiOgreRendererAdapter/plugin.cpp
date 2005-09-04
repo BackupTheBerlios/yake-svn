@@ -81,7 +81,7 @@ bool ThePlugin::initialise()
 			//Ogre::Root::getSingleton()._getCurrentSceneManager());
 	} catch (Ogre::Exception& e)
 	{
-		YAKE_EXCEPT("Failed to initialise CEGUI adapter!\n" + yake::String(e.getFullDescription().c_str()), "initialise");
+		YAKE_EXCEPT("Failed to initialise CEGUI adapter!\n" + yake::String(e.getFullDescription().c_str()));
 	}
 	YAKE_ASSERT( mGUIRenderer );
 	return (mGUIRenderer != 0);
