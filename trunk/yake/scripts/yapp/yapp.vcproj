@@ -380,9 +380,6 @@
 				RelativePath="..\..\yapp\model\yakeComplexModel.h">
 			</File>
 			<File
-				RelativePath="..\..\yapp\model\yakeEngine.h">
-			</File>
-			<File
 				RelativePath="..\..\src\yapp\model\yakeGraphical.cpp">
 			</File>
 			<File
@@ -402,6 +399,9 @@
 			</File>
 			<File
 				RelativePath="..\..\yapp\model\yakeModelMovableLink.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeMountable.cpp">
 			</File>
 			<File
 				RelativePath="..\..\yapp\model\yakeMountable.h">
@@ -498,6 +498,9 @@
 			Name="vehicle"
 			Filter="">
 			<File
+				RelativePath="..\..\yapp\model\yakeEngine.h">
+			</File>
+			<File
 				RelativePath="..\..\src\yapp\model\yakeVehicle.cpp">
 			</File>
 			<File
@@ -521,6 +524,73 @@
 			Filter="">
 			<File
 				RelativePath="..\..\yapp\trigger\yakeTrigger.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="vehicleNative"
+			Filter="">
+			<File
+				RelativePath="..\..\src\yapp\model\yakeNativeEngine.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeNativeEngine.h">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCustomBuildTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeNativeVehicleInputComponent.h">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCustomBuildTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeNativeVehiclePhysicalComponent.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeNativeVehiclePhysicalComponent.h">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCustomBuildTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakeNativeWheel.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeNativeWheel.h">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCustomBuildTool"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>

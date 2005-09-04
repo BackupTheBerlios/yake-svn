@@ -170,6 +170,9 @@
 			<File
 				RelativePath="..\..\yake\input\yakePCH.h">
 			</File>
+			<File
+				RelativePath="..\..\yake\input\yakePrerequisites.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

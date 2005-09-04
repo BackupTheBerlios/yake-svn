@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="samplesSync1"
-	ProjectGUID="{A2E804D9-C95C-47eb-87AB-FAA8A6CAC21B}"
+	ProjectGUID="{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -37,7 +37,7 @@
 				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"

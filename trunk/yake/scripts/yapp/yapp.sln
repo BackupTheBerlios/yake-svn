@@ -84,6 +84,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleRafDemo1", "samples\r
 		{6D6DD5E8-3B81-4C98-B460-B434DEE23EE2} = {6D6DD5E8-3B81-4C98-B460-B434DEE23EE2}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleCmdrMayhem", "samples\misc\sampleCmdrMayhem.vcproj", "{1CE9D735-3119-4E08-B4A0-F4DAD35FC8D5}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesSync1", "samples\model\samplesSync1.vcproj", "{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -166,6 +174,14 @@ Global
 		{BAA11C61-DA21-4E6F-8B5C-16A062720F1C}.Debug.Build.0 = Debug|Win32
 		{BAA11C61-DA21-4E6F-8B5C-16A062720F1C}.Release.ActiveCfg = Release|Win32
 		{BAA11C61-DA21-4E6F-8B5C-16A062720F1C}.Release.Build.0 = Release|Win32
+		{1CE9D735-3119-4E08-B4A0-F4DAD35FC8D5}.Debug.ActiveCfg = Debug|Win32
+		{1CE9D735-3119-4E08-B4A0-F4DAD35FC8D5}.Debug.Build.0 = Debug|Win32
+		{1CE9D735-3119-4E08-B4A0-F4DAD35FC8D5}.Release.ActiveCfg = Release|Win32
+		{1CE9D735-3119-4E08-B4A0-F4DAD35FC8D5}.Release.Build.0 = Release|Win32
+		{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}.Debug.ActiveCfg = Debug|Win32
+		{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}.Debug.Build.0 = Debug|Win32
+		{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}.Release.ActiveCfg = Release|Win32
+		{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

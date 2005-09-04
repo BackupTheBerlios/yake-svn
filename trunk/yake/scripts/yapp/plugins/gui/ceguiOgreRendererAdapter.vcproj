@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/;../../../../dependencies/ogrenew/OgreMain/include;../../../../dependencies/cegui_mk2/include;../../../../dependencies/ogrenew/CEGUIRenderer/include"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/;../../../../dependencies/ogrenew/OgreMain/include;../../../../dependencies/cegui_mk2/CEGUI;../../../../dependencies/ogrenew/CEGUIRenderer/include"
 				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_CEGUIRENDERERADAPTER_OGRE_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -72,7 +72,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/;../../../../dependencies/ogrenew/OgreMain/include;../../../../dependencies/cegui_mk2/include;../../../../dependencies/ogrenew/CEGUIRenderer/include"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/;../../../../dependencies/ogrenew/OgreMain/include;../../../../dependencies/cegui_mk2/CEGUI;../../../../dependencies/ogrenew/CEGUIRenderer/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_CEGUIRENDERERADAPTER_OGRE_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="3"

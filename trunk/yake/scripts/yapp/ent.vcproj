@@ -127,10 +127,16 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{E22096B0-18DC-47ae-BBBD-A51C0F018B87}">
 			<File
+				RelativePath="..\..\src\yapp\ent\yakeActor.cpp">
+			</File>
+			<File
 				RelativePath="..\..\src\yapp\ent\yakeEnt.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\yapp\ent\yakeEntity.cpp">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\ent\yakeEntityComponent.cpp">
 			</File>
 			<File
 				RelativePath="..\..\src\yapp\ent\yakeEntityMachine.cpp">
@@ -174,6 +180,9 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{D3A5D637-E2C0-4f5a-B733-3757A329BD6B}">
 			<File
+				RelativePath="..\..\yapp\ent\yakeActor.h">
+			</File>
+			<File
 				RelativePath="..\..\yapp\ent\yakeCommon.h">
 			</File>
 			<File
@@ -181,6 +190,12 @@
 			</File>
 			<File
 				RelativePath="..\..\yapp\ent\yakeEntity.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\ent\yakeEntityComponent.h">
+			</File>
+			<File
+				RelativePath="..\..\yapp\ent\yakeEntityMachine.h">
 			</File>
 			<File
 				RelativePath="..\..\yapp\ent\yakeEvent.h">
