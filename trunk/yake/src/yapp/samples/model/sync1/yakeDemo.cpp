@@ -39,8 +39,10 @@
 using namespace yake;
 using namespace yake::graphics;
 using namespace yake::base::templates;
-using namespace yake::base::math;
+using namespace yake::math;
 using namespace yake::data;
+
+static const real physicsStepTime = real(0.1);
 
 //#define COUTLN(x)
 #define COUTLN(x) { std::cout << x << "\n"; }
@@ -56,7 +58,7 @@ real fromSimTime(const SimTime time)
 }
 
 template<typename ValueType>
-ValueType LinearInterpolate(
+ValueType linearInterpolate(
 	ValueType y1,ValueType y2,
 	real mu)
 {
@@ -64,7 +66,7 @@ ValueType LinearInterpolate(
 }
 
 template<typename ValueType>
-ValueType CubicInterpolate(
+ValueType cubicInterpolate(
 	ValueType y0,ValueType y1,
 	ValueType y2,ValueType y3,
 	real mu)
@@ -82,6 +84,197 @@ struct ExampleSimulation
 {
 	real getCurrentTime() const;
 };
+namespace yake {
+namespace model {
+	class DynamicsMoveHistory
+	{
+	public:
+		struct Move
+		{
+			real		t;
+			Vector3		pos;
+			Vector3		linVel;
+			Vector3		linAcc;
+			Quaternion	rot;
+			Move(	const real time,
+					const Vector3& position, 
+					const Vector3& linearVel,
+					const Quaternion& orientation) :
+				t(time),
+				pos(position),
+				linVel(linearVel),
+				linAcc(Vector3::kZero),
+				rot(orientation)
+			{}
+		};
+		void add( const Move& move );
+		void interpolateTo( const real time, Vector3& retPos, Quaternion& retRot );
+	private:
+		typedef std::deque<Move> MoveList;
+		MoveList	mMoves;
+
+		real		mTimeRange;
+	};
+	void DynamicsMoveHistory::add(const Move& move)
+	{
+		mMoves.push_front( move );
+		if (mMoves.size() > 1)
+		{
+			const real deltaT = mMoves[0].t - mMoves[1].t;
+			if (deltaT > 0.)
+				mMoves[0].linAcc = (mMoves[0].linVel - mMoves[1].linVel) / (deltaT);
+		}
+
+		// keep at least 10 moves and at least the moves for the last 5 seconds.
+		while (mMoves.size() > 10 && (move.t - mMoves.back().t) > 5.)
+			mMoves.pop_back();
+	}
+	void DynamicsMoveHistory::interpolateTo( const real time, Vector3& retPos, Quaternion& retRot )
+	{
+		if (mMoves.empty())
+			return;
+		if (time < mMoves.back().t)
+		{
+			retPos = mMoves.back().pos;
+			retRot = mMoves.back().rot;
+			return;
+		}
+		if (time > mMoves.front().t)
+		{
+			// extrapolate
+			// @todo use better extrapolating algorithm... and extrapolate orientation, too.
+			retPos = mMoves.front().pos;
+			retRot = mMoves.front().rot;
+			if (mMoves.size() > 1)
+			{
+				const real deltaT = time - mMoves.front().t;
+				retPos += mMoves[1].linAcc * deltaT * deltaT;
+			}
+			return;
+		}
+		// interpolate
+		if (mMoves.size() < 2)
+			return;
+		for (size_t i=0; i<mMoves.size()-1; ++i)
+		{
+			if (time <= mMoves[i].t && time >= mMoves[i+1].t)
+			{
+				const real startT = mMoves[i+1].t;
+				const real endT = mMoves[i].t;
+				const real deltaT = endT - startT;
+				const real offsetRatioT = (time - startT) / deltaT;
+
+				// simple linear interpolation
+
+				const Vector3 startPos = mMoves[i+1].pos;
+				const Vector3 endPos = mMoves[i].pos;
+				const Vector3 deltaPos = endPos - startPos;
+				const Quaternion startQ = mMoves[i+1].rot;
+				const Quaternion endQ = mMoves[i].rot;
+
+				if (deltaT == real(0.))
+				{
+					retPos = startPos;
+					retRot = startQ;
+					return;
+				}
+
+				//retPos = startPos + deltaPos * offsetT;
+#if 0
+				retPos = linearInterpolate( startPos, endPos, offsetRatioT );
+#else
+				// final pos = start pos + start vel * dt + 1/2 * start acc * dt^2;
+				const real offsetT = offsetRatioT * deltaT;
+				retPos = startPos + mMoves[i+1].linVel * offsetT + .5 * mMoves[i+1].linAcc * offsetT * offsetT;
+#endif
+				retRot = Quaternion::Slerp( offsetRatioT, startQ, endQ );
+
+				return;
+			}
+		}
+	}
+
+
+	class ModelLink_DynActorToMovable : public model::ModelLinkController< physics::IActor >
+	{
+	public:
+		YAKE_DECLARE_CONCRETE( ModelLink_DynActorToMovable, "yake.DynamicsActorToMovable" );
+
+		ModelLink_DynActorToMovable(const real startTime = real(0.), const real interpTimeOffset = real(0.));
+
+		virtual void update(real timeElapsed);
+		void updateHistoryFromSource(real theTime);
+
+		typedef Signal1< void(const Vector3 &) > PositionSignal;
+		typedef Signal1< void(const Quaternion &) > OrientationSignal;
+
+		SignalConnection subscribeToPositionChanged( const PositionSignal::slot_type & slot );
+		SignalConnection subscribeToOrientationChanged( const OrientationSignal::slot_type & slot );
+		SignalConnection subscribeToPositionChanged( Movable* pMovable );
+		SignalConnection subscribeToOrientationChanged( Movable* pMovable );
+
+		typedef model::DynamicsMoveHistory MoveHistory;
+		//void addMove( const MoveHistory::Move& move );
+	private:
+		MoveHistory				mMoveHistory;
+		real					mTime;
+		real					mInterpTimeOffset;
+
+		PositionSignal			mPositionSignal;
+		OrientationSignal		mOrientationSignal;
+
+		Vector3					mLastPosition;
+		Quaternion				mLastOrientation;
+	};
+	ModelLink_DynActorToMovable::ModelLink_DynActorToMovable(const real startTime /*= real(0.)*/, const real interpTimeOffset /*= real(0.)*/) :
+		mTime(startTime),
+		mInterpTimeOffset(interpTimeOffset)
+	{
+	}
+	void ModelLink_DynActorToMovable::update(real timeElapsed)
+	{
+		mTime += timeElapsed;
+		const physics::IActor* pSource = getSource();
+		Vector3 position = pSource ? pSource->getPosition() : Vector3::kZero;
+		Quaternion orientation = pSource ? pSource->getOrientation() : Quaternion::kIdentity;
+		mMoveHistory.interpolateTo( mTime + mInterpTimeOffset, position, orientation );
+
+		// fire signals if necessary
+		if (mLastPosition != position)
+		{
+			mPositionSignal( position );
+			mLastPosition = position;
+		}
+		if (mLastOrientation != orientation)
+		{
+			mOrientationSignal( orientation );
+			mLastOrientation = orientation;
+		}
+	}
+	void ModelLink_DynActorToMovable::updateHistoryFromSource(real theTime)
+	{
+		const physics::IActor* pSource = getSource();
+		if (!pSource)
+			return;
+		mMoveHistory.add( MoveHistory::Move(
+							theTime,
+							pSource->getPosition(), 
+							pSource->getBody().getLinearVelocity(),
+							pSource->getOrientation()
+							)
+					);
+	}
+	SignalConnection ModelLink_DynActorToMovable::subscribeToPositionChanged( Movable* pMovable )
+	{
+		return mPositionSignal.connect( Bind1( &Movable::setPosition, pMovable ) );
+	}
+	SignalConnection ModelLink_DynActorToMovable::subscribeToOrientationChanged( Movable* pMovable )
+	{
+		return mOrientationSignal.connect( Bind1( &Movable::setOrientation, pMovable ) );
+	}
+} // ns model
+} // ns yake
+
 class TheApp : public yake::exapp::ExampleApplication
 {
 private:
@@ -92,34 +285,19 @@ private:
 
 	struct Object
 	{
-		physics::IDynamicActor*				mPhysical;
-		SharedPtr<app::model::Graphical>	mGraphical;
-		graphics::ISceneNode*				mpSN;
-		typedef app::model::DynamicsMoveHistory<TheApp> DynHistory;
-		DynHistory							mHistory;
-		typedef app::model::ModelMovableLink Link;
-		Link*								mpLink;
-		//MovableHistory						mPhysicalHistory;
-		void updateGraphics(real currentSimTime, real timeElapsed)
-		{
-			mpLink->update( timeElapsed );
-			/*
-			Vector3 p = mPhysical->getPosition();
-			mPhysicalHistory.interpolateTo( currentSimTime, p );
-			//mpSN->setPosition( p );
+		SharedPtr<model::complex::Model>	mComplex;
+		SharedPtr<model::Graphical>		mGraphical;
 
-			Vector3 currSnPos = mpSN->getPosition();
-			mpSN->setPosition( currSnPos + (p-currSnPos) * 0.5 );
-			*/
-		}
-		Object(TheApp& rSim) : mpSN(0), mHistory(rSim)
+		physics::IActor*						mPhysical;
+		graphics::ISceneNode*					mpSN;
+
+		typedef yake::model::ModelLink_DynActorToMovable Link;
+		Link*									mpLink;
+		ScopedSignalConnection					mPostStepConn;
+
+		Object() : mpSN(0), mPhysical(0)
 		{}
-		void onPostStep(const real currentSimTime)
-		{
-			mHistory.addMove( DynHistory::Move( currentSimTime, mPhysical->getPosition(), mPhysical->getBody().getLinearVelocity() ) );
-		}
 	};
-	SharedPtr<app::model::complex::Model>	mComplex;
 	real									mSimTime;
 public:
 	real getCurrentTime()
@@ -158,49 +336,39 @@ public:
 		
 		return static_cast<int>(idx);
 	}
-	void setupWorld(Object& obj)
+	void setupObject(Object& obj)
 	{
-		mComplex.reset( new app::model::complex::Model() );
-		using namespace app::model;
-/*
-		Graphical* pG = new Graphical();
-		graphics::ISceneNode* pSN = mGWorld->createSceneNode();
-		pSN->attachEntity( mGWorld->createEntity("box_1x1x1.mesh") );
-		pG->addSceneNode( pSN, "root", true );
-		mComplex->addGraphical( SharedPtr<Graphical>(pG), "box" );
-*/
-		physics::WeakIDynamicActorPtr pA = mPWorld->createDynamicActor();
-		pA.lock()->createShape( physics::IShape::BoxDesc(Vector3(1,1,1)) );
+		obj.mComplex.reset( new model::complex::Model() );
+		using namespace model;
+
+		// Loading physical part
+		obj.mPhysical = mPWorld->createActor( physics::ACTOR_DYNAMIC );
+		YAKE_ASSERT( obj.mPhysical );
+		obj.mPhysical->createShape( physics::IShape::BoxDesc(Vector3(1,1,1)) );
 		Physical* pP = new Physical();
-		pP->addActor( physics::WeakIActorPtr(pA), "root" );
-		mComplex->addPhysical( SharedPtr<Physical>(pP), "p_box" );
-/*
-		ModelMovableLink* pC = new ModelMovableLink();
-		pC->setSource( pA.lock().get() );
-		pC->subscribeToPositionChanged( pSN );
-		pC->subscribeToOrientationChanged( pSN );
-		mComplex->addController( SharedPtr<IObjectController>(pC), "p2g" );
-*/
+		pP->addActor( obj.mPhysical, "root" );
+		obj.mComplex->addPhysical( SharedPtr<Physical>(pP), "p_box" );
+
 		// Loading graphical part
-		obj.mGraphical.reset( new app::model::Graphical() );
+		obj.mGraphical.reset( new model::Graphical() );
 		YAKE_ASSERT( obj.mGraphical );
 
 		obj.mpSN = mGWorld->createSceneNode();
-		obj.mGraphical->addSceneNode( obj.mpSN, "base" );
+		obj.mGraphical->addSceneNode( obj.mpSN, false );
 		obj.mpSN->attachEntity( mGWorld->createEntity("box_1x1x1.mesh") );
-
-		// Loading physical part
-		obj.mPhysical = pA.lock().get();
-		//obj.mPhysical.reset( new ProxyMovable() );
-		YAKE_ASSERT( obj.mPhysical );
 
 		// linking
 		{
-			obj.mpLink = new Object::Link();
+			obj.mpLink = new Object::Link(real(0.),-physicsStepTime);
 			obj.mpLink->setSource( obj.mPhysical );
 			obj.mpLink->subscribeToPositionChanged( obj.mpSN );
 			obj.mpLink->subscribeToOrientationChanged( obj.mpSN );
+
+			obj.mComplex->addLink( SharedPtr<model::ModelLink>( obj.mpLink ), "body2scenenode" );
 		}
+
+		obj.mPostStepConn = mPWorld->subscribeToPostStep(
+			Bind1( &Object::Link::updateHistoryFromSource, obj.mpLink ) );
 	}
 
 	virtual void run()
@@ -213,7 +381,8 @@ public:
 		mPWorld = getPhysicsSystem().createWorld();
 		YAKE_ASSERT( mPWorld );
 		
-		//@todo mPWorld->setGlobalGravity( Vector3( 0, 0, -9.81 ) );
+		//mPWorld->setGlobalGravity( Vector3( 0, -9.81, 0 ) );
+		mPWorld->setGlobalGravity( Vector3( 0, -1., 0 ) );
 
 		// graphics
 		mGWorld = getGraphicsSystem().createWorld();
@@ -233,8 +402,8 @@ public:
 		pL->setDirection( Vector3(1,-1,0).normalisedCopy() );
 
 		// objects
-		Object obj(*this);
-		setupWorld(obj);
+		Object obj;
+		setupObject(obj);
 
 		// main loop
 		real lastTime = base::native::getTime();
@@ -243,13 +412,14 @@ public:
 			// timing
 			real time = base::native::getTime();
 			real timeElapsed = time - lastTime;
-			if (timeElapsed > 0.1)
-				timeElapsed = 0.1;
+			if (timeElapsed > real(0.05))
+				timeElapsed = real(0.05);
 			lastTime += timeElapsed;
 
 			static real timeScale = 1.;//0.05;
 			timeElapsed *= timeScale;
 
+			mSimTime += timeElapsed;
 			SimTime simtime = toSimTime( mSimTime );
 			
 			// handle input
@@ -287,26 +457,28 @@ public:
 			if ( !shutdownRequested() )
 			{
 			
-				//// physics: uses fixed time step, so funtion may return without actually stepping!
-				//obj.mPhysical->step( timeElapsed );
-				mPWorld->step( timeElapsed );
+				//// physics: may use fixed time step, so funtion may return without actually stepping!
 
-				obj.onPostStep( mSimTime );
+				// TEMP: We simulate a fixed time step... just for testing. normally it's handled by the
+				//       physics::IWorld::step() code.
+				static real ptimeElapsed = 0.;
+				ptimeElapsed += timeElapsed;
+				while (ptimeElapsed > physicsStepTime)
+				{
+					mPWorld->step( physicsStepTime );
+					ptimeElapsed -= physicsStepTime;
+				}
 
 				//// graphics: variable time step: as fast as possible
-				obj.updateGraphics( mSimTime, timeElapsed );
-				//obj.updateGraphics( simTime - PHYSICS_STEP_TIME, timeElapsed );
-
-				mComplex->updateControllers( timeElapsed );
+				obj.mComplex->updateGraphics( timeElapsed );
 				
 				mGWorld->render( timeElapsed );
-
-				mSimTime += timeElapsed;
 			}
 		}
 
 		obj.mGraphical.reset();
 		//obj.mPhysical.reset();
+		obj.mComplex.reset();
 		mGWorld.reset();
 		mPWorld.reset();
 	}
@@ -327,7 +499,7 @@ int main( int argc, char** argv )
 		theApp.initialise();
 		theApp.run();
 	}
-	catch (const yake::base::Exception& rException)
+	catch (const yake::Exception& rException)
 	{
 		std::cout << std::endl << rException.what() << std::endl;
 	}
