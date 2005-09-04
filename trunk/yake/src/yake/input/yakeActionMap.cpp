@@ -341,7 +341,7 @@ namespace input {
 #ifdef YAKE_DEBUG
 		return (mId == rhs.mId) && (mName == rhs.mName);
 #else
-		return mId == rhs.id;
+		return mId == rhs.mId;
 #endif
 	}
 	bool ActionId::operator != (const ActionId& rhs) const
@@ -349,7 +349,7 @@ namespace input {
 #ifdef YAKE_DEBUG
 		return (mId != rhs.mId) && (mName != rhs.mName);
 #else
-		return mId != rhs.id;
+		return mId != rhs.mId;
 #endif
 	}
 
