@@ -55,9 +55,9 @@ namespace xml {
 		virtual SharedPtr<INode> getNodeById( String const& rId ) const;
 		virtual const NodeList& getNodes() const;
 
-		// node values
-		virtual ValueType getValue( String const& rName ) const;
-		virtual void setValue( String const& rName, ValueType const& rValue );
+		// node name
+		virtual String getName() const;
+		virtual void setName(const String& name);
 
 		virtual const AttributeMap& getAttributes() const;
 		virtual ValueType getAttributeValue( String const& rName ) const;
@@ -76,7 +76,6 @@ namespace xml {
 	private:
 		TiXmlElement*			mElem;
 		NodeList				mNodes;
-		ValueType				mValue;
 		INode::AttributeMap		mAttributes;
 	};
 

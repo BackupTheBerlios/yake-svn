@@ -52,17 +52,19 @@ namespace dom {
 			VTID_UINT32		= 4,
 			VTID_INT32		= 5,
 			VTID_REAL		= 6,
-			VTID_STRING		= 7
+			VTID_STRING		= 7,
+			VTID_NULL		= 8
 		};
-		typedef Variant<
-						uint8,
+		struct NullType {};
+		typedef Variant<uint8,
 						int8,
 						uint16,
 						int16,
 						uint32,
 						int32,
 						real,
-						String> ValueType;
+						String,
+						NullType> ValueType;
 		typedef AssocVector< String, ValueType > AttributeMap;
 
 		// nodes
@@ -74,15 +76,9 @@ namespace dom {
 		//virtual NodeList::Iterator getFirstNode() const = 0;
 		//virtual NodeList::Iterator getNodeIterator() const = 0;
 
-		// node values
-		virtual ValueType getValue( String const& rName ) const = 0;
-		virtual void setValue( String const& rName, ValueType const& rValue ) = 0;
-		template< typename T >
-		T getValueAs( String const& rName ) const
-		{
-			ValueType val = getValue( rName );
-			return varGet< T >( val );
-		}
+		// node name
+		virtual String getName() const = 0;
+		virtual void setName(const String& name) = 0;
 
 		// attributes
 		virtual const AttributeMap& getAttributes() const = 0;
