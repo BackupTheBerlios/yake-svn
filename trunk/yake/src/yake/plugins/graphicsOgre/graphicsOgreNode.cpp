@@ -55,6 +55,7 @@ namespace ogre3d {
 		{
 			mSceneNode->removeAllChildren();
 			mSceneMgr->destroySceneNode( mSceneNode->getName() );
+			mSceneNode = 0;
 		}
 		mLights.clear();
 		mEntities.clear();

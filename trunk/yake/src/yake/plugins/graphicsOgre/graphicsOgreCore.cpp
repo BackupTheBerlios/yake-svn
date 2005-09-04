@@ -76,7 +76,9 @@ namespace ogre3d {
 				const bool bShutdownOgre /*= true*/,
 				const bool bParseDefaultResourceFile /*= true*/,
 				Ogre::RenderWindow* pRenderWindow /*= 0*/) :
-		mShutdownOgre( bShutdownOgre )
+		mShutdownOgre( bShutdownOgre ),
+		mSysFL( 0 ),
+		mRoot( 0 )
 	{
 		mReady = false;
 		try {
