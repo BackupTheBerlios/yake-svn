@@ -88,7 +88,7 @@ namespace physics {
 		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PreStep )
 		YAKE_MEMBERSIGNAL_FIRE_FN0( public, PreStep )
 		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PostStep )
-		YAKE_MEMBERSIGNAL_FIRE_FN0( public, PostStep )
+		YAKE_MEMBERSIGNAL_FIRE_FN1( public, PostStep, real currTime, currTime )
 
 		//-- NxUserContactReport interface
 		virtual NxU32 onPairCreated(NxActor& s1, NxActor& s2);
@@ -105,6 +105,7 @@ namespace physics {
 	private:
 		String					mCurrentSolver;
 		NxScene*				mpScene;
+		real					mCurrTime;
 
 		typedef AssocVector< NxActor*, ActorNx* > ContactActorMap;
 		ContactActorMap			mContactActors;

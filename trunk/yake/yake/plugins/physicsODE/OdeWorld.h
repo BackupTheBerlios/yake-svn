@@ -76,7 +76,7 @@ namespace physics {
 			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PreStep )
 			YAKE_MEMBERSIGNAL_FIRE_FN0( public, PreStep )
 			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PostStep )
-			YAKE_MEMBERSIGNAL_FIRE_FN0( public, PostStep )
+			YAKE_MEMBERSIGNAL_FIRE_FN1( public, PostStep, real t, t )
 		public:
 
 			///TODO what are these for?
@@ -98,6 +98,7 @@ namespace physics {
 			dTriMeshDataID getMeshDataById(  TriangleMeshId id ) const;
 		
 		protected:
+			real				mTime;
 			real				mStepSize;
 			dWorld*				mOdeWorld;
 			dJointGroup*		mOdeContactGroup;

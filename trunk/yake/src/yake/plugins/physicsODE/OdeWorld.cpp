@@ -62,6 +62,8 @@ namespace physics {
 
 			//dWorldSetContactMaxCorrectingVel( mOdeWorld->id(), 2. );
 			dWorldSetContactSurfaceLayer( mOdeWorld->id(), 0.0075 );
+
+			mTime = real(0.);
 		}
 
 		//-----------------------------------------------------
@@ -290,6 +292,7 @@ namespace physics {
 			firePreStep();
 			while ( t > mStepSize )
 			{
+				mTime += mStepSize;
 				t -= mStepSize;
 		
 		#ifdef ADJUST_FPU_PRECISION
@@ -312,7 +315,7 @@ namespace physics {
 				mOdeContactGroup->empty();
 			}
 			
-			firePostStep();
+			firePostStep( mTime );
 
 			overflow = t;
 		}

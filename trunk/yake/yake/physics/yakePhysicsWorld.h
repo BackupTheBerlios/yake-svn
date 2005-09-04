@@ -84,7 +84,7 @@ namespace physics {
 		virtual void step(const real timeElapsed) = 0;
 
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(void), PreStep )
-		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(void), PostStep )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PostStep )
 	};
 
 }

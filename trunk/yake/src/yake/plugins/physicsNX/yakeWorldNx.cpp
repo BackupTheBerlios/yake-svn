@@ -163,6 +163,8 @@ namespace physics {
 
 		getNxSDK()->setActorGroupPairFlags(0, 0, NX_NOTIFY_ON_START_TOUCH/*|NX_NOTIFY_ON_TOUCH*/|NX_NOTIFY_ON_END_TOUCH);
 
+		mCurrTime = 0.;
+
 		return true;
 	}
 	void WorldNx::step(const real timeElapsed)
@@ -177,7 +179,9 @@ namespace physics {
 		mpScene->simulate( timeElapsed );
 		mpScene->flushStream();
 		mpScene->fetchResults(NX_RIGID_BODY_FINISHED, true);
-		firePostStep();
+
+		mCurrTime += timeElapsed;
+		firePostStep( mCurrTime );
 	}
 	/*
 	WeakPtr<IMaterial> WorldNx::createMaterial( const IMaterial::Desc & rkMatDesc )
