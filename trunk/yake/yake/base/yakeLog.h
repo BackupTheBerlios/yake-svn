@@ -95,7 +95,7 @@ void YAKE_BASE_API log( const String& what );
 		ss << i;
 		return String( ss.str().c_str() );
 	}
-#	define TOSTRING(x) +TOSTRING2FN(x)
+#	define TOSTRING(x) +::yake::base::TOSTRING2FN(x)
 #else
 #	define TOSTRING(x) STRINGIFY (x)
 #endif
