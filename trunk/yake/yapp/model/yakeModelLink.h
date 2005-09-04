@@ -32,7 +32,6 @@
 #include <yake/data/yakeData.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	/** Represents a link between models and/or submodel of an model.
@@ -60,7 +59,6 @@ namespace model {
 		{ return mSource; }
 	};
 
-}
 }
 }
 

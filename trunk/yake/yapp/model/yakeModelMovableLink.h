@@ -31,7 +31,6 @@
 #include <yapp/model/yakeModelLink.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	/** A link controller designed to forward position and/or orientation to
@@ -61,7 +60,6 @@ namespace model {
 		virtual void update( real timeElapsed );
 	};
 
-}
 }
 }
 

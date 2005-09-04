@@ -30,7 +30,6 @@
 #include <yapp/base/yappPrerequisites.h>
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
@@ -74,7 +73,6 @@ namespace vehicle {
 	};
 
 
-}
 }
 }
 }

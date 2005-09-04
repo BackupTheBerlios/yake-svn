@@ -31,7 +31,6 @@
 #include <yapp/model/yakeVehiclePhysicalComponent.h>
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
@@ -60,7 +59,7 @@ namespace vehicle {
 
 		virtual IEngine* getEngine(const size_t index) ;
 
-		//virtual void attachComplexModel(::yake::app::model::complex::Model* pModel);
+		//virtual void attachComplexModel(::yake::model::complex::Model* pModel);
 
 		/*
 		virtual bool attachAxleToEngine(const String & axleName, const String & engineName) ;
@@ -89,10 +88,10 @@ namespace vehicle {
 
 		void translate( const Vector3 & d );
 	private:
-		typedef ::yake::base::templates::Vector< NativeEngine* > EngineList;
+		typedef ::yake::Vector< NativeEngine* > EngineList;
 		EngineList		mEngines;
 
-		typedef ::yake::base::templates::Vector< NativeWheel* > WheelList;
+		typedef ::yake::Vector< NativeWheel* > WheelList;
 		WheelList		mWheels;
 
 		struct Axle
@@ -103,7 +102,7 @@ namespace vehicle {
 			{
 			}
 		};
-		typedef ::yake::base::templates::Vector< Axle* > AxleList;
+		typedef ::yake::Vector< Axle* > AxleList;
 		AxleList		mAxles;
 
 		struct SteerGroup
@@ -115,7 +114,7 @@ namespace vehicle {
 			}
 		};
 
-		typedef ::yake::base::templates::Vector< SteerGroup* > SteerGroupList;
+		typedef ::yake::Vector< SteerGroup* > SteerGroupList;
 		SteerGroupList						mSteerGroups;
 
 		physics::IWorld*					mpPWorld;
@@ -135,7 +134,5 @@ namespace vehicle {
 }
 }
 }
-}
-
 
 #endif

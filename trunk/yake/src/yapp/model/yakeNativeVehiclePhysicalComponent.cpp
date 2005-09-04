@@ -47,7 +47,6 @@
 #endif
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
@@ -85,7 +84,7 @@ namespace vehicle {
 		YAKE_SAFE_DELETE( mpPhysical );
 
 		// wheels
-		templates::VectorIterator< WheelList > itWheel( mWheels.begin(), mWheels.end() );
+		VectorIterator< WheelList > itWheel( mWheels.begin(), mWheels.end() );
 		while (itWheel.hasMoreElements())
 		{
 			NativeWheel* pW = itWheel.getNext();
@@ -93,7 +92,7 @@ namespace vehicle {
 				delete pW;
 		}
 		// steer groups
-		templates::VectorIterator< SteerGroupList > itSG( mSteerGroups.begin(), mSteerGroups.end() );
+		VectorIterator< SteerGroupList > itSG( mSteerGroups.begin(), mSteerGroups.end() );
 		while (itSG.hasMoreElements())
 		{
 			SteerGroup* pSG = itSG.getNext();
@@ -101,7 +100,7 @@ namespace vehicle {
 				delete pSG;
 		}
 		// axles
-		templates::VectorIterator< AxleList > itAxle( mAxles.begin(), mAxles.end() );
+		VectorIterator< AxleList > itAxle( mAxles.begin(), mAxles.end() );
 		while (itAxle.hasMoreElements())
 		{
 			Axle* pA = itAxle.getNext();
@@ -109,7 +108,7 @@ namespace vehicle {
 				delete pA;
 		}
 		// engines
-		templates::VectorIterator< EngineList > itEngine( mEngines.begin(), mEngines.end() );
+		VectorIterator< EngineList > itEngine( mEngines.begin(), mEngines.end() );
 		while (itEngine.hasMoreElements())
 		{
 			NativeEngine* pEngine = itEngine.getNext();
@@ -130,46 +129,29 @@ namespace vehicle {
 		if (mpChassis)
 			return false;
 		//mpChassis = mpPWorld->createBox(1,1,1);
-		mpChassis = mpPWorld->createEmptyPhysicsObject();
-		mpChassis->setBody( mpPWorld->createBody() );
+		mpChassis = mpPWorld->createActor( physics::ACTOR_DYNAMIC );
 		mpChassis->setPosition( tpl.chassisTpl_.position_ );
-		mpChassis->getBody()->setMassBox( tpl.chassisTpl_.dimensions_.x, tpl.chassisTpl_.dimensions_.y, tpl.chassisTpl_.dimensions_.y, 1. );
-		mpChassis->getBody()->setMass( tpl.chassisTpl_.mass_ );
-		mpChassis->getBody()->translateMass( Vector3(0,-1,0) );
+		mpChassis->getBody().addMass(
+			physics::IBody::BoxMassDesc( tpl.chassisTpl_.dimensions_.x, tpl.chassisTpl_.dimensions_.y, tpl.chassisTpl_.dimensions_.z, 1.,
+			Vector3( 0,-1,0) ) );
+		mpChassis->getBody().setMass( tpl.chassisTpl_.mass_ );
+
+		//@FIXME material
+		/*
 		mpChassis->setSoftness( 0.01 );
 		mpChassis->setFriction( 5 ); // 100
 		mpChassis->setFriction2( 0.1 ); // 2
+		*/
 
-		ConstVectorIterator< VehicleTemplate::GeomTemplateList > geomIt( tpl.chassisTpl_.geoms_.begin(), tpl.chassisTpl_.geoms_.end() );
+		ConstVectorIterator< VehicleTemplate::ShapeTemplateList > geomIt( tpl.chassisTpl_.collisionShapes_ );
 		while (geomIt.hasMoreElements())
 		{
-			const VehicleTemplate::GeomTemplate & geomTpl = geomIt.getNext();
-			COUTLN(	"  geom type=" << geomTpl.type_ <<
-					" pos=" << geomTpl.position_.x << ", " << geomTpl.position_.y << ", " << geomTpl.position_.z <<
-					" dim=" << geomTpl.dimensions_.x << ", " << geomTpl.dimensions_.y << ", " << geomTpl.dimensions_.z );
-			physics::ICollisionGeometry* pGeom = 0;
-			if (geomTpl.type_ == physics::ICollisionGeometry::CGT_BOX)
-			{
-				const Vector3 & dim = geomTpl.dimensions_;
-				pGeom = mpPWorld->createCollisionGeomBox( dim.x, dim.y, dim.z );
-				YAKE_ASSERT( pGeom );
-			}
-			else if (geomTpl.type_ == physics::ICollisionGeometry::CGT_BOX)
-			{
-				const Vector3 & dim = geomTpl.dimensions_;
-				pGeom = mpPWorld->createCollisionGeomBox( dim.x, dim.y, dim.z );
-				YAKE_ASSERT( pGeom );
-			}
-			else
-			{
-				YAKE_ASSERT( 1==0 ).warning("unsupported geom type!");
-			}
-			if (!pGeom)
+			const VehicleTemplate::ShapeTemplate & shapeTpl = geomIt.getNext();
+			COUTLN(	"  shape type=" << shapeTpl.type_ );
+			physics::IShape* pShape = mpChassis->createShape( *shapeTpl.pDesc_ );
+			YAKE_ASSERT( pShape );
+			if (!pShape)
 				continue;
-			physics::ICollisionGeometry* pTransformGeom = mpPWorld->createCollisionGeomTransform();
-			YAKE_ASSERT( pTransformGeom );
-			pTransformGeom->tfAttachGeom( pGeom );
-			mpChassis->addCollisionGeometry( pTransformGeom );
 		}
 
 		YAKE_ASSERT( mpPhysical == 0 );
@@ -240,16 +222,15 @@ namespace vehicle {
 			// store wheel
 			mWheels.push_back( pW );
 			// create wheel joint
-			SharedPtr<physics::IJoint> pJ( mpPWorld->createJoint( physics::IJoint::JT_HINGE2 ) );
-			YAKE_ASSERT( pJ.get() );
-			pJ->attach( mpChassis->getBody(), pW->getPhysicsComplex()->getBody() );
-			pJ->setAnchor( pW->getPosition() );
-			pJ->setAxis1( Vector3::kUnitY ); // steering axis
-			pJ->setAxis2( Vector3::kUnitX ); // suspension axis
-			pJ->setHighStop(0);
-			pJ->setLowStop(0);
+			physics::IJointPtr pJ = mpPWorld->createJoint( physics::IJoint::DescHinge2(
+				mpChassis, pW->getPhysicsComplex(), Vector3::kUnitY, Vector3::kUnitX, pW->getPosition() ) );
+			YAKE_ASSERT( pJ );
+			pJ->setLimits( 0, 0.f, 0.f );
+			//@FIXME
+			/*
 			pJ->setSpring( 100 );
 			pJ->setDamping( 10 );
+			*/
 			//
 			pW->setJoint( pJ );
 			mpPhysical->addJoint( pJ );
@@ -374,5 +355,4 @@ namespace vehicle {
 
 } // ns vehicle
 } // ns model
-} // ns app
 } // ns yake

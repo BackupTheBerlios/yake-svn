@@ -34,7 +34,6 @@
 
 namespace yake {
 	using namespace base::templates;
-namespace app {
 namespace model {
 
 	/*class YAPP_BASE_API Entity : public DynamicReflectionObject
@@ -99,11 +98,11 @@ namespace complex {
 		*/
 		void addGraphical( const SharedPtr<Graphical> & pGraphical, const String & rName = "" );
 
-		void addController( const SharedPtr<IObjectController> & pController, const String & rName = "" );
+		void addGraphicsController( const SharedPtr<IObjectController> & pController, const String & rName = "" );
 		void addLink( const SharedPtr<ModelLink> & pModelLink, const String & rName = "" );
 
 		void updatePhysics( real timeElapsed );
-		void updateControllers( real timeElapsed );
+		void updateGraphics( real timeElapsed );
 	private:
 		typedef AssocVector< String, SharedPtr<Physical> > PhysicalMap;
 		PhysicalMap			mPhysicals;
@@ -122,7 +121,6 @@ namespace complex {
 } // complex
 
 } // model
-} // app
 } // yake
 
 #endif

@@ -55,7 +55,6 @@
 	*/
 
 namespace yake {
-namespace app {
 namespace model {
 
 using namespace ::yake::base;
@@ -195,8 +194,7 @@ using namespace ::yake::math;
 			}
 		};
 
-}
-}
-}
+} // namespace model
+} // namespace yake
 
 #endif

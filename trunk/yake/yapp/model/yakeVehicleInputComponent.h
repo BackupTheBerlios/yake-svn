@@ -30,7 +30,6 @@
 #include <yapp/base/yappPrerequisites.h>
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
@@ -70,6 +69,7 @@ namespace vehicle {
 	class YAPP_BASE_API IThrusterInputComponent : public IEngineInputComponent
 	{
 	public:
+		//inherits: virtual void throttleAnalog( const size_t idxThruster, const real throttle ) = 0;
 	};
 
 	class YAPP_BASE_API ICarInputComponent : public InputComponent
@@ -87,7 +87,5 @@ namespace vehicle {
 }
 }
 }
-}
-
 
 #endif

@@ -32,7 +32,6 @@
 #include <yapp/model/yakeVehicleInputComponent.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 /** yapp::vehicle is experimental code! Concrete implementations are not in public CVS
@@ -58,7 +57,6 @@ namespace vehicle {
 } // vehicle
 
 } // model
-} // app
 } // yake
 
 #endif

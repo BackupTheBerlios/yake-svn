@@ -29,7 +29,6 @@
 #include <yapp/model/yakeNativeWheel.h>
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
@@ -96,11 +95,11 @@ namespace vehicle {
 		return mCO->getOrientation();
 	}
 	//-----------------------------------------------------
-	SharedPtr<yake::app::model::CachedInterpolator<real> > NativeWheel::_getLinSkidCache()
+	SharedPtr<model::CachedInterpolator<real> > NativeWheel::_getLinSkidCache()
 	{
 		if (mLinSkidCache.get() == 0)
 		{
-			mLinSkidCache.reset( new yake::app::model::CachedInterpolator<real>(8) );
+			mLinSkidCache.reset( new model::CachedInterpolator<real>(8) );
 			mLinSkidCache->setWeight(0, 1.0);
 			mLinSkidCache->setWeight(0, 0.8);
 			mLinSkidCache->setWeight(0, 0.6);
@@ -113,11 +112,11 @@ namespace vehicle {
 		return mLinSkidCache;
 	}
 	//-----------------------------------------------------
-	SharedPtr<yake::app::model::CachedInterpolator<real> > NativeWheel::_getAngSkidCache()
+	SharedPtr<model::CachedInterpolator<real> > NativeWheel::_getAngSkidCache()
 	{
 		if (mAngSkidCache.get() == 0)
 		{
-			mAngSkidCache.reset( new yake::app::model::CachedInterpolator<real>(8) );
+			mAngSkidCache.reset( new model::CachedInterpolator<real>(8) );
 			mAngSkidCache->setWeight(0, 1.0);
 			mAngSkidCache->setWeight(0, 0.8);
 			mAngSkidCache->setWeight(0, 0.6);
@@ -213,7 +212,6 @@ namespace vehicle {
 	}
 
 
-}
 }
 }
 }

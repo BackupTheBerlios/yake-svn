@@ -32,7 +32,6 @@
 #include <yapp/model/yakeModel.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	/** A physical container model, also a submodel in a complex model.
@@ -79,7 +78,6 @@ namespace model {
 	};
 
 } // model
-} // app
 } // yake
 
 #endif

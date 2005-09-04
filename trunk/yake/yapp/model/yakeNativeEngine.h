@@ -31,7 +31,6 @@
 #include <yapp/model/yakeVehicleTpl.h>
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
@@ -119,7 +118,6 @@ namespace vehicle {
 		real getMaxTorque( const real rpm );
 	};
 
-}
 }
 }
 }

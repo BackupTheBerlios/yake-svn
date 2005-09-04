@@ -30,7 +30,6 @@
 #include <yapp/base/yappPrerequisites.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	/** Base class for Actor components.
@@ -149,7 +148,6 @@ namespace model {
 		ComponentList	mComponents;
 	};
 
-}
 }
 }
 

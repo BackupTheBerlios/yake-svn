@@ -34,7 +34,6 @@
 
 namespace yake {
 	using namespace base::templates;
-namespace app {
 namespace model {
 
 	/** A graphical container model, also a submodel in a complex model.
@@ -73,6 +72,10 @@ namespace model {
 			all appropriate objects to this model::Graphical.
 		*/
 		void fromDotScene( const String& fn, graphics::IWorld* pGWorld );
+
+		/** Sets the position of all root nodes.
+		*/
+		void setPosition( const Vector3& pos );
 	
 		//... getAllX();
 		//
@@ -154,7 +157,6 @@ namespace model {
 	};
 
 } // model
-} // app
 } // yake
 
 #endif

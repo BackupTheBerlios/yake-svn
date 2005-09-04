@@ -31,20 +31,19 @@
 #include <yapp/model/yakeModel.h>
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
 	/** Utilized by the "yake.native" vehicle implementation.
 	*/
-	class NativeWheel : public physics::IActor::ISlipNormalSource, public Movable
+	class NativeWheel : public Movable
 	{
 	public:
 		NativeWheel(physics::IWorld* pPWorld);
 		virtual ~NativeWheel();
 		physics::IActor* getPhysicsComplex() const;
 
-		void setJoint( SharedPtr<physics::IJoint> & jt );
+		void setJoint( physics::IJointPtr jt );
 		physics::IJoint* getJoint() const;
 		void setSuspension( const real spring, const real damping );
 		real getSuspensionSpring() const;
@@ -79,7 +78,5 @@ namespace vehicle {
 }
 }
 }
-}
-
 
 #endif

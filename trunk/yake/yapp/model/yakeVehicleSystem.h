@@ -30,7 +30,6 @@
 #include <yapp/base/yappPrerequisites.h>
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
@@ -59,7 +58,7 @@ namespace vehicle {
 										graphics::IWorld* pGWorld )
 		{ return 0; }
 	private:
-		bool _loadModelFromDotVehicle(::yake::app::model::complex::Model* pModel,
+		bool _loadModelFromDotVehicle(::yake::model::complex::Model* pModel,
 									const ::yake::String & rFN, 
 									physics::IWorld* pPWorld,
 									graphics::IWorld* pGWorld,
@@ -71,7 +70,5 @@ namespace vehicle {
 }
 }
 }
-}
-
 
 #endif

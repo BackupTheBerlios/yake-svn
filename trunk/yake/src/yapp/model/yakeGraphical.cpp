@@ -29,7 +29,6 @@
 #include <yapp/loader/yakeDotScene.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	//-----------------------------------------------------
@@ -38,9 +37,9 @@ namespace model {
 		VectorIterator<NodeList> it(mNodes);
 		while (it.hasMoreElements())
 		{
-			graphics::ISceneNode* pSN = it.getNext().pSN;
-			//@todo fixme: if (!pSN->getParent())
-				delete pSN;
+			SceneNodeEntry e = it.getNext();
+			if (e.bOwned)
+				delete e.pSN;
 		}
 		mNodes.clear();
 	}
@@ -87,6 +86,18 @@ namespace model {
 			}
 		}
 		return 0;
+	}
+	//-----------------------------------------------------
+	void Graphical::setPosition( const Vector3& pos )
+	{
+		VectorIterator< NodeList > it(mNodes);
+		while (it.hasMoreElements())
+		{
+			graphics::ISceneNode* pNode = it.getNext().pSN;
+			YAKE_ASSERT( pNode );
+			if (pNode)
+				pNode->setPosition( pos );
+		}
 	}
 	//-----------------------------------------------------
 	void Graphical::fromDotScene(const String & fn, graphics::IWorld* pGWorld)
@@ -254,10 +265,10 @@ namespace model {
 				
 		graphics::ISceneNode* pSN = mGWorld->createSceneNode( desc.name );
 
+		graphics::ISceneNode* parentSN = 0;
 		if ( desc.parentNodeName != yake::data::parser::dotscene::DotSceneParserV1::ROOT_NODE_NAME )
 		{
-			graphics::ISceneNode* parentSN = mSceneNodes[ desc.parentNodeName ];
-			
+			parentSN = mSceneNodes[ desc.parentNodeName ];
 			parentSN->addChildNode( pSN );
 		}
 		
@@ -267,7 +278,7 @@ namespace model {
 		
 		mSceneNodes[ desc.name ] = pSN;
 
-		mOwner.addSceneNode( pSN, true );
+		mOwner.addSceneNode( pSN, parentSN ? false : true );
 	}
 	
 	//-----------------------------------------------------
@@ -365,6 +376,5 @@ namespace model {
 		
 		mLights[ desc.name ] = info;
 	}
-}
 }
 }

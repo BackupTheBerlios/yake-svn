@@ -29,7 +29,6 @@
 #include <yapp/model/yakeActor.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	Actor::Actor()
@@ -81,6 +80,5 @@ namespace model {
 	}
 
 } // ns model
-} // ns app
 } // ns yake
 

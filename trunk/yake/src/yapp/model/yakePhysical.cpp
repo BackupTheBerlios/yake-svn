@@ -28,7 +28,6 @@
 #include <yapp/base/yapp.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	//-----------------------------------------------------
@@ -89,6 +88,5 @@ namespace model {
 			return itFind->second;
 	}
 
-}
 }
 }

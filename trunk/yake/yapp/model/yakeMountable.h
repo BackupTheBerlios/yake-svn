@@ -30,7 +30,6 @@
 #include <yapp/base/yappPrerequisites.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	class MountPoint;
@@ -40,22 +39,39 @@ namespace model {
 	*/
 	class YAPP_BASE_API Mountable
 	{
+		friend class MountPoint;
+	protected:
+		virtual ~Mountable();
+		Mountable();
 	public:
 		MountPoint* getMountPoint() const;
+	protected:
+		void onAttached( MountPoint* mountpoint );
+		void onDetached();
+	private:
+		MountPoint*	mPt;
 	};
 
 	/** Base class for mount points. Mountable objects can be attached to it.
 		@see Mountable
 	*/
-	class YAPP_BASE_API MountPoint : public yake::base::Movable
+	class YAPP_BASE_API MountPoint
 	{
 	protected:
-		MountPoint() {}
+		MountPoint() : mDir(Vector3::kUnitZ) {}
 	public:
-		virtual ~MountPoint() {}
-		bool isSuitableFor( const Mountable & mountable ) const;
-		void attach( SharedPtr<Mountable> & mountable );
-		void detach( const SharedPtr<Mountable> & mountable );
+		virtual ~MountPoint();
+		virtual bool isSuitableFor( const Mountable* mountable ) const;
+		void attach( Mountable* mountable );
+		void detach( Mountable* mountable );
+		void setDirection( const Vector3& dir);
+		Vector3 getDirection() const;
+		virtual void setPosition(const Vector3& rPosition ) = 0;
+		virtual Vector3 getPosition() const = 0;
+	private:
+		typedef std::deque< Mountable* > MountablePtrList;
+		MountablePtrList	mMountables;
+		Vector3				mDir;
 	};
 
 	/** Example class representing a turret with one or two axis of rotation.
@@ -80,6 +96,8 @@ namespace model {
 	*/
 	class YAPP_BASE_API Thruster : public vehicle::IEngine
 	{
+	protected:
+		Thruster();
 	public:
 		/** At least the following methods are inherited from vehicle::IEngine:
 
@@ -88,20 +106,27 @@ namespace model {
 		virtual real getThrottle() const = 0;
 		*/
 		void setMinimumForce( real force );
+		real getMinimumForce() const;
 		void setMaximumForce( real force );
+		real getMaximumForce() const;
 		real getForce() const;
+	protected:
+		void setForce( real force );
+	private:
+		real	mMaxForce;
+		real	mMinForce;
+		real	mForce;
 	};
 
 	/** A thruster that can be attached to a mount point.
 		@see Thruster
 	*/
-	class YAPP_BASE_API MountedThruster :  public Mountable
+	class YAPP_BASE_API MountedThruster : public Mountable, public Thruster
 	{
 	public:
 	};
 
 } // model
-} // app
 } // yake
 
 #endif

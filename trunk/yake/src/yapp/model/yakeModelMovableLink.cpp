@@ -29,7 +29,6 @@
 #include <yapp/model/yakeModelMovableLink.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	YAKE_REGISTER_CONCRETE( ModelMovableLink );
@@ -65,6 +64,5 @@ namespace model {
 		}
 	}
 
-}
 }
 }

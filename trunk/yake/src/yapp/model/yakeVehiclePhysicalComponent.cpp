@@ -31,7 +31,6 @@
 #include <yapp/model/yakeVehiclePhysicalComponent.h>
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
@@ -42,6 +41,5 @@ namespace vehicle {
 
 } // ns vehicle
 } // ns model
-} // ns app
 } // ns yake
 

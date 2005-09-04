@@ -31,7 +31,6 @@
 #include <yapp/model/yakeUpdaters.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	/** Represents a sub model in a model.
@@ -43,7 +42,6 @@ namespace model {
 		virtual ~Submodel() {}
 	};
 
-}
 }
 }
 

@@ -30,7 +30,6 @@
 //#include <yake/samples/common/yakeTrailGeometryCreator.h>
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
@@ -54,7 +53,7 @@ namespace vehicle {
 
 		YAKE_ASSERT( mComplex );
 		mComplex->updatePhysics( real(0.01) ); //@todo use elapsed time!
-		mComplex->updateControllers( real(0.01) ); //@todo use elapsed time!
+		mComplex->updateGraphics( real(0.01) ); //@todo use elapsed time!
 	}
 	//-----------------------------------------------------
 	void Vehicle::setModel( complex::Model* pComplex )
@@ -64,7 +63,6 @@ namespace vehicle {
 	}
 
 
-}
 }
 }
 }

@@ -29,7 +29,6 @@
 #include <yapp/model/yakeModelLink.h>
 
 namespace yake {
-namespace app {
 namespace model {
 namespace complex {
 
@@ -133,8 +132,9 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
-	void Model::addController(const SharedPtr<IObjectController> & pController, const String & rName)
+	void Model::addGraphicsController(const SharedPtr<IObjectController> & pController, const String & rName)
 	{
+		YAKE_ASSERT( 0==1 ).warning("IS THIS REALLY A GRAPHICS CONTROLLER?");
 		YAKE_ASSERT( pController.get() );
 		YAKE_ASSERT( rName.length() == 0 ).warning("tagging not implemented!");
 		mControllers.push_back( pController );
@@ -153,7 +153,7 @@ namespace complex {
 	{
 	}
 	//-----------------------------------------------------
-	void Model::updateControllers( real timeElapsed )
+	void Model::updateGraphics( real timeElapsed )
 	{
 		for (CtrlrList::const_iterator it = mControllers.begin(); it != mControllers.end(); ++it)
 		{
@@ -161,7 +161,6 @@ namespace complex {
 		}
 	}
 
-}
-}
-}
-}
+} // ns complex
+} // ns model
+} // ns yake
