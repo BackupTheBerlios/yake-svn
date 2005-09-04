@@ -83,9 +83,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"

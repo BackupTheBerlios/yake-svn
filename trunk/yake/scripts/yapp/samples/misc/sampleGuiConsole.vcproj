@@ -85,10 +85,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib input.lib data.lib graphics.lib yapp.lib audio.lib physics.lib scripting.lib"
+				AdditionalDependencies="base.lib input.lib data.lib graphics.lib yapp.lib audio.lib physics.lib scripting.lib luabindd.lib luad.lib CEGUIBase_d.lib scriptingLua.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib;../../../../dependencies/luabind/lib;../../../../dependencies/lua/lib;../../../../dependencies/cegui_mk2/lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
