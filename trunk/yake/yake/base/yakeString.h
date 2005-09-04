@@ -34,6 +34,7 @@
 #ifndef YAKE_BASE_PREREQUISITES_H
 #	include <yake/base/yakePrerequisites.h>
 #endif
+#include <yake/base/templates/yakeVector.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -77,6 +78,43 @@ namespace yake {
 		static real toReal( const String& rString );
 		static size_t toSizeT( const String& rString );
 		static int32 toInt32( const String& rString );
+		// Thanks to OGRE!
+	    static bool StringUtil::startsWith(const String& str, const String& pattern, bool lowerCase);
+		// Thanks to OGRE!
+	    static bool StringUtil::endsWith(const String& str, const String& pattern, bool lowerCase);
+	};
+
+	typedef Vector<String> StringVector;
+	struct YAKE_BASE_API MakeStringVector
+	{
+		MakeStringVector & operator<<(const char * str)
+		{
+			if (str)
+				m_strings.push_back(str); 
+			return *this; 
+		}
+		operator StringVector()
+		{ 
+			return m_strings; 
+		}
+	private:
+		StringVector m_strings;
+	};
+	typedef std::pair<String,String> StringPair;
+	typedef Vector<StringPair> StringPairVector;
+	struct YAKE_BASE_API MakeStringPairVector
+	{
+		MakeStringPairVector & operator<<(const StringPair& stringPair)
+		{
+			m_stringPairs.push_back( stringPair ); 
+			return *this; 
+		}
+		operator StringPairVector()
+		{ 
+			return m_stringPairs; 
+		}
+	private:
+		StringPairVector m_stringPairs;
 	};
 
 #undef YAKE_BASE_STRING
