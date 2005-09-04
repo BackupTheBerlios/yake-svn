@@ -104,13 +104,12 @@ namespace math {
         real Norm () const;  // squared-length
         Quaternion Inverse () const;  // apply to non-zero quaternion
         Quaternion UnitInverse () const;  // apply to unit-length quaternion
-        //Quaternion Exp () const;
-        //Quaternion Log () const;
+        Quaternion Exp () const;
+        Quaternion Log () const;
 
         // rotation of a vector by a quaternion
         Vector3 operator* (const Vector3& rkVector) const;
 
-		/*
         // spherical linear interpolation
         static Quaternion Slerp (real fT, const Quaternion& rkP,
             const Quaternion& rkQ, bool shortestPath = false);
@@ -128,7 +127,6 @@ namespace math {
         static Quaternion Squad (real fT, const Quaternion& rkP,
             const Quaternion& rkA, const Quaternion& rkB,
             const Quaternion& rkQ, bool shortestPath = false);
-		*/
 
         // cutoff for sine near zero
         static const real ms_fEpsilon;

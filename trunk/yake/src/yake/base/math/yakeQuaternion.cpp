@@ -292,7 +292,6 @@ namespace math {
         return Quaternion(w,-x,-y,-z);
     }
     //-----------------------------------------------------------------------
-	/*
     Quaternion Quaternion::Exp () const
     {
         // If q = A*(x*i+y*j+z*k) where (x,y,z) is unit length, then
@@ -351,7 +350,6 @@ namespace math {
 
         return kResult;
     }
-	*/
     //-----------------------------------------------------------------------
     Vector3 Quaternion::operator* (const Vector3& v) const
     {
@@ -367,7 +365,6 @@ namespace math {
 
     }
     //-----------------------------------------------------------------------
-	/*
     Quaternion Quaternion::Slerp (real fT, const Quaternion& rkP,
         const Quaternion& rkQ, bool shortestPath)
     {
@@ -432,7 +429,6 @@ namespace math {
         Quaternion kSlerpQ = Slerp(fT, rkA, rkB);
         return Slerp(fSlerpT, kSlerpP ,kSlerpQ);
     }
-	*/
     //-----------------------------------------------------------------------
     bool Quaternion::operator== (const Quaternion& rhs) const
     {
