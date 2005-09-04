@@ -24,30 +24,34 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAPP_DOTLINKLOADER_H
-#define YAPP_DOTLINKLOADER_H
-
-#include <yapp/base/yappPrerequisites.h>
+#include <yapp/ent/yakePCH.h>
+#include <yapp/ent/yakeCommon.h>
+#include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
+#include <yapp/ent/yakeObject.h>
+#include <yapp/ent/yakeEntityMachine.h>
+#include <yapp/ent/yakeEntityComponent.h>
+#include <yapp/ent/yakeEntity.h>
 
 namespace yake {
-namespace model {
+namespace ent {
 
-	class YAPP_BASE_API DotLinkLoader
+	YAKE_IMPLEMENT_REGISTRY( EntityComponent );
+
+	EntityComponent::EntityComponent( Entity& owner ) : mOwner( owner )
+	{}
+	void EntityComponent::tick()
 	{
-	public:
-		DotLinkLoader();
-		~DotLinkLoader();
+		onTick();
+	}
+	void EntityComponent::initialise(object_creation_context& creationCtx)
+	{
+		onInitialise( creationCtx );
+	}
+	Entity& EntityComponent::getOwner() const
+	{
+		return mOwner;
+	}
 
-		bool load( const String & rDotLinkFilename, complex::Model & rModel );
-		bool load( const data::dom::INode & rLinksNode, complex::Model & rModel );
-
-		typedef SharedPtr<ModelLink> SharedModelLinkPtr;
-		typedef Deque< SharedModelLinkPtr > SharedModelLinkList;
-	private:
-		void parseLink( const data::dom::INode & rLinkNode );
-		complex::Model*		mpModel;
-	};
-
-}
-}
-#endif
+} // namespace yake
+} // namespace ent

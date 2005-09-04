@@ -34,7 +34,42 @@
 namespace yake {
 namespace ent {
 
-	DEFINE_OBJECT_BASIC( Object )
+	void object_class::addParent(object_class* parent)
+	{
+		YAKE_ASSERT( parent );
+		if (!parent)
+			return;
+		mParents.push_back( parent );
+		parent->mChilds.push_back( this );
+	}
+	const object_class::ClassPtrList& object_class::getParents() const
+	{
+		return mParents;
+	}
+	const object_class::ClassPtrList& object_class::getChildren() const
+	{
+		return mChilds;
+	}
+
+	template<class ObjectType>
+		void applyClassProperties(ObjectType* pObj, const object_class& objectClass)
+	{
+		YAKE_ASSERT( pObj );
+		if (!pObj) return;
+		object_class::ClassPtrList classes = objectClass.getParents();
+		ConstVectorIterator< object_class::ClassPtrList > itParent( classes );
+		while (itParent.hasMoreElements())
+		{
+			applyClassProperties(pObj, *(itParent.getNext()));
+		}
+		PropertyDefMap::const_iterator itDefEnd = objectClass.getPropertyDef().end();
+		for (PropertyDefMap::const_iterator itDef = objectClass.getPropertyDef().begin(); itDef != itDefEnd; ++itDef)
+		{
+			pObj->addProperty( itDef->second.name, itDef->second.instantiate() );
+		}
+	}
+
+	DEFINE_OBJECT_ROOT( Object )
 
 	Object::Object() : mEvtSpawn("onSpawn"), mEvtTick("onTick")
 	{
@@ -115,6 +150,40 @@ namespace ent {
 	{
 		mMessageManager.addMessageHandler( id, fn, source );
 	}
+	void Object::addProperty(const String& name, Property* pProp)
+	{
+		YAKE_ASSERT( !name.empty() ).debug("No property name given!");
+		if (!pProp)
+			return;
+		PropertyPtrMap::const_iterator itFind = mProps.find(name);
+		if (itFind != mProps.end())
+			delete itFind->second;
+		mProps[ name ] = pProp;
+	}
+	Property* Object::getProperty(const String& name) const
+	{
+		PropertyPtrMap::const_iterator itFind = mProps.find(name);
+		if (itFind != mProps.end())
+			return itFind->second;
+		return 0;
+	}
+	bool Object::setProperty(const String& propName, const boost::any& value)
+	{
+		ent::Property* pProp = getProperty(propName);
+		YAKE_ASSERT(pProp).debug("Could not retrieve property.");
+		if (!pProp)
+			return false;
+		pProp->setValue( value );
+		return true;
+	}
+
+	Property* PropertyDef::instantiate() const
+	{
+		Property* pProp = new Property();
+		pProp->setValue( defaultValue );
+		return pProp;
+	}
+
 
 } // namespace yake
 } // namespace ent

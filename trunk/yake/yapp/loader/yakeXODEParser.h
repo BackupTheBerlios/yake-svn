@@ -35,8 +35,6 @@ namespace data {
 namespace parser {
 namespace xode {
 
-using namespace yake::app; // model::Physical
-
 	/** XODEParser base class providing default implementation for DOM parsing.
 	* \todo read lights, environment, external references ..
 	*/

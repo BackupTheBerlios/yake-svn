@@ -67,12 +67,14 @@ namespace raf {
 		// other ...
 		graphics::IWorld* getGraphicalWorld();
 		audio::IWorld* getAudioWorld();
+		physics::IWorld* getPhysicalWorld();
 
 		graphics::ICamera* getDefaultCamera();
 	private:
 		bool						mQuitRequested;
 		SharedPtr<graphics::IWorld>	mGWorld;
 		SharedPtr<audio::IWorld>	mAWorld;
+		SharedPtr<physics::IWorld>	mPWorld;
 
 		typedef std::vector<SharedPtr<graphics::IViewport> > ViewportList;
 		ViewportList				mViewports;

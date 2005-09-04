@@ -31,7 +31,6 @@
 #include <yapp/loader/yakeDotLinkLoader.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	DotLinkLoader::DotLinkLoader() : mpModel(0)
@@ -119,7 +118,7 @@ namespace model {
 			if (!pTargetNode.get())
 				continue;
 
-			const String nodeName = StringUtil::toLowerCase( pTargetNode->getValueAs<String>( "name" ) );
+			const String nodeName = StringUtil::toLowerCase( pTargetNode->getName() );
 			if (nodeName != "link_target")
 				continue;
 	
@@ -128,9 +127,8 @@ namespace model {
 			SharedPtr<IObjectController>  pController( pCreator->createLink( *mpModel, *pSourceNode, *pTargetNode ) );
 			YAKE_ASSERT( pController ).error( "Failed to create controller! " );
 			
-			mpModel->addController( pController );
+			mpModel->addGraphicsController( pController );
 		}
 	}
-}
 }
 }

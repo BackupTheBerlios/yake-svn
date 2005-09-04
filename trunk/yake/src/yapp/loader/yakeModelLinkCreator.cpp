@@ -29,11 +29,9 @@
 #include <yapp/loader/yakeModelLinkCreator.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	YAKE_IMPLEMENT_REGISTRY( ModelLinkCreator );
 
-}
 }
 }

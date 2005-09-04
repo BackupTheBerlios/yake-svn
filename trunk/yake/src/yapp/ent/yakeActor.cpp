@@ -24,30 +24,51 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAPP_DOTLINKLOADER_H
-#define YAPP_DOTLINKLOADER_H
-
-#include <yapp/base/yappPrerequisites.h>
+#include <yapp/ent/yakePCH.h>
+#include <yapp/ent/yakeCommon.h>
+#include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
+#include <yapp/ent/yakeObject.h>
+#include <yapp/ent/yakeEntityMachine.h>
+#include <yapp/ent/yakeEntityComponent.h>
+#include <yapp/ent/yakeEntity.h>
+#include <yapp/ent/yakeSim.h>
+#include <yapp/ent/yakeActor.h>
 
 namespace yake {
-namespace model {
+namespace ent {
 
-	class YAPP_BASE_API DotLinkLoader
+	YAKE_DEFINE_ENTITY_1( Actor, Pawn )
+
+	Actor::Actor()
 	{
-	public:
-		DotLinkLoader();
-		~DotLinkLoader();
+	}
+	void Actor::onTick()
+	{
+		Entity::onTick();
+	}
+	void Actor::onInitialise(object_creation_context& creationCtx)
+	{
+		Entity::onInitialise(creationCtx);
+		//if (!isServer())
+		{
+		}
+	}
+	void Actor::sense()
+	{
+		onSense();
+		mSigOnSense();
+	}
+	void Actor::think()
+	{
+		onThink();
+		mSigOnThink();
+	}
+	void Actor::act()
+	{
+		onAct();
+		mSigOnAct();
+	}
 
-		bool load( const String & rDotLinkFilename, complex::Model & rModel );
-		bool load( const data::dom::INode & rLinksNode, complex::Model & rModel );
-
-		typedef SharedPtr<ModelLink> SharedModelLinkPtr;
-		typedef Deque< SharedModelLinkPtr > SharedModelLinkList;
-	private:
-		void parseLink( const data::dom::INode & rLinkNode );
-		complex::Model*		mpModel;
-	};
-
-}
-}
-#endif
+} // namespace yake
+} // namespace ent

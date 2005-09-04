@@ -31,7 +31,6 @@
 #include <yapp/model/yakeModelLink.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	class YAPP_BASE_API ModelLinkCreator
@@ -44,7 +43,6 @@ namespace model {
 										const data::dom::INode& rTargetNode) = 0;
 	};
 
-}
 }
 }
 

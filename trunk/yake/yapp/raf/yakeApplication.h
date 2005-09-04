@@ -137,6 +137,10 @@ namespace raf {
 		graphics::IGraphicsSystem* getGraphicsSystem(const String& name = "");
 		physics::IPhysicsSystem* getPhysicsSystem(const String& name = "");
 		audio::IAudioSystem* getAudioSystem(const String& name = "");
+		input::KeyboardDevice* getKeyboard();
+		input::KeyboardEventGenerator* getKeyboardEventGenerator();
+		input::MouseDevice* getMouse();
+		input::MouseEventGenerator* getMouseEventGenerator();
 
 	private:
 		void initInput();

@@ -29,6 +29,8 @@
 #include <yapp/ent/yakeEvent.h>
 #include <yapp/ent/yakeMessaging.h>
 #include <yapp/ent/yakeObject.h>
+#include <yapp/ent/yakeEntityMachine.h>
+#include <yapp/ent/yakeEntityComponent.h>
 #include <yapp/ent/yakeEntity.h>
 #include <yapp/ent/yakeSim.h>
 
@@ -36,7 +38,7 @@ namespace yake {
 namespace ent {
 
 	EntityMachine::EntityMachine(Entity& owner) : 
-			BaseMachine(yake::state::TH_RELAXED),
+			EntityMachineBase(yake::state::TH_RELAXED),
 			mOwner(&owner)
 	{
 	}

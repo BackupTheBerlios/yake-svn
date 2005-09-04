@@ -29,6 +29,8 @@
 #include <yapp/ent/yakeEvent.h>
 #include <yapp/ent/yakeMessaging.h>
 #include <yapp/ent/yakeObject.h>
+#include <yapp/ent/yakeEntityMachine.h>
+#include <yapp/ent/yakeEntityComponent.h>
 #include <yapp/ent/yakeEntity.h>
 #include <yapp/ent/yakeSim.h>
 
@@ -46,6 +48,8 @@ namespace ent {
 		//getMsgMgr().addMessageHandler( CMDID_MachineExitState, boost::bind(&Entity::onCmdMachineExitState,this,_1) );
 		getMsgMgr().addMessageHandler( CMDID_MachineChangeTo, boost::bind(&Entity::onCmdMachineChangeTo,this,_1) );
 		mDefaultMachine.reset( new EntityMachine(*this) );
+
+		_initialiseComponents(creationCtx);
 	}
 	MsgResultCode Entity::onCmdMachineChangeTo(const Message& msg)
 	{
@@ -73,6 +77,70 @@ namespace ent {
 	void Entity::onTick()
 	{
 		++mAge;
+		_tickComponents();
+	}
+	void Entity::addComponent( const String& tag, SharedPtr<EntityComponent>& pComponent, size_t prio /*= 0*/ )
+	{
+		YAKE_ASSERT( prio == 0 )(prio).warning("Only 0 priorities are currently supported!");
+		YAKE_ASSERT( !tag.empty() ).warning("");
+		if (tag.empty())
+			return;
+		if (removeComponent( tag ).get())
+		{
+			YAKE_LOG_WARNING("Overwrote entity component!");
+		}
+		mComponents[ tag ] = pComponent;
+	}
+	SharedPtr<EntityComponent> Entity::removeComponent( EntityComponent* pComponent )
+	{
+		for (ComponentList::iterator itFind = mComponents.begin(); itFind != mComponents.end(); ++itFind)
+		{
+			if (itFind->second.get() == pComponent)
+			{
+				SharedPtr<EntityComponent> pC = itFind->second;
+				mComponents.erase( itFind );
+				return pC;
+			}
+		}
+		return SharedPtr<EntityComponent>();
+	}
+	SharedPtr<EntityComponent> Entity::removeComponent( const String& tag )
+	{
+		ComponentList::iterator itFind = mComponents.find( tag );
+		if (itFind != mComponents.end())
+		{
+			SharedPtr<EntityComponent> pC = itFind->second;
+			mComponents.erase( itFind );
+			return pC;
+		}
+		return SharedPtr<EntityComponent>();
+	}
+	EntityComponent* Entity::getComponent( const String& tag )
+	{
+		ComponentList::iterator itFind = mComponents.find( tag );
+		if (itFind != mComponents.end())
+			return itFind->second.get();
+		return 0;
+	}
+	void Entity::_tickComponents()
+	{
+		ConstVectorIterator< ComponentList > itComponent( mComponents );
+		while (itComponent.hasMoreElements())
+		{
+			EntityComponent* pComponent = itComponent.getNext().second.get();
+			YAKE_ASSERT( pComponent );
+			pComponent->tick();
+		}
+	}
+	void Entity::_initialiseComponents(object_creation_context& creationCtx)
+	{
+		ConstVectorIterator< ComponentList > itComponent( mComponents );
+		while (itComponent.hasMoreElements())
+		{
+			EntityComponent* pComponent = itComponent.getNext().second.get();
+			YAKE_ASSERT( pComponent );
+			pComponent->initialise(creationCtx);
+		}
 	}
 	void Entity::onGetDefaultEventParams(ParamList& params)
 	{
@@ -82,9 +150,27 @@ namespace ent {
 	{
 		return mAge;
 	}
-	void Entity::setVM(scripting::IVM* pVM)
+	void Entity::addVM(scripting::IVM* pVM)
 	{
-		mpVM = pVM;
+		YAKE_ASSERT( pVM ).warning("Tried to add a null VM!");
+		if (!pVM)
+			return;
+		mVMs.push_back( pVM );
+	}
+	scripting::IVM* Entity::getVM(const size_t index) const
+	{
+		YAKE_ASSERT( index <= mVMs.size() )( index )( mVMs.size() ).warning("Invalid index! VM not found!");
+		if (index <= mVMs.size())
+			return mVMs.at(index);
+		return 0;
+	}
+	size_t Entity::getVMCount() const
+	{
+		return mVMs.size();
+	}
+	scripting::IVM* Entity::getDefaultVM() const
+	{
+		return getVM( 0 );
 	}
 	EntityMachine* Entity::ceateMachine(const String& id)
 	{

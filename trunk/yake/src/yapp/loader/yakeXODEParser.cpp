@@ -34,8 +34,6 @@ namespace data {
 namespace parser {
 namespace xode {
 	
-	using namespace yake::app;
-	
 	//------------------------------------------------------
 	XODEParser::XODEParser( model::Physical& rBaseModel ) : mBaseModel( rBaseModel )
 	{
@@ -110,7 +108,7 @@ namespace xode {
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				yake::StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+				yake::StringUtil::toLowerCase( (*it)->getName() );
 			
 			if ( nodeName == "body" )
 			{
@@ -138,7 +136,7 @@ namespace xode {
 		
 		bool operator()( SharedPtr<dom::INode>const& pNode )
 		{
-			return pNode->getValueAs<String>( "name" ) == mNodeName; 
+			return pNode->getName() == mNodeName; 
 		}
 		
 	private:
@@ -208,7 +206,7 @@ namespace xode {
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>("name") );
+				StringUtil::toLowerCase( (*it)->getName() );
 
 			if ( nodeName == "quaternion" )
 			{
@@ -233,7 +231,7 @@ namespace xode {
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>("name") );
+				StringUtil::toLowerCase( (*it)->getName() );
 		
 			if ( nodeName == "position" )
 			{
@@ -270,7 +268,7 @@ namespace xode {
 		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+				StringUtil::toLowerCase( (*it)->getName() );
 		
 			std::cout << "reading mass_shape that is " << nodeName << " " << std::endl;
 
@@ -348,7 +346,7 @@ namespace xode {
 		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+				StringUtil::toLowerCase( (*it)->getName() );
 
 			if ( nodeName == "mass_shape" )
 			{
@@ -404,7 +402,7 @@ namespace xode {
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+				StringUtil::toLowerCase( (*it)->getName() );
 
 			std::cout << " body [" << name << "] has node #" << nodeName << std::endl;
 			
@@ -481,7 +479,7 @@ namespace xode {
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+				StringUtil::toLowerCase( (*it)->getName() );
 
 			std::cout << " geom [" << name << "] has node #" << nodeName << std::endl;
 
@@ -711,7 +709,7 @@ namespace xode {
 		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it )
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+				StringUtil::toLowerCase( (*it)->getName() );
 		
 			std::cout << "   Reading " << nodeName << " now..." << std::endl;
 			
@@ -736,7 +734,7 @@ namespace xode {
 		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it )
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+				StringUtil::toLowerCase( (*it)->getName() );
 		
 			if ( nodeName == "v" )
 			{
@@ -761,7 +759,7 @@ namespace xode {
 		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it )
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+				StringUtil::toLowerCase( (*it)->getName() );
 		
 			if ( nodeName == "t" )
 			{
@@ -843,7 +841,7 @@ namespace xode {
 		for ( NodeListIter it = nodes.begin(); it != nodes.end(); ++it )
 		{
 			String nodeName = 
-				StringUtil::toLowerCase( (*it)->getValueAs<String>( "name" ) );
+				StringUtil::toLowerCase( (*it)->getName() );
 		
 			std::cout << "   Reading " << nodeName << " now..." << std::endl;
 			

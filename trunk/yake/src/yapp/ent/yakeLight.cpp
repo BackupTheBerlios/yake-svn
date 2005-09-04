@@ -29,20 +29,24 @@
 #include <yapp/ent/yakeEvent.h>
 #include <yapp/ent/yakeMessaging.h>
 #include <yapp/ent/yakeObject.h>
+#include <yapp/ent/yakeEntityMachine.h>
+#include <yapp/ent/yakeEntityComponent.h>
 #include <yapp/ent/yakeEntity.h>
 #include <yapp/ent/yakeSim.h>
 
 namespace yake {
 namespace ent {
 
-	DEFINE_OBJECT( light )
+	YAKE_REGISTER_ENTITY_COMPONENT( LightVisual );
 
-	light::light() : mpLight(0), mLightEnabled(false)
+	LightVisual::LightVisual( Entity& owner ) :
+		EntityComponent( owner ),
+		mpLight(0),
+		mLightEnabled(false)
+	{}
+	void LightVisual::onInitialise(object_creation_context& creationCtx)
 	{
-	}
-	void light::onInitialise(object_creation_context& creationCtx)
-	{
-		Entity::onInitialise(creationCtx);
+		EntityComponent::onInitialise(creationCtx);
 		//if (!isServer())
 		{
 			YAKE_ASSERT( creationCtx.mpGWorld );
@@ -57,23 +61,68 @@ namespace ent {
 			mpLight->setDiffuseColour( Color(1,0,0) );
 			mpLight->setEnabled( true );
 
-			mLightEnabled = true;
+			getOwner().getProperty("enabled")->setValue(true);
 
 			mpSN->setPosition( Vector3(0,20,0) );
 		}
 	}
-	void light::enableLight( bool yes )
+	void LightVisual::onTick()
 	{
-		//if (!isServer())
+		// position
+		Property* pProp = getOwner().getProperty("position");
+		YAKE_ASSERT( pProp );
+		if (pProp->hasChanged())
 		{
-			mLightEnabled = yes;
-			if (mpLight)
-				mpLight->setEnabled( yes );
+			YAKE_ASSERT( mpSN );
+			if (pProp && mpSN)
+				mpSN->setPosition( pProp->getValueAs<Vector3>() );
+			pProp->setHasChanged( false );
+		}
+		// enabled
+		pProp = getOwner().getProperty("enabled");
+		YAKE_ASSERT( pProp );
+		if (pProp->hasChanged())
+		{
+			YAKE_ASSERT( mpLight );
+			if (pProp && mpLight)
+				mpLight->setEnabled( pProp->getValueAs<bool>() );
+			pProp->setHasChanged( false );
+		}
+		// colour
+		pProp = getOwner().getProperty("diffuseColour");
+		YAKE_ASSERT( pProp );
+		if (pProp->hasChanged())
+		{
+			YAKE_ASSERT( mpLight );
+			if (pProp && mpLight)
+				mpLight->setDiffuseColour( pProp->getValueAs<Color>() );
+			pProp->setHasChanged( false );
 		}
 	}
-	bool light::isLightEnabled() const
+
+	YAKE_DEFINE_ENTITY_1( Light, Entity )
+
+	Light::Light()
 	{
-		return mLightEnabled;
+	}
+	void Light::onTick()
+	{
+		Entity::onTick();
+	}
+	void Light::onInitialise(object_creation_context& creationCtx)
+	{
+		Entity::onInitialise(creationCtx);
+		//if (!isServer())
+		{
+		}
+	}
+	void Light::enableLight( bool yes )
+	{
+		getProperty("enabled")->setValue( yes );
+	}
+	bool Light::isLightEnabled() const
+	{
+		return getProperty("enabled")->getValueAs<bool>();
 	}
 
 } // namespace yake

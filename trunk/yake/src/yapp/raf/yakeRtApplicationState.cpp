@@ -79,6 +79,10 @@ namespace raf {
 				elapsed = real(0.01);
 
 			onFrame(elapsed);
+
+			if (mPWorld.get())
+				mPWorld->step( elapsed );
+
 			if (mGWorld.get())
 				mGWorld->render( elapsed );
 
@@ -117,6 +121,8 @@ namespace raf {
 	{
 		onDestroyScene();
 
+		mPWorld.reset();
+		mAWorld.reset();
 		mGWorld.reset();
 		mViewports.clear();
 		YAKE_SAFE_DELETE( mDefaultCamera );
@@ -133,6 +139,30 @@ namespace raf {
 			YAKE_EXCEPT("We really need a valid graphical world here! Bailing out!");
 		getApp().getGraphicsSystem()->subscribeToShutdownSignal( boost::bind( &RtMainState::requestQuit, this ) );
 		return mGWorld.get();
+	}
+	physics::IWorld* RtMainState::getPhysicalWorld()
+	{
+		if (!mPWorld.get())
+		{
+			physics::IPhysicsSystem* pSys = getApp().getPhysicsSystem();
+			YAKE_ASSERT( pSys );
+			mPWorld = pSys->createWorld();
+		}
+		if (!mPWorld.get())
+			YAKE_EXCEPT("We really need a valid physical world here! Bailing out!");
+		return mPWorld.get();
+	}
+	audio::IWorld* RtMainState::getAudioWorld()
+	{
+		if (!mAWorld.get())
+		{
+			audio::IAudioSystem* pSys = getApp().getAudioSystem();
+			YAKE_ASSERT( pSys );
+			mAWorld.reset( pSys->createWorld() );
+		}
+		if (!mAWorld.get())
+			YAKE_EXCEPT("We really need a valid audio world here! Bailing out!");
+		return mAWorld.get();
 	}
 	graphics::ICamera* RtMainState::getDefaultCamera()
 	{

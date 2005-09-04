@@ -38,24 +38,6 @@
 #endif
 
 namespace yake {
-	typedef Vector<String> StringVector;
-	struct MakeStringVector
-	{
-		MakeStringVector & operator<<(const char * lib)
-		{
-			YAKE_ASSERT( lib );
-			if (lib)
-				m_libs.push_back(lib); 
-			return *this; 
-		}
-		operator StringVector()
-		{ 
-			return m_libs; 
-		}
-
-	private:
-		StringVector m_libs;
-	};
 } // namespace yake
 
 #endif

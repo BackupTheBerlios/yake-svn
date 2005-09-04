@@ -29,27 +29,55 @@
 #include <yapp/ent/yakeEvent.h>
 #include <yapp/ent/yakeMessaging.h>
 #include <yapp/ent/yakeObject.h>
+#include <yapp/ent/yakeEntityMachine.h>
+#include <yapp/ent/yakeEntityComponent.h>
 #include <yapp/ent/yakeEntity.h>
 #include <yapp/ent/yakeSim.h>
 
 namespace yake {
 namespace ent {
 
-	DEFINE_OBJECT( pawn )
+	YAKE_REGISTER_ENTITY_COMPONENT( PawnVisual );
 
-	pawn::pawn()
+	PawnVisual::PawnVisual( Entity& owner ) :
+		EntityComponent( owner )
+	{}
+	void PawnVisual::onInitialise(object_creation_context& creationCtx)
 	{
+		EntityComponent::onInitialise(creationCtx);
+		getOwner().getProperty("position")->subscribeToOnChanged(
+			boost::bind( &PawnVisual::onPositionChanged, this, _1 ) );
 	}
-
-	void pawn::setGraphical( GraphicalModel* pModel )
+	void PawnVisual::setGraphical( GraphicalModel* pModel )
 	{
 		mGraphical.reset( pModel );
 	}
-
-	GraphicalModel* pawn::getGraphical() const
+	GraphicalModel* PawnVisual::getGraphical() const
 	{
 		return mGraphical.get();
 	}
+	void PawnVisual::onPositionChanged(Property& prop)
+	{
+		if (!prop.hasChanged())
+			return;
+		if (mGraphical)
+			mGraphical->setPosition( prop.getValueAs<Vector3>() );
+		prop.setHasChanged( false );
+	}
+	void PawnVisual::onTick()
+	{
+	}
+
+	YAKE_DEFINE_ENTITY_1( Pawn, Entity )
+
+	Pawn::Pawn()
+	{
+	}
+	void Pawn::onTick()
+	{
+		Entity::onTick();
+	}
+
 
 } // namespace yake
 } // namespace ent

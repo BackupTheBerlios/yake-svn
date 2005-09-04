@@ -30,7 +30,6 @@
 #include <yapp/model/yakeModelMovableLink.h>
 
 namespace yake {
-namespace app {
 namespace model {
 
 	YAKE_REGISTER_CONCRETE( ModelMovableLinkCreator );
@@ -99,6 +98,5 @@ namespace model {
 		pLink->subscribeToOrientationChanged( pTargetMovable );
 		return pLink;
 	}
-}
 }
 }

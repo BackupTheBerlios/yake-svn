@@ -272,6 +272,22 @@ namespace raf {
 	{
 		return findSystem<audio::IAudioSystem>( mAudioSystems, name );
 	}
+	input::KeyboardDevice* Application::getKeyboard()
+	{
+		return mKeyboard;
+	}
+	input::KeyboardEventGenerator* Application::getKeyboardEventGenerator()
+	{
+		return mKeyboardEventGenerator;
+	}
+	input::MouseDevice* Application::getMouse()
+	{
+		return mMouse;
+	}
+	input::MouseEventGenerator* Application::getMouseEventGenerator()
+	{
+		return mMouseEventGenerator;
+	}
 
 } // namespace raf
 } // namespace yake

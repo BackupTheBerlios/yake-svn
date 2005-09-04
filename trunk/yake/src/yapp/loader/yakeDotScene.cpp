@@ -69,9 +69,8 @@ namespace dotscene {
 	{
 		YAKE_DECLARE_FUNCTION( readScene );
 		
-		const String name = pNode->getAttributeValueAs<String>( "name" );
-		
-		YAKE_LOG( "readScene() [" + name + "]" );
+		//const String name = pNode->getAttributeValueAs<String>( "name" );
+		//YAKE_LOG( "readScene() [" + name + "]" );
 		
 		YAKE_ASSERT( pNode );
 		
@@ -126,7 +125,7 @@ namespace dotscene {
 		const dom::NodeList& nodes = pNode->getNodes();
 		for ( dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it )
 		{
-			String tag = StringUtil::toLowerCase((*it)->getValueAs<String>("name"));
+			String tag = StringUtil::toLowerCase((*it)->getName());
 
 			const SharedPtr<dom::INode> & pChild = (*it);
 			if (tag == "position")
@@ -157,7 +156,7 @@ namespace dotscene {
 		// Now it's time to read attached objects
 		for ( dom::NodeList::const_iterator it = attachedObjects.begin(); it != attachedObjects.end(); ++it )
 		{
-			String tag = StringUtil::toLowerCase((*it)->getValueAs<String>("name"));
+			String tag = StringUtil::toLowerCase((*it)->getName());
 
 			const SharedPtr<dom::INode>& pChild = (*it);
 			if ( tag == "entity" )
@@ -326,7 +325,7 @@ namespace dotscene {
 		const dom::NodeList& nodes = pNode->getNodes();
 		for ( dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it )
 		{
-			String childNodeName = (*it)->getValueAs<String>( "name" );
+			String childNodeName = (*it)->getName();
 			
 			YAKE_LOG( "node child: " + StringUtil::toLowerCase( childNodeName ) );
 
@@ -397,7 +396,7 @@ namespace dotscene {
 		const dom::NodeList& nodes = pNode->getNodes();
 		for ( dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it )
 		{
-			String childNodeName = (*it)->getValueAs<String>( "name" );
+			String childNodeName = (*it)->getName();
 			
 			YAKE_LOG( "node child: " + StringUtil::toLowerCase( childNodeName ) );
 
