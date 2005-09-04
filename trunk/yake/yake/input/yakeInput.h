@@ -24,13 +24,18 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
+#ifndef YAKE_INPUT_H
+#define YAKE_INPUT_H
 
-#if defined( YAKE_INPUT_EXPORTS )
-#	define YAKE_INPUT_API DLLEXPORT
-#else
-#	define YAKE_INPUT_API DLLIMPORT
+#ifndef YAKE_BASE_YAKE_H
+#include <yake/base/yake.h>
 #endif
 
-#ifndef YAKE_BASE_PREREQUISITES_H
-#include <yakeBase/yake/yakePrerequisites.h>
+#ifndef YAKE_INPUT_PREREQUISITES_H
+#include <yake/input/yakePrerequisites.h>
+#endif
+#include <yake/input/yakeInputSystem.h>
+#include <yake/input/yakeInputEventGenerator.h>
+#include <yake/input/yakeActionmap.h>
+
 #endif

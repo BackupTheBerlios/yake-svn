@@ -27,7 +27,9 @@
 #ifndef YAKE_INPUT_ACTIONMAP_H
 #define YAKE_INPUT_ACTIONMAP_H
 
-#include <yake/input/yakeInput.h>
+#ifndef YAKE_INPUT_PREREQUISITES_H
+#include <yake/input/yakePrerequisites.h>
+#endif
 
 namespace yake {
 
@@ -35,14 +37,17 @@ using namespace base;
 
 namespace input {
 
-
-	//typedef uint32 ActionId;
+	class ActionIdRegistry;
 	class YAKE_INPUT_API ActionId
 	{
+		friend class ActionIdRegistry;
 	public:
-		ActionId( uint32 id, const String & name ) : mId(id), mName(name)
-		{
-		}
+		typedef uint32 IdType;
+	protected:
+		ActionId( IdType id );
+	public:
+		ActionId( const ActionId& other );
+		ActionId( IdType id, const String & name );
 		bool operator == (const ActionId & rhs)
 		{
 			return mId == rhs.mId;
@@ -51,18 +56,36 @@ namespace input {
 		{
 			return mId;
 		}
-		uint32 id() const
-		{ return mId; }
+		IdType id() const
+		{ 
+			return mId; 
+		}
+		String getName() const
+		{
+			return mName;
+		}
+		bool operator == (const ActionId& rhs) const;
+		bool operator != (const ActionId& rhs) const;
 	private:
-		uint32			mId;
-		String	mName;
+		IdType		mId;
+		String		mName;
 	};
 	inline uint32 operator + (const ActionId & lhs, const uint32 rhs)
 	{
 		return lhs.id() + rhs;
 	}
 
+	class YAKE_INPUT_API ActionIdRegistry
+	{
+	public:
+		static void reg(const ActionId& id);
+		static ActionId getByName(const String& name);
+		static ActionId getById(const ActionId::IdType& id);
+	private:
+	};
+
 	// default action ids ( 0..9999 )
+	extern YAKE_INPUT_API const ActionId ACTIONID_NONE;
 	extern YAKE_INPUT_API const ActionId ACTIONID_FORWARD;
 	extern YAKE_INPUT_API const ActionId ACTIONID_REVERSE;
 	extern YAKE_INPUT_API const ActionId ACTIONID_STRAFE_LEFT;
@@ -153,6 +176,9 @@ namespace input {
 		void reg( const ActionId & actionId, ActionCondition* condition );
 		void subscribeToActionId( const ActionId & actionId, const ActionSignal::slot_type & slot );
 		void update();
+
+		static bool loadFromFile(ActionMap& amap, const String& fname, KeyboardDevice* pKeyboard);
+		static bool saveToFile(ActionMap& amap, const String& fname);
 	private:
 		typedef Vector< ActionId > ActionIdList;
 		struct ActionMapEntry {

@@ -27,8 +27,9 @@
 #ifndef INC_YAKE_INPUTSYSTEM_H
 #define INC_YAKE_INPUTSYSTEM_H
 
-#include <yake/input/yakeInput.h>
-#include <yake/base/math/yakeGeometry.h>
+#ifndef YAKE_INPUT_PREREQUISITES_H
+#include <yake/input/yakePrerequisites.h>
+#endif
 
 namespace yake {
 namespace input {
