@@ -30,7 +30,6 @@
 namespace yake {
 	using namespace base;
 	using namespace base::templates;
-namespace app {
 namespace task {
 
 	typedef uint8 TaskPriority;
@@ -162,7 +161,6 @@ namespace task {
 */
 
 } // task
-} // app
 } // yake
 
 #endif

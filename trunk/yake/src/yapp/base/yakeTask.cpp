@@ -28,7 +28,6 @@
 #include <yapp/base/yakeTask.h>
 
 namespace yake {
-namespace app {
 namespace task {
 
 	const uint32 TaskManager::TE_SINGLE_EXEC = 0x00000001;
@@ -110,5 +109,4 @@ namespace task {
 	}
 
 } // task
-} // app
 } // yake
