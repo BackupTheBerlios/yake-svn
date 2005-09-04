@@ -84,6 +84,7 @@
 #	define Function2 boost::function2
 #	define Function3 boost::function3
 	typedef boost::signals::connection SignalConnection;
+	typedef boost::signals::scoped_connection ScopedSignalConnection;
 /*
 #	define SIG boost
 #	define FUNC boost
@@ -121,6 +122,11 @@ namespace yake
 
 } // yake
 
+#define YAKE_MEMBERSIGNAL_PUREINTERFACE( ACCESS, SIGNATURE, NAME ) \
+ACCESS: \
+	typedef SignalX<SIGNATURE> Sig##NAME##Type; \
+	virtual SignalConnection subscribeTo##NAME( const Sig##NAME##Type::slot_type& slot ) = 0; \
+private:
 
 #define YAKE_MEMBERSIGNAL_VIRTUALIMPL( ACCESS, SIGNATURE, NAME ) \
 ACCESS: \

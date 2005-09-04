@@ -46,7 +46,7 @@ namespace base
 {
 
 extern YAKE_BASE_API Version linktime;
-const Version compiletime ( 0, 0, 1 );
+const Version compiletime ( 0, 2, 0 );
 
 } // base
 } // yake

@@ -277,6 +277,26 @@ public:
 		}
 	};
 
+
+	template< typename T >
+	Vector< T > split( const T& where, const T& separator )
+	{
+		Vector< T > result;
+
+		typename T::size_type oldpos = 0, pos = 0;
+		while( ( pos = where.find( separator, pos ) ) != T::npos )
+		{
+			result.push_back( where.substr( oldpos, pos - oldpos ) );
+
+			pos += separator.size();
+			oldpos = pos;
+		}
+
+		result.push_back( where.substr( oldpos, pos - oldpos ) );
+
+		return result;
+	}
+
 } // yake
 
 
