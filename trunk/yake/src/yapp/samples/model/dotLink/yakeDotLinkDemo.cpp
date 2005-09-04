@@ -51,9 +51,9 @@ private:
 	
 	SharedPtr<physics::IWorld>					mPWorld;
 	SharedPtr<graphics::IWorld>					mGWorld;
-	SharedPtr<app::model::Physical>				mPhysical;
-	SharedPtr<app::model::Graphical>			mGraphical;
-	SharedPtr<app::model::complex::Model>		mModel;
+	SharedPtr<model::Physical>					mPhysical;
+	SharedPtr<model::Graphical>					mGraphical;
+	SharedPtr<model::complex::Model>			mModel;
 		
 	String	mfnXODE;
 	String	mfnScene;
@@ -106,13 +106,13 @@ public:
 	void setupWorld()
 	{
 		// Loading graphical part
-		mGraphical.reset( new app::model::Graphical() );
+		mGraphical.reset( new model::Graphical() );
 		YAKE_ASSERT( mGraphical );
 		
 		mGraphical->fromDotScene( mfnScene, mGWorld.get() );
 
 		// Loading physical part
-		mPhysical.reset( new app::model::Physical() );
+		mPhysical.reset( new model::Physical() );
 		YAKE_ASSERT( mPhysical );
 		
 		yake::data::dom::xml::XmlSerializer ser;
@@ -123,12 +123,12 @@ public:
 		parser.load( ser.getDocumentNode() , mPWorld.get() );
 		
 		// Bringing it all together!
-		mModel = SharedPtr<app::model::complex::Model>( new app::model::complex::Model() );
+		mModel = SharedPtr<model::complex::Model>( new model::complex::Model() );
 		
 		mModel->addGraphical( mGraphical, "baseGraphical" );
 		mModel->addPhysical( mPhysical, "basePhysical" );
 		
-		app::model::DotLinkLoader dotLinkLoader;
+		model::DotLinkLoader dotLinkLoader;
 		dotLinkLoader.load( mfnLink, *mModel.get() );
 	}
 
@@ -204,7 +204,7 @@ public:
 				mPWorld->step( timeElapsed );
 				
 				//mModel->updatePhysics( timeElapsed );
-				mModel->updateControllers( timeElapsed );
+				mModel->updateGraphics( timeElapsed );
 				
 				mGWorld->render( timeElapsed );
 			}

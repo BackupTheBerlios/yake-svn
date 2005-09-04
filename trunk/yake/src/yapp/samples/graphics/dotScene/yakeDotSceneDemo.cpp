@@ -43,7 +43,7 @@ private:
 	Vector< std::pair<IViewport*,ICamera*> >	mVPs;
 	SharedPtr< IWorld >							mGWorld;
 
-	app::model::Graphical* 						mGraphical;
+	model::Graphical* 							mGraphical;
 	
 	String	mSceneFilename;
 public:
@@ -89,7 +89,7 @@ public:
 
 	void setupScene()
 	{
-		mGraphical = new app::model::Graphical();
+		mGraphical = new model::Graphical();
 		YAKE_ASSERT( mGraphical );
 		mGraphical->fromDotScene( mSceneFilename, mGWorld.get() );
 	}

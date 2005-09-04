@@ -52,7 +52,7 @@ class TheApp : public yake::exapp::ExampleApplication
 		Vector< std::pair<IViewport*,ICamera*> >	mVPs;
 		SharedPtr< IWorld >							mGWorld;
 
-		app::model::Graphical* 						mGraphical;
+		model::Graphical* 						mGraphical;
 		
 		SharedPtr< scripting::IBinder >			mMathLuaBinder;
 		SharedPtr< scripting::IBinder >			mBaseLuaBinder;
@@ -105,17 +105,17 @@ class TheApp : public yake::exapp::ExampleApplication
 
 		void setupScene()
 		{
-			mGraphical = new app::model::Graphical();
+			mGraphical = new model::Graphical();
 			YAKE_ASSERT( mGraphical );
 //			mGraphical->fromDotScene( mSceneFilename, mGWorld.get() );
 		}
 		
-		app::model::Graphical* getGraphicalScene()
+		model::Graphical* getGraphicalScene()
 		{
 			return mGraphical;
 		}
 		
-		yake::graphics::IWorld* getGraphicalWorld()
+		graphics::IWorld* getGraphicalWorld()
 		{
 			return mGWorld.get();
 		}

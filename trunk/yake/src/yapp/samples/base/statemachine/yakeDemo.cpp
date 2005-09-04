@@ -12,7 +12,6 @@
 #include <yapp/statemachine/yakeFiniteStateMachine.h>
 
 using namespace yake;
-using namespace app;
 
 //---------------------------------------------------------
 // Helper defines

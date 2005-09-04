@@ -14,10 +14,9 @@ private:
 	Vector< std::pair<IViewport*,ICamera*> >	mVPs;
 	SharedPtr< IWorld >							mGWorld;
 
-	app::model::Graphical* 						mScene;
+	model::Graphical* 							mScene;
 	String										mSceneFilename;
 
-	SharedPtr< scripting::IBinder >				mEntLuaBinder;
 public:
 	TheApp( const String filename ) : ExampleApplication(  
 								true /*graphics*/,
@@ -28,16 +27,6 @@ public:
 								false /*audio*/),
 								mSceneFilename( filename )
 	{
-
-		// load entity scripting plugin
-
-		//SharedPtr<base::Library> pLib = loadLib("entLua" );
-		//YAKE_ASSERT( pLib ).debug("Cannot load entity scripting Lua plugin.");
-
-		//mEntLuaBinder = create< scripting::IBinder >("yake::ent::luabinder");
-		//YAKE_ASSERT( mEntLuaBinder ).error("Cannot create entity scripting Lua binder.");
-
-		mEntLuaBinder.reset( new yake::ent::lua::Binder() );
 	}
 
 	void onKey(const yake::input::KeyboardEvent& rEvent)
@@ -69,7 +58,7 @@ public:
 
 	void setupScene()
 	{
-		mScene = new app::model::Graphical();
+		mScene = new model::Graphical();
 		YAKE_ASSERT( mScene );
 		mScene->fromDotScene( mSceneFilename, mGWorld.get() );
 	}
@@ -77,24 +66,24 @@ public:
 	void initSim(ent::sim& theSim)
 	{
 		// register entities with a specific sim
-		ent::pawn::reg( theSim );
-		ent::light::reg( theSim );
+		ent::Pawn::reg( theSim );
+		ent::Light::reg( theSim );
 
 		// add Lua binder
-		YAKE_ASSERT( mEntLuaBinder );
-		if (mEntLuaBinder)
-			theSim.addEntityVMBinder( mEntLuaBinder.get(), false );
-		theSim.addEntityVMBinder( new yake::ent::lua::MathBinder() );
-		// add special callback (no direct deps on lua via interface!)
-		theSim.getEvent_onEntitySpawned().addCallback( ent::lua::createEntitySpawnedCb() );
-		theSim.getEvent_onEntityVMCreated().addCallback( ent::lua::createEntityVMCreatedCb() );
+		ent::lua::bindSim( theSim );
 
 		// init done!
 
 		// create entities
-		ent::Entity* e1 = theSim.createEntity("pawn", "../../media/samples/scripted/ent_pawn_basic.lua");
-		ent::Entity* eLight1 = theSim.createEntity("light", "../../media/samples/scripted/ent_light.lua");
-	}
+		ent::Entity* e1 = theSim.createEntity("Pawn", 
+												MakeStringPairVector() << StringPair("visual","pawn.visual"),
+												MakeStringVector() << "../../media/samples/scripted/ent_pawn_basic.lua");
+		ent::Entity* eLight1 = theSim.createEntity("Light", 
+													MakeStringPairVector() << StringPair("visual","light.visual"), 
+													MakeStringVector() << "../../media/samples/scripted/ent_light.lua");
+		eLight1->setProperty( "position", Vector3(50,100,0) );
+		eLight1->setProperty( "diffuseColour", Color(1,1,1,1) );
+}
 
 	virtual void run()
 	{
@@ -176,8 +165,10 @@ public:
 			}
 		}
 
-		YAKE_SAFE_DELETE( mScene );
-	
+		theSim.removeAndDestroyAll();
+
+		//YAKE_SAFE_DELETE( mScene );	
+
 		mGWorld.reset();
 	}
 };
