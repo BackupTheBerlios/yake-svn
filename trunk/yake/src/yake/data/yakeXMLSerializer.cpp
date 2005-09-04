@@ -59,40 +59,49 @@ namespace xml {
 			mNodes.push_back( pNode );
 	}
 	
-	INode::ValueType XmlNode::getValue( String const& rId ) const
+	String XmlNode::getName() const
 	{
-		if ( rId == "name")
-			return mValue;
-		else
-			return 0;
+		YAKE_ASSERT( mElem );
+		if (mElem)
+			return String( mElem->Value() );
+		return String("");
 	}
-	
-	INode::ValueType XmlNode::getAttributeValue( String const& rName ) const
+
+	void XmlNode::setName(const String& name)
 	{
-		// iterate over node's attributes
-		const char* val = mElem->Attribute( rName.c_str() );
-		
-		if (!val)
-			return String("");
-		
-		return String( val );
+		YAKE_ASSERT( mElem );
+		if (mElem)
+			mElem->SetValue( name.c_str() );
 	}
-	
+
 	void XmlNode::setAttributeValue( String const& rName, ValueType const& rValue )
 	{
-		YAKE_ASSERT( 1 == 0 );
+		YAKE_ASSERT( mElem );
+		if (mElem)
+		{
+			if (rValue.which() == VTID_STRING)
+				mElem->SetAttribute( rName.c_str(), varGet<String>(rValue).c_str() );
+			else
+			{
+				YAKE_ASSERT( 0 == 1 );
+			}
+		}
 	}
-	
-	void XmlNode::setValue( String const& rName, ValueType const& rValue )
+
+	INode::ValueType XmlNode::getAttributeValue( String const& rName ) const
 	{
-		YAKE_ASSERT( 1 == 0 );
+		YAKE_ASSERT( mElem );
+		if (!mElem)
+			return NullType();
+		const char* val = mElem->Attribute( rName.c_str() );
+		return val ? String( val ) : String("");
 	}
 	
 	SharedPtr<INode> XmlNode::getNodeByName( String const& rName ) const
 	{
 		for ( NodeList::const_iterator it = mNodes.begin(); it != mNodes.end(); ++it )
 		{
-			data::dom::INode::ValueType value = (*it)->getValue( "name" );
+			data::dom::INode::ValueType value = (*it)->getName();
 			
 			if ( varGet<String>( value ) == rName )
 				return ( *it );
@@ -111,7 +120,6 @@ namespace xml {
 	{
 		YAKE_ASSERT( pElem );
 		
-		mValue = String( pElem->Value() );
 		for ( TiXmlAttribute* pAttr = mElem->FirstAttribute(); 
 			pAttr != 0; 
 			pAttr = pAttr->Next() )
