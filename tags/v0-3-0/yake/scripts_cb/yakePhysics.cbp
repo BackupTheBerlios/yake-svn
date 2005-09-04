@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!DOCTYPE Code::Blocks_project_file>
+<Code::Blocks_project_file>
+	<FileVersion major="1" minor="1"/>
+	<Project>
+		<Option title="yakePhysics"/>
+		<Option makefile="Makefile"/>
+		<Option makefile_is_custom="0"/>
+		<Option compiler="0"/>
+		<Build>
+			<Target title="release">
+				<Option output="physics.dll"/>
+				<Option working_dir=""/>
+				<Option object_output=".objs"/>
+				<Option deps_output=".deps"/>
+				<Option external_deps=""/>
+				<Option type="3"/>
+				<Option compiler="0"/>
+				<Option createStaticLib="1"/>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-fpermissive"/>
+			<Add option="-DBUILD_DLL"/>
+			<Add directory="..\..\yake"/>
+			<Add directory="..\dependencies"/>
+			<Add directory="..\dependencies\ttl"/>
+		</Compiler>
+		<Unit filename="..\src\yake\physics\yakePCH.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\physics\yakePhysicsAffectorZone.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\physics\yakePhysicsAffectors.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\src\yake\physics\yakePhysicsSystem.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakeAffectorZone.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePCH.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysics.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsActor.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsAffectors.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsAvatar.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsBody.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsBodyGroup.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsJoint.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsMaterial.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsMotors.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsPrerequisites.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsShape.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsSystem.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\yake\physics\yakePhysicsWorld.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="release"/>
+		</Unit>
+	</Project>
+</Code::Blocks_project_file>

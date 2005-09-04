@@ -1,0 +1,67 @@
+body 
+{
+	font-family: Arial;
+	font-size: 75%;
+}
+p
+{
+	margin-left: 2%;
+}
+h1
+{
+	font-size: 80%;
+}
+h2
+{
+	font-size: 80%;
+}
+h3
+{
+	font-size: 80%;
+}
+li p
+{
+	margin-bottom: 5px;
+}
+.toc
+{
+	margin-left: 2%;
+}
+.sect1
+{
+	margin-left: 2%;
+}
+.sect2
+{
+	margin-left: 2%;
+}
+.sect3
+{
+	margin-left: 2%;
+}
+.sect4
+{
+	margin-left: 2%;
+}
+.section
+{
+	margin-top: 25px;
+	margin-left: 2%;
+}
+.navheader
+{
+	font-size: 80%;
+}
+.navfooter
+{
+	font-size: 80%;
+}
+.title
+{
+	font-size: 100%;
+}
+.subtitle
+{
+	font-style: italic;
+	font-size: 80%;
+}
