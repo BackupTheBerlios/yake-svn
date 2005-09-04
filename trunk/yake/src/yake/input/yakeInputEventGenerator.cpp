@@ -25,7 +25,7 @@
    ------------------------------------------------------------------------------------
 */
 #include <yake/input/yakePCH.h>
-#include <yake/input/yakeInputEventGenerator.h>
+#include <yake/input/yakeInput.h>
 
 namespace yake {
 namespace input {
