@@ -33,7 +33,7 @@ void printNode( SharedPtr<dom::INode> pNode, unsigned level = 0)
 	for ( dom::NodeList::const_iterator it = rNodes.begin(); it != rNodes.end(); ++it )
 	{
 		SharedPtr<dom::INode> pCurrentNode = *it;
-		dom::INode::ValueType value = pCurrentNode->getValue( "name" );
+		dom::INode::ValueType value = pCurrentNode->getName();
 		
 		indent( level );
 		cout << "XML node: " << varGet<String>( value ) << endl;
@@ -67,7 +67,7 @@ int main()
 		// get some data from the DOM tree
 		SharedPtr<dom::INode> pNode = ser->getDocumentNode();
 
-		dom::INode::ValueType value = pNode->getValue( "name" );
+		dom::INode::ValueType value = pNode->getName();
 		cout << "root node: " << varGet<String>( value ) << endl;
 		
 		printNode( pNode );
