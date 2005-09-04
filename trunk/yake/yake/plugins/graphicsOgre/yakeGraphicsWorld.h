@@ -78,6 +78,11 @@ namespace ogre3d {
 		virtual IEntity* pickEntity(const Ray& ray);
 
 		static void setCore( OgreCore* core );
+
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void(real), PreRender )
+		YAKE_MEMBERSIGNAL_FIRE_FN1( public, PreRender, real timeElapsed, timeElapsed )
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void(real), PostRender )
+		YAKE_MEMBERSIGNAL_FIRE_FN1( public, PostRender, real timeElapsed, timeElapsed )
 	private:
 		static OgreCore*		msCore;
 		typedef AssocVector< String, Ogre::MeshPtr > ProcMeshMap;

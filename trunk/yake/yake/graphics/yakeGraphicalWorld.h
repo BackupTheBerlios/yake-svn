@@ -443,6 +443,9 @@ namespace graphics {
 		virtual real getRenderWindowHeight() const = 0;
 
 		virtual IEntity* pickEntity(const Ray& ray) = 0;
+
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PreRender )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PostRender )
 	};
 
 } // graphics

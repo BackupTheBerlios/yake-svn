@@ -234,7 +234,9 @@ namespace ogre3d {
 	void GraphicalWorld::render( real timeElapsed )
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
+		firePreRender( timeElapsed );
 		msCore->update( timeElapsed );
+		firePostRender( timeElapsed );
 	}
 
 	//-----------------------------------------------------
