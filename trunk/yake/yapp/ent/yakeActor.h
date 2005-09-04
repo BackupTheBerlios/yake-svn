@@ -24,28 +24,73 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_ENT_COMMON_H
-#define YAKE_ENT_COMMON_H
-
-#if YAKE_PLATFORM == PLATFORM_WIN32
-#	if defined(YAKE_ENT_EXPORTS)
-#		define YAKE_ENT_API DLLEXPORT
-#	else
-#		pragma message("Importing yake::ent")
-#		define YAKE_ENT_API DLLIMPORT
-#		pragma comment(lib, "ent.lib")
-#	endif
-#else
-#	define YAKE_ENT_API
-#endif
+#ifndef YAKE_ENT_ACTOR_H
+#define YAKE_ENT_ACTOR_H
 
 namespace yake {
 namespace ent {
 
-	//struct entity;
-	typedef uint32 simtime;
+	class ActorBehaviour;
+	class SensoryInputHistory;
+
+	class YAKE_ENT_API Actor : public Pawn
+	{
+		YAKE_DECLARE_ENTITY(Actor)
+	public:
+		enum LifeState {
+			kSpawning,
+			kAlive,
+			kDying,
+			kDead
+		};
+		OBJECT_PROPS_BEGIN(Actor)
+			OBJECT_PROP("lifeState", LifeState, kDead)
+			OBJECT_PROP("enabled", bool, true)
+			OBJECT_PROP("position", Vector3, Vector3(0,0,0))
+		OBJECT_PROPS_END()
+
+		void addBehaviour(ActorBehaviour*);
+
+		/** Gather input, be it from AI senses (Sight, Hearing, ...) or
+			input from a human player.
+			The behaviour can be overriden in onSense().
+			@see think
+			@see act
+			@see onSense
+		*/
+		void sense();
+
+		/** Make decision depending on inputs.
+			The behaviour can be overriden in onThink().
+			@see sense()
+			@see act()
+			@see onThink()
+		*/
+		void think();
+
+		/** Act depending on the decisions made in sense().
+			The behaviour can be overriden in onAct().
+			@see sense()
+			@see think()
+			@see onAct()
+		*/
+		void act();
+
+		YAKE_MEMBERSIGNAL( public, void(void), OnSense );
+		YAKE_MEMBERSIGNAL( public, void(void), OnThink );
+		YAKE_MEMBERSIGNAL( public, void(void), OnAct );
+	protected:
+		virtual void onInitialise(object_creation_context& creationCtx);
+		virtual void onTick();
+
+		virtual void onSense() {}
+		virtual void onThink() {}
+		virtual void onAct() {}
+	protected:
+		Actor();
+	};
+
 
 } // namespace yake
 } // namespace ent
-
 #endif

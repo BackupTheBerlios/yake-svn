@@ -31,84 +31,8 @@ namespace yake {
 namespace ent {
 
 	class Entity;
-	class EntityMachine;
 
-	typedef YAKE_ENT_API yake::app::model::Graphical GraphicalModel;
-
-	/** An entity state used by EntityMachines.
-	*/
-	class EntityMachineState : public yake::state::State
-	{
-	public:
-		EntityMachineState()
-		{}
-		virtual ~EntityMachineState()
-		{
-			ConstDequeIterator<CbList> itCb(mCallbacks);
-			while (itCb.hasMoreElements())
-				delete itCb.getNext();
-		}
-		struct ICallback
-		{
-			virtual ~ICallback() {}
-			virtual void onEnter() {}
-			virtual void onExit() {}
-			virtual void onStep() {}
-		};
-		void addCallback(ICallback* pCb)
-		{
-			if (pCb)
-				mCallbacks.push_back(pCb);
-		}
-		ICallback* removeCallback(ICallback* pCb)
-		{
-			if (pCb)
-			{
-				CbList::iterator it = std::find( mCallbacks.begin(), mCallbacks.end(), pCb);
-				if (it != mCallbacks.end())
-					mCallbacks.erase(it);
-			}
-			return pCb;
-		}
-	protected:
-		typedef std::deque<ICallback*> CbList;
-		CbList		mCallbacks;
-		virtual void onEnter()
-		{
-			ConstDequeIterator<CbList> itCb(mCallbacks);
-			while (itCb.hasMoreElements())
-				itCb.getNext()->onEnter();
-		}
-		virtual void onExit()
-		{
-			ConstDequeIterator<CbList> itCb(mCallbacks);
-			while (itCb.hasMoreElements())
-				itCb.getNext()->onExit();
-		}
-		virtual void onStep()
-		{
-			ConstDequeIterator<CbList> itCb(mCallbacks);
-			while (itCb.hasMoreElements())
-				itCb.getNext()->onStep();
-		}
-	};
-
-	/** A state machine for entities.
-		@todo remove from public header?
-	*/
-	class YAKE_ENT_API EntityMachine : public yake::state::Machine<String>
-	{
-	public:
-		typedef yake::state::Machine<String> BaseMachine;
-
-		EntityMachine(Entity& owner);
-		String getCurrentStateId() const;
-		Entity* getOwner() const
-		{ return mOwner; }
-	private:
-		Entity*		mOwner;
-	};
-
+	typedef YAKE_ENT_API ::yake::model::Graphical GraphicalModel;
 
 	/**
 	@todo use yake::reflection instead of custom object_class stuff.
@@ -121,19 +45,27 @@ namespace ent {
 		Entity(const Entity&);
 	protected:
 		Entity();
-		void setVM(scripting::IVM* pVM);
 		virtual void onInitialise(object_creation_context& creationCtx);
 		virtual void onTick();
 		virtual void onGetDefaultEventParams(ParamList& params);
 	public:
 		simtime getAge() const;
 
-		scripting::IVM* getVM() const
-		{ return mpVM; }
+		void addVM(scripting::IVM* pVM);
+		scripting::IVM* getVM(const size_t index) const;
+		size_t getVMCount() const;
+		scripting::IVM* getDefaultVM() const;
 
 		EntityMachine* ceateMachine(const String& id);
 		EntityMachine* getDefaultMachine() const;
 		EntityMachine* getMachine(const String& id);
+
+		OBJECT_PROPS_NONE(Entity);
+
+		void addComponent( const String& tag, SharedPtr<EntityComponent>& pComponent, size_t prio = 0 );
+		SharedPtr<EntityComponent> removeComponent( EntityComponent* pComponent );
+		SharedPtr<EntityComponent> removeComponent( const String& tag );
+		EntityComponent* getComponent( const String& tag );
 
 		//YAKE_MEMBERSIGNAL( public, void(Entity*,EntityMachine*,EntityMachineState*), StateAdded)
 		//YAKE_MEMBERSIGNAL( public, void(Entity*,EntityMachine*,const String&), ExitState)
@@ -142,42 +74,82 @@ namespace ent {
 		//MsgResultCode onCmdMachineEnterState(const Message& msg);
 		MsgResultCode onCmdMachineChangeTo(const Message& msg);
 	private:
-		simtime			mAge;
+		simtime						mAge;
 
-		scripting::IVM*	mpVM;
+		typedef Vector<scripting::IVM*>	VMList;
+		VMList						mVMs;
 
 		typedef std::map<String,SharedPtr<EntityMachine> > MachineMap;
-		MachineMap		mMachines;
+		MachineMap					mMachines;
 		SharedPtr<EntityMachine>	mDefaultMachine;
+
+		typedef std::map<String,SharedPtr<EntityComponent> > ComponentList;
+		ComponentList				mComponents;
+
+		void _tickComponents();
+		void _initialiseComponents(object_creation_context& creationCtx);
 	};
 
-	class YAKE_ENT_API pawn : public Entity
+#define YAKE_DECLARE_ENTITY( ENTITYCLASS ) DECLARE_OBJECT( ENTITYCLASS )
+#define YAKE_DEFINE_ENTITY( ENTITYCLASS ) DEFINE_OBJECT( ENTITYCLASS )
+#define YAKE_DEFINE_ENTITY_1( ENTITYCLASS, PARENT0 ) DEFINE_OBJECT_1( ENTITYCLASS, PARENT0 )
+
+	class YAKE_ENT_API PawnVisual : public EntityComponent
 	{
+		YAKE_DECLARE_ENTITY_COMPONENT( PawnVisual, "pawn.visual" );
+	protected:
+		virtual void onInitialise(object_creation_context& creationCtx);
+		virtual void onTick();
 	public:
 		void setGraphical( GraphicalModel* pModel );
 		GraphicalModel* getGraphical() const;
-
-		DECLARE_OBJECT(pawn)
-	protected:
-		pawn();
+	private:
+		void onPositionChanged(Property& prop);
 	private:
 		SharedPtr<GraphicalModel>	mGraphical;
 	};
 
-	class YAKE_ENT_API light : public Entity
+	class YAKE_ENT_API Pawn : public Entity
 	{
+		YAKE_DECLARE_ENTITY(Pawn)
 	public:
-		void enableLight( bool yes );
-		bool isLightEnabled() const;
-
-		DECLARE_OBJECT(light)
+		OBJECT_PROPS_BEGIN(Pawn)
+			OBJECT_PROP("position", Vector3, Vector3(0,0,0))
+		OBJECT_PROPS_END()
 	protected:
-		light();
+		virtual void onTick();
+	protected:
+		Pawn();
+	};
+
+	class YAKE_ENT_API LightVisual : public EntityComponent
+	{
+		YAKE_DECLARE_ENTITY_COMPONENT( LightVisual, "light.visual" );
+	protected:
 		virtual void onInitialise(object_creation_context& creationCtx);
+		virtual void onTick();
 	private:
 		SharedPtr<graphics::ISceneNode>		mpSN;
 		graphics::ILight*					mpLight;
 		bool								mLightEnabled;
+	};
+
+	class YAKE_ENT_API Light : public Entity
+	{
+		YAKE_DECLARE_ENTITY(Light)
+	public:
+		void enableLight( bool yes );
+		bool isLightEnabled() const;
+
+		OBJECT_PROPS_BEGIN(Light)
+			OBJECT_PROP("diffuseColour", Color, Color(1,1,1,1))
+			OBJECT_PROP("position", Vector3, Vector3(0,0,0))
+			OBJECT_PROP("enabled", bool, true)
+		OBJECT_PROPS_END()
+	protected:
+		Light();
+		virtual void onInitialise(object_creation_context& creationCtx);
+		virtual void onTick();
 	};
 
 } // namespace yake

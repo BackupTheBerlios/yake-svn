@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright  2004 The YAKE Team
+   Copyright © 2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -24,28 +24,26 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_ENT_COMMON_H
-#define YAKE_ENT_COMMON_H
+#ifndef YAKE_ENT_H
+#define YAKE_ENT_H
 
-#if YAKE_PLATFORM == PLATFORM_WIN32
-#	if defined(YAKE_ENT_EXPORTS)
-#		define YAKE_ENT_API DLLEXPORT
-#	else
-#		pragma message("Importing yake::ent")
-#		define YAKE_ENT_API DLLIMPORT
-#		pragma comment(lib, "ent.lib")
+#if !defined(YAKE_ENT_EXPORTS)
+#	if YAKE_PLATFORM == PLATFORM_WIN32
+#		pragma	comment(lib, "ent.lib")
 #	endif
-#else
-#	define YAKE_ENT_API
 #endif
 
-namespace yake {
-namespace ent {
-
-	//struct entity;
-	typedef uint32 simtime;
-
-} // namespace yake
-} // namespace ent
+#include <yake/base/yake.h>
+#include <yapp/base/yapp.h>
+#include <yake/scripting/yakeScriptingSystem.h>
+#include <yapp/msg/yakeMsg.h>
+#include <yapp/ent/yakeCommon.h>
+#include <yapp/ent/yakeEvent.h>
+#include <yapp/ent/yakeMessaging.h>
+#include <yapp/ent/yakeObject.h>
+#include <yapp/ent/yakeEntityMachine.h>
+#include <yapp/ent/yakeEntityComponent.h>
+#include <yapp/ent/yakeEntity.h>
+#include <yapp/ent/yakeSim.h>
 
 #endif

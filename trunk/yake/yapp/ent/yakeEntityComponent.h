@@ -24,28 +24,44 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_ENT_COMMON_H
-#define YAKE_ENT_COMMON_H
-
-#if YAKE_PLATFORM == PLATFORM_WIN32
-#	if defined(YAKE_ENT_EXPORTS)
-#		define YAKE_ENT_API DLLEXPORT
-#	else
-#		pragma message("Importing yake::ent")
-#		define YAKE_ENT_API DLLIMPORT
-#		pragma comment(lib, "ent.lib")
-#	endif
-#else
-#	define YAKE_ENT_API
-#endif
+#ifndef YAKE_ENT_ENTITYCOMPONENT_H
+#define YAKE_ENT_ENTITYCOMPONENT_H
 
 namespace yake {
 namespace ent {
 
-	//struct entity;
-	typedef uint32 simtime;
+	class Entity;
+
+	class YAKE_ENT_API EntityComponent
+	{
+		YAKE_DECLARE_REGISTRY_1( EntityComponent, String, Entity& );
+		friend class Entity;
+		EntityComponent();
+		EntityComponent(const EntityComponent&);
+	protected:
+		EntityComponent( Entity& owner );
+	public:
+		virtual ~EntityComponent() {}
+
+		void tick();
+	protected:
+		void initialise(object_creation_context& creationCtx);
+		virtual void onInitialise(object_creation_context& creationCtx) {}
+		virtual void onTick() {}
+		Entity& getOwner() const;
+	private:
+		Entity&		mOwner;
+	};
+
+#define YAKE_DECLARE_ENTITY_COMPONENT( CLASSNAME, STRINGID ) \
+	private: \
+		YAKE_DECLARE_CONCRETE( CLASSNAME, STRINGID ); \
+		CLASSNAME(const CLASSNAME&); \
+	public: \
+		CLASSNAME( ::yake::ent::Entity& owner );
+
+#define YAKE_REGISTER_ENTITY_COMPONENT( CLASSNAME ) YAKE_REGISTER_CONCRETE( CLASSNAME )
 
 } // namespace yake
 } // namespace ent
-
 #endif

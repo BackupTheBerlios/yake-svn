@@ -35,14 +35,20 @@ namespace ent {
 	public:
 		sim(scripting::IScriptingSystem& scriptingSystem,
 			const real ticksPerSecond = 10.f,
-			graphics::IWorld* pGWorld = 0);
+			graphics::IWorld* pGWorld = 0,
+			audio::IWorld* pAWorld = 0,
+			physics::IWorld* pPWorld = 0);
 		~sim();
 		simtime getTime() const;
 		real getTimeAsSeconds() const;
 		void tick(const real timeElapsed);
 		void regEntityCreator( const ObjectClassId& id, const ObjectCreatorFn& creatorFn );
 		void addEntityVMBinder( scripting::IBinder* pBinder, const bool bTransferOwnership = true );
-		Entity* createEntity( const ObjectClassId& id, const String& scriptFile );
+		Entity* createEntity(	const ObjectClassId& id, 
+								const StringPairVector& components,
+								const StringVector& scriptFiles );
+		void destroyEntity( Entity* pEnt );
+		void removeAndDestroyAll();
 
 		graphics::IWorld* getGraphicsWorld() const
 		{ return mpGWorld; }
@@ -62,9 +68,12 @@ namespace ent {
 	private:
 		typedef std::map<ObjectClassId,ObjectCreatorFn> ObjectCreateMap;
 		typedef std::list<SharedPtr<Object> > ObjectList;
+		typedef std::map<ObjectClassId,uint16> ClassIdMap;
 
-		ObjectCreateMap	mObjectCreators;
+		ObjectCreateMap		mObjectCreators;
 		ObjectList			mObjects;
+		ClassIdMap			mNumericClassIds;
+		uint16				mLastNumericClassId;
 
 		real				mSimTimeInSecs;
 		simtime				mSimTime;
@@ -82,6 +91,8 @@ namespace ent {
 		PureBinderPtrList	mNonOwnedBinders;
 
 		graphics::IWorld*	mpGWorld;
+		audio::IWorld*		mpAWorld;
+		physics::IWorld*	mpPWorld;
 
 		msg::MessageManager	mMsgMgr;
 	};
