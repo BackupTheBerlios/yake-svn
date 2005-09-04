@@ -45,8 +45,12 @@ namespace lua {
 
 			luabind::object fnTbl = pEntity->isServer() ? evtTbl.at("server") : evtTbl.at("client");
 			//luabind::object fnTbl = evtTbl["server"];
-			if (!fnTbl.is_valid())
-				throw "server event functions table is not valid";
+			if (!fnTbl.is_valid() || fnTbl.type() != LUA_TTABLE)
+				throw "event functions table is not valid";
+
+			luabind::object evtFn = fnTbl[ evtName ];
+			if (!evtFn.is_valid() || evtFn.type() != LUA_TFUNCTION)
+				throw "event function does not exist or is invalid";
 
 			luabind::call_member<void>( fnTbl, evtName.c_str() );
 			return true;

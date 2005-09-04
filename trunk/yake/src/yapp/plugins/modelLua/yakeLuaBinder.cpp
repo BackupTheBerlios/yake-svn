@@ -26,8 +26,6 @@
 
 namespace yake
 {
-namespace app
-{
 	namespace model
 	{
 		namespace lua
@@ -41,7 +39,7 @@ namespace app
 					return;
 
 				using namespace luabind;
-				using namespace yake::app::model;
+				using namespace yake::model;
 
 #define YAKE_MODEL_MODULE pL->getLuaState(), "yake"
 
@@ -60,5 +58,4 @@ namespace app
 
 		} // namespace lua
 	} // namespace model
-} // namespace app
 } // namespace yake

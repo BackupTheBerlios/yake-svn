@@ -28,14 +28,12 @@
 #define YAKE_ENT_LUA_H
 
 #include <yapp/plugins/entLua/yakePrerequisites.h>
-#include <yapp/plugins/entLua/yakeLuaBinder.h>
 
 namespace yake {
 namespace ent {
 namespace lua {
 
-	YAKE_ENTLUA_API ent::EventCallback* createEntitySpawnedCb();
-	YAKE_ENTLUA_API ent::EventCallback* createEntityVMCreatedCb();
+	YAKE_ENTLUA_API bool bindSim( sim& theSim );
 
 } // namespace lua
 } // namespace ent

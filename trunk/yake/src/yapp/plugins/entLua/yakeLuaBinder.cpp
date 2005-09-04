@@ -107,6 +107,9 @@ namespace lua {
 
 				luabind::object globals = luabind::get_globals(L);
 
+				//
+				//globals["theVM"] = pVM;
+
 				// create basic tables
 				if (globals["events"].type() != LUA_TTABLE)
 					globals["events"] = luabind::newtable(L);
@@ -125,8 +128,8 @@ namespace lua {
 				YAKE_ASSERT( pEntity );
 				globals["theEntity_asEntity"] = pEntity;
 				/*OR:
-				if (pEntity->isA() == light::getClass())
-					luabind::get_globals(L)["theEntity"] = light::cast(pEntity);
+				if (pEntity->isA() == Light::getClass())
+					luabind::get_globals(L)["theEntity"] = Light::cast(pEntity);
 				else
 					luabind::get_globals(L)["theEntity"] = pEntity;
 				*/
@@ -134,8 +137,29 @@ namespace lua {
 				//@todo move up the class hierarchy and look for an existing bind.
 				//		last fallback is getAs_entity(), obviously.
 				//If we could use the approach above, then the following would be superfluous:
-				const String cmd = "theEntity=getAs_" + pEntity->isA()->getName() + "(theEntity_asEntity)";
+				bool done = false;
+				object_class* theClass = pEntity->isA();
+				YAKE_LOG_INFORMATION("Looking for a Lua meta class converter for class: " + theClass->getName());
+				while (!done)
+				{
+					if (globals["getAs_"+theClass->getName()].type() == LUA_TFUNCTION)
+					{
+						done = true;
+					}
+					else
+					{
+						if (theClass != Entity::getClass())
+							theClass = theClass->getParents().front();
+						else
+						{
+							done = true;
+						}
+					}
+				}
+				YAKE_LOG_INFORMATION("=> Using class: " + theClass->getName());
+				const String cmd = "theEntity=getAs_" + theClass->getName() + "(theEntity_asEntity)";
 				pVM->execute(cmd);
+				YAKE_LOG_INFORMATION("=> Entity VM set up.");
 			}
 		}
 	};
@@ -156,10 +180,11 @@ namespace lua {
 
 		if (ent::Entity* pEntity = Entity::cast(pObject))
 		{
-			YAKE_ASSERT( pEntity->getVM() );
-			if (!pEntity->getVM())
+			scripting::IVM* pVM = pEntity->getVM(0);
+			YAKE_ASSERT( pVM );
+			if (!pVM)
 				return false;
-			pEvent->addCallback( new LuaEntityEventCallback( static_cast<scripting::LuaVM*>(pEntity->getVM()) ) );
+			pEvent->addCallback( new LuaEntityEventCallback( static_cast<scripting::LuaVM*>(pVM) ) );
 		}
 
 		return true;
@@ -211,15 +236,19 @@ namespace lua {
 			pSN->setPosition( pos );
 		}
 	}
-	void pawn_loadGraphical(pawn* pPawn, const String& fn)
+	void pawn_loadGraphical(Pawn* pPawn, const String& fn)
 	{
 		if (!pPawn)
+			return;
+		EntityComponent* pVisual = pPawn->getComponent("visual");
+		YAKE_ASSERT( pVisual ).warning("Could not retrieve visual entity component!");
+		if (!pVisual)
 			return;
 		GraphicalModel* pModel = new GraphicalModel();
 		YAKE_ASSERT( pModel );
 		if (!pModel)
 			return;
-		pPawn->setGraphical( pModel );
+		static_cast<PawnVisual*>(pVisual)->setGraphical( pModel );
 		pModel->fromDotScene( fn, sim::getSim().getGraphicsWorld() );
 	}
 	void entity_machineChangeTo(Entity* pEntity, const String& machine, const String& targetState)
@@ -253,7 +282,7 @@ namespace lua {
 		pMachine->addState(state,pState);
 		pState->addCallback(
 			new EntityMachineStateCallbackLua(
-				state,pEntity,machine,static_cast<scripting::LuaVM*>(pEntity->getVM())
+				state,pEntity,machine,static_cast<scripting::LuaVM*>(pEntity->getVM(0))
 				)
 			);
 	}
@@ -302,8 +331,8 @@ namespace lua {
 		];
 		module( pL->getLuaState() )
 		[
-			def("getAs_object", &getCasted<Object>),
-			class_<Object>("object")
+			def("getAs_Object", &getCasted<Object>),
+			class_<Object>("Object")
 				.def("getId", &Object::getId)
 				.def("getEventByName", &Object::getEventByName)
 				.def("addEvent", &Object::addEvent)
@@ -312,8 +341,8 @@ namespace lua {
 		];
 		module( pL->getLuaState() )
 		[
-			def("getAs_entity", &getCasted<Entity>),
-			class_<Entity,Object>("entity")
+			def("getAs_Entity", &getCasted<Entity>),
+			class_<Entity,Object>("Entity")
 				.def("getAge", &Entity::getAge)
 				.def("addState", &entity_machineAddState_default)
 				.def("changeStateTo", &entity_machineChangeTo_default)
@@ -323,12 +352,12 @@ namespace lua {
 		];
 		module( pL->getLuaState() )
 		[
-			def("getAs_light", &getCasted<light>),
-			class_<light,Entity>("light")
-				.def("cast", (light*(*)(Object*))&light::cast)
-				.def("cast", (const light*(*)(const Object*))&light::cast)
-				.def("enable", &light::enableLight)
-				.def("isEnabled", &light::isLightEnabled)
+			def("getAs_Light", &getCasted<Light>),
+			class_<Light,Entity>("Light")
+				.def("cast", (Light*(*)(Object*))&Light::cast)
+				.def("cast", (const Light*(*)(const Object*))&Light::cast)
+				.def("enable", &Light::enableLight)
+				.def("isEnabled", &Light::isLightEnabled)
 		];
 		module( pL->getLuaState() )
 		[
@@ -337,10 +366,10 @@ namespace lua {
 		];
 		module( pL->getLuaState() )
 		[
-			def("getAs_pawn", &getCasted<pawn>),
-			class_<pawn,Entity>("pawn")
-				.def("setGraphical", &pawn::setGraphical)
-				.def("getGraphical", &pawn::getGraphical)
+			def("getAs_Pawn", &getCasted<Pawn>),
+			class_<Pawn,Entity>("Pawn")
+				//.def("setGraphical", &pawn_setGraphical)
+				//.def("getGraphical", &pawn_getGraphical)
 				.def("createGraphical", &pawn_loadGraphical)
 		];
 		module( pL->getLuaState() )
@@ -373,6 +402,24 @@ namespace lua {
 				.def_readwrite("y", &Vector3::y)
 				.def_readwrite("z", &Vector3::z)
 		];
+	}
+
+	//
+	bool bindSim( sim& theSim )
+	{
+		//Binder* pBinder = create<scripting::IBinder>("yake::ent::luabinder");
+		Binder* pBinder = new Binder();
+		// add Lua binder
+		YAKE_ASSERT( pBinder );
+		if (!pBinder)
+			return false;
+		theSim.addEntityVMBinder( pBinder, false );
+		//mSim.addEntityVMBinder( new yake::ent::lua::MathBinder() );
+
+		// add special callback (no direct deps on lua via interface!)
+		theSim.getEvent_onEntitySpawned().addCallback( ent::lua::createEntitySpawnedCb() );
+		theSim.getEvent_onEntityVMCreated().addCallback( ent::lua::createEntityVMCreatedCb() );
+		return true;
 	}
 
 } // namespace lua

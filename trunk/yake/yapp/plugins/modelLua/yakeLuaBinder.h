@@ -22,7 +22,6 @@
 #define YAKE_MODEL_LUA_BINDER_H
 
 namespace yake {
-namespace app {
 namespace model {
 namespace lua {
 
@@ -36,7 +35,6 @@ namespace lua {
 
 } // namespace lua
 } // namespace model
-} // namespace app
 } // namespace yake
 
 #endif
