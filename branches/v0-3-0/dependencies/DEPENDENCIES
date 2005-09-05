@@ -1,0 +1,15 @@
+
+boost/
+cegui_mk2/
+libogg-1.1/
+libvorbis-1.0/
+loki/
+lua/
+luabind/
+ode/
+ogrenew/
+OpenAL/
+openalpp/
+OpenThreads/
+tinyxml/
+ttl/

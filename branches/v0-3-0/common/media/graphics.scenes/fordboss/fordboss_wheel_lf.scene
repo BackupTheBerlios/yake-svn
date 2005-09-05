@@ -1,0 +1,7 @@
+<scene id="0" formatversion="0.01.0" scenemanager="any" min_ogre_version="0.14.1" author="psy">
+    <nodes name="Scene Root" id="-1">
+		<node name="wheel_lf" id="2">
+			<entity name="ent_wheel_lf" id="2" meshfile="ford_lf.mesh" castsShadow="yes" />
+		</node>
+    </nodes>
+</scene>

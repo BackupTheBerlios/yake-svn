@@ -1,0 +1,50 @@
+<!DOCTYPE model [
+<!ELEMENT model (submodels, links)>
+<!ATTLIST model
+	id CDATA #REQUIRED
+	formatversion CDATA #REQUIRED 
+>
+<!ELEMENT submodels (submodel*)>
+<!ELEMENT submodel (source*)>
+<!ATTLIST submodel 
+	type CDATA #REQUIRED
+	id CDATA #REQUIRED
+> 
+<!ELEMENT source EMPTY>
+<!ATTLIST source 
+	type CDATA #REQUIRED
+	ref CDATA #REQUIRED
+	element CDATA "*"
+>
+<!ELEMENT links (link_defs?, link?)>
+<!ELEMENT link_defs (source*)>
+<!ELEMENT link (link_source, (link_target*), options)>
+<!ATTLIST link
+	id CDATA #REQUIRED
+	type CDATA #REQUIRED
+>
+<!ELEMENT link_subject EMPTY>
+<!ATTLIST link_subject 
+	type CDATA #REQUIRED
+	submodel CDATA #REQUIRED
+	id CDATA #REQUIRED
+>
+<!ELEMENT link_source (link_subject)>
+<!ATTLIST link_source 
+	id CDATA #REQUIRED
+>
+<!ELEMENT link_target (link_subject)>
+<!ATTLIST link_target 
+	id CDATA #REQUIRED
+>
+<!ELEMENT options (optext*)>
+<!ATTLIST options
+	position (yes|no) yes 
+	orientation (yes|no) yes
+>
+<!ELEMENT optext EMPTY>
+<!ATTLIST optext 
+	id CDATA #REQUIRED
+	ext CDATA #REQUIRED
+>
+]>

@@ -1,0 +1,88 @@
+<article>
+	<title>Quick Start Guide</title>
+	<articleinfo>
+		<title>Quick Start Guide</title>
+	</articleinfo>
+	<sect1>
+		<title>Obtaining the sources</title>
+		<para>Please visit http://yake.org for current information on how to obtain the sources to Yake.
+		</para>
+		<para>In general, there are three possibilities:
+			<itemizedlist>
+				<listitem>Major releases (e.g. yake 0.3): Introduces major features, may include major changes. Generally stable code base.</listitem>
+				<listitem>Minor releases (e.g. yake 0.3.1): Mainly bug fixes and smaller changes.</listitem>
+				<listitem>Unstable snapshots (e.g. yake 0.4-dev): Introduces major features and/or changes but code may still be in experimental stage. No guarantees for anything :)</listitem>
+			</itemizedlist>
+			The source code is released in archived files on http://yake.org or can be obtained through CVS. Please visit the website for more detailed information
+			on how to access the Yake CVS repository.
+		</para>
+	</sect1>
+	<sect1>
+		<title>Dependencies</title>
+		<para>The Yake <emphasis role="bold">core</emphasis> libraries (e.g. base, graphics, scripting, ...) depend on the following external libraries/products:
+			<itemizedlist>
+				<listitem>boost (headers only): available through http://boost.org</listitem>
+				<listitem>ttl (headers only): available through http://tinytl.sourceforge.net</listitem>
+				<listitem>Loki (headers only) [to be removed as it gets "boostified"]</listitem>
+				<listitem>TinyXML: available through http://www.grinninglizard.com/tinyxml</listitem>
+			</itemizedlist>
+			For each release, at least each major release, a dependency package is available.
+			This normally includes stripped down versions of the above libraries.
+		</para>
+		<para>Certain <emphasis role="bold">plugins</emphasis> have special requirements regarding external libraries.
+		For example, the graphicsOGRE plugin requires OGRE (http://www.ogre3d.org).</para>
+		<para>The file (YAKEROOT)/dependencies/DEPENDENCIES has more information on how the directory structure is expected to be layed out in order
+		for those plugins to compile without any modifications to the project/build settings.
+		</para>
+		<para>From time to time we may provide <emphasis role="bold">prebuilt</emphasis> libraries for the dependencies as it can be quite tedious to compile all these
+		yourself. There are disadvantages to this approach, though: You are dependent on the build environment we used to compile the libraries.
+		For example, if we build the libraries using VC7.1 + STLport 4.6 you'll have a big problem (not to say it's plain impossible) to use them
+		in a project that uses either the MS STL or another version of STLport.
+		</para>
+		<para>We certainly won't be able to provide libraries for each and
+		every combination of compiler and STL and other dependencies. We expect the user attempting to use Yake either adhere to these restrictions or have enough knowledge to compile the dependencies
+		themselves. All these dependencies are established projects, meaning they come with good to very good documentation and detailed
+		installation instructions. Furtheremore there are many forums and mailing lists dealing with (nearly) any possible issue that can be encountered during a build.
+		</para>
+	</sect1>
+	<sect1>
+		<title>Building Yake</title>
+		<para>Please note that this chapter is just a quick introduction. We expect the developer
+		attempting to use Yake to know how to use the build tools of his choice.
+		</para>
+		<sect2>
+			<title>Windows (using VC7.1)</title>
+			<orderedlist>
+				<listitem>Extract the sources into a folder of your choice, let's call it YAKEHOME.</listitem>
+				<listitem>Extract the dependencies package into YAKEHOME. Verify correct extraction (mainly that files are in the correct folders)!</listitem>
+				<listitem>Open the solution file YAKEHOME/scripts/yake.sln in the VC7.1 IDE.</listitem>
+				<listitem>Right-click on the solution in the solution explorer and choose "Build All" or "Batch build".</listitem>
+				<listitem>If the build process was successful you will find the import libraries located in YAKEHOME/common/lib/[debug|release], the dynamic link libraries as well as the sample executables in YAKEHOME/common/bin/[debug|release].</listitem>
+			</orderedlist>
+		</sect2>
+		<sect2>
+			<title>Windows (using Visual C++ 2003 Toolkit)</title>
+			<para>Makefiles are not yet available. We are currently investigating how to support this option. There is a certain amount
+			of maintenance effort involved. We try to find an automated way to generate makefiles from existing solution files (.sln) (or an alternative build system).
+			</para>
+		</sect2>
+		<sect2>
+			<title>Other platforms (Linux, MacOS X)</title>
+			<para>Officially supported build environments for Linux will be available soon.
+			</para>
+			<para>As no member of the Yake team has access to MacOS X we cannot provide ready-to-use build tools for the time being.
+			Contributions are welcome.
+			</para>
+		</sect2>
+	</sect1>
+	<sect1>
+		<title>The Samples</title>
+		<para>The samples are mostly short and self-explaining. They are documented in code and we are generally careful to provide
+		code that is easy to understand. There are a few samples which demonstrate more complicated techniques which
+		may not be obvious at just a quick glance. At least, it can be easier to grasp with a short amount of documentation to
+		them.</para>
+		<sect2>
+			<title>Registry Samples /todo</title>
+		</sect2>
+	</sect1>
+</article>
