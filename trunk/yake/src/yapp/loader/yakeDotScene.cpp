@@ -200,7 +200,7 @@ namespace dotscene {
 		desc.meshFile = pNode->getAttributeValueAs<String>( "meshFile" );
 		
 		String castsShadows = StringUtil::toLowerCase(pNode->getAttributeValueAs<String>("castsShadow"));
-		desc.castsShadows = castsShadows == "yes";
+		desc.castsShadows = castsShadows == "yes" || castsShadows == "true" || castsShadows == "1";
 
 		// Entity description ready. Fire!
 		mSigEntity( desc );
@@ -314,6 +314,8 @@ namespace dotscene {
 		YAKE_ASSERT( pNode );
 		
 		String lightType = pNode->getAttributeValueAs<String>( "type" );
+		String castsShadows = pNode->getAttributeValueAs<String>( "castShadows" );
+		desc.castsShadows = castsShadows == "yes" || castsShadows == "true" || castsShadows == "1";
 				
 		desc.type = graphics::ILight::LT_POINT;
 		
