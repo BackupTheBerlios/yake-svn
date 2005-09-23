@@ -46,11 +46,12 @@ namespace physics {
 		virtual void setStaticFrictionVEnabled(bool enabled);
 
 		//-- helpers
-		void _createFromDesc( const IMaterial::Desc & rDesc );
+		void _createFromDesc( const IMaterial::Desc & rDesc, NxScene* pScene );
 		inline NxMaterialIndex _getNxMatIndex() const
 		{ return mNxMatIndex; }
 	private:
 		NxMaterialIndex	mNxMatIndex;
+		NxScene* mpScene;
 	};
 
 }

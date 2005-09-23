@@ -28,6 +28,7 @@
 #define __INC_PCH_H__
 
 #include "NxPhysics.h"
+#include "NxExtensions.h"
 
 //YAKE:
 
@@ -43,6 +44,7 @@
 namespace yake {
 namespace physics {
 	NxPhysicsSDK* getNxSDK();
+	NxExtensions* getNxExt();
 }
 }
 

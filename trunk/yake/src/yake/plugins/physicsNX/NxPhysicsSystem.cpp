@@ -83,7 +83,13 @@ namespace physics {
 		return NxPhysicsSystem::mpNxSDK;
 	}
 
+	NxExtensions* getNxExt()
+	{
+		return NxPhysicsSystem::mpNxExt;
+	}
+
 	NxPhysicsSDK* NxPhysicsSystem::mpNxSDK = 0;
+	NxExtensions* NxPhysicsSystem::mpNxExt = 0;
 
 	//------------------------------------------------------
 	NxPhysicsSystem::NxPhysicsSystem() : IPhysicsSystem()
@@ -95,16 +101,15 @@ namespace physics {
 		if (!mpNxSDK)
 			return;
 
+		YAKE_ASSERT(!mpNxExt);
+		if (mpNxExt)
+			return;
+		mpNxExt = GetNxExtensions(0, &gErrorStream, 0);
+
 		// default settings
 		mpNxSDK->setParameter(NX_MIN_SEPARATION_FOR_PENALTY, -0.05f);
 
-		// default material
-		NxMaterial	defaultMaterial;
-		defaultMaterial.restitution		= 0.0f;
-		defaultMaterial.staticFriction	= 0.9f;
-		defaultMaterial.dynamicFriction	= 0.9f;
-		YAKE_ASSERT( defaultMaterial.isValid() );
-		mpNxSDK->setMaterialAtIndex(0, &defaultMaterial);
+
 	}
 
 	//------------------------------------------------------

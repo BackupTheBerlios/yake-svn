@@ -88,7 +88,7 @@ namespace physics {
 		//meshDesc.heightFieldVerticalExtent  = 0;
 
 		//
-		NxTriangleMesh* pMesh = getNxSDK()->createTriangleMesh( meshDesc );
+		NxTriangleMesh* pMesh = getNxExt()->NxCreateTriangleMesh( getNxSDK(), meshDesc );
 		YAKE_ASSERT( pMesh );
 		if(!pMesh)
 			return 0;

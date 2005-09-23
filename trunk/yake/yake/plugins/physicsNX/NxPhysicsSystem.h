@@ -41,6 +41,7 @@ namespace physics {
 		virtual SharedPtr<IWorld> createWorld();
 	public:
 		static NxPhysicsSDK*	mpNxSDK;
+		static NxExtensions*	mpNxExt;
 	};
 
 }

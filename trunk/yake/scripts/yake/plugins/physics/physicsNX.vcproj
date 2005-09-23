@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(NXSDK_DIR)/Physics/Include;$(NXSDK_DIR)/Foundation/include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/"
+				AdditionalIncludeDirectories="$(NXSDK_DIR)/Physics/Include;$(NXSDK_DIR)/Foundation/include;$(NXSDK_DIR)/NxExtensions/Include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/"
 				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_PHYSICS_NX_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -34,10 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="physics.lib NxPhysics.lib"
+				AdditionalDependencies="physics.lib NxPhysics.lib NxExtensionsDLL.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;$(NXSDK_DIR)/Physics/lib/win32/release;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;$(NXSDK_DIR)/Physics/lib/win32/release;$(NXSDK_DIR)/NxExtensions/lib/win32/release;../../../../dependencies/lib"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
@@ -73,7 +73,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(NXSDK_DIR)/Physics/Include;$(NXSDK_DIR)/Foundation/include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/"
+				AdditionalIncludeDirectories="$(NXSDK_DIR)/Physics/Include;$(NXSDK_DIR)/Foundation/include;$(NXSDK_DIR)/NxExtensions/Include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_PHYSICS_NX_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
@@ -86,7 +86,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="physics.lib NxPhysics.lib"
+				AdditionalDependencies="physics.lib NxPhysics.lib NxExtensionsDLL.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;$(NXSDK_DIR)/Physics/lib/win32/release;../../../../dependencies/lib"

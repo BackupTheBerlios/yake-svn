@@ -165,6 +165,16 @@ namespace physics {
 
 		mCurrTime = 0.;
 
+		// default material
+		NxMaterial*	defaultMaterial = mpScene->getMaterialFromIndex(0);
+		defaultMaterial->setRestitution(0.0f);
+		defaultMaterial->setStaticFriction(0.9f);
+		defaultMaterial->setDynamicFriction(0.9f);
+
+		NxMaterialDesc defaultMaterialDesc;
+		defaultMaterial->saveToDesc(defaultMaterialDesc);
+		YAKE_ASSERT( defaultMaterialDesc.isValid() );
+
 		return true;
 	}
 	void WorldNx::step(const real timeElapsed)
@@ -278,7 +288,7 @@ namespace physics {
 		YAKE_ASSERT( pMaterial );
 		if (!pMaterial)
 			return 0;
-		pMaterial->_createFromDesc( rkMatDesc );
+		pMaterial->_createFromDesc( rkMatDesc, mpScene );
 
 		mMaterials.push_back( pMaterial );
 		return pMaterial;

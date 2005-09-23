@@ -44,16 +44,21 @@ namespace physics {
 	MaterialNx::~MaterialNx()
 	{
 		//@todo
+		mpScene->releaseMaterial(*mpScene->getMaterialFromIndex(mNxMatIndex));
 	}
-	void MaterialNx::_createFromDesc( const IMaterial::Desc & rDesc )
+	void MaterialNx::_createFromDesc( const IMaterial::Desc & rDesc, NxScene* pScene )
 	{
-		NxMaterial nxMat;
-		nxMat.setToDefault();
-		nxMat.restitution = toNx( rDesc.mRestitution );
-		nxMat.staticFriction = toNx( rDesc.mStaticFriction );
-		nxMat.staticFrictionV = 0;
-		YAKE_ASSERT( nxMat.isValid() );
-		mNxMatIndex = getNxSDK()->addMaterial( nxMat );
+		mpScene = pScene;
+		NxMaterialDesc nxDesc;
+		NxMaterial* defaultMaterial = mpScene->getMaterialFromIndex(0);
+		defaultMaterial->saveToDesc(nxDesc);
+		nxDesc.restitution = toNx( rDesc.mRestitution );
+		nxDesc.staticFriction = toNx( rDesc.mStaticFriction );
+		nxDesc.staticFrictionV = 0.0f;
+		YAKE_ASSERT( nxDesc.isValid() );
+		NxMaterial* nxMat = mpScene->createMaterial(nxDesc);
+
+		mNxMatIndex = nxMat->getMaterialIndex();
 	}
 	void MaterialNx::setBounciness(const real bounciness)
 	{
@@ -66,21 +71,21 @@ namespace physics {
 	}
 	void MaterialNx::setRestitution(const real restitution)
 	{
-		NxMaterial* pNxMat = getNxSDK()->getMaterial( mNxMatIndex );
+		NxMaterial* pNxMat = mpScene->getMaterialFromIndex( mNxMatIndex );
 		YAKE_ASSERT( pNxMat );
-		pNxMat->restitution = restitution;
+		pNxMat->setRestitution(restitution);
 	}
 	void MaterialNx::setStaticFriction(const real friction)
 	{
-		NxMaterial* pNxMat = getNxSDK()->getMaterial( mNxMatIndex );
+		NxMaterial* pNxMat = mpScene->getMaterialFromIndex( mNxMatIndex );
 		YAKE_ASSERT( pNxMat );
-		pNxMat->staticFriction = friction;
+		pNxMat->setStaticFriction(friction);
 	}
 	void MaterialNx::setStaticFrictionV(const real friction)
 	{
-		NxMaterial* pNxMat = getNxSDK()->getMaterial( mNxMatIndex );
+		NxMaterial* pNxMat = mpScene->getMaterialFromIndex( mNxMatIndex );
 		YAKE_ASSERT( pNxMat );
-		pNxMat->staticFrictionV = friction;
+		pNxMat->setStaticFrictionV(friction);
 	}
 	void MaterialNx::setStaticFrictionVEnabled(bool enabled)
 	{
