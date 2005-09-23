@@ -83,8 +83,10 @@
 #	define Function1 boost::function1
 #	define Function2 boost::function2
 #	define Function3 boost::function3
+namespace yake {
 	typedef boost::signals::connection SignalConnection;
 	typedef boost::signals::scoped_connection ScopedSignalConnection;
+}
 /*
 #	define SIG boost
 #	define FUNC boost
@@ -125,12 +127,12 @@ namespace yake
 #define YAKE_MEMBERSIGNAL_PUREINTERFACE( ACCESS, SIGNATURE, NAME ) \
 ACCESS: \
 	typedef SignalX<SIGNATURE> Sig##NAME##Type; \
-	virtual SignalConnection subscribeTo##NAME( const Sig##NAME##Type::slot_type& slot ) = 0; \
+	virtual ::yake::SignalConnection subscribeTo##NAME( const Sig##NAME##Type::slot_type& slot ) = 0; \
 private:
 
 #define YAKE_MEMBERSIGNAL_VIRTUALIMPL( ACCESS, SIGNATURE, NAME ) \
 ACCESS: \
-	virtual SignalConnection subscribeTo ## NAME (const Sig ## NAME ## Type::slot_type& slot ) \
+	virtual ::yake::SignalConnection subscribeTo ## NAME (const Sig ## NAME ## Type::slot_type& slot ) \
 	{ return mSig ## NAME.connect(slot); } \
 private: \
 	Sig ## NAME ## Type	mSig ## NAME; \
@@ -154,7 +156,7 @@ ACCESS: \
 #define YAKE_MEMBERSIGNAL( ACCESS, SIGNATURE, NAME ) \
 ACCESS: \
 	typedef SignalX<SIGNATURE> Sig ## NAME ## Type; \
-	SignalConnection subscribeTo ## NAME ( const Sig ## NAME ## Type::slot_type& slot ) \
+	::yake::SignalConnection subscribeTo ## NAME ( const Sig ## NAME ## Type::slot_type& slot ) \
 	{ return mSig ## NAME.connect(slot); } \
 private: \
 	Sig ## NAME ## Type	mSig ## NAME;
