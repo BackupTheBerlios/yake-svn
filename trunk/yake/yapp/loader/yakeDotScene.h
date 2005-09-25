@@ -27,6 +27,7 @@
 #ifndef YAKE_DATA_DOTSCENE_H
 #define YAKE_DATA_DOTSCENE_H
 
+#include <yapp/base/yappPrerequisites.h>
 #include <yake/data/yakeData.h>
 
 #pragma warning(disable: 4244)
@@ -81,8 +82,8 @@ namespace dotscene {
 			
 			struct Clipping
 			{
-				real near;
-				real far;
+				real nearClip;
+				real farClip;
 			}									clipping;
 		};
 		
