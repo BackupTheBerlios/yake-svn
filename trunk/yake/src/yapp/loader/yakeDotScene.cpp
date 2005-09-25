@@ -367,8 +367,8 @@ namespace dotscene {
 	{
 		YAKE_ASSERT( pNode );
 		
-		desc.clipping.near = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "near" ) );
-		desc.clipping.far = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "far" ) );
+		desc.clipping.nearClip = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "near" ) );
+		desc.clipping.farClip = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "far" ) );
 	}
 	
 	//------------------------------------------------------
