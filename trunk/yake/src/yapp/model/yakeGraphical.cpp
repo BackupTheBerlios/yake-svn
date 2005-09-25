@@ -326,8 +326,8 @@ namespace model {
 		pCamera->setFOV( desc.fov );
 		pCamera->setAspectRatio( desc.aspectRatio );
 		pCamera->setProjectionType( desc.projectionType );
-		pCamera->setNearClipDistance( desc.clipping.near );
-		pCamera->setFarClipDistance( desc.clipping.far );
+		pCamera->setNearClipDistance( desc.clipping.nearClip );
+		pCamera->setFarClipDistance( desc.clipping.farClip );
 		pCamera->setDirection( desc.normal );
 		
 		CameraInfo info;
