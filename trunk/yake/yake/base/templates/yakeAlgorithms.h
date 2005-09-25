@@ -41,9 +41,20 @@
 //============================================================================
 namespace yake {
 
+template<class ContainerT>
+	typename ContainerT::const_iterator find(const ContainerT& ctr, const typename ContainerT::value_type& v)
+{
+	return std::find( ctr.begin(), ctr.end(), v );
+}
+template<class ContainerT>
+	typename ContainerT::iterator find(ContainerT& ctr, const typename ContainerT::value_type& v)
+{
+	return std::find( ctr.begin(), ctr.end(), v );
+}
+
 /** Performs an operation operation for each element in a container [ begin, end - 1 ]. */
-template< typename Iterator, typename Operation >
-YAKE_API void ForEach( Iterator begin, Iterator end, Operation operation );
+//template< typename Iterator, typename Operation >
+//YAKE_BASE_API void ForEach( Iterator begin, Iterator end, Operation operation );
 
 } // yake
 
