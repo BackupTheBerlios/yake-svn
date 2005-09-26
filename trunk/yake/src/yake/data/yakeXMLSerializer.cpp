@@ -151,11 +151,11 @@ namespace xml {
 
 		mXmlDoc = new TiXmlDocument( rFile.c_str() );
 		bool ret = mXmlDoc->LoadFile();
-		YAKE_ASSERT( ret && "Could not load xml file.")( rFile );
+		YAKE_ASSERT( ret && "Could not load xml file.")( rFile ).warning("Could not load xml file.");
 
 		// read contents
 		mRootElem = mXmlDoc->RootElement();
-		YAKE_ASSERT( mRootElem ).debug("No root element found in document!");
+		YAKE_ASSERT( mRootElem ).warning("No root element found in document!");
 		if (!mRootElem)
 			return;
 		mRootNode.reset( new XmlNode( mRootElem ) );
