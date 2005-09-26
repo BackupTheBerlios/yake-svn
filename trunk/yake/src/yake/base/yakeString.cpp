@@ -103,6 +103,41 @@ namespace yake {
 	}
 
 	//-----------------------------------------------------------------------
+	void StringUtil::split(StringVector& ret, const String& rString, const String& delims, unsigned int maxSplits)
+	{
+		// static unsigned dl;
+		unsigned int numSplits = 0;
+
+		// Use STL methods 
+		size_t start, pos;
+		start = 0;
+		do 
+		{
+			pos = rString.find_first_of(delims, start);
+			if (pos == start)
+			{
+				// Do nothing
+				start = pos + 1;
+			}
+			else if (pos == rString.npos || (maxSplits && numSplits == maxSplits))
+			{
+				// Copy the rest of the string
+				ret.push_back( rString.substr(start) );
+			}
+			else
+			{
+				// Copy up to delimiter
+				ret.push_back( rString.substr(start, pos - start) );
+				start = pos + 1;
+			}
+			// parse up to next real data
+			start = rString.find_first_not_of(delims, start);
+			++numSplits;
+
+		} while (pos != rString.npos);
+	}
+
+	//-----------------------------------------------------------------------
 	String StringUtil::toLowerCase(const String& rString) 
 	{
 		String out( rString );
