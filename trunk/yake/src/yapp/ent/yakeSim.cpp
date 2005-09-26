@@ -76,6 +76,11 @@ namespace ent {
 		mObjects.clear();
 		private_::g_sim = 0;
 	}
+	void sim::setTicksPerSecond(const real ticksPerSecond)
+	{
+		if (ticksPerSecond > 0)
+			mTickTime = 0.1f;
+	}
 	Event& sim::getEvent_onEntitySpawned()
 	{
 		return mEvtEntitySpawned;
