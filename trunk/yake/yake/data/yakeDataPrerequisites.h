@@ -31,6 +31,9 @@
 #	define YAKE_DATA_API DLLEXPORT
 #else
 #	define YAKE_DATA_API DLLIMPORT
+#	if YAKE_PLATFORM == PLATFORM_WIN32
+#		pragma comment( lib, "data" )
+#	endif
 #endif
 
 #endif
