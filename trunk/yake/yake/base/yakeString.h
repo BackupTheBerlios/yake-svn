@@ -54,6 +54,7 @@ namespace yake {
 		lhs += ss.str();
 		return lhs;
 	}
+	typedef Vector<String> StringVector;
 
 	class YAKE_BASE_API StringUtil
 	{
@@ -73,6 +74,7 @@ namespace yake {
 		}
 		static void trim(String& rString, bool left = true, bool right = true);
 		static std::vector< String > split( const String& rString, const String& delims = "\t\n", unsigned int maxSplits = 0);
+		static void split( StringVector& ret, const String& rString, const String& delims = "\t\n", unsigned int maxSplits = 0);
 		static String toLowerCase( const String& rString );
 		static String toUpperCase( const String& rString );
 		static real toReal( const String& rString );
@@ -84,7 +86,6 @@ namespace yake {
 	    static bool StringUtil::endsWith(const String& str, const String& pattern, bool lowerCase);
 	};
 
-	typedef Vector<String> StringVector;
 	struct YAKE_BASE_API MakeStringVector
 	{
 		MakeStringVector & operator<<(const char * str)
