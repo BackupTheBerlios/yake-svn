@@ -55,45 +55,32 @@ void Log::onLog( const OnLog::slot_type& rSlot )
   mOnLog.connect( rSlot );
 }
 
-void Log::log( const String& rWhat, Severity severity )
+void Log::log( const String& rWhat,
+					Severity severity,
+					const String& rSource,
+					const String& rAdditionalInfo )
 {
-	mOnLog( rWhat, severity, "" );
+	mOnLog( Message( rWhat, severity, rSource, rAdditionalInfo ) );
 }
 
-void Log::log( const String& rWhat, Severity severity, const String& rSource )
+void log_information( const String& what, const String& source, const String& where )
 {
-	mOnLog( rWhat, severity, rSource );
+	Log::instance().log( what, Log::INFORMATIONS, source, where );
 }
 
-void Log::logPrintf( char * fmt, ... )
+void log_warning( const String& what, const String& source, const String& where )
 {
-    static char szBuffer[4097];
-	memset( szBuffer, 0, 4097 );
-    va_list list;
-    va_start( list, fmt );
-    YAKE_VSNPRINTF( szBuffer, 4096, fmt, list );
-	mOnLog( szBuffer, INFORMATIONS, "" );
-    va_end( list );
+	Log::instance().log( what, Log::WARNINGS, source, where );
 }
 
-void log_information( const String& what, const String& where )
+void log_error( const String& what, const String& source, const String& where )
 {
-	Log::instance().log( what, Log::INFORMATIONS, where );
-}
-
-void log_warning( const String& what, const String& where )
-{
-	Log::instance().log( what, Log::WARNINGS, where );
-}
-
-void log_error( const String& what, const String& where )
-{
-	Log::instance().log( what, Log::ERRORS, where );
+	Log::instance().log( what, Log::ERRORS, source, where );
 }
 
 void log( const String& what )
 {
-	Log::instance().log( what, Log::INFORMATIONS );
+	Log::instance().log( what );
 }
 
 } // base

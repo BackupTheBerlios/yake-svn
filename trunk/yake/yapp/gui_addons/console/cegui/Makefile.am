@@ -1,4 +1,3 @@
-INCLUDES = 
+INCLUDES = yakeCEGUIInputArea.h yakeCEGUIOutputArea.h
 METASOURCES = AUTO
-_SOURCES = yakeCEGUIInputArea.h
-_SOURCES = yakeCEGUIInputArea.h yakeCEGUIOutputArea.h
+

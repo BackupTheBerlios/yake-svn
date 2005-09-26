@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -82,6 +82,67 @@ namespace physics {
 		{
  			return real(mMass.mass);
 		}
+		
+		//---------------------------------------------------
+		/**
+		 *     Parse mass description struct and fill ODE mass struct.
+		 * @param desc Mass description.
+		 * @param mass Mass struct to fill.
+		 */
+		void parseMassDesc( const IBody::MassDesc& desc, dMass* mass )
+		{
+			if ( const IBody::SphereMassDesc* sphereMassDesc = dynamic_cast<const IBody::SphereMassDesc*>( &desc ) )
+			{
+				dMassSetSphere( mass, sphereMassDesc->density, sphereMassDesc->radius );
+			}
+			else if ( const IBody::BoxMassDesc* boxMassDesc = dynamic_cast<const IBody::BoxMassDesc*>( &desc ) )
+			{
+				dMassSetBox( mass, boxMassDesc->density, boxMassDesc->sizeX, boxMassDesc->sizeY, boxMassDesc->sizeZ );
+			}
+			else if ( const IBody::CapsuleMassDesc* capsuleMassDesc = dynamic_cast<const IBody::CapsuleMassDesc*>( &desc ) )
+			{
+				dMassSetCappedCylinder( mass,
+												capsuleMassDesc->density,
+												2, 							// along Y axis
+												capsuleMassDesc->radius,
+												capsuleMassDesc->length );
+			}
+			else if ( const IBody::CylinderMassDesc* cylMassDesc = dynamic_cast<const IBody::CylinderMassDesc*>( &desc ) )
+			{
+				dMassSetCylinder( mass,
+										cylMassDesc->density,
+										2,							// along Y axis
+										cylMassDesc->radius,
+										cylMassDesc->length );
+			}
+			else
+			{
+				YAKE_ASSERT( 0 ).error( "Unsupported/unknown mass description type!" );
+			}
+			
+			dMassTranslate( mass, desc.offset.x, desc.offset.y, desc.offset.z );
+		}
+		
+		//---------------------------------------------------
+		void OdeBody::setMass( const MassDesc& rDesc )
+		{
+			parseMassDesc( rDesc, &mMass );
+			
+			mOdeBody->setMass( &mMass );
+		}
+		
+		//---------------------------------------------------
+		void OdeBody::addMass( const MassDesc& rDesc )
+		{
+			dMass massToAdd;
+			
+			parseMassDesc( rDesc, &massToAdd );
+			
+			dMassAdd( &mMass, &massToAdd );
+			
+			mOdeBody->setMass( &mMass );
+		}
+
 		
 		//---------------------------------------------------
 		void OdeBody::addForce( const Force& force )

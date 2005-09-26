@@ -41,7 +41,7 @@ namespace raf {
 		{
 			return systems.begin()->second.get();
 		}
-		AssocVector<String,SharedPtr<SystemType> >::iterator itFind = systems.find( name );
+		typename AssocVector<String,SharedPtr<SystemType> >::iterator itFind = systems.find( name );
 		if (itFind == systems.end())
 			return 0;
 		return itFind->second.get();

@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -50,6 +50,6 @@ namespace graphics {
 	{
 		mParticleSys->setVisible( visible );
 	}
-
+	
 } // graphics
 } // yake

@@ -42,7 +42,7 @@ class TheApp : public yake::exapp::ExampleApplication
 private:
 	SharedPtr<physics::IWorld>			mPWorld;
 
-	app::model::Physical* 				mPhysical;
+	model::Physical* 						mPhysical;
 	
 	String	mWorldFilename;
 public:
@@ -58,7 +58,7 @@ public:
 
 	void setupWorld()
 	{
-		mPhysical = new app::model::Physical();
+		mPhysical = new model::Physical();
 		YAKE_ASSERT( mPhysical );
 		
 		yake::data::dom::xml::XmlSerializer ser;

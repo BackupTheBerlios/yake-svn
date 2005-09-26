@@ -38,6 +38,7 @@ int main( int argc, char** argv )
 {
 	// Use default executor for convenience.
 	// It's always possible to manually execute TheApp::initialise() etc.
-	return (raf::runApplication( TheApp() )) ? 0 : 1;
+	TheApp app;
+	return (raf::runApplication( app )) ? 0 : 1;
 }
 

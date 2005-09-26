@@ -136,8 +136,8 @@ namespace physics {
 		{
 		}
 		VertexVector	vertices;
-		NormalVector	normals;
 		IndexVector		indices;
+		NormalVector	normals;
 	};
 }
 }

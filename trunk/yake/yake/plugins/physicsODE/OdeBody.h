@@ -44,10 +44,8 @@ namespace physics {
 
 			virtual void setMass( const real mass );
 			virtual real getMass() const;
-			virtual void setMass( const MassDesc& rDesc )
-			{ YAKE_ASSERT(0); }
-			virtual void addMass( const MassDesc& rDesc )
-			{ YAKE_ASSERT(0); }
+			virtual void setMass( const MassDesc& rDesc );
+			virtual void addMass( const MassDesc& rDesc );
 
 			virtual void setLinearVelocity( Vector3 const& rVelocity );
 			virtual Vector3 getLinearVelocity() const;

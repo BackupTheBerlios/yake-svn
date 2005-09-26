@@ -4,6 +4,5 @@ INCLUDES = -I$(top_srcdir)/. -I$(top_srcdir)/dependencies \
 lib_LTLIBRARIES = libyappModel.la
 libyappModel_la_SOURCES = yakeComplexModel.cpp yakeGraphical.cpp \
 	yakePhysical.cpp yakeVehicle.cpp yakeActor.cpp yakeModelLink.cpp \
-	yakeModelMovableLink.cpp yakeNativeEngine.cpp yakeNativeWheel.cpp \
-	yakeVehiclePhysicalComponent.cpp yakeVehicleSerializerXML.cpp yakeVehicleTpl.cpp
+	yakeModelMovableLink.cpp yakeVehiclePhysicalComponent.cpp yakeVehicleTpl.cpp
 libyappModel_la_LIBADD = $(top_builddir)/src/yapp/loader/libyappLoader.la

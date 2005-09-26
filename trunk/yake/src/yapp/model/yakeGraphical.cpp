@@ -259,8 +259,6 @@ namespace model {
 	//-----------------------------------------------------
 	void Graphical::DotSceneListener::processSceneNode( const SceneNodeDesc desc )
 	{
-		YAKE_DECLARE_FUNCTION( processSceneNode );
-		
 		YAKE_LOG( "Processing scene node " + desc.name + " with parent node " + desc.parentNodeName );
 				
 		graphics::ISceneNode* pSN = mGWorld->createSceneNode( desc.name );
@@ -272,6 +270,7 @@ namespace model {
 			parentSN->addChildNode( pSN );
 		}
 		
+		pSN->setName( desc.name );
 		pSN->setPosition( desc.transform.position );
 		pSN->setOrientation( desc.transform.rotation );
 		pSN->setScale( desc.transform.scale );
@@ -279,13 +278,38 @@ namespace model {
 		mSceneNodes[ desc.name ] = pSN;
 
 		mOwner.addSceneNode( pSN, parentSN ? false : true );
+		
+		// look if this node is tracked
+		// TODO current scheme allows node to be tracked by only one target
+		TrackerMap::iterator end = mTrackersTargets.end();
+		for( TrackerMap::iterator trackRecord = mTrackersTargets.begin(); trackRecord != end; ++trackRecord )
+		{
+			if ( trackRecord->second == desc.name )
+			{
+				YAKE_LOG( "Setting track target for camera " + trackRecord->first + " ..." );
+			
+				CameraInfo info = mCameras[ trackRecord->first ];
+				
+				YAKE_LOG( "Camera info found. Acquiring camera..." );
+				
+				graphics::ICamera* tracker = info.camera;
+				
+				YAKE_LOG( "Got camera. Setting orientation..." );
+				
+				tracker->lookAt( pSN->getPosition( graphics::ISceneNode::TS_WORLD ) );
+				
+				YAKE_LOG( "Orientation was set up..." );
+				
+				// cleaning up
+				mTrackersTargets.erase( trackRecord );
+				break;
+			}
+		}
 	}
 	
 	//-----------------------------------------------------
 	void Graphical::DotSceneListener::processEntity( const EntityDesc desc )
 	{
-		YAKE_DECLARE_FUNCTION( processEntity );
-		
 		YAKE_LOG( "Processing entity " + desc.name + " with parent node " + desc.parentNodeName );
 		
 		graphics::IEntity* pEntity = mGWorld->createEntity( desc.meshFile );
@@ -310,8 +334,6 @@ namespace model {
 	//-----------------------------------------------------
 	void Graphical::DotSceneListener::processCamera( const CameraDesc desc )
 	{
-		YAKE_DECLARE_FUNCTION( processCamera );
-		
 		YAKE_LOG( "Processing camera " + desc.name + " with parent node " + desc.parentNodeName );
 		
 		graphics::ICamera* pCamera = mGWorld->createCamera();
@@ -323,12 +345,25 @@ namespace model {
 			parentSN->attachCamera( pCamera );
 		}
 		
-		pCamera->setFOV( desc.fov );
+		pCamera->setName( desc.name );
+		pCamera->setFOV( Math::DegreesToRadians( desc.fov ) );
 		pCamera->setAspectRatio( desc.aspectRatio );
 		pCamera->setProjectionType( desc.projectionType );
 		pCamera->setNearClipDistance( desc.clipping.nearClip );
 		pCamera->setFarClipDistance( desc.clipping.farClip );
-		pCamera->setDirection( desc.normal );
+		
+	//	pCamera->setDirection( desc.normal );
+		
+		pCamera->setPosition( Vector3() );
+		pCamera->setOrientation( Quaternion::kIdentity );
+		
+		
+		if ( desc.trackTargetName != "" )
+		{
+			YAKE_LOG( "Saving tracking record for camera " + desc.name + " ... " );
+			
+			mTrackersTargets.insert( TrackerMap::value_type( desc.name, desc.trackTargetName ) );
+		}
 		
 		CameraInfo info;
 		
@@ -341,8 +376,6 @@ namespace model {
 	//-----------------------------------------------------
 	void Graphical::DotSceneListener::processLight( const LightDesc desc )
 	{
-		YAKE_DECLARE_FUNCTION( processLight );
-		
 		YAKE_LOG( "Processing light " + desc.name + " with parent node " + desc.parentNodeName );
 		
 		graphics::ILight* pLight = mGWorld->createLight();
@@ -354,8 +387,19 @@ namespace model {
 			parentSN->attachLight( pLight );
 		}
 		
+		pLight->setName( desc.name );
 		pLight->setType( desc.type );
 		pLight->setCastsShadows( desc.castsShadows );
+		
+		if ( desc.castsShadows )
+		{
+			YAKE_LOG( "  light casts shadows" );
+		}
+		else
+		{
+			YAKE_LOG( "  light doesn't cast shadows" );
+		}
+		
 		pLight->setDiffuseColour( desc.diffuseColor );
 		pLight->setSpecularColour( desc.specularColor );
 		pLight->setAttenuation( desc.attenuation.range,

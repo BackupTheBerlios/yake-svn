@@ -41,6 +41,21 @@ namespace graphics {
 
 	YAKE_IMPLEMENT_REGISTRY( IGraphicsSystem );
 
+	/// GraphicsEntity
+	GraphicsEntity::GraphicsEntity() : mName( uniqueName::create( "graphics" ) )
+	{
+	}
+	
+	void GraphicsEntity::setName( const String& entityName )
+	{
+		mName = entityName;
+	}
+	
+	String GraphicsEntity::getName() const
+	{
+		return mName;
+	}
+	
 	// these destructors are here for rtti to work
 	IParticleSystem::~IParticleSystem()
 	{

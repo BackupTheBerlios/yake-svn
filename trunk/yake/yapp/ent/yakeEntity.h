@@ -62,7 +62,7 @@ namespace ent {
 
 		OBJECT_PROPS_NONE(Entity);
 
-		void addComponent( const String& tag, SharedPtr<EntityComponent>& pComponent, size_t prio = 0 );
+		void addComponent( const String& tag, const SharedPtr<EntityComponent>& pComponent, size_t prio = 0 );
 		SharedPtr<EntityComponent> removeComponent( EntityComponent* pComponent );
 		SharedPtr<EntityComponent> removeComponent( const String& tag );
 		EntityComponent* getComponent( const String& tag );

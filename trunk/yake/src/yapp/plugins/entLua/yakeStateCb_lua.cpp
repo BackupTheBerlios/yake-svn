@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -43,25 +43,25 @@ namespace lua {
 	{
 		try {
 			//std::cout << "executeEntityEvent(\"" << evtName.c_str() << "\")\n";
-			luabind::object machineTbl = (machineName == "default") ? luabind::get_globals(L) : luabind::get_globals(L)["machine_"+machineName];
-			if (!machineTbl.is_valid() || machineTbl.type() != LUA_TTABLE)
+			luabind::object machineTbl = (machineName == "default") ? luabind::globals(L) : luabind::globals(L)["machine_"+machineName];
+			if (!machineTbl.is_valid() || luabind::type( machineTbl ) != LUA_TTABLE)
 				throw "machine table is not valid";
 
 			luabind::object statesTbl = machineTbl["states"];
-			if (!statesTbl.is_valid() || statesTbl.type() != LUA_TTABLE)
+			if (!statesTbl.is_valid() || luabind::type( statesTbl ) != LUA_TTABLE)
 				throw "states table is not valid";
 
 			luabind::object stateTbl = statesTbl[stateName];
-			if (!stateTbl.is_valid() || stateTbl.type() != LUA_TTABLE)
+			if (!stateTbl.is_valid() || luabind::type( stateTbl ) != LUA_TTABLE)
 				throw "state table is not valid";
 
 			//luabind::object fnTbl = pEntity->isServer() ? stateTbl.at("server") : stateTbl.at("client");
 			luabind::object fnTbl = stateTbl["server"];
-			if (!fnTbl.is_valid() || fnTbl.type() != LUA_TTABLE)
+			if (!fnTbl.is_valid() || luabind::type( fnTbl ) != LUA_TTABLE)
 				throw "state functions table is not valid";
 
 			luabind::object fnObj = fnTbl[ fn.c_str() ];
-			if (!fnObj.is_valid() || fnObj.type() != LUA_TFUNCTION) // function defined?
+			if (!fnObj.is_valid() || luabind::type( fnObj ) != LUA_TFUNCTION) // function defined?
 				return true;
 
 			luabind::call_member<void>( fnTbl, fn.c_str() );

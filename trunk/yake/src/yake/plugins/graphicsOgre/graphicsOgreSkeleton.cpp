@@ -73,7 +73,6 @@ namespace ogre3d {
 		}*/
 	}
 
-
 	//------------------------------------------------------
 	void OgreSkeleton::setAnimationWeight( const String& rAnimName, real weight )
 	{
@@ -85,7 +84,7 @@ namespace ogre3d {
 	{
 		mEntity.attachObjectToBone( rBoneName, static_cast<OgreEntity*>( pEntity )->getEntity_() );
 	}
-
+	
 } // ogre3d
 } // graphics
 } // yake

@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -39,18 +39,16 @@ namespace yake
 {
 namespace base
 {
-
-void DebugLogAppender::onLog( const String& rWhat, Log::Severity severity, const String& rSource )
-{
-	static native::DebugLog::Severity severityTranslationTable[] =
+	void DebugLogAppender::onLog( const Log::Message& message )
 	{
-		native::DebugLog::INFORMATIONS,
-		native::DebugLog::WARNINGS,
-		native::DebugLog::ERRORS
-	};
-			
-	native::debug_Log( rWhat.c_str(), severityTranslationTable[ severity ], rSource.c_str() );
-}
+		static native::DebugLog::Severity severityTranslationTable[] =
+		{
+			native::DebugLog::INFORMATIONS,
+			native::DebugLog::WARNINGS,
+			native::DebugLog::ERRORS
+		};
 
+		native::debug_Log( message.text.c_str(), severityTranslationTable[ message.severity ], message.source.c_str() );
+	}
 } // base
 } // yake

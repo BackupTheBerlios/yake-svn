@@ -94,7 +94,7 @@ namespace dotscene {
 			bool						castsShadows;
 			Color						diffuseColor;
 			Color						specularColor;
-			Vector3						normal;
+			Vector3					normal;
 			
 			struct Range
 			{
@@ -110,6 +110,9 @@ namespace dotscene {
 				real linear;
 				real quadratic;
 			}							attenuation;
+			
+			LightDesc() : visible( true ), castsShadows( false )
+			{}
 		};
 		
 		typedef AssocVector< String, NodeDesc > SceneNodeDescMap;

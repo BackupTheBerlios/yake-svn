@@ -75,7 +75,7 @@ namespace yake
 			 */
 			void addMessage( const MessageType& msg )
 			{
-				CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem( msg.text_.c_str() );
+				CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem( (CEGUI::utf8*)msg.text_.c_str() );
 
 				outputBox_->addItem( item );
 

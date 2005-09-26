@@ -38,7 +38,9 @@
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
 
+#	if YAKE_COMPILER == COMPILER_MSVC
 #pragma comment(lib, "base.lib")
+#	endif
 
 namespace yake
 {
@@ -46,7 +48,7 @@ namespace base
 {
 
 extern YAKE_BASE_API Version linktime;
-const Version compiletime ( 0, 2, 0 );
+const Version compiletime ( 0, 3, 0 );
 
 } // base
 } // yake

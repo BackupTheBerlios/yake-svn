@@ -105,22 +105,22 @@ namespace lua {
 				lua_State* L = pLuaVM->getLuaState();
 				YAKE_ASSERT( L );
 
-				luabind::object globals = luabind::get_globals(L);
+				luabind::object globals = luabind::globals(L);
 
 				//
 				//globals["theVM"] = pVM;
 
 				// create basic tables
-				if (globals["events"].type() != LUA_TTABLE)
+				if ( luabind::type( globals["events"] ) != LUA_TTABLE)
 					globals["events"] = luabind::newtable(L);
 
 				luabind::object eventsTbl = globals["events"];
-				if (eventsTbl["client"].type() != LUA_TTABLE)
+				if ( luabind::type( eventsTbl["client"] ) != LUA_TTABLE)
 					eventsTbl["client"] = luabind::newtable(L);
-				if (eventsTbl["server"].type() != LUA_TTABLE)
+				if ( luabind::type( eventsTbl["server"] ) != LUA_TTABLE)
 					eventsTbl["server"] = luabind::newtable(L);
 
-				if (globals["states"].type() != LUA_TTABLE)
+				if ( luabind::type( globals["states"] ) != LUA_TTABLE)
 					globals["states"] = luabind::newtable(L);
 				luabind::object statesTbl = globals["states"];
 
@@ -142,7 +142,7 @@ namespace lua {
 				YAKE_LOG_INFORMATION("Looking for a Lua meta class converter for class: " + theClass->getName());
 				while (!done)
 				{
-					if (globals["getAs_"+theClass->getName()].type() == LUA_TFUNCTION)
+					if ( luabind::type( globals["getAs_"+theClass->getName()] ) == LUA_TFUNCTION)
 					{
 						done = true;
 					}

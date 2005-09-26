@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -147,9 +147,9 @@ namespace physics {
 		}
  		else if ( IShape::TriMeshDesc* pTriMeshDesc = dynamic_cast<IShape::TriMeshDesc*>( pShapeDesc ) )
  		{
- 			dTriMeshDataID dataId = mOdeWorld->getMeshDataById( pTriMeshDesc->meshId );
+			OdeTriMesh::MeshData data = mOdeWorld->getMeshDataById( pTriMeshDesc->meshId );
 			
-			OdeTriMesh* pMesh = new OdeTriMesh( mOdeWorld->_getOdeSpace(), this, dataId );
+			OdeTriMesh* pMesh = new OdeTriMesh( mOdeWorld->_getOdeSpace(), this, data.id );
 			
 			YAKE_ASSERT( pMesh ).error( "Mesh with such id wasn't found!" );
 			

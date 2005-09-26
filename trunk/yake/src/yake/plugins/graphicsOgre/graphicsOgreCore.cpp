@@ -76,9 +76,7 @@ namespace ogre3d {
 				const bool bShutdownOgre /*= true*/,
 				const bool bParseDefaultResourceFile /*= true*/,
 				Ogre::RenderWindow* pRenderWindow /*= 0*/) :
-		mShutdownOgre( bShutdownOgre ),
-		mSysFL( 0 ),
-		mRoot( 0 )
+		mShutdownOgre( bShutdownOgre )
 	{
 		mReady = false;
 		try {
@@ -263,7 +261,6 @@ namespace ogre3d {
 
 	void OgreCore::update( real timeElapsed )
 	{
-		YAKE_DECLARE_FUNCTION( update );
 		//HACK/FIXME
 		static bool bFirstTime = true;
 		if (bFirstTime)

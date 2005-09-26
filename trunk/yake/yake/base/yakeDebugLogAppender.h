@@ -50,7 +50,7 @@ class YAKE_BASE_API DebugLogAppender
 {
 // Methods
 public:
-	static void onLog( const String& rWhat, Log::Severity, const String& rSource );
+	static void onLog( const Log::Message& );
 };
 
 } // base

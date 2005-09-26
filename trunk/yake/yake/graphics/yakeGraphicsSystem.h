@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -74,7 +74,7 @@ namespace graphics {
 	{
 		typedef AssocVector<String, String> ParamMap;
 
-		YAKE_DECLARE_REGISTRY_01(IGraphicsSystem, String, ParamMap)		
+		YAKE_DECLARE_REGISTRY_01(IGraphicsSystem, String, ParamMap);
 	
 		virtual ~IGraphicsSystem();
 
@@ -94,7 +94,7 @@ namespace graphics {
 		// todo: meta: not needed, typeid(ptr) returns the concrete type info (see abstract factory sample code) 
 		virtual const std::type_info & get_type_info() = 0;
 	};
-
+	
 } // graphics
 } // yake
 

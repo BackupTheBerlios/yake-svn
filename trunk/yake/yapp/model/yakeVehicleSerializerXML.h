@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -54,8 +54,7 @@ namespace vehicle {
 			\param
 			\return 
 		*/
-		virtual bool load(	const SharedPtr<dom::INode> & docNode,
-							app::model::vehicle::VehicleTemplate & tpl);
+		virtual bool load(	const SharedPtr<dom::INode> & docNode, model::vehicle::VehicleTemplate & tpl);
 
 		/** Prepare for next run of load/store.
 		*/

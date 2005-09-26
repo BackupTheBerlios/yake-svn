@@ -144,6 +144,9 @@ namespace model {
 			typedef AssocVector< String, CameraInfo > CameraMap;
 			typedef AssocVector< String, LightInfo > LightMap;
 			
+			typedef std::map< String, String > TrackerMap;
+			TrackerMap		mTrackersTargets;
+			
 			SceneNodeMap	mSceneNodes;
 			EntityMap		mEntities;
 			CameraMap		mCameras;

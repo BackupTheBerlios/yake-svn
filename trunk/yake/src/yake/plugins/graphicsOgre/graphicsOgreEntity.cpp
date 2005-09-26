@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -97,20 +97,6 @@ namespace ogre3d {
 			mEntity->setCastShadows( castsShadow );
 	}
 
-
-	//------------------------------------------------------
-	String OgreEntity::getName() const
-	{
-		YAKE_ASSERT( mEntity ).debug( "need an entity" );
-		return String( mEntity->getName().c_str() );
-	}
-
-	//------------------------------------------------------
-	void OgreEntity::getName(String& name)
-	{
-		YAKE_ASSERT( mEntity ).debug( "need an entity" );
-		name = mEntity->getName().c_str();
-	}
 }
 }
 }

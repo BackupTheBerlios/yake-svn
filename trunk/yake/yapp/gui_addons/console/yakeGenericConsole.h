@@ -128,7 +128,7 @@ template <class> class OutputPolicy >
 		{
 			OutputPolicy<MessageType>::clearScroll();
 		
-			const string_t cmd = getPreviousCommand();
+			const string_t cmd = HistoryPolicy<MessageType>::getPreviousCommand();
 
 			InputPolicy::setCommand( cmd );
 		}
@@ -141,7 +141,7 @@ template <class> class OutputPolicy >
 		{
 			OutputPolicy<MessageType>::clearScroll();
 		
-			const string_t cmd = getNextCommand();
+			const string_t cmd = HistoryPolicy<MessageType>::getNextCommand();
 
 			InputPolicy::setCommand( cmd );
 		}

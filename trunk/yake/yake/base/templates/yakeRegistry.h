@@ -96,7 +96,7 @@ YAKE_IMPLEMENT_FUNCTION( FUNCTION )
 
 	SharedPtr< ICreator > getDefaultCreator()
 	{
-		YAKE_ASSERT( getIdentifiers().size() > 0 ).debug( "No default creator available." ); // todo: does not work in release mode, should throw exception
+		YAKE_ASSERT( ( Manager< typename ConfigClass::Id, SharedPtr< typename ConfigClass::ICreator>,RegisterFunctionsNames >::getIdentifiers().size() ) > 0 ).debug( "No default creator available." ); // todo: does not work in release mode, should throw exception
 		if( !m_pDefaultCreator ) m_pDefaultCreator = getObject( *Manager< typename ConfigClass::Id, SharedPtr< typename ConfigClass::ICreator >, RegisterFunctionsNames >::getIdentifiers().begin() ); // todo: (if(!m_pDefaultCreator) m_pDefaultCreator = front();
 		return m_pDefaultCreator;
 	}

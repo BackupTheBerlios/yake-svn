@@ -53,7 +53,38 @@ class YAKE_BASE_API Log
 // Types
 public:
 	enum Severity { INFORMATIONS, WARNINGS, ERRORS };
-	typedef Signal3< void (const String&, Severity, const String&) > OnLog;
+	
+	/**
+	 * Class representing log message.
+	*/
+	struct Message
+	{
+		/// Log message text.
+		String		text;
+		
+		/// Message severity.
+		Severity		severity;
+		
+		/// Message source, like "kernel" or "module X".
+		String		source;
+		
+		/// Any additional info, like "file foo.cpp, line 666".
+		String		additionalInfo;
+		
+		Message( 
+				const String& msgText,
+				Severity msgSeverity,
+				const String& msgSrc,
+				const String& msgInfo ):	text( msgText ),
+													severity( msgSeverity ),
+													source( msgSrc ),
+													additionalInfo( msgInfo )
+		{
+		}
+	};
+	
+	/// Log signal type.
+	typedef Signal3< void (const Message&) > OnLog;
 
 // Class
 public:
@@ -62,21 +93,28 @@ public:
 
 // Methods
 public:
+	/// Subscribe to log messages.
 	void onLog( const OnLog::slot_type& rSlot );
-	void log( const String& rWhat, Severity severity );
-	void log( const String& rWhat, Severity severity, const String& rSource );
-	void logPrintf(char *fmt, ...); // todo: remove this <= Er.. no!
+	
+	/// Log message.
+	void log( const String& rWhat,
+				 Severity severity = INFORMATIONS, 
+				 const String& rSource = "yake", 
+				 const String& rAdditionalInfo = "" );
+//deprecated method: for rich typesafe formatting use boost::format library
+//void logPrintf(char *fmt, ...); // todo: remove this <= Er.. no!
 
 // Data
 private:
+	/// Log signal itself.
 	OnLog mOnLog;
 
 	YAKE_BUILD_PHOENIX_SINGLETON(Log)
 };
 
-void YAKE_BASE_API log_information( const String& what, const String& where );
-void YAKE_BASE_API log_warning( const String& what, const String& where );
-void YAKE_BASE_API log_error( const String& what, const String& where );
+void YAKE_BASE_API log_information( const String& what, const String& source, const String& where );
+void YAKE_BASE_API log_warning( const String& what, const String& source, const String& where );
+void YAKE_BASE_API log_error( const String& what, const String& source, const String& where );
 
 // the simplest form of logging. Adds nothing to "what".
 // Useful in scripts where you just want to log something without "where"
@@ -100,11 +138,10 @@ void YAKE_BASE_API log( const String& what );
 #	define TOSTRING(x) STRINGIFY (x)
 #endif
 
-#define YAKE_LOG_INFORMATION( what ) yake::base::log_information( what, "File: "__FILE__"@"TOSTRING(__LINE__) );
-#define YAKE_LOG_WARNING( what ) yake::base::log_warning( what, "File: "__FILE__"@"TOSTRING(__LINE__) );
-#define YAKE_LOG_ERROR( what ) yake::base::log_error( what, "File: "__FILE__"@"TOSTRING(__LINE__) );
-#define YAKE_LOG( what ) yake::base::log_information( what, "File: "__FILE__"@"TOSTRING(__LINE__) );
-
+#define YAKE_LOG_INFORMATION( what ) yake::base::log_information( what, "yake", "File: "__FILE__"@"TOSTRING(__LINE__) );
+#define YAKE_LOG_WARNING( what ) yake::base::log_warning( what, "yake", "File: "__FILE__"@"TOSTRING(__LINE__) );
+#define YAKE_LOG_ERROR( what ) yake::base::log_error( what, "yake", "File: "__FILE__"@"TOSTRING(__LINE__) );
+#define YAKE_LOG( what ) yake::base::log_information( what, "yake", "File: "__FILE__"@"TOSTRING(__LINE__) );
 
 } // base
 } // yake

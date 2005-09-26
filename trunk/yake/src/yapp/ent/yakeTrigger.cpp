@@ -66,6 +66,7 @@ namespace ent {
 			if (itFind == mVolumes.end())
 				return pV;
 			mVolumes.erase( itFind );
+			return pV;
 		}
 		void VolumeSet::translate(const Vector3&)
 		{

@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -71,7 +71,13 @@ namespace physics {
  		{
 			for ( MeshDataMap::iterator i = mMeshDataMap.begin(); i != mMeshDataMap.end(); ++i )
 			{
-				dGeomTriMeshDataDestroy( i->second );
+				OdeTriMesh::MeshData mesh_data = i->second;
+				
+				dGeomTriMeshDataDestroy( mesh_data.id );
+				
+				YAKE_SAFE_DELETE_ARRAY( mesh_data.vertices );
+				YAKE_SAFE_DELETE_ARRAY( mesh_data.indices );
+				YAKE_SAFE_DELETE_ARRAY( mesh_data.normals );
 			}
 
  			YAKE_SAFE_DELETE( mOdeContactGroup );
@@ -323,16 +329,19 @@ namespace physics {
 		//-----------------------------------------------------
 		TriangleMeshId OdeWorld::createTriangleMesh( TriangleMeshDesc const& rTriMeshDesc )
 		{
-			dTriMeshDataID dataId = OdeTriMesh::buildMeshData(	rTriMeshDesc.vertices,
-																rTriMeshDesc.indices,
-																rTriMeshDesc.normals );
+			OdeTriMesh::MeshData data;
+			
+			OdeTriMesh::buildMeshData( data,
+												rTriMeshDesc.vertices,
+												rTriMeshDesc.indices,
+												rTriMeshDesc.normals );
 
-			mMeshDataMap.insert( MeshDataMap::value_type( mNextMeshId, dataId ) );
+			mMeshDataMap.insert( MeshDataMap::value_type( mNextMeshId, data ) );
 			
 			return mNextMeshId++;
 		}
 		//-----------------------------------------------------
-		dTriMeshDataID OdeWorld::getMeshDataById(  TriangleMeshId id ) const
+		OdeTriMesh::MeshData OdeWorld::getMeshDataById(  TriangleMeshId id ) const
 		{
 			MeshDataMap::const_iterator i = mMeshDataMap.find( id );
 			

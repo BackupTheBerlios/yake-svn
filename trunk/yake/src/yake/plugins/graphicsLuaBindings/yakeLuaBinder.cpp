@@ -24,6 +24,7 @@
 #include <yake/plugins/scriptingLua/ScriptingSystemLua.h>
 #include <yake/plugins/graphicsLuaBindings/yakeLuaBinder.h>
 #include <luabind/luabind.hpp>
+#include <luabind/iterator_policy.hpp>
 
 #include <yake/graphics/yakeGraphics.h>
 #include <yake/graphics/yakeGeometryAccess.h>
@@ -50,23 +51,33 @@ namespace yake
 
 				module( YAKE_GRAPHICS_MODULE )
 				[
-				    class_<IParticleSystem>( "IParticleSystem" )
-				    .def( "setVisible", &IParticleSystem::setVisible )
+				    class_<GraphicsEntity>( "GraphicsEntity" )
+				    .def( "getName", &GraphicsEntity::getName )
+				    .def( "setName", &GraphicsEntity::setName )
 				];
+				YAKE_LOG( "GraphicsEntity bound..." );
 
 				module( YAKE_GRAPHICS_MODULE )
 				[
-				    class_<ISkeleton>( "ISkeleton" )
+				    class_<IParticleSystem,GraphicsEntity>( "IParticleSystem" )
+				    .def( "setVisible", &IParticleSystem::setVisible )
+				];
+				YAKE_LOG( "IParticleSystem bound..." );
+
+				module( YAKE_GRAPHICS_MODULE )
+				[
+				    class_<ISkeleton,GraphicsEntity>( "ISkeleton" )
 				    .def( "enableAnimation", &ISkeleton::enableAnimation )
 				    .def( "advanceAnimation", &ISkeleton::advanceAnimation )
 				    .def( "advanceAllAnimations", &ISkeleton::advanceAllAnimations )
 				    .def( "setAnimationWeight", &ISkeleton::setAnimationWeight )
 				    .def( "attachEntityToBone", &ISkeleton::attachEntityToBone )
 				];
+				YAKE_LOG( "ISkeleton bound..." );
 
 				module( YAKE_GRAPHICS_MODULE )
 				[
-				    class_<ILight>( "ILight" )
+				    class_<ILight,GraphicsEntity>( "ILight" )
 				    .enum_( "LightType" )
 				    [
 				        value("LT_POINT", ILight::LT_POINT ),
@@ -91,22 +102,22 @@ namespace yake
 				    .def( "setDirection", &ILight::setDirection )
 				    .def( "getDirection", &ILight::getDirection )
 				];
+				YAKE_LOG( "ILight bound..." );
 
 				module( YAKE_GRAPHICS_MODULE )
 				[
-				    class_<IEntity>( "IEntity" )
+				    class_<IEntity,GraphicsEntity>( "IEntity" )
 				    .def( "getSkeleton", &IEntity::getSkeleton )
 				    .def( "setVisible", &IEntity::setVisible )
 				    .def( "setMaterial", &IEntity::setMaterial )
 				    .def( "setSubEntityMaterial", &IEntity::setSubEntityMaterial )
 				    .def( "setCastsShadow", &IEntity::setCastsShadow )
-				    .def( "getName", (String(IEntity::*)() const)&IEntity::getName )
-
 				];
+				YAKE_LOG( "IEntity bound..." );
 
 				module( YAKE_GRAPHICS_MODULE )
 				[
-				    class_<ICamera, Movable>( "ICamera" )
+				    class_<ICamera, bases<Movable, GraphicsEntity> >( "ICamera" )
 				    .enum_( "SceneDetailLevel" )
 				    [
 				        value( "SDL_POINTS", ICamera::SDL_POINTS ),
@@ -124,11 +135,13 @@ namespace yake
 				    .def( "getDetailLevel", &ICamera::getDetailLevel )
 				    .def( "setNearClipDistance", &ICamera::setNearClipDistance )
 				    .def( "getNearClipDistance", &ICamera::getNearClipDistance )
+				    .def( "getFarClipDistance", &ICamera::getFarClipDistance )
 				    .def( "setFarClipDistance", &ICamera::setFarClipDistance )
 				    .def( "setFOV", &ICamera::setFOV )
 				    .def( "getFOV", &ICamera::getFOV )
-				    .def( "setAspectRatio", &ICamera::getAspectRatio )
-				    .def( "setDirection", &ICamera::setDirection )
+					 .def( "setAspectRatio", &ICamera::setAspectRatio )
+					 .def( "getAspectRatio", &ICamera::getAspectRatio )
+					 .def( "setDirection", &ICamera::setDirection )
 				    .def( "getDirection", &ICamera::getDirection )
 				    .def( "getUp", &ICamera::getUp )
 				    .def( "getRight", &ICamera::getRight )
@@ -144,10 +157,11 @@ namespace yake
 				    .def( "getProjectionMatrix", &ICamera::getProjectionMatrix )
 				    .def( "getViewMatrix", &ICamera::getViewMatrix )
 				];
+				YAKE_LOG( "ICamera bound..." );
 
 				module( YAKE_GRAPHICS_MODULE )
 				[
-				    class_<ISceneNode, Movable>( "ISceneNode" )
+				    class_<ISceneNode, bases<Movable, GraphicsEntity> >( "ISceneNode" )
 				    .def( "addChildNode", &ISceneNode::addChildNode )
 				    .def( "createChildNode", &ISceneNode::createChildNode )
 				    .def( "attachEntity", &ISceneNode::attachEntity )
@@ -167,8 +181,8 @@ namespace yake
 				    .def( "detachLight", (void(ISceneNode::*)(ILight*))&ISceneNode::detach )
 				    .def( "detachCamera", (void(ISceneNode::*)(ICamera*))&ISceneNode::detach )
 				    .def( "detachParticleSystem", (void(ISceneNode::*)(IParticleSystem*))&ISceneNode::detach )
-				    .def( "getName", (String(ISceneNode::*)()const)&ISceneNode::getName )
 				];
+				YAKE_LOG( "ISceneNode bound..." );
 
 				module( YAKE_GRAPHICS_MODULE )
 				[
@@ -178,10 +192,11 @@ namespace yake
 				    .def( "setDimensions", &IViewport::setDimensions )
 				    .def( "setZ", &IViewport::setZ )
 				];
+				YAKE_LOG( "IViewport bound..." );
 
 				module( YAKE_GRAPHICS_MODULE )
 				[
-				    class_<IWorld>( "IWorld" )
+				    class_<yake::graphics::IWorld>( "IWorld" )
 				    .def( "createLight", &IWorld::createLight )
 				    .def( "createCamera", &IWorld::createCamera )
 				    .def( "createSceneNode", &IWorld::createSceneNode )
@@ -199,6 +214,7 @@ namespace yake
 				    .def( "getRenderWindowHeight", &IWorld::getRenderWindowHeight )
 				    .def( "pickEntity", &IWorld::pickEntity )
 				];
+				YAKE_LOG( "IWorld bound..." );
 
 				module( YAKE_GRAPHICS_MODULE )
 				[
@@ -206,9 +222,8 @@ namespace yake
 				    .def( "shutdown", &IGraphicsSystem::shutdown )
 				    .def( "createWorld", &IGraphicsSystem::createWorld )
 				];
-
+				YAKE_LOG( "IGraphicsSystem bound..." );
 			}
-
 
 		} // namespace lua
 	} // namespace graphics

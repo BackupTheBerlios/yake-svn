@@ -122,10 +122,6 @@ namespace graphics {
 		virtual void setSubEntityMaterial( const String & subEntity, const String & materialName ) = 0;
 		//virtual void setReceivesShadows( bool receivesShadows ) = 0;
 		virtual void setCastsShadow( bool castsShadow ) = 0;
-
-		//@todo move into base class!?
-		virtual String getName() const = 0;
-		virtual void getName(String& name) = 0;
 	};
 
 	/** A concrete instance of a camera in a scene.
@@ -208,6 +204,7 @@ namespace graphics {
 		inline void rotate( const Vector3& axis, real degrees );
 		inline void pitch( const real degrees );
 		virtual void yaw( const real degrees ) = 0;
+		virtual void roll( const  real degrees ) = 0;
 
 		/** Return a ray in world space coordinates as cast from the camera through a viewport
 			position.
@@ -257,6 +254,13 @@ namespace graphics {
 			TS_PARENT,
 			TS_WORLD
 		};
+
+		/** Returns the position in parent's transform space. */
+		virtual Vector3 getPosition() const = 0;
+		
+		/** Returns scene node position in transform space specified by ts parameter. */
+		virtual Vector3 getPosition( TransformSpace ts ) const = 0;
+		
 		/** Adds a node as a child to this node.
 		*/
 		virtual void addChildNode( ISceneNode* pNode ) = 0;
@@ -346,16 +350,6 @@ namespace graphics {
 		*/
 		virtual void detach( IParticleSystem* pPS ) = 0;
 
-		/** Return the name of this scene node.
-		*/
-		virtual String getName() const = 0;
-
-		/** Return the name of this scene node.
-		*/
-		virtual void getName(String& name) = 0;
-
-		//virtual void setName(const String& name) = 0;
-
 		/** Return the position as transformed through the hierarchy of nodes.
 		*/
 		virtual Vector3 getDerivedPosition() const = 0;
@@ -444,8 +438,8 @@ namespace graphics {
 
 		virtual IEntity* pickEntity(const Ray& ray) = 0;
 
-		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PreRender )
-		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PostRender )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PreRender );
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PostRender );
 	};
 
 } // graphics

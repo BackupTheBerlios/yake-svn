@@ -152,6 +152,12 @@ namespace ogre3d {
 	}
 	
 	//------------------------------------------------------
+	void OgreCamera::roll( const  real degrees )
+	{
+		mCam->roll( Ogre::Degree( degrees ) );
+	}
+	
+	//------------------------------------------------------
 	Ogre::ProjectionType yake2Ogre( const ICamera::ProjectionType type )
 	{
 		switch (type)
@@ -266,7 +272,7 @@ namespace ogre3d {
 		YAKE_ASSERT( mCam ).debug("need a camera!");
 		return mCam->getAspectRatio();
 	}
-
+	
 }
 }
 }

@@ -37,7 +37,7 @@ namespace ogre3d {
 
 	//------------------------------------------------------
 	OgreNode::OgreNode( Ogre::SceneManager * sceneMgr, const String& name /*= ""*/ ) : 
-		mSceneMgr( sceneMgr ), mSceneNode( 0 )
+			mSceneNode( 0 ) ,mSceneMgr( sceneMgr )
 	{
 		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
 		String id = name;
@@ -55,7 +55,6 @@ namespace ogre3d {
 		{
 			mSceneNode->removeAllChildren();
 			mSceneMgr->destroySceneNode( mSceneNode->getName() );
-			mSceneNode = 0;
 		}
 		mLights.clear();
 		mEntities.clear();
@@ -73,6 +72,26 @@ namespace ogre3d {
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		return VEC_OGRE2YAKE( mSceneNode->getPosition() );
+	}
+
+	//------------------------------------------------------
+	Vector3 OgreNode::getPosition( ISceneNode::TransformSpace ts ) const
+	{
+		switch( ts )
+		{
+			case TS_LOCAL:
+				return Vector3();
+				
+			case TS_PARENT:
+				return getPosition();
+				
+			case TS_WORLD:
+				return getDerivedPosition();
+			
+			default:
+				YAKE_ASSERT( 0 ).error( "Unknown transform space" );
+				return Vector3();
+		}
 	}
 
 	//------------------------------------------------------
@@ -252,21 +271,8 @@ namespace ogre3d {
 					return pNode;
 			}
 		}
+		
 		return 0;
-	}
-
-	//------------------------------------------------------
-	String OgreNode::getName() const
-	{
-		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-		return String( mSceneNode->getName().c_str() );
-	}
-
-	//------------------------------------------------------
-	void OgreNode::getName(String& name)
-	{
-		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-		name = mSceneNode->getName().c_str();
 	}
 
 	//------------------------------------------------------

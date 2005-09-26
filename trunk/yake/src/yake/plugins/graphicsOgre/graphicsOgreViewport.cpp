@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -105,7 +105,9 @@ namespace ogre3d {
 	//------------------------------------------------------
 	void OgreViewport::attachCamera( ICamera* pCam )
 	{
-		YAKE_ASSERT(1==0);
+		mCamera = dynamic_cast<OgreCamera*>( pCam );
+		
+		mViewport->setCamera( mCamera->getCamera_() );
 	}
 
 	//------------------------------------------------------

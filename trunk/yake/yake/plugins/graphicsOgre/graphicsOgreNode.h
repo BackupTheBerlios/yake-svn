@@ -40,6 +40,7 @@ namespace ogre3d {
 
 		virtual void setPosition( const Vector3 & position );
 		virtual Vector3 getPosition() const;
+		virtual Vector3 getPosition( TransformSpace ts ) const;
 		virtual void setOrientation( const Quaternion & orientation );
 		virtual Quaternion getOrientation() const;
 
@@ -73,10 +74,6 @@ namespace ogre3d {
 		virtual void detach( ICamera* pCamera );
 		virtual void detach( IParticleSystem* pPS );
 
-
-		virtual String getName() const;
-		virtual void getName(String& name);
-		//virtual void setName(const String& name);
 
 		Ogre::SceneNode* getSceneNode_() const
 		{ return mSceneNode; }

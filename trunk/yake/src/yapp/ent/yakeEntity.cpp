@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -79,7 +79,7 @@ namespace ent {
 		++mAge;
 		_tickComponents();
 	}
-	void Entity::addComponent( const String& tag, SharedPtr<EntityComponent>& pComponent, size_t prio /*= 0*/ )
+	void Entity::addComponent( const String& tag, const SharedPtr<EntityComponent>& pComponent, size_t prio /*= 0*/ )
 	{
 		YAKE_ASSERT( prio == 0 )(prio).warning("Only 0 priorities are currently supported!");
 		YAKE_ASSERT( !tag.empty() ).warning("");

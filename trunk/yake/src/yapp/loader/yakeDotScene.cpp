@@ -46,8 +46,6 @@ namespace dotscene {
 	//------------------------------------------------------
 	bool DotSceneParser::load( const SharedPtr<dom::INode>& docNode )
 	{
-		YAKE_DECLARE_FUNCTION( load );
-		
 		YAKE_LOG( "load()" );
 		
 		YAKE_ASSERT( docNode.get() );
@@ -67,8 +65,6 @@ namespace dotscene {
 	//------------------------------------------------------
 	void DotSceneParser::readScene( const SharedPtr<dom::INode>& pNode )
 	{
-		YAKE_DECLARE_FUNCTION( readScene );
-		
 		//const String name = pNode->getAttributeValueAs<String>( "name" );
 		//YAKE_LOG( "readScene() [" + name + "]" );
 		
@@ -84,8 +80,6 @@ namespace dotscene {
 	//------------------------------------------------------
 	void DotSceneParser::readNodes( const SharedPtr<dom::INode>& pNodes )
 	{
-		YAKE_DECLARE_FUNCTION( readNodes );
-		
 		YAKE_LOG( "readNodes()" );
 		YAKE_ASSERT( pNodes );
 		
@@ -99,8 +93,6 @@ namespace dotscene {
 	//------------------------------------------------------
 	void DotSceneParser::readNode( const SharedPtr<dom::INode>& pNode, String parentNodeName )
 	{
-		YAKE_DECLARE_FUNCTION( readNode );
-		
 		String nodeName = pNode->getAttributeValueAs<String>( "name" );
 		
 		YAKE_LOG( "readNode() [name=" + nodeName + "]" );
@@ -184,8 +176,6 @@ namespace dotscene {
 	//------------------------------------------------------
 	void DotSceneParser::readEntity( const SharedPtr<dom::INode>& pNode, String parentNodeName )
 	{
-		YAKE_DECLARE_FUNCTION( readEntity );
-		
 		YAKE_ASSERT( pNode );
 		
 		EntityDesc desc;
@@ -231,17 +221,17 @@ namespace dotscene {
 	}
 	
 	//------------------------------------------------------
-	void DotSceneParser::readRotation( const SharedPtr<dom::INode>& pNode, Quaternion & rotation )
+	void DotSceneParser::readRotation( const SharedPtr<dom::INode>& pNode, Quaternion& rotation )
 	{
 		YAKE_ASSERT( pNode );
-		if (pNode->getAttributeValueAs<String>("qx") != "")
+		if ( pNode->getAttributeValueAs<String>("qx") != "" )
 		{
 			rotation.x = StringUtil::parseReal( pNode->getAttributeValueAs<String>("qx") );
 			rotation.y = StringUtil::parseReal( pNode->getAttributeValueAs<String>("qy") );
 			rotation.z = StringUtil::parseReal( pNode->getAttributeValueAs<String>("qz") );
 			rotation.w = StringUtil::parseReal( pNode->getAttributeValueAs<String>("qw") );
 		}
-		if (pNode->getAttributeValueAs<String>("axisX") != "")
+		else if ( pNode->getAttributeValueAs<String>("axisX") != "" )
 		{
 			Vector3 axis;
 			axis.x = StringUtil::parseReal( pNode->getAttributeValueAs<String>("axisX") );
@@ -249,7 +239,7 @@ namespace dotscene {
 			axis.z = StringUtil::parseReal( pNode->getAttributeValueAs<String>("axisZ") );
 			rotation.FromAxes( &axis );
 		}
-		if (pNode->getAttributeValueAs<String>("angleX") != "")
+		else if ( pNode->getAttributeValueAs<String>("angleX") != "" )
 		{
 			Vector3 axis;
 			axis.x = StringUtil::parseReal( pNode->getAttributeValueAs<String>("angleX") );
@@ -262,8 +252,6 @@ namespace dotscene {
 	//------------------------------------------------------
 	void DotSceneParser::readColour( const SharedPtr<dom::INode>& pNode, Color& colour )
 	{
-		YAKE_DECLARE_FUNCTION( readColour );
-		
 		YAKE_ASSERT( pNode );
 		
 		String r = pNode->getAttributeValueAs<String>("r");
@@ -301,8 +289,6 @@ namespace dotscene {
 	//------------------------------------------------------
 	void DotSceneParser::readLight( const SharedPtr<dom::INode>& pNode, String parentNodeName )
 	{
-		YAKE_DECLARE_FUNCTION( readLight );
-		
 		String name = pNode->getAttributeValueAs<String>( "name" );
 
 		LightDesc desc;
@@ -374,8 +360,6 @@ namespace dotscene {
 	//------------------------------------------------------
 	void DotSceneParser::readCamera( const SharedPtr<dom::INode>& pNode, String parentNodeName )
 	{
-		YAKE_DECLARE_FUNCTION( readCamera );
-		
 		String name = pNode->getAttributeValueAs<String>( "name" );
 
 		CameraDesc desc;
@@ -394,6 +378,12 @@ namespace dotscene {
 			desc.projectionType = graphics::ICamera::PT_ORTHOGRAPHIC;
 		
 		desc.fov = StringUtil::parseReal( pNode->getAttributeValueAs<String>( "fov" ) );
+		
+		// Reading aspect ratio
+		String aspectRatio = pNode->getAttributeValueAs<String>( "aspectRatio" );
+		// default value is 1.333 ( 640/480, 800/600, etc... )
+		desc.aspectRatio =
+				aspectRatio == "" ? 1.333 : StringUtil::parseReal( aspectRatio );
 		
 		const dom::NodeList& nodes = pNode->getNodes();
 		for ( dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it )

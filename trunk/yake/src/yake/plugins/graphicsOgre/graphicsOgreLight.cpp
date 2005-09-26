@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -231,7 +231,7 @@ namespace ogre3d {
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
 		return VEC_OGRE2YAKE( mLight->getDirection() );
 	}
-
+	
 } // ogre3d
 } // graphics
 } // yake

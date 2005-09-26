@@ -40,8 +40,6 @@ namespace xode {
 	*/
 	class YAPP_BASE_API XODEParser
 	{
-		YAKE_DECLARE_CLASS( XODEParser );
-
 	public:
 		XODEParser( model::Physical& rBaseModel );
 		virtual ~XODEParser() {}
@@ -171,7 +169,6 @@ namespace xode {
 	
 	class YAPP_BASE_API XODEParserV1 : public XODEParser
 	{
-		YAKE_DECLARE_CLASS( XODEParserV1 );
 	public:
 		XODEParserV1( model::Physical& rBaseModel ):XODEParser( rBaseModel ) {}
 		virtual ~XODEParserV1() {}

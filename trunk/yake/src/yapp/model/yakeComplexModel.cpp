@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -33,39 +33,46 @@ namespace model {
 namespace complex {
 
 	//-----------------------------------------------------
-	Model::Model() : mParent(0)
+	Model::Model() : mParent( 0 )
 	{
 	}
+	
 	//-----------------------------------------------------
 	Model::~Model()
 	{
 	}
+	
 	//-----------------------------------------------------
 	void Model::setParentModel( Model* pModel )
 	{
 		mParent = pModel;
 	}
+	
 	//-----------------------------------------------------
 	Model* Model::getParentModel() const
 	{
 		return mParent;
 	}
+	
 	//-----------------------------------------------------
-	void Model::addChildModel( SharedPtr<Model> & rModel )
+	void Model::addChildModel( SharedPtr<Model>& rModel )
 	{
 		YAKE_ASSERT( rModel.get() );
 		mChildren.push_back( rModel );
 	}
+	
 	//-----------------------------------------------------
-	SharedPtr<Model> Model::getChildModelByName( const String & rName ) const
+	SharedPtr<Model> Model::getChildModelByName( const String& rName ) const
 	{
 		return SharedPtr<Model>();
 	}
+	
 	//-----------------------------------------------------
-	SharedPtr<Model> Model::removeChildModel( const String & rName )
+	SharedPtr<Model> Model::removeChildModel( const String& rName )
 	{
 		return SharedPtr<Model>();
 	}
+	
 	//-----------------------------------------------------
 	SharedPtr<Model> Model::removeChildModel( const SharedPtr<Model>& rModel )
 	{
@@ -84,29 +91,29 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
-	void Model::addPhysical(const SharedPtr<Physical> & pPhysical, const String & rName)
+	void Model::addPhysical( const SharedPtr<Physical>& pPhysical, const String& rName )
 	{
 		YAKE_ASSERT( pPhysical.get() );
 		String name = rName;
 		if (name != "")
 		{
 			PhysicalMap::const_iterator itFind = mPhysicals.find( name );
-			YAKE_ASSERT( itFind == mPhysicals.end() ).debug("submodel needs a unique name! name already taken!");
+			YAKE_ASSERT( itFind == mPhysicals.end() ).debug( "submodel needs a unique name! name already taken!" );
 		}
 		else
-			name = uniqueName::create("auto_");
+			name = uniqueName::create( "auto_" );
 		mPhysicals.insert( std::make_pair(name,pPhysical) );
 	}
 
 	//-----------------------------------------------------
-	void Model::addGraphical(const SharedPtr<Graphical> & pGraphical, const String & rName)
+	void Model::addGraphical( const SharedPtr<Graphical>& pGraphical, const String& rName )
 	{
 		YAKE_ASSERT( pGraphical.get() );
 		String name = rName;
-		if (name != "")
+		if ( name != "" )
 		{
 			GraphicalMap::const_iterator itFind = mGraphicals.find( name );
-			YAKE_ASSERT( itFind == mGraphicals.end() ).debug("submodel needs a unique name! name already taken!");
+			YAKE_ASSERT( itFind == mGraphicals.end() ).debug( "submodel needs a unique name! name already taken!" );
 		}
 		else
 			name = uniqueName::create("auto_");
@@ -114,37 +121,43 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
-	Physical* Model::getPhysicalByName( const String & rName ) const
+	Physical* Model::getPhysicalByName( const String& rName ) const
 	{
 		PhysicalMap::const_iterator itFind = mPhysicals.find( rName );
+		
 		if (itFind == mPhysicals.end())
 			return 0;
+		
 		return itFind->second.get();
 	}
 
 	//-----------------------------------------------------
-	Graphical* Model::getGraphicalByName( const String & rName ) const
+	Graphical* Model::getGraphicalByName( const String& rName ) const
 	{
 		GraphicalMap::const_iterator itFind = mGraphicals.find( rName );
-		if (itFind == mGraphicals.end())
+		
+		if ( itFind == mGraphicals.end() )
 			return 0;
+		
 		return itFind->second.get();
 	}
 
 	//-----------------------------------------------------
-	void Model::addGraphicsController(const SharedPtr<IObjectController> & pController, const String & rName)
+	void Model::addGraphicsController(const SharedPtr<IObjectController>& pController, const String& rName)
 	{
-		YAKE_ASSERT( 0==1 ).warning("IS THIS REALLY A GRAPHICS CONTROLLER?");
+		YAKE_ASSERT( 0 == 1 ).warning( "IS THIS REALLY A GRAPHICS CONTROLLER?" );
 		YAKE_ASSERT( pController.get() );
-		YAKE_ASSERT( rName.length() == 0 ).warning("tagging not implemented!");
+		YAKE_ASSERT( rName.length() == 0 ).warning( "tagging not implemented!" );
+		
 		mControllers.push_back( pController );
 	}
 
 	//-----------------------------------------------------
-	void Model::addLink( const SharedPtr<ModelLink> & pModelLink, const String & rName )
+	void Model::addLink( const SharedPtr<ModelLink>& pModelLink, const String& rName )
 	{
 		YAKE_ASSERT( pModelLink.get() );
-		YAKE_ASSERT( rName.length() == 0 ).warning("tagging not implemented!");
+		YAKE_ASSERT( rName.length() == 0 ).warning( "tagging not implemented!" );
+		
 		mControllers.push_back( pModelLink );
 	}
 
@@ -152,6 +165,7 @@ namespace complex {
 	void Model::updatePhysics( real timeElapsed )
 	{
 	}
+	
 	//-----------------------------------------------------
 	void Model::updateGraphics( real timeElapsed )
 	{

@@ -38,7 +38,17 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API GraphicsEntity
 	{
 	public:
+		/// Constructor. Initialises mName with some unique value.
+		GraphicsEntity();
+		
 		virtual ~GraphicsEntity() {}
+		
+		void setName( const String& entityName );
+		String getName() const;
+		
+	protected:
+		/// Entity name tag.
+		String	mName;
 	};
 
 }

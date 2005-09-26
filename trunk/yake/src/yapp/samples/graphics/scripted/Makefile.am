@@ -7,4 +7,4 @@ scriptedGraphics_LDADD = $(top_builddir)/src/yapp/model/libyappModel.la \
 	$(top_builddir)/src/yake/scripting/libyakeScripting.la $(top_builddir)/src/yake/physics/libyakePhysics.la \
 	$(top_builddir)/src/yake/input/libyakeInput.la $(top_builddir)/src/yake/graphics/libyakeGraphics.la \
 	$(top_builddir)/src/yake/base/libyakeBase.la $(top_builddir)/src/yake/audio/libyakeAudio.la \
-	$(top_builddir)/src/yake/data/libyakeData.la -llua -llualib -lluabind
+	$(top_builddir)/src/yake/data/libyakeData.la $(top_builddir)/src/yapp/ent/libyappEnt.la -llua -llualib -lluabind

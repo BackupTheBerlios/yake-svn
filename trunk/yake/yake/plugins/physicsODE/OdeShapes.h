@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -118,21 +118,30 @@ namespace physics {
 		
 		class OdeTriMesh : public OdeGeom
 		{
-		public:
-			OdeTriMesh::OdeTriMesh( dSpace* pSpace, OdeActor* pOwner, dTriMeshDataID meshDataId ); 
-			virtual ~OdeTriMesh();
+			public:
 
-			virtual ShapeType getType() const;
-			
-			static dTriMeshDataID buildMeshData( TriangleMeshDesc::VertexVector const& rVertices,
-						 		  	  			TriangleMeshDesc::IndexVector const& rIndices,
-						 		  	 			TriangleMeshDesc::NormalVector const& rNormals );
+				struct MeshData
+				{
+					MeshData() : id( NULL ), vertices( NULL ), indices( NULL ), normals( NULL )
+					{}
 
- 		
-		protected:
- 		  	TriangleMeshDesc::VertexVector		mVertices;
-		 	TriangleMeshDesc::IndexVector		mIndices;
-			TriangleMeshDesc::NormalVector		mNormals;
+					dTriMeshDataID id;
+
+				/// We need to store these here 'cause ODE doesn't copy data on mesh data construction
+					dReal*		vertices;
+					uint32*		indices;
+					dReal*		normals;
+				};
+
+				OdeTriMesh( dSpace* pSpace, OdeActor* pOwner, dTriMeshDataID meshDataId );
+				virtual ~OdeTriMesh();
+
+				virtual ShapeType getType() const;
+
+				static void buildMeshData(	MeshData& dataToFill,
+													TriangleMeshDesc::VertexVector const& rVertices,
+													TriangleMeshDesc::IndexVector const& rIndices,
+													TriangleMeshDesc::NormalVector const& rNormals );
 		};
 		
 } // physics

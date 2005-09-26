@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -39,17 +39,17 @@ namespace lua {
 	{
 		try {
 			//std::cout << "executeEntityEvent(\"" << evtName.c_str() << "\")\n";
-			luabind::object evtTbl = luabind::get_globals(L)["events"];
+			luabind::object evtTbl = luabind::globals(L)["events"];
 			if (!evtTbl.is_valid())
 				throw "event table is not valid";
 
-			luabind::object fnTbl = pEntity->isServer() ? evtTbl.at("server") : evtTbl.at("client");
+			luabind::object fnTbl = pEntity->isServer() ? luabind::gettable( evtTbl, "server" ) : luabind::gettable( evtTbl, "client" );
 			//luabind::object fnTbl = evtTbl["server"];
-			if (!fnTbl.is_valid() || fnTbl.type() != LUA_TTABLE)
+			if (!fnTbl.is_valid() || luabind::type( fnTbl ) != LUA_TTABLE)
 				throw "event functions table is not valid";
 
 			luabind::object evtFn = fnTbl[ evtName ];
-			if (!evtFn.is_valid() || evtFn.type() != LUA_TFUNCTION)
+			if (!evtFn.is_valid() || luabind::type( evtFn ) != LUA_TFUNCTION)
 				throw "event function does not exist or is invalid";
 
 			luabind::call_member<void>( fnTbl, evtName.c_str() );

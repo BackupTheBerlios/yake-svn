@@ -162,6 +162,9 @@
 	</BuildSharedLibrary>
 
 	<BuildSharedLibrary
+		name="yakegraphicsLuaBindings"
+
+	<BuildSharedLibrary
 		name="yappEvents"
 		src="src/yapp/base/event"
 	/>

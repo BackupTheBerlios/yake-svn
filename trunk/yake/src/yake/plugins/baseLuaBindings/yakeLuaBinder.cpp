@@ -199,8 +199,14 @@ namespace yake
 				    .def( "onLog", &Log::onLog )
 				    .def( "log", (void(Log::*)( const String&,Log::Severity))&Log::log )
 				    .def( "logAt", (void(Log::*)( const String&,Log::Severity,const String&))&Log::log )
-				    .def( "instance", &Log::instance )
+					.scope
+					[
+				    def( "instance", &Log::instance )
+					]
 				];
+
+				// Exporting log singleton as logger object
+				pL->execute( "logger = yake.Log.instance();" );
 
 				// Log shortcuts
 				module( YAKE_BASE_MODULE )

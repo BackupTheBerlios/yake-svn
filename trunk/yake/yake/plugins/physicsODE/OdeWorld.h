@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -26,6 +26,8 @@
 */
 #ifndef YAKE_ODEWORLD_H
 #define YAKE_ODEWORLD_H
+
+#include "yake/plugins/physicsODE/OdeShapes.h"
 
 namespace yake {
 
@@ -95,7 +97,7 @@ namespace physics {
 			real _getStepSize() const
 			{ return mStepSize; }
 
-			dTriMeshDataID getMeshDataById(  TriangleMeshId id ) const;
+			OdeTriMesh::MeshData getMeshDataById(  TriangleMeshId id ) const;
 		
 		protected:
 			real				mTime;
@@ -108,7 +110,7 @@ namespace physics {
 			BodyList			mBodies;
 		
 			TriangleMeshId		mNextMeshId;	
-			typedef AssocVector< TriangleMeshId, dTriMeshDataID > MeshDataMap;
+			typedef AssocVector< TriangleMeshId, OdeTriMesh::MeshData > MeshDataMap;
 			MeshDataMap			mMeshDataMap;
 
 			StringVector		mCurrentSolverParams;
