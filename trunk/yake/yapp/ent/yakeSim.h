@@ -39,6 +39,7 @@ namespace ent {
 			audio::IWorld* pAWorld = 0,
 			physics::IWorld* pPWorld = 0);
 		~sim();
+		void setTicksPerSecond(const real ticksPerSecond);
 		simtime getTime() const;
 		real getTimeAsSeconds() const;
 		void tick(const real timeElapsed);
