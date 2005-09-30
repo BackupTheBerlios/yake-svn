@@ -10,7 +10,7 @@
     </externals>
     <nodes name="Scene Root" id="-1">
         <node name="arena0ground" id="22">
-            <entity name="arena0ground" id="22" meshfile="arena0ground.mesh" static="true" />
+            <entity name="arena0ground" id="22" meshFile="arena0ground.mesh" static="true" />
         </node>
     </nodes>
 </scene>

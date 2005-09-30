@@ -31,7 +31,7 @@ thruster1
 
    	affector Scaler
    	{
-       	rate 	0.4
+       	rate 	0.1
    	}
 
 }
