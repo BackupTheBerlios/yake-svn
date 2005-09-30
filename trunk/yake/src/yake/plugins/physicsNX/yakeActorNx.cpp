@@ -105,6 +105,10 @@ namespace physics {
 		mpNxActor = 0;
 		mpNxDefaultShape = 0;
 	}
+	IWorld* ActorNx::getCreator() const
+	{
+		return &mWorld;
+	}
 	void ActorNx::setEnabled(const bool enabled)
 	{
 		YAKE_ASSERT( 0 && "NOT IMPLEMENTED!" );
@@ -124,7 +128,9 @@ namespace physics {
 	}
 	void ActorNx::destroyShape( IShape* pShape )
 	{
-		YAKE_ASSERT( 1==0 );
+		YAKE_ASSERT( pShape );
+		if (pShape)
+			delete pShape;
 	}
 	void ActorNx::onLastShapeIsAboutToDestroy()
 	{
