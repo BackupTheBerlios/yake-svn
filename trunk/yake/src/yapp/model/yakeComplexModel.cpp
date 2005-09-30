@@ -27,6 +27,7 @@
 #include <yapp/base/yappPCH.h>
 #include <yapp/base/yapp.h>
 #include <yapp/model/yakeModelLink.h>
+#include <yapp/model/yakeModelMovableLink.h>
 
 namespace yake {
 namespace model {
@@ -159,6 +160,31 @@ namespace complex {
 		YAKE_ASSERT( rName.length() == 0 ).warning( "tagging not implemented!" );
 		
 		mControllers.push_back( pModelLink );
+	}
+
+	//-----------------------------------------------------
+	ModelMovableLink* Model::addLink( Movable* pSource, Movable* pTarget )
+	{
+		YAKE_ASSERT( pSource );
+		YAKE_ASSERT( pTarget );
+		if (!pSource || !pTarget)
+			return 0;
+		ModelMovableLink* pLink = 0;
+		MovableLinkMap::iterator itFind = mMovableLinkMap.find( pSource );
+		if (itFind == mMovableLinkMap.end())
+		{
+			pLink = new ModelMovableLink();
+			pLink->setSource( pSource );
+			mMovableLinkMap.insert( std::make_pair(pSource,pLink) );
+			mControllers.push_back( SharedPtr<IObjectController>(pLink) );
+		}
+		else
+			pLink = itFind->second;
+		
+		pLink->subscribeToPositionChanged( pTarget );
+		pLink->subscribeToOrientationChanged( pTarget );
+
+		return pLink;
 	}
 
 	//-----------------------------------------------------
