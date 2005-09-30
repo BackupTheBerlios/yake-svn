@@ -88,16 +88,18 @@ namespace vehicle {
 
 		void translate( const Vector3 & d );
 	private:
-		typedef ::yake::Vector< NativeEngine* > EngineList;
+		typedef ::yake::Vector< IEngine* > EngineList;
+		typedef ::yake::Vector< NativeCarEngine* > CarEngineList;
 		EngineList		mEngines;
+		CarEngineList	mCarEngines;
 
 		typedef ::yake::Vector< NativeWheel* > WheelList;
 		WheelList		mWheels;
 
 		struct Axle
 		{
-			WheelList		wheels;
-			NativeEngine*	engine;
+			WheelList			wheels;
+			NativeCarEngine*	engine;
 			Axle() : engine(0)
 			{
 			}
@@ -126,7 +128,8 @@ namespace vehicle {
 	private:
 		SteerGroup* _getSteerGroup(const size_t index) const;
 		Axle* _getAxle(const size_t index) const;
-		NativeEngine* _getEngine(const size_t index) const;
+		NativeCarEngine* _getCarEngine(const size_t index) const;
+		IEngine* _getEngine(const size_t index) const;
 		NativeWheel* _getWheel(const size_t index) const;
 		void _reset();
 	};

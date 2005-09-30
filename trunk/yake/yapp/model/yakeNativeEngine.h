@@ -60,11 +60,11 @@ namespace vehicle {
 		GearList	mGears;
 	};
 
-	class YAPP_BASE_API NativeEngine : public IEngine
+	class YAPP_BASE_API NativeCarEngine : public IEngine
 	{
 	public:
-		NativeEngine();
-		~NativeEngine();
+		NativeCarEngine();
+		~NativeCarEngine();
 
 		virtual void updateSimulation( real timeElapsed );
 

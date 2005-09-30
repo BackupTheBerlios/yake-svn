@@ -36,16 +36,8 @@ namespace yake {
 	using namespace base::templates;
 namespace model {
 
-	/*class YAPP_BASE_API Entity : public DynamicReflectionObject
-	{
-	};*/
-
-	/*class YAPP_BASE_API ModelBase
-	{
-	public:
-	};*/
-
 	class ModelLink;
+	class ModelMovableLink;
 
 namespace complex {
 
@@ -103,6 +95,16 @@ namespace complex {
 
 		void updatePhysics( real timeElapsed );
 		void updateGraphics( real timeElapsed );
+
+		/** For convenience! This function creates a ModelMovableLink between
+			source and target movable objects. Both position and rotation
+			are marked for updates.
+			@Remarks This function is optimized to cache the created links
+				for each source. That means that for each source there's
+				only ever a single link (instead of having one for each
+				pair of source/target objects).
+		*/
+		ModelMovableLink* addLink( Movable* pSource, Movable* pTarget );
 	private:
 		typedef AssocVector< String, SharedPtr<Physical> > PhysicalMap;
 		PhysicalMap			mPhysicals;
@@ -112,6 +114,9 @@ namespace complex {
 
 		typedef Vector< SharedPtr<Model> > ModelList;
 		ModelList			mChildren;
+
+		typedef AssocVector< Movable*, ModelMovableLink* > MovableLinkMap;
+		MovableLinkMap		mMovableLinkMap;
 
 		Model*				mParent;
 

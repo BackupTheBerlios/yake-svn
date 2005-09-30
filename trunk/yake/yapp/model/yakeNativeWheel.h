@@ -69,7 +69,7 @@ namespace vehicle {
 		SharedPtr<CachedInterpolator<real> > _getLinSkidCache();
 		SharedPtr<CachedInterpolator<real> > _getAngSkidCache();
 	private:
-		SharedPtr<physics::IJoint>	mJoint;
+		physics::IJoint*	mJoint;
 		physics::IActor*	mCO;
 		SharedPtr<CachedInterpolator<real> >	mLinSkidCache;
 		SharedPtr<CachedInterpolator<real> >	mAngSkidCache;

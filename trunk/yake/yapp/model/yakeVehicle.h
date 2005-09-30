@@ -34,24 +34,30 @@
 namespace yake {
 namespace model {
 
-/** yapp::vehicle is experimental code! Concrete implementations are not in public CVS
-	and lots of its code may well be still in flux.
+/** yapp::vehicle is experimental code!
 */
 namespace vehicle {
 
+	class IPhysicalVehicleComponent;
 	/** Represents a vehicle :)
 	*/
-	class YAPP_BASE_API Vehicle : public Actor
+	class YAPP_BASE_API Vehicle// : public Actor
 	{
 	public:
 		Vehicle();
 		virtual ~Vehicle();
 		void setModel( complex::Model* pComplex );
-		virtual void onAct();
+		
+		//virtual void onAct();
+		void update(real timeElapsed);
+
+
+		void setPhysicalComponent(IPhysicalVehicleComponent* pPhysical);
 
 		InputComponent* queryInputInterface( VehicleInputComponentType type );
 	private:
-		complex::Model*	mComplex;
+		complex::Model*				mComplex;
+		IPhysicalVehicleComponent*	mPhysics;
 	};
 
 } // vehicle

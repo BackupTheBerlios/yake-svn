@@ -64,13 +64,13 @@ namespace vehicle {
 
 		virtual void readVehicle( const SharedPtr<dom::INode> & pNode );
 		virtual void readChassis( const SharedPtr<dom::INode> & pNodes );
-		virtual void readGeoms( const SharedPtr<dom::INode> & pNodes, app::model::vehicle::VehicleTemplate::ChassisTemplate & chassisTpl );
-			virtual void readGeom( const SharedPtr<dom::INode> & pNode, app::model::vehicle::VehicleTemplate::ChassisTemplate & chassisTpl );
+		virtual void readGeoms( const SharedPtr<dom::INode> & pNodes, model::vehicle::VehicleTemplate::ChassisTemplate & chassisTpl );
+			virtual void readGeom( const SharedPtr<dom::INode> & pNode, model::vehicle::VehicleTemplate::ChassisTemplate & chassisTpl );
 				virtual void readGeomDimensions( const SharedPtr<dom::INode> & pNode, Vector3 & dimensions );
 		virtual void readEngines( const SharedPtr<dom::INode> & pNodes );
 			virtual void readEngine( const SharedPtr<dom::INode> & pNode );
-				virtual void readRPM( const SharedPtr<dom::INode> & pNode, app::model::vehicle::VehicleTemplate::EngineTemplate& engineTpl );
-				virtual void readGearbox( const SharedPtr<dom::INode> & pNode, app::model::vehicle::VehicleTemplate::EngineTemplate& engineTpl );
+				virtual void readRPM( const SharedPtr<dom::INode> & pNode, model::vehicle::VehicleTemplate::CarEngineTemplate& engineTpl );
+				virtual void readGearbox( const SharedPtr<dom::INode> & pNode, model::vehicle::VehicleTemplate::CarEngineTemplate& engineTpl );
 		virtual void readAxles( const SharedPtr<dom::INode> & pNodes );
 			virtual void readAxle( const SharedPtr<dom::INode> & pNode );
 		virtual void readWheels( const SharedPtr<dom::INode> & pNodes );
@@ -80,7 +80,7 @@ namespace vehicle {
 		virtual void readPosition( const SharedPtr<dom::INode> & pNode, Vector3 & position );
 	protected:
 		SharedPtr<dom::INode>							mDocNode;
-		app::model::vehicle::VehicleTemplate*			mpTpl;
+		model::vehicle::VehicleTemplate*			mpTpl;
 	};
 	class VehicleSerializerV1 : public VehicleSerializer
 	{
