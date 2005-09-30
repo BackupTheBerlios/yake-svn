@@ -74,6 +74,10 @@ namespace input {
 	{
 		return lhs.id() + rhs;
 	}
+	inline bool operator < (const ActionId & lhs, const ActionId& rhs)
+	{
+		return lhs.id() < rhs.id();
+	}
 
 	class YAKE_INPUT_API ActionIdRegistry
 	{
@@ -89,6 +93,13 @@ namespace input {
 	extern YAKE_INPUT_API const ActionId ACTIONID_FORWARD;
 	extern YAKE_INPUT_API const ActionId ACTIONID_REVERSE;
 	extern YAKE_INPUT_API const ActionId ACTIONID_STRAFE_LEFT;
+	extern YAKE_INPUT_API const ActionId ACTIONID_STRAFE_RIGHT;
+	extern YAKE_INPUT_API const ActionId ACTIONID_ROTATE_LEFT;
+	extern YAKE_INPUT_API const ActionId ACTIONID_ROTATE_RIGHT;
+	extern YAKE_INPUT_API const ActionId ACTIONID_UP;
+	extern YAKE_INPUT_API const ActionId ACTIONID_DOWN;
+	extern YAKE_INPUT_API const ActionId ACTIONID_PITCH_UP;
+	extern YAKE_INPUT_API const ActionId ACTIONID_PITCH_DOWN;
 	extern YAKE_INPUT_API const ActionId ACTIONID_USER;
 	// example for a user defined action id:
 	//const ActionId ACTIONID_USER_CheerWildly( ACTIONID_USER+1, "cheerwildly" );
