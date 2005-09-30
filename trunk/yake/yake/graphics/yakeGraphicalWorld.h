@@ -51,6 +51,13 @@ namespace graphics {
 	public:
 		virtual ~IParticleSystem();
 		virtual void setVisible( bool visible ) = 0;
+		virtual size_t getNumEmitters() const = 0;
+		virtual void setEmissionRate( const size_t emitter, const real particlesPerSec ) = 0;
+		virtual real getEmissionRate( const size_t emitter ) const = 0;
+		virtual void setMinVelocity( const size_t emitter, const real vel ) = 0;
+		virtual real getMinVelocity( const size_t emitter ) const = 0;
+		virtual void setMaxVelocity( const size_t emitter, const real vel ) = 0;
+		virtual real getMaxVelocity( const size_t emitter ) const = 0;
 	};
 
 	class IEntity;
@@ -404,6 +411,8 @@ namespace graphics {
 	public:
 		virtual ~IWorld();
 
+		virtual void setSkyBox( const String& name ) = 0;
+
 		virtual ILight* createLight() = 0;
 		virtual ICamera* createCamera() = 0;
 
@@ -440,6 +449,13 @@ namespace graphics {
 
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PreRender );
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PostRender );
+	};
+
+	class YAKE_GRAPHICS_INTERFACE_API IFx
+	{
+		YAKE_DECLARE_REGISTRY_01(IFx, String, IWorld&);
+	public:
+		virtual ~IFx() {}
 	};
 
 } // graphics
