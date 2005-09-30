@@ -28,8 +28,8 @@
 #define YAPP_SAMPLES_HELPER_H
 
 using namespace yake;
-using namespace yake::base;
-using namespace yake::base::math;
+using namespace yake::templates;
+using namespace yake::math;
 using namespace yake::graphics;
 
 namespace yake {
@@ -74,7 +74,6 @@ namespace yake {
 
 	typedef Vector<SharedPtr<graphics::ISceneNode> > SharedSceneNodeList;
 	typedef Vector<SharedPtr<model::MovableUpdateController> > SharedMUCList;
-	typedef Vector<physics::ICollisionGeometry*> CollisionGeomList;
 
 	void createDebugGeometryForComplexPhysical(
 				const physics::IActor* pComplex,
@@ -84,57 +83,57 @@ namespace yake {
 				const String & overrideMesh = "",
 				real overrideMeshScaleFactor = 1. )
 	{
-		YAKE_ASSERT( pComplex );
-		YAKE_ASSERT( pWorld );
-		const CollisionGeomList geoms = pComplex->getCollisionGeometryVector();
-		if (geoms.size() == 0)
-			return;
-		ConstVectorIterator< const CollisionGeomList > it( geoms.begin(), geoms.end() );
-		while (it.hasMoreElements())
-		{
-			physics::ICollisionGeometry* pGeom = it.getNext();
-			YAKE_ASSERT( pGeom );
+		//YAKE_ASSERT( pComplex );
+		//YAKE_ASSERT( pWorld );
+		//const physics::IShapePtrList geoms = pComplex->getShapes();
+		//if (geoms.size() == 0)
+		//	return;
+		//ConstVectorIterator< physics::IShapePtrList > it( geoms.begin(), geoms.end() );
+		//while (it.hasMoreElements())
+		//{
+		//	physics::IShape* pGeom = it.getNext();
+		//	YAKE_ASSERT( pGeom );
 
-			graphics::ISceneNode* pSN = pWorld->createSceneNode();
-			YAKE_ASSERT( pSN );
-			graphics::IEntity* pE = 0;
+		//	graphics::ISceneNode* pSN = pWorld->createSceneNode();
+		//	YAKE_ASSERT( pSN );
+		//	graphics::IEntity* pE = 0;
 
-			switch (pGeom->getType())
-			{
-			case physics::ICollisionGeometry::CGT_BOX:
-				{
-				pE = pWorld->createEntity( (overrideMesh == "") ? "box_1x1x1.mesh" : overrideMesh );
-				pE->setCastsShadow( true );
-				Vector3 dim = pGeom->boxGetDimensions();
-				pSN->setScale( dim );
-				}
-				break;
-			case physics::ICollisionGeometry::CGT_SPHERE:
-				{
-				pE = pWorld->createEntity( (overrideMesh == "") ? "sphere_d1.mesh": overrideMesh);
-				pE->setCastsShadow( true  );
-				real scale = overrideMeshScaleFactor * 2 /* x2 because diameter is 1, therefore radius is 0.5 by default*/ * pGeom->sphereGetRadius();
-				if (scale < 0.0001)
-					scale = 1.;
-				pSN->setScale( Vector3(scale,scale,scale) );
-				}
-				break;
-			default:
-				YAKE_ASSERT( 1==0 ).error("unhandled debug geometry.");
-				break;
-			}
+		//	switch (pGeom->getType())
+		//	{
+		//	case physics::ST_BOX:
+		//		{
+		//		pE = pWorld->createEntity( (overrideMesh == "") ? "box_1x1x1.mesh" : overrideMesh );
+		//		pE->setCastsShadow( true );
+		//		Vector3 dim = pGeom->boxGetDimensions();
+		//		pSN->setScale( dim );
+		//		}
+		//		break;
+		//	case physics::ST_SPHERE:
+		//		{
+		//		pE = pWorld->createEntity( (overrideMesh == "") ? "sphere_d1.mesh": overrideMesh);
+		//		pE->setCastsShadow( true  );
+		//		real scale = overrideMeshScaleFactor * 2 /* x2 because diameter is 1, therefore radius is 0.5 by default*/ * pGeom->sphereGetRadius();
+		//		if (scale < 0.0001)
+		//			scale = 1.;
+		//		pSN->setScale( Vector3(scale,scale,scale) );
+		//		}
+		//		break;
+		//	default:
+		//		YAKE_ASSERT( 1==0 ).error("unhandled debug geometry.");
+		//		break;
+		//	}
 
-			YAKE_ASSERT( pE );
-			pSN->attachEntity( pE );
-			nodes.push_back( pSN );
+		//	YAKE_ASSERT( pE );
+		//	pSN->attachEntity( pE );
+		//	nodes.push_back( pSN );
 
-			model::MovableUpdateController* pMUC = new model::MovableUpdateController();
-			YAKE_ASSERT( pMUC );
-			pMUC->setUpdateSource( pGeom );
-			pMUC->subscribeToPositionChanged( pSN );
-			pMUC->subscribeToOrientationChanged( pSN );
-			ctrlrs.push_back( SharedPtr<model::MovableUpdateController>(pMUC) );
-		}
+		//	model::MovableUpdateController* pMUC = new model::MovableUpdateController();
+		//	YAKE_ASSERT( pMUC );
+		//	pMUC->setUpdateSource( pGeom );
+		//	pMUC->subscribeToPositionChanged( pSN );
+		//	pMUC->subscribeToOrientationChanged( pSN );
+		//	ctrlrs.push_back( SharedPtr<model::MovableUpdateController>(pMUC) );
+		//}
 	}
 
 	void createDebugGeometryForComplexPhysical(
