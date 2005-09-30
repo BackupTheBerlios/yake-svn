@@ -17,6 +17,8 @@ namespace physics
 		IBody& getBody() const;
 		IBody* getBodyPtr() const;
 
+		virtual IWorld* getCreator() const;
+
 		virtual void setPosition( const Vector3& rPosition );
 		virtual void setOrientation( const Quaternion& rOrientation );
 		virtual Vector3 getPosition() const;

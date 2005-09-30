@@ -37,6 +37,13 @@ namespace graphics {
 		virtual ~OgreParticleSystem();
 
 		virtual void setVisible( bool visible );
+		virtual size_t getNumEmitters() const;
+		virtual void setEmissionRate( const size_t emitter, const real particlesPerSec );
+		virtual real getEmissionRate( const size_t emitter ) const;
+		virtual void setMinVelocity( const size_t emitter, const real vel );
+		virtual real getMinVelocity( const size_t emitter ) const;
+		virtual void setMaxVelocity( const size_t emitter, const real vel );
+		virtual real getMaxVelocity( const size_t emitter ) const;
 
 		Ogre::ParticleSystem* getParticleSystem_() const
 		{

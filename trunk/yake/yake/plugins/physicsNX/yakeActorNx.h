@@ -42,6 +42,8 @@ namespace physics {
 		ActorNx( NxScene & rScene, WorldNx& rWorld, bool bDynamic );
 		virtual ~ActorNx();
 
+		virtual IWorld* getCreator() const;
+
 		virtual IShape* createShape( const IShape::Desc & rkShapeDesc );
 		virtual void destroyShape( IShape* pShape );
 		virtual IShapePtrList getShapes() const;

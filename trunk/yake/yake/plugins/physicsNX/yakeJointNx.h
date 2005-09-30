@@ -57,6 +57,10 @@ namespace physics {
 		//virtual void addForce(const size_t axisIndex, const real force, const real duration = real(-1));
 		//virtual void addTorque(const size_t axisIndex, const real torque, const real duration = real(-1));
 		//
+		virtual void setSpring(real);
+		virtual real getSpring() const;
+		virtual void setDamping(real);
+		virtual real getDamping() const;
 		static JointNx* createFromDesc_( NxScene & rScene, const IJoint::DescBase & rkJointDesc );
 		static const Deque<JointType>& getSupportedTypes_();
 		static const AssocVector<NxJointType, JointType>& getNxJointMap();
