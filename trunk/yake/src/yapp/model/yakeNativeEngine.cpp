@@ -90,8 +90,8 @@ namespace vehicle {
 	}
 
 
-	NativeEngine::NativeEngine() :
-		mDifferentialRatio( 3.42 ),
+	NativeCarEngine::NativeCarEngine() :
+		mDifferentialRatio( real(3.42) ),
 		mThrottle(0),
 		mCurrentGear(0),
 		mDriveTorque(0),
@@ -104,28 +104,30 @@ namespace vehicle {
 		mpGearBox = new NativeGearBox();
 		YAKE_ASSERT( mpGearBox );
 		mpGearBox->setSpeed( 6 );
-		mpGearBox->setGearRatio( 0, -2.90 ); mpGearBox->setGearMode( 0, NativeGearBox::GM_REVERSE );
-		mpGearBox->setGearRatio( 1,  2.66 ); mpGearBox->setGearMode( 1, NativeGearBox::GM_FORWARD );
-		mpGearBox->setGearRatio( 2,  1.78 ); mpGearBox->setGearMode( 2, NativeGearBox::GM_FORWARD );
-		mpGearBox->setGearRatio( 3,  1.30 ); mpGearBox->setGearMode( 3, NativeGearBox::GM_FORWARD );
-		mpGearBox->setGearRatio( 4,  0.74 ); mpGearBox->setGearMode( 4, NativeGearBox::GM_FORWARD );
-		mpGearBox->setGearRatio( 5,  0.50 ); mpGearBox->setGearMode( 5, NativeGearBox::GM_FORWARD );
+		mpGearBox->setGearRatio( 0, real(-2.90 ) ); mpGearBox->setGearMode( 0, NativeGearBox::GM_REVERSE );
+		mpGearBox->setGearRatio( 1, real( 2.66 ) ); mpGearBox->setGearMode( 1, NativeGearBox::GM_FORWARD );
+		mpGearBox->setGearRatio( 2, real( 1.78 ) ); mpGearBox->setGearMode( 2, NativeGearBox::GM_FORWARD );
+		mpGearBox->setGearRatio( 3, real( 1.30 ) ); mpGearBox->setGearMode( 3, NativeGearBox::GM_FORWARD );
+		mpGearBox->setGearRatio( 4, real( 0.74 ) ); mpGearBox->setGearMode( 4, NativeGearBox::GM_FORWARD );
+		mpGearBox->setGearRatio( 5, real( 0.50 ) ); mpGearBox->setGearMode( 5, NativeGearBox::GM_FORWARD );
 	}
-	NativeEngine::~NativeEngine()
+	NativeCarEngine::~NativeCarEngine()
 	{
 		YAKE_SAFE_DELETE( mpGearBox );
 	}
-	void NativeEngine::setFromTemplate( const VehicleTemplate::EngineTemplate & tpl )
+	void NativeCarEngine::setFromTemplate( const VehicleTemplate::EngineTemplate & tpl )
 	{
-		mMinRPM = tpl.rpmMin_;
-		mMaxRPM = tpl.rpmMax_;
-		mThrottleRPMRise = tpl.rpmRise_;
-		mRPMDieOff = tpl.rpmDieOff_;
-		mDifferentialRatio = tpl.differentialRatio;
+		const VehicleTemplate::CarEngineTemplate& engineTpl =
+			static_cast<const VehicleTemplate::CarEngineTemplate&>(tpl);
+		mMinRPM				= engineTpl.rpmMin_;
+		mMaxRPM				= engineTpl.rpmMax_;
+		mThrottleRPMRise	= engineTpl.rpmRise_;
+		mRPMDieOff			= engineTpl.rpmDieOff_;
+		mDifferentialRatio	= engineTpl.differentialRatio;
 		YAKE_ASSERT( mpGearBox );
-		mpGearBox->setFromTemplate( tpl.gears_ );
+		mpGearBox->setFromTemplate( engineTpl.gears_ );
 	}
-	void NativeEngine::updateSimulation( real timeElapsed )
+	void NativeCarEngine::updateSimulation( real timeElapsed )
 	{
 		updateCurrentRPM( timeElapsed );
 		updateGearRatios();
@@ -136,7 +138,7 @@ namespace vehicle {
 		real engineTorque = mThrottle * getMaxTorque( mCurrentRPM );
 		mDriveTorque = engineTorque * mGearRatio * mDifferentialRatio * 0.75/*just a guess*/;
 	}
-	void NativeEngine::setThrottle( real throttle )
+	void NativeCarEngine::setThrottle( real throttle )
 	{
 		mThrottle = throttle;
 		if (mThrottle > 1)
@@ -144,68 +146,68 @@ namespace vehicle {
 		else if (mThrottle < 0)
 			mThrottle = 0;
 	}
-	real NativeEngine::getThrottle() const
+	real NativeCarEngine::getThrottle() const
 	{
 		return mThrottle;
 	}
-	real NativeEngine::getRPM() const
+	real NativeCarEngine::getRPM() const
 	{
 		return mCurrentRPM;
 	}
-	uint8 NativeEngine::getGear() const
+	uint8 NativeCarEngine::getGear() const
 	{
 		return mCurrentGear;
 	}
-	void NativeEngine::shiftGear( uint8 gear )
+	void NativeCarEngine::shiftGear( uint8 gear )
 	{
 		if (gear < mpGearBox->getSpeed())
 			mCurrentGear = gear;
 	}
-	void NativeEngine::shiftGearUp()
+	void NativeCarEngine::shiftGearUp()
 	{
 		if (mCurrentGear+1 < mpGearBox->getSpeed())
 			mCurrentGear++;
 	}
-	void NativeEngine::shiftGearDown()
+	void NativeCarEngine::shiftGearDown()
 	{
 		if (mCurrentGear > 0)
 			mCurrentGear--;
 	}
-	real NativeEngine::getDriveTorque() const
+	real NativeCarEngine::getDriveTorque() const
 	{
 		return mDriveTorque;
 	}
-	real NativeEngine::getMinRPM() const
+	real NativeCarEngine::getMinRPM() const
 	{
 		return mMinRPM;
 	}
-	real NativeEngine::getMaxRPM() const
+	real NativeCarEngine::getMaxRPM() const
 	{
 		return mMaxRPM;
 	}
-	real NativeEngine::getRPMRise() const
+	real NativeCarEngine::getRPMRise() const
 	{
 		return mThrottleRPMRise;
 	}
-	real NativeEngine::getRPMDieOff() const
+	real NativeCarEngine::getRPMDieOff() const
 	{
 		return mRPMDieOff;
 	}
-	real NativeEngine::getMinShiftingTime() const
+	real NativeCarEngine::getMinShiftingTime() const
 	{
 		return 0.;
 	}
-	real NativeEngine::getMaxTorque( const real rpm )
+	real NativeCarEngine::getMaxTorque( const real rpm )
 	{
 		//TODO: look up in curve
 		return 500; // in Nm
 	}
-	void NativeEngine::updateGearRatios()
+	void NativeCarEngine::updateGearRatios()
 	{
 		mGearRatio = mpGearBox->getGearRatio( mCurrentGear );
 		mInvGearRatio = (mGearRatio != 0.) ? (1.0 / mGearRatio) : 0.;
 	}
-	void NativeEngine::updateCurrentRPM(real timeElapsed)
+	void NativeCarEngine::updateCurrentRPM(real timeElapsed)
 	{
 		if (mThrottle > 0.)
 		{
@@ -220,15 +222,15 @@ namespace vehicle {
 				mCurrentRPM = mMinRPM;
 		}
 	}
-	void NativeEngine::setParamMinRPM( const real rpm )
+	void NativeCarEngine::setParamMinRPM( const real rpm )
 	{
 		mMinRPM = rpm;
 	}
-	void NativeEngine::setParamMaxRPM( const real rpm )
+	void NativeCarEngine::setParamMaxRPM( const real rpm )
 	{
 		mMaxRPM = rpm;
 	}
-	void NativeEngine::setParamRedlineRPM( const real rpm )
+	void NativeCarEngine::setParamRedlineRPM( const real rpm )
 	{
 	}
 

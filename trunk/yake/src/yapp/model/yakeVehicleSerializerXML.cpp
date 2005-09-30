@@ -60,7 +60,7 @@ namespace vehicle {
 
 	//------------------------------------------------------
 	bool VehicleSerializer::load(	const SharedPtr<dom::INode> & docNode,
-									app::model::vehicle::VehicleTemplate& tpl)
+									model::vehicle::VehicleTemplate& tpl)
 	{
 		COUTLN( "load()" );
 		YAKE_ASSERT( docNode.get() );
@@ -80,7 +80,7 @@ namespace vehicle {
 	void VehicleSerializer::readVehicle( const SharedPtr<dom::INode> & pNode )
 	{
 		
-		const String name = pNode->getValueAs<String>( "name" );
+		const String name = pNode->getName();
 		COUTLN( "readVehicle() [" << name << "]" );
 		YAKE_ASSERT( pNode );
 
@@ -124,12 +124,12 @@ namespace vehicle {
 		YAKE_ASSERT( pNode );
 
 		// create template
-		app::model::vehicle::VehicleTemplate::EngineTemplate engineTpl;
+		model::vehicle::VehicleTemplate::CarEngineTemplate engineTpl;
 
 		const dom::NodeList & nodes = pNode->getNodes();
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
-			String childNodeName = (*it)->getValueAs<String>( "name" );
+			String childNodeName = (*it)->getName();
 			childNodeName = ::yake::StringUtil::toLowerCase(childNodeName);
 			COUTLN( "   (child: " <<  childNodeName << ")" );
 
@@ -144,7 +144,7 @@ namespace vehicle {
 		mpTpl->addEngine( engineTpl );
 	}
 	//------------------------------------------------------
-	void VehicleSerializer::readRPM( const SharedPtr<dom::INode> & pNode, app::model::vehicle::VehicleTemplate::EngineTemplate& engineTpl )
+	void VehicleSerializer::readRPM( const SharedPtr<dom::INode> & pNode, model::vehicle::VehicleTemplate::CarEngineTemplate& engineTpl )
 	{
 		COUTLN( "  readRPM()" );
 		YAKE_ASSERT( pNode );
@@ -154,13 +154,13 @@ namespace vehicle {
 		engineTpl.rpmRedline_ = StringUtil::toReal( pNode->getAttributeValueAs<String>( "redline" ) );
 	}
 	//------------------------------------------------------
-	void VehicleSerializer::readGearbox( const SharedPtr<dom::INode> & pNode, app::model::vehicle::VehicleTemplate::EngineTemplate& engineTpl )
+	void VehicleSerializer::readGearbox( const SharedPtr<dom::INode> & pNode, model::vehicle::VehicleTemplate::CarEngineTemplate& engineTpl )
 	{
-		using namespace app::model::vehicle;
+		using namespace model::vehicle;
 		COUTLN( "  readGearbox()" );
 		YAKE_ASSERT( pNode );
 		const dom::NodeList & nodes = pNode->getNodes();
-		templates::ConstVectorIterator< dom::NodeList > it( nodes.begin(), nodes.end() );
+		ConstVectorIterator< dom::NodeList > it( nodes.begin(), nodes.end() );
 		while (it.hasMoreElements())
 		{
 			const SharedPtr<dom::INode> & pGearNode = it.getNext();
@@ -200,7 +200,7 @@ namespace vehicle {
 		COUTLN( "readAxle() [id=" << id << " tag=" << tag << " engine=" << engineId << "]" );
 		YAKE_ASSERT( pNode );
 
-		app::model::vehicle::VehicleTemplate::AxleTemplate axleTpl;
+		model::vehicle::VehicleTemplate::AxleTemplate axleTpl;
 		axleTpl.efficiency_ = 0.75;
 		axleTpl.idxEngine_ = StringUtil::toInt32(engineId);
 
@@ -227,7 +227,7 @@ namespace vehicle {
 		COUTLN( "readWheel() [id=" << id << " tag=" << tag << " axle=" << axleId << "]" );
 		YAKE_ASSERT( pNode );
 
-		app::model::vehicle::VehicleTemplate::WheelTemplate wheelTpl;
+		model::vehicle::VehicleTemplate::WheelTemplate wheelTpl;
 
 		// physical representation of the wheel
 		wheelTpl.radius_ = StringUtil::toReal( pNode->getAttributeValueAs<String>( "radius" ) );
@@ -252,7 +252,7 @@ namespace vehicle {
 					( pGfxNode->getAttributeValueAs<String>( "name" ) == "relative");
 		wheelTpl.gfxDescriptor_ = gfxName;
 		wheelTpl.gfxDescriptorType_ = "scene";
-		wheelTpl.idxAxle_ = StringUtil::toSizeT( axleId );
+		wheelTpl.idxAxle_ = StringUtil::toInt32( axleId );
 		//wheelTpl.idxSteeringGroup_ = StringUtil::toInt32( steerId );
 		wheelTpl.idxSteeringGroup_ = -1;
 
@@ -284,13 +284,13 @@ namespace vehicle {
 		COUTLN( "readChassis()" );
 		YAKE_ASSERT( pNode );
 
-		app::model::vehicle::VehicleTemplate::ChassisTemplate chassisTpl;
+		model::vehicle::VehicleTemplate::ChassisTemplate chassisTpl;
 		chassisTpl.mass_ = 1.5;
 
 		const dom::NodeList & nodes = pNode->getNodes();
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
-			String childNodeName = (*it)->getValueAs<String>( "name" );
+			String childNodeName = (*it)->getName();
 			childNodeName = ::yake::StringUtil::toLowerCase(childNodeName);
 			COUTLN( "   (child: " <<  childNodeName << ")" );
 
@@ -330,7 +330,7 @@ namespace vehicle {
 				" dim=" << chassisTpl.dimensions_.x << ", " << chassisTpl.dimensions_.y << ", " << chassisTpl.dimensions_.z );
 	}
 	//------------------------------------------------------
-	void VehicleSerializer::readGeoms( const SharedPtr<dom::INode> & pNodes, app::model::vehicle::VehicleTemplate::ChassisTemplate & chassisTpl )
+	void VehicleSerializer::readGeoms( const SharedPtr<dom::INode> & pNodes, model::vehicle::VehicleTemplate::ChassisTemplate & chassisTpl )
 	{
 		YAKE_ASSERT( pNodes );
 		COUTLN("readGeoms() (children=" << pNodes->getNodes().size() << ")");
@@ -338,34 +338,34 @@ namespace vehicle {
 		for (dom::NodeList::const_iterator it = nodes.begin(); it != nodes.end(); ++it)
 		{
 			readGeom( (*it), chassisTpl );
-			const app::model::vehicle::VehicleTemplate::GeomTemplate & geomTpl = chassisTpl.geoms_.back();
+			const model::vehicle::VehicleTemplate::ShapeTemplate & geomTpl = chassisTpl.collisionShapes_.back();
 			COUTLN(	"  geom type=" << geomTpl.type_ <<
-					" pos=" << geomTpl.position_.x << ", " << geomTpl.position_.y << ", " << geomTpl.position_.z <<
-					" dim=" << geomTpl.dimensions_.x << ", " << geomTpl.dimensions_.y << ", " << geomTpl.dimensions_.z );
+					" pos=" << geomTpl.position_.x << ", " << geomTpl.position_.y << ", " << geomTpl.position_.z );
+//					" dim=" << geomTpl.dimensions_.x << ", " << geomTpl.dimensions_.y << ", " << geomTpl.dimensions_.z );
 		}
 	}
 	//------------------------------------------------------
-	void VehicleSerializer::readGeom( const SharedPtr<dom::INode> & pNode, app::model::vehicle::VehicleTemplate::ChassisTemplate & chassisTpl )
+	void VehicleSerializer::readGeom( const SharedPtr<dom::INode> & pNode, model::vehicle::VehicleTemplate::ChassisTemplate & chassisTpl )
 	{
 		YAKE_ASSERT( pNode );
-		COUTLN("readGeom() == " << varGet<String>(pNode->getValue("name")));
-		app::model::vehicle::VehicleTemplate::GeomTemplate geomTpl;
+		COUTLN("readGeom() == " << pNode->getAttributeValueAs<String>("type"));
+		model::vehicle::VehicleTemplate::ShapeTemplate geomTpl;
 
 		// dimensions
 		SharedPtr<dom::INode> pTmpNode = pNode->getNodeByName("dimensions");
-		if (pTmpNode.get())
-		{
-			readGeomDimensions( pTmpNode, geomTpl.dimensions_ );
-			String mode = StringUtil::toLowerCase( pTmpNode->getAttributeValueAs<String>("mode") );
-			if (mode == "relative")
-			{
-				geomTpl.dimensions_.x *= chassisTpl.dimensions_.x;
-				geomTpl.dimensions_.y *= chassisTpl.dimensions_.y;
-				geomTpl.dimensions_.z *= chassisTpl.dimensions_.z;
-			}
-		}
-		else
-			geomTpl.dimensions_ = Vector3(0.1,0.1,0.1);
+		//if (pTmpNode.get())
+		//{
+		//	readGeomDimensions( pTmpNode, geomTpl.dimensions_ );
+		//	String mode = StringUtil::toLowerCase( pTmpNode->getAttributeValueAs<String>("mode") );
+		//	if (mode == "relative")
+		//	{
+		//		geomTpl.dimensions_.x *= chassisTpl.dimensions_.x;
+		//		geomTpl.dimensions_.y *= chassisTpl.dimensions_.y;
+		//		geomTpl.dimensions_.z *= chassisTpl.dimensions_.z;
+		//	}
+		//}
+		//else
+		//	geomTpl.dimensions_ = Vector3(0.1,0.1,0.1);
 
 		geomTpl.position_ = Vector3(0,0,0);
 		pTmpNode = pNode->getNodeByName("position");
@@ -374,13 +374,24 @@ namespace vehicle {
 
 		String geomType = StringUtil::toLowerCase( pNode->getAttributeValueAs<String>("type") );
 		if (geomType == "sphere")
+		{
 			geomTpl.type_ = physics::ST_SPHERE;
+			real radius = atof( pNode->getAttributeValueAs<String>("radius").c_str() );
+			geomTpl.pDesc_.reset( new physics::IShape::SphereDesc(radius) );
+		}
 		else if (geomType == "box")
+		{
 			geomTpl.type_ = physics::ST_BOX;
+			Vector3 dimensions(1,1,1);
+			dimensions.x = atof( pNode->getAttributeValueAs<String>("boxx").c_str() );
+			dimensions.y = atof( pNode->getAttributeValueAs<String>("boxy").c_str() );
+			dimensions.z = atof( pNode->getAttributeValueAs<String>("boxz").c_str() );
+			geomTpl.pDesc_.reset( new physics::IShape::BoxDesc(dimensions) );
+		}
 
 		COUTLN("  -> type= " << geomType );
 
-		chassisTpl.geoms_.push_back( geomTpl );
+		chassisTpl.collisionShapes_.push_back( geomTpl );
 	}
 	//------------------------------------------------------
 	void VehicleSerializer::readGeomDimensions( const SharedPtr<dom::INode> & pNode, Vector3 & dimensions )

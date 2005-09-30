@@ -47,15 +47,11 @@
 #endif
 
 namespace yake {
-namespace app {
 namespace model {
 namespace vehicle {
 
 	//-----------------------------------------------------
-	YAKE_IMPLEMENT_REGISTRY( IVehicleSystem );
-	namespace privateVehSys {
-		YAKE_REGISTER_CONCRETE( NativeVehicleSystem );
-	}
+	YAKE_REGISTER_CONCRETE( NativeVehicleSystem );
 
 	//-----------------------------------------------------
 	class VehicleCreatorHelperV1
@@ -113,8 +109,8 @@ namespace vehicle {
 		mComplex->addGraphical( SharedPtr<model::Graphical>(pGraphical) );
 
 		// tie all root scene nodes to the physics object
-		const model::Graphical::SceneNodeList & nodes = pGraphical->getRootSceneNodes();
-/*		VectorIterator< model::Graphical::SceneNodeList > it(nodes.begin(), nodes.end());
+		const model::Graphical::SceneNodeList & nodes = pGraphical->getSceneNodes();
+		ConstVectorIterator< model::Graphical::SceneNodeList > it(nodes.begin(), nodes.end());
 		while (it.hasMoreElements())
 		{
 			graphics::ISceneNode* pSN = it.getNext();
@@ -125,11 +121,11 @@ namespace vehicle {
 
 			model::MovableUpdateController* pMUC = new model::MovableUpdateController();
 			YAKE_ASSERT( pMUC );
-			mComplex->addController( SharedPtr<model::IObjectController>(pMUC) );
+			mComplex->addGraphicsController( SharedPtr<model::IObjectController>(pMUC) );
 			pMUC->setUpdateSource( mPC->getChassisMovable() );
 			pMUC->subscribeToPositionChanged( pSN );
 			pMUC->subscribeToOrientationChanged( pSN );
-		}*/
+		}
 	}
 	//-----------------------------------------------------
 	void VehicleCreatorHelperV1::onEngine( const size_t index, const VehicleTemplate::EngineTemplate & tpl )
@@ -154,8 +150,8 @@ namespace vehicle {
 		mComplex->addGraphical( SharedPtr<model::Graphical>(pGraphical) );
 
 		// tie all root scene nodes to the physics object
-		const model::Graphical::SceneNodeList & nodes = pGraphical->getRootSceneNodes();
-/*		VectorIterator< model::Graphical::SceneNodeList > it(nodes.begin(), nodes.end());
+		const model::Graphical::SceneNodeList & nodes = pGraphical->getSceneNodes();
+		ConstVectorIterator< model::Graphical::SceneNodeList > it(nodes.begin(), nodes.end());
 		while (it.hasMoreElements())
 		{
 			graphics::ISceneNode* pSN = it.getNext();
@@ -166,22 +162,22 @@ namespace vehicle {
 
 			model::MovableUpdateController* pMUC = new model::MovableUpdateController();
 			YAKE_ASSERT( pMUC );
-			mComplex->addController( SharedPtr<model::IObjectController>(pMUC) );
+			mComplex->addGraphicsController( SharedPtr<model::IObjectController>(pMUC) );
 			pMUC->setUpdateSource( mPC->getWheelMovable(index) );
 			pMUC->subscribeToPositionChanged( pSN );
 			pMUC->subscribeToOrientationChanged( pSN );
-		}*/
+		}
 	}
 
 	//-----------------------------------------------------
-	Vehicle* NativeVehicleSystem::createVehicle(const ::yake::base::String & rTemplate, physics::IWorld* pPWorld, graphics::IWorld* pGWorld)
+	Vehicle* NativeVehicleSystem::createVehicle(const ::yake::String & rTemplate, physics::IWorld* pPWorld, graphics::IWorld* pGWorld)
 	{
 		YAKE_ASSERT( pPWorld );
 		YAKE_ASSERT( pGWorld );
 		Vehicle* pVehicle = new Vehicle();
 		YAKE_ASSERT( pVehicle );
 
-		::yake::app::model::complex::Model* pModel = new ::yake::app::model::complex::Model();
+		::yake::model::complex::Model* pModel = new ::yake::model::complex::Model();
 		YAKE_ASSERT( pModel );
 
 		// create physics component
@@ -189,7 +185,7 @@ namespace vehicle {
 		NativePhysicalVehicleComponent* pPhysicsComponent = //create<IPhysicalVehicleComponent>("yake.native");
 			new NativePhysicalVehicleComponent( pPWorld );
 		YAKE_ASSERT( pPhysicsComponent );
-		pVehicle->addComponent( pPhysicsComponent, "core" );
+		pVehicle->setPhysicalComponent( pPhysicsComponent );
 
 		// load vehicle (physics + graphics)
 		_loadModelFromDotVehicle( pModel, rTemplate, pPWorld, pGWorld, pPhysicsComponent );
@@ -202,8 +198,8 @@ namespace vehicle {
 		return pVehicle;
 	}
 	//-----------------------------------------------------
-	bool NativeVehicleSystem::_loadModelFromDotVehicle(::yake::app::model::complex::Model* pModel,
-								const ::yake::base::String & rFN, 
+	bool NativeVehicleSystem::_loadModelFromDotVehicle(::yake::model::complex::Model* pModel,
+								const ::yake::String & rFN, 
 								physics::IWorld* pPWorld,
 								graphics::IWorld* pGWorld,
 								IPhysicalVehicleComponent* pPC
@@ -237,6 +233,5 @@ namespace vehicle {
 
 }// ns vehicle
 } // ns model
-} // ns app
 } // ns yake
 

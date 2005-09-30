@@ -91,6 +91,7 @@ namespace vehicle {
 			if (pW)
 				delete pW;
 		}
+		mWheels.clear();
 		// steer groups
 		VectorIterator< SteerGroupList > itSG( mSteerGroups.begin(), mSteerGroups.end() );
 		while (itSG.hasMoreElements())
@@ -99,6 +100,7 @@ namespace vehicle {
 			if (pSG)
 				delete pSG;
 		}
+		mSteerGroups.clear();
 		// axles
 		VectorIterator< AxleList > itAxle( mAxles.begin(), mAxles.end() );
 		while (itAxle.hasMoreElements())
@@ -107,14 +109,17 @@ namespace vehicle {
 			if (pA)
 				delete pA;
 		}
+		mAxles.clear();
 		// engines
 		VectorIterator< EngineList > itEngine( mEngines.begin(), mEngines.end() );
 		while (itEngine.hasMoreElements())
 		{
-			NativeEngine* pEngine = itEngine.getNext();
+			IEngine* pEngine = itEngine.getNext();
 			if (pEngine)
 				delete pEngine;
 		}
+		mEngines.clear();
+		mCarEngines.clear();
 		// chassis
 		YAKE_SAFE_DELETE( mpChassis );
 	}
@@ -164,12 +169,22 @@ namespace vehicle {
 			COUTLN("engine");
 			const VehicleTemplate::EngineTemplate& engineTpl = tpl.getEngine(i);
 
-			NativeEngine* pEngine = new NativeEngine();
-			if (!pEngine)
-				continue;
-			mEngines.push_back( pEngine );
+			try {
+				const VehicleTemplate::CarEngineTemplate& carEngineTpl =
+					static_cast<const VehicleTemplate::CarEngineTemplate&>( engineTpl );
+				NativeCarEngine* pEngine = new NativeCarEngine();
+				if (!pEngine)
+					continue;
+				mEngines.push_back( pEngine );
+				mCarEngines.push_back( pEngine );
 
-			pEngine->setFromTemplate( engineTpl );
+				pEngine->setFromTemplate( engineTpl );
+			}
+			catch(...)
+			{
+				YAKE_ASSERT("Only car engine creators supported currently.");
+				YAKE_EXCEPT("Only car engine creators supported currently.");
+			}
 		}
 
 		// axles
@@ -178,11 +193,11 @@ namespace vehicle {
 			const VehicleTemplate::AxleTemplate& axleTpl = tpl.getAxle(i);
 			COUTLN("  axle " << i << " engine= " << axleTpl.idxEngine_);
 
-			YAKE_ASSERT( _getEngine( axleTpl.idxEngine_ ) != 0 );
+			YAKE_ASSERT( _getCarEngine( axleTpl.idxEngine_ ) != 0 );
 			// create axle
 			Axle* pAxle = new Axle();
 			YAKE_ASSERT( pAxle );
-			pAxle->engine = _getEngine(axleTpl.idxEngine_);
+			pAxle->engine = _getCarEngine(axleTpl.idxEngine_);
 			YAKE_ASSERT( pAxle->engine );
 			// store axle
 			mAxles.push_back( pAxle );
@@ -249,12 +264,20 @@ namespace vehicle {
 		return mSteerGroups[index];
 	}
 	//-----------------------------------------------------
-	NativeEngine* 
+	IEngine* 
 		NativePhysicalVehicleComponent::_getEngine(const size_t index) const
 	{
 		if (index >= mEngines.size())
 			return 0;
-		return mEngines[index];
+		return mEngines.at(index);
+	}
+	//-----------------------------------------------------
+	NativeCarEngine* 
+		NativePhysicalVehicleComponent::_getCarEngine(const size_t index) const
+	{
+		if (index >= mCarEngines.size())
+			return 0;
+		return mCarEngines.at(index);
 	}
 	//-----------------------------------------------------
 	NativePhysicalVehicleComponent::Axle* 
@@ -339,7 +362,7 @@ namespace vehicle {
 	//-----------------------------------------------------
 	void NativePhysicalVehicleComponent::setEngineThrottle(const size_t index, const real throttle)
 	{
-		NativeEngine* pEngine = _getEngine(index);
+		IEngine* pEngine = _getEngine(index);
 		YAKE_ASSERT( pEngine );
 		pEngine->setThrottle( throttle );
 	}

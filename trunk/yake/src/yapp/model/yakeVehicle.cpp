@@ -34,27 +34,45 @@ namespace model {
 namespace vehicle {
 
 	//-----------------------------------------------------
-	Vehicle::Vehicle() : mComplex(0)
+	Vehicle::Vehicle() : mComplex(0), mPhysics(0)
 	{
 	}
 	//-----------------------------------------------------
 	Vehicle::~Vehicle()
 	{
 		YAKE_SAFE_DELETE( mComplex );
+		YAKE_SAFE_DELETE( mPhysics );
 	}
 	//-----------------------------------------------------
-	void Vehicle::onAct()
+	void Vehicle::setPhysicalComponent(IPhysicalVehicleComponent* pPhysical)
 	{
-		IPhysicalVehicleComponent* pPC = 
-			static_cast<IPhysicalVehicleComponent*>(getComponent("core"));
-		if (!pPC)
-			return;
-		pPC->update(real(0.01)); //@todo use elapsed time!
-
-		YAKE_ASSERT( mComplex );
-		mComplex->updatePhysics( real(0.01) ); //@todo use elapsed time!
-		mComplex->updateGraphics( real(0.01) ); //@todo use elapsed time!
+		YAKE_ASSERT( !mPhysics );
+		mPhysics = pPhysical;
 	}
+	//-----------------------------------------------------
+	void Vehicle::update(real timeElapsed)
+	{
+		if (mPhysics)
+			mPhysics->update(timeElapsed);
+		if (mComplex)
+		{
+			mComplex->updatePhysics(timeElapsed);
+			mComplex->updateGraphics(timeElapsed);
+		}
+	}
+	//-----------------------------------------------------
+	//void Vehicle::onAct()
+	//{
+	//	IPhysicalVehicleComponent* pPC = 
+	//		static_cast<IPhysicalVehicleComponent*>(getComponent("core"));
+	//	if (!pPC)
+	//		return;
+	//	pPC->update(real(0.01)); //@todo use elapsed time!
+
+	//	YAKE_ASSERT( mComplex );
+	//	mComplex->updatePhysics( real(0.01) ); //@todo use elapsed time!
+	//	mComplex->updateGraphics( real(0.01) ); //@todo use elapsed time!
+	//}
 	//-----------------------------------------------------
 	void Vehicle::setModel( complex::Model* pComplex )
 	{

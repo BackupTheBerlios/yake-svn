@@ -33,42 +33,51 @@ namespace model {
 namespace vehicle {
 
 	//-----------------------------------------------------
-	NativeWheel::NativeWheel(physics::IWorld* pPWorld) : mCO(0)
+	NativeWheel::NativeWheel(physics::IWorld* pPWorld) : mCO(0), mJoint(0)
 	{
 		YAKE_ASSERT( pPWorld );
-		mCO = pPWorld->createSphere( 1 );
+		mCO = pPWorld->createActor( physics::ACTOR_DYNAMIC );
 		YAKE_ASSERT( mCO );
-		YAKE_ASSERT( mCO->getBody() );
-		mCO->getBody()->setMassSphere( 1, 1 );
-		setMass( 1 );
+
+		mCO->createShape( physics::IShape::SphereDesc(1) );
+
+		mCO->getBody().setMass( physics::IBody::SphereMassDesc(1,1) );
+		mCO->getBody().setMass( 1 );
+
 		mCO->setPosition(Vector3::kZero);
 		mCO->setOrientation(Quaternion::kIdentity);
-		mCO->setLateralSlipEnabled( true );
-		mCO->setSlipCoefficients( 0.1, 0. );
-		mCO->setSlipNormalSource( this );
+
+		//@fixme lateral slip
+		//mCO->setLateralSlipEnabled( true );
+		//mCO->setSlipCoefficients( 0.1, 0. );
+		//mCO->setSlipNormalSource( this );
+
 	}
 	//-----------------------------------------------------
 	NativeWheel::~NativeWheel()
 	{
-		YAKE_SAFE_DELETE( mCO );
+		YAKE_ASSERT( mCO );
+		if (mJoint)
+			mCO->getCreator()->destroyJoint( mJoint );
+		mCO->getCreator()->destroyActor( mCO );
+		mCO = 0;
 	}
 	//-----------------------------------------------------
 	void NativeWheel::setRadius( const real radius )
 	{
 		YAKE_ASSERT( mCO );
-		ShapePtrVector v = mCO->getShapes();
+		physics::IShapePtrList v = mCO->getShapes();
 		YAKE_ASSERT( v.size() == 1 );
-		physics::ICollisionGeometry* pGeom = v.front();
-		YAKE_ASSERT( pGeom );
-		YAKE_ASSERT( pGeom->getType() == physics::ICollisionGeometry::CGT_SPHERE );
-		pGeom->sphereSetRadius( radius );
+		physics::IShape* pShape = v.front();
+		mCO->destroyShape( pShape );
+
+		mCO->createShape( physics::IShape::SphereDesc(radius) );
 	}
 	//-----------------------------------------------------
 	void NativeWheel::setMass( const real mass )
 	{
 		YAKE_ASSERT( mCO );
-		YAKE_ASSERT( mCO->getBody() );
-		mCO->getBody()->setMass( mass );
+		mCO->getBody().setMass( mass );
 	}
 	//-----------------------------------------------------
 	void NativeWheel::setPosition(const Vector3 & rPosition)
@@ -100,14 +109,14 @@ namespace vehicle {
 		if (mLinSkidCache.get() == 0)
 		{
 			mLinSkidCache.reset( new model::CachedInterpolator<real>(8) );
-			mLinSkidCache->setWeight(0, 1.0);
-			mLinSkidCache->setWeight(0, 0.8);
-			mLinSkidCache->setWeight(0, 0.6);
-			mLinSkidCache->setWeight(0, 0.5);
-			mLinSkidCache->setWeight(0, 0.4);
-			mLinSkidCache->setWeight(0, 0.3);
-			mLinSkidCache->setWeight(0, 0.2);
-			mLinSkidCache->setWeight(0, 0.1);
+			mLinSkidCache->setWeight(0, real(1.0));
+			mLinSkidCache->setWeight(0, real(0.8));
+			mLinSkidCache->setWeight(0, real(0.6));
+			mLinSkidCache->setWeight(0, real(0.5));
+			mLinSkidCache->setWeight(0, real(0.4));
+			mLinSkidCache->setWeight(0, real(0.3));
+			mLinSkidCache->setWeight(0, real(0.2));
+			mLinSkidCache->setWeight(0, real(0.1));
 		}
 		return mLinSkidCache;
 	}
@@ -117,14 +126,14 @@ namespace vehicle {
 		if (mAngSkidCache.get() == 0)
 		{
 			mAngSkidCache.reset( new model::CachedInterpolator<real>(8) );
-			mAngSkidCache->setWeight(0, 1.0);
-			mAngSkidCache->setWeight(0, 0.8);
-			mAngSkidCache->setWeight(0, 0.6);
-			mAngSkidCache->setWeight(0, 0.5);
-			mAngSkidCache->setWeight(0, 0.4);
-			mAngSkidCache->setWeight(0, 0.3);
-			mAngSkidCache->setWeight(0, 0.2);
-			mAngSkidCache->setWeight(0, 0.1);
+			mAngSkidCache->setWeight(0, real(1.0));
+			mAngSkidCache->setWeight(0, real(0.8));
+			mAngSkidCache->setWeight(0, real(0.6));
+			mAngSkidCache->setWeight(0, real(0.5));
+			mAngSkidCache->setWeight(0, real(0.4));
+			mAngSkidCache->setWeight(0, real(0.3));
+			mAngSkidCache->setWeight(0, real(0.2));
+			mAngSkidCache->setWeight(0, real(0.1));
 		}
 		return mAngSkidCache;
 	}
@@ -136,11 +145,13 @@ namespace vehicle {
 	//-----------------------------------------------------
 	Vector3 NativeWheel::getLateralSlipNormal() const
 	{
-		YAKE_ASSERT( mJoint );
-		return mJoint->getAxis2();
+		//YAKE_ASSERT( mJoint );
+		//return mJoint->getAxis2();
+		YAKE_ASSERT( 1==0 && "NEEDS IMPLEMENTATION!" ).warning("NEEDS IMPLEMENTATION");
+		return Vector3();
 	}
 	//-----------------------------------------------------
-	void NativeWheel::setJoint( SharedPtr<physics::IJoint> & jt )
+	void NativeWheel::setJoint( physics::IJointPtr jt )
 	{
 		mJoint = jt;
 	}
@@ -166,49 +177,50 @@ namespace vehicle {
 	//-----------------------------------------------------
 	void NativeWheel::applySteer( real steer )
 	{
-		real epsilon = 0.015;
+		real epsilon = real(0.015);
 		//if (steer < 0) epsilon *= -1;
 		if (steer > -0.04 && steer < 0.04)
 		{
 			steer = 0;
 			epsilon = 0;
 		}
-		mJoint->setLowStop( steer - epsilon );
-		mJoint->setHighStop( steer + epsilon );
+		//mJoint->setLowStop( steer - epsilon );
+		//mJoint->setHighStop( steer + epsilon );
+		mJoint->setLimits( 0, steer - epsilon, steer + epsilon );
 	}
 	//-----------------------------------------------------
 	void NativeWheel::applyTq( const Vector3 & torque )
 	{
-		mCO->getBody()->addTorque( mCO->getBody()->getOrientation() * torque );
+		mCO->getBody().addTorque( mCO->getOrientation() * torque );
 	}
 	//-----------------------------------------------------
 	void NativeWheel::applyBrakeTq( const Vector3 & torque )
 	{
-		Vector3 linVel = mCO->getBody()->getLinearVelocity();
-		Vector3 dir = mCO->getBody()->getOrientation() * Vector3::kUnitZ;
+		Vector3 linVel = mCO->getBody().getLinearVelocity();
+		Vector3 dir = mCO->getOrientation() * Vector3::kUnitZ;
 		if (dir.dotProduct(linVel) > 0)
-			mCO->getBody()->addRelTorque( torque );
+			mCO->getBody().addLocalTorque( torque );
 		else
-			mCO->getBody()->addRelTorque( -torque );
+			mCO->getBody().addLocalTorque( -torque );
 	}
 	//-----------------------------------------------------
 	void NativeWheel::apply( real velocity, real fmax )
 	{
-		if (mJoint->getType() == physics::IJoint::JT_HINGE)
+		if (mJoint->getType() == physics::JT_HINGE)
 		{
-			mJoint->setMotor1Velocity( velocity );
-			mJoint->setMotor1MaximumForce( fmax );
+			mJoint->setMotorEnabled(0,true);
+			mJoint->setMotor(0, velocity, fmax );
 		}
 		else
 		{
-			mJoint->setMotor2Velocity( velocity );
-			mJoint->setMotor2MaximumForce( fmax );
+			mJoint->setMotorEnabled(1,true);
+			mJoint->setMotor(1, velocity, fmax );
 		}
 	}
 	//-----------------------------------------------------
 	physics::IJoint* NativeWheel::getJoint() const
 	{
-		return mJoint.get();
+		return mJoint;
 	}
 
 
