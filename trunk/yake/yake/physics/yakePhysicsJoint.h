@@ -205,6 +205,10 @@ namespace physics {
 		//virtual void addTorque(const size_t axisIndex, const real torque, const real duration = real(-1)) = 0;
 		///setLow/HiStop
 		//setSpring/Damper
+		virtual void setSpring(real) = 0;
+		virtual real getSpring() const = 0;
+		virtual void setDamping(real) = 0;
+		virtual real getDamping() const = 0;
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IJoint );
 
