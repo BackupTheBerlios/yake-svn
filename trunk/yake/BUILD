@@ -6,7 +6,7 @@ CONTENTS
 
 0. Prologue
 1. BUILD INSTRUCTIONS FOR YAKE ON PC/WIN
-2. BUILD INSTRUCTIONS FOR YAKE 0.1b2 ON PC/LINUX
+2. BUILD INSTRUCTIONS FOR YAKE ON PC/LINUX
 
 0. Prologue
 -----------
@@ -35,18 +35,27 @@ and
 
 (yake_root_dir)/scripts/yapp/yapp.sln
 
+If you don't have the dependencies package containing prebuilt libraries,
+then you have to compile these yourself.
+
+See the file <yakeroot>/dependencies/DEPENDENCIES for more information.
 
 
-2. BUILD INSTRUCTIONS FOR YAKE 0.1b2 ON PC/LINUX
-------------------------------------------------
+2. BUILD INSTRUCTIONS FOR YAKE ON PC/LINUX
+------------------------------------------
 
+Last modified: 30/9/2005 by Stephan Kaiser (psy)
 Last modified: 22/9/2004 by Nikita Buida (mj)
 
-This instruction applies to CVS version of Yake.
+This instruction applies to SVN (Subversion) version of Yake.
+
+If you encounter problems and need the very latest instructions, please
+visit www.yake.org and search the forums and the wiki. You will most likely
+find the solution there.
 
 Assuming that you are in yake root directory.
 
-#. Copy all files except CVS to yake root dir from ./scripts/linux.
+#. Copy all files except SVN related ones to yake root dir from ./scripts/linux.
 #. Set up ./dependencies dir.
 Its structure should look like this:
 /dependencies
