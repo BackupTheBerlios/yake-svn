@@ -89,6 +89,13 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
+	void GraphicalWorld::setSkyBox( const String& name )
+	{
+		YAKE_ASSERT( msCore ).debug("need a core!");
+		msCore->getSceneMgr()->setSkyBox( true, name );
+	}
+
+	//-----------------------------------------------------
 	IEntity* GraphicalWorld::createEntity( const String& mesh )
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");

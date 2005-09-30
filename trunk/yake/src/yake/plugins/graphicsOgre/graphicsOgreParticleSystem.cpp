@@ -42,14 +42,83 @@ namespace graphics {
 	//------------------------------------------------------
 	OgreParticleSystem::~OgreParticleSystem()
 	{
+		YAKE_ASSERT( mParticleSys );
 		mParticleSysMgr.destroySystem( mParticleSys->getName() );
 	}
 
 	//------------------------------------------------------
 	void OgreParticleSystem::setVisible( bool visible )
 	{
+		YAKE_ASSERT( mParticleSys );
 		mParticleSys->setVisible( visible );
 	}
-	
+
+	//------------------------------------------------------
+	size_t OgreParticleSystem::getNumEmitters() const
+	{
+		YAKE_ASSERT( mParticleSys );
+		return mParticleSys->getNumEmitters();
+	}
+
+	//------------------------------------------------------
+	void OgreParticleSystem::setEmissionRate( const size_t emitter, const real particlesPerSec )
+	{
+		YAKE_ASSERT( mParticleSys );
+		YAKE_ASSERT( mParticleSys->getNumEmitters() > emitter );
+		Ogre::ParticleEmitter* pEmitter = mParticleSys->getEmitter(emitter);
+		YAKE_ASSERT( pEmitter );
+		pEmitter->setEmissionRate( particlesPerSec );
+	}
+
+	//------------------------------------------------------
+	real OgreParticleSystem::getEmissionRate( const size_t emitter ) const
+	{
+		YAKE_ASSERT( mParticleSys );
+		YAKE_ASSERT( mParticleSys->getNumEmitters() > emitter );
+		Ogre::ParticleEmitter* pEmitter = mParticleSys->getEmitter(emitter);
+		YAKE_ASSERT( pEmitter );
+		return pEmitter->getEmissionRate();
+	}
+
+	//------------------------------------------------------
+	void OgreParticleSystem::setMinVelocity( const size_t emitter, const real vel )
+	{
+		YAKE_ASSERT( mParticleSys );
+		YAKE_ASSERT( mParticleSys->getNumEmitters() > emitter );
+		Ogre::ParticleEmitter* pEmitter = mParticleSys->getEmitter(emitter);
+		YAKE_ASSERT( pEmitter );
+		pEmitter->setMinParticleVelocity( vel );
+	}
+
+	//------------------------------------------------------
+	real OgreParticleSystem::getMinVelocity( const size_t emitter ) const
+	{
+		YAKE_ASSERT( mParticleSys );
+		YAKE_ASSERT( mParticleSys->getNumEmitters() > emitter );
+		Ogre::ParticleEmitter* pEmitter = mParticleSys->getEmitter(emitter);
+		YAKE_ASSERT( pEmitter );
+		return pEmitter->getMinParticleVelocity();
+	}
+
+	//------------------------------------------------------
+	void OgreParticleSystem::setMaxVelocity( const size_t emitter, const real vel )
+	{
+		YAKE_ASSERT( mParticleSys );
+		YAKE_ASSERT( mParticleSys->getNumEmitters() > emitter );
+		Ogre::ParticleEmitter* pEmitter = mParticleSys->getEmitter(emitter);
+		YAKE_ASSERT( pEmitter );
+		return pEmitter->setMaxParticleVelocity(vel);
+	}
+
+	//------------------------------------------------------
+	real OgreParticleSystem::getMaxVelocity( const size_t emitter ) const
+	{
+		YAKE_ASSERT( mParticleSys );
+		YAKE_ASSERT( mParticleSys->getNumEmitters() > emitter );
+		Ogre::ParticleEmitter* pEmitter = mParticleSys->getEmitter(emitter);
+		YAKE_ASSERT( pEmitter );
+		return pEmitter->getMaxParticleVelocity();
+	}
+
 } // graphics
 } // yake
