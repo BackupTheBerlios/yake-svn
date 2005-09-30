@@ -330,7 +330,7 @@ namespace physics {
 		if (!mpScene)
 			return 0;
 
-		std::cout << "NX: new static actor\n";
+		std::cout << "NX: new actor\n";
 		return _createActor(rActorDesc);
 	}
 	IAvatarPtr WorldNx::createAvatar( const IAvatar::Desc & rkAvatarDesc )
