@@ -92,6 +92,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesSync1", "samples\mod
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vehicle", "vehicle.vcproj", "{EAEC3A1F-2888-4EAC-869D-BFA70FD56A65}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -182,6 +186,10 @@ Global
 		{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}.Debug.Build.0 = Debug|Win32
 		{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}.Release.ActiveCfg = Release|Win32
 		{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}.Release.Build.0 = Release|Win32
+		{EAEC3A1F-2888-4EAC-869D-BFA70FD56A65}.Debug.ActiveCfg = Debug|Win32
+		{EAEC3A1F-2888-4EAC-869D-BFA70FD56A65}.Debug.Build.0 = Debug|Win32
+		{EAEC3A1F-2888-4EAC-869D-BFA70FD56A65}.Release.ActiveCfg = Release|Win32
+		{EAEC3A1F-2888-4EAC-869D-BFA70FD56A65}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
