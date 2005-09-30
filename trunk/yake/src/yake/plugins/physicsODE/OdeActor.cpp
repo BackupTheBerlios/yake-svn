@@ -64,6 +64,12 @@ namespace physics {
 	}
 
 	//-----------------------------------------------------
+	IWorld* OdeActor::getCreator() const
+	{
+		return mOdeWorld;
+	}
+
+	//-----------------------------------------------------
 	void OdeActor::setEnabled(const bool enabled)
 	{
 		YAKE_ASSERT( 0 && "NOT IMPLEMENTED" );
