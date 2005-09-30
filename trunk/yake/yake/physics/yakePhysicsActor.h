@@ -61,6 +61,7 @@ namespace physics {
 		ACTOR_MOVABLE,
 		ACTOR_DYNAMIC
 	};
+	class IWorld;
 	class IActor : public Movable, public ListenerManager<IActorListener>
 	{
 	public:
@@ -74,6 +75,8 @@ namespace physics {
 		};
 	public:
 		virtual ~IActor() {}
+
+		virtual IWorld* getCreator() const = 0;
 
 		virtual IShape* createShape( const IShape::Desc& rShapeDesc ) = 0;
 		virtual void destroyShape( IShape* pShape ) = 0;
