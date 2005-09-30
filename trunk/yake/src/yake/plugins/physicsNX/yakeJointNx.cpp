@@ -217,6 +217,20 @@ namespace physics {
 		YAKE_ASSERT( mpActors[ index ] );
 		return *mpActors[ index ];
 	}
+	void JointNx::setSpring(real)
+	{
+	}
+	real JointNx::getSpring() const
+	{
+		return 0.;
+	}
+	void JointNx::setDamping(real)
+	{
+	}
+	real JointNx::getDamping() const
+	{
+		return 1.;
+	}
 
 }
 }
