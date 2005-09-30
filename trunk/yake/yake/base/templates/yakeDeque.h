@@ -248,9 +248,14 @@ public:
 			mCurrent( start ), mEnd( end )
 		{
 		}
-		ConstDequeIterator(T& container) :
+		ConstDequeIterator(const T& container) :
 			mCurrent( container.begin() ), mEnd( container.end() )
 		{
+		}
+		void reset(const T& container)
+		{
+			mCurrent = container.begin();
+			mEnd = container.end();
 		}
 		bool hasMoreElements()
 		{
