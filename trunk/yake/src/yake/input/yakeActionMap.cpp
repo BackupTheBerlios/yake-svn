@@ -35,6 +35,9 @@ namespace input {
 	const ActionId ACTIONID_FORWARD(1, "forward");
 	const ActionId ACTIONID_REVERSE(2, "reverse");
 	const ActionId ACTIONID_STRAFE_LEFT(3, "strafe_left");
+	const ActionId ACTIONID_STRAFE_RIGHT(4, "strafe_right");
+	const ActionId ACTIONID_UP(5, "up");
+	const ActionId ACTIONID_DOWN(6, "down");
 
 	const ActionId ACTIONID_USER(10000, "user");
 
