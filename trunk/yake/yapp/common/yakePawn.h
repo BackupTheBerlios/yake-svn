@@ -28,7 +28,6 @@
 #define YAPP_MODEL_PAWN_H
 
 namespace yake {
-namespace app {
 namespace model {
 
 	/** Simple entity/actor that has a physical representation.
@@ -39,7 +38,7 @@ namespace model {
 		Pawn();
 		virtual ~Pawn();
 		void setModel( model::complex::Model* pComplex );
-		void setMovable( physics::IComplexObject* pMovable );
+		void setMovable( physics::IActor* pMovable );
 
 		//@{ name model::Actor interface
 		virtual void onSense();
@@ -52,10 +51,9 @@ namespace model {
 		void updateControllers( const real timeElapsed );
 	private:
 		model::complex::Model*		mComplex;
-		physics::IComplexObject*	mMovable;
+		physics::IActor*			mMovable;
 	};
 
-}
 }
 }
 
