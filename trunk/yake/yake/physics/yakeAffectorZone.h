@@ -96,22 +96,16 @@ namespace physics {
 	};
 	*/
 
-	class AffectorZone
+	class YAKE_PHYSICS_API AffectorZone
 	{
 	protected:
-		typedef Vector< SharedPtr<BoundingVolume> > VolumeList;
-		VolumeList				mVolumes;
-
 		typedef Vector< SharedPtr<physics::IBodyAffector> > AffectorList;
 		AffectorList			mAffectors;
 
-		SharedPtr<IWorld>		mWorld;
 		BodyGroup				mAffectedBodies;
 	public:
 		AffectorZone();
-		void addVolume( SharedPtr<BoundingVolume>& pVolume );
 		void addAffector( SharedPtr<IBodyAffector>& pAffector );
-		void setWorld( SharedPtr<IWorld>& pWorld );
 
 		void setEnabled( bool enabled );
 		bool isEnabled() const;
@@ -119,25 +113,27 @@ namespace physics {
 		virtual void update( const real timeElapsed );
 
 	protected:
-		void _determineAffectedBodies( const SharedPtr<IWorld> & pWorld );
+		virtual void _determineAffectedBodies() = 0;
 	private:
 		bool		mEnabled;
 		bool		mNeedsUpdate;
 	};
 
-	class AffectorZoneManager
+	class YAKE_PHYSICS_API AffectorZoneManager
 	{
 	public:
+		AffectorZoneManager( SharedPtr<physics::IWorld>& pWorld );
+		~AffectorZoneManager();
+
 		void addAffectorZone( SharedPtr<AffectorZone> & pSpace );
 
-		virtual void update( const real timeElapsed )
-		{
-			/**@todo
-			foreach forceSpace
-				if ((*it)->isEnabled())
-					(*it)->update( upd );
-			*/
-		}
+		virtual void update( const real timeElapsed );
+
+	protected:
+		typedef Vector< SharedPtr<AffectorZone> > ZoneList;
+		ZoneList mZones;
+		SharedPtr<physics::IWorld> mWorld;
+		SignalConnection mStepSigConn;
 	};
 
 }

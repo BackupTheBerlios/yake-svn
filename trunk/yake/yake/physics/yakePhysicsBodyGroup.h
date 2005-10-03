@@ -39,10 +39,10 @@ namespace physics {
 
 	class IBody;
 
-	class BodyGroup
+	class YAKE_PHYSICS_API BodyGroup
 	{
 	public:
-        typedef Vector<SharedPtr<IBody> > BodyVector;
+        typedef Vector<IBodyPtr> BodyVector;
 		typedef BodyVector::iterator iterator;
 		typedef BodyVector::const_iterator const_iterator;
 		typedef BodyVector::value_type value_type;
@@ -52,8 +52,8 @@ namespace physics {
 		BodyGroup();
 		~BodyGroup();
 
-		BodyGroup& operator += (SharedPtr<IBody> & rBody);
-		BodyGroup& operator -= (SharedPtr<IBody> & rBody);
+		BodyGroup& operator += (IBodyPtr rBody);
+		BodyGroup& operator -= (IBodyPtr rBody);
 
 		iterator begin();
 		const_iterator begin() const;

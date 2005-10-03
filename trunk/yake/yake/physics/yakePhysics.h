@@ -40,8 +40,8 @@
 #include <yake/physics/yakePhysicsActor.h>
 #include <yake/physics/yakePhysicsBodyGroup.h>
 #include <yake/physics/yakePhysicsAffectors.h>
-//#include <yake/physics/yakeAffectorZone.h>
 #include <yake/physics/yakePhysicsWorld.h>
+#include <yake/physics/yakeAffectorZone.h>
 #include <yake/physics/yakePhysicsSystem.h>
 
 #endif

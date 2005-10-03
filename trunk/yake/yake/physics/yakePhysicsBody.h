@@ -85,11 +85,14 @@ namespace physics {
 		
 		virtual void onSleeping(const bool sleeping);
 	};
+	class IBody;
+	YAKE_PHYSICS_COMMON_POINTERS( IBody );
 
 	class IActor;
 	class IBody : public ListenerManager<IBodyListener>
 	{
 	public:
+		enum quantityType { QT_MASS, QT_DENSITY };
 		struct Desc
 		{
 			Desc()
@@ -111,23 +114,26 @@ namespace physics {
 
 		struct MassDesc
 		{
-			MassDesc( real shapeDensity, const Vector3& rOffset = Vector3::kZero ) :
-					density( shapeDensity ),
-					offset( rOffset )
+			MassDesc( real massOrDensity, const Vector3& rOffset = Vector3::kZero, quantityType type = QT_DENSITY ) :
+					quantity( massOrDensity ),
+					offset( rOffset ),
+					qType( type )
 			{}
 
 			virtual ~MassDesc() {}
 
-			real 			density; /// For all of them. You can set total mass via setMass
+			real 			quantity; /// For all of them. You can set total mass via setMass
 			Vector3		offset; /// Mass can be offseted. TODO Add rotation "offset"?
+			quantityType qType;
 		};
 
 		struct SphereMassDesc : public MassDesc
 		{
 			SphereMassDesc(	real radiusValue,
 								real shapeDensity,
-								const Vector3& rOffset = Vector3::kZero ) :
-									MassDesc( shapeDensity, rOffset ),
+								const Vector3& rOffset = Vector3::kZero,
+								quantityType type = QT_DENSITY ) :
+									MassDesc( shapeDensity, rOffset, type ),
 							 		radius( radiusValue )
 			{}
 
@@ -140,8 +146,9 @@ namespace physics {
 							real boxSizeY,
 							real boxSizeZ,
 							real shapeDensity,
-							const Vector3& rOffset = Vector3::kZero  ) :
-								MassDesc( shapeDensity, rOffset ),
+							const Vector3& rOffset = Vector3::kZero,
+							quantityType type = QT_DENSITY ) :
+								MassDesc( shapeDensity, rOffset, type ),
 								sizeX( boxSizeX ),
 								sizeY( boxSizeY ),
 								sizeZ( boxSizeZ )
@@ -157,8 +164,9 @@ namespace physics {
 			CapsuleMassDesc(	real capRadius,
 								real capLength,
 								real shapeDensity,
-								const Vector3& rOffset = Vector3::kZero ) :
-									MassDesc( shapeDensity, rOffset ),
+								const Vector3& rOffset = Vector3::kZero,
+								quantityType type = QT_DENSITY ) :
+									MassDesc( shapeDensity, rOffset, type ),
 									radius( capRadius ),
 									length( capLength )
 			{}
@@ -172,8 +180,9 @@ namespace physics {
 			CylinderMassDesc(	real cylRadius,
 								real cylLength,
 								real shapeDensity,
-								const Vector3& rOffset = Vector3::kZero ) :
-									MassDesc( shapeDensity, rOffset ),
+								const Vector3& rOffset = Vector3::kZero,
+								quantityType type = QT_DENSITY ) :
+									MassDesc( shapeDensity, rOffset, type ),
 									radius( cylRadius ),
 									length( cylLength )
 			{}
@@ -271,6 +280,7 @@ namespace physics {
 		*/
 		virtual void addLocalTorque( const Vector3& rTorque ) = 0;
 	};
+	YAKE_PHYSICS_COMMON_POINTERS( IBody );
 
 }
 }

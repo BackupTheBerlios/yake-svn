@@ -99,7 +99,7 @@ namespace physics {
 		void regActor_(NxActor* pNxActor, ActorNx* pActor);
 		void unregActor_(NxActor* pNxActor);
 
-		YAKE_MEMBERSIGNAL( public, void(const real), PreStepInternal )
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void(const real), PreStepInternal )
 		YAKE_MEMBERSIGNAL_FIRE_FN1( public, PreStepInternal, const real dt, dt )
 
 	private:

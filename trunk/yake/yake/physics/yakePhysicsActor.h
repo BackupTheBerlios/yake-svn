@@ -78,18 +78,18 @@ namespace physics {
 
 		virtual IWorld* getCreator() const = 0;
 
-		virtual IShape* createShape( const IShape::Desc& rShapeDesc ) = 0;
+		virtual IShape* createShape( const IShape::Desc& rShapeDesc, real massOrDensity = 0.0f, IBody::quantityType type = IBody::QT_DENSITY ) = 0;
 		virtual void destroyShape( IShape* pShape ) = 0;
 		virtual IShapePtrList getShapes() const = 0;
 
 		virtual IBody* getBodyPtr() const = 0;
 		virtual IBody& getBody() const = 0;
 
-		//virtual void setPosition(const Vector3& position) = 0;
-		//virtual Vector3 getPosition() const = 0;
+		virtual void setPosition(const Vector3& position) = 0;
+		virtual Vector3 getPosition() const = 0;
 
-		//virtual void setOrientation( const Quaternion & rkOrientation ) = 0;
-		//virtual Quaternion getOrientation() const = 0;
+		virtual void setOrientation( const Quaternion & rkOrientation ) = 0;
+		virtual Quaternion getOrientation() const = 0;
 
 		virtual void setEnabled(const bool enabled) = 0;
 		virtual bool isEnabled() const = 0;

@@ -38,7 +38,7 @@ namespace physics {
 	/** A generic body affector. Basically defines the interface, factory and implements
 		some basic and usually common functionality.
 	*/
-	class IBodyAffector
+	class YAKE_PHYSICS_API IBodyAffector
 	{
 		YAKE_DECLARE_REGISTRY_0( IBodyAffector, String )
 	public:

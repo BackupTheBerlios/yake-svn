@@ -44,7 +44,7 @@ namespace physics {
 
 		virtual IWorld* getCreator() const;
 
-		virtual IShape* createShape( const IShape::Desc & rkShapeDesc );
+		virtual IShape* createShape( const IShape::Desc & rkShapeDesc, real massOrDensity = 0.0f, IBody::quantityType type = IBody::QT_DENSITY );
 		virtual void destroyShape( IShape* pShape );
 		virtual IShapePtrList getShapes() const;
 

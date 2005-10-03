@@ -24,7 +24,7 @@ namespace physics
 		virtual Vector3 getPosition() const;
 		virtual Quaternion getOrientation() const;
 		
-		virtual IShape* createShape( const IShape::Desc& rShapeDesc );
+		virtual IShape* createShape( const IShape::Desc& rShapeDesc, real massOrDensity = 0.0f, IBody::quantityType type = IBody::QT_DENSITY );
 		virtual void destroyShape( IShape* pShape );
 		virtual IShapePtrList getShapes() const;
 
@@ -43,6 +43,7 @@ namespace physics
 	protected:	
 		OdeGeom* createShapeFromDesc( const IShape::Desc& rShapeDesc );
 		OdeGeom* createTransformGeomIfNeeded( OdeGeom* pGeom, const Vector3& rOffset, const Quaternion& rRelOrientation );
+		IBody::MassDesc* createMassDescFromShapeDesc( const IShape::Desc& rShapeDesc, real massOrDensity, IBody::quantityType qType );
 
 		Vector3							mPosition;
 		Quaternion						mOrientation;

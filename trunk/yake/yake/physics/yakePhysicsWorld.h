@@ -85,6 +85,7 @@ namespace physics {
 
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(void), PreStep )
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PostStep )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(const real), PreStepInternal )
 	};
 
 }

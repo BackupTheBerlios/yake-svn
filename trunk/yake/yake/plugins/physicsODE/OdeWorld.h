@@ -79,6 +79,8 @@ namespace physics {
 			YAKE_MEMBERSIGNAL_FIRE_FN0( public, PreStep )
 			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PostStep )
 			YAKE_MEMBERSIGNAL_FIRE_FN1( public, PostStep, real t, t )
+			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PreStepInternal )
+			YAKE_MEMBERSIGNAL_FIRE_FN1( public, PreStepInternal, const real dt, dt )
 		public:
 
 			///TODO what are these for?
