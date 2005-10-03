@@ -141,8 +141,27 @@ namespace physics {
 		case dJointTypeUniversal:
 		case dJointTypeBall:
 		default:
+			YAKE_ASSERT( 1==0 )(mOdeJoint->getType()).warning("OdeJoint::_applySpring() not implemented for this type!");
 			break;
 		}
+	}
+	void OdeJoint::setSpring(real spring)
+	{
+		mSpringConstant = spring;
+		_applySpring();
+	}
+	real OdeJoint::getSpring() const
+	{
+		return mSpringConstant;
+	}
+	void OdeJoint::setDamping(real damping)
+	{
+		mDampingConstant = damping;
+		_applySpring();
+	}
+	real OdeJoint::getDamping() const
+	{
+		return mDampingConstant;
 	}
 
 } // physics

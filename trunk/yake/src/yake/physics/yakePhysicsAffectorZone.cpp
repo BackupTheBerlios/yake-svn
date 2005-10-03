@@ -40,8 +40,7 @@ namespace physics {
 		if (!mNeedsUpdate)
 			return;
 
-		YAKE_ASSERT( mWorld );
-		_determineAffectedBodies( mWorld );
+		_determineAffectedBodies();
 		
 		VectorIterator<AffectorList> itAff( mAffectors.begin(), mAffectors.end() );
 		while (itAff.hasMoreElements())
@@ -49,9 +48,49 @@ namespace physics {
 			itAff.getNext()->applyTo( mAffectedBodies, timeElapsed );
 		}
 	}
-	void AffectorZone::_determineAffectedBodies( const SharedPtr<IWorld>& pWorld )
+
+	void AffectorZone::setEnabled(bool enabled)
 	{
-		YAKE_ASSERT( pWorld );
+		mEnabled = enabled;
+	}
+
+	bool AffectorZone::isEnabled() const
+	{
+		return mEnabled;
+	}
+
+	void AffectorZone::addAffector(SharedPtr<IBodyAffector> &pAffector)
+	{
+		YAKE_ASSERT(pAffector);
+		mAffectors.push_back(pAffector);
+	}
+
+	void AffectorZoneManager::addAffectorZone(SharedPtr<AffectorZone> &pSpace)
+	{
+		mZones.push_back(pSpace);
+	}
+
+	AffectorZoneManager::AffectorZoneManager(SharedPtr<physics::IWorld>& pWorld) : mWorld(pWorld)
+	{
+		mStepSigConn = mWorld->subscribeToPreStepInternal( boost::bind(AffectorZoneManager::update, this, _1) );
+	}
+
+	AffectorZoneManager::~AffectorZoneManager()
+	{
+		mStepSigConn.disconnect();
+		mZones.clear();
+	}
+
+	void AffectorZoneManager::update(const real timeElapsed)
+	{
+		VectorIterator<ZoneList> itZone(mZones.begin(), mZones.end());
+		SharedPtr<AffectorZone> pZone;
+		while (itZone.hasMoreElements())
+		{
+			pZone = itZone.getNext();
+			if (pZone->isEnabled())
+				pZone->update(timeElapsed);
+		}
 	}
 
 }

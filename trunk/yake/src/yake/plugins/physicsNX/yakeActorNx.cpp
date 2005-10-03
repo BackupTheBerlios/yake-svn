@@ -154,7 +154,7 @@ namespace physics {
 		}
 		return out;
 	}
-	IShape* ActorNx::createShape( const IShape::Desc & rkShapeDesc )
+	IShape* ActorNx::createShape( const IShape::Desc & rkShapeDesc, real massOrDensity, IBody::quantityType type )
 	{
 		YAKE_ASSERT( mpNxActor ).error("Actor is invalid! Cannot create shape without a valid actor.");
 		if (!mpNxActor)
@@ -228,8 +228,18 @@ namespace physics {
 			mpNxDefaultShape = 0;
 		}
 
+		YAKE_ASSERT( mpBody || !(massOrDensity) ).warning( "Attempt to set mass on nonexistant body!" );
+
 		if (mpBody)
-			mpNxActor->updateMassFromShapes( 1, 0 );
+		{
+			if (type == IBody::QT_MASS)
+				mpNxActor->updateMassFromShapes( 0.0f, mpBody->getMass() + massOrDensity );
+			else
+			{
+				YAKE_LOG_WARNING( "Adding density in Novodex doesn't work very well." );
+				mpNxActor->updateMassFromShapes(  massOrDensity, 1.0f /*@fixme should be 0., not?*/ );
+			}
+		}
 
 		return mShapes.back().get();
 	}

@@ -310,6 +310,9 @@ namespace physics {
 
 				//mOdeWorld->step( mStepSize );
 				//mOdeWorld->stepFast1( mStepSize, 4 );
+
+				firePreStepInternal(mStepSize);
+
 				dWorldQuickStep( mOdeWorld->id(), mStepSize );
 				//dWorldStepFast1( mOdeWorld->id(), mStepSize, 4 );
 

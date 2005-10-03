@@ -46,12 +46,12 @@ namespace physics {
 	BodyGroup::~BodyGroup()
 	{
 	}
-	BodyGroup& BodyGroup::operator += (SharedPtr<IBody> & rBody)
+	BodyGroup& BodyGroup::operator += (IBodyPtr rBody)
 	{
 		mBodies.push_back( rBody );
 		return *this;
 	}
-	BodyGroup& BodyGroup::operator -= (SharedPtr<IBody> & rBody)
+	BodyGroup& BodyGroup::operator -= (IBodyPtr rBody)
 	{
 		BodyVector::iterator itFind = std::find(mBodies.begin(), mBodies.end(), rBody );
 		if (itFind != mBodies.end())

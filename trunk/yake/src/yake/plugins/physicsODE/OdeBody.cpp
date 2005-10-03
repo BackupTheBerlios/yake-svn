@@ -93,24 +93,44 @@ namespace physics {
 		{
 			if ( const IBody::SphereMassDesc* sphereMassDesc = dynamic_cast<const IBody::SphereMassDesc*>( &desc ) )
 			{
-				dMassSetSphere( mass, sphereMassDesc->density, sphereMassDesc->radius );
+				if ( sphereMassDesc->qType == IBody::QT_DENSITY )
+					dMassSetSphere( mass, sphereMassDesc->quantity, sphereMassDesc->radius );
+				else
+					dMassSetSphereTotal( mass, sphereMassDesc->quantity, sphereMassDesc->radius );
 			}
 			else if ( const IBody::BoxMassDesc* boxMassDesc = dynamic_cast<const IBody::BoxMassDesc*>( &desc ) )
 			{
-				dMassSetBox( mass, boxMassDesc->density, boxMassDesc->sizeX, boxMassDesc->sizeY, boxMassDesc->sizeZ );
+				if ( boxMassDesc->qType == IBody::QT_DENSITY )
+					dMassSetBox( mass, boxMassDesc->quantity, boxMassDesc->sizeX, boxMassDesc->sizeY, boxMassDesc->sizeZ );
+				else
+					dMassSetBoxTotal( mass, boxMassDesc->quantity, boxMassDesc->sizeX, boxMassDesc->sizeY, boxMassDesc->sizeZ );
 			}
 			else if ( const IBody::CapsuleMassDesc* capsuleMassDesc = dynamic_cast<const IBody::CapsuleMassDesc*>( &desc ) )
 			{
-				dMassSetCappedCylinder( mass,
-												capsuleMassDesc->density,
+				if ( capsuleMassDesc->qType == IBody::QT_DENSITY )
+					dMassSetCappedCylinder( mass,
+												capsuleMassDesc->quantity,
+												2, 							// along Y axis
+												capsuleMassDesc->radius,
+												capsuleMassDesc->length );
+				else
+					dMassSetCappedCylinderTotal( mass,
+												capsuleMassDesc->quantity,
 												2, 							// along Y axis
 												capsuleMassDesc->radius,
 												capsuleMassDesc->length );
 			}
 			else if ( const IBody::CylinderMassDesc* cylMassDesc = dynamic_cast<const IBody::CylinderMassDesc*>( &desc ) )
 			{
-				dMassSetCylinder( mass,
-										cylMassDesc->density,
+				if ( cylMassDesc->qType == IBody::QT_DENSITY )
+					dMassSetCylinder( mass,
+										cylMassDesc->quantity,
+										2,							// along Y axis
+										cylMassDesc->radius,
+										cylMassDesc->length );
+				else
+					dMassSetCylinderTotal( mass,
+										cylMassDesc->quantity,
 										2,							// along Y axis
 										cylMassDesc->radius,
 										cylMassDesc->length );
