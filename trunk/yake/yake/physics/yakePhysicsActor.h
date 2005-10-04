@@ -78,7 +78,7 @@ namespace physics {
 
 		virtual IWorld* getCreator() const = 0;
 
-		virtual IShape* createShape( const IShape::Desc& rShapeDesc, real massOrDensity = 0.0f, IBody::quantityType type = IBody::QT_DENSITY ) = 0;
+		virtual IShape* createShape( const IShape::Desc& rShapeDesc, real massOrDensity = 0.0f, IBody::quantityType type = IBody::QT_MASS ) = 0;
 		virtual void destroyShape( IShape* pShape ) = 0;
 		virtual IShapePtrList getShapes() const = 0;
 
