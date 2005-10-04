@@ -175,31 +175,6 @@ namespace physics {
 	}
 
 	//-----------------------------------------------------
-	IBody::MassDesc* OdeActor::createMassDescFromShapeDesc( IShape::Desc const& rShapeDesc, real massOrDensity, IBody::quantityType qType )
-	{
-		IShape::Desc* pShapeDesc = &const_cast<IShape::Desc&>( rShapeDesc );
-		IBody::MassDesc* result;
-		
-		if ( IShape::SphereDesc* pSphereDesc = dynamic_cast<IShape::SphereDesc*>( pShapeDesc ) )
-		{
-			result = new IBody::SphereMassDesc( pSphereDesc->radius, massOrDensity, pSphereDesc->position, qType );
-		}
-		else if ( IShape::BoxDesc* pBoxDesc = dynamic_cast<IShape::BoxDesc*>( pShapeDesc ) )
-		{
-			result = new IBody::BoxMassDesc( pBoxDesc->dimensions.x, pBoxDesc->dimensions.y, pBoxDesc->dimensions.z, massOrDensity,
-				pBoxDesc->position, qType );
-		}
-		else if ( IShape::CapsuleDesc* pCapsuleDesc = dynamic_cast<IShape::CapsuleDesc*>( pShapeDesc ) )
-		{
-			result = new IBody::CapsuleMassDesc( pCapsuleDesc->radius, pCapsuleDesc->height, massOrDensity, pCapsuleDesc->position, qType );
-		}
-
-		YAKE_ASSERT( result != 0 ).warning( "Unsupported shape type!" );
-
-		return result;
-	}
-
-	//-----------------------------------------------------
 	bool operator == (const SharedPtr<OdeGeom>& lhs, const OdeGeom* rhs)
 	{
 		return (lhs.get() == rhs);
@@ -406,10 +381,7 @@ namespace physics {
 
 			if (massOrDensity)
 			{
-//@todo clean up! avoid new/delete either by using caches/pools or ...
-				IBody::MassDesc* desc = createMassDescFromShapeDesc( rShapeDesc, massOrDensity, type );
-				mBody->addMass( *desc );
-				delete desc;
+				mBody->_applyMassDescFromShapeDesc( rShapeDesc, massOrDensity, type );
 			}
 		}
 		

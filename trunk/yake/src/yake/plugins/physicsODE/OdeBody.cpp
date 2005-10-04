@@ -143,6 +143,30 @@ namespace physics {
 			dMassTranslate( mass, desc.offset.x, desc.offset.y, desc.offset.z );
 		}
 		
+		//-----------------------------------------------------
+		void OdeBody::_applyMassDescFromShapeDesc( IShape::Desc const& rShapeDesc, real massOrDensity, IBody::quantityType qType )
+		{
+			const IShape::Desc* pShapeDesc = &( rShapeDesc );
+			
+			if ( const IShape::SphereDesc* pSphereDesc = dynamic_cast<const IShape::SphereDesc*>( pShapeDesc ) )
+			{
+				this->addMass( IBody::SphereMassDesc( pSphereDesc->radius, massOrDensity, pSphereDesc->position, qType ) );
+			}
+			else if ( const IShape::BoxDesc* pBoxDesc = dynamic_cast<const IShape::BoxDesc*>( pShapeDesc ) )
+			{
+				this->addMass( IBody::BoxMassDesc( pBoxDesc->dimensions.x, pBoxDesc->dimensions.y, pBoxDesc->dimensions.z, massOrDensity,
+					pBoxDesc->position, qType ) );
+			}
+			else if ( const IShape::CapsuleDesc* pCapsuleDesc = dynamic_cast<const IShape::CapsuleDesc*>( pShapeDesc ) )
+			{
+				this->addMass( IBody::CapsuleMassDesc( pCapsuleDesc->radius, pCapsuleDesc->height, massOrDensity, pCapsuleDesc->position, qType ) );
+			}
+			else
+			{
+				YAKE_ASSERT( 1 == 0 ).warning( "Unsupported shape type!" );
+			}
+		}
+
 		//---------------------------------------------------
 		void OdeBody::setMass( const MassDesc& rDesc )
 		{
