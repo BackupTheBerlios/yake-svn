@@ -237,7 +237,7 @@ namespace physics {
 			else
 			{
 				YAKE_LOG_WARNING( "Adding density in Novodex doesn't work very well." );
-				mpNxActor->updateMassFromShapes(  massOrDensity, 1.0f /*@fixme should be 0., not?*/ );
+				mpNxActor->updateMassFromShapes(  massOrDensity, 0.0f );
 			}
 		}
 
