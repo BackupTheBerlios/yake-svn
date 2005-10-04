@@ -85,6 +85,8 @@ namespace physics {
 			dBody* _getOdeBody() const;
 			//OdeWorld* _getWorld() const;
 			//bool _isValid() const { return mValid; }*/
+
+			void _applyMassDescFromShapeDesc( const IShape::Desc& rShapeDesc, real massOrDensity, IBody::quantityType qType );
 		protected:
 			OdeWorld* 				mOdeWorld;
 			OdeActor&				mOwner;
