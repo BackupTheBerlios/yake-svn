@@ -10,7 +10,7 @@ using namespace yake::math;
 class MiniApp
 {
 public:
-	MiniApp() {}
+	MiniApp() : mBouncyPhysicsMaterial1(0), mBouncyPhysicsMaterial2(0) {}
 	~MiniApp() {}
 
 	void init();
