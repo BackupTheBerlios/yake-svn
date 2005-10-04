@@ -114,7 +114,7 @@ namespace physics {
 
 		struct MassDesc
 		{
-			MassDesc( real massOrDensity, const Vector3& rOffset = Vector3::kZero, quantityType type = QT_DENSITY ) :
+			MassDesc( real massOrDensity, const Vector3& rOffset = Vector3::kZero, quantityType type = QT_MASS ) :
 					quantity( massOrDensity ),
 					offset( rOffset ),
 					qType( type )
@@ -132,7 +132,7 @@ namespace physics {
 			SphereMassDesc(	real radiusValue,
 								real shapeDensity,
 								const Vector3& rOffset = Vector3::kZero,
-								quantityType type = QT_DENSITY ) :
+								quantityType type = QT_MASS ) :
 									MassDesc( shapeDensity, rOffset, type ),
 							 		radius( radiusValue )
 			{}
@@ -147,7 +147,7 @@ namespace physics {
 							real boxSizeZ,
 							real shapeDensity,
 							const Vector3& rOffset = Vector3::kZero,
-							quantityType type = QT_DENSITY ) :
+							quantityType type = QT_MASS ) :
 								MassDesc( shapeDensity, rOffset, type ),
 								sizeX( boxSizeX ),
 								sizeY( boxSizeY ),
@@ -165,7 +165,7 @@ namespace physics {
 								real capLength,
 								real shapeDensity,
 								const Vector3& rOffset = Vector3::kZero,
-								quantityType type = QT_DENSITY ) :
+								quantityType type = QT_MASS ) :
 									MassDesc( shapeDensity, rOffset, type ),
 									radius( capRadius ),
 									length( capLength )
@@ -181,7 +181,7 @@ namespace physics {
 								real cylLength,
 								real shapeDensity,
 								const Vector3& rOffset = Vector3::kZero,
-								quantityType type = QT_DENSITY ) :
+								quantityType type = QT_MASS ) :
 									MassDesc( shapeDensity, rOffset, type ),
 									radius( cylRadius ),
 									length( cylLength )
