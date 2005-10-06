@@ -69,6 +69,12 @@ namespace physics {
 		//-----------------------------------------------------
  		OdeWorld::~OdeWorld()
  		{
+			mAvatars.clear();
+			mActors.clear();
+			mJoints.clear();
+			mMaterials.clear();
+			mBodies.clear();
+
 			for ( MeshDataMap::iterator i = mMeshDataMap.begin(); i != mMeshDataMap.end(); ++i )
 			{
 				OdeTriMesh::MeshData mesh_data = i->second;
