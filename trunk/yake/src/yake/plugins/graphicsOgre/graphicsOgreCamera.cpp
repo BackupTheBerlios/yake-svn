@@ -207,7 +207,12 @@ namespace ogre3d {
 	Matrix4 OgreCamera::getProjectionMatrix() const
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+		return MATRIX4_OGRE2YAKE( mCam->getProjectionMatrix() );
+#else
 		return MATRIX4_OGRE2YAKE( mCam->getStandardProjectionMatrix() );
+#endif
 	}
 
 	//------------------------------------------------------

@@ -415,7 +415,7 @@ int main()
 		theApp.initialise();
 		theApp.run();
 	}
-	catch (const yake::Exception & e)
+	catch ( const yake::Exception& e )
 	{
 		std::cout << std::endl << e.what() << std::endl;
 	}

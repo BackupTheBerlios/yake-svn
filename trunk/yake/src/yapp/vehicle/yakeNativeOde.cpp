@@ -25,7 +25,7 @@
    ------------------------------------------------------------------------------------
 */
 #include <yapp/vehicle/yakePCH.h>
-#include <yapp/vehicle/yakeInterfaces.h>
+#include <yapp/vehicle/yakeVehicle.h>
 #include <yapp/vehicle/yakeNativeOde.h>
 
 namespace yake {
@@ -203,7 +203,7 @@ namespace vehicle {
 					pEngine->setMaximumForce( thrusterTpl->maxForce );
 					pEngine->setThrottle(0.);
 					subscribeToUpdateThrusterSimulation(
-						boost::bind( OdeThruster::updateSimulation, pEngine, _1 ) );
+						boost::bind( &OdeThruster::updateSimulation, pEngine, _1 ) );
 
 					// the mountable thruster wrapper
 					if (thrusterTpl->mountPtIdx != MPID_NO_PARENT)
@@ -214,7 +214,7 @@ namespace vehicle {
 						pMounted->addTarget( mpChassis->getBodyPtr() );
 
 						subscribeToApplyThrusterToTargets(
-							boost::bind( OdeMountedThruster::applyToTargets, pMounted ) );
+							boost::bind( &OdeMountedThruster::applyToTargets, pMounted ) );
 
 						mMountPoints[thrusterTpl->mountPtIdx]->attach( pMounted );
 					}

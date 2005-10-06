@@ -36,6 +36,7 @@ namespace model {
 		mActors.clear();
 		mJoints.clear();
 	}
+	
 	//-----------------------------------------------------
 	Physical::ActorVector Physical::getActors() const
 	{
@@ -49,6 +50,7 @@ namespace model {
 		}
 		return c;
 	}
+
 	//-----------------------------------------------------
 	void Physical::translate( const Vector3 & d )
 	{
@@ -60,6 +62,7 @@ namespace model {
 				pActor->translate( d );
 		}
 	}
+
 	//-----------------------------------------------------
 	void Physical::addActor( physics::IActorPtr pActor, const String & rName )
 	{
@@ -69,6 +72,7 @@ namespace model {
 		String name = (rName.length() > 0) ? rName : (uniqueName::create("physical_actor_"));
 		mActors.insert( std::make_pair(name,pActor) );
 	}
+
 	//-----------------------------------------------------
 	void Physical::addJoint(physics::IJointPtr pJoint )
 	{
@@ -77,6 +81,7 @@ namespace model {
 			return;
 		mJoints.push_back( pJoint );
 	}
+
 	//-----------------------------------------------------
 	physics::IActorPtr Physical::getActorByName( const String & rName ) const
 	{

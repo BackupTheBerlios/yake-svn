@@ -1,3 +1,4 @@
 INCLUDES = $(all_includes)
 METASOURCES = AUTO
-SUBDIRS = base loader model statemachine ent gui msg plugins samples raf
+SUBDIRS = base loader model statemachine gui msg ent vehicle raf plugins \
+	samples

@@ -25,7 +25,7 @@
    ------------------------------------------------------------------------------------
 */
 #include <yapp/vehicle/yakePCH.h>
-#include <yapp/vehicle/yakeInterfaces.h>
+#include <yapp/vehicle/yakeVehicle.h>
 #include <yapp/vehicle/yakeNativeOde.h>
 
 namespace yake {

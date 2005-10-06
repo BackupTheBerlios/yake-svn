@@ -1,8 +1,8 @@
 #!/bin/bash
 
 libtoolize --force --copy
-autoheader
 aclocal
+autoheader
 automake -a
 autoconf
 

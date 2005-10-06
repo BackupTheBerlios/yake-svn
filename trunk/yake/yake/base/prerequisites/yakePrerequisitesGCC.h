@@ -40,7 +40,9 @@
 //#	include <wchar.h>
 #	include <ext/hash_map>
 #ifdef __GNUC__
-#    if __GNUC__ < 3
+#    if __GNUC__ >= 4
+# 	include<ext/hash_fun.h> 
+#    elif __GNUC__ < 3
 #       include <ext/stl_hash_fun.h>
 #    elif __GNUC_MINOR__ < 4
 #        include <ext/stl_hash_fun.h>

@@ -72,7 +72,7 @@ namespace physics {
 
 	AffectorZoneManager::AffectorZoneManager(SharedPtr<physics::IWorld>& pWorld) : mWorld(pWorld)
 	{
-		mStepSigConn = mWorld->subscribeToPreStepInternal( boost::bind(AffectorZoneManager::update, this, _1) );
+		mStepSigConn = mWorld->subscribeToPreStepInternal( boost::bind(&AffectorZoneManager::update, this, _1) );
 	}
 
 	AffectorZoneManager::~AffectorZoneManager()

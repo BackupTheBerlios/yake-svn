@@ -72,7 +72,7 @@ public:
 	{
 	}
 
-	void onKey(const yake::input::KeyboardEvent& rEvent)
+	void onKey( const yake::input::KeyboardEvent& rEvent )
 	{
 		std::cout << "KEY: " << rEvent.keyCode << std::endl;
 		
@@ -80,7 +80,7 @@ public:
 			requestShutdown();
 	}
 	
-	void onMB(uint8 btn)
+	void onMB( uint8 btn )
 	{
 		std::cout << "MB: " << static_cast<int>( btn ) << std::endl;
 	}

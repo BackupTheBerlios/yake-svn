@@ -14,7 +14,7 @@ using namespace yake;
 struct TheConfiguration : public raf::ApplicationConfiguration
 {
 	virtual StringVector getLibraries()
-	{ return MakeStringVector() << "graphicsOgre" << "inputOgre" << "physicsNx"; }
+	{ return MakeStringVector() << "graphicsOgre" << "inputOgre" << "physicsODE"; }
 
 	//virtual StringVector getScriptingSystems()
 	//{ return MakeStringVector() << "lua"; }
@@ -26,7 +26,7 @@ struct TheConfiguration : public raf::ApplicationConfiguration
 	{ return MakeStringVector() << "ogre"; }
 
 	virtual StringVector getPhysicsSystems()
-	{ return MakeStringVector() << "nx"; }
+	{ return MakeStringVector() << "ode"; }
 };
 
 /** Main application state */
@@ -128,19 +128,19 @@ protected:
 		using namespace input;
 		mActionMap.reg( ACTIONID_STRAFE_LEFT,
 			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_LEFT, KAM_CONTINUOUS ) );
-		mActionMap.subscribeToActionId( ACTIONID_STRAFE_LEFT, boost::bind(TheMainState::onStrafeLeft,this) );
+		mActionMap.subscribeToActionId( ACTIONID_STRAFE_LEFT, boost::bind(&TheMainState::onStrafeLeft,this) );
 
 		mActionMap.reg( ACTIONID_STRAFE_RIGHT,
 			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_RIGHT, KAM_CONTINUOUS ) );
-		mActionMap.subscribeToActionId( ACTIONID_STRAFE_RIGHT, boost::bind(TheMainState::onStrafeRight,this) );
+		mActionMap.subscribeToActionId( ACTIONID_STRAFE_RIGHT, boost::bind(&TheMainState::onStrafeRight,this) );
 
 		mActionMap.reg( ACTIONID_FORWARD,
 			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_UP, KAM_CONTINUOUS ) );
-		mActionMap.subscribeToActionId( ACTIONID_FORWARD, boost::bind(TheMainState::onForward,this) );
+		mActionMap.subscribeToActionId( ACTIONID_FORWARD, boost::bind(&TheMainState::onForward,this) );
 
 		mActionMap.reg( ACTIONID_REVERSE,
 			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_DOWN, KAM_CONTINUOUS ) );
-		mActionMap.subscribeToActionId( ACTIONID_REVERSE, boost::bind(TheMainState::onReverse,this) );
+		mActionMap.subscribeToActionId( ACTIONID_REVERSE, boost::bind(&TheMainState::onReverse,this) );
 	}
 	virtual void onExit()
 	{
@@ -248,6 +248,7 @@ int main( int argc, char** argv )
 {
 	// Use default executor for convenience.
 	// It's always possible to manually execute TheApp::initialise() etc.
-	return (raf::runApplication( TheApp() )) ? 0 : 1;
+	TheApp theApp;
+	return (raf::runApplication( theApp )) ? 0 : 1;
 }
 

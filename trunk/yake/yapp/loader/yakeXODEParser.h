@@ -41,6 +41,8 @@ namespace xode {
 	class YAPP_BASE_API XODEParser
 	{
 	public:
+		typedef SharedPtr<dom::INode> NodeSharedPtr;
+		
 		XODEParser( model::Physical& rBaseModel );
 		virtual ~XODEParser() {}
 
@@ -55,7 +57,7 @@ namespace xode {
 			\param file 
 			\return 
 		*/
-		virtual bool load( const SharedPtr<dom::INode> docNode,  physics::IWorld* pPWorld );
+		virtual bool load( const NodeSharedPtr docNode,  physics::IWorld* pPWorld );
 
 		/** Prepare for next run of load/store.
 		*/
@@ -104,44 +106,45 @@ namespace xode {
 		/// Default implementations for common functions.
 		
 
-		virtual void readXODE( const SharedPtr<dom::INode> pNode );
-		virtual void readWorld( const SharedPtr<dom::INode> pWorldNode );
-		virtual void readSpace( const SharedPtr<dom::INode> pSpaceNode );
-		virtual void readBody( const SharedPtr<dom::INode> pBodyNode );
-		virtual void readGeom( const SharedPtr<dom::INode> pGeomNode, physics::IActor* pParentObject = NULL, const Transform& rParentTransform = Transform() );
-		virtual void readBox( const SharedPtr<dom::INode> pNode, real& sX, real& sY, real& sZ );
-		virtual void readCappedCylinder( const SharedPtr<dom::INode> pNode, real& radius, real& length );
-		virtual void readCone( const SharedPtr<dom::INode> pNode, real& radius, real& length );
-		virtual void readCylinder( const SharedPtr<dom::INode> pNode, real& radius, real& length );
-		virtual void readPlane( const SharedPtr<dom::INode> pNode, real& a, real& b, real& c, real& d );
-		virtual void readRay( const SharedPtr<dom::INode> pNode, real& length );
-		virtual void readSphere( const SharedPtr<dom::INode> pNode, real& radius );
-		virtual void readTrimesh( const SharedPtr<dom::INode> pNode, physics::TriangleMeshDesc::VertexVector& rVertices, physics::TriangleMeshDesc::IndexVector& rIndices );
-		virtual void readVertices( const SharedPtr<dom::INode> pNode, physics::TriangleMeshDesc::VertexVector& rVertices );
-		virtual void readIndices( const SharedPtr<dom::INode> pNode, physics::TriangleMeshDesc::IndexVector& rIndices );
+		virtual void readXODE( const NodeSharedPtr pNode );
+		virtual void readWorld( const NodeSharedPtr pWorldNode );
+		virtual void readSpace( const NodeSharedPtr pSpaceNode );
+		virtual void readBody( const NodeSharedPtr pBodyNode );
+		virtual void readGeom( const NodeSharedPtr pGeomNode, physics::IActor* pParentObject = NULL, const Transform& rParentTransform = Transform() );
+		virtual void readBox( const NodeSharedPtr pNode, real& sX, real& sY, real& sZ );
+		virtual void readCappedCylinder( const NodeSharedPtr pNode, real& radius, real& length );
+		virtual void readCone( const NodeSharedPtr pNode, real& radius, real& length );
+		virtual void readCylinder( const NodeSharedPtr pNode, real& radius, real& length );
+		virtual void readPlane( const NodeSharedPtr pNode, real& a, real& b, real& c, real& d );
+		virtual void readRay( const NodeSharedPtr pNode, real& length );
+		virtual void readSphere( const NodeSharedPtr pNode, real& radius );
+		virtual void readTrimesh( const NodeSharedPtr pNode, physics::TriangleMeshDesc::VertexVector& rVertices, physics::TriangleMeshDesc::IndexVector& rIndices );
+		virtual void readVertices( const NodeSharedPtr pNode, physics::TriangleMeshDesc::VertexVector& rVertices );
+		virtual void readIndices( const NodeSharedPtr pNode, physics::TriangleMeshDesc::IndexVector& rIndices );
 		
-		virtual void readTransform( const SharedPtr<dom::INode> pTransformNode, Transform& rTrans );
+		virtual void readTransform( const NodeSharedPtr pTransformNode, Transform& rTrans );
 
-		virtual void readVector3( const SharedPtr<dom::INode> pVecNode, Vector3& rVec );  
-		virtual void readPosition( const SharedPtr<dom::INode> pPosNode, Vector3& rPos );  
-		virtual void readQuaternion( const SharedPtr<dom::INode> pQuatNode, Quaternion& rQuat );
-		virtual void readRotation( const SharedPtr<dom::INode> pRotNode, Quaternion& rRot );
-		virtual void readScale( const SharedPtr<dom::INode> pScaleNode, Vector3& rScale );  
-		virtual void readAxisAngleRot( const SharedPtr<dom::INode> pRotNode, Quaternion& rRot );
-		virtual void readMass( const SharedPtr<dom::INode> pMassNode, physics::IBody& rBody, const Transform& rParentTransform ); 
-		virtual void readMassShape( const SharedPtr<dom::INode> pMShapeNode, physics::IBody& rBody, const Transform& rParentTransform ); 
-		virtual void readMassAdjust( const SharedPtr<dom::INode> pMAdjustNode, physics::IBody& rBody ); 
-		virtual void readJoint( const SharedPtr<dom::INode> pJointNode, const String& rBodyName, Transform& rParentTransform );
+		virtual void readVector3( const NodeSharedPtr pVecNode, Vector3& rVec );  
+		virtual void readPosition( const NodeSharedPtr pPosNode, Vector3& rPos );  
+		virtual void readQuaternion( const NodeSharedPtr pQuatNode, Quaternion& rQuat );
+		virtual void readRotation( const NodeSharedPtr pRotNode, Quaternion& rRot );
+		virtual void readScale( const NodeSharedPtr pScaleNode, Vector3& rScale );  
+		virtual void readAxisAngleRot( const NodeSharedPtr pRotNode, Quaternion& rRot );
+		virtual void readMass( const NodeSharedPtr pMassNode, physics::IBody& rBody, const Transform& rParentTransform ); 
+		virtual void readMassShape( const NodeSharedPtr pMShapeNode, physics::IBody& rBody, const Transform& rParentTransform ); 
+		virtual void readMassAdjust( const NodeSharedPtr pMAdjustNode, physics::IBody& rBody ); 
+		virtual void readJoint( const NodeSharedPtr pJointNode, const String& rBodyName, Transform& rParentTransform );
 		
-		virtual void readBall( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
-		virtual void readFixed( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
-		virtual void readHinge( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
-		virtual void readHinge2( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
-		virtual void readSlider( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
-		virtual void readUniversal( const SharedPtr<dom::INode> pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readBall( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readFixed( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readHinge( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readHinge2( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readSlider( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual void readUniversal( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
 		
-		virtual void readAnchor( const SharedPtr<dom::INode> pAnchorNode, Vector3& rAnchor, Transform& rJointTransform );
-		virtual void readAxis( const SharedPtr<dom::INode> pAxisNode, Vector3& rAxis, Transform& rJointTransform );
+		virtual void readAnchor( const NodeSharedPtr pAnchorNode, Vector3& rAnchor, Transform& rJointTransform );
+		virtual void readAxis( const NodeSharedPtr pAxisNode, Vector3& rAxis, Transform& rJointTransform );
+		virtual physics::IMaterialPtr XODEParser::readMaterialExt( const NodeSharedPtr pNode );
 		
 // 		readGroup
 // 		readJointgroup
@@ -150,7 +153,7 @@ namespace xode {
 		struct JointDescription
 		{
 			String					mBody1Name; /// name of 2nd body is inside joint def  node
-			SharedPtr<dom::INode>	mJointDefNode;
+			NodeSharedPtr	mJointDefNode;
 			Transform				mParentTransform;
 		};
 	
@@ -162,7 +165,7 @@ namespace xode {
 		void createJoint( const JointDescription& rDesc );
 		
 	private:
-		SharedPtr<dom::INode>			mDocNode;
+		NodeSharedPtr			mDocNode;
 		physics::IWorld*					mPWorld;
 		model::Physical&					mBaseModel;
 	};

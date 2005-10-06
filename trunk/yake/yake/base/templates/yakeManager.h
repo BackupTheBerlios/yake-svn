@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -58,13 +58,11 @@ struct DefaultManagerError
 YAKE_DECLARE_CLASS( yake::base::templates::DefaultManagerError<> )
     static Value_ OnUnknownType( Identifier_ )
     {
-      YAKE_DECLARE_FUNCTION( OnUnknownType )
       YAKE_EXCEPT( "Unknown Type." );
     }
 
     static void OnNotFound( Identifier_ )
     {
-      YAKE_DECLARE_FUNCTION( OnNotFound )
       YAKE_EXCEPT( "Unkown Identifier_." );
     }
 };
