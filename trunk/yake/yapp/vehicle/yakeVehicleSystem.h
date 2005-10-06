@@ -24,20 +24,24 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_VEHICLE_H
-#define YAKE_VEHICLE_H
+#ifndef YAKE_VEHICLE_SYSTEM_H
+#define YAKE_VEHICLE_SYSTEM_H
 
-#if !defined(YAKE_VEHICLE_EXPORTS)
-#	if YAKE_PLATFORM == PLATFORM_WIN32
-#		pragma	comment(lib, "vehicle.lib")
-#	endif
-#endif
+#include "yakePrerequisites.h"
 
-#include <yake/base/yake.h>
-#include <yapp/base/yapp.h>
-#include <yapp/vehicle/yakeTemplates.h>
-#include <yapp/vehicle/yakeMountPoint.h>
-#include <yapp/vehicle/yakeInterfaces.h>
-#include <yapp/vehicle/yakeVehicleSystem.h>
+namespace yake {
+namespace vehicle {
+
+	class IVehicle;
+	class YAKE_VEH_API IVehicleSystem
+	{
+		YAKE_DECLARE_REGISTRY_0(IVehicleSystem,String);
+	public:
+		virtual IVehicle* create(const VehicleTemplate&, physics::IWorld& PWorld) = 0;
+	};
+
+} // namespace vehicle
+} // namespace yake
+
 
 #endif
