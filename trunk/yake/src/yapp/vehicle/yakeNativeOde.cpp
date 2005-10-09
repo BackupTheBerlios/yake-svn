@@ -27,6 +27,7 @@
 #include <yapp/vehicle/yakePCH.h>
 #include <yapp/vehicle/yakeVehicle.h>
 #include <yapp/vehicle/yakeNativeOde.h>
+#include <yapp/vehicle/yakeDotVehicle.h>
 
 namespace yake {
 namespace vehicle {
@@ -39,11 +40,40 @@ namespace vehicle {
 	//-----------------------------------------------------
 	OdeVehicleSystem::OdeVehicleSystem()
 	{}
+	OdeVehicleSystem::~OdeVehicleSystem()
+	{
+		mVehicleTemplates.clear();
+	}
 	IVehicle* OdeVehicleSystem::create(const VehicleTemplate& tpl, physics::IWorld& PWorld)
 	{
 		OdeVehicle* pV = new OdeVehicle();
 		pV->_create( tpl, PWorld );
 		return pV;
+	}
+	bool OdeVehicleSystem::loadTemplates(const String& fn)
+	{
+		DotVehicleParser dvp;
+		dvp.subscribeToOnVehicleTpl( boost::bind(&OdeVehicleSystem::_onVehicleTpl,this,_1,_2) );
+		bool ret = dvp.parse( fn );
+		return ret;
+	}
+	IVehicle* OdeVehicleSystem::create(const String& tplId, physics::IWorld& PWorld)
+	{
+		VehTplList::const_iterator itFind = mVehicleTemplates.find( tplId );
+		YAKE_ASSERT( itFind != mVehicleTemplates.end() );
+		if (itFind == mVehicleTemplates.end() )
+			return 0;
+		const VehicleTemplate* tpl = itFind->second.get();
+		YAKE_ASSERT( tpl );
+		if (!tpl)
+			return 0;
+		return create(*tpl,PWorld);
+	}
+	void OdeVehicleSystem::_onVehicleTpl(vehicle::DotVehicleParser& parser, const String& tplId)
+	{
+		YAKE_LOG("OdeVehicleSystem: loaded vehicle template'" + tplId + "'.");
+		mVehicleTemplates[ tplId ] = SharedPtr<vehicle::VehicleTemplate>( parser.detachCurrentVehicleTpl() );
+		YAKE_ASSERT( mVehicleTemplates[ tplId ] );
 	}
 
 	//-----------------------------------------------------
@@ -64,12 +94,12 @@ namespace vehicle {
 
 		ConstDequeIterator< EnginePtrList > itEngine( mEngines );
 		while (itEngine.hasMoreElements())
-			delete itEngine.getNext();
+			delete itEngine.getNext().second;
 		mEngines.clear();
 
 		ConstDequeIterator< MountPointList > itMP( mMountPoints );
 		while (itMP.hasMoreElements())
-			delete itMP.getNext();
+			delete itMP.getNext().second;
 		mMountPoints.clear();
 
 		mpChassis->getCreator()->destroyActor( mpChassis );
@@ -80,26 +110,42 @@ namespace vehicle {
 		ConstDequeIterator< EnginePtrList > itEngine( mEngines );
 		while (itEngine.hasMoreElements())
 		{
-			IEngine* pEngine = itEngine.getNext();
+			IEngine* pEngine = itEngine.getNext().second;
 			pEngine->updateSimulation(timeElapsed);
 		}
 		//
 		mSigUpdateThrusterSimulation( timeElapsed );
 		mSigApplyThrusterToTargets();
 	}
-	MountPoint* OdeVehicle::getMountPoint(size_t index) const
+	MountPoint* OdeVehicle::getMountPoint(const String& id) const
 	{
-		YAKE_ASSERT( index < mMountPoints.size() );
-		if (index >= mMountPoints.size())
+		YAKE_ASSERT( !id.empty() );
+		if (id.empty())
 			return 0;
-		return mMountPoints.at(index);
+		MountPointList::const_iterator itFind = mMountPoints.find(id);
+		YAKE_ASSERT( itFind != mMountPoints.end() );
+		if (itFind == mMountPoints.end())
+			return 0;
+		return itFind->second;
 	}
-	IEngine* OdeVehicle::getEngineInterface(size_t index) const
+	IEngine* OdeVehicle::getEngineInterface(const String& id) const
 	{
-		YAKE_ASSERT( index < mEngines.size() );
-		if (index >= mEngines.size())
+		YAKE_ASSERT( !id.empty() );
+		if (id.empty())
 			return 0;
-		return mEngines.at(index);
+		EnginePtrList::const_iterator itFind = mEngines.find(id);
+		YAKE_ASSERT( itFind != mEngines.end() );
+		if (itFind == mEngines.end())
+			return 0;
+		return itFind->second;
+	}
+	IEnginePtrList OdeVehicle::getEngineInterfaces() const
+	{
+		IEnginePtrList engines;
+		ConstVectorIterator< EnginePtrList > itEngine( mEngines );
+		while (itEngine.hasMoreElements())
+			engines.push_back( itEngine.getNext().second );
+		return engines;
 	}
 	IWheel* OdeVehicle::getWheelInterface(size_t index) const
 	{
@@ -123,6 +169,36 @@ namespace vehicle {
 		YAKE_ASSERT( mpChassis );
 		return mpChassis;
 	}
+	void OdeVehicle::_createMountPoint(const String& id, const VehicleTemplate::MountPointTpl& mtPtTpl,MountPoint* parentMtPt)
+	{
+		MountPoint* thisMtPt = new OdeMountPoint();
+
+		// link to parent if necessary
+		if (parentMtPt)
+			parentMtPt->addChild( thisMtPt );
+		else
+		{
+			mMountPoints[ id ] = thisMtPt;
+			thisMtPt->setOverrideParentMovable( mpChassis );
+		}
+
+		//
+		thisMtPt->setPosition( mtPtTpl.mPosition );
+		if (mtPtTpl.mUseDirection)
+			thisMtPt->setDirection( mtPtTpl.mDirection );
+		else
+			thisMtPt->setOrientation( mtPtTpl.mOrientation );
+
+		// child mount points
+		ConstVectorIterator< VehicleTemplate::MountPointTplList > itMP( mtPtTpl.mChildren );
+		while (itMP.hasMoreElements())
+		{
+			const std::pair<String,VehicleTemplate::MountPointTpl> mptTplEntry = itMP.getNext();
+			const VehicleTemplate::MountPointTpl& childMtPtTpl = mptTplEntry.second;
+
+			_createMountPoint( mptTplEntry.first, childMtPtTpl, thisMtPt );
+		}
+	}
 	void OdeVehicle::_create(const VehicleTemplate& tpl, physics::IWorld& PWorld )
 	{
 		// chassis
@@ -136,39 +212,14 @@ namespace vehicle {
 		mpChassis->getBody().setMass( tpl.mChassis.mMass );
 
 		// mount points
-		MountPointList allMPs;
 		ConstDequeIterator< VehicleTemplate::MountPointTplList > itMP( tpl.mMountPoints );
 		while (itMP.hasMoreElements())
 		{
-			const VehicleTemplate::MountPointTpl mptTpl = itMP.getNext();
-			MountPoint* pMP = new OdeMountPoint();
-			pMP->setPosition( mptTpl.mPosition );
-			if (mptTpl.mUseDirection)
-				pMP->setDirection( mptTpl.mDirection );
-			else
-				pMP->setOrientation( mptTpl.mOrientation );
+			const std::pair<String,VehicleTemplate::MountPointTpl> mptTplEntry = itMP.getNext();
+			const VehicleTemplate::MountPointTpl& mptTpl = mptTplEntry.second;
 
-			allMPs.push_back( pMP );
-
-			if (mptTpl.mParentMountPointIdx == MPID_NO_PARENT)
-			{
-				mMountPoints.push_back( pMP );
-				pMP->setOverrideParentMovable( mpChassis );
-			}
-			//mptTpl.
+			_createMountPoint( mptTplEntry.first, mptTpl );
 		}
-		size_t idx = 0;
-		itMP.reset( tpl.mMountPoints );
-		while (itMP.hasMoreElements())
-		{
-			const VehicleTemplate::MountPointTpl mptTpl = itMP.getNext();
-			if (mptTpl.mParentMountPointIdx != MPID_NO_PARENT)
-			{
-				allMPs.at(mptTpl.mParentMountPointIdx)->addChild( allMPs.at(idx), true );
-			}
-			++idx;
-		}
-		allMPs.clear();
 
 		// engines
 		ConstDequeIterator< VehicleTemplate::EngineTplList > itEngineTpl( tpl.mEngines );
@@ -176,7 +227,8 @@ namespace vehicle {
 		{
 			//@todo refactor to avoid casting... ?
 
-			const VehicleTemplate::EngineTpl* engineTpl = itEngineTpl.getNext();
+			const VehicleTemplate::EngineTplList::value_type engineTplEntry = itEngineTpl.getNext();
+			const VehicleTemplate::EngineTpl* engineTpl = engineTplEntry.second;
 
 			//@todo replace dynamic_casts with static_casts in release mode ?
 
@@ -185,7 +237,7 @@ namespace vehicle {
 			if (carEngineTpl)
 			{
 				OdeCarEngine* pEngine = new OdeCarEngine();
-				mEngines.push_back(pEngine);
+				mEngines[ engineTplEntry.first ] = pEngine;
 				pEngine->setParamMaxRPM( carEngineTpl->rpmMax_ );
 				pEngine->setParamMinRPM( carEngineTpl->rpmMin_ );
 				pEngine->setParamRedlineRPM( carEngineTpl->rpmRedline_ );
@@ -198,15 +250,15 @@ namespace vehicle {
 				{
 					// thruster itself
 					OdeThruster* pEngine = new OdeThruster();
-					mEngines.push_back(pEngine);
+					mEngines[ engineTplEntry.first ] = pEngine;
 					pEngine->setMinimumForce( thrusterTpl->minForce );
 					pEngine->setMaximumForce( thrusterTpl->maxForce );
 					pEngine->setThrottle(0.);
 					subscribeToUpdateThrusterSimulation(
 						boost::bind( &OdeThruster::updateSimulation, pEngine, _1 ) );
 
-					// the mountable thruster wrapper
-					if (thrusterTpl->mountPtIdx != MPID_NO_PARENT)
+					// the thruster is attached to a mount point, create wrapper:
+					if (thrusterTpl->mountPt != MPID_NO_PARENT)
 					{
 						OdeMountedThruster* pMounted = new OdeMountedThruster();
 						pMounted->setThruster( pEngine );
@@ -216,7 +268,7 @@ namespace vehicle {
 						subscribeToApplyThrusterToTargets(
 							boost::bind( &OdeMountedThruster::applyToTargets, pMounted ) );
 
-						mMountPoints[thrusterTpl->mountPtIdx]->attach( pMounted );
+						mMountPoints[thrusterTpl->mountPt]->attach( pMounted );
 					}
 				}
 			}
