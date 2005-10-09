@@ -32,36 +32,39 @@
 namespace yake {
 namespace vehicle {
 
-	const size_t MPID_NO_PARENT = 0xffffffff;
+	const String MPID_NO_PARENT = String("");
 	struct VehicleTemplate
 	{
+		struct MountPointTpl;
+		typedef AssocVector< String, MountPointTpl > MountPointTplList;
 		struct MountPointTpl
 		{
-			Vector3		mPosition;
-			Quaternion	mOrientation;
-			Vector3		mDirection;
-			size_t		mParentMountPointIdx;
-			bool		mUseDirection;
+			Vector3				mPosition;
+			Quaternion			mOrientation;
+			Vector3				mDirection;
+			bool				mUseDirection;
+			MountPointTplList	mChildren;
 			MountPointTpl(
 				const Vector3& pos = Vector3::kZero,
-				const Quaternion rot = Quaternion::kIdentity,
-				size_t parentMountPoint = MPID_NO_PARENT) :
+				const Quaternion rot = Quaternion::kIdentity) :
 				mPosition(pos),
 				mOrientation(rot),
-				mParentMountPointIdx(parentMountPoint),
 				mUseDirection(false)
 			{}
 			MountPointTpl(
 				const Vector3& pos,
-				const Vector3& dir,
-				size_t parentMountPoint = MPID_NO_PARENT) :
+				const Vector3& dir) :
 				mPosition(pos),
 				mDirection(dir),
-				mParentMountPointIdx(parentMountPoint),
 				mUseDirection(true)
 			{}
+			MountPointTpl& addMountPoint(
+				const Vector3& pos = Vector3::kZero,
+				const Quaternion rot = Quaternion::kIdentity);
+			MountPointTpl& addMountPoint(
+				const Vector3& pos,
+				const Vector3& dir);
 		};
-		typedef Deque< MountPointTpl > MountPointTplList;
 		enum GearMode
 		{
 			GM_FORWARD,
@@ -83,8 +86,8 @@ namespace vehicle {
 		{
 			real				minForce;
 			real				maxForce;
-			size_t				mountPtIdx;
-			ThrusterTpl(real minF = 0., real maxF = 1., size_t mtPt = 0) : minForce(minF), maxForce(maxF), mountPtIdx(mtPt) {}
+			String				mountPt;
+			ThrusterTpl(real minF = 0., real maxF = 1., const String& mtPt = "") : minForce(minF), maxForce(maxF), mountPt(mtPt) {}
 		};
 		struct CarEngineTpl : public EngineTpl
 		{
@@ -108,7 +111,7 @@ namespace vehicle {
 			{}
 		};
 
-		typedef Deque<EngineTpl*> EngineTplList;
+		typedef AssocVector<String,EngineTpl*> EngineTplList;
 
 		typedef Deque<physics::IShape::Desc*> ShapeTplList;
 
@@ -164,7 +167,7 @@ namespace vehicle {
 		{
 			ConstVectorIterator< EngineTplList > itEngine( mEngines );
 			while (itEngine.hasMoreElements())
-				delete itEngine.getNext();
+				delete itEngine.getNext().second;
 			mEngines.clear();
 			ConstVectorIterator< ShapeTplList > itShape( mChassis.mChassisShapes );
 			while (itShape.hasMoreElements())

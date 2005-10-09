@@ -32,12 +32,21 @@
 namespace yake {
 namespace vehicle {
 
+	class DotVehicleParser;
 	class YAKE_VEH_API OdeVehicleSystem : public IVehicleSystem
 	{
 		YAKE_DECLARE_CONCRETE(OdeVehicleSystem,"ode");
 	public:
 		OdeVehicleSystem();
+		~OdeVehicleSystem();
 		virtual IVehicle* create(const VehicleTemplate&, physics::IWorld& PWorld);
+		virtual bool loadTemplates(const String& fn);
+		virtual IVehicle* create(const String& tpl, physics::IWorld& PWorld);
+	private:
+		void _onVehicleTpl(DotVehicleParser& parser, const String& tplId);
+	private:
+		typedef AssocVector<String,SharedPtr<vehicle::VehicleTemplate> > VehTplList;
+		VehTplList				mVehicleTemplates;
 	};
 
 	class OdeWheel;
@@ -52,9 +61,10 @@ namespace vehicle {
 		//virtual void addMountPoint(MountPoint*);
 		//virtual MountPoint* removeMountPoint(MountPoint*);
 
-		virtual MountPoint* getMountPoint(size_t index) const;
+		virtual MountPoint* getMountPoint(const String& id) const;
 
-		virtual IEngine* getEngineInterface(size_t index) const;
+		virtual IEngine* getEngineInterface(const String& id) const;
+		virtual IEnginePtrList getEngineInterfaces() const;
 		virtual IWheel* getWheelInterface(size_t index) const;
 
 		virtual Vector3 getChassisPosition() const;
@@ -65,8 +75,11 @@ namespace vehicle {
 
 		YAKE_MEMBERSIGNAL(private,void(real),UpdateThrusterSimulation);
 		YAKE_MEMBERSIGNAL(private,void(void),ApplyThrusterToTargets);
+
 	private:
-		typedef Deque<IEngine*> EnginePtrList;
+		void _createMountPoint(const String& id, const VehicleTemplate::MountPointTpl&,MountPoint* parentMtPt = 0);
+	private:
+		typedef AssocVector<String,IEngine*> EnginePtrList;
 		EnginePtrList		mEngines; // owner of all engine objects
 
 		physics::IActorPtr	mpChassis;
@@ -77,7 +90,7 @@ namespace vehicle {
 		typedef Deque<OdeWheel*> WheelList;
 		WheelList			mWheels;
 
-		typedef Deque<MountPoint*> MountPointList;
+		typedef AssocVector<String,MountPoint*> MountPointList;
 		MountPointList		mMountPoints;
 	};
 

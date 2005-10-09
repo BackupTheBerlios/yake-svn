@@ -24,23 +24,45 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_VEHICLE_SYSTEM_H
-#define YAKE_VEHICLE_SYSTEM_H
+#ifndef YAKE_VEHICLE_DOTVEHICLE_H
+#define YAKE_VEHICLE_DOTVEHICLE_H
 
 #include "yakePrerequisites.h"
+#include "yakeTemplates.h"
 
 namespace yake {
+	namespace data {
+		namespace dom {
+			class INode;
+		}
+	}
 namespace vehicle {
 
-	class IVehicle;
-	class YAKE_VEH_API IVehicleSystem
+	class YAKE_VEH_API DotVehicleParser
 	{
-		YAKE_DECLARE_REGISTRY_0(IVehicleSystem,String);
 	public:
-		virtual ~IVehicleSystem() {}
-		virtual IVehicle* create(const VehicleTemplate&, physics::IWorld& PWorld) = 0;
-		virtual bool loadTemplates(const String& fn) = 0;
-		virtual IVehicle* create(const String& tpl, physics::IWorld& PWorld) = 0;
+		DotVehicleParser();
+		bool parse( const String& fn );
+		bool parse( const data::dom::INode& rootNode );
+
+		VehicleTemplate* detachCurrentVehicleTpl();
+
+		YAKE_MEMBERSIGNAL(public,void(DotVehicleParser&,const String&),OnVehicleTpl);
+	private:
+		void parseVehicleTpl( const data::dom::INode& n );
+		 void parseChassis( const data::dom::INode& n );
+		  void parseBody( const data::dom::INode& n );
+		  void parseShapeSet( const data::dom::INode& n );
+		   void parseShape( const data::dom::INode& n );
+		   void parseMountPoint( const data::dom::INode& n, VehicleTemplate::MountPointTpl* parentMtPt = 0 );
+		 void parseEngine( const data::dom::INode& n );
+		void parseEngineTpl( const data::dom::INode& n );
+
+		void parsePosition( const data::dom::INode& n, Vector3& ret );
+		void parseOrientation( const data::dom::INode& n, Quaternion& ret );
+		void parseDirection( const data::dom::INode& n, Vector3& ret );
+
+		VehicleTemplate*	mpCurrVehTpl;
 	};
 
 } // namespace vehicle

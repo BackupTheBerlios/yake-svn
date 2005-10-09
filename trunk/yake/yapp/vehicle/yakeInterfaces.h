@@ -34,6 +34,7 @@ namespace yake {
 namespace vehicle {
 
 	class IEngine;
+	typedef Deque<IEngine*> IEnginePtrList;
 	class IWheel;
 	class MountPoint;
 	class Mountable;
@@ -51,8 +52,9 @@ namespace vehicle {
 		//virtual void addMountPoint(MountPoint*) = 0;
 		//virtual MountPoint* removeMountPoint(MountPoint*) = 0;
 
-		virtual MountPoint* getMountPoint(size_t index) const = 0;
-		virtual IEngine* getEngineInterface(size_t index) const = 0;
+		virtual MountPoint* getMountPoint(const String& id) const = 0;
+		virtual IEngine* getEngineInterface(const String& id) const = 0;
+		virtual IEnginePtrList getEngineInterfaces() const = 0;
 		virtual IWheel* getWheelInterface(size_t index) const = 0;
 
 		virtual Vector3 getChassisPosition() const = 0;
