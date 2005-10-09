@@ -42,13 +42,13 @@ public:
 	{
 	}
 private:
-	void _createThrusterVisual(size_t mtPtIdx, graphics::ISceneNode& parentSN)
+	void _createThrusterVisual(const String& mtPtId, const String& engineId, graphics::ISceneNode& parentSN)
 	{
 		graphics::ISceneNode* pSN = parentSN.createChildNode();
 		graphics::IParticleSystem* pPS = getGraphicalWorld()->createParticleSystem("thruster1");
 		pSN->attachParticleSystem( pPS );
-		mComplex->addLink( mVehicle->getMountPoint(mtPtIdx), pSN );
-		_regThrusterPs( mtPtIdx, *pPS );
+		mComplex->addLink( mVehicle->getMountPoint(mtPtId), pSN );
+		_regThrusterPs( engineId, *pPS );
 	}
 protected:
 	virtual void onCreateScene()
@@ -69,30 +69,38 @@ protected:
 		// vehicle
 		SharedPtr<vehicle::IVehicleSystem> pVS = //create<vehicle::IVehicleSystem>("ode");
 			SharedPtr<vehicle::IVehicleSystem>(new vehicle::OdeVehicleSystem());
+
+		pVS->loadTemplates("../../media/vehicles/jet.xml");
+
+		
+#if 1	// <= Set to 1 in order to create the jet vehicle in code, or
+		//    set to 0 to load it from .vehicle file (see below).
+
 		vehicle::VehicleTemplate tpl;
 		tpl.mChassis.mChassisShapes.push_back(
 			new physics::IShape::BoxDesc(Vector3(1,1,2)) );
-		// mount point 0 for right thruster
-		tpl.mMountPoints.push_back(
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(80,0,0), Vector3(1,0,0) ) );
-		// mount point 1 for left thruster
-		tpl.mMountPoints.push_back(
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(-80,0,0), Vector3(-1,0,0) ) );
-		// mount point 2 for rear thruster
-		tpl.mMountPoints.push_back(
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(0,0,-80), Vector3(0,0,-1) ) );
-		// mount point 3 for front thruster
-		tpl.mMountPoints.push_back(
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(0,0,70), Vector3(0,0,1) ) );
-		// upward mount point - at center of vehicle
-		// thrusters
-		tpl.mEngines.push_back( new vehicle::VehicleTemplate::ThrusterTpl(0.,10.,0) );
-		tpl.mEngines.push_back( new vehicle::VehicleTemplate::ThrusterTpl(0.,10.,1) );
-		tpl.mEngines.push_back( new vehicle::VehicleTemplate::ThrusterTpl(0.,20.,2) );
-		tpl.mEngines.push_back( new vehicle::VehicleTemplate::ThrusterTpl(0.,20.,3) );
+		// mount points:
+		// mount point for left thruster
+		tpl.mMountPoints["left"] = 
+			vehicle::VehicleTemplate::MountPointTpl( Vector3(70,0,0), Vector3(1,0,0) );
+		// mount point for right thruster
+		tpl.mMountPoints["right"] = 
+			vehicle::VehicleTemplate::MountPointTpl( Vector3(-70,0,0), Vector3(-1,0,0) );
+		// mount point for rear thruster
+		tpl.mMountPoints["rear"] = 
+			vehicle::VehicleTemplate::MountPointTpl( Vector3(0,0,-80), Vector3(0,0,-1) );
+		// mount point for front thruster
+		tpl.mMountPoints["front"] = 
+			vehicle::VehicleTemplate::MountPointTpl( Vector3(0,0,70), Vector3(0,0,1) );
+		// thrusters:
+		tpl.mEngines["left"] = new vehicle::VehicleTemplate::ThrusterTpl(0.,10.,"left");
+		tpl.mEngines["right"] = new vehicle::VehicleTemplate::ThrusterTpl(0.,10.,"right");
+		tpl.mEngines["forward"] = new vehicle::VehicleTemplate::ThrusterTpl(0.,20.,"rear");
+		tpl.mEngines["backward"] = new vehicle::VehicleTemplate::ThrusterTpl(0.,20.,"front");
 		mVehicle = pVS->create( tpl, *getPhysicalWorld() );
-
-		//pV->getChassisPosition();
+#else
+		mVehicle = pVS->create("jet", *getPhysicalWorld() );
+#endif
 
 		// create container (e.g. for graphical objects and links)
 		mComplex = new model::complex::Model();
@@ -106,10 +114,10 @@ protected:
 		pG->addSceneNode(pSN);
 
 		// - thruster visuals
-		_createThrusterVisual( 0, *pSN );
-		_createThrusterVisual( 1, *pSN );
-		_createThrusterVisual( 2, *pSN );
-		_createThrusterVisual( 3, *pSN );
+		_createThrusterVisual( "left", "left", *pSN );
+		_createThrusterVisual( "right", "right", *pSN );
+		_createThrusterVisual( "front", "backward", *pSN );
+		_createThrusterVisual( "rear", "forward", *pSN );
 
 		// create visual <-> physics links
 		mComplex->addLink( mVehicle->getChassisMovable(), pSN );
@@ -152,23 +160,25 @@ protected:
 		getApp().getMouseEventGenerator()->update();
 		mActionMap.update();
 
-		for (size_t i=0; i<4; ++i)
+		vehicle::IEnginePtrList engines = mVehicle->getEngineInterfaces();
+		ConstDequeIterator< vehicle::IEnginePtrList > itEngine( engines );
+		while (itEngine.hasMoreElements())
 		{
-			mVehicle->getEngineInterface(i)->setThrottle(
-				mVehicle->getEngineInterface(i)->getThrottle() - timeElapsed * 1.7 );
+			vehicle::IEngine* pEngine = itEngine.getNext();
+			pEngine->setThrottle( pEngine->getThrottle() - timeElapsed * 1.7 );
 		}
 		ConstDequeIterator< ActionIdList > itAction( mActiveActions );
 		while (itAction.hasMoreElements())
 		{
 			const input::ActionId activeId = itAction.getNext();
 			if (activeId == input::ACTIONID_STRAFE_LEFT)
-				mVehicle->getEngineInterface(1)->setThrottle(1.);
+				mVehicle->getEngineInterface("right")->setThrottle(1.);
 			else if (activeId == input::ACTIONID_STRAFE_RIGHT)
-				mVehicle->getEngineInterface(0)->setThrottle(1.);
+				mVehicle->getEngineInterface("left")->setThrottle(1.);
 			else if (activeId == input::ACTIONID_FORWARD)
-				mVehicle->getEngineInterface(2)->setThrottle(1.);
+				mVehicle->getEngineInterface("forward")->setThrottle(1.);
 			else if (activeId == input::ACTIONID_REVERSE)
-				mVehicle->getEngineInterface(3)->setThrottle(1.);
+				mVehicle->getEngineInterface("backward")->setThrottle(1.);
 		}
 
 		mVehicle->updateSimulation( timeElapsed );
@@ -190,41 +200,41 @@ protected:
 	void onReverse()
 	{ mActiveActions.insert( input::ACTIONID_REVERSE ); }
 private:
-	void _regThrusterPs(size_t idx, graphics::IParticleSystem& ps)
+	void _regThrusterPs(const String& engineId, graphics::IParticleSystem& ps)
 	{
-		mEmitterMinVel[ idx ] = ps.getMinVelocity(0);
-		mEmitterMaxVel[ idx ] = ps.getMaxVelocity(0);
-		mEmitterEmissionRate[ idx ] = ps.getEmissionRate(0);
-		mThrusterPs[ idx ] = &ps;
+		mEmitterMinVel[ engineId ] = ps.getMinVelocity(0);
+		mEmitterMaxVel[ engineId ] = ps.getMaxVelocity(0);
+		mEmitterEmissionRate[ engineId ] = ps.getEmissionRate(0);
+		mThrusterPs[ engineId ] = &ps;
 	}
 	void _updateThrusterPs()
 	{
 		ConstDequeIterator< ThrusterPsMap > itM( mThrusterPs );
 		while (itM.hasMoreElements())
 		{
-			std::pair<size_t,graphics::IParticleSystem*> p = itM.getNext();
-			size_t idxMtPt = p.first;
+			std::pair<String,graphics::IParticleSystem*> p = itM.getNext();
+			const String mtPtId = p.first;
 			graphics::IParticleSystem* ps = p.second;
-			const real throttle = mVehicle->getEngineInterface(idxMtPt)->getThrottle();
+			const real throttle = mVehicle->getEngineInterface(mtPtId)->getThrottle();
 
-			real rate = throttle * mEmitterEmissionRate[ idxMtPt ];
+			real rate = throttle * mEmitterEmissionRate[ mtPtId ];
 			ps->setEmissionRate( 0, rate );
 
-			real vel = throttle * mEmitterMaxVel[ idxMtPt ];
+			real vel = throttle * mEmitterMaxVel[ mtPtId ];
 			ps->setMaxVelocity( 0, vel );
 
-			vel = throttle * mEmitterMinVel[ idxMtPt ];
+			vel = throttle * mEmitterMinVel[ mtPtId ];
 			ps->setMinVelocity( 0, vel );
 		}
 	}
 private:
 	vehicle::IVehicle*		mVehicle;
 	model::complex::Model*	mComplex;
-	typedef AssocVector<size_t,real> EmitterRealMap;
+	typedef AssocVector<String,real> EmitterRealMap;
 	EmitterRealMap			mEmitterMinVel;
 	EmitterRealMap			mEmitterMaxVel;
 	EmitterRealMap			mEmitterEmissionRate;
-	typedef AssocVector<size_t,graphics::IParticleSystem*> ThrusterPsMap;
+	typedef AssocVector<String,graphics::IParticleSystem*> ThrusterPsMap;
 	ThrusterPsMap			mThrusterPs;
 	input::ActionMap		mActionMap;
 
