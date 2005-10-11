@@ -105,7 +105,8 @@ namespace physics {
 		if (mpNxJoint)
 			return false;
 
-		NxPointOnLineJointDesc desc;
+		NxFixedJointDesc desc;
+		//NxPointOnLineJointDesc desc;
 		//NxPrismaticJointDesc desc;
 		desc.setToDefault();
 		desc.actor[0] = rActor1.getNxActorPtr_();

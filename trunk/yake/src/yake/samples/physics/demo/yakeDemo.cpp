@@ -447,6 +447,7 @@ void MiniApp::run()
 			const Vector3 spawnOffset = bUseWorldOne ? Vector3(-5,0,0) : Vector3(5,0,0);
 			const Vector3 spawnPos = spawnOffset + Vector3(randomiser.randReal()*0.5,10,randomiser.randReal()*0.5);
 			objs.push_back( SharedPtr<Simple>( new Simple( pPWorld ) ) );
+			SharedPtr<Simple> last = objs.back();
 
 			if (randomiser.randReal() < 0.5)
 				createBox( pPWorld, *objs.back(), 
@@ -456,6 +457,13 @@ void MiniApp::run()
 				createBall( pPWorld, *objs.back(), 
 								spawnPos,  // position
 								randomiser.randReal()*2 ); //dimension/radius
+
+			//
+			objs.push_back( SharedPtr<Simple>( new Simple( pPWorld ) ) );
+			createBall( pPWorld, *objs.back(),
+								spawnPos + Vector3(-5,0,0),
+								1 );
+			createFixedJoint( pPWorld, *last, *objs.back() );
 		}
 
 		// step the worlds
