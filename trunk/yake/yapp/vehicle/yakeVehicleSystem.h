@@ -40,6 +40,8 @@ namespace vehicle {
 		virtual ~IVehicleSystem() {}
 		virtual IVehicle* create(const VehicleTemplate&, physics::IWorld& PWorld) = 0;
 		virtual bool loadTemplates(const String& fn) = 0;
+		//virtual VehicleTemplate* cloneTemplate(const String& tpl) = 0;
+		virtual VehicleTemplate* getTemplate(const String& tpl) const = 0;
 		virtual IVehicle* create(const String& tpl, physics::IWorld& PWorld) = 0;
 	};
 

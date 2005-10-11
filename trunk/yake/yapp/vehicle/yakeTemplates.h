@@ -33,6 +33,7 @@ namespace yake {
 namespace vehicle {
 
 	const String MPID_NO_PARENT = String("");
+	const uint32 SG_NO_STEERING_GROUP = 0xffffffff;
 	struct VehicleTemplate
 	{
 		struct MountPointTpl;
@@ -139,19 +140,25 @@ namespace vehicle {
 			real			mSuspensionDamping;
 			String			mGfxReference; // e.g. dotScene file
 			String			mGfxReferenceType; // e.g. "dotscene"
-			WheelTpl() :
-				mPosition(Vector3::kZero),
+			WheelTpl(
+				const Vector3& position = Vector3::kZero,
+				const real radius = real(0.8),
+				const real mass = real(0.01),
+				const bool massRelativeToChassis = true,
+				const uint32 steeringGrp = SG_NO_STEERING_GROUP
+				) :
+				mPosition(position),
 				mOrientation(Quaternion::kIdentity),
-				mSteeringGroup(0),
-				mRadius(real(0.8)),
-				mMass(real(0.015)),
-				mMassRelativeToChassis(true),
+				mSteeringGroup(steeringGrp),
+				mRadius(radius),
+				mMass(mass),
+				mMassRelativeToChassis(massRelativeToChassis),
 				mSuspensionSpring(real(1)),
 				mSuspensionDamping(real(0.9))
 			{}
 		};
 
-		typedef Deque< WheelTpl > WheelTplList;
+		typedef AssocVector< String, WheelTpl > WheelTplList;
 
 		//
 
@@ -174,6 +181,7 @@ namespace vehicle {
 				delete itShape.getNext();
 			mChassis.mChassisShapes.clear();
 		}
+		//VehicleTemplate* clone() const;
 	};
 
 } // namespace vehicle

@@ -33,14 +33,16 @@ namespace yake {
 namespace vehicle {
 
 	class DotVehicleParser;
-	class YAKE_VEH_API OdeVehicleSystem : public IVehicleSystem
+	class YAKE_VEH_API GenericVehicleSystem : public IVehicleSystem
 	{
-		YAKE_DECLARE_CONCRETE(OdeVehicleSystem,"ode");
+		YAKE_DECLARE_CONCRETE(GenericVehicleSystem,"generic");
 	public:
-		OdeVehicleSystem();
-		~OdeVehicleSystem();
+		GenericVehicleSystem();
+		~GenericVehicleSystem();
 		virtual IVehicle* create(const VehicleTemplate&, physics::IWorld& PWorld);
 		virtual bool loadTemplates(const String& fn);
+		virtual VehicleTemplate* getTemplate(const String& tpl) const;
+		//virtual VehicleTemplate* cloneTemplate(const String& tpl);
 		virtual IVehicle* create(const String& tpl, physics::IWorld& PWorld);
 	private:
 		void _onVehicleTpl(DotVehicleParser& parser, const String& tplId);
@@ -50,11 +52,11 @@ namespace vehicle {
 	};
 
 	class OdeWheel;
-	class OdeVehicle : public IVehicle
+	class GenericVehicle : public IVehicle
 	{
 	public:
-		OdeVehicle();
-		virtual ~OdeVehicle();
+		GenericVehicle();
+		virtual ~GenericVehicle();
 
 		virtual void updateSimulation( real timeElapsed );
 
@@ -65,7 +67,7 @@ namespace vehicle {
 
 		virtual IEngine* getEngineInterface(const String& id) const;
 		virtual IEnginePtrList getEngineInterfaces() const;
-		virtual IWheel* getWheelInterface(size_t index) const;
+		virtual IWheel* getWheelInterface(const String& id) const;
 
 		virtual Vector3 getChassisPosition() const;
 		virtual Quaternion getChassisOrientation() const;
@@ -87,7 +89,7 @@ namespace vehicle {
 		typedef AssocVector<uint32,Deque<OdeWheel*> > SteeringGroupList;
 		SteeringGroupList	mSteeringGroups;
 
-		typedef Deque<OdeWheel*> WheelList;
+		typedef AssocVector<String,OdeWheel*> WheelList;
 		WheelList			mWheels;
 
 		typedef AssocVector<String,MountPoint*> MountPointList;
@@ -95,11 +97,11 @@ namespace vehicle {
 	};
 
 	class GearBox;
-	class OdeCarEngine : public ICarEngine
+	class GenericCarEngine : public ICarEngine
 	{
 	public:
-		OdeCarEngine();
-		virtual ~OdeCarEngine();
+		GenericCarEngine();
+		virtual ~GenericCarEngine();
 
 		virtual void setThrottle(real throttle);
 		virtual real getThrottle() const;
@@ -164,25 +166,28 @@ namespace vehicle {
 		virtual Vector3 getPosition() const;
 		virtual void setOrientation(const Quaternion&) {}
 		virtual Quaternion getOrientation() const;
+
+		virtual real getRadius() const;
 	private:
 		physics::IJointPtr		mpJoint;
 		physics::IActorPtr		mpWheel;
+		real					mRadius;
 	};
 
-	class OdeMountPoint : public MountPoint
+	class GenericMountPoint : public MountPoint
 	{
 	public:
-		OdeMountPoint() {}
+		GenericMountPoint() {}
 
 	private:
 		//typedef Deque<IThruster*> ThrusterPtrList;
 		//ThrusterPtrList		mThrusters; // references thruster engines (does NOT own them!)
 	};
 
-	class OdeThruster : public IThruster
+	class GenericThruster : public IThruster
 	{
 	public:
-		OdeThruster();
+		GenericThruster();
 
 		virtual void setThrottle( real throttle );
 		virtual real getThrottle() const;
@@ -191,10 +196,10 @@ namespace vehicle {
 	private:
 		real	mThrottle;
 	};
-	class OdeMountedThruster : public IMountedThruster
+	class GenericMountedThruster : public IMountedThruster
 	{
 	public:
-		OdeMountedThruster();
+		GenericMountedThruster();
 
 		virtual void onApplyToTargets();
 	private:

@@ -55,7 +55,7 @@ namespace vehicle {
 		virtual MountPoint* getMountPoint(const String& id) const = 0;
 		virtual IEngine* getEngineInterface(const String& id) const = 0;
 		virtual IEnginePtrList getEngineInterfaces() const = 0;
-		virtual IWheel* getWheelInterface(size_t index) const = 0;
+		virtual IWheel* getWheelInterface(const String& id) const = 0;
 
 		virtual Vector3 getChassisPosition() const = 0;
 		virtual Quaternion getChassisOrientation() const = 0;
@@ -158,6 +158,8 @@ namespace vehicle {
 	{
 	public:
 		virtual ~IWheel() {}
+
+		virtual real getRadius() const = 0;
 	};
 
 } // namespace vehicle

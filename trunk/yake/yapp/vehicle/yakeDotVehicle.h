@@ -54,6 +54,8 @@ namespace vehicle {
 		  void parseBody( const data::dom::INode& n );
 		  void parseShapeSet( const data::dom::INode& n );
 		   void parseShape( const data::dom::INode& n );
+		    void parseShapeBox( const data::dom::INode& n );
+		    void parseShapeSphere( const data::dom::INode& n );
 		   void parseMountPoint( const data::dom::INode& n, VehicleTemplate::MountPointTpl* parentMtPt = 0 );
 		 void parseEngine( const data::dom::INode& n );
 		void parseEngineTpl( const data::dom::INode& n );

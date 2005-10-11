@@ -81,6 +81,9 @@ namespace complex {
 		*/
 		void addPhysical( const SharedPtr<Physical> & pPhysical, const String & rName = ""/*, bool bManaged*/ );
 
+		/** @copydoc addPhysical */
+		void addPhysical( Physical* pPhysical, const String & rName = ""/*, bool bManaged*/ );
+
 		/** Adds a "Graphical" object to this model.
 			The model references it using a shared pointer.
 			If it holds the only reference to the object it effectively
@@ -89,6 +92,10 @@ namespace complex {
 			objects by name.
 		*/
 		void addGraphical( const SharedPtr<Graphical> & pGraphical, const String & rName = "" );
+
+		/** @copydoc addGraphical
+		*/
+		void addGraphical( Graphical* pGraphical, const String & rName = "" );
 
 		void addGraphicsController( const SharedPtr<IObjectController> & pController, const String & rName = "" );
 		void addLink( const SharedPtr<ModelLink> & pModelLink, const String & rName = "" );
