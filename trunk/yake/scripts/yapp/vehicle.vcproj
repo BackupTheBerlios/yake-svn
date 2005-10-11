@@ -197,6 +197,10 @@
 			Name="nativeNx"
 			Filter="">
 		</Filter>
+		<Filter
+			Name="generic"
+			Filter="">
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
