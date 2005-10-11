@@ -14,7 +14,7 @@ using namespace yake;
 struct TheConfiguration : public raf::ApplicationConfiguration
 {
 	virtual StringVector getLibraries()
-	{ return MakeStringVector() << "graphicsOgre" << "inputOgre" << "physicsODE"; }
+	{ return MakeStringVector() << "graphicsOgre" << "inputOgre" << "physicsNx"; }
 
 	//virtual StringVector getScriptingSystems()
 	//{ return MakeStringVector() << "lua"; }
@@ -26,8 +26,10 @@ struct TheConfiguration : public raf::ApplicationConfiguration
 	{ return MakeStringVector() << "ogre"; }
 
 	virtual StringVector getPhysicsSystems()
-	{ return MakeStringVector() << "ode"; }
+	{ return MakeStringVector() << "nx"; }
 };
+
+const real razorMeshScale = 0.1;
 
 /** Main application state */
 class TheMainState : public raf::RtMainState
@@ -36,7 +38,8 @@ public:
 	TheMainState(raf::Application& owner) :
 		raf::RtMainState(owner),
 		mVehicle(0),
-		mComplex(0)
+		mComplex(0),
+		mGround(0)
 	{}
 	~TheMainState()
 	{
@@ -45,10 +48,19 @@ private:
 	void _createThrusterVisual(const String& mtPtId, const String& engineId, graphics::ISceneNode& parentSN)
 	{
 		graphics::ISceneNode* pSN = parentSN.createChildNode();
-		graphics::IParticleSystem* pPS = getGraphicalWorld()->createParticleSystem("thruster1");
+		graphics::IParticleSystem* pPS = getGraphicalWorld()->createParticleSystem("thruster2");
 		pSN->attachParticleSystem( pPS );
 		mComplex->addLink( mVehicle->getMountPoint(mtPtId), pSN );
 		_regThrusterPs( engineId, *pPS );
+	}
+	void _createWheelVisual(const String& wheelId, graphics::ISceneNode& parentSN)
+	{
+		graphics::ISceneNode* pSN = getGraphicalWorld()->createSceneNode();
+		graphics::IEntity* pE = getGraphicalWorld()->createEntity("sphere_d1.mesh");
+		pSN->attachEntity( pE );
+		const Vector3 scale = Vector3::kUnitScale * mVehicle->getWheelInterface(wheelId)->getRadius();
+		pSN->setScale( scale );
+		mComplex->addLink( mVehicle->getWheelInterface(wheelId), pSN );
 	}
 protected:
 	virtual void onCreateScene()
@@ -62,18 +74,41 @@ protected:
 		getGraphicalWorld()->createSceneNode("lightnode0")->attachLight( pLight );
 
 		// position camera and look at the ninja
+		getDefaultCamera()->setNearClipDistance( 1 );
 		getDefaultCamera()->setFixedYawAxis(Vector3::kUnitY);
-		getDefaultCamera()->setPosition(Vector3(100,20,-400));
-		getDefaultCamera()->lookAt(Vector3(0,100,0));
+		getDefaultCamera()->setPosition(Vector3(0,0,-40));
+
+		// create ground
+		mGround = new model::complex::Model();
+		{
+			// visual
+			graphics::ISceneNode* pGroundSN = getGraphicalWorld()->createSceneNode();
+			graphics::IEntity* pGroundE = getGraphicalWorld()->createEntity("plane_1x1.mesh");
+			pGroundE->setMaterial("box");
+			pGroundSN->attachEntity( pGroundE );
+			pGroundSN->setScale( Vector3(100,1,100) );
+			pGroundSN->setPosition( Vector3(0,-10,0) );
+
+			model::Graphical* pG = new model::Graphical();
+			pG->addSceneNode( pGroundSN );
+			mGround->addGraphical( pG );
+
+			// physical
+			physics::IActorPtr pGroundPlane = getPhysicalWorld()->createActor( physics::ACTOR_STATIC );
+			pGroundPlane->createShape( physics::IShape::PlaneDesc( Vector3(0,1,0), -10 ) );
+
+			model::Physical* pP = new model::Physical();
+			pP->addActor( pGroundPlane, "groundPlane" );
+			mGround->addPhysical( pP );
+		}
 
 		// vehicle
-		SharedPtr<vehicle::IVehicleSystem> pVS = //create<vehicle::IVehicleSystem>("ode");
-			SharedPtr<vehicle::IVehicleSystem>(new vehicle::OdeVehicleSystem());
+		SharedPtr<vehicle::IVehicleSystem> pVS = //create<vehicle::IVehicleSystem>("generic");
+			SharedPtr<vehicle::IVehicleSystem>(new vehicle::GenericVehicleSystem());
 
 		pVS->loadTemplates("../../media/vehicles/jet.xml");
 
-		
-#if 1	// <= Set to 1 in order to create the jet vehicle in code, or
+#if 0	// <= Set to 1 in order to create the jet vehicle in code, or
 		//    set to 0 to load it from .vehicle file (see below).
 
 		vehicle::VehicleTemplate tpl;
@@ -82,16 +117,16 @@ protected:
 		// mount points:
 		// mount point for left thruster
 		tpl.mMountPoints["left"] = 
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(70,0,0), Vector3(1,0,0) );
+			vehicle::VehicleTemplate::MountPointTpl( Vector3(7,0,0), Vector3(1,0,0) );
 		// mount point for right thruster
 		tpl.mMountPoints["right"] = 
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(-70,0,0), Vector3(-1,0,0) );
+			vehicle::VehicleTemplate::MountPointTpl( Vector3(-7,0,0), Vector3(-1,0,0) );
 		// mount point for rear thruster
 		tpl.mMountPoints["rear"] = 
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(0,0,-80), Vector3(0,0,-1) );
+			vehicle::VehicleTemplate::MountPointTpl( Vector3(0,0,-8), Vector3(0,0,-1) );
 		// mount point for front thruster
 		tpl.mMountPoints["front"] = 
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(0,0,70), Vector3(0,0,1) );
+			vehicle::VehicleTemplate::MountPointTpl( Vector3(0,0,7), Vector3(0,0,1) );
 		// thrusters:
 		tpl.mEngines["left"] = new vehicle::VehicleTemplate::ThrusterTpl(0.,10.,"left");
 		tpl.mEngines["right"] = new vehicle::VehicleTemplate::ThrusterTpl(0.,10.,"right");
@@ -99,6 +134,19 @@ protected:
 		tpl.mEngines["backward"] = new vehicle::VehicleTemplate::ThrusterTpl(0.,20.,"front");
 		mVehicle = pVS->create( tpl, *getPhysicalWorld() );
 #else
+		// add wheels
+		const real wheelRadius = 2;
+		const real wheelRelativeMass = 0.1; // mass relative to chassis
+		vehicle::VehicleTemplate* tpl = pVS->getTemplate("jet");
+		YAKE_ASSERT( tpl );
+		tpl->mWheels["frontWheel"] = 
+			vehicle::VehicleTemplate::WheelTpl( Vector3(0,-3,5), wheelRadius, wheelRelativeMass, true );
+		tpl->mWheels["leftRearWheel"] = 
+			vehicle::VehicleTemplate::WheelTpl( Vector3(-3,-3,-3), wheelRadius, wheelRelativeMass, true );
+		tpl->mWheels["rightRearWheel"] = 
+			vehicle::VehicleTemplate::WheelTpl( Vector3(3,-3,-3), wheelRadius, wheelRelativeMass, true );
+
+		// instantiate
 		mVehicle = pVS->create("jet", *getPhysicalWorld() );
 #endif
 
@@ -111,6 +159,7 @@ protected:
 		// - ship body
 		graphics::ISceneNode* pSN = getGraphicalWorld()->createSceneNode("root");
 		pSN->attachEntity( getGraphicalWorld()->createEntity("razor.mesh") );
+		pSN->setScale( Vector3::kUnitScale * razorMeshScale );
 		pG->addSceneNode(pSN);
 
 		// - thruster visuals
@@ -118,6 +167,15 @@ protected:
 		_createThrusterVisual( "right", "right", *pSN );
 		_createThrusterVisual( "front", "backward", *pSN );
 		_createThrusterVisual( "rear", "forward", *pSN );
+		_createThrusterVisual( "bottom", "upward", *pSN );
+
+		// - wheel visuals
+		if (mVehicle->getWheelInterface("frontWheel"))
+		{
+			_createWheelVisual( "frontWheel", *pSN );
+			_createWheelVisual( "leftRearWheel", *pSN );
+			_createWheelVisual( "rightRearWheel", *pSN );
+		}
 
 		// create visual <-> physics links
 		mComplex->addLink( mVehicle->getChassisMovable(), pSN );
@@ -127,6 +185,8 @@ protected:
 	}
 	virtual void onDestroyScene()
 	{
+		YAKE_SAFE_DELETE( mGround );
+
 		YAKE_SAFE_DELETE( mComplex );
 		YAKE_SAFE_DELETE( mVehicle );
 	}
@@ -149,6 +209,10 @@ protected:
 		mActionMap.reg( ACTIONID_REVERSE,
 			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_DOWN, KAM_CONTINUOUS ) );
 		mActionMap.subscribeToActionId( ACTIONID_REVERSE, boost::bind(&TheMainState::onReverse,this) );
+
+		mActionMap.reg( ACTIONID_UP,
+			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_PGUP, KAM_CONTINUOUS ) );
+		mActionMap.subscribeToActionId( ACTIONID_UP, boost::bind(&TheMainState::onUp,this) );
 	}
 	virtual void onExit()
 	{
@@ -179,6 +243,8 @@ protected:
 				mVehicle->getEngineInterface("forward")->setThrottle(1.);
 			else if (activeId == input::ACTIONID_REVERSE)
 				mVehicle->getEngineInterface("backward")->setThrottle(1.);
+			else if (activeId == input::ACTIONID_UP)
+				mVehicle->getEngineInterface("upward")->setThrottle(1.);
 		}
 
 		mVehicle->updateSimulation( timeElapsed );
@@ -199,6 +265,8 @@ protected:
 	{ mActiveActions.insert( input::ACTIONID_FORWARD ); }
 	void onReverse()
 	{ mActiveActions.insert( input::ACTIONID_REVERSE ); }
+	void onUp()
+	{ mActiveActions.insert( input::ACTIONID_UP ); }
 private:
 	void _regThrusterPs(const String& engineId, graphics::IParticleSystem& ps)
 	{
@@ -228,6 +296,7 @@ private:
 		}
 	}
 private:
+	model::complex::Model*	mGround;
 	vehicle::IVehicle*		mVehicle;
 	model::complex::Model*	mComplex;
 	typedef AssocVector<String,real> EmitterRealMap;

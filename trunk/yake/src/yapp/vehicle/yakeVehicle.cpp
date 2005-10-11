@@ -32,6 +32,13 @@ namespace yake {
 namespace vehicle {
 
 	//-----------------------------------------------------
+	// Class: VehicleTemplate
+	//-----------------------------------------------------
+	//VehicleTemplate* VehicleTemplate::clone() const
+	//{
+	//}
+
+	//-----------------------------------------------------
 	// Class: Mountable
 	//-----------------------------------------------------
 	Mountable::Mountable() : mPt(0)

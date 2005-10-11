@@ -33,64 +33,85 @@ namespace yake {
 namespace vehicle {
 
 	YAKE_IMPLEMENT_REGISTRY(IVehicleSystem);
-	YAKE_REGISTER_CONCRETE(OdeVehicleSystem);
+	YAKE_REGISTER_CONCRETE(GenericVehicleSystem);
 
 	//-----------------------------------------------------
-	// Class: OdeVehicleSystem
+	// Class: GenericVehicleSystem
 	//-----------------------------------------------------
-	OdeVehicleSystem::OdeVehicleSystem()
+	GenericVehicleSystem::GenericVehicleSystem()
 	{}
-	OdeVehicleSystem::~OdeVehicleSystem()
+	GenericVehicleSystem::~GenericVehicleSystem()
 	{
 		mVehicleTemplates.clear();
 	}
-	IVehicle* OdeVehicleSystem::create(const VehicleTemplate& tpl, physics::IWorld& PWorld)
+	IVehicle* GenericVehicleSystem::create(const VehicleTemplate& tpl, physics::IWorld& PWorld)
 	{
-		OdeVehicle* pV = new OdeVehicle();
+		GenericVehicle* pV = new GenericVehicle();
 		pV->_create( tpl, PWorld );
 		return pV;
 	}
-	bool OdeVehicleSystem::loadTemplates(const String& fn)
+	bool GenericVehicleSystem::loadTemplates(const String& fn)
 	{
 		DotVehicleParser dvp;
-		dvp.subscribeToOnVehicleTpl( boost::bind(&OdeVehicleSystem::_onVehicleTpl,this,_1,_2) );
+		dvp.subscribeToOnVehicleTpl( boost::bind(&GenericVehicleSystem::_onVehicleTpl,this,_1,_2) );
 		bool ret = dvp.parse( fn );
 		return ret;
 	}
-	IVehicle* OdeVehicleSystem::create(const String& tplId, physics::IWorld& PWorld)
+	VehicleTemplate* GenericVehicleSystem::getTemplate(const String& tplId) const
 	{
 		VehTplList::const_iterator itFind = mVehicleTemplates.find( tplId );
 		YAKE_ASSERT( itFind != mVehicleTemplates.end() );
 		if (itFind == mVehicleTemplates.end() )
 			return 0;
-		const VehicleTemplate* tpl = itFind->second.get();
+		VehicleTemplate* tpl = itFind->second.get();
+		YAKE_ASSERT( tpl );
+		if (!tpl)
+			return 0;
+		return tpl;
+	}
+	//VehicleTemplate* GenericVehicleSystem::cloneTemplate(const String& tpl)
+	//{
+	//	VehTplList::const_iterator itFind = mVehicleTemplates.find( tplId );
+	//	YAKE_ASSERT( itFind != mVehicleTemplates.end() );
+	//	if (itFind == mVehicleTemplates.end() )
+	//		return 0;
+	//	const VehicleTemplate* tpl = itFind->second.get();
+	//	YAKE_ASSERT( tpl );
+	//	if (!tpl)
+	//		return 0;
+	//	return tpl->clone();
+	//}
+	IVehicle* GenericVehicleSystem::create(const String& tplId, physics::IWorld& PWorld)
+	{
+		const VehicleTemplate* tpl = getTemplate( tplId );
 		YAKE_ASSERT( tpl );
 		if (!tpl)
 			return 0;
 		return create(*tpl,PWorld);
 	}
-	void OdeVehicleSystem::_onVehicleTpl(vehicle::DotVehicleParser& parser, const String& tplId)
+	void GenericVehicleSystem::_onVehicleTpl(vehicle::DotVehicleParser& parser, const String& tplId)
 	{
-		YAKE_LOG("OdeVehicleSystem: loaded vehicle template'" + tplId + "'.");
+		YAKE_LOG("GenericVehicleSystem: loaded vehicle template'" + tplId + "'.");
 		mVehicleTemplates[ tplId ] = SharedPtr<vehicle::VehicleTemplate>( parser.detachCurrentVehicleTpl() );
 		YAKE_ASSERT( mVehicleTemplates[ tplId ] );
 	}
 
 	//-----------------------------------------------------
-	// Class: OdeVehicle
+	// Class: GenericVehicle
 	//-----------------------------------------------------
-	OdeVehicle::OdeVehicle() : mpChassis(0)
+	GenericVehicle::GenericVehicle() : mpChassis(0)
 	{
 	}
-	OdeVehicle::~OdeVehicle()
+	GenericVehicle::~GenericVehicle()
 	{
 		for (SteeringGroupList::const_iterator it = mSteeringGroups.begin(); it != mSteeringGroups.end(); ++it)
 		{
-			ConstDequeIterator< WheelList > itWheel( it->second );
+			ConstDequeIterator< Deque<OdeWheel*> > itWheel( it->second );
 			while (itWheel.hasMoreElements())
 				delete itWheel.getNext();
 		}
 		mSteeringGroups.clear();
+		mWheels.clear();
 
 		ConstDequeIterator< EnginePtrList > itEngine( mEngines );
 		while (itEngine.hasMoreElements())
@@ -105,7 +126,7 @@ namespace vehicle {
 		mpChassis->getCreator()->destroyActor( mpChassis );
 		mpChassis = 0;
 	}
-	void OdeVehicle::updateSimulation(real timeElapsed)
+	void GenericVehicle::updateSimulation(real timeElapsed)
 	{
 		ConstDequeIterator< EnginePtrList > itEngine( mEngines );
 		while (itEngine.hasMoreElements())
@@ -117,7 +138,7 @@ namespace vehicle {
 		mSigUpdateThrusterSimulation( timeElapsed );
 		mSigApplyThrusterToTargets();
 	}
-	MountPoint* OdeVehicle::getMountPoint(const String& id) const
+	MountPoint* GenericVehicle::getMountPoint(const String& id) const
 	{
 		YAKE_ASSERT( !id.empty() );
 		if (id.empty())
@@ -128,7 +149,7 @@ namespace vehicle {
 			return 0;
 		return itFind->second;
 	}
-	IEngine* OdeVehicle::getEngineInterface(const String& id) const
+	IEngine* GenericVehicle::getEngineInterface(const String& id) const
 	{
 		YAKE_ASSERT( !id.empty() );
 		if (id.empty())
@@ -139,7 +160,7 @@ namespace vehicle {
 			return 0;
 		return itFind->second;
 	}
-	IEnginePtrList OdeVehicle::getEngineInterfaces() const
+	IEnginePtrList GenericVehicle::getEngineInterfaces() const
 	{
 		IEnginePtrList engines;
 		ConstVectorIterator< EnginePtrList > itEngine( mEngines );
@@ -147,31 +168,35 @@ namespace vehicle {
 			engines.push_back( itEngine.getNext().second );
 		return engines;
 	}
-	IWheel* OdeVehicle::getWheelInterface(size_t index) const
+	IWheel* GenericVehicle::getWheelInterface(const String& id) const
 	{
-		YAKE_ASSERT( index < mWheels.size() );
-		if (index >= mWheels.size())
+		YAKE_ASSERT( !id.empty() );
+		if (id.empty())
 			return 0;
-		return mWheels.at(index);
+		WheelList::const_iterator itFind = mWheels.find(id);
+		//YAKE_ASSERT( itFind != mWheels.end() )( id );
+		if (itFind == mWheels.end())
+			return 0;
+		return itFind->second;
 	}
-	Vector3 OdeVehicle::getChassisPosition() const
+	Vector3 GenericVehicle::getChassisPosition() const
 	{
 		YAKE_ASSERT( mpChassis );
 		return mpChassis->getPosition();
 	}
-	Quaternion OdeVehicle::getChassisOrientation() const
+	Quaternion GenericVehicle::getChassisOrientation() const
 	{
 		YAKE_ASSERT( mpChassis );
 		return mpChassis->getOrientation();
 	}
-	Movable* OdeVehicle::getChassisMovable() const
+	Movable* GenericVehicle::getChassisMovable() const
 	{
 		YAKE_ASSERT( mpChassis );
 		return mpChassis;
 	}
-	void OdeVehicle::_createMountPoint(const String& id, const VehicleTemplate::MountPointTpl& mtPtTpl,MountPoint* parentMtPt)
+	void GenericVehicle::_createMountPoint(const String& id, const VehicleTemplate::MountPointTpl& mtPtTpl,MountPoint* parentMtPt)
 	{
-		MountPoint* thisMtPt = new OdeMountPoint();
+		MountPoint* thisMtPt = new GenericMountPoint();
 
 		// link to parent if necessary
 		if (parentMtPt)
@@ -199,11 +224,12 @@ namespace vehicle {
 			_createMountPoint( mptTplEntry.first, childMtPtTpl, thisMtPt );
 		}
 	}
-	void OdeVehicle::_create(const VehicleTemplate& tpl, physics::IWorld& PWorld )
+	void GenericVehicle::_create(const VehicleTemplate& tpl, physics::IWorld& PWorld )
 	{
 		// chassis
 		mpChassis = PWorld.createActor( physics::ACTOR_DYNAMIC );
 		mpChassis->setPosition( tpl.mChassis.mPosition );
+		//mpChassis->setOrientation( tpl.mChassis.mOrientation );
 		ConstDequeIterator< VehicleTemplate::ShapeTplList > itShapeTpl( tpl.mChassis.mChassisShapes );
 		while (itShapeTpl.hasMoreElements())
 		{
@@ -236,7 +262,7 @@ namespace vehicle {
 					dynamic_cast<const VehicleTemplate::CarEngineTpl*>( engineTpl );
 			if (carEngineTpl)
 			{
-				OdeCarEngine* pEngine = new OdeCarEngine();
+				GenericCarEngine* pEngine = new GenericCarEngine();
 				mEngines[ engineTplEntry.first ] = pEngine;
 				pEngine->setParamMaxRPM( carEngineTpl->rpmMax_ );
 				pEngine->setParamMinRPM( carEngineTpl->rpmMin_ );
@@ -249,24 +275,24 @@ namespace vehicle {
 				if (thrusterTpl)
 				{
 					// thruster itself
-					OdeThruster* pEngine = new OdeThruster();
+					GenericThruster* pEngine = new GenericThruster();
 					mEngines[ engineTplEntry.first ] = pEngine;
 					pEngine->setMinimumForce( thrusterTpl->minForce );
 					pEngine->setMaximumForce( thrusterTpl->maxForce );
 					pEngine->setThrottle(0.);
 					subscribeToUpdateThrusterSimulation(
-						boost::bind( &OdeThruster::updateSimulation, pEngine, _1 ) );
+						boost::bind( &GenericThruster::updateSimulation, pEngine, _1 ) );
 
 					// the thruster is attached to a mount point, create wrapper:
 					if (thrusterTpl->mountPt != MPID_NO_PARENT)
 					{
-						OdeMountedThruster* pMounted = new OdeMountedThruster();
+						GenericMountedThruster* pMounted = new GenericMountedThruster();
 						pMounted->setThruster( pEngine );
 
 						pMounted->addTarget( mpChassis->getBodyPtr() );
 
 						subscribeToApplyThrusterToTargets(
-							boost::bind( &OdeMountedThruster::applyToTargets, pMounted ) );
+							boost::bind( &GenericMountedThruster::applyToTargets, pMounted ) );
 
 						mMountPoints[thrusterTpl->mountPt]->attach( pMounted );
 					}
@@ -277,23 +303,24 @@ namespace vehicle {
 		// steering groups
 		uint32 numStGrps = tpl.mSteeringGroups > 0 ? tpl.mSteeringGroups : 1;
 		for (uint32 i=0; i<numStGrps; ++i)
-			mSteeringGroups.insert( std::make_pair(i,WheelList()) );
+			mSteeringGroups.insert( std::make_pair(i,Deque<OdeWheel*>()) );
 
 		// wheels
 		ConstDequeIterator< VehicleTemplate::WheelTplList > itWheelTpl( tpl.mWheels );
 		while (itWheelTpl.hasMoreElements())
 		{
-			const VehicleTemplate::WheelTpl wheelTpl = itWheelTpl.getNext();
-			YAKE_ASSERT( wheelTpl.mSteeringGroup < mSteeringGroups.size() );
-			if (wheelTpl.mSteeringGroup >= mSteeringGroups.size())
-			{
-				mWheels.push_back( 0 ); // => need this so that the indices stay valid!
-				continue;
-			}
+			const std::pair<String,VehicleTemplate::WheelTpl> wtp = itWheelTpl.getNext();
+			const VehicleTemplate::WheelTpl& wheelTpl = wtp.second;
+			YAKE_ASSERT( wheelTpl.mSteeringGroup < mSteeringGroups.size() || wheelTpl.mSteeringGroup == SG_NO_STEERING_GROUP );
 
 			OdeWheel* pW = new OdeWheel(mpChassis,wheelTpl,PWorld);
-			mSteeringGroups[ wheelTpl.mSteeringGroup ].push_back( pW );
-			mWheels.push_back( pW );
+
+			if (wheelTpl.mSteeringGroup != SG_NO_STEERING_GROUP)
+			{
+				mSteeringGroups[ wheelTpl.mSteeringGroup ].push_back( pW );
+			}
+
+			mWheels[ wtp.first ] = pW;
 		}
 	}
 
@@ -304,16 +331,22 @@ namespace vehicle {
 						const VehicleTemplate::WheelTpl& tpl,
 						physics::IWorld& PWorld ) :
 		mpJoint(0),
-		mpWheel(0)
+		mpWheel(0),
+		mRadius(tpl.mRadius)
 	{
 		YAKE_ASSERT( chassisObj );
 		mpWheel = PWorld.createActor( physics::ACTOR_DYNAMIC );
-		mpWheel->createShape( physics::IShape::SphereDesc( tpl.mRadius ) );
+		mpWheel->createShape( physics::IShape::SphereDesc( mRadius ) );
 		real mass = tpl.mMassRelativeToChassis ?
 							(tpl.mMass * chassisObj->getBody().getMass()) : tpl.mMass;
+		mpWheel->setPosition( tpl.mPosition );
+		mpWheel->setOrientation( tpl.mOrientation );
 		mpWheel->getBody().setMass( mass );
 
 		mpJoint = PWorld.createJoint( physics::IJoint::DescFixed( chassisObj, mpWheel ) );
+		//mpJoint = PWorld.createJoint( physics::IJoint::DescBall( chassisObj, mpWheel, chassisObj->getPosition() ) );
+		
+		YAKE_ASSERT( mpJoint );
 	}
 	OdeWheel::~OdeWheel()
 	{
@@ -323,6 +356,10 @@ namespace vehicle {
 		mpJoint = 0;
 		mpWheel->getCreator()->destroyActor( mpWheel );
 		mpWheel = 0;
+	}
+	real OdeWheel::getRadius() const
+	{
+		return mRadius;
 	}
 	Vector3 OdeWheel::getPosition() const
 	{
@@ -336,31 +373,31 @@ namespace vehicle {
 	}
 
 	//-----------------------------------------------------
-	// Class: OdeThruster
+	// Class: GenericThruster
 	//-----------------------------------------------------
-	OdeThruster::OdeThruster() : mThrottle(0)
+	GenericThruster::GenericThruster() : mThrottle(0)
 	{
 	}
-	void OdeThruster::setThrottle( real throttle )
+	void GenericThruster::setThrottle( real throttle )
 	{
 		mThrottle = (throttle < 0.) ? 0. : ((throttle > 1.) ? 1. : throttle);
 	}
-	real OdeThruster::getThrottle() const
+	real GenericThruster::getThrottle() const
 	{
 		return mThrottle;
 	}
-	void OdeThruster::updateSimulation( real timeElapsed )
+	void GenericThruster::updateSimulation( real timeElapsed )
 	{
 		setForce( getMinimumForce() + mThrottle * ( getMaximumForce() - getMinimumForce() ) );
 	}
 
 	//-----------------------------------------------------
-	// Class: OdeMountedThruster
+	// Class: GenericMountedThruster
 	//-----------------------------------------------------
-	OdeMountedThruster::OdeMountedThruster()
+	GenericMountedThruster::GenericMountedThruster()
 	{
 	}
-	void OdeMountedThruster::onApplyToTargets()
+	void GenericMountedThruster::onApplyToTargets()
 	{
 		YAKE_ASSERT(mThruster);
 		if (!mThruster)

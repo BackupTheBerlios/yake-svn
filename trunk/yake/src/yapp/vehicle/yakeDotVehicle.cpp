@@ -82,18 +82,65 @@ namespace vehicle {
 			INode* pN = itN.getNext().get();
 			const String name = pN->getName();
 			if (name == "mountPoint")
-			{
 				parseMountPoint( *pN );
-			} else if (name == "engine")
-			{
+			else if (name == "engine")
 				parseEngine( *pN );
-			}
+			else if (name == "chassis")
+				parseChassis( *pN );
 		}
 
 		const String tplId = n.getAttributeValueAs<String>("name");
 
 		mSigOnVehicleTpl( *this, tplId );
 		YAKE_SAFE_DELETE( mpCurrVehTpl );
+	}
+	void DotVehicleParser::parseChassis( const data::dom::INode& n )
+	{
+		SharedPtr<data::dom::INode> pN = n.getNodeByName("body");
+		if (pN.get())
+		{
+			mpCurrVehTpl->mChassis.mMass = StringUtil::parseReal( pN->getAttributeValueAs<String>("totalMass") );
+		}
+		pN = n.getNodeByName("shapeSet");
+		if (pN.get())
+		{
+			NodeList shapeNodes = pN->getNodes();
+			ConstVectorIterator< NodeList > itShapeN( shapeNodes );
+			while (itShapeN.hasMoreElements())
+			{
+				const INode* pShapeN = itShapeN.getNext().get();
+				const String name = pShapeN->getName();
+				if (name == "box")
+					parseShapeBox( *pShapeN );
+				else if (name == "sphere")
+					parseShapeSphere( *pShapeN );
+				else
+				{
+					YAKE_ASSERT( 0 && "unhandled shape type" )( name );
+				}
+			}
+		}
+	}
+	void DotVehicleParser::parseShapeBox( const data::dom::INode& n )
+	{
+		Vector3 dim;
+		dim.x = StringUtil::parseReal( n.getAttributeValueAs<String>("x") );
+		dim.y = StringUtil::parseReal( n.getAttributeValueAs<String>("y") );
+		dim.z = StringUtil::parseReal( n.getAttributeValueAs<String>("z") );
+		Vector3 pos;
+		if (n.getNodeByName("position"))
+			parsePosition( *n.getNodeByName("position"), pos );
+		mpCurrVehTpl->mChassis.mChassisShapes.push_back(
+			new physics::IShape::BoxDesc( dim, 0, pos ) );
+	}
+	void DotVehicleParser::parseShapeSphere( const data::dom::INode& n )
+	{
+		real radius = StringUtil::parseReal( n.getAttributeValueAs<String>("radius") );
+		Vector3 pos;
+		if (n.getNodeByName("position"))
+			parsePosition( *n.getNodeByName("position"), pos );
+		mpCurrVehTpl->mChassis.mChassisShapes.push_back(
+			new physics::IShape::SphereDesc( radius, 0, pos ) );
 	}
 	void DotVehicleParser::parseEngine( const data::dom::INode& n )
 	{

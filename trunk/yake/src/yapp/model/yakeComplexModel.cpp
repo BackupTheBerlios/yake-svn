@@ -107,6 +107,12 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
+	void Model::addPhysical( Physical* pPhysical, const String& rName )
+	{
+		addPhysical( SharedPtr<Physical>( pPhysical ), rName );
+	}
+
+	//-----------------------------------------------------
 	void Model::addGraphical( const SharedPtr<Graphical>& pGraphical, const String& rName )
 	{
 		YAKE_ASSERT( pGraphical.get() );
@@ -119,6 +125,12 @@ namespace complex {
 		else
 			name = uniqueName::create("auto_");
 		mGraphicals.insert( std::make_pair(name,pGraphical) );
+	}
+
+	//-----------------------------------------------------
+	void Model::addGraphical( Graphical* pGraphical, const String & rName /*= ""*/ )
+	{
+		addGraphical( SharedPtr<Graphical>( pGraphical ), rName );
 	}
 
 	//-----------------------------------------------------

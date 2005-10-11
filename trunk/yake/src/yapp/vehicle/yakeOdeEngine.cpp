@@ -113,9 +113,9 @@ namespace vehicle {
 	}
 
 	//-----------------------------------------------------
-	// Class: OdeCarEngine
+	// Class: GenericCarEngine
 	//-----------------------------------------------------
-	OdeCarEngine::OdeCarEngine() :
+	GenericCarEngine::GenericCarEngine() :
 		mDifferentialRatio( real(3.42) ),
 		mThrottle(0),
 		mCurrentGear(0),
@@ -136,11 +136,11 @@ namespace vehicle {
 		mpGearBox->setGearRatio( 4, real( 0.74 ) ); mpGearBox->setGearMode( 4, GearBox::GM_FORWARD );
 		mpGearBox->setGearRatio( 5, real( 0.50 ) ); mpGearBox->setGearMode( 5, GearBox::GM_FORWARD );
 	}
-	OdeCarEngine::~OdeCarEngine()
+	GenericCarEngine::~GenericCarEngine()
 	{
 		YAKE_SAFE_DELETE( mpGearBox );
 	}
-	void OdeCarEngine::updateSimulation( real timeElapsed )
+	void GenericCarEngine::updateSimulation( real timeElapsed )
 	{
 		updateCurrentRPM( timeElapsed );
 		updateGearRatios();
@@ -151,7 +151,7 @@ namespace vehicle {
 		real engineTorque = mThrottle * getMaxTorque( mCurrentRPM );
 		mDriveTorque = engineTorque * mGearRatio * mDifferentialRatio * 0.75/*just a guess*/;
 	}
-	void OdeCarEngine::setThrottle( real throttle )
+	void GenericCarEngine::setThrottle( real throttle )
 	{
 		mThrottle = throttle;
 		if (mThrottle > 1)
@@ -159,68 +159,68 @@ namespace vehicle {
 		else if (mThrottle < 0)
 			mThrottle = 0;
 	}
-	real OdeCarEngine::getThrottle() const
+	real GenericCarEngine::getThrottle() const
 	{
 		return mThrottle;
 	}
-	real OdeCarEngine::getRPM() const
+	real GenericCarEngine::getRPM() const
 	{
 		return mCurrentRPM;
 	}
-	uint8 OdeCarEngine::getGear() const
+	uint8 GenericCarEngine::getGear() const
 	{
 		return mCurrentGear;
 	}
-	void OdeCarEngine::shiftGear( uint8 gear )
+	void GenericCarEngine::shiftGear( uint8 gear )
 	{
 		if (gear < mpGearBox->getSpeed())
 			mCurrentGear = gear;
 	}
-	void OdeCarEngine::shiftGearUp()
+	void GenericCarEngine::shiftGearUp()
 	{
 		if (mCurrentGear+1 < mpGearBox->getSpeed())
 			mCurrentGear++;
 	}
-	void OdeCarEngine::shiftGearDown()
+	void GenericCarEngine::shiftGearDown()
 	{
 		if (mCurrentGear > 0)
 			mCurrentGear--;
 	}
-	real OdeCarEngine::getDriveTorque() const
+	real GenericCarEngine::getDriveTorque() const
 	{
 		return mDriveTorque;
 	}
-	real OdeCarEngine::getMinRPM() const
+	real GenericCarEngine::getMinRPM() const
 	{
 		return mMinRPM;
 	}
-	real OdeCarEngine::getMaxRPM() const
+	real GenericCarEngine::getMaxRPM() const
 	{
 		return mMaxRPM;
 	}
-	real OdeCarEngine::getRPMRise() const
+	real GenericCarEngine::getRPMRise() const
 	{
 		return mThrottleRPMRise;
 	}
-	real OdeCarEngine::getRPMDieOff() const
+	real GenericCarEngine::getRPMDieOff() const
 	{
 		return mRPMDieOff;
 	}
-	real OdeCarEngine::getMinShiftingTime() const
+	real GenericCarEngine::getMinShiftingTime() const
 	{
 		return 0.;
 	}
-	real OdeCarEngine::getMaxTorque( const real rpm )
+	real GenericCarEngine::getMaxTorque( const real rpm )
 	{
 		//TODO: look up in curve
 		return 500; // in Nm
 	}
-	void OdeCarEngine::updateGearRatios()
+	void GenericCarEngine::updateGearRatios()
 	{
 		mGearRatio = mpGearBox->getGearRatio( mCurrentGear );
 		mInvGearRatio = (mGearRatio != 0.) ? (1.0 / mGearRatio) : 0.;
 	}
-	void OdeCarEngine::updateCurrentRPM(real timeElapsed)
+	void GenericCarEngine::updateCurrentRPM(real timeElapsed)
 	{
 		if (mThrottle > 0.)
 		{
@@ -235,15 +235,15 @@ namespace vehicle {
 				mCurrentRPM = mMinRPM;
 		}
 	}
-	void OdeCarEngine::setParamMinRPM( const real rpm )
+	void GenericCarEngine::setParamMinRPM( const real rpm )
 	{
 		mMinRPM = rpm;
 	}
-	void OdeCarEngine::setParamMaxRPM( const real rpm )
+	void GenericCarEngine::setParamMaxRPM( const real rpm )
 	{
 		mMaxRPM = rpm;
 	}
-	void OdeCarEngine::setParamRedlineRPM( const real rpm )
+	void GenericCarEngine::setParamRedlineRPM( const real rpm )
 	{
 	}
 } // namespace vehicle

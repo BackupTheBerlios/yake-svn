@@ -75,7 +75,7 @@ namespace raf {
 		{
 			real now = native::getTime();
 			real elapsed = now - lastTime;
-			if (elapsed < real(0.))
+			if (elapsed < real(0.0001))
 				elapsed = real(0.01);
 
 			onFrame(elapsed);
