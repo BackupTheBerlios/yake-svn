@@ -3,15 +3,15 @@
 		<!-- chassis -->
 		<chassis>
 			<body totalMass="10" />
-			<shapeset>
-				<box x="1.5" y="1" z="2">
+			<shapeSet>
+				<box x="3" y="1" z="10">
 					<position x="0" y="0" z="0" />
 				</box>
-			</shapeset>
+			</shapeSet>
 		</chassis>
 		<!-- left thruster -->
 		<mountPoint name="left">
-			<position x="70" y="0" z="0" />
+			<position x="7" y="0" z="0" />
 			<direction x="1" y="0" z="0" />
 		</mountPoint>
 		<engine name="left" type="MountedThruster" mountPoint="left">
@@ -19,7 +19,7 @@
 		</engine>
 		<!-- right thruster -->
 		<mountPoint name="right">
-			<position x="-70" y="0" z="0" />
+			<position x="-7" y="0" z="0" />
 			<direction x="-1" y="0" z="0" />
 		</mountPoint>
 		<engine name="right" type="MountedThruster" mountPoint="right">
@@ -27,7 +27,7 @@
 		</engine>
 		<!-- front thruster -->
 		<mountPoint name="front">
-			<position x="0" y="0" z="70" />
+			<position x="0" y="0" z="7" />
 			<direction x="0" y="0" z="1" />
 		</mountPoint>
 		<engine name="backward" type="MountedThruster" mountPoint="front">
@@ -35,11 +35,19 @@
 		</engine>
 		<!-- rear thruster -->
 		<mountPoint name="rear">
-			<position x="0" y="0" z="-70" />
+			<position x="0" y="0" z="-7" />
 			<direction x="0" y="0" z="-1" />
 		</mountPoint>
 		<engine name="forward" type="MountedThruster" mountPoint="rear">
 			<forces min="0." max="20." dieOff="10" rise="20" />
+		</engine>
+		<!-- bottom (upward) thruster -->
+		<mountPoint name="bottom">
+			<position x="0" y="0" z="0" />
+			<direction x="0" y="-1" z="0" />
+		</mountPoint>
+		<engine name="upward" type="MountedThruster" mountPoint="bottom">
+			<forces min="0." max="70." dieOff="10" rise="20" />
 		</engine>
 	</vehicleTemplate>
 </dotvehicle>
