@@ -208,6 +208,9 @@
 			<File
 				RelativePath="..\..\..\..\yake\plugins\physicsODE\yakePCH.h">
 			</File>
+			<File
+				RelativePath="..\..\..\..\yake\plugins\physicsODE\yakePrerequisites.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

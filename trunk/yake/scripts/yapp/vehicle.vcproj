@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../;../../dependencies;../../dependencies/boost;../../dependencies/ttl"
+				AdditionalIncludeDirectories="../../;../../dependencies;../../dependencies/boost;../../dependencies/ttl;../../dependencies/ode/include"
 				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_CONSOLE;YAKE_VEHICLE_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -38,7 +38,7 @@
 				AdditionalDependencies="base.lib physics.lib data.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../common/lib/$(ConfigurationName);../../dependencies/lib"
+				AdditionalLibraryDirectories="../../common/lib/$(ConfigurationName);../../dependencies/lib;../../dependencies/ode/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
@@ -73,7 +73,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../;../../dependencies;../../dependencies/boost;../../dependencies/ttl"
+				AdditionalIncludeDirectories="../../;../../dependencies;../../dependencies/boost;../../dependencies/ttl;../../dependencies/ode/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;YAKE_VEHICLE_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
@@ -89,7 +89,7 @@
 				AdditionalDependencies="base.lib physics.lib data.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../common/lib/$(ConfigurationName);../../dependencies/lib"
+				AdditionalLibraryDirectories="../../common/lib/$(ConfigurationName);../../dependencies/lib;../../dependencies/ode/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
