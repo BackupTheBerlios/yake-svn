@@ -27,11 +27,13 @@
 #ifndef ODE_MATERIAL_H
 #define ODE_MATERIAL_H
 
+#include <yake/plugins/physicsODE/yakePrerequisites.h>
+
 namespace yake
 {
 namespace physics
 {
-	class OdeMaterial : public IMaterial
+	class YAKE_PHYSICSODE_API OdeMaterial : public IMaterial
 	{
 	public:
 		OdeMaterial();

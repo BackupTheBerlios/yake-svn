@@ -27,6 +27,8 @@
 #ifndef YAKE_PHYSICSSYSTEMODE_H
 #define YAKE_PHYSICSSYSTEMODE_H
 
+#include <yake/plugins/physicsODE/yakePrerequisites.h>
+
 namespace yake {
 namespace physics {
 

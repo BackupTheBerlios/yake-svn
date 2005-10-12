@@ -27,12 +27,14 @@
 #ifndef YAKE_ODEBODY_H
 #define YAKE_ODEBODY_H
 
+#include <yake/plugins/physicsODE/yakePrerequisites.h>
+
 namespace yake {
 namespace physics {
 
 		class OdeActor;
 		
-		class OdeBody : public IBody
+		class YAKE_PHYSICSODE_API OdeBody : public IBody
 		{
 		public:
 			OdeBody( OdeWorld* pWorld, OdeActor& rOwner );

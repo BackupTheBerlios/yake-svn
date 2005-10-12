@@ -27,6 +27,7 @@
 #ifndef YAKE_ODEWORLD_H
 #define YAKE_ODEWORLD_H
 
+#include <yake/plugins/physicsODE/yakePrerequisites.h>
 #include "yake/plugins/physicsODE/OdeShapes.h"
 
 namespace yake {
@@ -42,7 +43,7 @@ namespace physics {
 		class OdeAvatar;
 		class OdeMaterial;
 		
-		class OdeWorld : public IWorld
+		class YAKE_PHYSICSODE_API OdeWorld : public IWorld
 		{
 		public:
 			OdeWorld();
@@ -83,7 +84,6 @@ namespace physics {
 			YAKE_MEMBERSIGNAL_FIRE_FN1( public, PreStepInternal, const real dt, dt )
 		public:
 
-			///TODO what are these for?
 			// helpers
 			dWorldID _getOdeID() const;
 			dJointGroup* _getOdeContactJointGroup() const 

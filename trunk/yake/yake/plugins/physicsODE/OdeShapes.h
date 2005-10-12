@@ -27,6 +27,7 @@
 #ifndef YAKE_ODESHAPES_H
 #define YAKE_ODESHAPES_H
 
+#include <yake/plugins/physicsODE/yakePrerequisites.h>
 #include <yake/plugins/physicsODE/OdeMaterial.h>
 
 namespace yake {
@@ -34,11 +35,11 @@ namespace physics {
 
 		class OdeActor;
 		class OdeTransformGeom;
-		class OdeGeom : public IShape
+		class YAKE_PHYSICSODE_API OdeGeom : public IShape
 		{
 			friend class OdeTransformGeom;
 			OdeGeom();
-			OdeGeom(const OdeGeom&);
+			//OdeGeom(const OdeGeom&);
 		public:
 			OdeGeom(OdeActor* pOwner);
 			virtual ~OdeGeom();
@@ -70,7 +71,7 @@ namespace physics {
 			OdeActor*			mOwner;
 		};
 		
-		class OdeTransformGeom : public OdeGeom
+		class YAKE_PHYSICSODE_API OdeTransformGeom : public OdeGeom
 		{
 		public:
 			OdeTransformGeom( dSpace* pSpace, OdeActor* pOwner );
@@ -84,7 +85,7 @@ namespace physics {
 			OdeGeom*	mAttachedGeom;
 		};
 		
-		class OdePlane : public OdeGeom
+		class YAKE_PHYSICSODE_API OdePlane : public OdeGeom
 		{
 		public:
 			OdePlane( dSpace* pSpace, OdeActor* pOwner, real a, real b, real c, real d );
@@ -92,7 +93,7 @@ namespace physics {
 			virtual ShapeType getType() const;
 		};
 		
-		class OdeSphere :  public OdeGeom
+		class YAKE_PHYSICSODE_API OdeSphere :  public OdeGeom
 		{
 		public:
 			OdeSphere::OdeSphere( dSpace* pSpace, OdeActor* pOwner, real radius );
@@ -100,7 +101,7 @@ namespace physics {
 			virtual ShapeType getType() const;
 		};
 		
-		class OdeBox : public OdeGeom
+		class YAKE_PHYSICSODE_API OdeBox : public OdeGeom
 		{
 		public:
 			OdeBox( dSpace* pSpace, OdeActor* pOwner, real sizex, real sizey, real sizez);
@@ -108,7 +109,7 @@ namespace physics {
 			virtual ShapeType getType() const;
 		};
 		
-		class OdeCCylinder : public OdeGeom
+		class YAKE_PHYSICSODE_API OdeCCylinder : public OdeGeom
 		{
 		public:
 			OdeCCylinder( dSpace* pSpace, OdeActor* pOwner, real radius, real length );
@@ -116,7 +117,7 @@ namespace physics {
 			virtual ShapeType getType() const;
 		};
 		
-		class OdeTriMesh : public OdeGeom
+		class YAKE_PHYSICSODE_API OdeTriMesh : public OdeGeom
 		{
 			public:
 

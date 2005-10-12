@@ -27,16 +27,18 @@
 #ifndef YAKE_ODEJOINT_H
 #define YAKE_ODEJOINT_H
 
+#include <yake/plugins/physicsODE/yakePrerequisites.h>
+
 namespace yake {
 namespace physics {
 
 		class OdeWorld;
 		
-		class OdeJoint : public IJoint
+		class YAKE_PHYSICSODE_API OdeJoint : public IJoint
 		{
 		protected:
-			OdeJoint();
-			OdeJoint( OdeJoint const& );
+			//OdeJoint();
+			//OdeJoint( OdeJoint const& );
 			OdeJoint( OdeWorld* pWorld, JointType type );
 		
 		public:
@@ -68,6 +70,9 @@ namespace physics {
 
 			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, OnBreaking )
 			YAKE_MEMBERSIGNAL_FIRE_FN0( public, OnBreaking )
+
+			dJoint* _getOdeJoint() const
+			{ return mOdeJoint; }
 		protected:
 			void _applySpring();
 			real _getCFMFromSpring() const;
@@ -82,7 +87,7 @@ namespace physics {
 			JointType		mType;
 		};
 
-		class OdeHingeJoint : public OdeJoint
+		class YAKE_PHYSICSODE_API OdeHingeJoint : public OdeJoint
 		{
 		public:
 			OdeHingeJoint( OdeWorld* pWorld );
@@ -104,7 +109,7 @@ namespace physics {
 			real	mMaxForce0;
 		};
 
-		class OdeHinge2Joint : public OdeJoint
+		class YAKE_PHYSICSODE_API OdeHinge2Joint : public OdeJoint
 		{
 		public:
 			OdeHinge2Joint( OdeWorld* pWorld );
@@ -127,7 +132,7 @@ namespace physics {
 			real	mMaxForce[2];
 		};
 
-		class OdeBallJoint : public OdeJoint
+		class YAKE_PHYSICSODE_API OdeBallJoint : public OdeJoint
 		{
 		public:
 			OdeBallJoint( OdeWorld* pWorld );
@@ -146,7 +151,7 @@ namespace physics {
 			virtual void setLimits( size_t axisIndex, real low, real high );
 		};
 
-		class OdeFixedJoint : public OdeJoint
+		class YAKE_PHYSICSODE_API OdeFixedJoint : public OdeJoint
 		{
 		public:
 			OdeFixedJoint( OdeWorld* pWorld );
@@ -167,7 +172,7 @@ namespace physics {
 			virtual void setLimits( size_t axisIndex, real low, real high );
 		};
 
-		class OdeSliderJoint : public OdeJoint
+		class YAKE_PHYSICSODE_API OdeSliderJoint : public OdeJoint
 		{
 		public:
 			OdeSliderJoint( OdeWorld* pWorld );
@@ -190,7 +195,7 @@ namespace physics {
 			real	mMaxForce0;
 		};
 		
-		class OdeUniversalJoint : public OdeJoint
+		class YAKE_PHYSICSODE_API OdeUniversalJoint : public OdeJoint
 		{
 		public:
 			OdeUniversalJoint( OdeWorld* pWorld );

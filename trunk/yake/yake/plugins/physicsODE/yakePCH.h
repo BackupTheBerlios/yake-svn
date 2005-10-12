@@ -35,6 +35,7 @@
 
 #include <yake/base/yake.h>
 #include <yake/physics/yakePhysics.h>
+#include <yake/plugins/physicsODE/yakePrerequisites.h>
 
 //@todo fix these macros
 #define VEC_YAKE2ODE( YV ) ::Ogre::Vector3( YV.x, YV.y, YV.z )
