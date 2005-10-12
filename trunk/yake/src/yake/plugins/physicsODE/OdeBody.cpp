@@ -55,11 +55,14 @@ namespace physics {
 			setMass( 1 );
 			setPosition( Vector3(0,0,0) );
 			setOrientation( Quaternion::kIdentity );
+
+			mOdeWorld->_addBody( this );
 		}
 
 		//---------------------------------------------------
 		OdeBody::~OdeBody()
 		{
+			mOdeWorld->_removeBody( this );
 			YAKE_SAFE_DELETE( mOdeBody );
 		}
 		

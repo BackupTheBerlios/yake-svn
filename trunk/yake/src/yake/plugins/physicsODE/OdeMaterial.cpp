@@ -32,8 +32,8 @@ namespace physics {
 
 	//---------------------------------------------------
 	OdeMaterial::OdeMaterial() : 
-		mSoftness(0.5),
-		mFriction(1),
+		mSoftness(0),
+		mFriction(10),
 		mFriction2(0),
 		mLateralSlip(false),
 		mSlipNormal(Vector3::kZero),
@@ -59,7 +59,7 @@ namespace physics {
 	}
 	void OdeMaterial::setStaticFriction( const real friction )
 	{
-		//@todo
+		mFriction = friction; //@todo is that right?
 	}
 	void OdeMaterial::setStaticFrictionV( const real friction )
 	{

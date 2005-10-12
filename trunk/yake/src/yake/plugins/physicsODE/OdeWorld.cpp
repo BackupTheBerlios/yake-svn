@@ -49,19 +49,20 @@ namespace physics {
 			
 			mOdeContactGroup = new dJointGroup( 0 );
 
+			mOdeWorld->setAutoDisableFlag( 1 );
+			mOdeWorld->setAutoDisableAngularThreshold( 0.04 ); // ODE default: 0.01
+			mOdeWorld->setAutoDisableLinearThreshold( 0.03 ); // ODE default: 0.01
+			mOdeWorld->setAutoDisableSteps( 30 ); // ODE default: 10
+			mOdeWorld->setAutoDisableTime( 0 ); // ODE default: 0. (= ignore time)
+
 			mOdeWorld->setGravity( 0., -9.81, 0. );
 			mOdeWorld->setCFM( 0.0005 );
 			mOdeWorld->setERP( 0.99 );
-			mOdeWorld->setAutoDisableFlag( 1 );
-			mOdeWorld->setAutoDisableAngularThreshold( 0.005 ); // ODE default: 0.01
-			mOdeWorld->setAutoDisableLinearThreshold( 0.005 ); // ODE default: 0.01
-			mOdeWorld->setAutoDisableSteps( 10 ); // ODE default: 10
-			mOdeWorld->setAutoDisableTime( 0 ); // ODE default: 0. (= ignore time)
 
 			dWorldSetQuickStepNumIterations( mOdeWorld->id(), 20 );
 
-			//dWorldSetContactMaxCorrectingVel( mOdeWorld->id(), 2. );
-			dWorldSetContactSurfaceLayer( mOdeWorld->id(), 0.0075 );
+			dWorldSetContactMaxCorrectingVel( mOdeWorld->id(), 10. );
+			dWorldSetContactSurfaceLayer( mOdeWorld->id(), 0.025 );
 
 			mTime = real(0.);
 		}
@@ -254,30 +255,37 @@ namespace physics {
 			mActors.push_back( SharedPtr<OdeActor>( pActor ) );
 			return pActor;
 		}
+		//-----------------------------------------------------
 		bool operator==(const SharedPtr<OdeJoint>& lhs, const OdeJoint* rhs)
 		{
 			return (lhs.get() == rhs);
 		}
+		//-----------------------------------------------------
 		void OdeWorld::destroyJoint( IJointPtr pJoint )
 		{
 			YAKE_ASSERT( pJoint );
 			mJoints.erase( std::find(mJoints.begin(), mJoints.end(), dynamic_cast<OdeJoint*>(pJoint) ) );
 		}
+		//-----------------------------------------------------
 		bool operator==(const SharedPtr<OdeActor>& lhs, const OdeActor* rhs)
 		{
 			return (lhs.get() == rhs);
 		}
+		//-----------------------------------------------------
 		void OdeWorld::destroyActor( IActorPtr pActor )
 		{
 			YAKE_ASSERT( pActor );
 			mActors.erase( std::find(mActors.begin(), mActors.end(), dynamic_cast<OdeActor*>(pActor) ) );
 		}
+		//-----------------------------------------------------
 		void OdeWorld::destroyAvatar( IAvatarPtr pAvatar )
 		{
 			YAKE_ASSERT( 0 && "NOT IMPLEMENTED" );
 			//YAKE_ASSERT( !pAvatar.expired() );
 			//mAvatars.erase( std::find(mAvatars.begin(), mAvatars.end(), dynamic_cast<OdeAvatar*>(pAvatar .lock().get()) ) );
 		}
+
+		//-----------------------------------------------------
 		bool operator==(const SharedPtr<OdeMaterial>& lhs, const OdeMaterial* rhs)
 		{
 			return (lhs.get() == rhs);
@@ -319,6 +327,7 @@ namespace physics {
 
 				firePreStepInternal(mStepSize);
 
+				//dWorldStep( mOdeWorld->id(), mStepSize );
 				dWorldQuickStep( mOdeWorld->id(), mStepSize );
 				//dWorldStepFast1( mOdeWorld->id(), mStepSize, 4 );
 
@@ -328,6 +337,24 @@ namespace physics {
 
 				// Clear contacts
 				mOdeContactGroup->empty();
+
+				// Dampen bodies
+				ConstVectorIterator< BodyList > itBody( mBodies );
+				while (itBody.hasMoreElements())
+				{
+					OdeBody* pBody = itBody.getNext();
+					YAKE_ASSERT( pBody );
+					dBody* pOdeBody = pBody->_getOdeBody();
+					YAKE_ASSERT( pOdeBody );
+					if (!pOdeBody->isEnabled())
+						continue;
+					const dReal vScale = -0.04 * pBody->getMass();
+					const dReal aScale = -0.05 * pBody->getMass();
+					dReal const* linV = pOdeBody->getLinearVel();
+					pOdeBody->addForce( vScale*linV[0], vScale*linV[1], vScale*linV[2] );
+					dReal const* angV = pOdeBody->getAngularVel();
+					pOdeBody->addTorque( aScale*angV[0], aScale*angV[1], aScale*angV[2] );
+				}
 			}
 			
 			firePostStep( mTime );
@@ -365,6 +392,22 @@ namespace physics {
 			return mOdeWorld->id();
 		}
 		
+		//-----------------------------------------------------
+		void OdeWorld::_addBody( OdeBody* body )
+		{
+			YAKE_ASSERT( body );
+			if (body)
+				mBodies.push_back( body );
+		}
+
+		//-----------------------------------------------------
+		void OdeWorld::_removeBody( OdeBody* body )
+		{
+			BodyList::iterator itFind = std::find( mBodies.begin(), mBodies.end(), body );
+			if (itFind != mBodies.end())
+				mBodies.erase( itFind );
+		}
+
 		//-----------------------------------------------------
 		void OdeWorld::_OdeNearCallback ( void* data, dGeomID o1, dGeomID o2 )
 		{

@@ -287,7 +287,7 @@ namespace physics {
 				}
 				
 				///FIXME Implement materials!
-				contact[i].surface.mu = 0; //std::min( this->getFriction(), pOther->getFriction());
+				contact[i].surface.mu = std::min( rMatA.mFriction, rMatB.mFriction );
 				float friction2 = std::min( rMatA.mFriction2, rMatB.mFriction2 ); //std::min(this->getFriction2(), pOther->getFriction2());
 				if ( friction2 > 0.f )
 				{
@@ -348,7 +348,7 @@ namespace physics {
 				contact[i].surface.motion1 = 0;
 				contact[i].surface.motion2 = 0;
 
-				contact[i].surface.soft_erp = 0.9; // 0.8
+				contact[i].surface.soft_erp = 0.95; // 0.8
 				//contact[i].surface.bounce = 0.05; //0.05
 				//contact[i].surface.bounce_vel = 0.025; //0.025
 				
