@@ -14,7 +14,7 @@ using namespace yake;
 struct TheConfiguration : public raf::ApplicationConfiguration
 {
 	virtual StringVector getLibraries()
-	{ return MakeStringVector() << "graphicsOgre" << "inputOgre" << "physicsNx"; }
+	{ return MakeStringVector() << "graphicsOgre" << "inputOgre" << "physicsOde"; }
 
 	//virtual StringVector getScriptingSystems()
 	//{ return MakeStringVector() << "lua"; }
@@ -26,7 +26,7 @@ struct TheConfiguration : public raf::ApplicationConfiguration
 	{ return MakeStringVector() << "ogre"; }
 
 	virtual StringVector getPhysicsSystems()
-	{ return MakeStringVector() << "nx"; }
+	{ return MakeStringVector() << "ode"; }
 };
 
 const real razorMeshScale = 0.1;
@@ -86,7 +86,7 @@ protected:
 			graphics::IEntity* pGroundE = getGraphicalWorld()->createEntity("plane_1x1.mesh");
 			pGroundE->setMaterial("box");
 			pGroundSN->attachEntity( pGroundE );
-			pGroundSN->setScale( Vector3(100,1,100) );
+			pGroundSN->setScale( Vector3(200,1,200) );
 			pGroundSN->setPosition( Vector3(0,-10,0) );
 
 			model::Graphical* pG = new model::Graphical();
