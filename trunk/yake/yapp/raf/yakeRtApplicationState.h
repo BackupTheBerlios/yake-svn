@@ -28,6 +28,9 @@
 #define YAKE_RAF_RTAPPLICATIONSTATE_H
 
 namespace yake {
+	namespace input {
+		enum KeyCode;
+	}
 namespace raf {
 	class Application;
 	class MainState;
@@ -36,12 +39,10 @@ namespace raf {
 	class YAKE_RAF_API RtMainState : public MainState
 	{
 	public:
-		RtMainState(Application& owner) :
-			MainState(owner), 
-			mQuitRequested(false)
-		{}
+		RtMainState(Application& owner);
 		void requestQuit();
 		bool quitRequested() const;
+		void enableInstantQuitByKey( input::KeyCode kc );
 	protected:
 		// main message handlers to override
 
@@ -79,6 +80,9 @@ namespace raf {
 		typedef std::vector<SharedPtr<graphics::IViewport> > ViewportList;
 		ViewportList				mViewports;
 		graphics::ICamera*			mDefaultCamera;
+
+		input::KeyCode				mQuitKC;
+		bool						mQuitByKeyEnabled;
 	};
 
 } // namespace raf
