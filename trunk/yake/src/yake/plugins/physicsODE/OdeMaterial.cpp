@@ -34,7 +34,7 @@ namespace physics {
 	OdeMaterial::OdeMaterial() : 
 		mSoftness(0),
 		mFriction(10),
-		mFriction2(0),
+		mFriction2(5),
 		mLateralSlip(false),
 		mSlipNormal(Vector3::kZero),
 		mSlipLinearCoeff(0),
