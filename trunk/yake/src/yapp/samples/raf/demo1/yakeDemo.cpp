@@ -1,5 +1,6 @@
 #include <yapp/samples/raf/demo1/yakePCH.h>
 #include <yake/audio/yakeAudio.h>
+#include <yake/input/yakeInput.h>
 #include <yapp/raf/yakeRaf.h>
 
 using namespace yake;
@@ -8,7 +9,10 @@ using namespace yake;
 struct TheConfiguration : public raf::ApplicationConfiguration
 {
 	virtual StringVector getLibraries()
-	{ return MakeStringVector() << "scriptingLua" << "graphicsOgre"; }
+	{ return MakeStringVector() << "scriptingLua" << "graphicsOgre" << "inputOgre"; }
+
+	virtual StringVector getInputSystems()
+	{ return MakeStringVector() << "ogre"; }
 
 	virtual StringVector getScriptingSystems()
 	{ return MakeStringVector() << "lua"; }
@@ -22,7 +26,9 @@ class TheMainState : public raf::RtMainState
 {
 public:
 	TheMainState(raf::Application& owner) : raf::RtMainState(owner)
-	{}
+	{
+		enableInstantQuitByKey( input::KC_ESCAPE );
+	}
 protected:
 	virtual void onCreateScene()
 	{
