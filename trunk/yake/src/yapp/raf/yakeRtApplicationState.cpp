@@ -35,6 +35,12 @@ namespace raf {
 	//-----------------------------------------------------
 	// Class: RtMainState
 	//-----------------------------------------------------
+	RtMainState::RtMainState(Application& owner) :
+		MainState(owner), 
+		mQuitRequested(false),
+		mQuitKC(input::KC_ESCAPE),
+		mQuitByKeyEnabled(false)
+	{}
 	graphics::ICamera* RtMainState::onCreateDefaultCamera()
 	{
 		return getGraphicalWorld()->createCamera();
@@ -64,6 +70,11 @@ namespace raf {
 	{
 		return mQuitRequested;
 	}
+	void RtMainState::enableInstantQuitByKey( input::KeyCode kc )
+	{
+		mQuitByKeyEnabled = true;
+		mQuitKC = kc;
+	}
 	void RtMainState::onEnter()
 	{
 		createScene();
@@ -77,6 +88,13 @@ namespace raf {
 			real elapsed = now - lastTime;
 			if (elapsed < real(0.0001))
 				elapsed = real(0.01);
+
+			getApp().getInputSystem()->update();
+			getApp().getKeyboardEventGenerator()->update();
+			getApp().getMouseEventGenerator()->update();
+
+			if (mQuitByKeyEnabled && getApp().getKeyboard()->isKeyDown( mQuitKC ))
+				requestQuit();
 
 			onFrame(elapsed);
 

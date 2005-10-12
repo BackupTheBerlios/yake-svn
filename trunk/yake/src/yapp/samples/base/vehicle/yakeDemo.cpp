@@ -40,7 +40,9 @@ public:
 		mVehicle(0),
 		mComplex(0),
 		mGround(0)
-	{}
+	{
+		enableInstantQuitByKey( input::KC_ESCAPE );
+	}
 	~TheMainState()
 	{
 	}
@@ -219,9 +221,6 @@ protected:
 	}
 	virtual void onFrame(const real timeElapsed)
 	{
-		getApp().getInputSystem()->update();
-		getApp().getKeyboardEventGenerator()->update();
-		getApp().getMouseEventGenerator()->update();
 		mActionMap.update();
 
 		vehicle::IEnginePtrList engines = mVehicle->getEngineInterfaces();
