@@ -47,7 +47,7 @@
 			<direction x="0" y="-1" z="0" />
 		</mountPoint>
 		<engine name="upward" type="MountedThruster" mountPoint="bottom">
-			<forces min="0." max="70." dieOff="10" rise="20" />
+			<forces min="0." max="150." dieOff="10" rise="20" />
 		</engine>
 	</vehicleTemplate>
 </dotvehicle>
