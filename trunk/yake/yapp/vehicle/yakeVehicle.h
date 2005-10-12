@@ -33,6 +33,9 @@
 #	endif
 #endif
 
+#define YAKE_VEHICLE_USE_ODE 1
+//#define YAKE_VEHICLE_USE_NX 1
+
 #include <yake/base/yake.h>
 #include <yapp/base/yapp.h>
 #include <yapp/vehicle/yakeTemplates.h>
