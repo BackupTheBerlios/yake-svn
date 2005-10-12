@@ -66,7 +66,9 @@ namespace yake {
 			}
 			void removeListener(ListenerType* pListener)
 			{
-				mListeners.remove( pListener );
+				ListenerPtrList::iterator itFind = std::find( mListeners.begin(), mListeners.end(), pListener );
+				if (itFind != mListeners.end())
+					mListeners.erase( itFind );
 			}
 		};
 

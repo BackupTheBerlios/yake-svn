@@ -37,7 +37,7 @@ namespace yake {
 	using namespace math;
 namespace physics {
 
-	class IMaterial
+	class YAKE_PHYSICS_API IMaterial
 	{
 	public:
 		struct Desc

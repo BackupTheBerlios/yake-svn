@@ -74,7 +74,7 @@ namespace physics {
 
 	class IActor;
 	class IAngularMotor;
-	class IJoint
+	class YAKE_PHYSICS_API IJoint
 	{
 	public:
 		/**

@@ -37,7 +37,7 @@ namespace yake {
 	using namespace math;
 namespace physics {
 
-	class IAvatarListener
+	class YAKE_PHYSICS_API IAvatarListener
 	{
 	public:
 		virtual ~IAvatarListener() {}
@@ -48,7 +48,7 @@ namespace physics {
 	};
 
 	/** An avatar in a physical world. */
-	class IAvatar : public Movable, public ListenerManager<IAvatarListener>
+	class YAKE_PHYSICS_API IAvatar : public Movable, public ListenerManager<IAvatarListener>
 	{
 	public:
 		struct Desc

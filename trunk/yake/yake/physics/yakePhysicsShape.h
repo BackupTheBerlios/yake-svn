@@ -62,7 +62,7 @@ namespace physics {
 
 	class IMaterial;
 	/** A shape is what we formerly called "collision geom" in yake::physics. */
-	class IShape : public Movable
+	class YAKE_PHYSICS_API IShape : public Movable
 	{
 	public:
 		struct Desc
@@ -78,6 +78,7 @@ namespace physics {
 			{}
 
 			virtual ~Desc() {}
+			//virtual Desc* clone() const = 0;
 
 			ShapeType	type; // superfluous as shape type is determined by dynamic_cast on Desc struct...
 			Vector3		position;

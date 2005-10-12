@@ -49,7 +49,7 @@ namespace yake {
 	using namespace math;
 namespace physics {
 
-	class IWorld
+	class YAKE_PHYSICS_API IWorld
 	{
 	public:
 		virtual ~IWorld() {}

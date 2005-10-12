@@ -62,7 +62,7 @@ namespace physics {
 		ACTOR_DYNAMIC
 	};
 	class IWorld;
-	class IActor : public Movable, public ListenerManager<IActorListener>
+	class YAKE_PHYSICS_API IActor : public Movable, public ListenerManager<IActorListener>
 	{
 	public:
 		struct Desc

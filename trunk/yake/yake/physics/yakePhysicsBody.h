@@ -42,7 +42,7 @@ namespace physics {
 		RF_GLOBAL
 	};
 
-	struct Force
+	struct YAKE_PHYSICS_API Force
 	{
 		Vector3			force;
 		real				duration;
@@ -78,18 +78,18 @@ namespace physics {
 		}
 	};
 
-	class IBodyListener
+	class YAKE_PHYSICS_API IBodyListener
 	{
 	public:
 		virtual ~IBodyListener() {}
 		
-		virtual void onSleeping(const bool sleeping);
+		virtual void onSleeping(const bool sleeping) = 0;
 	};
 	class IBody;
 	YAKE_PHYSICS_COMMON_POINTERS( IBody );
 
 	class IActor;
-	class IBody : public ListenerManager<IBodyListener>
+	class YAKE_PHYSICS_API IBody : public ListenerManager<IBodyListener>
 	{
 	public:
 		enum quantityType { QT_MASS, QT_DENSITY };
