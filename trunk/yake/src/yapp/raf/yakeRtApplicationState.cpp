@@ -89,12 +89,16 @@ namespace raf {
 			if (elapsed < real(0.0001))
 				elapsed = real(0.01);
 
-			getApp().getInputSystem()->update();
-			getApp().getKeyboardEventGenerator()->update();
-			getApp().getMouseEventGenerator()->update();
-
-			if (mQuitByKeyEnabled && getApp().getKeyboard()->isKeyDown( mQuitKC ))
-				requestQuit();
+			if (getApp().getInputSystem())
+			{
+				getApp().getInputSystem()->update();
+				if (getApp().getKeyboardEventGenerator())
+					getApp().getKeyboardEventGenerator()->update();
+				if (getApp().getMouseEventGenerator())
+					getApp().getMouseEventGenerator()->update();
+				if (mQuitByKeyEnabled && getApp().getKeyboard()->isKeyDown( mQuitKC ))
+					requestQuit();
+			}
 
 			onFrame(elapsed);
 
