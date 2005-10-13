@@ -29,6 +29,17 @@
 #include <yapp/vehicle/yakeNativeOde.h>
 #include <yapp/vehicle/yakeDotVehicle.h>
 
+#if defined(YAKE_VEHICLE_USE_ODE)
+#	include <dependencies/ode/include/ode/ode.h>
+#	include <dependencies/ode/include/ode/odecpp.h>
+#	include <dependencies/ode/include/ode/objects.h>
+#	include <yake/plugins/physicsODE/OdeJoint.h>
+#	include <yake/plugins/physicsODE/OdeBody.h>
+#	include <yake/plugins/physicsODE/OdeWorld.h>
+#	pragma comment(lib, "physicsODE.lib")
+#	pragma comment(lib, "oded.lib")
+#endif // #if defined(YAKE_VEHICLE_USE_ODE)
+
 namespace yake {
 namespace vehicle {
 
@@ -323,7 +334,32 @@ namespace vehicle {
 			mWheels[ wtp.first ] = pW;
 		}
 	}
+	void GenericVehicle::setSteering( const uint32 sg, const real value )
+	{
+		//SteeringGroupList::iterator itFind = std::find( mSteeringGroups.begin(), mSteeringGroups.end(), sg );
+		//YAKE_ASSERT( itFind != mSteeringGroups.end() )( sg ).debug("steering group not found!");
+		//if (itFind == mSteeringGroups.end())
+		//	return;
+		real newVal = value;
+		if (newVal < -1.)
+			newVal = -1.;
+		else if (newVal > 1.)
+			newVal = 1.;
+		ConstVectorIterator< Deque<OdeWheel*> > itWheel( mSteeringGroups[ sg ] );
+		while (itWheel.hasMoreElements())
+		{
+			OdeWheel* pW = itWheel.getNext();
+			YAKE_ASSERT( pW );
+			pW->setSteering( newVal );
+		}
+	}
+	real GenericVehicle::getSteering( const uint32 sg ) const
+	{
+		YAKE_ASSERT(0 && "NOT IMPLEMENTED")(sg);
+		return 0.;
+	}
 
+#if defined(YAKE_VEHICLE_USE_ODE)
 	//-----------------------------------------------------
 	// Class: OdeWheel
 	//-----------------------------------------------------
@@ -332,8 +368,17 @@ namespace vehicle {
 						physics::IWorld& PWorld ) :
 		mpJoint(0),
 		mpWheel(0),
-		mRadius(tpl.mRadius)
+		mRadius(tpl.mRadius),
+		mTargetSteer(0),
+		mCurrSteer(0)
 	{
+		{
+			physics::OdeWorld* pW = dynamic_cast<physics::OdeWorld*>( &PWorld );
+			YAKE_ASSERT( pW ).debug("Incorrect physics world provider used! ODE expected!");
+			if (!pW)
+				YAKE_EXCEPT("Incorrect physics world provider used! ODE expected!");
+		}
+
 		YAKE_ASSERT( chassisObj );
 		mpWheel = PWorld.createActor( physics::ACTOR_DYNAMIC );
 		mpWheel->createShape( physics::IShape::SphereDesc( mRadius ) );
@@ -343,19 +388,78 @@ namespace vehicle {
 		mpWheel->setOrientation( tpl.mOrientation );
 		mpWheel->getBody().setMass( mass );
 
-		mpJoint = PWorld.createJoint( physics::IJoint::DescFixed( chassisObj, mpWheel ) );
-		//mpJoint = PWorld.createJoint( physics::IJoint::DescBall( chassisObj, mpWheel, chassisObj->getPosition() ) );
+		physics::OdeBody* pBody = static_cast<physics::OdeBody*>( mpWheel->getBodyPtr() );
+		dBodyID bodyId = pBody->_getOdeBody()->id();
+		dBodySetFiniteRotationMode( bodyId, 1 );
+
+		//if (tpl.mSteeringGroup == SG_NO_STEERING_GROUP)
+		//	mpJoint = PWorld.createJoint( physics::IJoint::DescFixed( chassisObj, mpWheel ) );
+		//else
+		{
+			mpJoint = PWorld.createJoint( physics::IJoint::DescHinge2( 
+				chassisObj, mpWheel, 
+				tpl.mOrientation * Vector3::kUnitY,
+				tpl.mOrientation * Vector3::kUnitX,
+				tpl.mPosition ) );
+
+			mpJoint->setSpring( tpl.mSuspensionSpring );
+			mpJoint->setDamping( tpl.mSuspensionDamping );
+			//-> equals: dJointSetHinge2Param( jID, dParamSuspensionERP, _getERPFromSpring() );
+			//           and dJointSetHinge2Param( jID, dParamSuspensionCFM, _getCFMFromSpring() );
+
+			if (tpl.mSteeringGroup == SG_NO_STEERING_GROUP)
+			{
+				mpJoint->setLimits( 0, 0.0, 0.0 );
+				mpJoint->setLimits( 1, 0.0, 0.0 );
+			}
+			else
+			{
+				mpJoint->setLimits( 0, -0.1, 0.1 );
+				mpJoint->setLimits( 1,  0.0, 0.0 );
+			}
+
+			physics::OdeHinge2Joint* pJ = static_cast<physics::OdeHinge2Joint*>( mpJoint );
+			dJointID jID = pJ->_getOdeJoint()->id();
+
+			dJointSetHinge2Param( jID, dParamSuspensionERP, 0.95 );
+			dJointSetHinge2Param( jID, dParamSuspensionCFM, 0.2 );
+
+			dJointSetHinge2Param( jID, dParamStopERP, 0.95 );
+			dJointSetHinge2Param( jID, dParamStopCFM, 0.1 );
+			//dJointSetHinge2Param( hinges_[i], dParamStopERP, (!(i&2) ? FRONT_TURN_ERP : REAR_TURN_ERP) );
+			//dJointSetHinge2Param( hinges_[i], dParamStopCFM, (!(i&2) ? FRONT_TURN_CFM : REAR_TURN_CFM) );
+		}
 		
 		YAKE_ASSERT( mpJoint );
+
+
+		mPostStepSigConn = PWorld.subscribeToPreStepInternal( boost::bind(&OdeWheel::_onPreStepInternal,this,_1) );
 	}
 	OdeWheel::~OdeWheel()
 	{
+		mPostStepSigConn.disconnect();
 		YAKE_ASSERT( mpWheel );
 		YAKE_ASSERT( mpJoint );
 		mpWheel->getCreator()->destroyJoint( mpJoint );
 		mpJoint = 0;
 		mpWheel->getCreator()->destroyActor( mpWheel );
 		mpWheel = 0;
+	}
+	void OdeWheel::setSteering( const real s )
+	{
+		mTargetSteer = s;
+		if (mTargetSteer < -1.)
+			mTargetSteer = -1.;
+		else if (mTargetSteer > 1.)
+			mTargetSteer = 1.;
+	}
+	void OdeWheel::_onPreStepInternal( const real dt )
+	{
+		// interpolate towards target steering
+		mCurrSteer = mCurrSteer + /*@todo make this configurable:*/ 1.3 * dt * (mTargetSteer - mCurrSteer);
+
+		YAKE_ASSERT( mpJoint );
+		mpJoint->setLimits( 0, mCurrSteer - 0.05, mCurrSteer + 0.05 );
 	}
 	real OdeWheel::getRadius() const
 	{
@@ -371,7 +475,7 @@ namespace vehicle {
 		YAKE_ASSERT( mpWheel );
 		return mpWheel->getOrientation();
 	}
-
+#endif // YAKE_VEHICLE_USE_ODE
 	//-----------------------------------------------------
 	// Class: GenericThruster
 	//-----------------------------------------------------

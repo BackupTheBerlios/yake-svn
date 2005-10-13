@@ -87,6 +87,10 @@ namespace vehicle {
 				parseEngine( *pN );
 			else if (name == "chassis")
 				parseChassis( *pN );
+			else if (name == "steeringGroup")
+				parseSteeringGroup( *pN );
+			else if (name == "wheel")
+				parseWheel( *pN );
 		}
 
 		const String tplId = n.getAttributeValueAs<String>("name");
@@ -220,6 +224,52 @@ namespace vehicle {
 				parseMountPoint( *pN, thisMtPt );
 			}
 		}
+	}
+	void DotVehicleParser::parseSteeringGroup( const data::dom::INode& n )
+	{
+		const uint32 idx = uint32( StringUtil::toSizeT( n.getAttributeValueAs<String>("index") ) );
+		mpCurrVehTpl->mSteeringGroups = std::max( idx, mpCurrVehTpl->mSteeringGroups );
+		if (mpCurrVehTpl->mSteeringGroups == 0)
+			mpCurrVehTpl->mSteeringGroups = 1;
+	}
+	void DotVehicleParser::parseWheel( const data::dom::INode& n )
+	{
+		const String name = n.getAttributeValueAs<String>("name");
+		YAKE_ASSERT( !name.empty() );
+		if (name.empty())
+			return;
+		YAKE_ASSERT( mpCurrVehTpl->mWheels.find( name ) == mpCurrVehTpl->mWheels.end() )( name ).debug("duplicate wheel name. overriding values.");
+
+		Vector3 position;
+		SharedPtr<data::dom::INode> pN = n.getNodeByName("position");
+		if (pN.get())
+			parsePosition( *pN, position );
+
+		Quaternion rotation( Quaternion::kIdentity );
+		pN = n.getNodeByName("orientation");
+		if (pN.get())
+			parseOrientation( *pN, rotation );
+
+		const real radius = StringUtil::parseReal( n.getAttributeValueAs<String>("radius") );
+		uint32 sg = SG_NO_STEERING_GROUP;
+		if (!n.getAttributeValueAs<String>("steeringGroup").empty())
+			sg = uint32( StringUtil::toSizeT( n.getAttributeValueAs<String>("steeringGroup") ) );
+		const real mass = StringUtil::parseReal( n.getAttributeValueAs<String>("mass") );
+		const bool relToChassis = StringUtil::parseBool( n.getAttributeValueAs<String>("massIsRelativeToChassis") );
+		const real suspSpring = StringUtil::parseReal( n.getAttributeValueAs<String>("suspensionSpring") );
+		const real suspDamping = StringUtil::parseReal( n.getAttributeValueAs<String>("suspensionDamping") );
+
+		mpCurrVehTpl->mWheels[ name ] = VehicleTemplate::WheelTpl(
+											position,
+											rotation,
+											radius,
+											mass,
+											relToChassis,
+											sg,
+											suspSpring,
+											suspDamping );
+
+
 	}
 	void DotVehicleParser::parsePosition( const data::dom::INode& n, Vector3& ret )
 	{
