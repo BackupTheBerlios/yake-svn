@@ -136,17 +136,9 @@ protected:
 		tpl.mEngines["backward"] = new vehicle::VehicleTemplate::ThrusterTpl(0.,20.,"front");
 		mVehicle = pVS->create( tpl, *getPhysicalWorld() );
 #else
-		// add wheels
-		const real wheelRadius = 2;
-		const real wheelRelativeMass = 0.1; // mass relative to chassis
-		vehicle::VehicleTemplate* tpl = pVS->getTemplate("jet");
-		YAKE_ASSERT( tpl );
-		tpl->mWheels["frontWheel"] = 
-			vehicle::VehicleTemplate::WheelTpl( Vector3(0,-3,5), wheelRadius, wheelRelativeMass, true );
-		tpl->mWheels["leftRearWheel"] = 
-			vehicle::VehicleTemplate::WheelTpl( Vector3(-3,-3,-3), wheelRadius, wheelRelativeMass, true );
-		tpl->mWheels["rightRearWheel"] = 
-			vehicle::VehicleTemplate::WheelTpl( Vector3(3,-3,-3), wheelRadius, wheelRelativeMass, true );
+		// It's possible retrieve the template and make further adjustments to it before
+		// instantiating vehicles.
+		// e.g.: vehicle::VehicleTemplate* tpl = pVS->getTemplate("jet");
 
 		// instantiate
 		mVehicle = pVS->create("jet", *getPhysicalWorld() );
@@ -196,6 +188,19 @@ protected:
 	{
 		RtMainState::onEnter();
 		using namespace input;
+
+		// front wheel controls
+
+		mActionMap.reg( ACTIONID_LEFT,
+			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_COMMA, KAM_CONTINUOUS ) );
+		mActionMap.subscribeToActionId( ACTIONID_LEFT, boost::bind(&TheMainState::onFrontWheelLeft,this) );
+
+		mActionMap.reg( ACTIONID_RIGHT,
+			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_PERIOD, KAM_CONTINUOUS ) );
+		mActionMap.subscribeToActionId( ACTIONID_RIGHT, boost::bind(&TheMainState::onFrontWheelRight,this) );
+
+		// thruster controls
+
 		mActionMap.reg( ACTIONID_STRAFE_LEFT,
 			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_LEFT, KAM_CONTINUOUS ) );
 		mActionMap.subscribeToActionId( ACTIONID_STRAFE_LEFT, boost::bind(&TheMainState::onStrafeLeft,this) );
@@ -230,6 +235,9 @@ protected:
 			vehicle::IEngine* pEngine = itEngine.getNext();
 			pEngine->setThrottle( pEngine->getThrottle() - timeElapsed * 1.7 );
 		}
+
+		real steering0 = 0;
+
 		ConstDequeIterator< ActionIdList > itAction( mActiveActions );
 		while (itAction.hasMoreElements())
 		{
@@ -244,7 +252,12 @@ protected:
 				mVehicle->getEngineInterface("backward")->setThrottle(1.);
 			else if (activeId == input::ACTIONID_UP)
 				mVehicle->getEngineInterface("upward")->setThrottle(1.);
+			else if (activeId == input::ACTIONID_LEFT)
+				steering0 -= 0.3;
+			else if (activeId == input::ACTIONID_RIGHT)
+				steering0 += 0.3;
 		}
+		mVehicle->setSteering( 0, steering0 );
 
 		mVehicle->updateSimulation( timeElapsed );
 		mComplex->updatePhysics( timeElapsed );
@@ -266,6 +279,10 @@ protected:
 	{ mActiveActions.insert( input::ACTIONID_REVERSE ); }
 	void onUp()
 	{ mActiveActions.insert( input::ACTIONID_UP ); }
+	void onFrontWheelLeft()
+	{ mActiveActions.insert( input::ACTIONID_LEFT ); }
+	void onFrontWheelRight()
+	{ mActiveActions.insert( input::ACTIONID_RIGHT ); }
 private:
 	void _regThrusterPs(const String& engineId, graphics::IParticleSystem& ps)
 	{
