@@ -98,8 +98,13 @@ namespace input {
 	extern YAKE_INPUT_API const ActionId ACTIONID_ROTATE_RIGHT;
 	extern YAKE_INPUT_API const ActionId ACTIONID_UP;
 	extern YAKE_INPUT_API const ActionId ACTIONID_DOWN;
+	extern YAKE_INPUT_API const ActionId ACTIONID_LEFT;
+	extern YAKE_INPUT_API const ActionId ACTIONID_RIGHT;
 	extern YAKE_INPUT_API const ActionId ACTIONID_PITCH_UP;
 	extern YAKE_INPUT_API const ActionId ACTIONID_PITCH_DOWN;
+	extern YAKE_INPUT_API const ActionId ACTIONID_USE;
+	extern YAKE_INPUT_API const ActionId ACTIONID_FIRE1;
+	extern YAKE_INPUT_API const ActionId ACTIONID_FIRE2;
 	extern YAKE_INPUT_API const ActionId ACTIONID_USER;
 	// example for a user defined action id:
 	//const ActionId ACTIONID_USER_CheerWildly( ACTIONID_USER+1, "cheerwildly" );
