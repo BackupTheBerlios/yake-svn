@@ -39,7 +39,7 @@
 			<direction x="0" y="0" z="-1" />
 		</mountPoint>
 		<engine name="forward" type="MountedThruster" mountPoint="rear">
-			<forces min="0." max="20." dieOff="10" rise="20" />
+			<forces min="0." max="80." dieOff="10" rise="20" />
 		</engine>
 		<!-- bottom (upward) thruster -->
 		<mountPoint name="bottom">
@@ -47,7 +47,21 @@
 			<direction x="0" y="-1" z="0" />
 		</mountPoint>
 		<engine name="upward" type="MountedThruster" mountPoint="bottom">
-			<forces min="0." max="150." dieOff="10" rise="20" />
+			<forces min="0." max="250." dieOff="10" rise="20" />
 		</engine>
+		<!-- two axles -->
+		<axle name="front" />
+		<axle name="rear" />
+		<!-- wheels - one in front for steering, two at the rear end -->
+		<steeringGroup index="0" />
+		<wheel name="frontWheel" axle="front" steeringGroup="0" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="5" suspensionDamping="4.5">
+			<position x="0" y="-3" z="5.5" />
+		</wheel>
+		<wheel name="leftRearWheel" axle="rear" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="5" suspensionDamping="4.5">
+			<position x="-3" y="-3" z="-3" />
+		</wheel>
+		<wheel name="rightRearWheel" axle="rear" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="5" suspensionDamping="4.5">
+			<position x="3" y="-3" z="-3" />
+		</wheel>
 	</vehicleTemplate>
 </dotvehicle>
