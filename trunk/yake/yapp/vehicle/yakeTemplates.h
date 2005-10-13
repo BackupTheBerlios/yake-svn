@@ -142,19 +142,22 @@ namespace vehicle {
 			String			mGfxReferenceType; // e.g. "dotscene"
 			WheelTpl(
 				const Vector3& position = Vector3::kZero,
+				const Quaternion& orientation = Quaternion::kIdentity,
 				const real radius = real(0.8),
 				const real mass = real(0.01),
 				const bool massRelativeToChassis = true,
-				const uint32 steeringGrp = SG_NO_STEERING_GROUP
+				const uint32 steeringGrp = SG_NO_STEERING_GROUP,
+				const real suspensionSpring = real(1),
+				const real suspensionDamping = real(0.9)
 				) :
 				mPosition(position),
-				mOrientation(Quaternion::kIdentity),
+				mOrientation(orientation),
 				mSteeringGroup(steeringGrp),
 				mRadius(radius),
 				mMass(mass),
 				mMassRelativeToChassis(massRelativeToChassis),
-				mSuspensionSpring(real(1)),
-				mSuspensionDamping(real(0.9))
+				mSuspensionSpring(suspensionSpring),
+				mSuspensionDamping(suspensionDamping)
 			{}
 		};
 

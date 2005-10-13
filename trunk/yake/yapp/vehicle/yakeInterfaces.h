@@ -33,6 +33,12 @@
 namespace yake {
 namespace vehicle {
 
+	enum Steering {
+		S_LEFT,
+		S_RIGHT,
+		S_NONE
+	};
+
 	class IEngine;
 	typedef Deque<IEngine*> IEnginePtrList;
 	class IWheel;
@@ -56,6 +62,8 @@ namespace vehicle {
 		virtual IEngine* getEngineInterface(const String& id) const = 0;
 		virtual IEnginePtrList getEngineInterfaces() const = 0;
 		virtual IWheel* getWheelInterface(const String& id) const = 0;
+		virtual void setSteering( const uint32 sg, const real ) = 0;
+		virtual real getSteering( const uint32 sg ) const = 0;
 
 		virtual Vector3 getChassisPosition() const = 0;
 		virtual Quaternion getChassisOrientation() const = 0;

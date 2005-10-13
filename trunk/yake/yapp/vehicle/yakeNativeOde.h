@@ -73,6 +73,9 @@ namespace vehicle {
 		virtual Quaternion getChassisOrientation() const;
 		virtual Movable* getChassisMovable() const;
 
+		virtual void setSteering( const uint32 sg, const real );
+		virtual real getSteering( const uint32 sg ) const;
+
 		void _create(const VehicleTemplate&, physics::IWorld& PWorld);
 
 		YAKE_MEMBERSIGNAL(private,void(real),UpdateThrusterSimulation);
@@ -153,6 +156,7 @@ namespace vehicle {
 		real		mDriveTorque;
 	};
 
+#if defined(YAKE_VEHICLE_USE_ODE)
 	class OdeWheel : public IWheel
 	{
 		OdeWheel();
@@ -168,12 +172,19 @@ namespace vehicle {
 		virtual Quaternion getOrientation() const;
 
 		virtual real getRadius() const;
+
+		void setSteering( const real s );
+	private:
+		void _onPreStepInternal( const real dt );
 	private:
 		physics::IJointPtr		mpJoint;
 		physics::IActorPtr		mpWheel;
 		real					mRadius;
+		real					mTargetSteer;
+		real					mCurrSteer;
+		SignalConnection		mPostStepSigConn;
 	};
-
+#endif // YAKE_VEHICLE_USE_ODE
 	class GenericMountPoint : public MountPoint
 	{
 	public:
