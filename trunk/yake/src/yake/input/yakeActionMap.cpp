@@ -38,6 +38,13 @@ namespace input {
 	const ActionId ACTIONID_STRAFE_RIGHT(4, "strafe_right");
 	const ActionId ACTIONID_UP(5, "up");
 	const ActionId ACTIONID_DOWN(6, "down");
+	const ActionId ACTIONID_LEFT(7, "left");
+	const ActionId ACTIONID_RIGHT(8, "right");
+	const ActionId ACTIONID_ROTATE_LEFT(9, "rotate_left");
+	const ActionId ACTIONID_ROTATE_RIGHT(10, "rotate_right");
+	const ActionId ACTIONID_USE(11, "use");
+	const ActionId ACTIONID_FIRE1(12, "fire1");
+	const ActionId ACTIONID_FIRE2(13, "fire2");
 
 	const ActionId ACTIONID_USER(10000, "user");
 
