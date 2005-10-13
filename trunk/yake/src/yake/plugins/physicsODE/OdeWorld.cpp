@@ -184,12 +184,14 @@ namespace physics {
 			case JT_FIXED:
 				{
 				pJoint = new OdeFixedJoint( this );
+				pJoint->attach( rBody1, rBody2 );
 				}
 				break;
 			case JT_HINGE:
 				{
 				pJoint = new OdeHingeJoint( this );
 				const IJoint::DescHinge& desc = static_cast<const IJoint::DescHinge&>( rJointDesc );
+				pJoint->attach( rBody1, rBody2 );
 				pJoint->setAnchor( 0, desc.anchor );
 				pJoint->setAxis( 0, desc.axis );
 				}
@@ -198,6 +200,7 @@ namespace physics {
 				{
 				pJoint = new OdeHinge2Joint( this );
 				const IJoint::DescHinge2& desc = static_cast<const IJoint::DescHinge2&>( rJointDesc );
+				pJoint->attach( rBody1, rBody2 );
 				pJoint->setAnchor( 0, desc.anchor );
 				pJoint->setAxis( 0, desc.axis0 );
 				pJoint->setAxis( 1, desc.axis1 );
@@ -207,6 +210,7 @@ namespace physics {
 				{
 				pJoint = new OdeUniversalJoint( this );
 				const IJoint::DescUniversal& desc = static_cast<const IJoint::DescUniversal&>( rJointDesc );
+				pJoint->attach( rBody1, rBody2 );
 				pJoint->setAnchor( 0, desc.anchor );
 				pJoint->setAxis( 0, desc.axis0 );
 				pJoint->setAxis( 1, desc.axis1 );
@@ -216,6 +220,7 @@ namespace physics {
 				{
 				pJoint = new OdeBallJoint( this );
 				const IJoint::DescBall& desc = static_cast<const IJoint::DescBall&>( rJointDesc );
+				pJoint->attach( rBody1, rBody2 );
 				pJoint->setAnchor( 0, desc.anchor );
 				}
 				break;
@@ -223,6 +228,7 @@ namespace physics {
 				{
 				pJoint = new OdeSliderJoint( this );
 				const IJoint::DescSlider& desc = static_cast<const IJoint::DescSlider&>( rJointDesc );
+				pJoint->attach( rBody1, rBody2 );
 				pJoint->setAxis( 0, desc.axis );
 				}
 				break;
@@ -232,7 +238,6 @@ namespace physics {
 			};
 			YAKE_ASSERT( pJoint != NULL ).error( "Unknown type of joint or ... some other error :(" );
 			
-			pJoint->attach( rBody1, rBody2 );
 			mJoints.push_back( SharedPtr<OdeJoint>(pJoint) );
 			
 			return pJoint;
