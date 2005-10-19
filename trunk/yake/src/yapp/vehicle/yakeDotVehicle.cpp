@@ -167,9 +167,51 @@ namespace vehicle {
 				StringUtil::parseReal( pForcesN->getAttributeValueAs<String>("max") ),
 				mtPt );
 		}
+		else if (type == "CarEngine")
+		{
+			String axle = n.getAttributeValueAs<String>("axle");
+			YAKE_ASSERT( !axle.empty() );
+
+			VehicleTemplate::CarEngineTpl* tpl = new VehicleTemplate::CarEngineTpl();
+
+			parseRPM( *tpl, *n.getNodeByName("rpm") );
+			parseGearBox( *tpl, *n.getNodeByName("gearBox") );
+
+			mpCurrVehTpl->mEngines[ id ] = tpl;
+		}
 		else
 		{
-			YAKE_ASSERT( 1==0 && "Unhandled engine type!" );
+			YAKE_ASSERT( 1==0 && "DotVehicleParser::parseEngine: Unhandled engine type!" );
+		}
+	}
+	void DotVehicleParser::parseRPM( vehicle::VehicleTemplate::CarEngineTpl& tpl, const data::dom::INode& n )
+	{
+		tpl.rpmMin_ = StringUtil::parseReal( n.getAttributeValueAs<String>("min") );
+		tpl.rpmMax_ = StringUtil::parseReal( n.getAttributeValueAs<String>("max") );
+		tpl.rpmRedline_ = StringUtil::parseReal( n.getAttributeValueAs<String>("redline") );
+		//tpl.rpmDieOff_ = StringUtil::parseReal( n.getAttributeValueAs<String>("dieoff") );
+		//tpl.rpmRise_ = StringUtil::parseReal( n.getAttributeValueAs<String>("rise") );
+	}
+	void DotVehicleParser::parseGearBox( vehicle::VehicleTemplate::CarEngineTpl& tpl, const data::dom::INode& n )
+	{
+		NodeList nodes = n.getNodes();
+		ConstVectorIterator< NodeList > itN( nodes );
+		while (itN.hasMoreElements())
+		{
+			INode* pN = itN.getNext().get();
+			const String name = pN->getName();
+			if (name != "gear")
+				continue;
+			const String mode = StringUtil::toLowerCase( pN->getAttributeValueAs<String>("mode") );
+			VehicleTemplate::GearMode gm = VehicleTemplate::GM_FORWARD;
+			if (mode == "forward")
+				gm = VehicleTemplate::GM_FORWARD;
+			else if (mode == "reverse")
+				gm = VehicleTemplate::GM_REVERSE;
+			else if (mode == "neutral")
+				gm = VehicleTemplate::GM_NEUTRAL;
+			const real ratio = StringUtil::parseReal( pN->getAttributeValueAs<String>("ratio") );
+			tpl.gears_.push_back( vehicle::VehicleTemplate::GearTpl(ratio,gm) );
 		}
 	}
 	void DotVehicleParser::parseMountPoint( const data::dom::INode& n, VehicleTemplate::MountPointTpl* parentMtPt /*= 0*/ )

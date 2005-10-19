@@ -31,6 +31,12 @@ struct TheConfiguration : public raf::ApplicationConfiguration
 
 const real razorMeshScale = 0.1;
 
+class VehicleHumanInputController
+{
+public:
+	void setVehicle(vehicle::IVehicle*);
+};
+
 /** Main application state */
 class TheMainState : public raf::RtMainState
 {

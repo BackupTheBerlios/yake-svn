@@ -34,31 +34,6 @@ namespace vehicle {
 	//-----------------------------------------------------
 	// Class: GearBox
 	//-----------------------------------------------------
-	class GearBox
-	{
-	public:
-		enum GearMode {
-			GM_REVERSE,
-			GM_NEUTRAL,
-			GM_FORWARD
-		};
-		void setSpeed( uint8 numGears );
-		uint8 getSpeed() const;
-
-		void setGearRatio( uint8 gear, real ratio );
-		void setGearMode( uint8 gear, const GearMode mode );
-		real getGearRatio( uint8 gear );
-
-		void setFromTemplate( const VehicleTemplate::GearTplList & gears );
-	private:
-		struct Gear
-		{
-			real		ratio_;
-			GearMode	mode_;
-		};
-		typedef Vector< Gear > GearList;
-		GearList	mGears;
-	};
 	void GearBox::setSpeed(uint8 numGears)
 	{
 		mGears.resize( numGears );
@@ -150,6 +125,11 @@ namespace vehicle {
 		//drive torque gets delivered to the wheels
 		real engineTorque = mThrottle * getMaxTorque( mCurrentRPM );
 		mDriveTorque = engineTorque * mGearRatio * mDifferentialRatio * 0.75/*just a guess*/;
+	}
+	GearBox& GenericCarEngine::getGearBox()
+	{
+		YAKE_ASSERT( mpGearBox );
+		return *mpGearBox;
 	}
 	void GenericCarEngine::setThrottle( real throttle )
 	{

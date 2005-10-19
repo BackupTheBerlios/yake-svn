@@ -96,26 +96,26 @@ namespace physics {
 		{
 			if (axisIndex == 0)
 			{
-				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, mVelTarget[0] );
-				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, mMaxForce[0] );
+				static_cast<dHinge2Joint*>(mOdeJoint)->setParam( dParamVel, mVelTarget[0] );
+				static_cast<dHinge2Joint*>(mOdeJoint)->setParam( dParamFMax, mMaxForce[0] );
 			}
 			else if (axisIndex == 1)
 			{
-				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, mVelTarget[1] );
-				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, mMaxForce[1] );
+				static_cast<dHinge2Joint*>(mOdeJoint)->setParam( dParamVel2, mVelTarget[1] );
+				static_cast<dHinge2Joint*>(mOdeJoint)->setParam( dParamFMax2, mMaxForce[1] );
 			}
 		}
 		else
 		{
 			if (axisIndex == 0)
 			{
-				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, 0 );
-				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel, 0 );
+				static_cast<dHinge2Joint*>(mOdeJoint)->setParam( dParamVel, 0 );
+				static_cast<dHinge2Joint*>(mOdeJoint)->setParam( dParamFMax, 0 );
 			}
 			else if (axisIndex == 1)
 			{
-				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, 0 );
-				static_cast<dUniversalJoint*>(mOdeJoint)->setParam( dParamVel2, 0 );
+				static_cast<dHinge2Joint*>(mOdeJoint)->setParam( dParamVel2, 0 );
+				static_cast<dHinge2Joint*>(mOdeJoint)->setParam( dParamFMax2, 0 );
 			}
 		}
 	}

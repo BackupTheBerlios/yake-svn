@@ -146,8 +146,25 @@ namespace vehicle {
 			pEngine->updateSimulation(timeElapsed);
 		}
 		//
-		mSigUpdateThrusterSimulation( timeElapsed );
+		mSigUpdateEngineSimulation( timeElapsed );
 		mSigApplyThrusterToTargets();
+		_applyDriveTorqueToAxles( timeElapsed );
+	}
+	void GenericVehicle::_applyDriveTorqueToAxles( real timeElapsed )
+	{
+		ConstDequeIterator< AxleList > itAxle( mAxles );
+		while (itAxle.hasMoreElements())
+		{
+			CarEngineWheelsPair cewp = itAxle.getNext().second;
+
+			const real torque = timeElapsed * cewp.first->getDriveTorque();
+			ConstDequeIterator< Deque<OdeWheel*> > itWheel( cewp.second );
+			while (itWheel.hasMoreElements())
+			{
+				OdeWheel* pW = itWheel.getNext();
+				pW->_applyDriveTq( torque );
+			}
+		}
 	}
 	MountPoint* GenericVehicle::getMountPoint(const String& id) const
 	{
@@ -278,6 +295,11 @@ namespace vehicle {
 				pEngine->setParamMaxRPM( carEngineTpl->rpmMax_ );
 				pEngine->setParamMinRPM( carEngineTpl->rpmMin_ );
 				pEngine->setParamRedlineRPM( carEngineTpl->rpmRedline_ );
+				pEngine->getGearBox().setFromTemplate( carEngineTpl->gears_ );
+				subscribeToUpdateEngineSimulation(
+					boost::bind( &GenericCarEngine::updateSimulation, pEngine, _1 ) );
+
+				mAxles[ carEngineTpl->axle_ ] = std::make_pair( pEngine, Deque<OdeWheel*>() );
 			}
 			else
 			{
@@ -291,7 +313,7 @@ namespace vehicle {
 					pEngine->setMinimumForce( thrusterTpl->minForce );
 					pEngine->setMaximumForce( thrusterTpl->maxForce );
 					pEngine->setThrottle(0.);
-					subscribeToUpdateThrusterSimulation(
+					subscribeToUpdateEngineSimulation(
 						boost::bind( &GenericThruster::updateSimulation, pEngine, _1 ) );
 
 					// the thruster is attached to a mount point, create wrapper:
@@ -330,6 +352,8 @@ namespace vehicle {
 			{
 				mSteeringGroups[ wheelTpl.mSteeringGroup ].push_back( pW );
 			}
+
+			mAxles[ wheelTpl.mAxle ].second.push_back( pW );
 
 			mWheels[ wtp.first ] = pW;
 		}
@@ -370,7 +394,8 @@ namespace vehicle {
 		mpWheel(0),
 		mRadius(tpl.mRadius),
 		mTargetSteer(0),
-		mCurrSteer(0)
+		mCurrSteer(0),
+		mBrakeRatio(real(0.))
 	{
 		{
 			physics::OdeWorld* pW = dynamic_cast<physics::OdeWorld*>( &PWorld );
@@ -418,14 +443,15 @@ namespace vehicle {
 				mpJoint->setLimits( 1,  0.0, 0.0 );
 			}
 
-			physics::OdeHinge2Joint* pJ = static_cast<physics::OdeHinge2Joint*>( mpJoint );
-			dJointID jID = pJ->_getOdeJoint()->id();
+			//physics::OdeHinge2Joint* pJ = static_cast<physics::OdeHinge2Joint*>( mpJoint );
+			//dJointID jID = pJ->_getOdeJoint()->id();
 
-			dJointSetHinge2Param( jID, dParamSuspensionERP, 0.95 );
-			dJointSetHinge2Param( jID, dParamSuspensionCFM, 0.2 );
+			//dJointSetHinge2Param( jID, dParamSuspensionERP, 0.95 );
+			//dJointSetHinge2Param( jID, dParamSuspensionCFM, 0.2 );
 
-			dJointSetHinge2Param( jID, dParamStopERP, 0.95 );
-			dJointSetHinge2Param( jID, dParamStopCFM, 0.1 );
+			//dJointSetHinge2Param( jID, dParamStopERP, 0.95 );
+			//dJointSetHinge2Param( jID, dParamStopCFM, 0.1 );
+
 			//dJointSetHinge2Param( hinges_[i], dParamStopERP, (!(i&2) ? FRONT_TURN_ERP : REAR_TURN_ERP) );
 			//dJointSetHinge2Param( hinges_[i], dParamStopCFM, (!(i&2) ? FRONT_TURN_CFM : REAR_TURN_CFM) );
 		}
@@ -444,6 +470,14 @@ namespace vehicle {
 		mpJoint = 0;
 		mpWheel->getCreator()->destroyActor( mpWheel );
 		mpWheel = 0;
+	}
+	void OdeWheel::brake(const real ratio)
+	{
+		mBrakeRatio = ratio;
+		if (mBrakeRatio > 1.)
+			mBrakeRatio = 1.;
+		else if (mBrakeRatio < 0.)
+			mBrakeRatio = 0.;
 	}
 	void OdeWheel::setSteering( const real s )
 	{
@@ -474,6 +508,49 @@ namespace vehicle {
 	{
 		YAKE_ASSERT( mpWheel );
 		return mpWheel->getOrientation();
+	}
+	void OdeWheel::_applyDriveTq( const real tq )
+	{
+		//std::cout << "DTQ=" << tq << "\n";
+		//_applyTq( Vector3::kUnitX * tq );
+
+		if (mBrakeRatio > 0.01)
+			_applyBrakeTq( Vector3::kUnitX * mBrakeRatio * 1.5 );
+
+		const real targetVel = tq < 0. ? -80 : 80;
+		_applyMotor( targetVel, - tq / 50. );
+	}
+	void OdeWheel::_applyTq( const Vector3& torque )
+	{
+		mpWheel->getBody().addTorque( mpWheel->getOrientation() * torque );
+	}
+	void OdeWheel::_applyBrakeTq( const Vector3 & torque )
+	{
+		Vector3 linVel = mpWheel->getBody().getLinearVelocity();
+		Vector3 dir = mpWheel->getOrientation() * Vector3::kUnitX;
+		if (dir.dotProduct(linVel) > 0)
+		{
+			std::cout << "BRK+\n";
+			mpWheel->getBody().addLocalTorque( torque );
+		}
+		else
+		{
+			std::cout << "BRK-\n";
+			mpWheel->getBody().addLocalTorque( -torque );
+		}
+	}
+	void OdeWheel::_applyMotor( real velocity, real fmax )
+	{
+		if (mpJoint->getType() == physics::JT_HINGE)
+		{
+			mpJoint->setMotor( 0, velocity, fmax );
+			mpJoint->setMotorEnabled( 0, true );
+		}
+		else if (mpJoint->getType() == physics::JT_HINGE2)
+		{
+			mpJoint->setMotor( 1, velocity, fmax );
+			mpJoint->setMotorEnabled( 1, true );
+		}
 	}
 #endif // YAKE_VEHICLE_USE_ODE
 	//-----------------------------------------------------
