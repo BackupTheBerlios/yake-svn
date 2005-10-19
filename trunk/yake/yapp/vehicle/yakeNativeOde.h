@@ -32,6 +32,35 @@
 namespace yake {
 namespace vehicle {
 
+	//-----------------------------------------------------
+	// Class: GearBox
+	//-----------------------------------------------------
+	class GearBox
+	{
+	public:
+		enum GearMode {
+			GM_REVERSE,
+			GM_NEUTRAL,
+			GM_FORWARD
+		};
+		void setSpeed( uint8 numGears );
+		uint8 getSpeed() const;
+
+		void setGearRatio( uint8 gear, real ratio );
+		void setGearMode( uint8 gear, const GearMode mode );
+		real getGearRatio( uint8 gear );
+
+		void setFromTemplate( const VehicleTemplate::GearTplList & gears );
+	private:
+		struct Gear
+		{
+			real		ratio_;
+			GearMode	mode_;
+		};
+		typedef Vector< Gear > GearList;
+		GearList	mGears;
+	};
+
 	class DotVehicleParser;
 	class YAKE_VEH_API GenericVehicleSystem : public IVehicleSystem
 	{
@@ -78,11 +107,12 @@ namespace vehicle {
 
 		void _create(const VehicleTemplate&, physics::IWorld& PWorld);
 
-		YAKE_MEMBERSIGNAL(private,void(real),UpdateThrusterSimulation);
+		YAKE_MEMBERSIGNAL(private,void(real),UpdateEngineSimulation);
 		YAKE_MEMBERSIGNAL(private,void(void),ApplyThrusterToTargets);
 
 	private:
 		void _createMountPoint(const String& id, const VehicleTemplate::MountPointTpl&,MountPoint* parentMtPt = 0);
+		void _applyDriveTorqueToAxles( real timeElapsed );
 	private:
 		typedef AssocVector<String,IEngine*> EnginePtrList;
 		EnginePtrList		mEngines; // owner of all engine objects
@@ -91,6 +121,10 @@ namespace vehicle {
 
 		typedef AssocVector<uint32,Deque<OdeWheel*> > SteeringGroupList;
 		SteeringGroupList	mSteeringGroups;
+
+		typedef std::pair<ICarEngine*,Deque<OdeWheel*> > CarEngineWheelsPair;
+		typedef AssocVector<uint32,CarEngineWheelsPair> AxleList;
+		AxleList			mAxles;
 
 		typedef AssocVector<String,OdeWheel*> WheelList;
 		WheelList			mWheels;
@@ -173,8 +207,16 @@ namespace vehicle {
 
 		virtual real getRadius() const;
 
+		virtual void brake(const real ratio);
+
 		void setSteering( const real s );
+
+		void _applyDriveTq( const real tq );
 	private:
+		void _applyTq( const Vector3 & torque );
+		void _applyBrakeTq( const Vector3 & torque );
+		void _applyMotor( real velocity, real fmax );
+
 		void _onPreStepInternal( const real dt );
 	private:
 		physics::IJointPtr		mpJoint;
@@ -183,6 +225,7 @@ namespace vehicle {
 		real					mTargetSteer;
 		real					mCurrSteer;
 		SignalConnection		mPostStepSigConn;
+		real					mBrakeRatio;
 	};
 #endif // YAKE_VEHICLE_USE_ODE
 	class GenericMountPoint : public MountPoint

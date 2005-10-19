@@ -168,6 +168,7 @@ namespace vehicle {
 		virtual ~IWheel() {}
 
 		virtual real getRadius() const = 0;
+		virtual void brake(const real ratio) = 0;
 	};
 
 } // namespace vehicle

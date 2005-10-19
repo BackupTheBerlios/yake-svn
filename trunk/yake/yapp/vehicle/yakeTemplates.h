@@ -76,7 +76,7 @@ namespace vehicle {
 		{
 			real				ratio_;
 			GearMode			mode_;
-			GearTpl() : ratio_(1.), mode_(GM_FORWARD) {}
+			GearTpl(const real r = 1., const GearMode m = GM_FORWARD) : ratio_(r), mode_(m) {}
 		};
 		typedef Vector<GearTpl> GearTplList;
 		struct EngineTpl
@@ -92,6 +92,7 @@ namespace vehicle {
 		};
 		struct CarEngineTpl : public EngineTpl
 		{
+			uint32				axle_;
 			real				rpmMin_;
 			real				rpmMax_;
 			real				rpmRedline_;
@@ -108,7 +109,8 @@ namespace vehicle {
 				rpmDieOff_(real(800.)),
 				rpmRise_(real(2000.)),
 				minShiftingTime_(real(0.15)),
-				differentialRatio(real(3.14))
+				differentialRatio(real(3.14)),
+				axle_(0)
 			{}
 		};
 
@@ -130,6 +132,7 @@ namespace vehicle {
 
 		struct WheelTpl
 		{
+			uint32			mAxle;
 			Vector3			mPosition;
 			Quaternion		mOrientation;
 			uint32			mSteeringGroup;
@@ -143,12 +146,13 @@ namespace vehicle {
 			WheelTpl(
 				const Vector3& position = Vector3::kZero,
 				const Quaternion& orientation = Quaternion::kIdentity,
-				const real radius = real(0.8),
-				const real mass = real(0.01),
+				const real radius = real(0.2),
+				const real mass = real(0.018),
 				const bool massRelativeToChassis = true,
 				const uint32 steeringGrp = SG_NO_STEERING_GROUP,
-				const real suspensionSpring = real(1),
-				const real suspensionDamping = real(0.9)
+				const real suspensionSpring = real(30),
+				const real suspensionDamping = real(3),
+				const uint32 axle = 0
 				) :
 				mPosition(position),
 				mOrientation(orientation),
@@ -157,7 +161,8 @@ namespace vehicle {
 				mMass(mass),
 				mMassRelativeToChassis(massRelativeToChassis),
 				mSuspensionSpring(suspensionSpring),
-				mSuspensionDamping(suspensionDamping)
+				mSuspensionDamping(suspensionDamping),
+				mAxle(axle)
 			{}
 		};
 
