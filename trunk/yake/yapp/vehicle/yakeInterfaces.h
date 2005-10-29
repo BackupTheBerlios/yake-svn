@@ -68,6 +68,9 @@ namespace vehicle {
 		virtual Vector3 getChassisPosition() const = 0;
 		virtual Quaternion getChassisOrientation() const = 0;
 		virtual Movable* getChassisMovable() const = 0;
+
+		virtual void enableDebugGeometry(graphics::IWorld&) = 0;
+		virtual void disableDebugGeometry() = 0;
 	};
 
 	/** Interface to a vehicle engine.

@@ -141,8 +141,9 @@ namespace vehicle {
 			bool			mMassRelativeToChassis;
 			real			mSuspensionSpring;
 			real			mSuspensionDamping;
-			String			mGfxReference; // e.g. dotScene file
-			String			mGfxReferenceType; // e.g. "dotscene"
+			//String			mGfxReference; // e.g. dotScene file
+			//String			mGfxReferenceType; // e.g. "dotscene"
+			String			mMaterial;
 			WheelTpl(
 				const Vector3& position = Vector3::kZero,
 				const Quaternion& orientation = Quaternion::kIdentity,
@@ -152,6 +153,7 @@ namespace vehicle {
 				const uint32 steeringGrp = SG_NO_STEERING_GROUP,
 				const real suspensionSpring = real(30),
 				const real suspensionDamping = real(3),
+				const String& material = "",
 				const uint32 axle = 0
 				) :
 				mPosition(position),
@@ -162,6 +164,7 @@ namespace vehicle {
 				mMassRelativeToChassis(massRelativeToChassis),
 				mSuspensionSpring(suspensionSpring),
 				mSuspensionDamping(suspensionDamping),
+				mMaterial(material),
 				mAxle(axle)
 			{}
 		};

@@ -105,6 +105,9 @@ namespace vehicle {
 		virtual void setSteering( const uint32 sg, const real );
 		virtual real getSteering( const uint32 sg ) const;
 
+		virtual void enableDebugGeometry(graphics::IWorld&);
+		virtual void disableDebugGeometry();
+
 		void _create(const VehicleTemplate&, physics::IWorld& PWorld);
 
 		YAKE_MEMBERSIGNAL(private,void(real),UpdateEngineSimulation);
@@ -131,6 +134,8 @@ namespace vehicle {
 
 		typedef AssocVector<String,MountPoint*> MountPointList;
 		MountPointList		mMountPoints;
+
+		model::complex::Model*	mDebugModel;
 	};
 
 	class GearBox;
