@@ -70,11 +70,11 @@ namespace physics {
 			Desc(	const ShapeType type_,
 					const Vector3& rPosition = Vector3::kZero, 
 					const Quaternion& rOrientation = Quaternion::kIdentity,
-					IMaterialPtr material_ = 0 ) :
+					const String& material_ = "" ) :
 				type( type_ ),
 				position( rPosition ),
 				orientation( rOrientation ),
-				pMaterial( material_ )
+				material( material_ )
 			{}
 
 			virtual ~Desc() {}
@@ -83,13 +83,13 @@ namespace physics {
 			ShapeType	type; // superfluous as shape type is determined by dynamic_cast on Desc struct...
 			Vector3		position;
 			Quaternion	orientation;
-			IMaterialPtr	pMaterial;
+			String		material;
 		};
 		struct SphereDesc : Desc
 		{
 			SphereDesc(	real radius_ = real(1.),
 						// base class:
-						IMaterialPtr material_ = 0,
+						const String& material_ = "",
 						const Vector3& rPosition = Vector3::kZero, 
 						const Quaternion& rOrientation = Quaternion::kIdentity
 						 ) :
@@ -102,7 +102,7 @@ namespace physics {
 		{
 			BoxDesc(	const Vector3& rDimensions = Vector3(1,1,1),
 						// base class:
-						IMaterialPtr material_ = 0,
+						const String& material_ = "",
 						const Vector3& rPosition = Vector3::kZero, 
 						const Quaternion& rOrientation = Quaternion::kIdentity
 						 ) :
@@ -116,7 +116,7 @@ namespace physics {
 			PlaneDesc(	const Vector3& rNormal = Vector3(0,1,0),
 						const real d_ = real(1.),
 						// base class:
-						IMaterialPtr material_ = 0,
+						const String& material_ = "",
 						const Vector3& rPosition = Vector3::kZero, 
 						const Quaternion& rOrientation = Quaternion::kIdentity
 						 ) :
@@ -132,7 +132,7 @@ namespace physics {
 			CapsuleDesc(const real height_ = real(2.),
 						const real radius_ = real(1.),
 						// base class:
-						IMaterialPtr material_ = 0,
+						const String& material_ = "",
 						const Vector3& rPosition = Vector3::kZero, 
 						const Quaternion& rOrientation = Quaternion::kIdentity
 						 ) :
@@ -148,7 +148,7 @@ namespace physics {
 		{
 			TriMeshDesc(	const TriangleMeshId meshId_,
 							// base class:
-							IMaterialPtr material_ = 0,
+							const String& material_ = "",
 							const Vector3& rPosition = Vector3::kZero, 
 							const Quaternion& rOrientation = Quaternion::kIdentity
 						 ) :
@@ -161,6 +161,12 @@ namespace physics {
 		virtual ~IShape() {}
 
 		virtual ShapeType getType() const = 0;
+
+		//virtual Vector3 getDerivedPosition() const = 0;
+		//virtual Quaternion getDerivedOrientation() const = 0;
+
+		virtual Vector3 getPropertyVector3(const String&) const = 0;
+		virtual real getPropertyReal(const String&) const = 0;
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IShape );
 
