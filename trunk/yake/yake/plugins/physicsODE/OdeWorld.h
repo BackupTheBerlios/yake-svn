@@ -56,7 +56,8 @@ namespace physics {
 				YAKE_ASSERT( 0 ).warning("not supported.");
 				return IAvatarPtr();
 			}
-			virtual IMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc );
+			virtual IMaterialPtr getMaterial( const String& id ) const;
+			virtual IMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc, const String& id = "" );
 			virtual void destroyJoint( IJointPtr pJoint );
 			virtual void destroyActor( IActorPtr pActor );
 			virtual void destroyAvatar( IAvatarPtr pAvatar );
@@ -123,7 +124,7 @@ namespace physics {
 			typedef Deque<SharedPtr<OdeJoint> > OdeJointVector;
 			OdeJointVector			mJoints;
 
-			typedef Deque<SharedPtr<OdeMaterial> > OdeMaterialVector;
+			typedef std::map<String,SharedPtr<OdeMaterial> > OdeMaterialVector;
 			OdeMaterialVector		mMaterials;
 
 			typedef Deque<SharedPtr<OdeAvatar> > OdeAvatarVector;

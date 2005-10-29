@@ -36,7 +36,8 @@ namespace physics
 	class YAKE_PHYSICSODE_API OdeMaterial : public IMaterial
 	{
 	public:
-		OdeMaterial();
+		OdeMaterial(const physics::IMaterial::Desc& desc, const String& name);
+		OdeMaterial(const String& name);
 		virtual void setBounciness(const real bounciness);
 		virtual void setSoftness(const real softness);
 		virtual void setRollingFriction( const real friction );
@@ -54,6 +55,8 @@ namespace physics
 		Vector3					mSlipNormal;
 		real					mSlipLinearCoeff;
 		real					mSlipAngularCoeff;
+
+		String					mName;
 	};
 
 } // physics

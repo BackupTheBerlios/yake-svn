@@ -64,7 +64,8 @@ namespace physics {
 		virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc(ACTOR_MOVABLE) );
 		virtual ActorNx* _createActor(const IActor::Desc & rkActorDesc);
 		virtual IAvatarPtr createAvatar( const IAvatar::Desc & rkAvatarDesc );
-		virtual IMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc );
+		virtual IMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc, const String& id = "" );
+		virtual IMaterialPtr getMaterial( const String& id ) const;
 		virtual void destroyJoint( IJointPtr pJoint );
 		virtual void destroyActor( IActorPtr pActor );
 		virtual void destroyAvatar( IAvatarPtr pAvatar );
@@ -126,7 +127,7 @@ namespace physics {
 		typedef std::list<JointNx*> JointNxVector;
 		JointNxVector			mJoints;
 
-		typedef std::list<MaterialNx*> MaterialNxVector;
+		typedef std::map<String,MaterialNx*> MaterialNxVector;
 		MaterialNxVector		mMaterials;
 
 		typedef std::list<AvatarNx*> AvatarNxVector;

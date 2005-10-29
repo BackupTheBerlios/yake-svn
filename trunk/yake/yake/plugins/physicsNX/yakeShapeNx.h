@@ -45,6 +45,9 @@ namespace physics {
 		virtual void setOrientation( const Quaternion & rkOrientation );
 		virtual Quaternion getOrientation() const;
 
+		virtual Vector3 getPropertyVector3(const String&) const;
+		virtual real getPropertyReal(const String&) const;
+
 		// helpers
 
 		void createAsSphere_( const real radius = real(1.) );
@@ -67,6 +70,9 @@ namespace physics {
 		TriangleMeshId	mTrimeshId;
 
 		MaterialNx*		mMaterial;
+
+		typedef std::map<String,boost::any> PropMap;
+		PropMap			mProps;
 	};
 
 }

@@ -48,8 +48,8 @@ namespace physics {
 			virtual dSpace* _getOdeSpace() const;
 			virtual dGeom* _getOdeGeomPtr();
 
-			const OdeMaterial&	getMaterial() const;
-			void setMaterial( OdeMaterial const& rMaterial );
+			OdeMaterial* getMaterial() const;
+			void setMaterial( OdeMaterial* pMaterial );
 
 			OdeActor* getOwner() const
 			{ return mOwner; }
@@ -59,6 +59,12 @@ namespace physics {
 			virtual void setOrientation( Quaternion const& rOrientation );
 			virtual Quaternion getOrientation() const;
 
+			virtual Vector3 getDerivedPosition() const;
+			virtual Quaternion getDerivedOrientation() const;
+
+			virtual Vector3 getPropertyVector3(const String&) const;
+			virtual real getPropertyReal(const String&) const;
+
 		protected:
 			virtual void _setData( void* pData );
 			virtual void* _getData() const;
@@ -67,8 +73,10 @@ namespace physics {
 			dGeomID				mOdeGeomID;
 			dSpace*				mOdeSpace;
 			dGeom*				mOdeGeom;
-			OdeMaterial			mMaterial;
+			OdeMaterial*		mMaterial;
 			OdeActor*			mOwner;
+			typedef std::map<String,boost::any> PropMap;
+			PropMap				mProps;
 		};
 		
 		class YAKE_PHYSICSODE_API OdeTransformGeom : public OdeGeom
@@ -78,9 +86,16 @@ namespace physics {
 			
 			virtual ShapeType getType() const;
 			
+			virtual void setPosition( Vector3 const& rPosition);
+			virtual Vector3 getPosition() const;
+			virtual void setOrientation( Quaternion const& rOrientation );
+			virtual Quaternion getOrientation() const;
+
 			void attachGeom( OdeGeom* pGeom );
 			OdeGeom* getAttachedGeom() const;
 		
+			virtual Vector3 getDerivedPosition() const;
+			virtual Quaternion getDerivedOrientation() const;
 		private:
 			OdeGeom*	mAttachedGeom;
 		};

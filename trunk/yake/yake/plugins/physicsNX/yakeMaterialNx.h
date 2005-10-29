@@ -33,7 +33,7 @@ namespace physics {
 	class MaterialNx : public IMaterial
 	{
 	public:
-		MaterialNx( const NxMaterialIndex index );
+		MaterialNx( const NxMaterialIndex index, const String& id );
 		MaterialNx();
 		~MaterialNx();
 
@@ -49,8 +49,11 @@ namespace physics {
 		void _createFromDesc( const IMaterial::Desc & rDesc, NxScene* pScene );
 		inline NxMaterialIndex _getNxMatIndex() const
 		{ return mNxMatIndex; }
+		inline String getId() const
+		{ return mId; }
 	private:
 		NxMaterialIndex	mNxMatIndex;
+		String			mId;
 		NxScene* mpScene;
 	};
 
