@@ -114,10 +114,11 @@ namespace vehicle {
 			{
 				const INode* pShapeN = itShapeN.getNext().get();
 				const String name = pShapeN->getName();
+				const String matId = pShapeN->getAttributeValueAs<String>("material");
 				if (name == "box")
-					parseShapeBox( *pShapeN );
+					parseShapeBox( *pShapeN, matId );
 				else if (name == "sphere")
-					parseShapeSphere( *pShapeN );
+					parseShapeSphere( *pShapeN, matId );
 				else
 				{
 					YAKE_ASSERT( 0 && "unhandled shape type" )( name );
@@ -125,7 +126,7 @@ namespace vehicle {
 			}
 		}
 	}
-	void DotVehicleParser::parseShapeBox( const data::dom::INode& n )
+	void DotVehicleParser::parseShapeBox( const data::dom::INode& n, const String& matId )
 	{
 		Vector3 dim;
 		dim.x = StringUtil::parseReal( n.getAttributeValueAs<String>("x") );
@@ -135,16 +136,16 @@ namespace vehicle {
 		if (n.getNodeByName("position"))
 			parsePosition( *n.getNodeByName("position"), pos );
 		mpCurrVehTpl->mChassis.mChassisShapes.push_back(
-			new physics::IShape::BoxDesc( dim, 0, pos ) );
+			new physics::IShape::BoxDesc( dim, matId, pos ) );
 	}
-	void DotVehicleParser::parseShapeSphere( const data::dom::INode& n )
+	void DotVehicleParser::parseShapeSphere( const data::dom::INode& n, const String& matId )
 	{
 		real radius = StringUtil::parseReal( n.getAttributeValueAs<String>("radius") );
 		Vector3 pos;
 		if (n.getNodeByName("position"))
 			parsePosition( *n.getNodeByName("position"), pos );
 		mpCurrVehTpl->mChassis.mChassisShapes.push_back(
-			new physics::IShape::SphereDesc( radius, 0, pos ) );
+			new physics::IShape::SphereDesc( radius, matId, pos ) );
 	}
 	void DotVehicleParser::parseEngine( const data::dom::INode& n )
 	{
@@ -300,6 +301,8 @@ namespace vehicle {
 		const bool relToChassis = StringUtil::parseBool( n.getAttributeValueAs<String>("massIsRelativeToChassis") );
 		const real suspSpring = StringUtil::parseReal( n.getAttributeValueAs<String>("suspensionSpring") );
 		const real suspDamping = StringUtil::parseReal( n.getAttributeValueAs<String>("suspensionDamping") );
+		const String matId = n.getAttributeValueAs<String>("material");
+		const uint32 axle = StringUtil::parseInt( n.getAttributeValueAs<String>("axle") );
 
 		mpCurrVehTpl->mWheels[ name ] = VehicleTemplate::WheelTpl(
 											position,
@@ -309,7 +312,9 @@ namespace vehicle {
 											relToChassis,
 											sg,
 											suspSpring,
-											suspDamping );
+											suspDamping,
+											matId,
+											axle);
 
 
 	}

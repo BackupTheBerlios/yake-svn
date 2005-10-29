@@ -110,11 +110,13 @@ namespace vehicle {
 	//-----------------------------------------------------
 	// Class: GenericVehicle
 	//-----------------------------------------------------
-	GenericVehicle::GenericVehicle() : mpChassis(0)
+	GenericVehicle::GenericVehicle() : mpChassis(0), mDebugModel(0)
 	{
 	}
 	GenericVehicle::~GenericVehicle()
 	{
+		YAKE_SAFE_DELETE( mDebugModel );
+
 		for (SteeringGroupList::const_iterator it = mSteeringGroups.begin(); it != mSteeringGroups.end(); ++it)
 		{
 			ConstDequeIterator< Deque<OdeWheel*> > itWheel( it->second );
@@ -149,6 +151,12 @@ namespace vehicle {
 		mSigUpdateEngineSimulation( timeElapsed );
 		mSigApplyThrusterToTargets();
 		_applyDriveTorqueToAxles( timeElapsed );
+
+		if (mDebugModel)
+		{
+			mDebugModel->updatePhysics(timeElapsed);
+			mDebugModel->updateGraphics(timeElapsed);
+		}
 	}
 	void GenericVehicle::_applyDriveTorqueToAxles( real timeElapsed )
 	{
@@ -382,6 +390,66 @@ namespace vehicle {
 		YAKE_ASSERT(0 && "NOT IMPLEMENTED")(sg);
 		return 0.;
 	}
+	void createDebugGeometry(	const physics::IActor& actor, 
+								graphics::IWorld& GWorld, 
+								model::Graphical& graphical,
+								model::complex::Model& theModel)
+	{
+		physics::IShapePtrList shapes = actor.getShapes();
+		ConstDequeIterator<physics::IShapePtrList> itShape( shapes );
+		while (itShape.hasMoreElements())
+		{
+			const physics::IShapePtr pShape = itShape.getNext();
+			YAKE_ASSERT( pShape );
+			graphics::ISceneNode* pSN = GWorld.createSceneNode();
+			graphics::IEntity* pE = 0;
+			switch (pShape->getType())
+			{
+			case physics::ST_BOX:
+				{
+					pE = GWorld.createEntity("box_1x1x1.mesh");
+					pSN->attachEntity( pE );
+					pSN->setScale( pShape->getPropertyVector3("dimensions") );
+				}
+				break;
+			case physics::ST_SPHERE:
+				{
+					pE = GWorld.createEntity("sphere_1d.mesh");
+					pSN->attachEntity( pE );
+					pSN->setScale( Vector3::kUnitScale * pShape->getPropertyReal("radius") );
+				}
+				break;
+			default:
+				YAKE_ASSERT("0 && NOT IMPLEMENTED FOR THESE SHAPES!");
+				break;
+			}
+			if (pE)
+			{
+				graphical.addSceneNode( pSN );
+
+				model::ModelMovableLink* pLink = new model::ModelMovableLink();
+				pLink->setSource( pShape );
+				pLink->subscribeToPositionChanged( pSN );
+				pLink->subscribeToOrientationChanged( pSN );
+				theModel.addGraphicsController( pLink );
+			}
+			else
+				delete pSN;
+		} // for each shape
+	} // createDebugGeometry()
+	void GenericVehicle::enableDebugGeometry(graphics::IWorld& GWorld)
+	{
+		if (mDebugModel)
+			delete mDebugModel;
+		mDebugModel = new model::complex::Model();
+		model::Graphical* pGraphical = new model::Graphical();
+		createDebugGeometry( *mpChassis, GWorld, *pGraphical, *mDebugModel );
+		mDebugModel->addGraphical( pGraphical );
+	}
+	void GenericVehicle::disableDebugGeometry()
+	{
+		YAKE_SAFE_DELETE( mDebugModel );
+	}
 
 #if defined(YAKE_VEHICLE_USE_ODE)
 	//-----------------------------------------------------
@@ -406,7 +474,7 @@ namespace vehicle {
 
 		YAKE_ASSERT( chassisObj );
 		mpWheel = PWorld.createActor( physics::ACTOR_DYNAMIC );
-		mpWheel->createShape( physics::IShape::SphereDesc( mRadius ) );
+		mpWheel->createShape( physics::IShape::SphereDesc( mRadius, tpl.mMaterial ) );
 		real mass = tpl.mMassRelativeToChassis ?
 							(tpl.mMass * chassisObj->getBody().getMass()) : tpl.mMass;
 		mpWheel->setPosition( tpl.mPosition );
@@ -493,7 +561,8 @@ namespace vehicle {
 		mCurrSteer = mCurrSteer + /*@todo make this configurable:*/ 1.3 * dt * (mTargetSteer - mCurrSteer);
 
 		YAKE_ASSERT( mpJoint );
-		mpJoint->setLimits( 0, mCurrSteer - 0.05, mCurrSteer + 0.05 );
+		const real maxSteer = 0.7;
+		mpJoint->setLimits( 0, maxSteer * (mCurrSteer - 0.05), maxSteer * (mCurrSteer + 0.05) );
 	}
 	real OdeWheel::getRadius() const
 	{
@@ -517,8 +586,8 @@ namespace vehicle {
 		if (mBrakeRatio > 0.01)
 			_applyBrakeTq( Vector3::kUnitX * mBrakeRatio * 1.5 );
 
-		const real targetVel = tq < 0. ? -80 : 80;
-		_applyMotor( targetVel, - tq / 50. );
+		const real targetVel = tq < 0. ? -40 : 40;
+		_applyMotor( targetVel, - tq * 0.0075 );
 	}
 	void OdeWheel::_applyTq( const Vector3& torque )
 	{
