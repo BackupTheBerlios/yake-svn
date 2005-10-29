@@ -41,7 +41,8 @@ namespace yake
 				mOdeGeomID( 0 ),
 				mOdeSpace( 0 ),
 				mOdeGeom( 0 ),
-				mOwner( pOwner )
+				mOwner( pOwner ),
+				mMaterial( 0 )
 		{
 			YAKE_ASSERT( mOwner );
 		}
@@ -91,15 +92,15 @@ namespace yake
 		}
 
 		//-----------------------------------------------------
-		const OdeMaterial& OdeGeom::getMaterial() const
+		OdeMaterial* OdeGeom::getMaterial() const
 		{
 			return mMaterial;
 		}
 
 		//-----------------------------------------------------
-		void OdeGeom::setMaterial( OdeMaterial const& rMaterial )
+		void OdeGeom::setMaterial( OdeMaterial* pMaterial )
 		{
-			mMaterial = rMaterial;
+			mMaterial = pMaterial;
 		}
 
 		//-----------------------------------------------------
@@ -138,6 +139,48 @@ namespace yake
 			dGeomGetQuaternion( mOdeGeomID, q );
 
 			return Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) );
+		}
+
+		//-----------------------------------------------------
+		Vector3 OdeGeom::getDerivedPosition() const
+		{
+			dBodyID bodyId = dGeomGetBody( mOdeGeomID );
+			const dReal* pos = dBodyGetPosition( bodyId );
+			return Vector3( real(pos[0]), real(pos[1]), real(pos[2]) );
+		}
+
+		//-----------------------------------------------------
+		Quaternion OdeGeom::getDerivedOrientation() const
+		{
+			dBodyID bodyId = dGeomGetBody( mOdeGeomID );
+			const dReal* q = dBodyGetQuaternion( bodyId );
+			return Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) );
+		}
+
+		//-----------------------------------------------------
+		bool operator == (const std::pair<const String,boost::any>& lhs, const std::pair<const String,boost::any>& rhs)
+		{
+			return (lhs.first == rhs.first);
+		}
+
+		//-----------------------------------------------------
+		Vector3 OdeGeom::getPropertyVector3(const String& id) const
+		{
+			PropMap::const_iterator itFind = mProps.find( id );
+			YAKE_ASSERT(itFind != mProps.end());
+			if (itFind == mProps.end())
+				return Vector3();
+			return boost::any_cast<Vector3>(itFind->second);
+		}
+
+		//-----------------------------------------------------
+		real OdeGeom::getPropertyReal(const String& id) const
+		{
+			PropMap::const_iterator itFind = mProps.find( id );
+			YAKE_ASSERT(itFind != mProps.end());
+			if (itFind == mProps.end())
+				return real(0.);
+			return boost::any_cast<real>(itFind->second);
 		}
 
 		//-----------------------------------------------------
@@ -279,6 +322,8 @@ namespace yake
 			mOdeGeomID = mOdeGeom->id();
 
 			_setData( this );
+
+			mProps["radius"] = radius;
 		}
 
 		//-----------------------------------------------------
@@ -307,6 +352,9 @@ namespace yake
 			mOdeGeomID = mOdeGeom->id();
 
 			_setData( this );
+
+			mProps["radius"] = radius;
+			mProps["length"] = length;
 		}
 
 		//-----------------------------------------------------
@@ -332,6 +380,8 @@ namespace yake
 			mOdeGeomID = mOdeGeom->id();
 
 			_setData( this );
+
+			mProps["dimensions"] = Vector3(sizex,sizey,sizez);
 		}
 
 		//-----------------------------------------------------
@@ -366,6 +416,9 @@ namespace yake
 			mOdeGeomID = mOdeGeom->id();
 
 			_setData( this );
+
+			mProps["normal"] = Vector3(a,b,c);
+			mProps["d"] = d;
 		}
 
 		//-----------------------------------------------------
@@ -400,7 +453,7 @@ namespace yake
 		//-----------------------------------------------------
 		ShapeType OdeTransformGeom::getType() const
 		{
-			return ST_OTHER;
+			return mAttachedGeom ? mAttachedGeom->getType() : ST_OTHER;
 		}
 
 		//-----------------------------------------------------
@@ -417,12 +470,79 @@ namespace yake
 
 			pSpace->remove( mAttachedGeom->_getOdeGeomID() );
 			dGeomTransformSetGeom( mOdeGeomID, mAttachedGeom->_getOdeGeomID() );
+
+			mProps = mAttachedGeom->mProps;
 		}
 
 		//-----------------------------------------------------
 		OdeGeom* OdeTransformGeom::getAttachedGeom() const
 		{
 			return mAttachedGeom;
+		}
+
+		//-----------------------------------------------------
+		Vector3 OdeTransformGeom::getDerivedPosition() const
+		{
+			return (mAttachedGeom ?
+				(getPosition() + getDerivedOrientation() * mAttachedGeom->getPosition()) :
+				getPosition() );
+		}
+
+		//-----------------------------------------------------
+		Quaternion OdeTransformGeom::getDerivedOrientation() const
+		{
+			return (mAttachedGeom ?
+				mAttachedGeom->getDerivedOrientation() :
+				getOrientation() );
+		}
+
+		//-----------------------------------------------------
+		void OdeTransformGeom::setPosition( Vector3 const& rPosition )
+		{
+			if (getType() == ST_PLANE)
+				return;
+			YAKE_ASSERT( mAttachedGeom );
+			const dReal* pos = dGeomGetPosition( mOdeGeomID );
+			mAttachedGeom->setPosition( rPosition - Vector3(real(pos[0]), real(pos[1]), real(pos[2])) );
+			//dGeomSetPosition( mOdeGeomID, rPosition.x, rPosition.y, rPosition.z );
+		}
+
+		//-----------------------------------------------------
+		Vector3 OdeTransformGeom::getPosition() const
+		{
+			if (getType() == ST_PLANE)
+				return Vector3::kZero;
+			YAKE_ASSERT( mAttachedGeom );
+
+			const dReal* pos = dGeomGetPosition( mOdeGeomID );
+			dQuaternion q;
+			dGeomGetQuaternion( mOdeGeomID, q );
+			return Vector3( real(pos[0]), real(pos[1]), real(pos[2]) ) + 
+				Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) ) * mAttachedGeom->getPosition();
+		}
+
+		//-----------------------------------------------------
+		void OdeTransformGeom::setOrientation( Quaternion const& rOrientation )
+		{
+			if (getType() == ST_PLANE)
+				return;
+			YAKE_ASSERT( mAttachedGeom );
+			const dQuaternion q = { rOrientation.w, rOrientation.x, rOrientation.y, rOrientation.z };
+			dGeomSetQuaternion( mOdeGeomID, q );
+		}
+
+		//-----------------------------------------------------
+		Quaternion OdeTransformGeom::getOrientation() const
+		{
+			if (getType() == ST_PLANE)
+				return Quaternion::kIdentity;
+			YAKE_ASSERT( mAttachedGeom );
+			dQuaternion q;
+			dGeomGetQuaternion( mOdeGeomID, q );
+
+			YAKE_ASSERT( mAttachedGeom );
+
+			return mAttachedGeom->getOrientation() * Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) );
 		}
 
 		// /*		//-----------------------------------------------------

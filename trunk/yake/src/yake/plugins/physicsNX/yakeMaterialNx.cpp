@@ -33,8 +33,9 @@ namespace yake {
 	using namespace math;
 namespace physics {
 
-	MaterialNx::MaterialNx( const NxMaterialIndex index ) :
-		mNxMatIndex( index )
+	MaterialNx::MaterialNx( const NxMaterialIndex index, const String& id ) :
+		mNxMatIndex( index ),
+		mId(id)
 	{
 	}
 	MaterialNx::MaterialNx() :

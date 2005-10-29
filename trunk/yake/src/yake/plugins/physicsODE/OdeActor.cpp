@@ -86,8 +86,8 @@ namespace physics {
 														const Vector3& rOffset,
 														const Quaternion& rRelOrientation )
 	{
-		if ( rOffset == Vector3::kZero && rRelOrientation == Quaternion::kIdentity )
-			return pGeom;
+		//if ( rOffset == Vector3::kZero && rRelOrientation == Quaternion::kIdentity )
+		//	return pGeom;
 			
 		OdeTransformGeom* pTrans = new OdeTransformGeom( mOdeWorld->_getOdeSpace(), this );
 		pTrans->attachGeom( pGeom );
@@ -103,11 +103,11 @@ namespace physics {
 	{
 		IShape::Desc* pShapeDesc = &const_cast<IShape::Desc&>( rShapeDesc );
 		
-		IMaterial* pMaterial = pShapeDesc->pMaterial;
-		OdeMaterial* pOdeMaterial = 0;
-		
-		if (pMaterial)
-			pOdeMaterial = dynamic_cast<OdeMaterial*>( pMaterial );
+		IMaterial* pMaterial = this->getCreator()->getMaterial( pShapeDesc->material );
+		if ( !pMaterial )
+			pMaterial = this->getCreator()->getMaterial("default");
+
+		YAKE_ASSERT( pMaterial );
 	
 		OdeGeom* result = 0;
 		
@@ -165,11 +165,19 @@ namespace physics {
 		YAKE_ASSERT( result != 0 ).error( "Unsupported shape type!" );
 	
 		/// setting material if any
-		if ( pOdeMaterial != 0 )
-			result->setMaterial( *pOdeMaterial );
+
+		YAKE_ASSERT( pMaterial );
+		result->setMaterial( static_cast<OdeMaterial*>(pMaterial) );
 
 		if (result)
+		{
 			mShapes.push_back( SharedPtr<OdeGeom>(result) );
+			if (result->getType() != ST_PLANE)
+			{
+				result->setPosition( pShapeDesc->position );
+				result->setOrientation( pShapeDesc->orientation );
+			}
+		}
 
 		return result;
 	}
@@ -239,8 +247,8 @@ namespace physics {
 		OdeActor* pActorA = pShapeA->getOwner();
 		OdeActor* pActorB = pShapeB->getOwner();
 
-		const OdeMaterial& rMatA = pShapeA->getMaterial();
-		const OdeMaterial& rMatB = pShapeB->getMaterial();
+		const OdeMaterial& rMatA = *pShapeA->getMaterial();
+		const OdeMaterial& rMatB = *pShapeB->getMaterial();
 		
 		/// FIXME Implement materials!
 		float softness =  rMatA.mSoftness + rMatB.mSoftness; //this->getSoftness() + pOther->getSoftness();

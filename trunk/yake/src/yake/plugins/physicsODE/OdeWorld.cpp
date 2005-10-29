@@ -65,6 +65,8 @@ namespace physics {
 			dWorldSetContactSurfaceLayer( mOdeWorld->id(), 0.025 );
 
 			mTime = real(0.);
+
+			mMaterials["default"] = SharedPtr<OdeMaterial>(new OdeMaterial("default"));
 		}
 
 		//-----------------------------------------------------
@@ -291,22 +293,30 @@ namespace physics {
 		}
 
 		//-----------------------------------------------------
-		bool operator==(const SharedPtr<OdeMaterial>& lhs, const OdeMaterial* rhs)
-		{
-			return (lhs.get() == rhs);
-		}
 		void OdeWorld::destroyMaterial( IMaterialPtr pMaterial )
 		{
 			YAKE_ASSERT( pMaterial );
-			mMaterials.erase( std::find(mMaterials.begin(), mMaterials.end(), dynamic_cast<OdeMaterial*>(pMaterial) ) );
+			mMaterials.erase( mMaterials.find( dynamic_cast<OdeMaterial*>(pMaterial)->mName ) );
 		}
 
 		//-----------------------------------------------------
-		IMaterialPtr OdeWorld::createMaterial( IMaterial::Desc const& rMatDesc )
+		IMaterialPtr OdeWorld::createMaterial( IMaterial::Desc const& rMatDesc, const String& id /*= ""*/ )
 		{
-			SharedPtr<OdeMaterial> pMat( new OdeMaterial );
-			mMaterials.push_back( pMat );
+			String matId = id.empty() ? uniqueName::create("ode.material_") : id;
+			SharedPtr<OdeMaterial> pMat( new OdeMaterial(rMatDesc,matId) );
+			mMaterials.insert( std::make_pair(matId,pMat) );
 			return pMat.get();
+		}
+
+		//-----------------------------------------------------
+		bool operator == (const std::pair<const String,SharedPtr<OdeMaterial> >& lhs, const std::pair<const String,SharedPtr<OdeMaterial> >& rhs)
+		{
+			return lhs.first == rhs.first;
+		}
+		IMaterialPtr OdeWorld::getMaterial( const String& id ) const
+		{
+			OdeMaterialVector::const_iterator itFind = mMaterials.find( id );
+			return (itFind == mMaterials.end()) ? 0 : itFind->second.get();
 		}
 
 		//-----------------------------------------------------

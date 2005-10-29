@@ -160,12 +160,7 @@ namespace physics {
 		if (!mpNxActor)
 			return 0;
 
-		MaterialNx* pMaterial = 0;
-		if (rkShapeDesc.pMaterial)
-		{
-			pMaterial = dynamic_cast<MaterialNx*>(rkShapeDesc.pMaterial);
-			YAKE_ASSERT( pMaterial ).debug("Specified material is invalid! => using default material!");
-		}
+		MaterialNx* pMaterial = static_cast<MaterialNx*>(this->mWorld.getMaterial(rkShapeDesc.material));
 		YAKE_ASSERT( pMaterial ).warning("No material specified => using default material!");
 
 		ShapeNx* pShape = new ShapeNx( mpNxActor, this, pMaterial );

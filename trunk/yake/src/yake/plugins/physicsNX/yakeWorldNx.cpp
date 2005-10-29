@@ -53,7 +53,9 @@ namespace physics {
 		std::for_each( mJoints.begin(), mJoints.end(), Deleter<JointNxVector>() );
 		mJoints.clear();
 
-		std::for_each( mMaterials.begin(), mMaterials.end(), Deleter<MaterialNxVector>() );
+		ConstVectorIterator< MaterialNxVector > itMat( mMaterials );
+		while (itMat.hasMoreElements())
+			delete itMat.getNext().second;
 		mMaterials.clear();
 
 		TrimeshNxManager::destroyAll();
@@ -282,7 +284,7 @@ namespace physics {
 		mMaterials.erase( std::find(mMaterials.begin(), mMaterials.end(), rMaterial.lock() ) );
 	}
 	*/
-	IMaterialPtr WorldNx::createMaterial( const IMaterial::Desc & rkMatDesc )
+	IMaterialPtr WorldNx::createMaterial( const IMaterial::Desc & rkMatDesc, const String& id /*= ""*/ )
 	{
 		MaterialNx* pMaterial = new MaterialNx();
 		YAKE_ASSERT( pMaterial );
@@ -290,8 +292,16 @@ namespace physics {
 			return 0;
 		pMaterial->_createFromDesc( rkMatDesc, mpScene );
 
-		mMaterials.push_back( pMaterial );
+		const String matId = (id.empty()) ? uniqueName::create("ode_mat_") : id;
+		mMaterials.insert( std::make_pair(matId,pMaterial) );
 		return pMaterial;
+	}
+	IMaterialPtr WorldNx::getMaterial( const String& id ) const
+	{
+		MaterialNxVector::const_iterator itFind = mMaterials.find( id );
+		if (itFind == mMaterials.end())
+			return 0;
+		return itFind->second;
 	}
 	IJointPtr WorldNx::createJoint( const IJoint::DescBase & rkJointDesc )
 	{
@@ -382,7 +392,10 @@ namespace physics {
 	void WorldNx::destroyMaterial( IMaterialPtr pMaterial )
 	{
 		YAKE_ASSERT( pMaterial );
-		mMaterials.remove( static_cast<MaterialNx*>(pMaterial) );
+		MaterialNxVector::iterator itFind = mMaterials.find( static_cast<MaterialNx*>(pMaterial)->getId() );
+		if (itFind == mMaterials.end())
+			return;
+		mMaterials.erase( itFind );
 		delete pMaterial;
 	}
 	TriangleMeshId WorldNx::createTriangleMesh( const TriangleMeshDesc & rkTrimeshDesc )

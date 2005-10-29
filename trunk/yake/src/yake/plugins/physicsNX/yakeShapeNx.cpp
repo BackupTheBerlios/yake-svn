@@ -110,6 +110,8 @@ namespace physics {
 		YAKE_ASSERT( desc.isValid() );
 
 		attachAndCreate_(desc);
+
+		mProps["radius"] = radius;
 	}
 	void ShapeNx::createAsBox_( const Vector3 & rkDimensions )
 	{
@@ -121,6 +123,8 @@ namespace physics {
 		YAKE_ASSERT( desc.isValid() );
 
 		attachAndCreate_(desc);
+
+		mProps["dimensions"] = rkDimensions;
 	}
 	void ShapeNx::createAsPlane_( const Vector3 & rkNormal, const real d )
 	{
@@ -133,6 +137,9 @@ namespace physics {
 		YAKE_ASSERT( desc.isValid() );
 
 		attachAndCreate_(desc);
+
+		mProps["normal"] = rkNormal;
+		mProps["d"] = d;
 	}
 	void ShapeNx::createAsCapsule_( const real height, const real radius )
 	{
@@ -145,6 +152,9 @@ namespace physics {
 		YAKE_ASSERT( desc.isValid() );
 
 		attachAndCreate_(desc);
+
+		mProps["height"] = height;
+		mProps["radius"] = radius;
 	}
 	void ShapeNx::createAsMesh_( const TriangleMeshId id )
 	{
@@ -182,6 +192,22 @@ namespace physics {
 	{
 		YAKE_ASSERT( mpNxShape ).error("Cannot access property as long as object isn't finalized!");
 		return fromNx( mpNxShape->getLocalOrientation() );
+	}
+	Vector3 ShapeNx::getPropertyVector3(const String& id) const
+	{
+		PropMap::const_iterator itFind = mProps.find( id );
+		YAKE_ASSERT(itFind != mProps.end());
+		if (itFind == mProps.end())
+			return Vector3();
+		return boost::any_cast<Vector3>(itFind->second);
+	}
+	real ShapeNx::getPropertyReal(const String& id) const
+	{
+		PropMap::const_iterator itFind = mProps.find( id );
+		YAKE_ASSERT(itFind != mProps.end());
+		if (itFind == mProps.end())
+			return real(0.);
+		return boost::any_cast<real>(itFind->second);
 	}
 
 }

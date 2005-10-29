@@ -31,14 +31,26 @@ namespace yake {
 namespace physics {
 
 	//---------------------------------------------------
-	OdeMaterial::OdeMaterial() : 
+	OdeMaterial::OdeMaterial(const String& name) : 
 		mSoftness(0),
 		mFriction(10),
 		mFriction2(5),
 		mLateralSlip(false),
 		mSlipNormal(Vector3::kZero),
 		mSlipLinearCoeff(0),
-		mSlipAngularCoeff(0)
+		mSlipAngularCoeff(0),
+		mName(name)
+	{
+	}
+	OdeMaterial::OdeMaterial(const physics::IMaterial::Desc& desc, const String& name) : 
+		mSoftness(desc.mSoftness),
+		mFriction(desc.mFriction),
+		mFriction2(desc.mFriction),
+		mLateralSlip(false),
+		mSlipNormal(Vector3::kZero),
+		mSlipLinearCoeff(0),
+		mSlipAngularCoeff(0),
+		mName(name)
 	{
 	}
 	void OdeMaterial::setBounciness(const real bounciness)
