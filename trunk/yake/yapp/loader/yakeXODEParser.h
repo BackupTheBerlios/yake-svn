@@ -144,7 +144,7 @@ namespace xode {
 		
 		virtual void readAnchor( const NodeSharedPtr pAnchorNode, Vector3& rAnchor, Transform& rJointTransform );
 		virtual void readAxis( const NodeSharedPtr pAxisNode, Vector3& rAxis, Transform& rJointTransform );
-		virtual physics::IMaterialPtr XODEParser::readMaterialExt( const NodeSharedPtr pNode );
+		virtual String XODEParser::readMaterialExt( const NodeSharedPtr pNode );
 		
 // 		readGroup
 // 		readJointgroup
