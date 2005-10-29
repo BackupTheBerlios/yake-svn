@@ -166,6 +166,12 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
+	void Model::addGraphicsController( IObjectController* pController, const String & rName /*= ""*/ )
+	{
+		addGraphicsController( SharedPtr<IObjectController>( pController ), rName );
+	}
+
+	//-----------------------------------------------------
 	void Model::addLink( const SharedPtr<ModelLink>& pModelLink, const String& rName )
 	{
 		YAKE_ASSERT( pModelLink.get() );
