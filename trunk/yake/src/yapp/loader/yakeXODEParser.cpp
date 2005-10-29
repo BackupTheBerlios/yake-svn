@@ -431,7 +431,7 @@ namespace xode
 	* @param pNode - node to search
 	* @return ptr to newly created material or physics::WeakIMaterialPtr()
 	*/
-	physics::IMaterialPtr XODEParser::readMaterialExt( const NodeSharedPtr pNode )
+	String XODEParser::readMaterialExt( const NodeSharedPtr pNode )
 	{
 		YAKE_LOG( "Entered readMaterialExt..." );
 	
@@ -460,10 +460,12 @@ namespace xode
 				// parsing
 				physics::IMaterial::Desc desc;
 	
+				String strName = pParamsNode->getAttributeValueAs<String>( "name" );
 				String strFriction = pParamsNode->getAttributeValueAs<String>( "friction" );
 				String strRestitution = pParamsNode->getAttributeValueAs<String>( "bouncecoeff" );
 				String strSoftness = pParamsNode->getAttributeValueAs<String>( "soften" );
 	
+				YAKE_LOG( "Material name = '" + (strName.empty() ? "<AUTO>" : strName) + "'" );
 				YAKE_LOG( "Read friction = " + strFriction );
 				YAKE_LOG( "Read restitution = " + strRestitution );
 				YAKE_LOG( "Read softness = " + strSoftness );
@@ -472,9 +474,11 @@ namespace xode
 				desc.mRestitution = StringUtil::parseReal( strRestitution );
 				desc.mSoftness = StringUtil::parseReal( strSoftness );
 	
-				physics::IMaterialPtr result = mPWorld->createMaterial( desc );
-	
-				return result;
+
+				if (!mPWorld->getMaterial(strName))
+					mPWorld->createMaterial( desc, strName );
+
+				return strName;
 			}
 			else
 			{
@@ -485,8 +489,7 @@ namespace xode
 		{
 			YAKE_LOG( "readMaterialExt() : didn't find material... returning default one :) " );
 		}
-	
-		return physics::IMaterialPtr();
+		return String("default");
 	}
 	
 	//------------------------------------------------------
