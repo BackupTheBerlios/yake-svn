@@ -57,6 +57,7 @@ private:
 	{
 		graphics::ISceneNode* pSN = getGraphicalWorld()->createSceneNode();
 		graphics::IEntity* pE = getGraphicalWorld()->createEntity("wheel1.mesh");
+		pE->setCastsShadow( true );
 		pSN->attachEntity( pE );
 		mComplex->addLink( mVehicle->getWheelInterface(wheelId), pSN );
 	}
@@ -71,6 +72,8 @@ protected:
 		pLight->setDirection( Vector3(0,-1,1) );
 		getGraphicalWorld()->createSceneNode("lightnode0")->attachLight( pLight );
 
+		getGraphicalWorld()->setShadowsEnabled( true );
+
 		// position camera and look at the ninja
 		getDefaultCamera()->setNearClipDistance( 1 );
 		getDefaultCamera()->setFixedYawAxis(Vector3::kUnitY);
@@ -79,13 +82,15 @@ protected:
 		// create ground
 		mGround = new model::complex::Model();
 		{
+			const real groundHeight = -2;
 			// visual
 			graphics::ISceneNode* pGroundSN = getGraphicalWorld()->createSceneNode();
 			graphics::IEntity* pGroundE = getGraphicalWorld()->createEntity("plane_1x1.mesh");
 			pGroundE->setMaterial("box");
+			pGroundE->setCastsShadow( false );
 			pGroundSN->attachEntity( pGroundE );
 			pGroundSN->setScale( Vector3(200,1,200) );
-			pGroundSN->setPosition( Vector3(0,-10,0) );
+			pGroundSN->setPosition( Vector3(0,groundHeight,0) );
 
 			model::Graphical* pG = new model::Graphical();
 			pG->addSceneNode( pGroundSN );
@@ -93,12 +98,17 @@ protected:
 
 			// physical
 			physics::IActorPtr pGroundPlane = getPhysicalWorld()->createActor( physics::ACTOR_STATIC );
-			pGroundPlane->createShape( physics::IShape::PlaneDesc( Vector3(0,1,0), -2 ) );
+			pGroundPlane->createShape( physics::IShape::PlaneDesc( Vector3(0,1,0), groundHeight ) );
 
 			model::Physical* pP = new model::Physical();
 			pP->addActor( pGroundPlane, "groundPlane" );
 			mGround->addPhysical( pP );
 		}
+
+		// materials @todo read from .physics:
+		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1, 0.01, 0.01 ), "chassis" );
+		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1, 0.01, 0.2 ), "chassisTop" );
+		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1, 0.01, 0.25 ), "wheel" );
 
 		// vehicle
 		SharedPtr<vehicle::IVehicleSystem> pVS = //create<vehicle::IVehicleSystem>("generic");
@@ -113,6 +123,8 @@ protected:
 		// instantiate
 		mVehicle = pVS->create("delorean", *getPhysicalWorld() );
 
+		//mVehicle->enableDebugGeometry( *getGraphicalWorld() );
+
 		// create container (e.g. for graphical objects and links)
 		mComplex = new model::complex::Model();
 		model::Graphical* pG = new model::Graphical();
@@ -121,7 +133,9 @@ protected:
 		// create visuals
 		// - ship body
 		graphics::ISceneNode* pSN = getGraphicalWorld()->createSceneNode("root");
-		pSN->attachEntity( getGraphicalWorld()->createEntity("delorean.mesh") );
+		graphics::IEntity* pE = getGraphicalWorld()->createEntity("delorean.mesh");
+		pE->setCastsShadow( true );
+		pSN->attachEntity( pE );
 		//pSN->setScale( Vector3::kUnitScale * razorMeshScale );
 		pG->addSceneNode(pSN);
 
