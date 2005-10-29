@@ -98,6 +98,7 @@ namespace complex {
 		void addGraphical( Graphical* pGraphical, const String & rName = "" );
 
 		void addGraphicsController( const SharedPtr<IObjectController> & pController, const String & rName = "" );
+		void addGraphicsController( IObjectController* pController, const String & rName = "" );
 		void addLink( const SharedPtr<ModelLink> & pModelLink, const String & rName = "" );
 
 		void updatePhysics( real timeElapsed );
