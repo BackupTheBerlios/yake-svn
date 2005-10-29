@@ -330,7 +330,17 @@ namespace yake {
 
         friend bool operator<=(const AssocVector& lhs, const AssocVector& rhs)
         { return !(rhs < lhs); }
-    };
+
+		const_reference at(size_type _Pos) const
+		{	// subscript nonmutable sequence with checking
+			return Base::at(_Pos);
+		}
+		reference at(size_type _Pos)
+		{
+			return Base::at(_Pos);
+		}
+
+	};
 
     // specialized algorithms:
     template <class K, class V, class C, class A>
