@@ -214,6 +214,8 @@ namespace vehicle {
 
 		virtual void brake(const real ratio);
 
+		virtual real getSkid() const;
+
 		void setSteering( const real s );
 
 		void _applyDriveTq( const real tq );
@@ -223,14 +225,17 @@ namespace vehicle {
 		void _applyMotor( real velocity, real fmax );
 
 		void _onPreStepInternal( const real dt );
+		void _onPostStep( const real dt );
 	private:
+		physics::IActorPtr		mpChassis;
 		physics::IJointPtr		mpJoint;
 		physics::IActorPtr		mpWheel;
 		real					mRadius;
 		real					mTargetSteer;
 		real					mCurrSteer;
-		SignalConnection		mPostStepSigConn;
+		SignalConnection		mPreStepSigConn, mPostStepSigConn;
 		real					mBrakeRatio;
+		real					mSkid;
 	};
 #endif // YAKE_VEHICLE_USE_ODE
 	class GenericMountPoint : public MountPoint

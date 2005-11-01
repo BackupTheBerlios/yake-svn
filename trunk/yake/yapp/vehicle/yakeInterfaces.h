@@ -172,6 +172,7 @@ namespace vehicle {
 
 		virtual real getRadius() const = 0;
 		virtual void brake(const real ratio) = 0;
+		virtual real getSkid() const = 0;
 	};
 
 } // namespace vehicle
