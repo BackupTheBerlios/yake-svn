@@ -20,7 +20,7 @@ thruster2
 			velocity_max    70
 			colour_range_start  1 1 0.5
 			colour_range_end    1 0.8 0.3
-	}
+		}
 
 	affector ColourFader
 	{
