@@ -54,13 +54,13 @@
 		<axle name="rear" />
 		<!-- wheels - one in front for steering, two at the rear end -->
 		<steeringGroup index="0" />
-		<wheel name="frontWheel" axle="front" steeringGroup="0" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="5" suspensionDamping="4.5">
+		<wheel name="frontWheel" axle="front" steeringGroup="0" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="100" suspensionDamping="20">
 			<position x="0" y="-3" z="5.5" />
 		</wheel>
-		<wheel name="leftRearWheel" axle="rear" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="5" suspensionDamping="4.5">
+		<wheel name="leftRearWheel" axle="rear" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="150" suspensionDamping="20">
 			<position x="-3" y="-3" z="-3" />
 		</wheel>
-		<wheel name="rightRearWheel" axle="rear" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="5" suspensionDamping="4.5">
+		<wheel name="rightRearWheel" axle="rear" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="150" suspensionDamping="20">
 			<position x="3" y="-3" z="-3" />
 		</wheel>
 	</vehicleTemplate>
