@@ -89,7 +89,7 @@
 				AdditionalDependencies="physics.lib NxPhysics.lib NxExtensionsDLL.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;$(NXSDK_DIR)/Physics/lib/win32/release;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/release;&quot;$(NXSDK_DIR)/Physics/lib/win32/release&quot;;&quot;$(NXSDK_DIR)/NxExtensions/lib/win32/Release&quot;;../../../../dependencies/lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
