@@ -55,11 +55,23 @@ public:
 private:
 	void _createWheelVisual(const String& wheelId, graphics::ISceneNode& parentSN)
 	{
+		// scene node + wheel mesh
 		graphics::ISceneNode* pSN = getGraphicalWorld()->createSceneNode();
 		graphics::IEntity* pE = getGraphicalWorld()->createEntity("wheel1.mesh");
 		pE->setCastsShadow( true );
 		pSN->attachEntity( pE );
 		mComplex->addLink( mVehicle->getWheelInterface(wheelId), pSN );
+
+		// scene node + particle system for smoke...
+		pSN = getGraphicalWorld()->createSceneNode();
+		graphics::IParticleSystem* pPS = getGraphicalWorld()->createParticleSystem("SkidSmoke");
+		mWheelPs[wheelId] = pPS;
+		mEmitterEmissionRate[wheelId] = pPS->getEmissionRate(0);
+		pSN->attachParticleSystem( pPS );
+		model::ModelMovableLink* pLink = new model::ModelMovableLink();
+		pLink->setSource( mVehicle->getWheelInterface(wheelId) );
+		pLink->subscribeToPositionChanged( pSN ); //position only!
+		mComplex->addGraphicsController( pLink );
 	}
 protected:
 	virtual void onCreateScene()
@@ -106,9 +118,9 @@ protected:
 		}
 
 		// materials @todo read from .physics:
-		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1, 0.01, 0.01 ), "chassis" );
-		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1, 0.01, 0.2 ), "chassisTop" );
-		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1, 0.01, 0.25 ), "wheel" );
+		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1f, 0.01f, 0.01f ), "chassis" );
+		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1f, 0.01f, 0.2f ), "chassisTop" );
+		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1f, 0.01f, 0.25f ), "wheel" );
 
 		// vehicle
 		SharedPtr<vehicle::IVehicleSystem> pVS = //create<vehicle::IVehicleSystem>("generic");
@@ -215,9 +227,9 @@ protected:
 			else if (activeId == ACTIONID_BRAKE)
 				braking0 = 1.;
 			else if (activeId == input::ACTIONID_LEFT)
-				steering0 -= 0.7;
+				steering0 -= real(0.7);
 			else if (activeId == input::ACTIONID_RIGHT)
-				steering0 += 0.7;
+				steering0 += real(0.7);
 		}
 		mVehicle->setSteering( 0, steering0 );
 		mVehicle->getWheelInterface("leftFrontWheel")->brake(braking0);
@@ -225,6 +237,13 @@ protected:
 
 		mVehicle->updateSimulation( timeElapsed );
 		mComplex->updatePhysics( timeElapsed );
+
+		ConstDequeIterator< WheelPsMap > itWheel( mWheelPs );
+		while (itWheel.hasMoreElements())
+		{
+			const String wheelId = itWheel.getNext().first;
+			mWheelPs[ wheelId ]->setEmissionRate( 0, mEmitterEmissionRate[wheelId] * mVehicle->getWheelInterface( wheelId )->getSkid() );
+		}
 
 		getDefaultCamera()->lookAt(mVehicle->getChassisPosition());
 		mComplex->updateGraphics( timeElapsed );
@@ -251,8 +270,8 @@ private:
 	EmitterRealMap			mEmitterMinVel;
 	EmitterRealMap			mEmitterMaxVel;
 	EmitterRealMap			mEmitterEmissionRate;
-	typedef AssocVector<String,graphics::IParticleSystem*> ThrusterPsMap;
-	ThrusterPsMap			mThrusterPs;
+	typedef AssocVector<String,graphics::IParticleSystem*> WheelPsMap;
+	WheelPsMap				mWheelPs;
 	input::ActionMap		mActionMap;
 
 	typedef std::set<input::ActionId> ActionIdList;

@@ -164,6 +164,8 @@ namespace vehicle {
 		while (itAxle.hasMoreElements())
 		{
 			CarEngineWheelsPair cewp = itAxle.getNext().second;
+			if (!cewp.first) // no engine attached to axle.
+				continue;
 
 			const real torque = timeElapsed * cewp.first->getDriveTorque();
 			ConstDequeIterator< Deque<OdeWheel*> > itWheel( cewp.second );
@@ -361,6 +363,7 @@ namespace vehicle {
 				mSteeringGroups[ wheelTpl.mSteeringGroup ].push_back( pW );
 			}
 
+			YAKE_ASSERT( mAxles[ wheelTpl.mAxle ].first ).warning("Need an engine for the axle?");
 			mAxles[ wheelTpl.mAxle ].second.push_back( pW );
 
 			mWheels[ wtp.first ] = pW;
@@ -463,7 +466,9 @@ namespace vehicle {
 		mRadius(tpl.mRadius),
 		mTargetSteer(0),
 		mCurrSteer(0),
-		mBrakeRatio(real(0.))
+		mBrakeRatio(real(0.)),
+		mSkid(0),
+		mpChassis( chassisObj )
 	{
 		{
 			physics::OdeWorld* pW = dynamic_cast<physics::OdeWorld*>( &PWorld );
@@ -527,11 +532,13 @@ namespace vehicle {
 		YAKE_ASSERT( mpJoint );
 
 
-		mPostStepSigConn = PWorld.subscribeToPreStepInternal( boost::bind(&OdeWheel::_onPreStepInternal,this,_1) );
+		mPreStepSigConn = PWorld.subscribeToPreStepInternal( boost::bind(&OdeWheel::_onPreStepInternal,this,_1) );
+		mPostStepSigConn = PWorld.subscribeToPostStep( boost::bind(&OdeWheel::_onPostStep,this,_1) );
 	}
 	OdeWheel::~OdeWheel()
 	{
 		mPostStepSigConn.disconnect();
+		mPreStepSigConn.disconnect();
 		YAKE_ASSERT( mpWheel );
 		YAKE_ASSERT( mpJoint );
 		mpWheel->getCreator()->destroyJoint( mpJoint );
@@ -563,6 +570,16 @@ namespace vehicle {
 		YAKE_ASSERT( mpJoint );
 		const real maxSteer = 0.7;
 		mpJoint->setLimits( 0, maxSteer * (mCurrSteer - 0.05), maxSteer * (mCurrSteer + 0.05) );
+	}
+	void OdeWheel::_onPostStep( const real dt )
+	{
+		YAKE_ASSERT( mpChassis );
+		YAKE_ASSERT( mpWheel );
+		const Vector3 chassisDir = mpChassis->getOrientation() * Vector3::kUnitZ;
+		const Vector3 wheelMovementDir = mpWheel->getBody().getLinearVelocity().normalisedCopy();
+		mSkid = 1. - chassisDir.dotProduct( wheelMovementDir );
+		if (mSkid < 0)
+			mSkid = 0.;
 	}
 	real OdeWheel::getRadius() const
 	{
@@ -620,6 +637,10 @@ namespace vehicle {
 			mpJoint->setMotor( 1, velocity, fmax );
 			mpJoint->setMotorEnabled( 1, true );
 		}
+	}
+	real OdeWheel::getSkid() const
+	{
+		return mSkid;
 	}
 #endif // YAKE_VEHICLE_USE_ODE
 	//-----------------------------------------------------
