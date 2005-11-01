@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<GUILayout>
+<Window Type="TaharezLook/FrameWindow" Name="/Console">
+	<Property Name="Position" Value="x:0.1 y:0.1" />
+	<Property Name="Size" Value="w:0.85 h:0.85" />
+	<Property Name="Alpha" Value="0.8" />
+	<Window Type="DefaultWindow" Name="/Console/Wnd"> 
+		<Property Name="Alpha" Value="0.8" />
+		<Property Name="Position" Value="x:0.0 y:0.00" />
+		<Property Name="Size" Value="w:1 h:1" />
+		<Window Type="TaharezLook/Listbox" Name="/Console/Wnd/List">
+			<Property Name="InheritsAlpha" Value="false" />
+			<Property Name="Alpha" Value="1.0" />
+			<Property Name="Position" Value="x:0.0 y:0.1" />
+			<Property Name="Size" Value="w:1 h:0.77" />
+		</Window>
+	 	<Window Type="TaharezLook/Editbox" Name="/Console/Wnd/Edit" >
+			<Property Name="InheritsAlpha" Value="false" />
+			<Property Name="Alpha" Value="1.0" />
+			<Property Name="Position" Value="x:0.01 y:0.87" />
+			<Property Name="Size" Value="w:0.98 h:0.05" />
+  		</Window>
+	</Window>
+</Window>
+</GUILayout>
+

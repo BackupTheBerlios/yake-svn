@@ -1,0 +1,1 @@
+- compile serialization library project as multi-threaded-debug-dll

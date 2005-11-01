@@ -1,0 +1,16 @@
+<scene id="0" formatversion="0.01.0" scenemanager="any" min_ogre_version="0.12.0" author="cTh&apos;s Ogre MAX plugin">
+    <environment>
+        <colour_ambient r="0" g="0" b="0" />
+        <colour_background r="0" g="0" b="0" />
+    </environment>
+    <externals>
+        <item type="material">
+            <file name="arena0_export.material" />
+        </item>
+    </externals>
+    <nodes name="Scene Root" id="-1">
+        <node name="arena0ground" id="22">
+            <entity name="arena0ground" id="22" meshFile="arena0ground.mesh" static="true" />
+        </node>
+    </nodes>
+</scene>

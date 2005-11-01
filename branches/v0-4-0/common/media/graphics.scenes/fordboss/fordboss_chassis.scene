@@ -1,0 +1,8 @@
+<scene id="0" formatversion="0.01.0" scenemanager="any" min_ogre_version="0.14.1" author="psy">
+    <nodes name="Scene Root" id="-1">
+		<node name="chassis" id="1">
+			<entity name="ent_chassis" id="1" meshfile="fordboss.mesh" castsShadow="yes" />
+			<position x="0" y="0" z="0" />
+		</node>
+    </nodes>
+</scene>
