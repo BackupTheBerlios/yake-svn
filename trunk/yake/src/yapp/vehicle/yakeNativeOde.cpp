@@ -37,7 +37,11 @@
 #	include <yake/plugins/physicsODE/OdeBody.h>
 #	include <yake/plugins/physicsODE/OdeWorld.h>
 #	pragma comment(lib, "physicsODE.lib")
-#	pragma comment(lib, "oded.lib")
+#	ifdef YAKE_DEBUG
+#		pragma comment(lib, "oded.lib")
+#	else
+#		pragma comment(lib, "ode.lib")
+#	endif
 #endif // #if defined(YAKE_VEHICLE_USE_ODE)
 
 namespace yake {
