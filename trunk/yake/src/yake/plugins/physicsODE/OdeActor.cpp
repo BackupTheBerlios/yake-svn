@@ -313,21 +313,20 @@ namespace physics {
 // 					Vector3 angVel = mBody->getAngularVelocity();
 
 					// contact normal
-					Vector3 normal = Vector3( contact[i].geom.normal[0],
-											contact[i].geom.normal[1],
-											contact[i].geom.normal[2] );
-					normal.normalise();
+					const Vector3 normal = Vector3( contact[i].geom.normal[0],
+													contact[i].geom.normal[1],
+													contact[i].geom.normal[2] ).normalisedCopy();
 
-					Vector3 mSlipNormal = Vector3( 0, 1, 0 ); // FIXME Bad hack
+					const Vector3 mSlipNormal = Vector3( 1, 0, 0 ); // FIXME Bad hack
 					//mSlipNormal = mSlipNormalSource->getLateralSlipNormal();
 					
-					real mSlipLinearCoeff; /// FIXME bad hack
-					real mSlipAngularCoeff; /// FIXME bad hack 
+					real mSlipLinearCoeff = 0.7; /// FIXME bad hack
+					real mSlipAngularCoeff = 0.7; /// FIXME bad hack 
 					
 					/// FIXME Error tolerance is hardcoded!
 					if ( (mSlipNormal - normal).length() < 0.01 )
 					{
-						std::cout << " warning: OdeActor::_collide: normal = slipNormal" << std::endl;
+						YAKE_LOG_WARNING( "warning: OdeActor::_collide: normal == slipNormal" );
 					}
 					else
 					{
