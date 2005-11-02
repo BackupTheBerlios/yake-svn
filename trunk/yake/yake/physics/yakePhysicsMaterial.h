@@ -51,7 +51,9 @@ namespace physics {
 				mFriction( friction ),
 				mRestitution( restitution ),
 				mStaticFriction( staticFriction ),
-				mRollingFriction( rollingFriction )
+				mRollingFriction( rollingFriction ),
+				mSoftness( softness ),
+				mBounciness( bounciness )
 			{}
 			
 			virtual ~Desc() {}

@@ -50,7 +50,7 @@ namespace event {
 		virtual MsgResultCode onMessage( const MessageId id, ParamHolder* pParams );
 	};
 
-	inline MsgResultCode MessageListener::onMessage( const MessageId id, ParamHolder* pParams )
+	inline MsgResultCode MessageListener::onMessage( const MessageId /*id*/, ParamHolder* /*pParams*/ )
 	{
 		return kMsgUnhandled;
 	}

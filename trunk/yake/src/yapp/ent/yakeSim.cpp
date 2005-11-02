@@ -72,7 +72,8 @@ namespace ent {
 	{
 		mNonOwnedBinders.clear();
 		mBinders.clear();
-		mObjectCreators.clear();
+		mObjectClasses.clear();
+		mObjectClassIds.clear();
 		mObjects.clear();
 		private_::g_sim = 0;
 	}
@@ -120,10 +121,19 @@ namespace ent {
 	{
 		mObjects.clear();
 	}
-	void sim::regEntityCreator( const ObjectClassId& id, const ObjectCreatorFn& creatorFn )
+	void sim::regObjectClass( object_class* theClass )
 	{
-		mObjectCreators[ id ] = creatorFn;
+		YAKE_ASSERT( theClass ).debug("Trying to register 0 class!");
+		if (!theClass)
+			return;
+		const ObjectClassId id = theClass->getName();
+		mObjectClassIds.push_back( id );
+		mObjectClasses[ id ] = theClass;
 		mNumericClassIds[ id ] = mLastNumericClassId++;
+	}
+	const ObjectClassIdList& sim::getRegisteredObjectClasses() const
+	{
+		return mObjectClassIds;
 	}
 	void sim::addEntityVMBinder( scripting::IBinder* pBinder, const bool bTransferOwnership )
 	{
@@ -162,14 +172,15 @@ namespace ent {
 	}
 	Entity* sim::createEntity( const ObjectClassId& id, const StringPairVector& components, const StringVector& scriptFiles )
 	{
-		ObjectCreateMap::const_iterator itFind = mObjectCreators.find( id );
-		if (itFind == mObjectCreators.end())
+		ObjectClassMap::const_iterator itFind = mObjectClasses.find( id );
+		if (itFind == mObjectClasses.end())
 		{
 			std::stringstream msg;
-			msg << "Could not find creator for object type: " << id.c_str();
+			msg << "Could not find creator for object class: " << id.c_str();
 			YAKE_EXCEPT(msg.str());
 		}
-		Object* pObject = (itFind->second)();
+		YAKE_ASSERT( itFind->second );
+		Object* pObject = itFind->second->createInstance();
 		Entity* pEntity = Entity::cast( pObject );
 		YAKE_ASSERT( pEntity ).debug("The created object is an Object but not an Entity!");
 		if (!pEntity)

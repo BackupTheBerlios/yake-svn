@@ -78,7 +78,7 @@ namespace physics {
 	{
 		YAKE_DECLARE_CONCRETE( ConstantDirectionalAccelerationBodyAffector, "yake.constant_directional_acceleration" )
 	public:
-		virtual void applyTo( IBody & rBody, const real timeElapsed )
+		virtual void applyTo( IBody & rBody, const real /*timeElapsed*/ )
 		{
 			rBody.addForce( mAcceleration * rBody.getMass() );
 		}

@@ -34,6 +34,17 @@
 namespace yake {
 namespace ent {
 
+	Object* object_class::createInstance() const
+	{
+		YAKE_ASSERT( !mCreatorFn.empty() )( mName ).debug("Class has no registered creation function!");
+		if (mCreatorFn.empty())
+			return 0;
+		return mCreatorFn();
+	}
+	const ObjectCreatorFn& object_class::getCreatorFn() const
+	{
+		return mCreatorFn;
+	}
 	void object_class::addParent(object_class* parent)
 	{
 		YAKE_ASSERT( parent );

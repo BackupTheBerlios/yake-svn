@@ -30,6 +30,7 @@
 namespace yake {
 namespace ent {
 
+	typedef Deque<ObjectClassId> ObjectClassIdList;
 	class YAKE_ENT_API sim
 	{
 	public:
@@ -43,7 +44,7 @@ namespace ent {
 		simtime getTime() const;
 		real getTimeAsSeconds() const;
 		void tick(const real timeElapsed);
-		void regEntityCreator( const ObjectClassId& id, const ObjectCreatorFn& creatorFn );
+		void regObjectClass( object_class* theClass );
 		void addEntityVMBinder( scripting::IBinder* pBinder, const bool bTransferOwnership = true );
 		Entity* createEntity(	const ObjectClassId& id, 
 								const StringPairVector& components,
@@ -64,14 +65,17 @@ namespace ent {
 
 		Event& getEvent_onEntitySpawned();
 		Event& getEvent_onEntityVMCreated();
+
+		const ObjectClassIdList& getRegisteredObjectClasses() const;
 	private:
 		scripting::IVM* createEntityVM();
 	private:
-		typedef std::map<ObjectClassId,ObjectCreatorFn> ObjectCreateMap;
+		typedef std::map<ObjectClassId,object_class*> ObjectClassMap;
 		typedef std::list<SharedPtr<Object> > ObjectList;
 		typedef std::map<ObjectClassId,uint16> ClassIdMap;
 
-		ObjectCreateMap		mObjectCreators;
+		ObjectClassMap		mObjectClasses;
+		ObjectClassIdList	mObjectClassIds;
 		ObjectList			mObjects;
 		ClassIdMap			mNumericClassIds;
 		uint16				mLastNumericClassId;

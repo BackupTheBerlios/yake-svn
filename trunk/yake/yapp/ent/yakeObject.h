@@ -126,8 +126,10 @@ namespace ent {
 	*/
 	struct YAKE_ENT_API object_class
 	{
+		object_class(const object_class&);
 	public:
 		object_class(const String& name) : mName(name) {}
+		object_class(const String& name, const ObjectCreatorFn& creatorFn) : mName(name), mCreatorFn(creatorFn) {}
 		bool operator == (const object_class& rhs)
 		{ return mName == rhs.getName(); }
 		String getName() const
@@ -140,11 +142,14 @@ namespace ent {
 		typedef std::vector<object_class*> ClassPtrList;
 		const ClassPtrList& getParents() const;
 		const ClassPtrList& getChildren() const;
+		const ObjectCreatorFn& getCreatorFn() const;
+		Object* createInstance() const;
 	private:
 		String				mName;
 		PropertyDefMap		mPropDefs;
 		ClassPtrList		mParents;
 		ClassPtrList		mChilds;
+		ObjectCreatorFn		mCreatorFn;
 	};
 
 	#define DECLARE_OBJECT_BASIC(CLASSNAME) \
@@ -249,16 +254,25 @@ namespace ent {
 		static const CLASSNAME* cast( const Object* other ) \
 		{  return dynamic_cast<const CLASSNAME*>(other); }
 
-	#define DEFINE_OBJECT_BASIC(CLASSNAME) \
+	#define DEFINE_OBJECT_CLASS_WITH_CREATOR(CLASSNAME) \
+		::yake::ent::object_class* CLASSNAME::getClass() \
+		{ \
+			static ::yake::ent::object_class g_class(#CLASSNAME,&CLASSNAME::create); \
+			return &g_class; \
+		}
+	#define DEFINE_OBJECT_CLASS_WITHOUT_CREATOR(CLASSNAME) \
 		::yake::ent::object_class* CLASSNAME::getClass() \
 		{ \
 			static ::yake::ent::object_class g_class(#CLASSNAME); \
 			return &g_class; \
-		} \
+		}
+
+	#define DEFINE_OBJECT_BASIC(CLASSNAME) \
 		::yake::ent::object_class* CLASSNAME::isA() const \
 		{ return CLASSNAME::getClass(); }
 
 	#define DEFINE_OBJECT_ROOT(CLASSNAME) \
+		DEFINE_OBJECT_CLASS_WITHOUT_CREATOR(CLASSNAME) \
 		DEFINE_OBJECT_BASIC(CLASSNAME) \
 		void CLASSNAME::initEntity(CLASSNAME* pObj) \
 		{ \
@@ -268,20 +282,22 @@ namespace ent {
 		}
 
 	#define DEFINE_OBJECT(CLASSNAME) \
+		DEFINE_OBJECT_CLASS_WITH_CREATOR(CLASSNAME) \
 		DEFINE_OBJECT_BASIC(CLASSNAME) \
 		void CLASSNAME::reg( ::yake::ent::sim& theSim ) \
 		{ \
 			CLASSNAME::regPropDefs##CLASSNAME(getClass()->getPropertyDef()); \
-			theSim.regEntityCreator(#CLASSNAME, &CLASSNAME::create); \
+			theSim.regObjectClass(getClass()); \
 		}
 
 	#define DEFINE_OBJECT_1(CLASSNAME,PARENT0) \
+		DEFINE_OBJECT_CLASS_WITH_CREATOR(CLASSNAME) \
 		DEFINE_OBJECT_BASIC(CLASSNAME) \
 		void CLASSNAME::reg( ::yake::ent::sim& theSim ) \
 		{ \
 			getClass()->addParent(PARENT0::getClass()); \
 			CLASSNAME::regPropDefs##CLASSNAME(getClass()->getPropertyDef()); \
-			theSim.regEntityCreator(#CLASSNAME, &CLASSNAME::create); \
+			theSim.regObjectClass(getClass()); \
 		}
 
 	template<class T>
