@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesVehicle"
-	ProjectGUID="{B9A9E534-6EB6-4667-B91B-74B930636F5E}"
+	Name="samplePhysicsDemo"
+	ProjectGUID="{3DA99679-404B-44C7-9267-C97D066F3D96}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -20,13 +20,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yapp/samples/base/vehicle/yakePCH.h"
+				PrecompiledHeaderThrough="yake/samples/physics/demo/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -34,10 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib vehicle.lib"
+				AdditionalDependencies="base.lib data.lib input.lib graphics.lib audio.lib physics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug"
+				AdditionalLibraryDirectories="../../../../common/lib/$(ConfigurationName);../../../../dependencies/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
@@ -75,7 +75,8 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="yake/samples/physics/demo/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -83,10 +84,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib vehicle.lib"
+				AdditionalDependencies="base.lib data.lib input.lib graphics.lib audio.lib physics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -121,26 +122,29 @@
 			Name="inc"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\yapp\samples\common\yakeHelper.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yapp\samples\base\vehicle\yakePCH.h">
+				RelativePath="..\..\..\..\yake\samples\physics\demo\pch.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yapp\samples\base\vehicle\yakeDemo.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yapp\samples\base\vehicle\yakePCH.cpp">
+				RelativePath="..\..\..\..\src\yake\samples\physics\demo\pch.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\samples\physics\demo\yakeDemo.cpp">
 			</File>
 		</Filter>
 	</Files>

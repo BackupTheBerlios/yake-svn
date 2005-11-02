@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesRegistryPluginManual"
-	ProjectGUID="{6876FBCB-B5AD-494E-ADE4-F81441BC4EF9}"
+	Name="sampleRegistryPlugin"
+	ProjectGUID="{6876FBCB-B5AD-493E-ADE4-F81441BC4EF2}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -70,7 +70,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -120,7 +120,7 @@
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yake\samples\base\registryPluginManual\yakeUnitTest.cpp">
+				RelativePath="..\..\..\..\src\yake\samples\base\registryPlugin\yakeUnitTest.cpp">
 			</File>
 		</Filter>
 	</Files>

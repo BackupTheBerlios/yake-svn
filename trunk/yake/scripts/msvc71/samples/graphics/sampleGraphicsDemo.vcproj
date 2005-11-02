@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesAbstractFactory"
-	ProjectGUID="{0CA5015D-D3E7-4B2B-B903-75788097E065}"
+	Name="sampleGraphicsDemo"
+	ProjectGUID="{723A2F36-A3DC-40E5-A7B0-0629219B04DE}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -25,8 +25,8 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough=""
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="yake/samples/graphics/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -34,9 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="base.lib data.lib input.lib graphics.lib audio.lib physics.lib scripting.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/$(ConfigurationName);../../../../dependencies/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
@@ -74,7 +75,8 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="yake/samples/graphics/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -82,9 +84,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="base.lib data.lib input.lib graphics.lib audio.lib physics.lib scripting.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
+				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -117,12 +121,48 @@
 		<Filter
 			Name="inc"
 			Filter="">
+			<File
+				RelativePath="..\..\..\..\yake\samples\graphics\pch.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\samples\common\yakeComplexModel.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\samples\data\demo\yakeDotScene.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\samples\common\yakeExampleApplication.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\samples\common\yakeModel.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\samples\common\yakeVehicle.h">
+			</File>
+			<File
+				RelativePath="..\..\..\..\yake\samples\common\yakeXODE.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yake\samples\base\abstractfactory\yakeUnitTest.cpp">
+				RelativePath="..\..\..\..\src\yake\samples\graphics\demo\pch.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yake\samples\graphics\demo\yakeGraphicsDemo.cpp">
 			</File>
 		</Filter>
 	</Files>

@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesScriptingLua"
-	ProjectGUID="{26B28ECB-A1FD-4CC0-A5EE-6E4587BBB058}"
+	Name="sampleContainer"
+	ProjectGUID="{7E0CC2D4-0DDE-419A-81DE-EE0739673432}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -19,14 +19,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/;../../../../dependencies\lua\include;../../../../dependencies\luabind"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
 				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough=""
+				PrecompiledHeaderFile=""
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -34,10 +34,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="input.lib graphics.lib audio.lib scripting.lib luad.lib luabindd.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies\lua\lib;../../../../dependencies\luabind\lib;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../dependencies/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
@@ -65,8 +64,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../../../../common/bin/release"
-			IntermediateDirectory="../../../../common/obj/release/$(ProjectName)"
+			OutputDirectory="Release"
+			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			CharacterSet="2">
 			<Tool
@@ -74,8 +73,7 @@
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough=""
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -83,10 +81,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="input.lib graphics.lib audio.lib scripting.lib"
-				OutputFile="$(OutDir)/$(ProjectName).exe"
+				OutputFile="$(OutDir)/yakeSamplesContainer.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../dependencies/lib"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -119,15 +116,12 @@
 		<Filter
 			Name="inc"
 			Filter="">
-			<File
-				RelativePath="..\..\..\..\yake\samples\common\yakeExampleApplication.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yake\samples\scripting\lua\yakeDemo.cpp">
+				RelativePath="..\..\..\..\src\yake\samples\base\container\yakeUnitTest.cpp">
 			</File>
 		</Filter>
 	</Files>

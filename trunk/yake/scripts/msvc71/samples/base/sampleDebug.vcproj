@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesRxBasics"
-	ProjectGUID="{5ECA70DD-F347-4FA8-973A-5A1E604210B0}"
+	Name="sampleDebug"
+	ProjectGUID="{BCA46ED8-E97C-49d0-A521-FA8E7CEB885A}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -25,8 +25,8 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yake/samples/rx/basics/yakePCH.h"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough=""
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -34,10 +34,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="rx.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug"
+				AdditionalLibraryDirectories="../../../../dependencies/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
@@ -74,8 +73,7 @@
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yake/samples/rx/basics/yakePCH.h"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -83,10 +81,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="rx.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -120,30 +117,12 @@
 		<Filter
 			Name="inc"
 			Filter="">
-			<File
-				RelativePath="..\..\..\..\yake\samples\rx\basics\yakePCH.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yake\samples\rx\basics\yakeDemo.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yake\samples\rx\basics\yakePCH.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
+				RelativePath="..\..\..\..\src\yake\samples\base\debug\yakeUnitTest.cpp">
 			</File>
 		</Filter>
 	</Files>

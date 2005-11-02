@@ -3,19 +3,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yapp", "yapp.vcproj", "{F11
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesEvents", "samples\base\samplesEvents.vcproj", "{CD6F13A0-F399-411A-9766-0F8E02761D90}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleEvents", "samples\base\sampleEvents.vcproj", "{CD6F13A0-F399-411A-9766-0F8E02761D90}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesDotScene", "samples\graphics\samplesDotScene.vcproj", "{8E612AD0-68D1-445E-A31E-7CB1CCA18CA0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleDotScene", "samples\graphics\sampleDotScene.vcproj", "{8E612AD0-68D1-445E-A31E-7CB1CCA18CA0}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesStateMachine", "samples\state\samplesStateMachine.vcproj", "{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleStateMachine", "samples\state\sampleStateMachine.vcproj", "{84F0FA89-EB3D-47D6-9C6E-628434AE2C70}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesVehicle", "samples\base\samplesVehicle.vcproj", "{B9A9E534-6EB6-4667-B91B-74B930636F5E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleVehicle", "samples\base\sampleVehicle.vcproj", "{B9A9E534-6EB6-4667-B91B-74B930636F5E}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -23,11 +23,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ceguiOgreRendererAdapter", 
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesDotLink", "samples\model\samplesDotLink.vcproj", "{1C76B4C7-8ECE-4C0D-81B4-B65707F96510}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleDotLink", "samples\model\sampleDotLink.vcproj", "{1C76B4C7-8ECE-4C0D-81B4-B65707F96510}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesXODE", "samples\model\samplesXODE.vcproj", "{0FCB117D-9915-40AE-A86D-99C3D6EB7B2C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleXODE", "samples\model\sampleXODE.vcproj", "{0FCB117D-9915-40AE-A86D-99C3D6EB7B2C}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -88,7 +88,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleCmdrMayhem", "samples
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesSync1", "samples\model\samplesSync1.vcproj", "{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleSync1", "samples\model\sampleSync1.vcproj", "{A2E804D9-C95C-47EB-87AB-FAA8A6CAC21B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -96,7 +96,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vehicle", "vehicle.vcproj",
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplesCar", "samples\misc\sampleCar.vcproj", "{EE77E955-42BD-47A4-BDC6-D92759F45D01}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleCar", "samples\misc\sampleCar.vcproj", "{EE77E955-42BD-47A4-BDC6-D92759F45D01}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

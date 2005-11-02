@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesDotLink"
-	ProjectGUID="{1C76B4C7-8ECE-4C0D-81B4-B65707F96510}"
+	Name="sampleXODE"
+	ProjectGUID="{0FCB117D-9915-40AE-A86D-99C3D6EB7B2C}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -34,10 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib"
+				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/debug"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
@@ -74,7 +74,6 @@
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
-				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
 				PrecompiledHeaderThrough="yapp/samples/model/yakePCH.h"
 				WarningLevel="3"
@@ -84,10 +83,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/release"
 				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -122,9 +120,6 @@
 			Name="inc"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\yapp\samples\common\yakeHelper.h">
-			</File>
-			<File
 				RelativePath="..\..\..\..\yapp\samples\model\yakePCH.h">
 			</File>
 		</Filter>
@@ -132,10 +127,7 @@
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yapp\samples\model\dotLink\yakeDotLinkDemo.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yapp\samples\model\dotLink\yakePCH.cpp">
+				RelativePath="..\..\..\..\src\yapp\samples\model\Xode\yakePCH.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -148,6 +140,9 @@
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yapp\samples\model\Xode\yakeXODELoaderDemo.cpp">
 			</File>
 		</Filter>
 	</Files>

@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesDebug"
-	ProjectGUID="{BCA46ED8-E97C-49d0-A521-FA8E7CEB885A}"
+	Name="sampleDotScene"
+	ProjectGUID="{8E612AD0-68D1-445E-A31E-7CB1CCA18CA0}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -25,8 +25,8 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough=""
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="yapp/samples/graphics/dotScene/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -34,9 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
@@ -73,7 +74,9 @@
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="2"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="yapp/samples/graphics/dotScene/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -81,6 +84,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="base.lib graphics.lib physics.lib audio.lib data.lib input.lib yapp.lib scripting.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
@@ -117,12 +121,31 @@
 		<Filter
 			Name="inc"
 			Filter="">
+			<File
+				RelativePath="..\..\..\..\yapp\samples\graphics\dotscene\yakePCH.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yake\samples\base\debug\yakeUnitTest.cpp">
+				RelativePath="..\..\..\..\src\yapp\samples\graphics\dotScene\yakeDotSceneDemo.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\src\yapp\samples\graphics\dotScene\yakePCH.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="yapp/samples/graphics/dotScene/yakePCH.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>

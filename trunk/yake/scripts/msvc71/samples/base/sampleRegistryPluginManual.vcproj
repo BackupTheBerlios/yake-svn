@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samples_application"
-	ProjectGUID="{44C8B2A3-281A-4910-A737-7EA1F6F43E35}"
+	Name="sampleRegistryPluginManual"
+	ProjectGUID="{6876FBCB-B5AD-494E-ADE4-F81441BC4EF9}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -19,12 +19,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
+				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -69,11 +68,10 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -84,7 +82,7 @@
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -117,36 +115,12 @@
 		<Filter
 			Name="inc"
 			Filter="">
-			<File
-				RelativePath="..\..\..\..\yake\samples\common\application.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\samples\common\configs.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\samples\common\ext_lib_man.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\samples\common\init_gui.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\samples\common\initialization.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\samples\common\libraries.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\samples\common\library_manager.h">
-			</File>
-			<File
-				RelativePath="..\..\..\..\yake\samples\common\load_libraries.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yake\samples\application\unit_test.cpp">
+				RelativePath="..\..\..\..\src\yake\samples\base\registryPluginManual\yakeUnitTest.cpp">
 			</File>
 		</Filter>
 	</Files>

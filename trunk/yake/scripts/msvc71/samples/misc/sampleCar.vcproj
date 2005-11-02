@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesCar"
+	Name="sampleCar"
 	ProjectGUID="{EE77E955-42BD-47A4-BDC6-D92759F45D01}"
 	Keyword="Win32Proj">
 	<Platforms>

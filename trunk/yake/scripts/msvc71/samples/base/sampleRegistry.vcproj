@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesRegistry"
+	Name="sampleRegistry"
 	ProjectGUID="{0CA5014D-D3E7-4B2B-B993-75788097E065}"
 	Keyword="Win32Proj">
 	<Platforms>

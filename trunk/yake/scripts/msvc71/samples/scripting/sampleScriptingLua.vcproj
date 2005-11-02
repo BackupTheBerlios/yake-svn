@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="samplesPhysicsDemo"
-	ProjectGUID="{3DA99679-404B-44C7-9267-C97D066F3D96}"
+	Name="sampleScriptingLua"
+	ProjectGUID="{26B28ECB-A1FD-4CC0-A5EE-6E4587BBB058}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -19,14 +19,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/;../../../../dependencies\lua\include;../../../../dependencies\luabind"
 				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yake/samples/physics/demo/pch.h"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough=""
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
@@ -34,10 +34,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib data.lib input.lib graphics.lib audio.lib physics.lib"
+				AdditionalDependencies="input.lib graphics.lib audio.lib scripting.lib luad.lib luabindd.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/$(ConfigurationName);../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies\lua\lib;../../../../dependencies\luabind\lib;../../../../dependencies/lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
@@ -74,9 +74,8 @@
 				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
-				PrecompiledHeaderThrough="yake/samples/physics/demo/pch.h"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough=""
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
@@ -84,11 +83,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib data.lib input.lib graphics.lib audio.lib physics.lib"
+				AdditionalDependencies="input.lib graphics.lib audio.lib scripting.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
-				GenerateDebugInformation="FALSE"
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -122,29 +120,14 @@
 			Name="inc"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\yake\samples\physics\demo\pch.h">
+				RelativePath="..\..\..\..\yake\samples\common\yakeExampleApplication.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\..\..\..\src\yake\samples\physics\demo\pch.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yake\samples\physics\demo\yakeDemo.cpp">
+				RelativePath="..\..\..\..\src\yake\samples\scripting\lua\yakeDemo.cpp">
 			</File>
 		</Filter>
 	</Files>
