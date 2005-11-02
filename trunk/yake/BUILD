@@ -1,11 +1,13 @@
 
+This file is part of Yake. Copyright (c) by the Yake Team and the contributors.
+
 This document contains build instructions for different platforms:
 
 CONTENTS
 --------
 
 0. Prologue
-1. BUILD INSTRUCTIONS FOR YAKE ON PC/WIN
+1. BUILD INSTRUCTIONS FOR YAKE ON PC/WINDOWS
 2. BUILD INSTRUCTIONS FOR YAKE ON PC/LINUX
 
 0. Prologue
@@ -17,26 +19,22 @@ additional information.
 You can find it here: http://www.yake.org/wiki .
 
 
-1. BUILD INSTRUCTIONS FOR YAKE ON PC/WIN
-----------------------------------------
+1. BUILD INSTRUCTIONS FOR YAKE ON PC/WINDOWS
+--------------------------------------------
 
-Last modified: 16/9/2004 by Stephan Kaiser (psy)
+Last modified: 02/11/2005 by Stephan Kaiser (psy)
 
 Please refer to the manual for detailed instructions.
-In essence, opening the workspaces for Yake and Yapp
-respectively and doing a complete 'Build' is what you
-want to do.
+In essence, opening the workspace for Yake and starting
+a complete 'Build' is what you want to do.
 
-You can find the workspaces here:
+You can find the workspace here:
 
-(yake_root_dir)/scripts/yake/yake.sln
+(yake_root_dir)/scripts/msvc71/yake.sln
 
-and
-
-(yake_root_dir)/scripts/yapp/yapp.sln
-
-If you don't have the dependencies package containing prebuilt libraries,
-then you have to compile these yourself.
+If you don't have or don't want to use the dependencies package
+containing prebuilt libraries then you have to compile these yourself
+as needed.
 
 See the file <yakeroot>/dependencies/DEPENDENCIES for more information.
 
