@@ -58,7 +58,7 @@ public:
 	class M1Listener : public MessageListener
 	{
 	public:
-		virtual MsgResultCode onMessage( const MessageId id, yake::base::ParamHolder* pParams )
+		virtual MsgResultCode onMessage( const MessageId id, yake::ParamHolder* pParams )
 		{
 			if (kMsgHandled == MessageListener::onMessage( id, pParams ))
 				return kMsgHandled;
@@ -68,32 +68,26 @@ public:
 				if (pParams)
 				{
 					// case 1 : dump all parameters
-					yake::base::ParamHolder::StringVector keys;
+					yake::ParamHolder::StringVector keys;
 					keys = pParams->getKeys();
-					ConstVectorIterator<yake::base::ParamHolder::StringVector> it( keys.begin(), keys.end() );
+					ConstVectorIterator<yake::ParamHolder::StringVector> it( keys.begin(), keys.end() );
 					while (it.hasMoreElements())
 					{
 						String key = it.getNext();
 						std::cout << key;
-						yake::base::ParamHolder::Param value = pParams->get(key);
-						std::cout << " [type=" << value.which() << "] ";
-						std::cout << " = ";
-						if (value.which() == yake::base::ParamHolder::kString)
-							std::cout << varGet<String>(value) << std::endl;
-						else
-							std::cout << std::endl;
+						try {	
+							const String s = boost::any_cast<String>(pParams->get(key));
+							std::cout << " = (string) " << s << std::endl;
+						} 
+						catch (bad_any_cast&)
+						{
+							std::cout << " = (unhandled type)" << std::endl;
+						}
 					}
 
 					// case 2 : we expect a certain parameter of type String
-					yake::base::ParamHolder::Param value = pParams->get("aString");
-					//YAKE_ASSERT( value.which() != yapp::event::ParamHolder::kNone ); // superfluous, check for error condition...
-					YAKE_ASSERT( value.which() == yake::base::ParamHolder::kString ); // to be sure...
-					std::cout << "Retrieving expected param 'aString' = " << varGet<String>(value) << std::endl;
 
 					// case 3 : we expect a certain parameter of type Pointer
-					//value = pParams->get("aPointer");
-					//YAKE_ASSERT( value.which() == yapp::event::ParamHolder::kPointer ); // to be sure...
-					//std::cout << "Retrieving expected param 'aPointer' = " << varGet<yapp::event::ParamHolder::Pointer>(value).get() << std::endl;
 				}
 				return kMsgHandled;
 			}
@@ -107,7 +101,7 @@ public:
 			mRetCode(code),
 			mName(name)
 		{}
-		virtual MsgResultCode onMessage( const MessageId id, yake::base::ParamHolder* pParams )
+		virtual MsgResultCode onMessage( const MessageId id, yake::ParamHolder* pParams )
 		{
 			std::cout << "> M2 (" << mName << ") received " << id << std::endl;
 			return mRetCode;
@@ -119,11 +113,10 @@ public:
 	void run()
 	{
 		// construct message instance
-		yake::base::ParamHolder par1;
-		par1.set( "aString", "aloha" );
-		par1.set( "aString", "aloha2" );
-		par1.set( "anotherString", "aloha" );
-//		par1.set( "aPointer", yapp::event::ParamHolder::Pointer(&par1) );
+		yake::ParamHolder par1;
+		par1.set( "aString", String("aloha") );
+		par1.set( "aString", String("aloha2") );
+		par1.set( "anotherString", String("aloha") );
 
 		M1Listener L1;
 
