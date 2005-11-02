@@ -240,25 +240,25 @@ void MiniApp::init()
 
 	// physics 1
 
-	SharedPtr<base::Library> pLib = loadLib("physicsNX" );
+	SharedPtr<base::Library> pLib = loadLib("physicsOde" );
 	YAKE_ASSERT( pLib ).debug("Cannot load physics plugin 1.");
 
-	mPhysics1 = create< physics::IPhysicsSystem >("nx");
-	YAKE_ASSERT( mPhysics1 ).debug("Cannot create physics system 1.");
+	mPhysics2 = create< physics::IPhysicsSystem >("ode");
+	YAKE_ASSERT( mPhysics2 ).debug("Cannot create physics system 1.");
 
-	mPWorld1 = mPhysics1->createWorld();
-	YAKE_ASSERT( mPWorld1 ).debug("Cannot create world 1.");
+	mPWorld2 = mPhysics2->createWorld();
+	YAKE_ASSERT( mPWorld2 ).debug("Cannot create world 1.");
 
 	// physics 2
 #ifdef USE_SECOND_PHYSICS_PLUGIN
-	pLib = loadLib("physicsOde" );
+	pLib = loadLib("physicsNX" );
 	YAKE_ASSERT( pLib ).debug("Cannot load physics plugin 2.");
 
-	mPhysics2 = create< physics::IPhysicsSystem >("ode");
-	YAKE_ASSERT( mPhysics2 ).debug("Cannot create physics system 2.");
+	mPhysics1 = create< physics::IPhysicsSystem >("nx");
+	YAKE_ASSERT( mPhysics1 ).debug("Cannot create physics system 2.");
 
-	mPWorld2 = mPhysics2->createWorld();
-	YAKE_ASSERT( mPWorld2 ).debug("Cannot create world 2.");
+	mPWorld1 = mPhysics1->createWorld();
+	YAKE_ASSERT( mPWorld1 ).debug("Cannot create world 2.");
 #endif
 	// graphics
 
