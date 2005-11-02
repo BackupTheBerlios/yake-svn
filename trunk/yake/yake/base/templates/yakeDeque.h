@@ -244,6 +244,11 @@ public:
 		typename T::const_iterator mEnd;
 		ConstDequeIterator() {}
 	public:
+		ConstDequeIterator( const ConstDequeIterator& other )
+		{
+			mCurrent = other.mCurrent;
+			mEnd = other.mEnd;
+		}
 		ConstDequeIterator(typename T::const_iterator start, typename T::const_iterator end) :
 			mCurrent( start ), mEnd( end )
 		{
