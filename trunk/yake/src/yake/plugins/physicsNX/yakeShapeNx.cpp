@@ -61,6 +61,16 @@ namespace physics {
 	{ 
 		return mType; 
 	}
+	void ShapeNx::setMaterial( IMaterial* pMaterial )
+	{
+		YAKE_ASSERT( pMaterial );
+		if (!pMaterial)
+			return;
+		MaterialNx* pMatNx = static_cast<MaterialNx*>(pMaterial);
+		YAKE_ASSERT( pMatNx );
+		YAKE_ASSERT( mpNxShape );
+		mpNxShape->setMaterial( pMatNx->_getNxMatIndex() );
+	}
 	void ShapeNx::attachAndCreate_(const NxShapeDesc & rkDesc)
 	{
 		YAKE_ASSERT( rkDesc.isValid() );
@@ -156,10 +166,19 @@ namespace physics {
 		mProps["height"] = height;
 		mProps["radius"] = radius;
 	}
-	void ShapeNx::createAsMesh_( const TriangleMeshId id )
+	void ShapeNx::createAsMesh_( const TriMeshDesc& desc )
 	{
 		YAKE_ASSERT( !mpNxShape ).error("Shape was already finalized!"); // only as long this object isn't finalized!
 
+		TriangleMeshId id = desc.trimeshId_;
+		if (id == kTriangleMeshIdNone)
+		{
+			// create new
+			TrimeshNxManager::createMesh( desc.trimesh_, id );
+			YAKE_ASSERT( id != kTriangleMeshIdNone );
+		}
+
+		// now find existing
 		NxTriangleMeshShapeDesc meshShapeDesc;
 		meshShapeDesc.meshData = TrimeshNxManager::getById( id );
 		YAKE_ASSERT( meshShapeDesc.isValid() );
@@ -168,8 +187,8 @@ namespace physics {
 		if (!meshShapeDesc.meshData)
 			return;
 
+		// finish
 		mTrimeshId = id;
-
 		mType = ST_TRIANGLE_MESH;
 		attachAndCreate_(meshShapeDesc);
 	}
