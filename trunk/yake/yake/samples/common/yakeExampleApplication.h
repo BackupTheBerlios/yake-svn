@@ -155,7 +155,7 @@ namespace exapp {
 			// physics
 			if (mLoadPhysicsSystem)
 			{
-				SharedPtr<base::Library> pLib = loadLib("physicsNX" );
+				SharedPtr<base::Library> pLib = loadLib("physicsODE" );
 				YAKE_ASSERT( pLib ).debug("Cannot load graphics plugin.");
 
 				mPhysicsSystem = create_default< physics::IPhysicsSystem >();

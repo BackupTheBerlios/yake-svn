@@ -36,9 +36,8 @@ namespace physics
 	class YAKE_PHYSICSODE_API OdeMaterial : public IMaterial
 	{
 	public:
-		OdeMaterial(const physics::IMaterial::Desc& desc, const String& name);
-		OdeMaterial(const String& name);
-		virtual void setBounciness(const real bounciness);
+		OdeMaterial( const physics::IMaterial::Desc& desc, const String& name );
+		OdeMaterial( const String& name );
 		virtual void setSoftness(const real softness);
 		virtual void setRollingFriction( const real friction );
 		virtual void setRestitution( const real restitution );

@@ -49,7 +49,7 @@ namespace physics {
 			virtual dGeom* _getOdeGeomPtr();
 
 			OdeMaterial* getMaterial() const;
-			void setMaterial( OdeMaterial* pMaterial );
+			virtual void setMaterial( IMaterial* pMaterial );
 
 			OdeActor* getOwner() const
 			{ return mOwner; }

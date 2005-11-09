@@ -66,7 +66,7 @@ namespace yake {
 			}
 			void removeListener(ListenerType* pListener)
 			{
-				ListenerPtrList::iterator itFind = std::find( mListeners.begin(), mListeners.end(), pListener );
+				typename ListenerPtrList::iterator itFind = std::find( mListeners.begin(), mListeners.end(), pListener );
 				if (itFind != mListeners.end())
 					mListeners.erase( itFind );
 			}
@@ -123,12 +123,12 @@ namespace physics {
 		TriangleMeshDesc()
 		{
 		}
-		TriangleMeshDesc(	const VertexVector& rVertices,
-							const IndexVector& rIndices ) :
+		TriangleMeshDesc( const VertexVector& rVertices, const IndexVector& rIndices ) :
 				vertices( rVertices ),
 				indices( rIndices )
 		{
 		}
+		
 		TriangleMeshDesc(	const VertexVector& rVertices,
 							const IndexVector& rIndices,
 							const NormalVector& rNormals ) :
@@ -137,6 +137,7 @@ namespace physics {
 				normals( rNormals )
 		{
 		}
+		
 		VertexVector	vertices;
 		IndexVector		indices;
 		NormalVector	normals;
@@ -145,3 +146,4 @@ namespace physics {
 }
 
 #endif
+

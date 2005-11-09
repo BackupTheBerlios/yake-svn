@@ -61,6 +61,7 @@ namespace physics {
 			IActor::Desc desc(type);
 			return createActor( desc ); 
 		}
+
 		virtual IAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc ) = 0;
 		virtual IMaterialPtr createMaterial( const IMaterial::Desc& rkMatDesc, const String& id = "" ) = 0;
 		virtual IMaterialPtr getMaterial( const String& id ) const = 0;

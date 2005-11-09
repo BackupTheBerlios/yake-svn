@@ -161,4 +161,12 @@ ACCESS: \
 private: \
 	Sig ## NAME ## Type	mSig ## NAME;
 
+#define YAKE_MEMBERSIGNAL_PROT( ACCESS, SIGNATURE, NAME ) \
+ACCESS: \
+	typedef SignalX<SIGNATURE> Sig ## NAME ## Type; \
+	::yake::SignalConnection subscribeTo ## NAME ( const Sig ## NAME ## Type::slot_type& slot ) \
+	{ return mSig ## NAME.connect(slot); } \
+protected: \
+	Sig ## NAME ## Type	mSig ## NAME;
+
 #endif

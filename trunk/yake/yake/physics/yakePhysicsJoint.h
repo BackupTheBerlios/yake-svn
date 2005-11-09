@@ -92,7 +92,9 @@ namespace physics {
 				breakingForce( real(0) ),
 				breakingTorque( real(0) )
 			{
-				YAKE_ASSERT( pFirst || pSecond ).warning("need at least one actor!");
+			    // we want to allow to create joint descriptions when actors are not yet created,
+			    // like on parsing stage...
+			    //	YAKE_ASSERT( pFirst || pSecond ).warning("need at least one actor!");
 			}
 
 			virtual ~DescBase() {}

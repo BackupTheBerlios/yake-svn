@@ -146,21 +146,22 @@ namespace physics {
 
 		struct TriMeshDesc : Desc
 		{
-			TriMeshDesc(	const TriangleMeshId meshId_,
-							// base class:
-							const String& material_ = "",
-							const Vector3& rPosition = Vector3::kZero, 
-							const Quaternion& rOrientation = Quaternion::kIdentity
-						 ) :
+		    TriMeshDesc(	const TriangleMeshDesc trimesh,
+			    // base class:
+			    const String& material_ = "",
+			    const Vector3& rPosition = Vector3::kZero, 
+			    const Quaternion& rOrientation = Quaternion::kIdentity
+			    ) :
 				Desc( ST_TRIANGLE_MESH, rPosition, rOrientation, material_ ),
-				meshId( meshId_ )
-			{}
-			TriangleMeshId	meshId;
+				trimesh_( trimesh )
+		    {}
+		    TriangleMeshDesc trimesh_;	
 		};
 	public:
 		virtual ~IShape() {}
 
 		virtual ShapeType getType() const = 0;
+		virtual void setMaterial( IMaterial* pMaterial ) = 0;
 
 		//virtual Vector3 getDerivedPosition() const = 0;
 		//virtual Quaternion getDerivedOrientation() const = 0;
@@ -170,6 +171,7 @@ namespace physics {
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IShape );
 
-}
+    }
 }
 #endif
+

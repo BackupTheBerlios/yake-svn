@@ -49,9 +49,9 @@ namespace physics {
 			OdeWorld();
 			virtual ~OdeWorld();
 
-			virtual IJointPtr createJoint( const IJoint::DescBase & rkJointDesc );
-			virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc(ACTOR_MOVABLE) );
-			virtual IAvatarPtr createAvatar( const IAvatar::Desc & rkAvatarDesc )
+			virtual IJointPtr createJoint( const IJoint::DescBase& rkJointDesc );
+			virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc( ACTOR_MOVABLE ) );
+			virtual IAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc )
 			{
 				YAKE_ASSERT( 0 ).warning("not supported.");
 				return IAvatarPtr();
@@ -134,3 +134,4 @@ namespace physics {
 }
 
 #endif
+

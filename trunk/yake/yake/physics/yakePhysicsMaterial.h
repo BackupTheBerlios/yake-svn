@@ -42,7 +42,7 @@ namespace physics {
 	public:
 		struct Desc
 		{
-			Desc( real bounciness = 0.5,
+			Desc(
 					real softness = 0.2,
 					real friction = 0.1,
 					real restitution = 0.5, 
@@ -52,13 +52,11 @@ namespace physics {
 				mRestitution( restitution ),
 				mStaticFriction( staticFriction ),
 				mRollingFriction( rollingFriction ),
-				mSoftness( softness ),
-				mBounciness( bounciness )
+				mSoftness( softness )
 			{}
 			
 			virtual ~Desc() {}
 			
-			real mBounciness;
 			real mSoftness;
 			real mFriction;
 			real mRestitution;
@@ -68,7 +66,6 @@ namespace physics {
 
 		virtual ~IMaterial() {}
 
-		virtual void setBounciness(const real bounciness) = 0;
 		virtual void setSoftness(const real softness) = 0;
 		virtual void setRollingFriction(const real friction) = 0;
 		virtual void setRestitution(const real restitution) = 0;
