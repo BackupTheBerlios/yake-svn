@@ -69,6 +69,10 @@ namespace physics
 		void _collide( OdeActor* pOther, dGeomID geomA, dGeomID geomB, dJointGroup* pContactJointGroup );
 	
 	protected:	
+		static const int MAX_CONTACTS= 40;
+
+		IBody::MassDesc* createMassDescFromShapeDesc( const IShape::Desc& rShapeDesc, real massOrDensity, IBody::quantityType qType );
+		
 		OdeGeom* createShapeFromDesc( const IShape::Desc& rShapeDesc );
 		OdeGeom* createTransformGeomIfNeeded( OdeGeom* pGeom, const Vector3& rOffset, const Quaternion& rRelOrientation );
 
