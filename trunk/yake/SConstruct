@@ -9,12 +9,13 @@ print """
 	"""
 
 title = "Builder for Yake"
-last_modified = "on 22/10/2004 by Nikita Buida (mj)"
+last_modified = "on 01/11/2005 by Nikita Buida (mj)"
+
 
 print title
 print 'This file was last modified ', last_modified
 
-print """
+Help( """
 	Usage.
 		Issue 
 			% scons
@@ -27,16 +28,16 @@ print """
 		
 		That's it. Enjoy. Find some bugs, improve program, send a patch ;)
 	
-"""
+""" )
 
 import build
 
 import os
 import os.path
-
+import sys
 import glob
 
-cc_flags = '-DGCC_3_1 -DEXT_HASH'
+cc_flags = '-DGCC_3_1 -DEXT_HASH -DYAKE_DEBUG -DYAKE_DEBUG_BUILD'
 
 lib_includes = build.commonIncludes
 build_dir = build.commonPaths['ObjectDir']
@@ -51,6 +52,9 @@ BuildDir( build_dir, '.', duplicate = 0 )
 
 env = Environment( CCFLAGS = cc_flags )
 
+#######################################################
+# utility functions
+#######################################################
 def CollectSources( path ):
 	sources = glob.glob( path + '/' + '*.cpp' )
 	sources_build = []
@@ -70,6 +74,8 @@ def BuildProgram( name, path, link_to ):
 	bin_name = bin_build_dir + '/' + name
 	return env.Program( bin_name, bin_src, CPPPATH = lib_includes, LIBS = link_to, LIBPATH = lib_dir )
 
+######################################################
+
 #Library add handling
 libadds = {}
 
@@ -83,28 +89,37 @@ def processLibadds( ent_libadd ):
 	return result
 			
 
-#Collection of libraries to install
-yakeLibs = []
+# if command line target is specified
+if len( COMMAND_LINE_TARGETS ) <> 0 and 'install' not in COMMAND_LINE_TARGETS:
+    print 'COMMAND_LINE_TARGETS: ', map(str, COMMAND_LINE_TARGETS)
+    object_name = str( COMMAND_LINE_TARGETS[0] )
+    object = env.Object( build_dir + '/' + object_name, CPPPATH = lib_includes )
+    env.Alias( object_name, object ) 
+else:
+    # else continue with normal build or install
+    #Collection of libraries to install
+    yakeLibs = []
 
 
-#reading shared libs
-for name, buildentity in build.sharedLibs.iteritems():
-	libadd = processLibadds( buildentity.libadd )
+    #reading shared libs
+    for name, buildentity in build.sharedLibs.iteritems():
+    	libadd = processLibadds( buildentity.libadd )
 	ent_name = str(name)
 	yakeLibs.append( BuildLibrary( ent_name, str(buildentity.src), libadd ))
 	libadds[ ent_name ] = libadd + [ ent_name ]
 
-#reading programs libs
-for name, buildentity in build.programs.iteritems():
-	print name, buildentity, buildentity.src, buildentity.libadd
+    #reading programs libs
+    for name, buildentity in build.programs.iteritems():
+	
+	if not build.quiet:
+	    print name, buildentity, buildentity.src, buildentity.libadd
+	
 	libadd = processLibadds( buildentity.libadd )
 	ent_name = str(name)
 	BuildProgram( ent_name, str(buildentity.src), libadd )
 
-############################################################
-#                   INSTALL                                #
-############################################################
-env.Install( lib_install_dir, yakeLibs )
-env.Alias( 'install', lib_install_dir ) 
+    #handle install
+    env.Install( lib_install_dir, yakeLibs )
+    env.Alias( 'install', lib_install_dir )
 
 

@@ -253,6 +253,7 @@
 		src="src/yapp/vehicle"
 	>
 		<libadd>yappBase</libadd>
+		<libadd>yakephysicsODE</libadd>
 	</BuildSharedLibrary>
 
 	<BuildSharedLibrary
@@ -282,6 +283,7 @@
 		src="src/yapp/plugins/modelLuaBindings"
 	>
 		<libadd>yappEnt</libadd>
+		<libadd>luabind</libadd>
 	</BuildSharedLibrary>
 
 <!-- SAMPLES -->
