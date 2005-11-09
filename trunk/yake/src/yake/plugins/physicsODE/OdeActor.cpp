@@ -154,7 +154,13 @@ namespace physics {
 		}
 		else if ( IShape::TriMeshDesc* pTriMeshDesc = dynamic_cast<IShape::TriMeshDesc*>( pShapeDesc ) )
 		{
-			OdeTriMesh::MeshData data = mOdeWorld->getMeshDataById( pTriMeshDesc->trimeshId_ );
+			TriangleMeshId id = pTriMeshDesc->trimeshId_;
+			if (id == kTriangleMeshIdNone)
+			{
+				id = mOdeWorld->createTriangleMesh( pTriMeshDesc->trimesh_ );
+				YAKE_ASSERT( id != kTriangleMeshIdNone );
+			}
+			OdeTriMesh::MeshData data = mOdeWorld->getMeshDataById( id );
 
 			OdeTriMesh* pMesh = new OdeTriMesh( mOdeWorld->_getOdeSpace(), this, data.id );
 
