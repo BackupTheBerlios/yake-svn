@@ -34,16 +34,15 @@
 namespace yake {
 namespace physics {
 
-	//-----------------------------------------------------
-	//	OdeActor
-	//-----------------------------------------------------
+    //-----------------------------------------------------
+    //	OdeActor
+    //-----------------------------------------------------
 	
-	//-----------------------------------------------------
-	//-----------------------------------------------------
-	OdeActor::OdeActor( OdeWorld* pWorld, bool bDynamic ) :
-			mOdeWorld(pWorld),
-			mBody(0)
-	{
+    //-----------------------------------------------------
+    OdeActor::OdeActor( OdeWorld* pWorld, bool bDynamic ) :
+		mOdeWorld(pWorld),
+		mBody(0)
+    {
 		if (bDynamic)
 		{
 			mBody = new OdeBody( mOdeWorld, *this );
@@ -53,77 +52,79 @@ namespace physics {
 		}
 		this->setPosition( Vector3::kZero );
 		this->setOrientation( Quaternion::kIdentity );
-	}
+    }
 
-	//-----------------------------------------------------
-	OdeActor::~OdeActor()
-	{
+    //-----------------------------------------------------
+    OdeActor::~OdeActor()
+    {
 		YAKE_SAFE_DELETE( mBody );
 		// destroy all shapes
 		mShapes.clear();
-	}
+    }
 
-	//-----------------------------------------------------
-	IWorld* OdeActor::getCreator() const
-	{
+    //-----------------------------------------------------
+    IWorld* OdeActor::getCreator() const
+    {
 		return mOdeWorld;
-	}
+    }
 
-	//-----------------------------------------------------
-	void OdeActor::setEnabled(const bool enabled)
-	{
+    //-----------------------------------------------------
+    void OdeActor::setEnabled(const bool enabled)
+    {
 		YAKE_ASSERT( 0 && "NOT IMPLEMENTED" );
-	}
+    }
 
-	//-----------------------------------------------------
-	bool OdeActor::isEnabled() const
-	{
+    //-----------------------------------------------------
+    bool OdeActor::isEnabled() const
+    {
 		return true;
-	}
-	
-	//-----------------------------------------------------
-	OdeGeom* OdeActor::createTransformGeomIfNeeded(	OdeGeom* pGeom,
-														const Vector3& rOffset,
-														const Quaternion& rRelOrientation )
-	{
+    }
+
+    //-----------------------------------------------------
+    OdeGeom* OdeActor::createTransformGeomIfNeeded(	OdeGeom* pGeom,
+	    const Vector3& rOffset,
+	    const Quaternion& rRelOrientation )
+    {
 		//if ( rOffset == Vector3::kZero && rRelOrientation == Quaternion::kIdentity )
-		//	return pGeom;
-			
+		//    return pGeom;
+
 		OdeTransformGeom* pTrans = new OdeTransformGeom( mOdeWorld->_getOdeSpace(), this );
 		pTrans->attachGeom( pGeom );
-		
+
 		pTrans->setPosition( rOffset );
 		pTrans->setOrientation( rRelOrientation );
-		
+
 		return pTrans;
-	}
+    }
 
-	//-----------------------------------------------------
-	OdeGeom* OdeActor::createShapeFromDesc( IShape::Desc const& rShapeDesc )
-	{
+    //-----------------------------------------------------
+    OdeGeom* OdeActor::createShapeFromDesc( const IShape::Desc& rShapeDesc )
+    {
 		IShape::Desc* pShapeDesc = &const_cast<IShape::Desc&>( rShapeDesc );
-		
-		IMaterial* pMaterial = this->getCreator()->getMaterial( pShapeDesc->material );
-		if ( !pMaterial )
-			pMaterial = this->getCreator()->getMaterial("default");
 
-		YAKE_ASSERT( pMaterial );
-	
+		IMaterial* pMaterial = this->getCreator()->getMaterial( pShapeDesc->material );
+
+		if ( !pMaterial )
+			pMaterial = this->getCreator()->getMaterial( "default" );
+
+		OdeMaterial* pOdeMaterial = pMaterial ? dynamic_cast<OdeMaterial*>( pMaterial ) : 0;
+		YAKE_ASSERT( pOdeMaterial );
+
 		OdeGeom* result = 0;
-		
+
 		if ( IShape::SphereDesc* pSphereDesc = dynamic_cast<IShape::SphereDesc*>( pShapeDesc ) )
 		{
 			OdeSphere* pSphere = new OdeSphere( mOdeWorld->_getOdeSpace(), this, pSphereDesc->radius );
-			
+
 			result = createTransformGeomIfNeeded( pSphere, rShapeDesc.position, rShapeDesc.orientation );
 		}
 		else if ( IShape::BoxDesc* pBoxDesc = dynamic_cast<IShape::BoxDesc*>( pShapeDesc ) )
 		{
 			OdeBox* pBox = new OdeBox( mOdeWorld->_getOdeSpace(), 
-										this,
-										pBoxDesc->dimensions.x, 
-										pBoxDesc->dimensions.y,
-										pBoxDesc->dimensions.z  );
+				this,
+				pBoxDesc->dimensions.x, 
+				pBoxDesc->dimensions.y,
+				pBoxDesc->dimensions.z  );
 			result = createTransformGeomIfNeeded( pBox, rShapeDesc.position, rShapeDesc.orientation );
 		}
 		else if ( IShape::PlaneDesc* pPlaneDesc = dynamic_cast<IShape::PlaneDesc*>( pShapeDesc ) )
@@ -132,272 +133,245 @@ namespace physics {
 			/// Calculating absolute coordinates instead...
 			Vector3 normal( pPlaneDesc->orientation*pPlaneDesc->normal );
 			normal.normalise();
-			
- 			real d = pPlaneDesc->d + normal.dotProduct( pPlaneDesc->position ); 
-			
+
+			real d = pPlaneDesc->d + normal.dotProduct( pPlaneDesc->position ); 
+
 			OdePlane* pPlane = new OdePlane(	mOdeWorld->_getOdeSpace(), 
-												this,
-												normal.x,
-												normal.y,
-												normal.z,
-												d );
+				this,
+				normal.x,
+				normal.y,
+				normal.z,
+				d );
 			result = pPlane;
 		}
 		else if ( IShape::CapsuleDesc* pCapsuleDesc = dynamic_cast<IShape::CapsuleDesc*>( pShapeDesc ) )
 		{
 			OdeCCylinder* pCapsule = new OdeCCylinder( mOdeWorld->_getOdeSpace(), 
-										this,
-										pCapsuleDesc->radius,
-										pCapsuleDesc->height  );
+				this,
+				pCapsuleDesc->radius,
+				pCapsuleDesc->height  );
 			result = createTransformGeomIfNeeded( pCapsule, rShapeDesc.position, rShapeDesc.orientation );
 		}
- 		else if ( IShape::TriMeshDesc* pTriMeshDesc = dynamic_cast<IShape::TriMeshDesc*>( pShapeDesc ) )
- 		{
-			OdeTriMesh::MeshData data = mOdeWorld->getMeshDataById( pTriMeshDesc->meshId );
-			
-			OdeTriMesh* pMesh = new OdeTriMesh( mOdeWorld->_getOdeSpace(), this, data.id );
-			
-			YAKE_ASSERT( pMesh ).error( "Mesh with such id wasn't found!" );
-			
- 			result = createTransformGeomIfNeeded( pMesh, rShapeDesc.position, rShapeDesc.orientation );
- 		}
+		else if ( IShape::TriMeshDesc* pTriMeshDesc = dynamic_cast<IShape::TriMeshDesc*>( pShapeDesc ) )
+		{
+			YAKE_ASSERT( false ).error( "FIXME mesh reading is not implemented as it should be!" );
+
+			//OdeTriMesh::MeshData data = mOdeWorld->getMeshDataById( pTriMeshDesc->meshId );
+
+			//	OdeTriMesh* pMesh = new OdeTriMesh( mOdeWorld->_getOdeSpace(), this, data.id );
+
+			//YAKE_ASSERT( pMesh ).error( "Mesh with such id wasn't found!" );
+
+			result = 0;//createTransformGeomIfNeeded( pMesh, rShapeDesc.position, rShapeDesc.orientation );
+		}
 
 		YAKE_ASSERT( result != 0 ).error( "Unsupported shape type!" );
-	
+
 		/// setting material if any
 
-		YAKE_ASSERT( pMaterial );
-		result->setMaterial( static_cast<OdeMaterial*>(pMaterial) );
+		YAKE_ASSERT( pOdeMaterial );
+		result->setMaterial( pOdeMaterial );
 
-		if (result)
+		if ( result )
 		{
 			mShapes.push_back( SharedPtr<OdeGeom>(result) );
-			if (result->getType() != ST_PLANE)
-			{
-				result->setPosition( pShapeDesc->position );
-				result->setOrientation( pShapeDesc->orientation );
-			}
+			// plane is not a movable geom. Its position is determined on creation!
+		// if (result->getType() != ST_PLANE)
+		// {
+		//     result->setPosition( pShapeDesc->position );
+		//     result->setOrientation( pShapeDesc->orientation );
+		// }
 		}
 
 		return result;
-	}
+    }
 
-	//-----------------------------------------------------
-	bool operator == (const SharedPtr<OdeGeom>& lhs, const OdeGeom* rhs)
-	{
+    //-----------------------------------------------------
+    bool operator == (const SharedPtr<OdeGeom>& lhs, const OdeGeom* rhs)
+    {
 		return (lhs.get() == rhs);
-	}
-	void OdeActor::destroyShape( IShape* pShape )
-	{
+    }
+
+    //-----------------------------------------------------
+    void OdeActor::destroyShape( IShape* pShape )
+    {
 		OdeGeom* pGeom = dynamic_cast<OdeGeom*>( pShape );
 		ShapeList::iterator victim = std::find( mShapes.begin(), mShapes.end(), pGeom );
 		mShapes.erase( victim );
-	}
+    }
 
-	//-----------------------------------------------------
-	IShapePtrList OdeActor::getShapes() const
-	{
+    //-----------------------------------------------------
+    IShapePtrList OdeActor::getShapes() const
+    {
 		IShapePtrList ret;
 		//ret.reserve( mShapes.size() );
 		//std::copy( mShapes.begin(), mShapes.end(), std::back_inserter( mShapes ) );
 		for (ShapeList::const_iterator it = mShapes.begin(); it != mShapes.end(); ++it)
 			ret.push_back( dynamic_cast<IShape*>(it->get()) );
 		return ret;
-	}
+    }
 
-	//-----------------------------------------------------
-// 	void OdeActor::postStep( real timeElapsed )
-// 	{
-// 		Vector< OdeActor* > its;
-// 		for (CollisionList::iterator it = mCollisions.begin(); it != mCollisions.end(); ++it)
-// 		{
-// 			CollisionInfo& info = it->second;
-// 			info.time += timeElapsed;
-// 			if (info.time >= 0.1)
-// 			{
-// 				mLeaveCollisionSignal( this, it->first );
-// 				its.push_back( it->first );
-// 			}
-// 		}
-// 		VectorIterator< Vector< OdeActor* > > itErase(
-// 			its.begin(), its.end() );
-// 		while (itErase.hasMoreElements())
-// 		{
-// 			CollisionList::iterator itFind = mCollisions.find( itErase.getNext() );
-// 			if (itFind != mCollisions.end())
-// 				mCollisions.erase( itFind );
-// 		}
-// 		its.clear();
-// 	}
+    //-----------------------------------------------------
+    // 	void OdeActor::postStep( real timeElapsed )
+    // 	{
+    // 		Vector< OdeActor* > its;
+    // 		for (CollisionList::iterator it = mCollisions.begin(); it != mCollisions.end(); ++it)
+    // 		{
+    // 			CollisionInfo& info = it->second;
+    // 			info.time += timeElapsed;
+    // 			if (info.time >= 0.1)
+    // 			{
+    // 				mLeaveCollisionSignal( this, it->first );
+    // 				its.push_back( it->first );
+    // 			}
+    // 		}
+    // 		VectorIterator< Vector< OdeActor* > > itErase(
+    // 			its.begin(), its.end() );
+    // 		while (itErase.hasMoreElements())
+    // 		{
+    // 			CollisionList::iterator itFind = mCollisions.find( itErase.getNext() );
+    // 			if (itFind != mCollisions.end())
+    // 				mCollisions.erase( itFind );
+    // 		}
+    // 		its.clear();
+    // 	}
 
-	//-----------------------------------------------------
-	void OdeActor::_collide( OdeActor* pOther, dGeomID geomA, dGeomID geomB, dJointGroup* contactJointGroup )
-	{
- 		YAKE_ASSERT( pOther ).debug( "Need the other object participating in the collision!" );
+//#define DEBUG_COLLISIONS
+
+    //-----------------------------------------------------
+    void OdeActor::_collide( OdeActor* pOther, dGeomID geomA, dGeomID geomB, dJointGroup* contactJointGroup )
+    {
+		YAKE_ASSERT( pOther ).debug( "Need the other object participating in the collision!" );
 		YAKE_ASSERT( contactJointGroup ).error( "Need a joint group for contact joints!" );
 
-		
-		/// FIXME Is this needed ?
+		// filtering out useless geom combinations...
 		if ( ( dGeomGetClass( geomA ) == dRayClass ) || ( dGeomGetClass( geomB ) == dRayClass ) )
 			return;
 
-		OdeGeom* pShapeA = reinterpret_cast<OdeGeom*>(dGeomGetData( geomA ));
-		OdeGeom* pShapeB = reinterpret_cast<OdeGeom*>(dGeomGetData( geomB ));
-		
-		OdeActor* pActorA = pShapeA->getOwner();
-		OdeActor* pActorB = pShapeB->getOwner();
+		OdeGeom* pShapeA = reinterpret_cast<OdeGeom*>( dGeomGetData( geomA ) );
+		OdeGeom* pShapeB = reinterpret_cast<OdeGeom*>( dGeomGetData( geomB ) );
+
+#ifdef DEBUG_COLLISIONS
+	YAKE_LOG( "Actor collision function entered..." );
+#endif 
 
 		const OdeMaterial& rMatA = *pShapeA->getMaterial();
 		const OdeMaterial& rMatB = *pShapeB->getMaterial();
-		
-		/// FIXME Implement materials!
-		float softness =  rMatA.mSoftness + rMatB.mSoftness; //this->getSoftness() + pOther->getSoftness();
 
-		/// FIXME what's this??? Magic number!
-		const int N = 40;
-		dContact contact[N];
+		dContact contact[ MAX_CONTACTS ];
 
 		// initiating collision detection
-		int n = dCollide( geomA, geomB, N, &contact[0].geom, sizeof( dContact ) );
+		int numCollided = dCollide( geomA, geomB, MAX_CONTACTS, &contact[0].geom, sizeof( dContact ) );
+		if (numCollided == 0)
+			return;
 
-		if ( n > 0 )
+		//HACK FIXME implement collision cache!!!
+		// fire collision events
+		CollisionCache::iterator itFind = mCollisions.find( pOther );
+		if ( itFind == mCollisions.end() )
 		{
-			// fire collision events
-			CollisionCache::iterator itFind = mCollisions.find( pOther );
-			if ( itFind == mCollisions.end() )
-			{
-				// new collision
-				CollisionInfo info = 0;
-				mCollisions.insert( CollisionCache::value_type( pOther, info ) );
-				/// FIXME  collision signal!  //mEnterCollisionSignal( this, pOther );
-			}
-			else
-			{
-				// still colliding, so reset timeout
-				itFind->second = 0;
-			}
-			
-			// create contact joints
-			for ( int i = 0; i < n; ++i ) 
-			{
-				contact[i].surface.mode = //dContactSlip1
-										//dContactSlip2
-										dContactSoftERP
-										//|dContactSoftCFM
-										//|dContactBounce
-										|dContactApprox1
-										//|dContactMu2
-										;
-				if ( softness > 0 )
-				{
-					contact[i].surface.mode |= dContactSoftCFM;
-					contact[i].surface.soft_cfm = softness;
-				}
-				
-				///FIXME Implement materials!
-				contact[i].surface.mu = std::min( rMatA.mFriction, rMatB.mFriction );
-				float friction2 = std::min( rMatA.mFriction2, rMatB.mFriction2 ); //std::min(this->getFriction2(), pOther->getFriction2());
-				if ( friction2 > 0.f )
-				{
-					contact[i].surface.mode |= dContactMu2;
-					contact[i].surface.mu2 = friction2; // 0 or 10
-				}
-				contact[i].surface.slip1 = 0; // 0.1
-				contact[i].surface.slip2 = 0.1;
+			// new collision
+			CollisionInfo info = 0;
+			mCollisions.insert( CollisionCache::value_type( pOther, info ) );
 
-#ifdef DEAD
-				// FIXME put that stuff in material: if ( mLateralSlip && mSlipNormalSource )
-				{
-					// velocities & coefficients
-// 					Vector3 linVel = mBody->getLinearVelocity();
-// 					Vector3 angVel = mBody->getAngularVelocity();
-
-					// contact normal
-					const Vector3 normal = Vector3( contact[i].geom.normal[0],
-													contact[i].geom.normal[1],
-													contact[i].geom.normal[2] ).normalisedCopy();
-
-					const Vector3 mSlipNormal = Vector3( 1, 0, 0 ); // FIXME Bad hack
-					//mSlipNormal = mSlipNormalSource->getLateralSlipNormal();
-					
-					real mSlipLinearCoeff = 0.7; /// FIXME bad hack
-					real mSlipAngularCoeff = 0.7; /// FIXME bad hack 
-					
-					/// FIXME Error tolerance is hardcoded!
-					if ( (mSlipNormal - normal).length() < 0.01 )
-					{
-						YAKE_LOG_WARNING( "warning: OdeActor::_collide: normal == slipNormal" );
-					}
-					else
-					{
-						real dot = normal.dotProduct( mSlipNormal );
-						/// FIXME Error tolerance hardcoded
-						if (dot < 0.9 && dot > -0.9)
-						{
-							// find the fdir1 direction
-							Vector3 perpVec = mSlipNormal.crossProduct( normal );
-							perpVec.normalise();
-
-							// set contact info
-							contact[i].surface.mode |= dContactFDir1|dContactSlip2;
-
-							//  (kLinearVel*f)*linearVel + (kAngularVel*f)*angularVel
-//							contact[i].surface.slip2 =	mSlipLinearCoeff * linVel.length() +
-//													mSlipAngularCoeff * angVel.length();
-
-							contact[i].fdir1[0] = perpVec.x;
-							contact[i].fdir1[1] = perpVec.y;
-							contact[i].fdir1[2] = perpVec.z;
-						}
-					}
-				}
-#endif
-				contact[i].surface.motion1 = 0;
-				contact[i].surface.motion2 = 0;
-
-				contact[i].surface.soft_erp = 0.95; // 0.8
-				//contact[i].surface.bounce = 0.05; //0.05
-				//contact[i].surface.bounce_vel = 0.025; //0.025
-				
-				//for (int j=1; j<=mNumJointsPerContact; ++j)
-				{
-					dJointID c = dJointCreateContact (
-									mOdeWorld->_getOdeID(),
-									contactJointGroup->id(),
-									contact + i );
-					dJointAttach ( c, dGeomGetBody( geomA ), dGeomGetBody( geomB ) );
-				}
-			}
+			//mEnterCollisionSignal( this, pOther );
 		}
-	}
-	
-	//-----------------------------------------------------
-	IShape* OdeActor::createShape( const IShape::Desc& rShapeDesc, real massOrDensity, IBody::quantityType type )
-	{
+		else
+		{
+			// still colliding, so reset timeout
+			itFind->second = 0;
+		}
+
+		// calculate soft cfm parameter[0..10^-6] from softness [0..1]
+		float softness = ( rMatA.mSoftness + rMatB.mSoftness ) / 1000000.0f;
+
+#ifdef DEBUG_COLLISIONS
+		YAKE_LOG( String("Collision: softness was set to ") << softness );
+#endif
+
+	    // create contact joints
+	    for ( int i = 0; i < numCollided; ++i )
+	    {
+			contact[i].surface.mode =
+			    dContactSoftERP
+			    |dContactSoftCFM
+			    |dContactBounce
+			    |dContactApprox1;
+
+			// Setting contact softness...
+			if ( softness > 0 )
+			{
+				contact[i].surface.mode |= dContactSoftCFM;
+				contact[i].surface.soft_cfm = softness;
+			}
+
+			// determine surface friction coefficients
+			// frictionCoefficient [0..1]
+			real frictionCoefficient = std::min( rMatA.mFriction, rMatB.mFriction );
+
+#ifdef DEBUG_COLLISIONS
+		YAKE_LOG( String("Collision: frictionCoefficient was set to ") << frictionCoefficient );
+#endif
+
+			contact[i].surface.mu = frictionCoefficient*dInfinity; 
+			float friction2 = std::min( rMatA.mFriction2, rMatB.mFriction2 ); 
+			if ( friction2 > 0.f )
+			{
+				contact[i].surface.mode |= dContactMu2;
+				contact[i].surface.mu2 = friction2; // 0 or 10
+			}
+
+			contact[i].surface.slip1 = 0.1; //FIXME need to set this right
+			contact[i].surface.slip2 = 0.1; //FIXME need to set this right
+			contact[i].surface.motion1 = 0; //
+			contact[i].surface.motion2 = 0;
+
+			//FIXME soft erp parameter should be correct
+			contact[i].surface.soft_erp = 0.9; 
+
+			real restitution = std::max( rMatA.mRestitution, rMatB.mRestitution );
+			contact[i].surface.bounce = restitution; 
+
+#ifdef DEBUG_COLLISIONS
+		YAKE_LOG( String("Collision: restitution was set to ") << restitution );
+#endif
+
+			//FIXME bounce velocity needs to be tuned
+			contact[i].surface.bounce_vel = 0.1;
+
+			dJointID contactJointID = dJointCreateContact(	mOdeWorld->_getOdeID(),
+				contactJointGroup->id(),
+				contact + i );
+			dJointAttach ( contactJointID, dGeomGetBody( geomA ), dGeomGetBody( geomB ) );
+	    } // for each contact
+    }
+
+    //-----------------------------------------------------
+    IShape* OdeActor::createShape( const IShape::Desc& rShapeDesc, real massOrDensity, IBody::quantityType type )
+    {
 		if ( mBody && dynamic_cast<const IShape::PlaneDesc*>( &rShapeDesc ) )
 			YAKE_ASSERT( false ).error( "Attempted to attach immovable plane shape to movable actor!" );
-			
+
 		OdeGeom* pShape = createShapeFromDesc( rShapeDesc );
 		YAKE_ASSERT( pShape );
-
 		YAKE_ASSERT( mBody || !(massOrDensity) ).warning( "Attempt to set mass on nonexistant body!" );
-		
+
 		if (mBody)
 		{
 			dGeomSetBody( pShape->_getOdeGeomID(), mBody->_getOdeBody()->id() );
 
 			if (massOrDensity)
 			{
-				mBody->_applyMassDescFromShapeDesc( rShapeDesc, massOrDensity, type );
+			mBody->_applyMassDescFromShapeDesc( rShapeDesc, massOrDensity, type );
 			}
 		}
-		
+
 		return pShape;
-	}
-	
-	//-----------------------------------------------------
-	void OdeActor::setPosition( const Vector3& rPosition )
-	{
+    }
+
+    //-----------------------------------------------------
+    void OdeActor::setPosition( const Vector3& rPosition )
+    {
 		mPosition = rPosition;
 		if (mBody)
 			mBody->setPosition( rPosition );
@@ -408,13 +382,13 @@ namespace physics {
 				i->get()->setPosition( mPosition );
 			}
 		}
-	}
-	
-	//-----------------------------------------------------
-	void OdeActor::setOrientation( const Quaternion& rOrientation )
-	{
+    }
+
+    //-----------------------------------------------------
+    void OdeActor::setOrientation( const Quaternion& rOrientation )
+    {
 		mOrientation = rOrientation;
-		
+
 		if (mBody)
 			mBody->setOrientation( rOrientation );
 		else
@@ -424,36 +398,36 @@ namespace physics {
 				i->get()->setOrientation( mOrientation );
 			}
 		}
-	}
-	
-	//-----------------------------------------------------
-	Vector3 OdeActor::getPosition() const
-	{
+    }
+
+    //-----------------------------------------------------
+    Vector3 OdeActor::getPosition() const
+    {
 		if (mBody)
 			return mBody->getPosition();
 		return mPosition;
-	}
-	
-	//-----------------------------------------------------
-	Quaternion OdeActor::getOrientation() const
-	{
+    }
+
+    //-----------------------------------------------------
+    Quaternion OdeActor::getOrientation() const
+    {
 		if (mBody)
 			return mBody->getOrientation();
 		return mOrientation;
-	}
-	
-	//-----------------------------------------------------
-	IBody& OdeActor::getBody() const
-	{
+    }
+
+    //-----------------------------------------------------
+    IBody& OdeActor::getBody() const
+    {
 		YAKE_ASSERT( mBody );
 		return *mBody;
-	}
-		
-	//-----------------------------------------------------
-	IBody* OdeActor::getBodyPtr() const
-	{
+    }
+
+    //-----------------------------------------------------
+    IBody* OdeActor::getBodyPtr() const
+    {
 		return mBody;
-	}
+    }
 
 } // physics
 } // yake
