@@ -27,8 +27,6 @@ private:
 		{}
 	};
 	typedef Deque< SharedPtr<graphics::ISceneNode> > SceneNodes;
-	typedef Deque< SharedPtr<graphics::IEntity> > Entities;
-	typedef Deque< SharedPtr<graphics::ILight> > Lights;
 	typedef Deque< SharedPtr<View> > Views;
 
 	physics::IMaterialPtr	mBouncyPhysicsMaterial1;
@@ -37,7 +35,6 @@ private:
 	struct Simple
 	{
 		SharedPtr<graphics::ISceneNode>		pSN;
-		SharedPtr<graphics::IEntity>		pE;
 		physics::IActorPtr					pActor;
 		void update()
 		{
@@ -61,8 +58,6 @@ private:
 
 	Views						mViews;;
 	SceneNodes					mSceneNodes;
-	Entities					mEntities;
-	Lights						mLights;
 
 	Deque< SharedPtr<Library> >	mLibs;
 
@@ -83,21 +78,15 @@ private:
 		if (itFind != mSceneNodes.end())
 			mSceneNodes.erase( itFind );
 	}
-	void removeEntity( SharedPtr<graphics::IEntity> & pEntity )
-	{
-		Entities::iterator itFind = std::find(mEntities.begin(),mEntities.end(),pEntity);
-		if (itFind != mEntities.end())
-			mEntities.erase( itFind );
-	}
 	void createSimpleGraphicalObject(	Simple & rSimple,
 										const String & rkMesh,
 										const Vector3 & rkPosition = Vector3::kZero,
 										const Vector3 & rkScale = Vector3(1,1,1))
 	{
 		rSimple.pSN.reset( mGWorld->createSceneNode() );
-		rSimple.pE.reset( mGWorld->createEntity(rkMesh) );
-		rSimple.pE->setMaterial("Examples/BumpyMetal");
-		rSimple.pSN->attachEntity( rSimple.pE.get() );
+		graphics::IEntity* pE = mGWorld->createEntity(rkMesh);
+		pE->setMaterial("Examples/BumpyMetal");
+		rSimple.pSN->attachEntity( pE );
 		rSimple.pSN->setPosition( rkPosition );
 		rSimple.pSN->setScale( rkScale );
 	}
@@ -161,22 +150,22 @@ private:
 		mLibs.push_back( pDynLib );
 		return pDynLib;
 	}
-	void createSimpleEntity( const String & rkMesh )
+	void createSimpleEntity( const String & rkMesh, const bool castsShadow = true, const String& material = "")
 	{
 		SharedPtr<graphics::ISceneNode> pSN( mGWorld->createSceneNode() );
-		SharedPtr<graphics::IEntity> pE( mGWorld->createEntity( rkMesh ) );
-		pSN->attachEntity( pE.get() );
+		graphics::IEntity* pE = mGWorld->createEntity( rkMesh );
+		pSN->attachEntity( pE );
 		mSceneNodes.push_back( pSN );
-		mEntities.push_back( pE );
-		pE->setCastsShadow( true );
+		pE->setCastsShadow( castsShadow );
+		if (!material.empty())
+			pE->setMaterial( material );
 	}
 	void createNinja()
 	{
 		SharedPtr<graphics::ISceneNode> pSN( mGWorld->createSceneNode() );
-		SharedPtr<graphics::IEntity> pE( mGWorld->createEntity( "ninja.mesh" ) );
+		graphics::IEntity* pE = mGWorld->createEntity( "ninja.mesh" );
 		mSceneNodes.push_back( pSN );
-		mEntities.push_back( pE );
-		pSN->attachEntity( pE.get() );
+		pSN->attachEntity( pE );
 
 		pE->setCastsShadow( true );
 
@@ -185,10 +174,9 @@ private:
 	void createPositionedLight()
 	{
 		SharedPtr<graphics::ISceneNode> pSN( mGWorld->createSceneNode() );
-		SharedPtr<graphics::ILight> pL( mGWorld->createLight() );
-		pSN->attachLight( pL.get() );
+		graphics::ILight* pL = mGWorld->createLight();
+		pSN->attachLight( pL );
 		mSceneNodes.push_back( pSN );
-		mLights.push_back( pL );
 		pL->setType( graphics::ILight::LT_POINT );
 		pL->setDiffuseColour( Color(1,1,1,1) );
 		pSN->setPosition( Vector3(0,50,0) );
@@ -199,10 +187,8 @@ private:
 	}
 	void createGroundPlane()
 	{
-		createSimpleEntity("plane_1x1.mesh");
+		createSimpleEntity("plane_1x1.mesh", false, "Examples/BumpyMetal");
 		mSceneNodes.back()->setScale(Vector3(30,1,30));
-		mEntities.back()->setMaterial("Examples/BumpyMetal");
-		mEntities.back()->setCastsShadow(false);
 	}
 	void requestShutdown()
 	{
@@ -216,11 +202,10 @@ private:
 	{
 		using namespace graphics;
 		// fixed light (sun)
-		SharedPtr<graphics::ILight> pL( mGWorld->createLight() );
+		graphics::ILight* pL = mGWorld->createLight();
 		SharedPtr<graphics::ISceneNode> pNode( mGWorld->createSceneNode() );
-		pNode->attachLight( pL.get() );
+		pNode->attachLight( pL );
 		
-		mLights.push_back( pL );
 		mSceneNodes.push_back(pNode);
 
 		pL->setType(ILight::LT_DIRECTIONAL);
@@ -243,22 +228,22 @@ void MiniApp::init()
 	SharedPtr<base::Library> pLib = loadLib("physicsOde" );
 	YAKE_ASSERT( pLib ).debug("Cannot load physics plugin 1.");
 
-	mPhysics2 = create< physics::IPhysicsSystem >("ode");
-	YAKE_ASSERT( mPhysics2 ).debug("Cannot create physics system 1.");
+	mPhysics1 = create< physics::IPhysicsSystem >("ode");
+	YAKE_ASSERT( mPhysics1 ).debug("Cannot create physics system 1.");
 
-	mPWorld2 = mPhysics2->createWorld();
-	YAKE_ASSERT( mPWorld2 ).debug("Cannot create world 1.");
+	mPWorld1 = mPhysics1->createWorld();
+	YAKE_ASSERT( mPWorld1 ).debug("Cannot create world 1.");
 
 	// physics 2
 #ifdef USE_SECOND_PHYSICS_PLUGIN
 	pLib = loadLib("physicsNX" );
 	YAKE_ASSERT( pLib ).debug("Cannot load physics plugin 2.");
 
-	mPhysics1 = create< physics::IPhysicsSystem >("nx");
-	YAKE_ASSERT( mPhysics1 ).debug("Cannot create physics system 2.");
+	mPhysics2 = create< physics::IPhysicsSystem >("nx");
+	YAKE_ASSERT( mPhysics2 ).debug("Cannot create physics system 2.");
 
-	mPWorld1 = mPhysics1->createWorld();
-	YAKE_ASSERT( mPWorld1 ).debug("Cannot create world 2.");
+	mPWorld2 = mPhysics2->createWorld();
+	YAKE_ASSERT( mPWorld2 ).debug("Cannot create world 2.");
 #endif
 	// graphics
 
@@ -322,8 +307,6 @@ void MiniApp::init()
 }
 void MiniApp::cleanUp()
 {
-	mLights.clear();
-	mEntities.clear();
 	mSceneNodes.clear();
 	if (mBouncyPhysicsMaterial1)
 		mPWorld1->destroyMaterial( mBouncyPhysicsMaterial1 );
