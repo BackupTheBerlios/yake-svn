@@ -75,6 +75,8 @@ namespace raf {
 			{ return MakeStringVector(); }
 		virtual StringVector getInputSystems()
 			{ return MakeStringVector(); }
+
+		virtual SharedPtr<graphics::IGraphicsSystem> useExternalGraphicsSystem() { return SharedPtr<graphics::IGraphicsSystem>(); }
 	};
 
 	class YAKE_RAF_API Application
@@ -164,6 +166,7 @@ namespace raf {
 		input::KeyboardEventGenerator*	mKeyboardEventGenerator;
 		input::MouseDevice*				mMouse;
 		input::MouseEventGenerator*		mMouseEventGenerator;
+		bool							mUseExtGraphicsSystem;
 	};
 
 	/** An example base application class provided for convenience.

@@ -59,8 +59,11 @@ namespace raf {
 	protected:
 		// message handlers to override by derived classes
 		virtual void onCreateScene() {}
+		virtual graphics::ICamera* onGetDefaultCamera() { return 0; }
 		virtual graphics::ICamera* onCreateDefaultCamera();
+		virtual graphics::IViewport* onGetDefaultViewport() { return 0; }
 		virtual graphics::IViewport* onCreateDefaultViewport();
+		virtual SharedPtr<graphics::IWorld> onGetDefaultWorld() { return SharedPtr<graphics::IWorld>(); }
 		virtual void onDestroyScene() {}
 		virtual void onFrame(const real timeElapsed) {}
 		virtual bool onQuitRequested() { return true; }

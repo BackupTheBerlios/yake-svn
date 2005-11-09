@@ -28,6 +28,7 @@
 #define YAKE_RAF_H
 
 #include <yapp/raf/yakePrerequisites.h>
+#include <yapp/statemachine/yakeFiniteStateMachine.h>
 #include <yapp/raf/yakeApplicationState.h>
 #include <yapp/raf/yakeRtApplicationState.h>
 #include <yapp/raf/yakeApplication.h>
