@@ -195,14 +195,7 @@ namespace physics {
 		case ST_TRIANGLE_MESH:
 			{
 				const IShape::TriMeshDesc& rkTrimesh = static_cast<const IShape::TriMeshDesc&>(rkShapeDesc);
-				YAKE_ASSERT( kTriangleMeshIdNone != rkTrimesh.meshId );
-				if (!kTriangleMeshIdNone == rkTrimesh.meshId)
-				{
-					delete pShape;
-					pShape = 0;
-					return 0;
-				}
-				pShape->createAsMesh_( rkTrimesh.meshId );
+				pShape->createAsMesh_( rkTrimesh );
 			}
 			break;
 		default:
