@@ -154,15 +154,13 @@ namespace physics {
 		}
 		else if ( IShape::TriMeshDesc* pTriMeshDesc = dynamic_cast<IShape::TriMeshDesc*>( pShapeDesc ) )
 		{
-			YAKE_ASSERT( false ).error( "FIXME mesh reading is not implemented as it should be!" );
+			OdeTriMesh::MeshData data = mOdeWorld->getMeshDataById( pTriMeshDesc->trimeshId_ );
 
-			//OdeTriMesh::MeshData data = mOdeWorld->getMeshDataById( pTriMeshDesc->meshId );
+			OdeTriMesh* pMesh = new OdeTriMesh( mOdeWorld->_getOdeSpace(), this, data.id );
 
-			//	OdeTriMesh* pMesh = new OdeTriMesh( mOdeWorld->_getOdeSpace(), this, data.id );
+			YAKE_ASSERT( pMesh ).error( "Mesh with such id wasn't found!" );
 
-			//YAKE_ASSERT( pMesh ).error( "Mesh with such id wasn't found!" );
-
-			result = 0;//createTransformGeomIfNeeded( pMesh, rShapeDesc.position, rShapeDesc.orientation );
+			result = createTransformGeomIfNeeded( pMesh, rShapeDesc.position, rShapeDesc.orientation );
 		}
 
 		YAKE_ASSERT( result != 0 ).error( "Unsupported shape type!" );
@@ -304,6 +302,8 @@ namespace physics {
 				contact[i].surface.mode |= dContactSoftCFM;
 				contact[i].surface.soft_cfm = softness;
 			}
+			else
+				contact[i].surface.soft_cfm = 0.;
 
 			// determine surface friction coefficients
 			// frictionCoefficient [0..1]
@@ -313,7 +313,8 @@ namespace physics {
 		YAKE_LOG( String("Collision: frictionCoefficient was set to ") << frictionCoefficient );
 #endif
 
-			contact[i].surface.mu = frictionCoefficient*dInfinity; 
+			contact[i].surface.mu = frictionCoefficient; 
+
 			float friction2 = std::min( rMatA.mFriction2, rMatB.mFriction2 ); 
 			if ( friction2 > 0.f )
 			{

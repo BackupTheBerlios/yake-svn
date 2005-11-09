@@ -383,9 +383,9 @@ namespace physics {
 		OdeTriMesh::MeshData data;
 		
 		OdeTriMesh::buildMeshData( data,
-											rTriMeshDesc.vertices,
-											rTriMeshDesc.indices,
-											rTriMeshDesc.normals );
+									rTriMeshDesc.vertices,
+									rTriMeshDesc.indices,
+									rTriMeshDesc.normals );
 
 		mMeshDataMap.insert( MeshDataMap::value_type( mNextMeshId, data ) );
 		

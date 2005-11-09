@@ -200,6 +200,7 @@ namespace physics {
 		// enabling collisions with spheres and boxes
 		dGeomTriMeshEnableTC( mOdeGeomID, dSphereClass, 1 );
 		dGeomTriMeshEnableTC( mOdeGeomID, dBoxClass, 1 );
+		YAKE_LOG_INFORMATION("physicsOde: enabled sphere+box collisions for trimesh");
 
 		_setData( this );
 	}
@@ -227,53 +228,47 @@ namespace physics {
 		YAKE_ASSERT( !rVertices.empty() ).error( "Wont create empty mesh!");
 		YAKE_ASSERT( !rIndices.empty() ).error( "Vertices without indices are meaningless!" );
 		// Performing conversion to ODE internal format
-		dReal*		pVertices;
-		uint32*		pIndices;
-		dReal*		pNormals;
+		dReal*		pVertices = 0;
+		uint32*		pIndices = 0;
+		dReal*		pNormals = 0;
 
 		// stuffing vertices
 		pVertices = new dReal[ 3*rVertices.size() ];
-		uint32 elementCounter = 0;
-
-		ConstVectorIterator<TriangleMeshDesc::VertexVector> itV( rVertices.begin(), rVertices.end() );
-		while ( itV.hasMoreElements() )
+		ConstVectorIterator< TriangleMeshDesc::VertexVector > itV( rVertices );
+		dReal* pCurrOrd = pVertices;
+		while (itV.hasMoreElements())
 		{
-			Vector3 const& v = itV.getNext();
-			pVertices[ elementCounter*3 + 0 ] = v.x;
-			pVertices[ elementCounter*3 + 1 ] = v.y;
-			pVertices[ elementCounter*3 + 2 ] = v.z;
-			++elementCounter;
+			const Vector3& v = *itV.peekNextPtr();
+			*pCurrOrd++ = v.x;
+			*pCurrOrd++ = v.y;
+			*pCurrOrd++ = v.z;
+			itV.moveNext();
 		}
 
 		// pouring indices
 		pIndices = new uint32[ rIndices.size() ];
-		elementCounter = 0;
-
-		ConstVectorIterator<TriangleMeshDesc::IndexVector> itI( rIndices.begin(), rIndices.end() );
-		while ( itI.hasMoreElements() )
-		{
-			pIndices[ elementCounter++] = itI.getNext();
-		}
+		std::copy( rIndices.begin(), rIndices.end(), pIndices );
 
 		// spice-up with normals
 		if ( !rNormals.empty() ) // according to taste (normals are optional)
 		{
 			pNormals = new dReal[ 3*rNormals.size() ];
-			elementCounter  = 0;
-
-			ConstVectorIterator<TriangleMeshDesc::NormalVector> itN( rNormals.begin(), rNormals.end() );
-			while ( itN.hasMoreElements() )
+			ConstVectorIterator< TriangleMeshDesc::VertexVector > itN( rNormals );
+			pCurrOrd = pNormals;
+			while (itN.hasMoreElements())
 			{
-				Vector3 const& v = itN.getNext();
-				pNormals[ elementCounter*3 + 0 ] = v.x;
-				pNormals[ elementCounter*3 + 1 ] = v.y;
-				pNormals[ elementCounter*3 + 2 ] = v.z;
-				++elementCounter;
+				const Vector3& n = *itN.peekNextPtr();
+				*pCurrOrd++ = n.x;
+				*pCurrOrd++ = n.y;
+				*pCurrOrd++ = n.z;
+				itN.moveNext();
 			}
 		}
 
 		// serving up
 		dTriMeshDataID dataId = dGeomTriMeshDataCreate();
+
+		YAKE_ASSERT( sizeof(dReal) == sizeof(double) );
 
 		if ( !rNormals.empty() )
 		{
