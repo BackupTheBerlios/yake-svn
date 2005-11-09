@@ -33,17 +33,20 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreLight::OgreLight( Ogre::SceneManager* pSceneMgr ) : mSceneMgr( pSceneMgr ), mLight( NULL )
+	OgreLight::OgreLight( GraphicalWorld& owningWorld, Ogre::SceneManager* pSceneMgr ) : 
+		mSceneMgr( pSceneMgr ), mLight( NULL ), OgreWrappedObject(owningWorld)
 	{
 		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
-		mLight = mSceneMgr->createLight( yake::uniqueName::create("sn_") );
+		mLight = mSceneMgr->createLight( yake::uniqueName::create("light_") );
 		YAKE_ASSERT( mLight ).warning("Couldn't create a light!");
+		//YAKE_LOG(String("gfx: new light '") << this->getName() << "'(" << String(mLight->getName().c_str()) << ")");
 	}
 
 	//------------------------------------------------------
 	OgreLight::~OgreLight()
 	{
-	    if ( mLight != NULL && mSceneMgr != NULL)
+		//YAKE_LOG(String("gfx: light d'tor '") << this->getName() << "'");
+		if ( mLight != NULL && mSceneMgr != NULL)
 // for Ogre 1.1.0 "Dagon" compatibility
 #if OGRE_VERSION_MINOR >= 1 
 		mSceneMgr->destroyLight( mLight->getName() );

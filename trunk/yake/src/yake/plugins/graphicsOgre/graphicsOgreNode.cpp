@@ -30,14 +30,16 @@
 #include <yake/plugins/graphicsOgre/graphicsOgreLight.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreNode.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreParticleSystem.h>
+#include <yake/plugins/graphicsOgre/yakeGraphicsWorld.h>
 
 namespace yake {
 namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreNode::OgreNode( Ogre::SceneManager * sceneMgr, const String& name /*= ""*/ ) : 
-			mSceneNode( 0 ) ,mSceneMgr( sceneMgr )
+	OgreNode::OgreNode( GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr, const String& name /*= ""*/ ) : 
+			OgreWrappedObject( owningWorld ),
+			mSceneNode( 0 ) ,mSceneMgr( sceneMgr ), mParentNode(0)
 	{
 		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
 		String id = name;
@@ -46,18 +48,73 @@ namespace ogre3d {
 		mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( id ) );
 		YAKE_ASSERT( mSceneNode ).warning("Couldn't create a scene node!");
 		mSceneNode->setPosition( 0, 0, 0 );
+		//YAKE_LOG(String("gfx: new node ") << id << "(" << String(mSceneNode->getName().c_str()) << ")");
+	}
+
+	//------------------------------------------------------
+	template<class Ctr>
+	void destroyPtrContainer(Ctr& ctr)
+	{
+		ConstDequeIterator< Ctr > it( ctr );
+		while (it.hasMoreElements())
+			delete it.getNext();
+		ctr.clear();
+	}
+
+	//------------------------------------------------------
+	template<class T>
+	void detachAndDestroyPtrContainer(std::deque<T>& ctr, OgreNode& n)
+	{
+		ConstDequeIterator< std::deque<T> > it( ctr );
+		while (it.hasMoreElements())
+		{
+			T obj = it.getNext();
+			n.detach( obj );
+			delete obj;
+		}
+		ctr.clear();
 	}
 
 	//------------------------------------------------------
 	OgreNode::~OgreNode()
 	{
+		//YAKE_LOG(String("gfx: node d'tor '") << this->getName() << "' - cleaning... ");
+		detachAndDestroyPtrContainer( mEntities, *this );
+		detachAndDestroyPtrContainer( mLights, *this );
+		detachAndDestroyPtrContainer( mCameras, *this );
+		detachAndDestroyPtrContainer( mParticleSystems, *this );
+
+		if (mParentNode)
+		{
+			mParentNode->detach( this );
+			mParentNode = 0;
+		}
+
+		destroyPtrContainer( mChildren );
+
+		YAKE_ASSERT( mSceneNode );
 		if (mSceneNode)
 		{
-			mSceneNode->removeAllChildren();
+			YAKE_ASSERT( mSceneNode->numAttachedObjects() == 0 );
+			YAKE_ASSERT( mSceneNode->numChildren() == 0 );
+			mSceneNode->getParent()->removeChild( mSceneNode );
+			mSceneNode->detachAllObjects();
+			mSceneNode->removeAndDestroyAllChildren(); // just in case...
 			mSceneMgr->destroySceneNode( mSceneNode->getName() );
 		}
-		mLights.clear();
-		mEntities.clear();
+		//YAKE_LOG(String("gfx: node d'tor '") << this->getName() << "' - done. ");
+	}
+
+	//------------------------------------------------------
+	void OgreNode::detach( ISceneNode* pNode )
+	{
+		YAKE_ASSERT( pNode );
+		if (mSceneNode)
+			mSceneNode->removeChild( static_cast<OgreNode*>(pNode)->getSceneNode_()->getName() );
+		NodeList::iterator itFind = std::find( mChildren.begin(), mChildren.end(), pNode );
+		if (itFind != mChildren.end())
+			mChildren.erase( itFind );
+		static_cast<OgreNode*>(pNode)->_onDetached();
 	}
 
 	//------------------------------------------------------
@@ -178,7 +235,8 @@ namespace ogre3d {
 		if ( NULL == pCamera )
 			return;
 		
-		mSceneNode->attachObject( static_cast<OgreCamera*>( pCamera )->getCamera_() );
+		OgreCamera* pCam = static_cast<OgreCamera*>( pCamera );
+		mSceneNode->attachObject( pCam->getCamera_() );
 		mCameras.push_back( pCamera );
 	}
 
@@ -191,7 +249,8 @@ namespace ogre3d {
 		if ( NULL == pLight )
 			return;
 		
-		mSceneNode->attachObject( static_cast<OgreLight*>( pLight )->getLight_() );
+		OgreLight* pL = static_cast<OgreLight*>( pLight );
+		mSceneNode->attachObject( pL->getLight_() );
 		mLights.push_back( pLight );
 	}
 
@@ -204,6 +263,8 @@ namespace ogre3d {
 		if ( NULL == pEntity )
 			return;
 
+		OgreEntity* pE = static_cast<OgreEntity*>( pEntity );
+		//YAKE_LOG(String("gfx node '") << this->getName() << "'): attachEntity '" << pE->getName() << "'");
 		mSceneNode->attachObject( static_cast<OgreEntity*>(pEntity)->getEntity_() );
 		mEntities.push_back( pEntity );
 	}
@@ -217,26 +278,44 @@ namespace ogre3d {
 		if ( NULL == pParticleSys )
 			return;
 
-		mSceneNode->attachObject( static_cast<OgreParticleSystem*>( pParticleSys )->getParticleSystem_() );
+		OgreParticleSystem* pPS = static_cast<OgreParticleSystem*>( pParticleSys );
+		mSceneNode->attachObject( pPS->getParticleSystem_() );
 
 		mParticleSystems.push_back( pParticleSys );
+	}
+
+	//------------------------------------------------------
+	void OgreNode::_onDetached()
+	{
+		if (mSceneNode->getParent())
+			mSceneNode->getParent()->removeChild(mSceneNode);
+		mParentNode = 0;
+	}
+
+	//------------------------------------------------------
+	void OgreNode::_onAttached( OgreNode* pParent )
+	{
+		mParentNode = pParent;
 	}
 
 	//------------------------------------------------------
 	void OgreNode::addChildNode( ISceneNode* pNode )
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-		mSceneNode->addChild( static_cast<OgreNode*>(pNode)->getSceneNode_() );
+		OgreNode* pN = static_cast<OgreNode*>( pNode );
+		pN->_onDetached();
+		mSceneNode->addChild( pN->getSceneNode_() );
 		mChildren.push_back( pNode );
+		pN->_onAttached( this );
 	}
 
 	//------------------------------------------------------
 	ISceneNode* OgreNode::createChildNode( const String& name /*= ""*/ )
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-		OgreNode* pChild = new OgreNode( mSceneMgr, name );
+		OgreNode* pChild = new OgreNode( getOwningWorld(), mSceneMgr, name );
 		mSceneNode->addChild( pChild->getSceneNode_() );
-		mChildren.push_back( pChild );
+		this->addChildNode( pChild );
 		return pChild;
 	}
 
@@ -306,7 +385,9 @@ namespace ogre3d {
 		YAKE_ASSERT( pEntity ).warning("passed a null ptr!");
 		if (!pEntity)
 			return;
-		mSceneNode->detachObject( static_cast<OgreEntity*>(pEntity)->getEntity_() );
+		OgreEntity* pObj = static_cast<OgreEntity*>(pEntity);
+		//YAKE_LOG(String("gfx node '") << this->getName() << "': detachEntity '" << pObj->getName() << "'");
+		mSceneNode->detachObject( pObj->getEntity_() );
 		
 		// removing from list
 		EntityPtrList::iterator victim = std::find( mEntities.begin(), mEntities.end(), pEntity );
@@ -322,7 +403,8 @@ namespace ogre3d {
 		YAKE_ASSERT( pLight ).warning("passed a null ptr!");
 		if (!pLight)
 			return;
-		mSceneNode->detachObject( static_cast<OgreLight*>(pLight)->getLight_() );
+		OgreLight* pObj = static_cast<OgreLight*>(pLight);
+		mSceneNode->detachObject( pObj->getLight_() );
 
 		// removing from list
 		LightPtrList::iterator victim = std::find( mLights.begin(), mLights.end(), pLight );
@@ -338,7 +420,8 @@ namespace ogre3d {
 		YAKE_ASSERT( pCamera ).warning("passed a null ptr!");
 		if (!pCamera)
 			return;
-		mSceneNode->detachObject( static_cast<OgreCamera*>(pCamera)->getCamera_() );
+		OgreCamera* pObj = static_cast<OgreCamera*>(pCamera);
+		mSceneNode->detachObject( pObj->getCamera_() );
 
 		// removing from list
 		CameraPtrList::iterator victim = std::find( mCameras.begin(), mCameras.end(), pCamera );
@@ -354,7 +437,8 @@ namespace ogre3d {
 		YAKE_ASSERT( pPS ).warning("passed a null ptr!");
 		if (!pPS)
 			return;
-		mSceneNode->detachObject( static_cast<OgreParticleSystem*>(pPS)->getParticleSystem_() );
+		OgreParticleSystem* pObj = static_cast<OgreParticleSystem*>(pPS);
+		mSceneNode->detachObject( pObj->getParticleSystem_() );
 
 		// removing from list
 		ParticleSystemPtrList::iterator victim = std::find( mParticleSystems.begin(), mParticleSystems.end(), pPS );

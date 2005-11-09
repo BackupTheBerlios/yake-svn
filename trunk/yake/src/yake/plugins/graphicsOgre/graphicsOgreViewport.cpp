@@ -35,7 +35,10 @@ namespace ogre3d {
 
 	//------------------------------------------------------
 	OgreViewport::OgreViewport( OgreCore* pCore, 
-								OgreCamera* pCam ) : mCore( pCore ), 
+								OgreCamera* pCam,
+								GraphicalWorld& owningWorld ) : 
+													mCore( pCore ), 
+													OgreWrappedObject( owningWorld ),
 													mCamera( pCam ),
 													mViewport( 0 )
 	{

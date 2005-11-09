@@ -42,7 +42,7 @@ namespace graphics {
 namespace ogre3d {
 
 	//-----------------------------------------------------
-	OgreMeshGeometryAccess::OgreMeshGeometryAccess(Ogre::MeshPtr& mesh) : mMesh(mesh), mLastId(0)
+	OgreMeshGeometryAccess::OgreMeshGeometryAccess(GraphicalWorld& owningWorld, Ogre::MeshPtr& mesh) : OgreWrappedObject( owningWorld ), mMesh(mesh), mLastId(0)
 	{
 	}
 

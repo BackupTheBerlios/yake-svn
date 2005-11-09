@@ -34,17 +34,19 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreEntity::OgreEntity( ::Ogre::SceneManager * sceneMgr, const String & mesh ) : mSceneMgr( sceneMgr ), mEntity( 0 )
+	OgreEntity::OgreEntity( GraphicalWorld& owningWorld, ::Ogre::SceneManager * sceneMgr, const String & mesh ) : OgreWrappedObject( owningWorld ), mSceneMgr( sceneMgr ), mEntity( 0 )
 	{
 		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
 		YAKE_TRY
 			mEntity = mSceneMgr->createEntity( Ogre::String(yake::uniqueName::create("en_").c_str()), Ogre::String(mesh.c_str()) );
 		YAKE_CATCH_OGRE_RETHROW
+		//YAKE_LOG(String("gfx: new entity '") << this->getName() << "'(" << String(mEntity->getName().c_str()) << ")");
 	}
 
 	//------------------------------------------------------
 	OgreEntity::~OgreEntity()
 	{
+		//YAKE_LOG(String("gfx: entity d'tor '") << this->getName() << "'");
 		YAKE_TRY
 		if (mEntity && mSceneMgr)
 		{
@@ -89,7 +91,10 @@ namespace ogre3d {
 	{
 		YAKE_ASSERT( mEntity ).debug( "need an entity" );
 		if ( mEntity->hasSkeleton() )
-			return new OgreSkeleton( *mEntity );
+		{
+			OgreWrappedObject& o = const_cast<OgreWrappedObject&>( static_cast<const OgreWrappedObject&>(*this) );
+			return new OgreSkeleton( *mEntity, o.getOwningWorld() );
+		}
 		else
 			return NULL;
 	}

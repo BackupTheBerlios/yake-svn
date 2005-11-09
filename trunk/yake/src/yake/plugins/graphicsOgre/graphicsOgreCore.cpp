@@ -198,6 +198,27 @@ namespace ogre3d {
 	OgreCore::~OgreCore()
 	{
 		try {
+			Ogre::SceneNode* pSN = this->getSceneMgr()->getRootSceneNode();
+			YAKE_ASSERT( pSN->numAttachedObjects() == 0 );
+			YAKE_ASSERT( pSN->numChildren() == 0 );
+			if (pSN->numAttachedObjects() > 0)
+			{
+				Ogre::SceneNode::ObjectIterator itObj = pSN->getAttachedObjectIterator();
+				while (itObj.hasMoreElements())
+				{
+					YAKE_LOG_WARNING(String("gfx rootnode.obj '") << String(itObj.getNext()->getName().c_str()) << "'");
+				}
+			}
+			if (pSN->numChildren() > 0)
+			{
+				Ogre::SceneNode::ChildNodeIterator itN = pSN->getChildIterator();
+				while (itN.hasMoreElements())
+				{
+					YAKE_LOG_WARNING(String("gfx rootnode.node '") << String(itN.getNext()->getName().c_str()) << "'");
+				}
+			}
+			pSN->detachAllObjects();
+			pSN->removeAndDestroyAllChildren();
 			if (mSysFL)
 			{
 				mRoot->removeFrameListener( mSysFL );

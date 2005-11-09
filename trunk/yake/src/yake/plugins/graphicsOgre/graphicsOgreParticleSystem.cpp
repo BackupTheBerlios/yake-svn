@@ -25,13 +25,15 @@
    ------------------------------------------------------------------------------------
 */
 #include <yake/plugins/graphicsOgre/yakePCH.h>
+#include <yake/plugins/graphicsOgre/yakeGraphicsWorld.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreParticleSystem.h>
 
 namespace yake {
 namespace graphics {
 
 	//------------------------------------------------------
-	OgreParticleSystem::OgreParticleSystem( Ogre::ParticleSystemManager& rPSMgr, const String& rPSTempl ) : 
+	OgreParticleSystem::OgreParticleSystem( ogre3d::GraphicalWorld& owningWorld, Ogre::ParticleSystemManager& rPSMgr, const String& rPSTempl ) : 
+																ogre3d::OgreWrappedObject(owningWorld),
 																mParticleSysMgr( rPSMgr ), mParticleSys( NULL )
 	{
 		mParticleSys = mParticleSysMgr.createSystem( uniqueName::create( "ps_" ), rPSTempl );
