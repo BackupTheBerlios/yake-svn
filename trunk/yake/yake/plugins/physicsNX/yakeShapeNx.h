@@ -48,13 +48,15 @@ namespace physics {
 		virtual Vector3 getPropertyVector3(const String&) const;
 		virtual real getPropertyReal(const String&) const;
 
+		virtual void setMaterial( IMaterial* pMaterial );
+
 		// helpers
 
 		void createAsSphere_( const real radius = real(1.) );
 		void createAsBox_( const Vector3 & rkDimensions );
 		void createAsPlane_( const Vector3 & rkNormal, const real d );
 		void createAsCapsule_( const real height, const real radius );
-		void createAsMesh_( const TriangleMeshId id );
+		void createAsMesh_( const TriMeshDesc& desc );
 
 	private:
 		void attachAndCreate_(const NxShapeDesc & rkDesc);
