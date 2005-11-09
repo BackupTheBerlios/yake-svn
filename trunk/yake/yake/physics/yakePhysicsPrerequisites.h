@@ -114,11 +114,11 @@ namespace physics {
 			Is this OK? Today, it's practically OK and tomorrow it'll be even more as it's part
 			of the first Technical Corrigendum.
 		*/
-		typedef Vector<Vector3> Vector3Vector;
+		typedef std::vector<Vector3> Vector3Vector;
 		typedef Vector3Vector VertexVector;
 		typedef Vector3Vector NormalVector;
 		typedef uint32 IndexType;
-		typedef Vector<IndexType> IndexVector;
+		typedef std::vector<IndexType> IndexVector;
 
 		TriangleMeshDesc()
 		{

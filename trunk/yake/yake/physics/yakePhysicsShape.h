@@ -153,9 +153,20 @@ namespace physics {
 			    const Quaternion& rOrientation = Quaternion::kIdentity
 			    ) :
 				Desc( ST_TRIANGLE_MESH, rPosition, rOrientation, material_ ),
-				trimesh_( trimesh )
+				trimesh_( trimesh ),
+				trimeshId_( kTriangleMeshIdNone )
 		    {}
-		    TriangleMeshDesc trimesh_;	
+		    TriMeshDesc(	const TriangleMeshId trimeshId,
+			    // base class:
+			    const String& material_ = "",
+			    const Vector3& rPosition = Vector3::kZero, 
+			    const Quaternion& rOrientation = Quaternion::kIdentity
+			    ) :
+				Desc( ST_TRIANGLE_MESH, rPosition, rOrientation, material_ ),
+				trimeshId_( trimeshId )
+		    {}
+		    TriangleMeshDesc	trimesh_;
+			TriangleMeshId		trimeshId_;
 		};
 	public:
 		virtual ~IShape() {}
