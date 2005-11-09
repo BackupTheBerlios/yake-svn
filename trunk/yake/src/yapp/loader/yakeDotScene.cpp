@@ -34,7 +34,7 @@ namespace data {
 namespace parser {
 namespace dotscene {
 
-	String DotSceneParser::ROOT_NODE_NAME = "root_node";
+	const String DotSceneParser::ROOT_NODE_NAME = "root_node";
 	
 	//------------------------------------------------------
 	void DotSceneParser::reset()
@@ -169,7 +169,7 @@ namespace dotscene {
 		// descending the node tree...
 		for ( dom::NodeList::const_iterator it = childNodes.begin(); it != childNodes.end(); ++it )
 		{
-				readNode( *it, nodeName );
+		  readNode( *it, nodeName );
 		}
 	}
 

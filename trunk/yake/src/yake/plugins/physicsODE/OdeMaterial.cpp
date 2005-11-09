@@ -39,9 +39,12 @@ namespace physics {
 		mSlipNormal(Vector3::kZero),
 		mSlipLinearCoeff(0),
 		mSlipAngularCoeff(0),
+		mRestitution(0), // better value?
 		mName(name)
 	{
 	}
+
+	//---------------------------------------------------
 	OdeMaterial::OdeMaterial(const physics::IMaterial::Desc& desc, const String& name) : 
 		mSoftness(desc.mSoftness),
 		mFriction(desc.mFriction),
@@ -50,33 +53,42 @@ namespace physics {
 		mSlipNormal(Vector3::kZero),
 		mSlipLinearCoeff(0),
 		mSlipAngularCoeff(0),
+		mRestitution( desc.mRestitution ),
 		mName(name)
 	{
 	}
-	void OdeMaterial::setBounciness(const real bounciness)
-	{
-		//@todo
-	}
+
+	//---------------------------------------------------
 	void OdeMaterial::setSoftness(const real softness)
 	{
 		mSoftness = softness;
 	}
+
+	//---------------------------------------------------
 	void OdeMaterial::setRollingFriction( const real friction )
 	{
 		//@todo
 	}
+
+	//---------------------------------------------------
 	void OdeMaterial::setRestitution( const real restitution )
 	{
-		//@todo
+		mRestitution = restitution;	
 	}
+
+	//---------------------------------------------------
 	void OdeMaterial::setStaticFriction( const real friction )
 	{
 		mFriction = friction; //@todo is that right?
 	}
+
+	//---------------------------------------------------
 	void OdeMaterial::setStaticFrictionV( const real friction )
 	{
 		//@todo
 	}
+
+	//---------------------------------------------------
 	void OdeMaterial::setStaticFrictionVEnabled( bool enabled )
 	{
 		//@todo
