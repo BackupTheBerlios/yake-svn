@@ -157,6 +157,8 @@ namespace raf {
 	{
 		ApplicationConfiguration& cfg = getConfiguration();
 
+		mUseExtGraphicsSystem = cfg.useExternalGraphicsSystem().get() != 0;
+
 		// load libs
 		StringVector libs = cfg.getLibraries();
 		ConstVectorIterator<StringVector> itLib( libs );
@@ -168,7 +170,10 @@ namespace raf {
 		// load & init systems
 		loadAndInitSystems<scripting::IScriptingSystem>( cfg.getScriptingSystems(), mScriptingSystems );
 		loadAndInitSystems<audio::IAudioSystem>( cfg.getAudioSystems(), mAudioSystems );
-		loadAndInitSystems<graphics::IGraphicsSystem>( cfg.getGraphicsSystems(), mGraphicsSystems );
+		if (mUseExtGraphicsSystem)
+			mGraphicsSystems["default"] = cfg.useExternalGraphicsSystem();
+		else
+			loadAndInitSystems<graphics::IGraphicsSystem>( cfg.getGraphicsSystems(), mGraphicsSystems );
 		loadAndInitSystems<physics::IPhysicsSystem>( cfg.getPhysicsSystems(), mPhysicsSystems );
 		loadAndInitSystems<input::IInputSystem>( cfg.getInputSystems(), mInputSystems );
 		if (!mInputSystems.empty())
@@ -262,6 +267,8 @@ namespace raf {
 	}
 	graphics::IGraphicsSystem* Application::getGraphicsSystem(const String& name)
 	{
+		if (name.empty() && mUseExtGraphicsSystem)
+			return findSystem<graphics::IGraphicsSystem>( mGraphicsSystems, "default" );
 		return findSystem<graphics::IGraphicsSystem>( mGraphicsSystems, name );
 	}
 	physics::IPhysicsSystem* Application::getPhysicsSystem(const String& name)

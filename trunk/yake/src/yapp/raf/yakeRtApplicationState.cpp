@@ -59,7 +59,7 @@ namespace raf {
 		}
 		// default is a fullscreen viewport
 		pVP->setDimensions( real(0), real(0), real(1), real(1) );
-		pVP->setZ( 100 );
+		pVP->setZ( 111 );
 		return pVP;
 	}
 	void RtMainState::requestQuit()
@@ -118,22 +118,28 @@ namespace raf {
 	void RtMainState::createScene()
 	{
 		// set up default camera and viewport
-		mDefaultCamera = onCreateDefaultCamera();
+		mDefaultCamera = onGetDefaultCamera();
+		if (!mDefaultCamera)
+			mDefaultCamera = onCreateDefaultCamera();
 		YAKE_ASSERT( mDefaultCamera );
 		if (!mDefaultCamera)
 		{
-			YAKE_LOG_WARNING("No default camera created. => No default viewport will be created.");
+			YAKE_LOG_WARNING("No default camera available.");
 		}
 		else
 		{
-			graphics::IViewport* pVP = onCreateDefaultViewport();
+			graphics::IViewport* pVP = onGetDefaultViewport();
+			if (!pVP)
+				pVP = onCreateDefaultViewport();
 			YAKE_ASSERT( pVP );
-			if (pVP)
+			if (!pVP)
+			{
+				YAKE_LOG_WARNING("Could not get/create default viewport!");
+			}
+			else if (!onGetDefaultViewport())
 			{
 				mViewports.push_back( SharedPtr<graphics::IViewport>(pVP) );
 			}
-			else
-				YAKE_LOG_WARNING("Could not create default viewport!");
 		}
 
 		// set up user defined scene
@@ -145,17 +151,22 @@ namespace raf {
 
 		mPWorld.reset();
 		mAWorld.reset();
-		mGWorld.reset();
 		mViewports.clear();
-		YAKE_SAFE_DELETE( mDefaultCamera );
+		if (!onGetDefaultCamera())
+			YAKE_SAFE_DELETE( mDefaultCamera );
+		mGWorld.reset();
 	}
 	graphics::IWorld* RtMainState::getGraphicalWorld()
 	{
 		if (!mGWorld.get())
 		{
-			graphics::IGraphicsSystem* pSys = getApp().getGraphicsSystem();
-			YAKE_ASSERT( pSys );
-			mGWorld = pSys->createWorld();
+			mGWorld = onGetDefaultWorld();
+			if (!mGWorld.get())
+			{
+				graphics::IGraphicsSystem* pSys = getApp().getGraphicsSystem();
+				YAKE_ASSERT( pSys );
+				mGWorld = pSys->createWorld();
+			}
 		}
 		if (!mGWorld.get())
 			YAKE_EXCEPT("We really need a valid graphical world here! Bailing out!");
