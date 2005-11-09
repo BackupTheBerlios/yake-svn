@@ -72,4 +72,20 @@
 	{ \
 	}
 
+namespace yake {
+	namespace graphics {
+		namespace ogre3d {
+			class GraphicalWorld;
+			struct OgreWrappedObject
+			{
+				OgreWrappedObject(GraphicalWorld& owner);
+				virtual ~OgreWrappedObject();
+				GraphicalWorld& getOwningWorld();
+			private:
+				mutable GraphicalWorld&	mOwningWorld;
+			};
+		}
+	}
+}
+
 #endif // __INC_PCH_H__

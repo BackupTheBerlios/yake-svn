@@ -30,10 +30,10 @@
 namespace yake {
 namespace graphics {
 
-	class OgreParticleSystem : public graphics::IParticleSystem
+	class OgreParticleSystem : public graphics::IParticleSystem, public ogre3d::OgreWrappedObject
 	{
 	public:
-		OgreParticleSystem( Ogre::ParticleSystemManager& rPSMgr, const String& rPSTemplateName );
+		OgreParticleSystem( ogre3d::GraphicalWorld& owningWorld, Ogre::ParticleSystemManager& rPSMgr, const String& rPSTemplateName);
 		virtual ~OgreParticleSystem();
 
 		virtual void setVisible( bool visible );

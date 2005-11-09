@@ -85,6 +85,9 @@ namespace ogre3d {
 		YAKE_MEMBERSIGNAL_FIRE_FN1( public, PreRender, real timeElapsed, timeElapsed )
 		YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void(real), PostRender )
 		YAKE_MEMBERSIGNAL_FIRE_FN1( public, PostRender, real timeElapsed, timeElapsed )
+
+		void reg( OgreWrappedObject* pO );
+		void unreg( OgreWrappedObject* pO );
 	private:
 		static OgreCore*		msCore;
 		typedef AssocVector< String, Ogre::MeshPtr > ProcMeshMap;
@@ -93,6 +96,10 @@ namespace ogre3d {
 
 		typedef std::map< Ogre::Entity*, OgreEntity* > EntityMap;
 		EntityMap				mEntityMap;
+
+		typedef std::deque< OgreWrappedObject* > WrappedList;
+		WrappedList				mWrapped;
+		uint32					mLastWrappedId;
 
 		String					mCurrentShadowTechnique;
 		StringMap				mCurrentShadowTechniqueParams;

@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright  2004 The YAKE Team
+   Copyright © 2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -31,12 +31,13 @@ namespace yake {
 namespace graphics {
 namespace ogre3d {
 
-	class OgreEntity : public graphics::IEntity
+	class OgreNode;
+	class OgreEntity : public graphics::IEntity, public OgreWrappedObject
 	{
 		OgreEntity();
 		OgreEntity( const OgreEntity& );
 	public:
-		OgreEntity( ::Ogre::SceneManager* sceneMgr, const String& mesh );
+		OgreEntity( GraphicalWorld& owningWorld, ::Ogre::SceneManager* sceneMgr, const String& mesh );
 		virtual ~OgreEntity();
 
 		virtual ISkeleton* getSkeleton() const;

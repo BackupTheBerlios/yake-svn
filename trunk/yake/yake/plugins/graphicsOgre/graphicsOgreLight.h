@@ -31,10 +31,10 @@ namespace yake {
 namespace graphics {
 namespace ogre3d {
 
-	class OgreLight : public graphics::ILight
+	class OgreLight : public graphics::ILight, public OgreWrappedObject
 	{
 	public:
-		OgreLight( Ogre::SceneManager* sceneMgr );
+		OgreLight( GraphicalWorld& owningWorld, Ogre::SceneManager* sceneMgr );
 		virtual ~OgreLight();
 
 		virtual void setType( const LightType type );

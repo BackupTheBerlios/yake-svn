@@ -32,10 +32,10 @@ namespace graphics {
 namespace ogre3d {
 
 	class OgreEntity;
-	class OgreNode : public graphics::ISceneNode
+	class OgreNode : public graphics::ISceneNode, public OgreWrappedObject
 	{
 	public:
-		OgreNode( Ogre::SceneManager * sceneMgr, const String& name = "" );
+		OgreNode( GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr, const String& name = "" );
 		virtual ~OgreNode();
 
 		virtual void setPosition( const Vector3 & position );
@@ -73,10 +73,12 @@ namespace ogre3d {
 		virtual void detach( ILight* pLight );
 		virtual void detach( ICamera* pCamera );
 		virtual void detach( IParticleSystem* pPS );
-
+		virtual void detach( ISceneNode* pNode );
 
 		Ogre::SceneNode* getSceneNode_() const
 		{ return mSceneNode; }
+		void _onAttached( OgreNode* );
+		void _onDetached();
 	protected:
 		typedef SceneNodePtrList NodeList;
 		NodeList			mChildren;
@@ -87,6 +89,7 @@ namespace ogre3d {
 
 		Ogre::SceneNode* 	mSceneNode;
 		Ogre::SceneManager*	mSceneMgr;
+		OgreNode*			mParentNode;
 	};
 
 }
