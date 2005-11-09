@@ -43,8 +43,13 @@ namespace ogre3d {
 	//------------------------------------------------------
 	OgreLight::~OgreLight()
 	{
-		if ( mLight != NULL && mSceneMgr != NULL)
-			mSceneMgr->removeLight( mLight->getName() );
+	    if ( mLight != NULL && mSceneMgr != NULL)
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+		mSceneMgr->destroyLight( mLight->getName() );
+#else
+		mSceneMgr->removeLight( mLight->getName() );
+#endif
 	}
 
 	//------------------------------------------------------

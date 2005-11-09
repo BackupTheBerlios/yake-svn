@@ -48,7 +48,12 @@ namespace ogre3d {
 		YAKE_TRY
 		if (mEntity && mSceneMgr)
 		{
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+			mSceneMgr->destroyEntity( mEntity );
+#else
 			mSceneMgr->removeEntity( mEntity );
+#endif
 			mEntity = 0;
 		}
 		YAKE_CATCH_OGRE_RETHROW

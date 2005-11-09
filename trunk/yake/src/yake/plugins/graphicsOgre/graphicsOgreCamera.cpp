@@ -52,8 +52,13 @@ namespace ogre3d {
 	//------------------------------------------------------
 	OgreCamera::~OgreCamera()
 	{
-		if ( mCam )
-			mSceneMgr->removeCamera( mCam->getName() );
+	    if ( mCam )
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+		mSceneMgr->destroyCamera( mCam->getName() );
+#else 
+		mSceneMgr->removeCamera( mCam->getName() );
+#endif
 	}
 
 	//------------------------------------------------------
