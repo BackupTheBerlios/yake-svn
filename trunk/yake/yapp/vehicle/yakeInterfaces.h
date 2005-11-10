@@ -27,11 +27,12 @@
 #ifndef YAKE_VEHICLE_INTERFACES_H
 #define YAKE_VEHICLE_INTERFACES_H
 
-#include "yakePrerequisites.h"
+#include <yapp/vehicle/yakePrerequisites.h>
 #include "yakeTemplates.h"
 
 namespace yake {
 namespace vehicle {
+	class MountPoint;
 
 	enum Steering {
 		S_LEFT,
