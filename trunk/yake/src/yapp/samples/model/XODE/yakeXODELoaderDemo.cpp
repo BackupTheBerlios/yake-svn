@@ -75,7 +75,7 @@ public:
 		parser.subscribeToMaterialSignal( Bind1( &XODEListener::processMaterial, &listener ) );
 		parser.subscribeToMassSignal( Bind1( &XODEListener::processMass, &listener ) );
 		parser.subscribeToJointSignal( Bind1( &XODEListener::processJoint, &listener ) );
-		parser.subscribeToParseEndedSignal( Bind0( &XODEListener::postprocess, &listener ) );
+		parser.subscribeToParseEndedSignal( boost::bind( &XODEListener::postprocess, &listener ) );
 
 		parser.load( ser.getDocumentNode() );
 	}
