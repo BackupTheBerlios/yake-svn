@@ -199,8 +199,8 @@ namespace ogre3d {
 	{
 		try {
 			Ogre::SceneNode* pSN = this->getSceneMgr()->getRootSceneNode();
-			YAKE_ASSERT( pSN->numAttachedObjects() == 0 );
-			YAKE_ASSERT( pSN->numChildren() == 0 );
+			YAKE_ASSERT( pSN->numAttachedObjects() == 0 )( pSN->numAttachedObjects() );
+			YAKE_ASSERT( pSN->numChildren() == 0 )( pSN->numChildren() );
 			if (pSN->numAttachedObjects() > 0)
 			{
 				Ogre::SceneNode::ObjectIterator itObj = pSN->getAttachedObjectIterator();

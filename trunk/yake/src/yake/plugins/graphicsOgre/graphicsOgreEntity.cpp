@@ -34,7 +34,7 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreEntity::OgreEntity( GraphicalWorld& owningWorld, ::Ogre::SceneManager * sceneMgr, const String & mesh ) : OgreWrappedObject( owningWorld ), mSceneMgr( sceneMgr ), mEntity( 0 )
+	OgreEntity::OgreEntity( ::Ogre::SceneManager * sceneMgr, const String & mesh ) : mSceneMgr( sceneMgr ), mEntity( 0 )
 	{
 		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
 		YAKE_TRY
@@ -92,8 +92,7 @@ namespace ogre3d {
 		YAKE_ASSERT( mEntity ).debug( "need an entity" );
 		if ( mEntity->hasSkeleton() )
 		{
-			OgreWrappedObject& o = const_cast<OgreWrappedObject&>( static_cast<const OgreWrappedObject&>(*this) );
-			return new OgreSkeleton( *mEntity, o.getOwningWorld() );
+			return new OgreSkeleton( *mEntity );
 		}
 		else
 			return NULL;

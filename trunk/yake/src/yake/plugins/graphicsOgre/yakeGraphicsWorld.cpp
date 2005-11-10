@@ -51,43 +51,32 @@ namespace ogre3d {
 
 	OgreCore* GraphicalWorld::msCore = 0;
 
-	OgreWrappedObject::OgreWrappedObject(GraphicalWorld& owner) : mOwningWorld(owner)
-	{
-		mOwningWorld.reg( this );
-	}
-	OgreWrappedObject::~OgreWrappedObject()
-	{
-		mOwningWorld.unreg( this );
-	}
-	GraphicalWorld& OgreWrappedObject::getOwningWorld()
-	{
-		return mOwningWorld;
-	}
-
 	//-----------------------------------------------------
-	void GraphicalWorld::reg( OgreWrappedObject* pO )
+	void GraphicalWorld::reg( OgreNode* pO )
 	{
 		YAKE_ASSERT( pO );
 		if (!pO)
 			return;
-		mWrapped.push_back( pO );
+		//mWrapped.push_back( pO );
+		mWrapped[ pO->getName() ] = pO;
 
-		//YAKE_LOG(String("REG WRAPPED=") << mWrapped.size());
+		//YAKE_LOG(String("REG WRAPPED=") << pO->getName());
 	}
 
 	//-----------------------------------------------------
-	void GraphicalWorld::unreg( OgreWrappedObject* pO )
+	void GraphicalWorld::unreg( OgreNode* pO )
 	{
 		YAKE_ASSERT( pO );
 		if (!pO)
 			return;
-		WrappedList::iterator itFind = std::find( mWrapped.begin(), mWrapped.end(), pO );
+		//WrappedList::iterator itFind = std::find( mWrapped.begin(), mWrapped.end(), pO );
+		WrappedList::iterator itFind = mWrapped.find( pO->getName() );
 		YAKE_ASSERT( itFind != mWrapped.end() );
 		if (itFind == mWrapped.end())
 			return;
 		mWrapped.erase( itFind );
 
-		//YAKE_LOG(String("UNREG WRAPPED=") << mWrapped.size());
+		//YAKE_LOG(String("UNREG WRAPPED=") << pO->getName());
 	}
 
 	//-----------------------------------------------------
@@ -98,7 +87,7 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	GraphicalWorld::GraphicalWorld() : mpRaySceneQuery(0), mLastWrappedId(0)
+	GraphicalWorld::GraphicalWorld() : mpRaySceneQuery(0), mRootNode(0)
 	{
 		YAKE_ASSERT( msCore );
 
@@ -115,10 +104,12 @@ namespace ogre3d {
 
 	GraphicalWorld::~GraphicalWorld()
 	{
+		YAKE_SAFE_DELETE( mRootNode );
 		while (mWrapped.size() > 0)
 		{
 			YAKE_LOG_INFORMATION(String("graphicsOgre: trying to destroy wrapped object..."));
-			delete *mWrapped.begin();
+			//delete *mWrapped.begin();
+			delete mWrapped.begin()->second;
 			mWrapped.erase( mWrapped.begin() );
 		}
 
@@ -130,8 +121,13 @@ namespace ogre3d {
 	//-----------------------------------------------------
 	ISceneNode* GraphicalWorld::createSceneNode( const String& name )
 	{
+		if (!mRootNode)
+		{
+			mRootNode = new OgreNode( *this, msCore->getSceneMgr(), uniqueName::create("rootSn") );
+			YAKE_ASSERT( mRootNode );
+		}
 		YAKE_ASSERT( msCore ).debug("need a core!");
-		return new OgreNode( *this, msCore->getSceneMgr(), name );
+		return mRootNode->createChildNode(name);
 	}
 
 	//-----------------------------------------------------
@@ -145,7 +141,7 @@ namespace ogre3d {
 	IEntity* GraphicalWorld::createEntity( const String& mesh )
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
-		OgreEntity* pEntity = new OgreEntity( *this, msCore->getSceneMgr(), mesh );
+		OgreEntity* pEntity = new OgreEntity( msCore->getSceneMgr(), mesh );
 		mEntityMap[ pEntity->getEntity_() ] = pEntity;
 		return pEntity;
 	}
@@ -154,21 +150,21 @@ namespace ogre3d {
 	ILight* GraphicalWorld::createLight()
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
-		return new OgreLight( *this, msCore->getSceneMgr() );
+		return new OgreLight( msCore->getSceneMgr() );
  	}
 
 	//-----------------------------------------------------
 	IParticleSystem* GraphicalWorld::createParticleSystem( const String& rPSTemplateName )
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
-		return new OgreParticleSystem( *this, *msCore->getParticleSysMgr(), rPSTemplateName );
+		return new OgreParticleSystem( *msCore->getParticleSysMgr(), rPSTemplateName );
 	}
 
 	//-----------------------------------------------------
 	ICamera* GraphicalWorld::createCamera()
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
-		return new OgreCamera( *this, msCore->getSceneMgr() );
+		return new OgreCamera( msCore->getSceneMgr() );
 	}
 
 	//------------------------------------------------------
@@ -177,7 +173,7 @@ namespace ogre3d {
 		YAKE_ASSERT( msCore ).debug("need a core!");
 		YAKE_ASSERT( pCamera ).debug("need a camera!");
 		YAKE_TRY
-		return new OgreViewport( msCore, static_cast<OgreCamera*>( pCamera ), *this );
+		return new OgreViewport( msCore, static_cast<OgreCamera*>( pCamera ) );
 		YAKE_CATCH_OGRE_RETHROW
 	}
 
@@ -306,7 +302,7 @@ namespace ogre3d {
 		pMesh->setIndexBufferPolicy( Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false );
 		pMesh->setVertexBufferPolicy( Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY, false );
 
-		pMGA = new OgreMeshGeometryAccess( *this, pMesh );
+		pMGA = new OgreMeshGeometryAccess( pMesh );
 		YAKE_ASSERT( pMGA );
 		return pMGA;
 	}
@@ -322,7 +318,7 @@ namespace ogre3d {
 		ProcMeshMap::iterator itFind = mProcMeshes.find( name );
 		if (itFind == mProcMeshes.end())
 			return 0;
-		return new OgreMeshGeometryAccess(*this, itFind->second);
+		return new OgreMeshGeometryAccess(itFind->second);
 	}
 
 	//-----------------------------------------------------

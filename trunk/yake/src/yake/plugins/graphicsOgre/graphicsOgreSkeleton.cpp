@@ -33,7 +33,7 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreSkeleton::OgreSkeleton( Ogre::Entity& rEntity, GraphicalWorld& owningWorld ) : OgreWrappedObject( owningWorld ), mEntity( rEntity )
+	OgreSkeleton::OgreSkeleton( Ogre::Entity& rEntity ) : mEntity( rEntity )
 	{
 	}
 

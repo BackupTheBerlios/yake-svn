@@ -38,17 +38,19 @@ namespace ogre3d {
 
 	//------------------------------------------------------
 	OgreNode::OgreNode( GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr, const String& name /*= ""*/ ) : 
-			OgreWrappedObject( owningWorld ),
+			mWorld( owningWorld ),
 			mSceneNode( 0 ) ,mSceneMgr( sceneMgr ), mParentNode(0)
 	{
 		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
-		String id = name;
-		if (id.empty())
-			id = uniqueName::create("sn_");
-		mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( id ) );
+		String ogreid = name;
+		if (ogreid.empty())
+			ogreid = uniqueName::create("sn_"+name+"_");
+		mName = name;
+		mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( ogreid ) );
 		YAKE_ASSERT( mSceneNode ).warning("Couldn't create a scene node!");
 		mSceneNode->setPosition( 0, 0, 0 );
-		//YAKE_LOG(String("gfx: new node ") << id << "(" << String(mSceneNode->getName().c_str()) << ")");
+		mWorld.reg( this );
+		//YAKE_LOG(String("gfx: new node '") << name << "' ogreid='" << String(mSceneNode->getName().c_str()) << "'");
 	}
 
 	//------------------------------------------------------
@@ -79,16 +81,17 @@ namespace ogre3d {
 	OgreNode::~OgreNode()
 	{
 		//YAKE_LOG(String("gfx: node d'tor '") << this->getName() << "' - cleaning... ");
-		detachAndDestroyPtrContainer( mEntities, *this );
-		detachAndDestroyPtrContainer( mLights, *this );
-		detachAndDestroyPtrContainer( mCameras, *this );
-		detachAndDestroyPtrContainer( mParticleSystems, *this );
 
 		if (mParentNode)
 		{
 			mParentNode->detach( this );
 			mParentNode = 0;
 		}
+
+		detachAndDestroyPtrContainer( mEntities, *this );
+		detachAndDestroyPtrContainer( mLights, *this );
+		detachAndDestroyPtrContainer( mCameras, *this );
+		detachAndDestroyPtrContainer( mParticleSystems, *this );
 
 		destroyPtrContainer( mChildren );
 
@@ -97,11 +100,15 @@ namespace ogre3d {
 		{
 			YAKE_ASSERT( mSceneNode->numAttachedObjects() == 0 );
 			YAKE_ASSERT( mSceneNode->numChildren() == 0 );
-			mSceneNode->getParent()->removeChild( mSceneNode );
+			if (mSceneNode->getParent())
+				mSceneNode->getParent()->removeChild( mSceneNode );
 			mSceneNode->detachAllObjects();
 			mSceneNode->removeAndDestroyAllChildren(); // just in case...
+			//YAKE_LOG(String("destroying OGRE SN '") << mSceneNode->getName().c_str() << "'");
 			mSceneMgr->destroySceneNode( mSceneNode->getName() );
 		}
+
+		this->mWorld.unreg( this );
 		//YAKE_LOG(String("gfx: node d'tor '") << this->getName() << "' - done. ");
 	}
 
@@ -109,12 +116,18 @@ namespace ogre3d {
 	void OgreNode::detach( ISceneNode* pNode )
 	{
 		YAKE_ASSERT( pNode );
-		if (mSceneNode)
-			mSceneNode->removeChild( static_cast<OgreNode*>(pNode)->getSceneNode_()->getName() );
+		YAKE_ASSERT( mSceneNode );
+
+		Ogre::SceneNode* pChildSN = static_cast<OgreNode*>(pNode)->getSceneNode_();
+		YAKE_ASSERT( pChildSN );
+		YAKE_ASSERT( pChildSN->getParent() == mSceneNode );
+		mSceneNode->removeChild( pChildSN->getName() );
+		
 		NodeList::iterator itFind = std::find( mChildren.begin(), mChildren.end(), pNode );
 		if (itFind != mChildren.end())
 			mChildren.erase( itFind );
-		static_cast<OgreNode*>(pNode)->_onDetached();
+		
+		static_cast<OgreNode*>(pNode)->_setParent(0);
 	}
 
 	//------------------------------------------------------
@@ -285,17 +298,15 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreNode::_onDetached()
+	void OgreNode::_setParent( OgreNode* pParent )
 	{
-		if (mSceneNode->getParent())
-			mSceneNode->getParent()->removeChild(mSceneNode);
-		mParentNode = 0;
+		mParentNode = pParent;
 	}
 
 	//------------------------------------------------------
-	void OgreNode::_onAttached( OgreNode* pParent )
+	OgreNode* OgreNode::_getParent() const
 	{
-		mParentNode = pParent;
+		return mParentNode;
 	}
 
 	//------------------------------------------------------
@@ -303,18 +314,29 @@ namespace ogre3d {
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		OgreNode* pN = static_cast<OgreNode*>( pNode );
-		pN->_onDetached();
-		mSceneNode->addChild( pN->getSceneNode_() );
+
+		OgreNode* pOtherParent = pN->_getParent();
+		if (pOtherParent)
+			pOtherParent->detach( pN );
+		YAKE_ASSERT( !pN->_getParent() );
+
+		Ogre::SceneNode* pChildSN = pN->getSceneNode_();
+		YAKE_ASSERT( pChildSN );
+
+		// in case pChildSN is a child of the OGRE scene manager's root node...
+		if (pChildSN->getParent())
+			pChildSN->getParent()->removeChild( pChildSN );
+
+		mSceneNode->addChild( pChildSN );
 		mChildren.push_back( pNode );
-		pN->_onAttached( this );
+		pN->_setParent( this );
 	}
 
 	//------------------------------------------------------
 	ISceneNode* OgreNode::createChildNode( const String& name /*= ""*/ )
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
-		OgreNode* pChild = new OgreNode( getOwningWorld(), mSceneMgr, name );
-		mSceneNode->addChild( pChild->getSceneNode_() );
+		OgreNode* pChild = new OgreNode( mWorld, mSceneMgr, name );
 		this->addChildNode( pChild );
 		return pChild;
 	}

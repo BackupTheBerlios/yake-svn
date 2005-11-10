@@ -32,8 +32,7 @@ namespace yake {
 namespace graphics {
 
 	//------------------------------------------------------
-	OgreParticleSystem::OgreParticleSystem( ogre3d::GraphicalWorld& owningWorld, Ogre::ParticleSystemManager& rPSMgr, const String& rPSTempl ) : 
-																ogre3d::OgreWrappedObject(owningWorld),
+	OgreParticleSystem::OgreParticleSystem( Ogre::ParticleSystemManager& rPSMgr, const String& rPSTempl ) : 
 																mParticleSysMgr( rPSMgr ), mParticleSys( NULL )
 	{
 		mParticleSys = mParticleSysMgr.createSystem( uniqueName::create( "ps_" ), rPSTempl );

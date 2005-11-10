@@ -32,7 +32,7 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreCamera::OgreCamera( GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr ) :OgreWrappedObject( owningWorld ),  mSceneMgr( sceneMgr ), mCam( 0 )
+	OgreCamera::OgreCamera( Ogre::SceneManager * sceneMgr ) : mSceneMgr( sceneMgr ), mCam( 0 )
 	{
 		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
 		mCam = mSceneMgr->createCamera( yake::uniqueName::create("sn_") );
