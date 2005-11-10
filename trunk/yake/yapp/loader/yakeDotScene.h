@@ -42,7 +42,6 @@ namespace dotscene {
 	*/
 	class DotSceneParser
 	{
-		YAKE_DECLARE_CLASS( DotSceneParser );
 	public:
 		
 		struct Desc
@@ -120,7 +119,7 @@ namespace dotscene {
 		typedef AssocVector< String, CameraDesc > CameraDescMap;
 		typedef AssocVector< String, LightDesc > LightDescMap;
 
-		static String	ROOT_NODE_NAME;
+		static const String ROOT_NODE_NAME;
 		
 		virtual ~DotSceneParser() {}
 

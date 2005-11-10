@@ -28,6 +28,7 @@
 #define YAKE_DATA_XODEPARSER_H
 
 #include <yake/data/yakeData.h>
+#include <yake/physics/yakePhysics.h>
 #include <yapp/model/yakePhysical.h>
 
 namespace yake {
@@ -36,14 +37,15 @@ namespace parser {
 namespace xode {
 
 	/** XODEParser base class providing default implementation for DOM parsing.
-	* \todo read lights, environment, external references ..
 	*/
 	class YAPP_BASE_API XODEParser
 	{
 	public:
 		typedef SharedPtr<dom::INode> NodeSharedPtr;
+		typedef dom::NodeList::const_iterator NodeListIter;
+
 		
-		XODEParser( model::Physical& rBaseModel );
+		XODEParser();
 		virtual ~XODEParser() {}
 
 		String getName() const
@@ -57,29 +59,28 @@ namespace xode {
 			\param file 
 			\return 
 		*/
-		virtual bool load( const NodeSharedPtr docNode,  physics::IWorld* pPWorld );
+		virtual bool load( const NodeSharedPtr docNode );
 
 		/** Prepare for next run of load/store.
 		*/
 		virtual void reset();
-	
-	protected:
+		
 		/// XODE "transform" node representation
 		struct Transform
 		{
-			Vector3 	mPosition;
-			Quaternion	mRotation;
-			Vector3		mScale;
+			Vector3 	position_;
+			Quaternion	rotation_;
+			Vector3		scale_;
 			
-			Transform() : mScale( Vector3::kUnitScale )
+			Transform() : scale_( Vector3::kUnitScale )
 			{
 			}
 			
 			bool isIdentity() const
 			{
-				bool result = mScale == Vector3::kUnitScale;
-				result &= mPosition == Vector3::kZero;
-				result &= mRotation == Quaternion::kZero;
+				bool result = scale_ == Vector3::kUnitScale;
+				result &= position_ == Vector3::kZero;
+				result &= rotation_ == Quaternion::kZero;
 				
 				return result;
 			}
@@ -88,29 +89,108 @@ namespace xode {
 			{
 				Transform result;
 				
-				Quaternion const& rParRot = parentTransform.mRotation;
-				Vector3 const& rParPos = parentTransform.mPosition;
-				Vector3 const& rParScale = parentTransform.mScale;
+				Quaternion const& rParRot = parentTransform.rotation_;
+				Vector3 const& rParPos = parentTransform.position_;
+				Vector3 const& rParScale = parentTransform.scale_;
 				
-				result.mPosition = parentTransform.mPosition 
-					+ rParRot*( mPosition*rParScale );
+				result.position_ = parentTransform.position_ 
+					+ rParRot*( position_*rParScale );
 					
-				result.mRotation = rParRot*mRotation;
+				result.rotation_ = rParRot*rotation_;
 				
-				result.mScale = mScale*rParScale;  
+				result.scale_ = scale_*rParScale;  
 				
 				return result;
 			}
 		};
+
+		// Event-spawning parser makes heavy use of these
+		struct Desc
+		{
+		  String	name_;
+		  String	parentName_;
+		  Transform	transform_;
+		};
+
+		struct BodyDesc : public Desc
+		{
+		};
+
+		struct GeomDesc : public Desc
+		{
+		    SharedPtr<physics::IShape::Desc> shape_;
+		};
+
+		struct MassDesc : public Desc // ??? is this needed??
+		{
+		  SharedPtr<physics::IBody::MassDesc> mass_;
+		};
+
+		struct JointDesc : public Desc
+		{
+		  String otherBody_;
+
+		  SharedPtr<physics::IJoint::DescBase> joint_;
+		};
+
+		struct MaterialDesc : public Desc // ?? no... not needed
+		{
+		  physics::IMaterial::Desc material_;
+		};
+		
+		typedef SignalX< void( const BodyDesc& ) > BodySignal;
+		typedef SignalX< void( const GeomDesc& ) > GeomSignal;
+		typedef SignalX< void( const MassDesc& ) > MassSignal;
+		typedef SignalX< void( const JointDesc& ) > JointSignal;
+		typedef SignalX< void( const MaterialDesc& ) > MaterialSignal;
+		typedef SignalX< void ( void ) > EventSignal; // special event handler type
+	
+		SignalConnection subscribeToBodySignal( const BodySignal::slot_type& slot )
+		{ return sigBody_.connect(slot); } 
+		SignalConnection subscribeToGeomSignal( const GeomSignal::slot_type& slot )
+		{ return sigGeom_.connect(slot); } 
+		SignalConnection subscribeToMassSignal( const MassSignal::slot_type& slot )
+		{ return sigMass_.connect(slot); } 
+		SignalConnection subscribeToJointSignal( const JointSignal::slot_type& slot )
+		{ return sigJoint_.connect(slot); } 
+		SignalConnection subscribeToMaterialSignal( const MaterialSignal::slot_type& slot )
+		{ return sigMaterial_.connect(slot); } 
+
+		SignalConnection subscribeToParseEndedSignal( const EventSignal::slot_type& slot )
+		{ return sigParseEnded_.connect( slot ); } 
+
+		typedef AssocVector< String, BodyDesc > BodyDescMap;
+		typedef AssocVector< String, GeomDesc > GeomDescMap;
+		typedef AssocVector< String, MassDesc > MassDescMap;
+		typedef AssocVector< String, JointDesc > JointDescMap;
+		typedef AssocVector< String, MaterialDesc > MaterialDescMap;
+
+		const BodyDescMap& getBodyDescriptions() { return bodyDescriptions_; }
+		const GeomDescMap& getGeomDescriptions() { return geomDescriptions_; }
+		const MassDescMap& getMassDescriptions() { return massDescriptions_; }
+		const JointDescMap& getJointDescriptions() { return jointDescriptions_; }
+		const MaterialDescMap& getMaterialDescriptions() { return materialDescriptions_; }
+		
+	protected:
+		BodySignal	sigBody_;
+		GeomSignal	sigGeom_;
+		MassSignal	sigMass_;
+		JointSignal	sigJoint_;
+		MaterialSignal	sigMaterial_;
+		EventSignal	sigParseEnded_;
+	
+		BodyDescMap bodyDescriptions_;
+		GeomDescMap geomDescriptions_;
+		MassDescMap massDescriptions_;
+		JointDescMap jointDescriptions_;
+		MaterialDescMap materialDescriptions_;
 		
 		/// Default implementations for common functions.
-		
-
 		virtual void readXODE( const NodeSharedPtr pNode );
 		virtual void readWorld( const NodeSharedPtr pWorldNode );
-		virtual void readSpace( const NodeSharedPtr pSpaceNode );
-		virtual void readBody( const NodeSharedPtr pBodyNode );
-		virtual void readGeom( const NodeSharedPtr pGeomNode, physics::IActor* pParentObject = NULL, const Transform& rParentTransform = Transform() );
+		virtual void readSpace( const NodeSharedPtr pSpaceNode, const String& parent );
+		virtual void readBody( const NodeSharedPtr pBodyNode, const String& parent );
+		virtual void readGeom( const NodeSharedPtr pGeomNode, const String& parent , const Transform& rParentTransform = Transform() );
 		virtual void readBox( const NodeSharedPtr pNode, real& sX, real& sY, real& sZ );
 		virtual void readCappedCylinder( const NodeSharedPtr pNode, real& radius, real& length );
 		virtual void readCone( const NodeSharedPtr pNode, real& radius, real& length );
@@ -130,59 +210,38 @@ namespace xode {
 		virtual void readRotation( const NodeSharedPtr pRotNode, Quaternion& rRot );
 		virtual void readScale( const NodeSharedPtr pScaleNode, Vector3& rScale );  
 		virtual void readAxisAngleRot( const NodeSharedPtr pRotNode, Quaternion& rRot );
-		virtual void readMass( const NodeSharedPtr pMassNode, physics::IBody& rBody, const Transform& rParentTransform ); 
-		virtual void readMassShape( const NodeSharedPtr pMShapeNode, physics::IBody& rBody, const Transform& rParentTransform ); 
-		virtual void readMassAdjust( const NodeSharedPtr pMAdjustNode, physics::IBody& rBody ); 
-		virtual void readJoint( const NodeSharedPtr pJointNode, const String& rBodyName, Transform& rParentTransform );
+		virtual void readMass( const NodeSharedPtr pMassNode, const String& parent , const Transform& rParentTransform ); 
+		virtual void readMassShape( const NodeSharedPtr pMShapeNode, const String& parent, const Transform& rParentTransform ); 
+		virtual void readMassAdjust( const NodeSharedPtr pMAdjustNode, const String& parent ); 
+		virtual void readJoint( const NodeSharedPtr pJointNode, const String& parent , Transform& rParentTransform );
 		
-		virtual void readBall( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
-		virtual void readFixed( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
-		virtual void readHinge( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
-		virtual void readHinge2( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
-		virtual void readSlider( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
-		virtual void readUniversal( const NodeSharedPtr pJointNode, physics::IActor* pActor1, physics::IActor* pActor2, Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readBall( const NodeSharedPtr pJointNode, Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readFixed( const NodeSharedPtr pJointNode, Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readHinge( const NodeSharedPtr pJointNode, Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readHinge2( const NodeSharedPtr pJointNode, Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readSlider( const NodeSharedPtr pJointNode, Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readUniversal( const NodeSharedPtr pJointNode, Transform& rJointTransform );
 		
 		virtual void readAnchor( const NodeSharedPtr pAnchorNode, Vector3& rAnchor, Transform& rJointTransform );
 		virtual void readAxis( const NodeSharedPtr pAxisNode, Vector3& rAxis, Transform& rJointTransform );
-		virtual String XODEParser::readMaterialExt( const NodeSharedPtr pNode );
-		
-// 		readGroup
-// 		readJointgroup
-// 		virtual void readMassStruct
-		
-		struct JointDescription
-		{
-			String					mBody1Name; /// name of 2nd body is inside joint def  node
-			NodeSharedPtr	mJointDefNode;
-			Transform				mParentTransform;
-		};
-	
-		typedef Vector<JointDescription> JointDescriptions;
-		JointDescriptions			mJointDescriptions;
-		
-		/// Joint creation is only possible at post-parse step
-		void createJointsFromDescriptions(); 
-		void createJoint( const JointDescription& rDesc );
-		
+		virtual void readMaterialExt( const NodeSharedPtr pNode, const String& parent  );
+
 	private:
-		NodeSharedPtr			mDocNode;
-		physics::IWorld*					mPWorld;
-		model::Physical&					mBaseModel;
+		NodeSharedPtr		mDocNode;
 	};
 	
 	class YAPP_BASE_API XODEParserV1 : public XODEParser
 	{
 	public:
-		XODEParserV1( model::Physical& rBaseModel ):XODEParser( rBaseModel ) {}
 		virtual ~XODEParserV1() {}
 		
 		virtual Version getVersion() const
 		{ 
-			return Version( 0, 1, 0 );
+			return Version( 0, 5, 0 );
 		}
 	};
 
-} // dotscene
+} // xode
 } // parser
 } // data
 } // yake
