@@ -386,6 +386,12 @@
 				RelativePath="..\..\yapp\model\yakeGraphical.h">
 			</File>
 			<File
+				RelativePath="..\..\src\yapp\model\yakeGraphicalDataImporter.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakeGraphicalDataImporter.h">
+			</File>
+			<File
 				RelativePath="..\..\yapp\model\yakeModel.h">
 			</File>
 			<File
@@ -411,6 +417,12 @@
 			</File>
 			<File
 				RelativePath="..\..\yapp\model\yakePhysical.h">
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\model\yakePhysicalDataImporter.cpp">
+			</File>
+			<File
+				RelativePath="..\..\yapp\model\yakePhysicalDataImporter.h">
 			</File>
 			<File
 				RelativePath="..\..\yapp\model\yakeUpdaters.h">
