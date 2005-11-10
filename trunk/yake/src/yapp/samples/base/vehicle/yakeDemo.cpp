@@ -14,7 +14,7 @@ using namespace yake;
 struct TheConfiguration : public raf::ApplicationConfiguration
 {
 	virtual StringVector getLibraries()
-	{ return MakeStringVector() << "graphicsOgre" << "inputOgre" << "physicsOde"; }
+	{ return MakeStringVector() << "graphicsOgre" << "inputOgre" << "physicsODE"; }
 
 	//virtual StringVector getScriptingSystems()
 	//{ return MakeStringVector() << "lua"; }
@@ -49,13 +49,16 @@ public:
 	{
 		enableInstantQuitByKey( input::KC_ESCAPE );
 	}
+
 	~TheMainState()
 	{
 	}
+
 private:
 	void _createThrusterVisual(const String& mtPtId, const String& engineId, graphics::ISceneNode& parentSN)
 	{
-		graphics::ISceneNode* pSN = parentSN.createChildNode();
+		graphics::ISceneNode* pSN = parentSN.createChildNode( mtPtId );
+
 		graphics::IParticleSystem* pPS = getGraphicalWorld()->createParticleSystem("thruster2");
 		pSN->attachParticleSystem( pPS );
 		mComplex->addLink( mVehicle->getMountPoint(mtPtId), pSN );
@@ -71,6 +74,7 @@ private:
 		mComplex->addLink( mVehicle->getWheelInterface(wheelId), pSN );
 	}
 protected:
+
 	virtual void onCreateScene()
 	{
 		YAKE_LOG_INFORMATION("Creating scene");
@@ -81,7 +85,7 @@ protected:
 		pLight->setDirection( Vector3(0,-1,1) );
 		getGraphicalWorld()->createSceneNode("lightnode0")->attachLight( pLight );
 
-		// position camera and look at the ninja
+		// position camera and look at the razor
 		getDefaultCamera()->setNearClipDistance( 1 );
 		getDefaultCamera()->setFixedYawAxis(Vector3::kUnitY);
 		getDefaultCamera()->setPosition(Vector3(0,0,-40));
@@ -100,6 +104,8 @@ protected:
 			model::Graphical* pG = new model::Graphical();
 			pG->addSceneNode( pGroundSN );
 			mGround->addGraphical( pG );
+
+			getPhysicalWorld()->setGlobalGravity( Vector3( 0, -9.81, 0 ) ); 
 
 			// physical
 			physics::IActorPtr pGroundPlane = getPhysicalWorld()->createActor( physics::ACTOR_STATIC );
@@ -157,11 +163,12 @@ protected:
 
 		// create visuals
 		// - ship body
-		graphics::ISceneNode* pSN = getGraphicalWorld()->createSceneNode("root");
+		graphics::ISceneNode* pSN = getGraphicalWorld()->createSceneNode( "root" );
 		pSN->attachEntity( getGraphicalWorld()->createEntity("razor.mesh") );
 		pSN->setScale( Vector3::kUnitScale * razorMeshScale );
 		pG->addSceneNode(pSN);
 
+		YAKE_LOG( "Creating thruster visuals" );
 		// - thruster visuals
 		_createThrusterVisual( "left", "left", *pSN );
 		_createThrusterVisual( "right", "right", *pSN );
@@ -183,6 +190,7 @@ protected:
 		// sky box
 		getGraphicalWorld()->setSkyBox("Examples/SpaceSkyBox");
 	}
+
 	virtual void onDestroyScene()
 	{
 		YAKE_SAFE_DELETE( mGround );
@@ -190,6 +198,7 @@ protected:
 		YAKE_SAFE_DELETE( mComplex );
 		YAKE_SAFE_DELETE( mVehicle );
 	}
+
 	virtual void onEnter()
 	{
 		RtMainState::onEnter();
@@ -227,9 +236,11 @@ protected:
 			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_PGUP, KAM_CONTINUOUS ) );
 		mActionMap.subscribeToActionId( ACTIONID_UP, boost::bind(&TheMainState::onUp,this) );
 	}
+
 	virtual void onExit()
 	{
 	}
+
 	virtual void onFrame(const real timeElapsed)
 	{
 		mActionMap.update();
@@ -277,10 +288,13 @@ protected:
 protected:
 	void onStrafeLeft()
 	{ mActiveActions.insert( input::ACTIONID_STRAFE_LEFT ); }
+
 	void onStrafeRight()
 	{ mActiveActions.insert( input::ACTIONID_STRAFE_RIGHT ); }
+
 	void onForward()
 	{ mActiveActions.insert( input::ACTIONID_FORWARD ); }
+
 	void onReverse()
 	{ mActiveActions.insert( input::ACTIONID_REVERSE ); }
 	void onUp()
@@ -297,6 +311,7 @@ private:
 		mEmitterEmissionRate[ engineId ] = ps.getEmissionRate(0);
 		mThrusterPs[ engineId ] = &ps;
 	}
+
 	void _updateThrusterPs()
 	{
 		ConstDequeIterator< ThrusterPsMap > itM( mThrusterPs );
@@ -317,6 +332,7 @@ private:
 			ps->setMinVelocity( 0, vel );
 		}
 	}
+
 private:
 	model::complex::Model*	mGround;
 	vehicle::IVehicle*		mVehicle;
