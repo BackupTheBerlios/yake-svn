@@ -41,12 +41,12 @@ namespace model {
 	*/
 	class YAPP_BASE_API Graphical : public Submodel
 	{
-		YAKE_DECLARE_CLASS( Graphical );
 	public:
 		Graphical()
 		{}
+
 		virtual ~Graphical();
-		//typedef Vector<graphics::ISceneNode*> SceneNodeList;
+
 		typedef graphics::SceneNodePtrList SceneNodeList;
 
 		/** Adds a scene node to this model::Graphical object.
@@ -60,7 +60,7 @@ namespace model {
 			all child nodes recursively.
 			Consider using getAllSceneNodes() as an alternative (for performance reasons!).
 		*/
-		SceneNodeList getSceneNodes(bool bRecursive = false) const;
+		SceneNodeList getSceneNodes( bool bRecursive = false ) const;
 
 		/** Returns a scene node given its name, either restricted to root nodes or the complete
 			node hierarchy.
@@ -77,86 +77,16 @@ namespace model {
 		*/
 		void setPosition( const Vector3& pos );
 	
-		//... getAllX();
-		//
-		//graphics::IEntity* getEntity( String name );
-		//graphics::ICamera* getCamera( String name );
-		//graphics::ILight* getLight( String name );
-		//
-		//graphics::ISceneNode* getParentForEntity( String entityName );
-		//graphics::ISceneNode* getParentForLight( String lightName );
-		//graphics::ISceneNode* getParentForCamera( String cameraName );
-		
 	private:
 		struct SceneNodeEntry
 		{
 			graphics::ISceneNode*	pSN;
 			bool					bOwned;
 		};
+
 		typedef Vector< SceneNodeEntry > NodeList;
 		NodeList		mNodes;
 		
-		class DotSceneListener
-		{
-		public:
-			DotSceneListener( Graphical& owner ) : mOwner(owner)
-			{}
-			typedef yake::data::parser::dotscene::DotSceneParser::NodeDesc SceneNodeDesc;
-			typedef yake::data::parser::dotscene::DotSceneParser::EntityDesc EntityDesc;
-			typedef yake::data::parser::dotscene::DotSceneParser::CameraDesc CameraDesc;
-			typedef yake::data::parser::dotscene::DotSceneParser::LightDesc LightDesc;
-			
-			void processSceneNode( const SceneNodeDesc );
-			void processEntity( const EntityDesc );
-			void processCamera( const CameraDesc );
-			void processLight( const LightDesc );
-			
-			void reset( graphics::IWorld* graphicsWorld )
-			{
-				mSceneNodes.clear();
-				mEntities.clear();
-				mCameras.clear();
-				mLights.clear();
-				
-				mGWorld = graphicsWorld;
-			}
-			
-			struct EntityInfo
-			{
-				graphics::IEntity*	entity;
-				String				parentSceneNode;
-			};
-			
-			struct CameraInfo
-			{
-				graphics::ICamera*	camera;
-				String				parentSceneNode;
-			};
-			
-			struct LightInfo
-			{
-				graphics::ILight*	light;
-				String				parentSceneNode;
-			};
-
-			typedef AssocVector< String, graphics::ISceneNode* > SceneNodeMap;
-			typedef AssocVector< String, EntityInfo > EntityMap;
-			typedef AssocVector< String, CameraInfo > CameraMap;
-			typedef AssocVector< String, LightInfo > LightMap;
-			
-			typedef std::map< String, String > TrackerMap;
-			TrackerMap		mTrackersTargets;
-			
-			SceneNodeMap	mSceneNodes;
-			EntityMap		mEntities;
-			CameraMap		mCameras;
-			LightMap		mLights;
-			
-			graphics::IWorld*	mGWorld;
-
-			Graphical&		mOwner;
-		};
-
 	};
 
 } // model
