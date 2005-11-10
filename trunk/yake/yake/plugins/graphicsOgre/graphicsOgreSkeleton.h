@@ -31,10 +31,10 @@ namespace yake {
 namespace graphics {
 namespace ogre3d {
 
-	class OgreSkeleton : public graphics::ISkeleton, public OgreWrappedObject
+	class OgreSkeleton : public graphics::ISkeleton
 	{
 	public:
-		OgreSkeleton( Ogre::Entity& rEntity, GraphicalWorld& owningWorld );
+		OgreSkeleton( Ogre::Entity& rEntity );
 		virtual ~OgreSkeleton();
 
 		virtual void enableAnimation( const String& rAnimName, bool enable );

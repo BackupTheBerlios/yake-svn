@@ -32,7 +32,8 @@ namespace graphics {
 namespace ogre3d {
 
 	class OgreEntity;
-	class OgreNode : public graphics::ISceneNode, public OgreWrappedObject
+	class GraphicalWorld;
+	class OgreNode : public graphics::ISceneNode
 	{
 	public:
 		OgreNode( GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr, const String& name = "" );
@@ -77,8 +78,8 @@ namespace ogre3d {
 
 		Ogre::SceneNode* getSceneNode_() const
 		{ return mSceneNode; }
-		void _onAttached( OgreNode* );
-		void _onDetached();
+		void _setParent( OgreNode* );
+		OgreNode* _getParent() const;
 	protected:
 		typedef SceneNodePtrList NodeList;
 		NodeList			mChildren;
@@ -90,6 +91,7 @@ namespace ogre3d {
 		Ogre::SceneNode* 	mSceneNode;
 		Ogre::SceneManager*	mSceneMgr;
 		OgreNode*			mParentNode;
+		GraphicalWorld&		mWorld;
 	};
 
 }

@@ -32,12 +32,12 @@ namespace graphics {
 namespace ogre3d {
 
 	class OgreNode;
-	class OgreEntity : public graphics::IEntity, public OgreWrappedObject
+	class OgreEntity : public graphics::IEntity
 	{
 		OgreEntity();
 		OgreEntity( const OgreEntity& );
 	public:
-		OgreEntity( GraphicalWorld& owningWorld, ::Ogre::SceneManager* sceneMgr, const String& mesh );
+		OgreEntity( ::Ogre::SceneManager* sceneMgr, const String& mesh );
 		virtual ~OgreEntity();
 
 		virtual ISkeleton* getSkeleton() const;

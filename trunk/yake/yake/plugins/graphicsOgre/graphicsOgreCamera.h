@@ -31,12 +31,12 @@ namespace yake {
 namespace graphics {
 namespace ogre3d {
 
-	class OgreCamera : public ICamera, public OgreWrappedObject
+	class OgreCamera : public ICamera
 	{
 		OgreCamera();
 		OgreCamera( const OgreCamera & );
 	public:
-		OgreCamera( GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr );
+		OgreCamera( Ogre::SceneManager * sceneMgr );
 		virtual ~OgreCamera();
 
 		// Movable

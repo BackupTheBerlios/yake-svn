@@ -35,7 +35,7 @@ namespace yake {
 namespace graphics {
 namespace ogre3d {
 
-	class OgreMeshGeometryAccess : public IMeshGeometryAccess, public OgreWrappedObject
+	class OgreMeshGeometryAccess : public IMeshGeometryAccess
 	{
 	private:
 		Ogre::MeshPtr		mMesh;
@@ -43,7 +43,7 @@ namespace ogre3d {
 		SubMeshMap			mSubmeshes;
 		SubmeshId			mLastId;
 	public:
-		OgreMeshGeometryAccess( GraphicalWorld& owningWorld, Ogre::MeshPtr& mesh );
+		OgreMeshGeometryAccess( Ogre::MeshPtr& mesh );
 		virtual ~OgreMeshGeometryAccess();
 
 		virtual SubmeshId createSubmesh();

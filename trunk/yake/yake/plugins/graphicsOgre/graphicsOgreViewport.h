@@ -33,10 +33,10 @@ namespace ogre3d {
 
 	class OgreCore;
 	class OgreCamera;
-	class OgreViewport : public graphics::IViewport, public OgreWrappedObject
+	class OgreViewport : public graphics::IViewport
 	{
 	public:
-		OgreViewport( OgreCore* pCore, OgreCamera* pCamera, GraphicalWorld& owningWorld );
+		OgreViewport( OgreCore* pCore, OgreCamera* pCamera );
 
 		virtual ~OgreViewport();
 
