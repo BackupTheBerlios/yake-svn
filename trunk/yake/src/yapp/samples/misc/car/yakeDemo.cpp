@@ -118,9 +118,9 @@ protected:
 		}
 
 		// materials @todo read from .physics:
-		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1f, 0.01f, 0.01f ), "chassis" );
-		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1f, 0.01f, 0.2f ), "chassisTop" );
-		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.1f, 0.01f, 0.25f ), "wheel" );
+		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.01f, 0.01f, 0.01f ), "chassis" );
+		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.01f, 0.2f, 0.01f ), "chassisTop" );
+		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.01f, 0.25f, 0.01f ), "wheel" );
 
 		// vehicle
 		SharedPtr<vehicle::IVehicleSystem> pVS = //create<vehicle::IVehicleSystem>("generic");
