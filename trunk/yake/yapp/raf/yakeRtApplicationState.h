@@ -27,10 +27,9 @@
 #ifndef YAKE_RAF_RTAPPLICATIONSTATE_H
 #define YAKE_RAF_RTAPPLICATIONSTATE_H
 
+#include "yake/input/yakeInputSystem.h"
+
 namespace yake {
-	namespace input {
-		enum KeyCode;
-	}
 namespace raf {
 	class Application;
 	class MainState;
