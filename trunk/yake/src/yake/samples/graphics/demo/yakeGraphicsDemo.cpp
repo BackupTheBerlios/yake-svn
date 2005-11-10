@@ -34,11 +34,10 @@ private:
 
 	struct SimpleOne {
 		graphics::ISceneNode*			pSN;
-		graphics::IEntity*				pE;
 	};
 	SimpleOne							mNinja;
 	SimpleOne							mGround;
-	SharedPtr<graphics::ILight>			mSunLight;
+	graphics::ILight*					mSunLight;
 	SharedPtr<graphics::ISceneNode>		mSunLightNode;
 
 	SimpleSpline						mCamPath;
@@ -147,38 +146,38 @@ public:
 	void setupNinja()
 	{
 		// setup NINJA
-		mNinja.pSN = mGWorld->createSceneNode();
+		mNinja.pSN = mGWorld->createSceneNode("sn_ninja");
 		YAKE_ASSERT( mNinja.pSN );
 
-		mNinja.pE = mGWorld->createEntity("ninja.mesh");
-		//mNinja.pE = mGWorld->createEntity("box_1x1x1.mesh");
-		YAKE_ASSERT( mNinja.pE );
-		mNinja.pE->setCastsShadow( true );
+		graphics::IEntity* pE = mGWorld->createEntity("ninja.mesh");
+		//pE = mGWorld->createEntity("box_1x1x1.mesh");
+		YAKE_ASSERT( pE );
+		pE->setCastsShadow( true );
 
-		mNinja.pSN->attachEntity( mNinja.pE );
+		mNinja.pSN->attachEntity( pE );
 		mNinja.pSN->setPosition( Vector3(0,0,-200) );
 	}
 
 	void setupGround()
 	{
 		// create entity
-		mGround.pE = mGWorld->createEntity("plane_1x1.mesh");
-		YAKE_ASSERT( mGround.pE );
-		mGround.pE->setCastsShadow( false  );
+		graphics::IEntity* pE = mGWorld->createEntity("plane_1x1.mesh");
+		YAKE_ASSERT( pE );
+		pE->setCastsShadow( false  );
 
 		// create scene node and attach entity to node
-		mGround.pSN = mGWorld->createSceneNode();
+		mGround.pSN = mGWorld->createSceneNode("sn_ground");
 		YAKE_ASSERT( mGround.pSN );
-		mGround.pSN->attachEntity( mGround.pE );
+		mGround.pSN->attachEntity( pE );
 		mGround.pSN->setScale( Vector3(100,1,100) );
 	}
 
 	void setupLights()
 	{
 		// fixed light (sun)
-		mSunLight.reset( mGWorld->createLight() );
-		mSunLightNode.reset( mGWorld->createSceneNode() );
-		mSunLightNode->attachLight( mSunLight.get() );
+		mSunLight = mGWorld->createLight();
+		mSunLightNode.reset( mGWorld->createSceneNode("sn_sunlight") );
+		mSunLightNode->attachLight( mSunLight );
 
 		mSunLight->setType(ILight::LT_SPOT);
 		//mSunLight->setType(ILight::LT_DIRECTIONAL);
@@ -191,7 +190,7 @@ public:
 
 		// movable light 1
 		YAKE_ASSERT(0==mLightOneNode);
-		mLightOneNode = mGWorld->createSceneNode();
+		mLightOneNode = mGWorld->createSceneNode("sn_lightOne");
 		YAKE_ASSERT( mLightOneNode );
 		mLightOne = mGWorld->createLight();
 		YAKE_ASSERT( mLightOne );
@@ -213,7 +212,7 @@ public:
 	{
 		// cube
 		graphics::ISceneNode* node = 0;
-        node = mGWorld->createSceneNode();
+        node = mGWorld->createSceneNode("sn_cube");
 		YAKE_ASSERT( node );
 		graphics::IEntity* ent = 0;
         ent = mGWorld->createEntity( "cube.mesh" );
@@ -227,7 +226,7 @@ public:
 		// Floor plane
 		ent = mGWorld->createEntity("plane_1x1.mesh");
 		YAKE_ASSERT( ent );
-		node = mGWorld->createSceneNode();
+		node = mGWorld->createSceneNode("sn_plane");
 		YAKE_ASSERT( node );
 		node->attachEntity( ent );
 		node->setScale( Vector3(1000,1,1000) );
@@ -237,7 +236,7 @@ public:
 		// column
 		ent = mGWorld->createEntity("column.mesh");
 		YAKE_ASSERT( ent );
-		node = mGWorld->createSceneNode();
+		node = mGWorld->createSceneNode("sn_col1");
 		YAKE_ASSERT( node );
 		node->attachEntity( ent );
 		ent->setMaterial("Examples/Athene/Basic");
@@ -247,7 +246,7 @@ public:
 		// column
 		ent = mGWorld->createEntity("column.mesh");
 		YAKE_ASSERT( ent );
-		node = mGWorld->createSceneNode();
+		node = mGWorld->createSceneNode("sn_col2");
 		YAKE_ASSERT( node );
 		node->attachEntity( ent );
 		ent->setMaterial("Examples/Rockwall");
@@ -257,7 +256,7 @@ public:
 		// column
 		ent = mGWorld->createEntity("column.mesh");
 		YAKE_ASSERT( ent );
-		node = mGWorld->createSceneNode();
+		node = mGWorld->createSceneNode("sn_col3");
 		YAKE_ASSERT( node );
 		node->attachEntity( ent );
 		ent->setMaterial("Examples/Rockwall");
@@ -267,7 +266,7 @@ public:
 		// column
 		ent = mGWorld->createEntity("column.mesh");
 		YAKE_ASSERT( ent );
-		node = mGWorld->createSceneNode();
+		node = mGWorld->createSceneNode("sn_col4");
 		YAKE_ASSERT( node );
 		node->attachEntity( ent );
 		ent->setMaterial("Examples/Rockwall");
@@ -391,7 +390,7 @@ public:
 		}
 
 		mSunLightNode.reset();
-		mSunLight.reset();
+		mSunLight = 0; // destroyed automatically by destroying the node it's attached to.
 
 		YAKE_SAFE_DELETE( mLightOneNode );
 
