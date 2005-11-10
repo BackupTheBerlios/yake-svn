@@ -30,9 +30,9 @@
 #include <yapp/vehicle/yakeDotVehicle.h>
 
 #if defined(YAKE_VEHICLE_USE_ODE)
-#	include <dependencies/ode/include/ode/ode.h>
-#	include <dependencies/ode/include/ode/odecpp.h>
-#	include <dependencies/ode/include/ode/objects.h>
+#	include <ode/ode.h>
+#	include <ode/odecpp.h>
+#	include <ode/objects.h>
 #	include <yake/plugins/physicsODE/OdeJoint.h>
 #	include <yake/plugins/physicsODE/OdeBody.h>
 #	include <yake/plugins/physicsODE/OdeWorld.h>
