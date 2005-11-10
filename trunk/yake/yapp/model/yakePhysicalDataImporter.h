@@ -43,7 +43,7 @@ namespace model {
     using namespace yake::data::parser::xode;
     using namespace yake::physics;
     
-    class XODEListener
+    class YAPP_BASE_API XODEListener
     {
 
 	public:

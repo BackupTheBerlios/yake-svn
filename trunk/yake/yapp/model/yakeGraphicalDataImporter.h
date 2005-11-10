@@ -39,7 +39,7 @@ namespace model {
     /** Class implements DotSceneParser's listener. Creates graphical objects and places
      * them in model::Graphical object.
      */
-    class DotSceneListener
+    class YAPP_BASE_API DotSceneListener
     {
 	public:
 	    DotSceneListener( Graphical& owner ) : mOwner(owner)
