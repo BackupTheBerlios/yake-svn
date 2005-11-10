@@ -50,3 +50,4 @@ namespace lua {
 } // namespace yake
 
 #endif
+
