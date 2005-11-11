@@ -42,12 +42,9 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 
 typedef std::string YAKE_BASE_STRING;
 
-} // base
 } // yake
 
 namespace std
