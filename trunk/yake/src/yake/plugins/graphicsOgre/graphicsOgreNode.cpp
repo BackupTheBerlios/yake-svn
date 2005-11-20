@@ -67,14 +67,13 @@ namespace ogre3d {
 	template<class T>
 	void detachAndDestroyPtrContainer(std::deque<T>& ctr, OgreNode& n)
 	{
-		ConstDequeIterator< std::deque<T> > it( ctr );
-		while (it.hasMoreElements())
+		while (!ctr.empty())
 		{
-			T obj = it.getNext();
+			T obj = ctr.front();
 			n.detach( obj );
 			delete obj;
+			//=> not needed as n.detach() takes care of that! => ctr.pop_front();
 		}
-		ctr.clear();
 	}
 
 	//------------------------------------------------------
@@ -89,11 +88,13 @@ namespace ogre3d {
 		}
 
 		detachAndDestroyPtrContainer( mEntities, *this );
-		detachAndDestroyPtrContainer( mLights, *this );
+		if (!mLights.empty())
+			detachAndDestroyPtrContainer( mLights, *this );
 		detachAndDestroyPtrContainer( mCameras, *this );
 		detachAndDestroyPtrContainer( mParticleSystems, *this );
 
-		destroyPtrContainer( mChildren );
+		while (!mChildren.empty())
+			delete mChildren.front(); // nodes auto-remove from "mChildren"
 
 		YAKE_ASSERT( mSceneNode );
 		if (mSceneNode)
