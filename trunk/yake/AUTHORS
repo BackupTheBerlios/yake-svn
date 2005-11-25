@@ -14,10 +14,10 @@ Contributor                             Subject Areas
 -----------                             --------------------------------------
 Nikita Buida (mj)                     : Linux port, SCons, various enhancements
                                         and fixes and samples, rewrite of physicsODE
+? (jones)                             : Linux port
 ? (Poldi)                             : Linux port
 Jan Eickmann (jeickmann)			  : Fixes
 Joel Croteau (TV4fun)                 : physics component enhancements, various fixes
-
 
 If we've forgotten you in the above list, please contact us!
 
