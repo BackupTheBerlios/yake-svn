@@ -45,7 +45,7 @@ namespace ogre3d {
 		String ogreid = name;
 		if (ogreid.empty())
 			ogreid = uniqueName::create("sn_"+name+"_");
-		mName = name;
+		mName = ogreid;
 		mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( ogreid ) );
 		YAKE_ASSERT( mSceneNode ).warning("Couldn't create a scene node!");
 		mSceneNode->setPosition( 0, 0, 0 );
@@ -107,6 +107,7 @@ namespace ogre3d {
 			mSceneNode->removeAndDestroyAllChildren(); // just in case...
 			//YAKE_LOG(String("destroying OGRE SN '") << mSceneNode->getName().c_str() << "'");
 			mSceneMgr->destroySceneNode( mSceneNode->getName() );
+			mSceneNode = 0;
 		}
 
 		this->mWorld.unreg( this );
