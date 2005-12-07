@@ -67,7 +67,7 @@ struct test_linear :
 	private InheritLinear
 	< 
 		system_list, 
-		typename lambda< semi_init_system_holder<_, _> >::type,
+		typename ::boost::mpl::lambda< semi_init_system_holder<_, _> >::type,
 		semi_init_system_holder_root
 	>::type
 {
@@ -101,7 +101,7 @@ struct Holder { T value; };
 typedef InheritMultiple
 	<
 		list< int, std::string, Widget >,
-		lambda< Holder< _ > >::type
+		::boost::mpl::lambda< Holder< _ > >::type
 	>::type myWidgetInfo;
 
 } // inheritance
