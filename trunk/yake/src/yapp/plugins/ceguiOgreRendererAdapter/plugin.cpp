@@ -26,7 +26,7 @@
 */
 #include <yapp/plugins/ceguiOgreRendererAdapter/pch.h>
 #include "OgreNoMemoryMacros.h"
-#include "CEGUI.h"
+#include <CEGUI/CEGUI.h>
 #include <Ogre.h>
 #include "OgreCEGUIRenderer.h"
 #include <yapp/common/yakeCEGUIRendererAdapter.h>
