@@ -140,7 +140,7 @@ namespace physics {
 					try {
 						getNxSDK()->releaseTriangleMesh( *pNxMesh );
 					} catch (...) {
-						YAKE_LOG("NX: Catched exception from NX when releasing triangle mesh.\n");
+						YAKE_LOG("NX: Caught exception from NX when releasing triangle mesh.\n");
 					}
 				}
 			}
@@ -160,7 +160,7 @@ namespace physics {
 				try {
 					getNxSDK()->releaseTriangleMesh( *p.second.first );
 				} catch (...) {
-					YAKE_LOG("NX: Catched exception from NX when releasing triangle mesh.\n");
+					YAKE_LOG("NX: Caught exception from NX when releasing triangle mesh.\n");
 				}
 			}
 			p.second.second = 0;
