@@ -36,6 +36,13 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
+namespace Ogre {
+	class MeshPtr;
+	class RaySceneQuery;
+	class Entity;
+	class SceneNode;
+	class SceneManager;
+}
 using namespace yake::base::mpl;
 using namespace yake::base;
 namespace yake {
@@ -89,6 +96,10 @@ namespace ogre3d {
 
 		void reg( OgreNode* pO );
 		void unreg( OgreNode* pO );
+
+		Ogre::SceneManager* getSceneMgr() const;
+		OgreCore* getCore() const
+		{ return msCore; }
 	private:
 		static OgreCore*		msCore;
 		typedef AssocVector< String, Ogre::MeshPtr > ProcMeshMap;
