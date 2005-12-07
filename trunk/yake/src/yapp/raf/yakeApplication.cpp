@@ -27,6 +27,17 @@
 #include <yapp/raf/pch.h>
 #include <yapp/raf/yakeApplicationState.h>
 #include <yapp/raf/yakeApplication.h>
+#if YAKE_RAF_USES_CEGUI == 1
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/CEGUISystem.h>
+#include <yapp/common/yakeCEGUIRendererAdapter.h>
+#include <yapp/common/yakeCEGUIHelpers.h>
+#ifdef YAKE_DEBUG
+#	pragma comment(lib,"CEGUIBase_d.lib")
+#else
+#	pragma comment(lib,"CEGUIBase.lib")
+#endif
+#endif
 
 namespace yake {
 namespace raf {
@@ -98,6 +109,11 @@ namespace raf {
 	Application::Application() : 
 		mMachine( 0 ),
 		mMainState( 0 ),
+#if YAKE_RAF_USES_CEGUI == 1
+		mCeguiRendererAdapter( 0 ),
+		mCeguiMouseInputEnabled( false ),
+		mCeguiKeyboardInputEnabled( false ),
+#endif
 		mKeyboard( 0 ),
 		mKeyboardEventGenerator( 0 ),
 		mMouse( 0 ),
@@ -153,6 +169,163 @@ namespace raf {
 	void Application::initPhysics()
 	{
 	}
+#if YAKE_RAF_USES_CEGUI == 1
+	void Application::initCEGUI()
+	{
+		const String file = "ceguiOgreRendererAdapter";
+		yake::base::Library* pDynLib = new yake::base::Library( file ); //@FIXME. MEMORY LEAK.
+		YAKE_ASSERT( pDynLib ).debug( "Out of memory" );
+
+		YAKE_LOG( "Loading plugin " + file );
+
+		yake::base::YakeDynLibStartPluginFn pfnStartPlugin = (yake::base::YakeDynLibStartPluginFn)pDynLib->getSymbol( "dynlibStartPlugin" );
+		YAKE_ASSERT( pfnStartPlugin ).debug( "Cannot find export in dynamic library" );
+
+		mCeguiRendererAdapter = static_cast<ceguiadapter::RendererAdapterPlugin*>(pfnStartPlugin());
+		YAKE_ASSERT( mCeguiRendererAdapter ).debug( "Plugin startup function failed" );
+
+		//
+		bool bRet = mCeguiRendererAdapter->initialise();
+		YAKE_ASSERT( bRet ).debug( "Plugin initialization failed" );
+
+		if (!bRet)
+		{
+			delete mCeguiRendererAdapter;
+			YAKE_EXCEPT("Could not initialize GUI (CEGUI)!");
+		}
+
+		//---- Stating CEGUI
+
+		YAKE_LOG( "Initialising CEGUI..." );
+		CEGUI::System* ceguiSys = new CEGUI::System( mCeguiRendererAdapter->getRenderer() );
+
+		using namespace CEGUI;
+
+		YAKE_LOG( "Setting CEGUI logging level..." );
+		Logger::getSingleton().setLoggingLevel( Informative );
+
+		try
+		{
+			YAKE_LOG( "Loading scheme..." );
+			// load scheme and set up defaults
+			SchemeManager::getSingleton().loadScheme((utf8*)"TaharezLook.scheme");
+			System::getSingleton().setDefaultMouseCursor((utf8*)"TaharezLook", (utf8*)"MouseArrow");
+			CEGUI::MouseCursor::getSingleton().setImage(CEGUI::System::getSingleton().getDefaultMouseCursor());
+			System::getSingleton().setDefaultFont((utf8*)"Tahoma-12");
+
+			WindowManager& wmgr = WindowManager::getSingleton();
+
+			//Window* sheet = wmgr.loadWindowLayout( "console.layout" );
+			//System::getSingleton().setGUISheet(sheet);
+
+			//CEGUI::Window* pEditBoxWnd = CEGUI::WindowManager::getSingleton().getWindow((CEGUI::utf8*)"/Console/Wnd/Edit");
+			//mEditBox = static_cast<CEGUI::Editbox*>(CEGUI::WindowManager::getSingleton().getWindow("/Console/Wnd/Edit"));
+			//mListBox = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("/Console/Wnd/List"));
+		}
+		// catch to prevent exit (errors will be logged).
+		catch( CEGUI::Exception& e)
+		{
+			YAKE_LOG( yake::String( "CEGUI Exception: " ) + e.getMessage().c_str() );
+			YAKE_EXCEPT(yake::String( "Caught CEGUI Exception:\n") + e.getMessage().c_str() );
+		}
+	}
+	void Application::enableKeyboardInputForCEGUI(const bool yes)
+	{
+		if (!mKeyboardEventGenerator)
+			return;
+		if (mCeguiKeyboardInputEnabled && !yes)
+		{
+			// disable
+			ConstDequeIterator< SigConnList > it( mCeguiKeyboardSigConn );
+			while (it.hasMoreElements())
+				it.getNext().disconnect();
+			mCeguiKeyboardSigConn.clear();
+		}
+		else if (!mCeguiKeyboardInputEnabled && yes)
+		{
+			// enable
+			mCeguiKeyboardInputEnabled = true;
+			mCeguiKeyboardSigConn.push_back(
+				getKeyboardEventGenerator()->subscribeToKeyDown( Bind1( &Application::onKeyDown, this ) ) );
+			mCeguiKeyboardSigConn.push_back(
+				getKeyboardEventGenerator()->subscribeToKeyUp( Bind1( &Application::onKeyUp, this ) ) );
+		}
+	}
+	void Application::enableMouseInputForCEGUI(const bool yes)
+	{
+		if (!mMouseEventGenerator)
+			return;
+		if (mCeguiMouseInputEnabled && !yes)
+		{
+			// disable
+			ConstDequeIterator< SigConnList > it( mCeguiMouseSigConn );
+			while (it.hasMoreElements())
+				it.getNext().disconnect();
+			mCeguiMouseSigConn.clear();
+		}
+		else if (!mCeguiMouseInputEnabled && yes)
+		{
+			// enable
+			mCeguiMouseInputEnabled = true;
+			mCeguiMouseSigConn.push_back(
+				getMouseEventGenerator()->subscribeToMouseButtonDown( Bind1( &Application::onMBDown, this ) ) );
+			mCeguiMouseSigConn.push_back(
+				getMouseEventGenerator()->subscribeToMouseButtonUp( Bind1( &Application::onMBUp, this ) ) );
+			mCeguiMouseSigConn.push_back(
+				getMouseEventGenerator()->subscribeToMouseMoved( Bind1( &Application::onMouseMoved, this ) ) );
+		}
+	}
+	void Application::enableInputForCEGUI(const bool keyb /*= true*/, const bool mouse /*= true*/)
+	{
+		enableKeyboardInputForCEGUI( keyb );
+		enableMouseInputForCEGUI( mouse );
+	}
+	void Application::onKeyDown( const yake::input::KeyboardEvent& rEvent )
+	{
+		YAKE_ASSERT( mCeguiKeyboardInputEnabled ).debug("Callback should not be enabled!");
+		if (!mCeguiKeyboardInputEnabled)
+			return;
+		if (CEGUI::System::getSingletonPtr())
+		{
+			CEGUI::System::getSingleton().injectKeyDown( rEvent.keyCode );
+			long modifiers = getKeyboard()->isKeyDown(input::KC_LSHIFT) || getKeyboard()->isKeyDown(input::KC_RSHIFT) ? 1 : 0;
+			CEGUI::System::getSingleton().injectChar( getKeyChar( rEvent.keyCode, modifiers ) );
+		}
+	}
+	void Application::onKeyUp( const yake::input::KeyboardEvent& rEvent )
+	{
+		YAKE_ASSERT( mCeguiKeyboardInputEnabled ).debug("Callback should not be enabled!");
+		if (!mCeguiKeyboardInputEnabled)
+			return;
+		if (CEGUI::System::getSingletonPtr())
+			CEGUI::System::getSingleton().injectKeyUp( rEvent.keyCode );
+	}
+	void Application::onMBDown( uint8 btn )
+	{
+		YAKE_ASSERT( mCeguiMouseInputEnabled ).debug("Callback should not be enabled!");
+		if (!mCeguiMouseInputEnabled)
+			return;
+		if (CEGUI::System::getSingletonPtr())
+			CEGUI::System::getSingleton().injectMouseButtonDown( convertYakeButtonToCegui( btn ) );
+	}
+	void Application::onMBUp( uint8 btn )
+	{
+		YAKE_ASSERT( mCeguiMouseInputEnabled ).debug("Callback should not be enabled!");
+		if (!mCeguiMouseInputEnabled)
+			return;
+		if (CEGUI::System::getSingletonPtr())
+			CEGUI::System::getSingleton().injectMouseButtonUp( convertYakeButtonToCegui( btn ) );
+	}
+	void Application::onMouseMoved( const Vector3& rDelta )
+	{
+		YAKE_ASSERT( mCeguiMouseInputEnabled ).debug("Callback should not be enabled!");
+		if (!mCeguiMouseInputEnabled)
+			return;
+		const real scale = 1;
+		if (CEGUI::System::getSingletonPtr())
+			CEGUI::System::getSingleton().injectMouseMove( rDelta.x*scale, rDelta.y*scale );
+	}
+#endif
 	bool Application::initialise()
 	{
 		ApplicationConfiguration& cfg = getConfiguration();
@@ -180,6 +353,14 @@ namespace raf {
 			initInput();
 		if (!mPhysicsSystems.empty())
 			initPhysics();
+
+#if YAKE_RAF_USES_CEGUI == 1
+		// CEGUI
+		if (cfg.loadCEGUI())
+		{
+			initCEGUI();
+		}
+#endif
 
 		// application state machine
 		mMachine = new AppMachine( state::TH_RELAXED );
@@ -210,7 +391,15 @@ namespace raf {
 			mMachine->exitAll();
 			YAKE_SAFE_DELETE( mMachine );
 		}
-
+#if YAKE_RAF_USES_CEGUI == 1
+		if (mCeguiRendererAdapter)
+		{
+			if ( CEGUI::System::getSingletonPtr() )
+				delete CEGUI::System::getSingletonPtr();
+			mCeguiRendererAdapter->shutdown();
+			YAKE_SAFE_DELETE( mCeguiRendererAdapter );
+		}
+#endif
 		YAKE_SAFE_DELETE( mKeyboardEventGenerator );
 		YAKE_SAFE_DELETE( mMouseEventGenerator );
 		mInputSystems.clear();
