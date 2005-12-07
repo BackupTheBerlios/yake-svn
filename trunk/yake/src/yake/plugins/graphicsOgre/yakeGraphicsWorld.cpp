@@ -119,6 +119,14 @@ namespace ogre3d {
 	}
 	
 	//-----------------------------------------------------
+	Ogre::SceneManager* GraphicalWorld::getSceneMgr() const
+	{
+		if (!msCore)
+			return 0;
+		return msCore->getSceneMgr();
+	}
+
+	//-----------------------------------------------------
 	ISceneNode* GraphicalWorld::createSceneNode( const String& name )
 	{
 		if (!mRootNode)
