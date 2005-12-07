@@ -51,11 +51,7 @@ namespace physics {
 
 			virtual IJointPtr createJoint( const IJoint::DescBase& rkJointDesc );
 			virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc( ACTOR_MOVABLE ) );
-			virtual IAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc )
-			{
-				YAKE_ASSERT( 0 ).warning("not supported.");
-				return IAvatarPtr();
-			}
+			virtual IAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc );
 			virtual IMaterialPtr getMaterial( const String& id ) const;
 			virtual IMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc, const String& id = "" );
 			virtual void destroyJoint( IJointPtr pJoint );
@@ -83,6 +79,7 @@ namespace physics {
 			YAKE_MEMBERSIGNAL_FIRE_FN1( public, PostStep, real t, t )
 			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PreStepInternal )
 			YAKE_MEMBERSIGNAL_FIRE_FN1( public, PreStepInternal, const real dt, dt )
+			YAKE_MEMBERSIGNAL( public, void(const real), PostStepInternal )
 		public:
 
 			// helpers
