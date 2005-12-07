@@ -71,7 +71,9 @@ namespace physics {
 
 		virtual void setTargetVelocity( const Vector3 & rkTargetVelocity ) = 0;
 		virtual void jump() = 0;
-		virtual void duck() = 0;
+		virtual bool isJumping() const = 0;
+		virtual void duck(const bool yes) = 0;
+		virtual bool isDucking() const = 0;
 
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(bool), OnJump )
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(bool), OnDuck )
