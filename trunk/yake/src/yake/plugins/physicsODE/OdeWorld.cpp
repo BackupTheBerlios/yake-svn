@@ -30,6 +30,8 @@
 #include <yake/plugins/physicsODE/OdeBody.h>
 #include <yake/plugins/physicsODE/OdeActor.h>
 #include <yake/plugins/physicsODE/OdeShapes.h>
+#include <yake/plugins/physicsODE/OdeAvatar.h>
+#include <yake/plugins/physicsODE/OdeRay.h>
 
 #if (YAKE_PLATFORM == PLATFORM_WIN32) && (YAKE_COMPILER == COMPILER_MSVC)
 #	define ADJUST_FPU_PRECISION
@@ -271,7 +273,21 @@ namespace physics {
 		
 		return pJoint;
 	}
-	
+	//-----------------------------------------------------
+	IAvatarPtr OdeWorld::createAvatar( const IAvatar::Desc& rkAvatarDesc )
+	{
+		OdeAvatar* pAvatar = new OdeAvatar( this );
+		YAKE_ASSERT( pAvatar );
+
+		if (!pAvatar->init( rkAvatarDesc ))
+		{
+			delete pAvatar;
+			return 0;
+		}
+		
+		mAvatars.push_back( SharedPtr<OdeAvatar>( pAvatar ) );
+		return pAvatar;
+	}
 	//-----------------------------------------------------
 	IActorPtr OdeWorld::createActor( const IActor::Desc& rActorDesc )
 	{
@@ -330,6 +346,8 @@ namespace physics {
 			mTime += mStepSize;
 			t -= mStepSize;
 	
+			firePreStepInternal(mStepSize);
+
 	#ifdef ADJUST_FPU_PRECISION
 			_controlfp(_PC_64, _MCW_PC);
 	#endif
@@ -339,8 +357,6 @@ namespace physics {
 
 			//mOdeWorld->step( mStepSize );
 			//mOdeWorld->stepFast1( mStepSize, 4 );
-
-			firePreStepInternal(mStepSize);
 
 			//dWorldStep( mOdeWorld->id(), mStepSize );
 			dWorldQuickStep( mOdeWorld->id(), mStepSize );
@@ -370,6 +386,9 @@ namespace physics {
 				dReal const* angV = pOdeBody->getAngularVel();
 				pOdeBody->addTorque( aScale*angV[0], aScale*angV[1], aScale*angV[2] );
 			}
+
+			//
+			mSigPostStepInternal(mStepSize);
 		}
 		
 		firePostStep( mTime );
@@ -450,14 +469,28 @@ namespace physics {
 			return;
 
 
-		OdeActor* pA = static_cast<OdeGeom*>( dGeomGetData( o1 ) )->getOwner();
-		OdeActor* pB = static_cast<OdeGeom*>( dGeomGetData( o2 ) )->getOwner();
-		
-		if ( pA && pB )
+		void* data1 = dGeomGetData( o1 );
+		void* data2 = dGeomGetData( o2 );
+		if ( ( dGeomGetClass( o1 ) == dRayClass ) || ( dGeomGetClass( o2 ) == dRayClass ) )
 		{
-			// collide
-			pA->_collide( pB, o1, o2, odeContactGroup );
-			return;
+			const bool firstIsRay = (dGeomGetClass(o1) == dRayClass);
+			dGeomID rayId = firstIsRay ? o1 : o2;
+			dGeomID otherId = firstIsRay ? o2 : o1;
+			OdeRay* pRay = static_cast<OdeRay*>( firstIsRay ? data1 : data2 );
+			YAKE_ASSERT( pRay );
+			if (pRay)
+				pRay->collideWith( otherId );
+		}
+		else if (data1 && data2)
+		{
+			OdeActor* pA = static_cast<OdeGeom*>( data1 )->getOwner();
+			OdeActor* pB = static_cast<OdeGeom*>( data2 )->getOwner();
+			if ( pA && pB )
+			{
+				// collide
+				pA->_collide( pB, o1, o2, odeContactGroup );
+				return;
+			}
 		}
 	}
 
