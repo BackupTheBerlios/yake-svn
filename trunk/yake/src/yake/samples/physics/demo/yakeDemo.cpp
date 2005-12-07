@@ -104,7 +104,7 @@ private:
 		rSimple.pActor->getBody().setMass( mass );
 		rSimple.pActor->setPosition( rkPosition );
 
-		rSimple.pActor->subscribeToCollisionEntered( boost::bind(MiniApp::onCollisionEntered,this));
+		rSimple.pActor->subscribeToCollisionEntered( boost::bind(&MiniApp::onCollisionEntered,this));
 	}
 	bool createBall( SharedPtr<physics::IWorld> pPWorld, Simple & rSimple, const Vector3 & rkPosition, const real radius )
 	{
@@ -258,7 +258,7 @@ void MiniApp::init()
 
 	mGWorld->setShadowsEnabled( true );
 
-	mGraphics->subscribeToShutdownSignal( boost::bind(MiniApp::requestShutdown,this) );
+	mGraphics->subscribeToShutdownSignal( boost::bind(&MiniApp::requestShutdown,this) );
 
 	{
 		graphics::ICamera* pC = mGWorld->createCamera();
