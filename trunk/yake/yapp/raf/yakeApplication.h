@@ -38,6 +38,11 @@ namespace yake {
 		class MouseDevice;
 		class MouseEventGenerator;
 	}
+#if YAKE_RAF_USES_CEGUI == 1
+	namespace ceguiadapter {
+		class RendererAdapterPlugin;
+	}
+#endif
 namespace raf {
 
 	class Application;
@@ -77,6 +82,10 @@ namespace raf {
 			{ return MakeStringVector(); }
 
 		virtual SharedPtr<graphics::IGraphicsSystem> useExternalGraphicsSystem() { return SharedPtr<graphics::IGraphicsSystem>(); }
+#if YAKE_RAF_USES_CEGUI == 1
+		/** I could need some Dihydrogendinatriumethylendiamintetraacetat. */
+		virtual bool loadCEGUI() { return false; }
+#endif
 	};
 
 	class YAKE_RAF_API Application
@@ -144,9 +153,23 @@ namespace raf {
 		input::MouseDevice* getMouse();
 		input::MouseEventGenerator* getMouseEventGenerator();
 
+#if YAKE_RAF_USES_CEGUI == 1
+		void enableKeyboardInputForCEGUI(const bool yes);
+		void enableMouseInputForCEGUI(const bool yes);
+		void enableInputForCEGUI(const bool keyb = true, const bool mouse = true);
+#endif
 	private:
 		void initInput();
 		void initPhysics();
+#if YAKE_RAF_USES_CEGUI == 1
+		void initCEGUI();
+
+		void onKeyDown( const yake::input::KeyboardEvent& rEvent );
+		void onKeyUp( const yake::input::KeyboardEvent& rEvent );
+		void onMBDown( uint8 btn );
+		void onMBUp( uint8 btn );
+		void onMouseMoved( const Vector3& rDelta );
+#endif
 	private:
 		typedef Deque<SharedPtr<base::Library> > LibList;
 		typedef AssocVector<String,SharedPtr<scripting::IScriptingSystem> > ScriptingSystemList;
@@ -167,6 +190,14 @@ namespace raf {
 		input::MouseDevice*				mMouse;
 		input::MouseEventGenerator*		mMouseEventGenerator;
 		bool							mUseExtGraphicsSystem;
+#if YAKE_RAF_USES_CEGUI == 1
+		::yake::ceguiadapter::RendererAdapterPlugin*	mCeguiRendererAdapter;
+		typedef std::deque<yake::SignalConnection> SigConnList;
+		SigConnList						mCeguiMouseSigConn;
+		SigConnList						mCeguiKeyboardSigConn;
+		bool							mCeguiMouseInputEnabled;
+		bool							mCeguiKeyboardInputEnabled;
+#endif
 	};
 
 	/** An example base application class provided for convenience.

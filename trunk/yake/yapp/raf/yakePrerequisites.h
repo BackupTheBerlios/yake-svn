@@ -40,6 +40,9 @@
 #	define YAKE_RAF_API
 #endif
 
+// configuration
+#define YAKE_RAF_USES_CEGUI 1
+
 namespace yake {
 } // namespace yake
 
