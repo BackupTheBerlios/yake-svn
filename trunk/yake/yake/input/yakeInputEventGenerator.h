@@ -58,10 +58,10 @@ namespace input {
 		typedef Signal1< void( const KeyboardEvent & )> KeyboardSignal;
 
 		// keyboard signals
-		virtual void subscribeToKeyDown( const KeyboardSignal::slot_type & slot )
-		{ mKeyDownSignal.connect( slot ); }
-		virtual void subscribeToKeyUp( const KeyboardSignal::slot_type & slot )
-		{ mKeyUpSignal.connect( slot ); }
+		virtual SignalConnection subscribeToKeyDown( const KeyboardSignal::slot_type & slot )
+		{ return mKeyDownSignal.connect( slot ); }
+		virtual SignalConnection subscribeToKeyUp( const KeyboardSignal::slot_type & slot )
+		{ return mKeyUpSignal.connect( slot ); }
 
 	protected:
 		// keyboard signal
@@ -93,12 +93,12 @@ namespace input {
 		{ mMouseWheelDownSignal.connect( slot ); }
 		virtual void subscribeToMouseWheelUp( const MouseWheelSignal::slot_type & slot )
 		{ mMouseWheelUpSignal.connect( slot ); }
-		virtual void subscribeToMouseButtonDown( const MouseButtonSignal::slot_type & slot )
-		{ mMouseButtonDownSignal.connect( slot ); }
-		virtual void subscribeToMouseButtonUp( const MouseButtonSignal::slot_type & slot )
-		{ mMouseButtonUpSignal.connect( slot ); }
-		virtual void subscribeToMouseMoved( const MouseMovedSignal::slot_type & slot )
-		{ mMouseMovedSignal.connect( slot ); }
+		virtual SignalConnection subscribeToMouseButtonDown( const MouseButtonSignal::slot_type & slot )
+		{ return mMouseButtonDownSignal.connect( slot ); }
+		virtual SignalConnection subscribeToMouseButtonUp( const MouseButtonSignal::slot_type & slot )
+		{ return mMouseButtonUpSignal.connect( slot ); }
+		virtual SignalConnection subscribeToMouseMoved( const MouseMovedSignal::slot_type & slot )
+		{ return mMouseMovedSignal.connect( slot ); }
 	protected:
 		// mouse signals
 		MouseButtonSignal	mMouseButtonDownSignal,
