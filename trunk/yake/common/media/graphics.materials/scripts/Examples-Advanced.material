@@ -10,7 +10,6 @@ vertex_program Ogre/CelShadingVP cg
 	default_params
 	{
 		param_named_auto lightPosition light_position_object_space 0
-		param_named_auto eyePosition camera_position_object_space
 		param_named_auto worldViewProj worldviewproj_matrix
 		param_named shininess float 10 
 	}
@@ -121,7 +120,6 @@ material Examples/BumpMapping/SingleLight
 			vertex_program_ref Examples/BumpMapVP
 			{
 				param_named_auto lightPosition light_position_object_space 0
-				param_named_auto eyePosition camera_position_object_space
 				param_named_auto worldViewProj worldviewproj_matrix
 			}
 
@@ -164,7 +162,6 @@ material Examples/BumpMapping/SingleLight
 			vertex_program_ref Examples/BumpMapVP
 			{
 				param_named_auto lightPosition light_position_object_space 0
-				param_named_auto eyePosition camera_position_object_space
 				param_named_auto worldViewProj worldviewproj_matrix
 			}
 
@@ -237,7 +234,6 @@ material Examples/BumpMapping/MultiLight
 			vertex_program_ref Examples/BumpMapVP
 			{
 				param_named_auto lightPosition light_position_object_space 0
-				param_named_auto eyePosition camera_position_object_space
 				param_named_auto worldViewProj worldviewproj_matrix
 			}
 
@@ -327,7 +323,6 @@ material Examples/BumpMapping/MultiLight
 			vertex_program_ref Examples/BumpMapVP
 			{
 				param_named_auto lightPosition light_position_object_space 0
-				param_named_auto eyePosition camera_position_object_space
 				param_named_auto worldViewProj worldviewproj_matrix
 			}
 			
@@ -416,7 +411,6 @@ material Examples/BumpMapping/MultiLightSpecular
 			vertex_program_ref Examples/BumpMapVPSpecular
 			{
 				param_named_auto lightPosition light_position_object_space 0
-				param_named_auto eyePosition camera_position_object_space
 				param_named_auto worldViewProj worldviewproj_matrix
 			}
 
@@ -512,7 +506,6 @@ material Examples/BumpMapping/MultiLightSpecular
 			vertex_program_ref Examples/BumpMapVP
 			{
 				param_named_auto lightPosition light_position_object_space 0
-				param_named_auto eyePosition camera_position_object_space
 				param_named_auto worldViewProj worldviewproj_matrix
 			}
 			
@@ -647,7 +640,6 @@ material Examples/FresnelReflectionRefraction
 			vertex_program_ref Examples/FresnelRefractReflectVP
 			{
 				param_named_auto worldViewProjMatrix worldviewproj_matrix
-				param_named_auto eyePosition camera_position_object_space
 				param_named fresnelBias float -0.3 
 				param_named fresnelScale float 1.4 
 				param_named fresnelPower float 8  
@@ -701,7 +693,6 @@ material Examples/FresnelReflectionRefraction
 			vertex_program_ref Examples/FresnelRefractReflectVP
 			{
 				param_named_auto worldViewProjMatrix worldviewproj_matrix
-				param_named_auto eyePosition camera_position_object_space
 				param_named fresnelBias float -0.3
 				param_named fresnelScale float 1.4
 				param_named fresnelPower float 8
@@ -796,7 +787,6 @@ material Examples/Athene/NormalMapped
 			vertex_program_ref Examples/BumpMapVP
 			{
 				param_named_auto lightPosition light_position_object_space 0
-				param_named_auto eyePosition camera_position_object_space
 				param_named_auto worldViewProj worldviewproj_matrix
 			}
 
@@ -886,7 +876,6 @@ material Examples/Athene/NormalMapped
 			vertex_program_ref Examples/BumpMapVP
 			{
 				param_named_auto lightPosition light_position_object_space 0
-				param_named_auto eyePosition camera_position_object_space
 				param_named_auto worldViewProj worldviewproj_matrix
 			}
 			
@@ -996,7 +985,6 @@ material Examples/Athene/NormalMappedSpecular
 			vertex_program_ref Examples/BumpMapVPSpecular
 			{
 				param_named_auto lightPosition light_position_object_space 0
-				param_named_auto eyePosition camera_position_object_space
 				param_named_auto worldViewProj worldviewproj_matrix
 			}
 
@@ -1092,7 +1080,6 @@ material Examples/Athene/NormalMappedSpecular
 			vertex_program_ref Examples/BumpMapVP
 			{
 				param_named_auto lightPosition light_position_object_space 0
-				param_named_auto eyePosition camera_position_object_space
 				param_named_auto worldViewProj worldviewproj_matrix
 			}
 			
