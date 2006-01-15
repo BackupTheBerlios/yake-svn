@@ -134,7 +134,7 @@ namespace ent {
 	};
 	class YAKE_ENT_API Trigger : public Entity
 	{
-		YAKE_DECLARE_ENTITY(Trigger)
+		YAKE_DECLARE_ENTITY(Trigger,"Trigger")
 	public:
 		OBJECT_PROPS_BEGIN(Trigger)
 			OBJECT_PROP("position", Point3, Point3(0,0,0))

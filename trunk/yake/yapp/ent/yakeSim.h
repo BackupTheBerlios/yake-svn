@@ -30,76 +30,101 @@
 namespace yake {
 namespace ent {
 
-	typedef Deque<ObjectClassId> ObjectClassIdList;
-	class YAKE_ENT_API sim
+	typedef ::yake::object::ObjectManager<Object> ObjectManager;
+
+	class YAKE_ENT_API Simulation
 	{
 	public:
-		sim(scripting::IScriptingSystem& scriptingSystem,
-			const real ticksPerSecond = 10.f,
-			graphics::IWorld* pGWorld = 0,
-			audio::IWorld* pAWorld = 0,
-			physics::IWorld* pPWorld = 0);
-		~sim();
+		Simulation();
+		~Simulation();
+
+		// registration / setup
+
 		void setTicksPerSecond(const real ticksPerSecond);
 		simtime getTime() const;
 		real getTimeAsSeconds() const;
-		void tick(const real timeElapsed);
-		void regObjectClass( object_class* theClass );
+
+		/** Register a class. */
+		template<class T>
+		void regClass(const String& clsName)
+		{
+			ClassId clsId =
+				mObjMgr.registerClass(	clsName,
+												boost::bind(&object_class::createInstance,T::getClass(),_1),
+												boost::bind(&object_class::destroyInstance,T::getClass(),_1)).second;
+		}
+		/** VM binders can be used to bind features the entity's VMs. */
 		void addEntityVMBinder( scripting::IBinder* pBinder, const bool bTransferOwnership = true );
-		Entity* createEntity(	const ObjectClassId& id, 
-								const StringPairVector& components,
-								const StringVector& scriptFiles );
-		void destroyEntity( Entity* pEnt );
-		void removeAndDestroyAll();
 
-		graphics::IWorld* getGraphicsWorld() const
-		{ return mpGWorld; }
+		// start / stop / run
 
-		// temp
-		static sim& getSim();
-		
-		msg::MessageManager& getMessageMgr();
+		bool start(	scripting::IScriptingSystem* pScripting = 0,
+						graphics::IWorld* pGWorld = 0,
+						audio::IWorld* pAWorld = 0,
+						physics::IWorld* pPWorld = 0);
+		void stop();
 
-		// post message to another object
+		void tick(const real timeElapsed);
+
+		// object/entity management
+
+		/**
+			@Remarks "scriptFiles" and "components" are ignored for non-Entity derived objects.
+		*/
+		Object* createObject(const String& clsName,
+									const StringPairVector& components = StringPairVector(),
+									const StringVector& scriptFiles = StringVector());
+		Object* createObject(const ClassId clsId,
+									const StringPairVector& components = StringPairVector(),
+									const StringVector& scriptFiles = StringVector());
+		void destroyObject( Object* );
+		void removeAndDestroyObjects();
+
+		// messaging
+
 		void postMessage(ObjectMessage* pMessage, Object* target);
 
-		Event& getEvent_onEntitySpawned();
-		Event& getEvent_onEntityVMCreated();
+		// events
 
-		const ObjectClassIdList& getRegisteredObjectClasses() const;
+		Event& getEvent_onEntityVMCreated();
+		Event& getEvent_onEntityVMSpawned();
+
+		// @fixme temporary accessors
+
+		static Simulation& getSim();
+		graphics::IWorld* getGraphicsWorld() const
+		{ return mpGWorld; }
 	private:
 		scripting::IVM* createEntityVM();
 	private:
-		typedef std::map<ObjectClassId,object_class*> ObjectClassMap;
-		typedef std::list<SharedPtr<Object> > ObjectList;
-		typedef std::map<ObjectClassId,uint16> ClassIdMap;
+		ObjectManager					mObjMgr;
+		msg::MessageManager			mMsgMgr;
+		typedef std::list<Object*> ObjectList;
+		ObjectList						mObjs;
 
-		ObjectClassMap		mObjectClasses;
-		ObjectClassIdList	mObjectClassIds;
-		ObjectList			mObjects;
-		ClassIdMap			mNumericClassIds;
-		uint16				mLastNumericClassId;
+		scripting::IScriptingSystem*	mpScripting;
 
-		real				mSimTimeInSecs;
-		simtime				mSimTime;
-		real				mTickTime;
-		real				mCurrTickTime;
+		// timing
+		real								mSimTimeInSecs;
+		simtime							mSimTime;
+		real								mTickTime;
+		real								mCurrTickTime;
 
-		Event				mEvtEntitySpawned;
-		Event				mEvtEntityVMCreated;
-		scripting::IScriptingSystem&	mScripting;
-
-		typedef SharedPtr<scripting::IBinder> BinderPtr;
-		typedef std::deque<BinderPtr> BinderList;
+		// scripting binders
+		typedef SharedPtr<scripting::IBinder> BinderSharedPtr;
+		typedef std::deque<BinderSharedPtr> BinderList;
 		typedef std::deque<scripting::IBinder*> PureBinderPtrList;
-		BinderList			mBinders;
-		PureBinderPtrList	mNonOwnedBinders;
+		BinderList						mBinders;
+		PureBinderPtrList				mNonOwnedBinders;
 
-		graphics::IWorld*	mpGWorld;
-		audio::IWorld*		mpAWorld;
-		physics::IWorld*	mpPWorld;
+		// graphics / audio / physics ....
+		graphics::IWorld*				mpGWorld;
+		audio::IWorld*					mpAWorld;
+		physics::IWorld*				mpPWorld;
 
-		msg::MessageManager	mMsgMgr;
+		// events
+		Event								mEvtEntityVMSpawned;
+		Event								mEvtEntityVMCreated;
 	};
 
 } // namespace yake

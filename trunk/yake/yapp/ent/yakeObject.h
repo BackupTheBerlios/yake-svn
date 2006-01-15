@@ -33,11 +33,17 @@ namespace yake {
 	}
 namespace ent {
 
-	class sim;
+	class Simulation;
 
-	typedef YAKE_ENT_API yake::String ObjectClassId;
-	typedef YAKE_ENT_API uint32 ObjectId;
-	typedef YAKE_ENT_API boost::function<Object*(void)> ObjectCreatorFn;
+	typedef YAKE_ENT_API yake::String ObjectClassName;
+	typedef YAKE_ENT_API object::ObjectId<object::default_objectid_traits> ObjectId;
+	typedef YAKE_ENT_API boost::function<Object*(const ObjectId&)> ObjectCreatorFn;
+	typedef YAKE_ENT_API boost::function<void(Object*)> ObjectDestroyFn;
+
+	typedef ObjectId::ClassId ClassId;
+	typedef ObjectId::ClassIdSet ClassIdSet;
+	typedef ObjectId::ClassIdMap ClassIdMap;
+	typedef ObjectId::ObjectIdSet ObjectIdSet;
 
 	/** Data is passed to a newly created object.
 	*/
@@ -129,7 +135,7 @@ namespace ent {
 		object_class(const object_class&);
 	public:
 		object_class(const String& name) : mName(name) {}
-		object_class(const String& name, const ObjectCreatorFn& creatorFn) : mName(name), mCreatorFn(creatorFn) {}
+		object_class(const String& name, const ObjectCreatorFn& creatorFn, const ObjectDestroyFn& destroyFn) : mName(name), mCreatorFn(creatorFn), mDestroyFn(destroyFn) {}
 		bool operator == (const object_class& rhs)
 		{ return mName == rhs.getName(); }
 		String getName() const
@@ -143,13 +149,16 @@ namespace ent {
 		const ClassPtrList& getParents() const;
 		const ClassPtrList& getChildren() const;
 		const ObjectCreatorFn& getCreatorFn() const;
-		Object* createInstance() const;
+		const ObjectDestroyFn& getDestroyFn() const;
+		Object* createInstance(const ObjectId&) const;
+		void destroyInstance(Object*) const;
 	private:
-		String				mName;
-		PropertyDefMap		mPropDefs;
-		ClassPtrList		mParents;
-		ClassPtrList		mChilds;
+		String					mName;
+		PropertyDefMap			mPropDefs;
+		ClassPtrList			mParents;
+		ClassPtrList			mChilds;
 		ObjectCreatorFn		mCreatorFn;
+		ObjectDestroyFn		mDestroyFn;
 	};
 
 	#define DECLARE_OBJECT_BASIC(CLASSNAME) \
@@ -171,7 +180,7 @@ namespace ent {
 	*/
 	class YAKE_ENT_API Object
 	{
-		friend class sim;
+		friend class Simulation;
 		DECLARE_OBJECT_ROOT(Object)
 	private:
 		Object(const Object&);
@@ -191,6 +200,8 @@ namespace ent {
 		virtual void onGetDefaultEventParams(ParamList& params) {};
 	public:
 		ObjectId getId() const;
+		ObjectId id() const;
+		void setId(const ObjectId& id);
 		bool isServer() const;
 
 		Event* getEventByName(const String& name) const;
@@ -205,7 +216,7 @@ namespace ent {
 		ObjectMessage* createMessage(const MessageId& id);
 		void addMessageHandler(const MessageId& id, const MessageHandlerFn& fn, Object* source = 0);
 	protected:
-		// supposed to be called only by sim!
+		// supposed to be called only by Simulation!
 		void postMessage(ObjectMessage* pMessage)
 		{
 			mMessageManager.postMessage( pMessage );
@@ -238,17 +249,23 @@ namespace ent {
 #define OBJECT_PROPS_END() \
 		}
 
-	#define DECLARE_OBJECT(CLASSNAME) \
+
+	#define DECLARE_OBJECT(CLASSNAME,STRINGID) \
 		DECLARE_OBJECT_BASIC(CLASSNAME) \
 	private: \
-		static Object* create() \
+		static Object* create(const ObjectId& id) \
 		{ \
 			CLASSNAME* pObj = new CLASSNAME(); \
+			pObj->setId(id); \
 			initEntity(pObj); \
 			return pObj; \
 		} \
+		static void destroy(Object* obj) \
+		{ \
+			delete obj; \
+		} \
 	public: \
-		static void reg( ::yake::ent::sim& theSim ); \
+		static void init(); \
 		static CLASSNAME* cast( Object* other ) \
 		{  return dynamic_cast<CLASSNAME*>(other); } \
 		static const CLASSNAME* cast( const Object* other ) \
@@ -257,7 +274,7 @@ namespace ent {
 	#define DEFINE_OBJECT_CLASS_WITH_CREATOR(CLASSNAME) \
 		::yake::ent::object_class* CLASSNAME::getClass() \
 		{ \
-			static ::yake::ent::object_class g_class(#CLASSNAME,&CLASSNAME::create); \
+			static ::yake::ent::object_class g_class(#CLASSNAME,&CLASSNAME::create,&CLASSNAME::destroy); \
 			return &g_class; \
 		}
 	#define DEFINE_OBJECT_CLASS_WITHOUT_CREATOR(CLASSNAME) \
@@ -284,20 +301,18 @@ namespace ent {
 	#define DEFINE_OBJECT(CLASSNAME) \
 		DEFINE_OBJECT_CLASS_WITH_CREATOR(CLASSNAME) \
 		DEFINE_OBJECT_BASIC(CLASSNAME) \
-		void CLASSNAME::reg( ::yake::ent::sim& theSim ) \
+		void CLASSNAME::init() \
 		{ \
 			CLASSNAME::regPropDefs##CLASSNAME(getClass()->getPropertyDef()); \
-			theSim.regObjectClass(getClass()); \
 		}
 
 	#define DEFINE_OBJECT_1(CLASSNAME,PARENT0) \
 		DEFINE_OBJECT_CLASS_WITH_CREATOR(CLASSNAME) \
 		DEFINE_OBJECT_BASIC(CLASSNAME) \
-		void CLASSNAME::reg( ::yake::ent::sim& theSim ) \
+		void CLASSNAME::init() \
 		{ \
 			getClass()->addParent(PARENT0::getClass()); \
 			CLASSNAME::regPropDefs##CLASSNAME(getClass()->getPropertyDef()); \
-			theSim.regObjectClass(getClass()); \
 		}
 
 	template<class T>

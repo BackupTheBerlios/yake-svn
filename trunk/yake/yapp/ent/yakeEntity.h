@@ -40,7 +40,7 @@ namespace ent {
 	class YAKE_ENT_API Entity : public Object
 	{
 		friend class sim;
-		DECLARE_OBJECT(Entity)
+		DECLARE_OBJECT(Entity,"Entity")
 	private:
 		Entity(const Entity&);
 	protected:
@@ -90,7 +90,7 @@ namespace ent {
 		void _initialiseComponents(object_creation_context& creationCtx);
 	};
 
-#define YAKE_DECLARE_ENTITY( ENTITYCLASS ) DECLARE_OBJECT( ENTITYCLASS )
+#define YAKE_DECLARE_ENTITY( ENTITYCLASS,STRINGID ) DECLARE_OBJECT( ENTITYCLASS, STRINGID )
 #define YAKE_DEFINE_ENTITY( ENTITYCLASS ) DEFINE_OBJECT( ENTITYCLASS )
 #define YAKE_DEFINE_ENTITY_1( ENTITYCLASS, PARENT0 ) DEFINE_OBJECT_1( ENTITYCLASS, PARENT0 )
 
@@ -111,7 +111,7 @@ namespace ent {
 
 	class YAKE_ENT_API Pawn : public Entity
 	{
-		YAKE_DECLARE_ENTITY(Pawn)
+		YAKE_DECLARE_ENTITY(Pawn,"Pawn")
 	public:
 		OBJECT_PROPS_BEGIN(Pawn)
 			OBJECT_PROP("position", Vector3, Vector3(0,0,0))
@@ -136,7 +136,7 @@ namespace ent {
 
 	class YAKE_ENT_API Light : public Entity
 	{
-		YAKE_DECLARE_ENTITY(Light)
+		YAKE_DECLARE_ENTITY(Light,"Pawn")
 	public:
 		void enableLight( bool yes );
 		bool isLightEnabled() const;
@@ -152,6 +152,6 @@ namespace ent {
 		virtual void onTick();
 	};
 
-} // namespace yake
 } // namespace ent
+} // namespace yake
 #endif

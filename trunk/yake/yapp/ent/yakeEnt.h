@@ -37,6 +37,7 @@
 #include <yapp/base/yapp.h>
 #include <yake/scripting/yakeScriptingSystem.h>
 #include <yapp/msg/yakeMsg.h>
+#include <yake/object/yakeObjects.h>
 #include <yapp/ent/yakeCommon.h>
 #include <yapp/ent/yakeEvent.h>
 #include <yapp/ent/yakeMessaging.h>

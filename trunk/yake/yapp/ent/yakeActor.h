@@ -35,7 +35,7 @@ namespace ent {
 
 	class YAKE_ENT_API Actor : public Pawn
 	{
-		YAKE_DECLARE_ENTITY(Actor)
+		YAKE_DECLARE_ENTITY(Actor,"Actor")
 	public:
 		enum LifeState {
 			kSpawning,

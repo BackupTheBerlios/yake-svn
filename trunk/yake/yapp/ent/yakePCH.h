@@ -31,5 +31,6 @@
 #include <yapp/base/yapp.h>
 #include <yake/scripting/yakeScriptingSystem.h>
 #include <yapp/msg/yakeMsg.h>
+#include <yake/object/yakeObjects.h>
 
 #endif
