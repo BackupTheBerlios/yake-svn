@@ -33,7 +33,7 @@ namespace yake {
 namespace ent {
 namespace lua {
 
-	YAKE_ENTLUA_API ent::EventCallback* createEntitySpawnedCb();
+	YAKE_ENTLUA_API ent::EventCallback* createEntityVMSpawnedCb();
 	YAKE_ENTLUA_API ent::EventCallback* createEntityVMCreatedCb();
 
 	struct YAKE_ENTLUA_API Binder : public scripting::IBinder

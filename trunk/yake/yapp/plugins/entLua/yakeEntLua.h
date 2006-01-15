@@ -33,7 +33,7 @@ namespace yake {
 namespace ent {
 namespace lua {
 
-	YAKE_ENTLUA_API bool bindSim( sim& theSim );
+	YAKE_ENTLUA_API bool bindSim( Simulation& theSim );
 
 } // namespace lua
 } // namespace ent
