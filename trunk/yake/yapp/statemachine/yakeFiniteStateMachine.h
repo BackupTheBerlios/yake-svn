@@ -299,8 +299,11 @@ namespace state {
 		{
 			typename TransitionMap::const_iterator itFind = mTransitions.find( idPair );
 			if (itFind == mTransitions.end())
-				return SharedTransitionPtr();
-			return itFind->second;
+			{
+				return false;
+			}
+			rTansition = itFind->second;
+			return true;
 		}
 		bool _hasTransition( const StateIdPair& idPair )
 		{
