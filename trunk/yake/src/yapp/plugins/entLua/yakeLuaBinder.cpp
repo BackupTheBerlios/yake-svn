@@ -36,9 +36,9 @@ namespace yake {
 namespace ent {
 namespace lua {
 
-	struct EntitySpawnedCb : public ent::EventCallback
+	struct EntityVMSpawnedCb : public ent::EventCallback
 	{
-		EntitySpawnedCb() {}
+		EntityVMSpawnedCb () {}
 		virtual void onFire(const ent::EventData& evtData)
 		{
 			scripting::IVM* pVM = 0;
@@ -71,9 +71,9 @@ namespace lua {
 			}
 		}
 	};
-	ent::EventCallback* createEntitySpawnedCb()
+	ent::EventCallback* createEntityVMSpawnedCb()
 	{
-		return new EntitySpawnedCb();
+		return new EntityVMSpawnedCb();
 	}
 	struct EntityVMCreatedCb : public ent::EventCallback
 	{
@@ -249,7 +249,7 @@ namespace lua {
 		if (!pModel)
 			return;
 		static_cast<PawnVisual*>(pVisual)->setGraphical( pModel );
-		pModel->fromDotScene( fn, sim::getSim().getGraphicsWorld() );
+		pModel->fromDotScene( fn, Simulation::getSim().getGraphicsWorld() );
 	}
 	void entity_machineChangeTo(Entity* pEntity, const String& machine, const String& targetState)
 	{
@@ -262,7 +262,7 @@ namespace lua {
 			return;
 		pMsg->set("machine",machine);
 		pMsg->set("to",targetState);
-		sim::getSim().postMessage( pMsg, pEntity );
+		Simulation::getSim().postMessage( pMsg, pEntity );
 	}
 	void entity_machineChangeTo_default(Entity* pEntity, const String& targetState)
 	{
@@ -316,8 +316,14 @@ namespace lua {
 
 		module( pL->getLuaState() )
 		[
-			class_<sim>("sim")
-				.def("getTime", &sim::getTimeAsSeconds)
+			class_<ObjectId>("ObjectId")
+				.def("classId", &ObjectId::classId)
+				.def("serialNo", &ObjectId::serialNo)
+		];
+		module( pL->getLuaState() )
+		[
+			class_<Simulation>("Simulation")
+				.def("getTime", &Simulation::getTimeAsSeconds)
 		];
 		module( pL->getLuaState() )
 		[
@@ -326,7 +332,7 @@ namespace lua {
 		];
 		module( pL->getLuaState() )
 		[
-			class_<Event>("event")
+			class_<Event>("Event")
 				.def("getName", &Event::getName)
 		];
 		module( pL->getLuaState() )
@@ -374,7 +380,7 @@ namespace lua {
 		];
 		module( pL->getLuaState() )
 		[
-			def("getSim",&sim::getSim),
+			def("getSim",&Simulation::getSim),
 			def("createEvent",&createEvent),
 			def("fireEvent",&fireEvent),
 			def("rand",&randReal)
@@ -405,7 +411,7 @@ namespace lua {
 	}
 
 	//
-	bool bindSim( sim& theSim )
+	bool bindSim( Simulation& theSim )
 	{
 		//Binder* pBinder = create<scripting::IBinder>("yake::ent::luabinder");
 		Binder* pBinder = new Binder();
@@ -417,7 +423,7 @@ namespace lua {
 		//mSim.addEntityVMBinder( new yake::ent::lua::MathBinder() );
 
 		// add special callback (no direct deps on lua via interface!)
-		theSim.getEvent_onEntitySpawned().addCallback( ent::lua::createEntitySpawnedCb() );
+		theSim.getEvent_onEntityVMSpawned().addCallback( ent::lua::createEntityVMSpawnedCb() );
 		theSim.getEvent_onEntityVMCreated().addCallback( ent::lua::createEntityVMCreatedCb() );
 		return true;
 	}
