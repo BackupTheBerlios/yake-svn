@@ -38,74 +38,57 @@ namespace yake {
 namespace ent {
 
 	namespace private_ {
-		sim* g_sim = 0;
+		Simulation* g_sim = 0;
 	}
-	sim& sim::getSim()
+	Simulation& Simulation::getSim()
 	{
 		return *(private_::g_sim);
 	}
 
-	sim::sim(	scripting::IScriptingSystem& scriptingSystem,
-				const real ticksPerSecond, 
-				graphics::IWorld* pGWorld /*= 0*/,
-				audio::IWorld* pAWorld /*= 0*/,
-				physics::IWorld* pPWorld /*= 0*/
-			) : 
-		mSimTime(0),
-		mpGWorld(pGWorld),
-		mpAWorld(pAWorld),
-		mpPWorld(pPWorld),
-		mScripting(scriptingSystem),
-		mEvtEntitySpawned("onEntitySpawned"),
+	Simulation::Simulation() :
+		mpGWorld(0),
+		mpAWorld(0),
+		mpPWorld(0),
+		mpScripting(0),
+		mEvtEntityVMSpawned("onEntitySpawned"),
 		mEvtEntityVMCreated("onEntityVMCreated"),
+		mSimTime(0),
 		mTickTime(0.1f),
 		mCurrTickTime(0.f),
-		mSimTimeInSecs(0.f),
-		mLastNumericClassId(1)
+		mSimTimeInSecs(0.f)
+	{
+	}
+	Simulation::~Simulation()
+	{
+		stop();
+	}
+	bool Simulation::start(	scripting::IScriptingSystem* pScripting /*= 0*/,
+					graphics::IWorld* pGWorld /*= 0*/,
+					audio::IWorld* pAWorld /*= 0*/,
+					physics::IWorld* pPWorld /*= 0*/)
 	{
 		private_::g_sim = this;
-
-		if (ticksPerSecond > 0)
-			mTickTime = 1.f / ticksPerSecond;
+		mpScripting = pScripting;
+		mpGWorld = pGWorld;
+		mpAWorld = pAWorld;
+		mpPWorld = pPWorld;
+		return true;
 	}
-	sim::~sim()
+	void Simulation::stop()
 	{
+		removeAndDestroyObjects();
 		mNonOwnedBinders.clear();
 		mBinders.clear();
-		mObjectClasses.clear();
-		mObjectClassIds.clear();
-		mObjects.clear();
 		private_::g_sim = 0;
 	}
-	void sim::setTicksPerSecond(const real ticksPerSecond)
-	{
-		if (ticksPerSecond > 0)
-			mTickTime = 0.1f;
-	}
-	Event& sim::getEvent_onEntitySpawned()
-	{
-		return mEvtEntitySpawned;
-	}
-	Event& sim::getEvent_onEntityVMCreated()
-	{
-		return mEvtEntityVMCreated;
-	}
-	simtime sim::getTime() const
-	{
-		return mSimTime;
-	}
-	real sim::getTimeAsSeconds() const
-	{
-		return mSimTimeInSecs;
-	}
-	void sim::tick(const real timeElapsed)
+	void Simulation::tick(const real timeElapsed)
 	{
 		mCurrTickTime += timeElapsed;
 		while (mCurrTickTime > 0)
 		{
 			mMsgMgr.execute();
 
-			ConstVectorIterator<ObjectList> itEntity( mObjects );
+			ConstVectorIterator<ObjectList> itEntity( mObjs );
 			while (itEntity.hasMoreElements())
 			{
 				itEntity.getNext()->tick();
@@ -117,37 +100,115 @@ namespace ent {
 			mSimTimeInSecs += mTickTime;
 		}
 	}
-	void sim::removeAndDestroyAll()
+	Object* Simulation::createObject(const String& clsName,
+												const StringPairVector& components,
+												const StringVector& scriptFiles )
 	{
-		mObjects.clear();
+		std::pair<object::ResultCode,ClassId> clsId = mObjMgr.getClassId( clsName );
+		YAKE_ASSERT( clsId.first == object::RC_OK );
+		if (clsId.first != object::RC_OK)
+			return 0;
+		return createObject( clsId.second, components, scriptFiles );
 	}
-	void sim::regObjectClass( object_class* theClass )
+	Object* Simulation::createObject(const ClassId clsId,
+												const StringPairVector& components,
+												const StringVector& scriptFiles)
 	{
-		YAKE_ASSERT( theClass ).debug("Trying to register 0 class!");
-		if (!theClass)
-			return;
-		const ObjectClassId id = theClass->getName();
-		mObjectClassIds.push_back( id );
-		mObjectClasses[ id ] = theClass;
-		mNumericClassIds[ id ] = mLastNumericClassId++;
+		Object* pObject = mObjMgr.createObject( clsId );
+		if (!pObject)
+			return 0;
+		Entity* pEntity = Entity::cast(pObject);
+
+		if (!pEntity)
+			mObjs.push_back( pObject );
+		else
+		{
+
+			// create VMs & load & execute entity scripts
+			const size_t numVMs = (scriptFiles.size() > 0) ? scriptFiles.size() : 1; // at least one VM
+			ParamList params;
+			params["object"] = pObject;
+			params["entity"] = pEntity;
+			if (mpScripting)
+			{
+				for (size_t i=0; i<numVMs; ++i)
+				{
+					// create VM
+					scripting::IVM* pVM = createEntityVM();
+					pEntity->addVM( pVM );
+
+					// fire "entity VM created"
+					params["vm"] = pVM;
+					mEvtEntityVMCreated.fire(params);
+
+					// load & execute entity script
+					if (i <= scriptFiles.size())
+					{
+						const String scriptFile = scriptFiles.at(i);
+						if (scriptFile.empty())
+							continue;
+						AutoPtr<scripting::IScript> pScript( mpScripting->createScriptFromFile(scriptFile) );
+						YAKE_ASSERT( pScript.get() );
+						pVM->execute( pScript.get() );
+					} // for each script
+				} // for each VM
+			} // if mpScripting
+
+			// create components
+			ConstVectorIterator<StringPairVector> itC( components );
+			while (itC.hasMoreElements())
+			{
+				const StringPair stringPair = itC.getNext();
+				pEntity->addComponent( stringPair.first, create<EntityComponent>( stringPair.second, *pEntity ) );
+			}
+
+			// minimal first time setup
+			object_creation_context ctx;
+			ctx.mpGWorld = mpGWorld;
+			ctx.mpAWorld = mpAWorld;
+			ctx.mpPWorld = mpPWorld;
+			pEntity->initialise( ctx );
+
+			// store entity & fire events
+			mObjs.push_back( pObject );
+
+			// fire "entity spawned" for each VM
+
+			params.clear();
+			params["object"] = pObject;
+			params["entity"] = pEntity;
+			for (size_t i=0; i<pEntity->getVMCount(); ++i)
+			{
+				params["vm"] = pEntity->getVM(i);
+				mEvtEntityVMSpawned.fire(params);
+			}
+
+			// spawn entity itself
+
+			pEntity->spawn();
+
+			ObjectMessage* pMsg = pEntity->createMessage( MSGID_EntitySpawned );
+			pMsg->set("entity", pEntity );
+			mMsgMgr.postMessage( pMsg );
+		}
+		return pObject;
 	}
-	const ObjectClassIdList& sim::getRegisteredObjectClasses() const
-	{
-		return mObjectClassIds;
-	}
-	void sim::addEntityVMBinder( scripting::IBinder* pBinder, const bool bTransferOwnership )
+	void Simulation::addEntityVMBinder( scripting::IBinder* pBinder, const bool bTransferOwnership )
 	{
 		YAKE_ASSERT( pBinder );
 		if (!pBinder)
 			return;
 		if (bTransferOwnership)
-			mBinders.push_back( BinderPtr( pBinder ) );
+			mBinders.push_back( BinderSharedPtr( pBinder ) );
 		else
 			mNonOwnedBinders.push_back( pBinder );
 	}
-	scripting::IVM* sim::createEntityVM()
+	scripting::IVM* Simulation::createEntityVM()
 	{
-		scripting::IVM* pVM = mScripting.createVM();
+		YAKE_ASSERT( mpScripting );
+		if (!mpScripting)
+			return 0;
+		scripting::IVM* pVM = mpScripting->createVM();
 		YAKE_ASSERT( pVM );
 
 		// bind complete entity system to VM
@@ -170,102 +231,28 @@ namespace ent {
 
 		return pVM;
 	}
-	Entity* sim::createEntity( const ObjectClassId& id, const StringPairVector& components, const StringVector& scriptFiles )
+	void Simulation::destroyObject( Object* obj )
 	{
-		ObjectClassMap::const_iterator itFind = mObjectClasses.find( id );
-		if (itFind == mObjectClasses.end())
-		{
-			std::stringstream msg;
-			msg << "Could not find creator for object class: " << id.c_str();
-			YAKE_EXCEPT(msg.str());
-		}
-		YAKE_ASSERT( itFind->second );
-		Object* pObject = itFind->second->createInstance();
-		Entity* pEntity = Entity::cast( pObject );
-		YAKE_ASSERT( pEntity ).debug("The created object is an Object but not an Entity!");
-		if (!pEntity)
-		{
-			delete pObject;
-			return 0;
-		}
-
-		// create VMs & load & execute entity scripts
-		const size_t numVMs = (scriptFiles.size() > 0) ? scriptFiles.size() : 1; // at least one VM
-		ParamList params;
-		params["object"] = pObject;
-		params["entity"] = pEntity;
-		for (size_t i=0; i<numVMs; ++i)
-		{
-			// create VM
-			scripting::IVM* pVM = createEntityVM();
-			pEntity->addVM( pVM );
-
-			// fire "entity VM created"
-			params["vm"] = pVM;
-			mEvtEntityVMCreated.fire(params);
-
-			// load & execute entity script
-			if (i <= scriptFiles.size())
-			{
-				const String scriptFile = scriptFiles.at(i);
-				if (scriptFile.empty())
-					continue;
-				AutoPtr<scripting::IScript> pScript( mScripting.createScriptFromFile(scriptFile) );
-				YAKE_ASSERT( pScript.get() );
-				pVM->execute( pScript.get() );
-			}
-		}
-
-		// create components
-		ConstVectorIterator<StringPairVector> itC( components );
-		while (itC.hasMoreElements())
-		{
-			const StringPair stringPair = itC.getNext();
-			pEntity->addComponent( stringPair.first, create<EntityComponent>( stringPair.second, *pEntity ) );
-		}
-
-		// minimal first time setup
-		object_creation_context ctx;
-		ctx.mpGWorld = mpGWorld;
-		ctx.mpAWorld = mpAWorld;
-		ctx.mpPWorld = mpPWorld;
-		pEntity->initialise( ctx );
-
-		// store entity & fire events
-		mObjects.push_back( SharedPtr<Entity>(pEntity) );
-
-		// fire "entity spawned"
-
-		params.clear();
-		params["object"] = pObject;
-		params["entity"] = pEntity;
-		for (size_t i=0; i<pEntity->getVMCount(); ++i)
-		{
-			params["vm"] = pEntity->getVM(i);
-			mEvtEntitySpawned.fire(params);
-		}
-
-		// spawn entity itself
-
-		pEntity->spawn();
-
-		ObjectMessage* pMsg = pEntity->createMessage( MSGID_EntitySpawned );
-		pMsg->set("entity", pEntity );
-		mMsgMgr.postMessage( pMsg );
-
-		return pEntity;
-	}
-	bool operator == (const SharedPtr<Object>& lhs, const Object* rhs)
-	{ return lhs.get() == rhs; }
-	void sim::destroyEntity( Entity* pEnt )
-	{
-		if (!pEnt)
+		if (!obj)
 			return;
-		ObjectList::iterator itFind = std::find( mObjects.begin(), mObjects.end(), pEnt );
-		if (itFind != mObjects.end())
-			mObjects.erase( itFind );
+		// remove from list
+		ObjectList::iterator itFind = std::find( mObjs.begin(), mObjs.end(), obj );
+		if (itFind != mObjs.end())
+			mObjs.erase( itFind );
+		// destroy
+		mObjMgr.destroyObject( obj );
 	}
-	void sim::postMessage(ObjectMessage* pMessage, Object* target)
+	void Simulation::removeAndDestroyObjects()
+	{
+		ConstDequeIterator<ObjectList> itObj( mObjs );
+		while (itObj.hasMoreElements())
+		{
+			Object* obj = itObj.getNext();
+			mObjMgr.destroyObject(obj);
+		}
+		mObjs.clear();
+	}
+	void Simulation::postMessage(ObjectMessage* pMessage, Object* target)
 	{
 		YAKE_ASSERT( pMessage ).warning("null message");
 		if (!pMessage)
@@ -278,6 +265,27 @@ namespace ent {
 		// forward/post
 		target->postMessage( pMessage );
 	}
-
+	void Simulation::setTicksPerSecond(const real ticksPerSecond)
+	{
+		YAKE_ASSERT( ticksPerSecond > 0. );
+		if (ticksPerSecond > 0.)
+			mTickTime = 1. / ticksPerSecond;
+	}
+	Event& Simulation::getEvent_onEntityVMSpawned()
+	{
+		return mEvtEntityVMSpawned;
+	}
+	Event& Simulation::getEvent_onEntityVMCreated()
+	{
+		return mEvtEntityVMCreated;
+	}
+	simtime Simulation::getTime() const
+	{
+		return mSimTime;
+	}
+	real Simulation::getTimeAsSeconds() const
+	{
+		return mSimTimeInSecs;
+	}
 } // namespace yake
 } // namespace ent

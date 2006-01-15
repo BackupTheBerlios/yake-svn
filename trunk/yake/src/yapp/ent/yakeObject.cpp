@@ -34,16 +34,29 @@
 namespace yake {
 namespace ent {
 
-	Object* object_class::createInstance() const
+	Object* object_class::createInstance(const ObjectId& id) const
 	{
 		YAKE_ASSERT( !mCreatorFn.empty() )( mName ).debug("Class has no registered creation function!");
 		if (mCreatorFn.empty())
 			return 0;
-		return mCreatorFn();
+		return mCreatorFn(id);
 	}
 	const ObjectCreatorFn& object_class::getCreatorFn() const
 	{
 		return mCreatorFn;
+	}
+	void object_class::destroyInstance(Object* obj) const
+	{
+		if (!obj)
+			return;
+		YAKE_ASSERT( !mDestroyFn.empty() )( mName ).debug("Class has no registered destruction function!");
+		if (mDestroyFn.empty())
+			return;
+		return mDestroyFn(obj);
+	}
+	const ObjectDestroyFn& object_class::getDestroyFn() const
+	{
+		return mDestroyFn;
 	}
 	void object_class::addParent(object_class* parent)
 	{
@@ -82,13 +95,14 @@ namespace ent {
 
 	DEFINE_OBJECT_ROOT( Object )
 
-	Object::Object() : mEvtSpawn("onSpawn"), mEvtTick("onTick")
+	Object::Object() : mId(ObjectId::kNull), mEvtSpawn("onSpawn"), mEvtTick("onTick")
 	{
-		static ObjectId lastId = 1;
-		mId = lastId++;
-
 		regEvent(&mEvtSpawn);
 		regEvent(&mEvtTick);
+	}
+	void Object::setId(const ObjectId& id)
+	{
+		mId = id;
 	}
 	void Object::initialise(object_creation_context& creationCtx)
 	{
@@ -130,6 +144,10 @@ namespace ent {
 		mEvtTick.fire(getDefaultEventParams());
 	}
 	ObjectId Object::getId() const
+	{
+		return mId;
+	}
+	ObjectId Object::id() const
 	{
 		return mId;
 	}
