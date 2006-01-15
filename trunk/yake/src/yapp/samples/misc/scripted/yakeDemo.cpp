@@ -63,24 +63,31 @@ public:
 		mScene->fromDotScene( mSceneFilename, mGWorld.get() );
 	}
 
-	void initSim(ent::sim& theSim)
+	void initSim(ent::Simulation& theSim)
 	{
-		// register entities with a specific sim
-		ent::Pawn::reg( theSim );
-		ent::Light::reg( theSim );
+		//@fixme: static initialization !?
+		ent::Entity::init();
+		ent::Pawn::init();
+		ent::Light::init();
 
 		// add Lua binder
 		ent::lua::bindSim( theSim );
 
+		// register entities with a specific sim
+		theSim.regClass<ent::Pawn>("Pawn");
+		theSim.regClass<ent::Light>("Light");
+
 		// init done!
 
 		// create entities
-		ent::Entity* e1 = theSim.createEntity("Pawn", 
+		ent::Entity* e1 = ent::Entity::cast( 
+											theSim.createObject("Pawn", 
 												MakeStringPairVector() << StringPair("visual","pawn.visual"),
-												MakeStringVector() << "../../media/samples/scripted/ent_pawn_basic.lua");
-		ent::Entity* eLight1 = theSim.createEntity("Light", 
-													MakeStringPairVector() << StringPair("visual","light.visual"), 
-													MakeStringVector() << "../../media/samples/scripted/ent_light.lua");
+												MakeStringVector() << "../../media/samples/scripted/ent_pawn_basic.lua") );
+		ent::Entity* eLight1 = ent::Entity::cast( 
+											theSim.createObject("Light", 
+												MakeStringPairVector() << StringPair("visual","light.visual"), 
+												MakeStringVector() << "../../media/samples/scripted/ent_light.lua") );
 		eLight1->setProperty( "position", Vector3(50,100,0) );
 		eLight1->setProperty( "diffuseColour", Color(1,1,1,1) );
 }
@@ -119,7 +126,8 @@ public:
 		setupScene();
 
 		// create sim
-		ent::sim theSim( getScriptingSystem(), 10.f, mGWorld.get() );
+		ent::Simulation theSim;
+		theSim.start( &getScriptingSystem(), mGWorld.get() );
 		initSim(theSim);
 
 		// main loop
@@ -165,7 +173,7 @@ public:
 			}
 		}
 
-		theSim.removeAndDestroyAll();
+		theSim.stop();
 
 		//YAKE_SAFE_DELETE( mScene );	
 
