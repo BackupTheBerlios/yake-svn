@@ -79,7 +79,7 @@ namespace physics {
 		mDimensions = desc.dimensions;
 
 		mHeightAboveGround = mDimensions.y*real(0.75);
-		mHeightAboveGroundDuck = 0.5 * mHeightAboveGround;
+		mHeightAboveGroundDuck = real(0.5) * mHeightAboveGround;
 
 		mSphereRadius = mDimensions.x * real(0.5);
 		mSphereOffset = Vector3(0,mHeightAboveGround,0);
