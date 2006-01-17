@@ -124,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../;../../dependencies;../../dependencies/boost;../../dependencies/ttl"
+				AdditionalIncludeDirectories="../../;../../dependencies;../../dependencies/boost;../../dependencies/ttl;../../dependencies/cegui_mk2"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;YAKE_RAF_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
@@ -148,7 +148,7 @@
 				AdditionalDependencies="base.lib physics.lib data.lib scripting.lib graphics.lib input.lib audio.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../common/lib/$(ConfigurationName);../../dependencies/lib"
+				AdditionalLibraryDirectories="../../common/lib/$(ConfigurationName);../../dependencies/lib;../../dependencies/cegui_mk2/lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="1"
