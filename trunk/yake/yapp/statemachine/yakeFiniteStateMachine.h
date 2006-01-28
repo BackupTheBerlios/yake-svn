@@ -302,7 +302,7 @@ namespace state {
 			{
 				return false;
 			}
-			rTansition = itFind->second;
+			rTransition = itFind->second;
 			return true;
 		}
 		bool _hasTransition( const StateIdPair& idPair )
