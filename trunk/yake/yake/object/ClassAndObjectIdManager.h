@@ -33,7 +33,7 @@
 namespace yake {
 namespace OBJECTS_NAMESPACE {
 
-	template<typename classdata_type,typename objectid_type = ::object::ObjectId<default_objectid_traits> >
+	template<typename classdata_type,typename objectid_type = ::yake::OBJECTS_NAMESPACE::ObjectId<default_objectid_traits> >
 	struct ClassEntryT
 	{
 		// official interface:
@@ -53,7 +53,7 @@ namespace OBJECTS_NAMESPACE {
 		classdata_type	data_;
 	};
 
-	template<typename classentry_type,typename objectid_type = ::object::ObjectId<default_objectid_traits> >
+	template<typename classentry_type,typename objectid_type = ::yake::OBJECTS_NAMESPACE::ObjectId<default_objectid_traits> >
 	struct ClassAndObjectIdManager
 	{
 	public:
