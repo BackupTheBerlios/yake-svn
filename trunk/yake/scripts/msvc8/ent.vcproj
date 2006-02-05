@@ -196,6 +196,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\yapp\ent\yakeDemo.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\yapp\ent\yakeEnt.cpp"
 				>
 			</File>
