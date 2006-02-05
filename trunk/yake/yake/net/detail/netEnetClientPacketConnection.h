@@ -18,8 +18,17 @@ namespace impl {
 		virtual void send(const PeerId, const void*, const size_t, const SendOptions& opt = SendOptions());
 
 		virtual void addStartedCallback(const OnStartedFn&);
-		virtual void addPacketReceivedCallback( const OnPacketReceivedFn&);
+		virtual CallbackConnection addPacketReceivedCallback( const OnPacketReceivedFn&);
 		virtual void addTimeOutCallback(const OnTimeOutFn&);
+
+		void disconnectPacketReceivedCallback(const CallbackHandle h)
+		{
+			boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
+			OnPacketReceivedFnList::iterator it = packetReceivedFnList_.find(h);
+			if (it == packetReceivedFnList_.end())
+				return;
+			packetReceivedFnList_.erase( it );
+		}
 	private:
 		void sendTo(const PeerId clientId, const void* dataPtr, const size_t dataSize, const Reliability rel, const Ordering, const ChannelId channel);
 		void sendBroadcast(const void* dataPtr, const size_t dataSize, const Reliability rel, const Ordering, const ChannelId channel);
@@ -35,7 +44,7 @@ namespace impl {
 		{
 			boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
 			for (OnPacketReceivedFnList::const_iterator it = packetReceivedFnList_.begin(); it != packetReceivedFnList_.end(); ++it)
-				(*it)(peerId,data,dataLen,channel);
+				(it->second)(peerId,data,dataLen,channel);
 		}
 		void fireCallback_TimeOut()
 		{
@@ -44,12 +53,13 @@ namespace impl {
 		}
 	private:
 		typedef std::deque<OnStartedFn> OnStartedFnList;
-		typedef std::deque<OnPacketReceivedFn> OnPacketReceivedFnList;
+		typedef std::map<CallbackHandle,OnPacketReceivedFn> OnPacketReceivedFnList;
 		typedef std::deque<OnTimeOutFn> OnTimeOutFnList;
 		OnStartedFnList					startedFnList_;
 		OnPacketReceivedFnList			packetReceivedFnList_;
-		boost::mutex					packetReceivedFnListMtx_;
+		boost::mutex						packetReceivedFnListMtx_;
 		OnTimeOutFnList					timeOutFnList_;
+		CallbackHandle						lastPacketReceivedCbHandle_;
 
 	private:
 		ENetAddress		m_address;

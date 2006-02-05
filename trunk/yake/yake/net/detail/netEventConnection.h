@@ -15,6 +15,9 @@ namespace impl {
 		virtual void setPacketConnection(IPacketConnection*,const NetEvent::Direction);
 		virtual void setMaxEventErrors(const size_t);
 
+		virtual bool start();
+		virtual void stop();
+
 		virtual void registerEvent(const NetEvent::id_type, const NetEvent::Direction,
 									const CreateEventFn& fnCreate, const DestroyEventFn& fnDestroy);
 		virtual void sendEvent(const NetEvent&, const SendOptions& opt = SendOptions());
@@ -22,43 +25,60 @@ namespace impl {
 		virtual void setAllowedIncomingEventIds(const std::vector<NetEvent::id_type>&);
 
 		virtual void setProcessEventCallback(const EvtProcessEventFn&);
-		//virtual void removeProcessEventCallback(const EvtProcessEventFn&);
 		virtual void setDisconnectCallback(const EvtDisconnectFn&);
-	private:
+
+		virtual void setPolling(const bool manualPolling = false);
+		virtual void poll();
+
 		void onReceivePacket(const PeerId, const void*, const size_t, const ChannelId);
 	private:
-		//typedef std::deque<EvtProcessEventFn> EvtProcessEventFnList;
-		//EvtProcessEventFnList	processEventFns_;
-		EvtProcessEventFn processEventFn_;
-		void fireCallbacks_ProcessEvent(const PeerId peerId, const NetEvent& evt, const ChannelId channel)
-		{
-			if (!processEventFn_.empty())
-				processEventFn_(peerId,evt,channel);
+		mutable EvtProcessEventFn	processEventFn_;
+		boost::mutex					processEventFnMtx_;
 
-			//EvtProcessEventFnList fns = processEventFns_; // Use a copy as the original container may be modified during the callbacks!
-			//for (EvtProcessEventFnList::const_iterator it = fns.begin(); it != fns.end(); ++it)
-			//	(*it)(peerId,evt,channel);
-		}
-
-	private:
 		typedef NetEvent::id_type event_id;
 		typedef NetEvent::Direction event_direction;
 
 		struct IdEntry
 		{
 			event_direction		dir;
-			CreateEventFn		fnCreate;
-			DestroyEventFn		fnDestroy;
+			CreateEventFn			fnCreate;
+			DestroyEventFn			fnDestroy;
 		};
 		typedef std::map<event_id,IdEntry> EventIdMap;
-		EventIdMap				eventIds_;
+		EventIdMap					eventIds_;
 
 		typedef std::vector<NetEvent::id_type> EventIdVector;
-		EventIdVector			allowedEventIds_;
-		mutable boost::mutex	allowedEventIdsMtx_;
+		EventIdVector				allowedEventIds_;
+		mutable boost::mutex		allowedEventIdsMtx_;
 
 		event_direction			dir_;
 		IPacketConnection*		conn_;
+
+		struct EvtQItem
+		{
+			PeerId					peerId_;
+			ChannelId				channel_;
+			NetEvent*				evt_;
+			DestroyEventFn			fnDestroy_;
+			EvtQItem(const PeerId peerId, NetEvent* evt, const ChannelId channel, const DestroyEventFn fnDestroy) :
+				peerId_(peerId), evt_(evt), channel_(channel), fnDestroy_(fnDestroy)
+			{}
+			EvtQItem& operator = (const EvtQItem& rhs)
+			{
+				peerId_ = rhs.peerId_;
+				channel_= rhs.channel_;
+				evt_    = rhs.evt_;
+				fnDestroy_ = rhs.fnDestroy_;
+				return *this;
+			}
+		};
+		typedef std::deque<EvtQItem> EvtQ;
+		mutable EvtQ				evtQ_;
+		boost::mutex				evtQMtx_;
+		bool							manualPolling_;
+
+		mutable bool				started_;
+		boost::mutex				startedMtx_;
 
 		struct statistics_t
 		{

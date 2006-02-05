@@ -13,13 +13,31 @@ namespace net {
 		virtual void send(const PeerId, const void*, const size_t, const SendOptions& opt = SendOptions()) = 0;
 	};
 
+#pragma warning(push)
+#pragma warning(disable: 4251) // class 'X' needs to have dll-interface to be used by clients of struct 'net::CallbackConnection'
+	typedef uint32 CallbackHandle;
+	struct NET_API CallbackConnection
+	{
+	public:
+		typedef boost::function<void(const CallbackHandle)> DisconnectFn;
+		CallbackConnection(const CallbackHandle h, const DisconnectFn& fn);
+		CallbackConnection(const CallbackConnection&);
+		CallbackConnection& operator=(const CallbackConnection&);
+		~CallbackConnection(); // does nothing!
+		void disconnect();
+	private:
+		DisconnectFn	disconnectFn_;
+		CallbackHandle	handle_;
+	};
+#pragma warning(pop)
+
 	class NET_API IPacketReceiver
 	{
 	public:
 		virtual ~IPacketReceiver() {}
 
 		typedef boost::function<void(const PeerId, const void*, const size_t, const ChannelId)> OnPacketReceivedFn;
-		virtual void addPacketReceivedCallback( const OnPacketReceivedFn&) = 0;
+		virtual CallbackConnection addPacketReceivedCallback( const OnPacketReceivedFn&) = 0;
 	};
 
 	class NET_API IPacketConnection : public IPacketSender, public IPacketReceiver

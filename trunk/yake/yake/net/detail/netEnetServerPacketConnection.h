@@ -24,7 +24,15 @@ namespace impl {
 		virtual void addStartedCallback(const OnStartedFn&);
 		virtual void addClientConnectedCallback(const OnClientConnectedFn&);
 		virtual void addClientDisconnectedCallback(const OnClientDisconnectedFn&);
-		virtual void addPacketReceivedCallback( const OnPacketReceivedFn&);
+		virtual CallbackConnection addPacketReceivedCallback( const OnPacketReceivedFn&);
+
+		void disconnectPacketReceivedCallback(const CallbackHandle h)
+		{
+			boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
+			OnPacketReceivedFnList::iterator it = packetReceivedFnList_.find( h );
+			if (it != packetReceivedFnList_.end())
+				packetReceivedFnList_.erase( it );
+		}
 	private:
 		void sendTo(const PeerId clientId, const void* dataPtr, const size_t dataSize, const Reliability rel, const Ordering, const ChannelId channel);
 		void sendBroadcast(const void* dataPtr, const size_t dataSize, const Reliability rel, const Ordering, const ChannelId channel);
@@ -52,18 +60,19 @@ namespace impl {
 		{
 			boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
 			for (OnPacketReceivedFnList::const_iterator it = packetReceivedFnList_.begin(); it != packetReceivedFnList_.end(); ++it)
-				(*it)(peerId,data,dataLen,channel);
+				(it->second)(peerId,data,dataLen,channel);
 		}
 	private:
 		typedef std::deque<OnStartedFn> OnStartedFnList;
 		typedef std::deque<OnClientConnectedFn> OnClientConnectedFnList;
 		typedef std::deque<OnClientDisconnectedFn> OnClientDisconnectedFnList;
-		typedef std::deque<OnPacketReceivedFn> OnPacketReceivedFnList;
+		typedef std::map<CallbackHandle,OnPacketReceivedFn> OnPacketReceivedFnList;
 		OnStartedFnList					startedFnList_;
 		OnClientConnectedFnList			clientConnectedFnList_;
 		OnClientDisconnectedFnList		clientDisconnectedFnList_;
 		OnPacketReceivedFnList			packetReceivedFnList_;
-		boost::mutex					packetReceivedFnListMtx_;
+		CallbackHandle						lastPacketReceivedCbHandle_;
+		boost::mutex						packetReceivedFnListMtx_;
 
 	private:
 		enum State {
