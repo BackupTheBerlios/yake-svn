@@ -38,6 +38,7 @@ namespace ogre3d {
 		OgreEntity( const OgreEntity& );
 	public:
 		OgreEntity( ::Ogre::SceneManager* sceneMgr, const String& mesh );
+		OgreEntity( ::Ogre::Entity* ent, ::Ogre::SceneManager* sceneMgr );
 		virtual ~OgreEntity();
 
 		virtual ISkeleton* getSkeleton() const;

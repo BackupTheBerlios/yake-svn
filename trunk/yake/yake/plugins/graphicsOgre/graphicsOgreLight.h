@@ -35,6 +35,7 @@ namespace ogre3d {
 	{
 	public:
 		OgreLight( Ogre::SceneManager* sceneMgr );
+		OgreLight( Ogre::Light*, Ogre::SceneManager* sceneMgr );
 		virtual ~OgreLight();
 
 		virtual void setType( const LightType type );

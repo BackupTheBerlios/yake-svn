@@ -37,6 +37,8 @@ namespace ogre3d {
 	{
 	public:
 		OgreNode( GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr, const String& name = "" );
+		//For wrapping existing OGRE scene nodes (e.g. created by OSM loader):
+		OgreNode( Ogre::SceneNode * node, GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr );
 		virtual ~OgreNode();
 
 		virtual void setPosition( const Vector3 & position );
@@ -82,15 +84,15 @@ namespace ogre3d {
 		OgreNode* _getParent() const;
 	protected:
 		typedef SceneNodePtrList NodeList;
-		NodeList			mChildren;
-		EntityPtrList		mEntities;
-		LightPtrList		mLights;
-		CameraPtrList		mCameras;
+		NodeList					mChildren;
+		EntityPtrList			mEntities;
+		LightPtrList			mLights;
+		CameraPtrList			mCameras;
 		ParticleSystemPtrList	mParticleSystems;
 
-		Ogre::SceneNode* 	mSceneNode;
+		Ogre::SceneNode* 		mSceneNode;
 		Ogre::SceneManager*	mSceneMgr;
-		OgreNode*			mParentNode;
+		OgreNode*				mParentNode;
 		GraphicalWorld&		mWorld;
 	};
 

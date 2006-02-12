@@ -69,6 +69,8 @@ namespace ogre3d {
 		/** Render a single frame. */
 		void render( real timeElapsed );
 
+		virtual bool load(const String& type, const String& file);
+
 		virtual void setSkyBox( const String& name );
 
 		virtual ISceneNode* createSceneNode( const String& tag = "" );

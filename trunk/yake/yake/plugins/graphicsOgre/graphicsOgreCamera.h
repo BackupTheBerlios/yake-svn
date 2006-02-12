@@ -37,6 +37,7 @@ namespace ogre3d {
 		OgreCamera( const OgreCamera & );
 	public:
 		OgreCamera( Ogre::SceneManager * sceneMgr );
+		OgreCamera( Ogre::Camera*, Ogre::SceneManager * sceneMgr );
 		virtual ~OgreCamera();
 
 		// Movable
