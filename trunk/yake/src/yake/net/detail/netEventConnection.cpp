@@ -90,6 +90,11 @@ namespace impl {
 	{
 		boost::mutex::scoped_lock lck(startedMtx_);
 		NET_ASSERT( !started_ );
+		if (started_)
+		{
+			NET_ASSERT( conn_ );
+			return false;
+		}
 		if (conn_)
 		{
 			conn_->addPacketReceivedCallback( boost::bind(&EventConnection::onReceivePacket,this,_1,_2,_3,_4) );
