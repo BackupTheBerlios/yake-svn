@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm150"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/OgreMain/include"
+				AdditionalIncludeDirectories="../../../../dependencies/oSceneLoaderLib/TinyXML;../../../../dependencies/oSceneLoaderLib/include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/OgreMain/include"
 				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_GRAPHICSCONCRETEAPI_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -125,7 +125,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/OgreMain/include"
+				AdditionalIncludeDirectories="../../../../dependencies/oSceneLoaderLib/TinyXML;../../../../dependencies/oSceneLoaderLib/include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/OgreMain/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_GRAPHICSCONCRETEAPI_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
@@ -276,6 +276,110 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<Filter
+				Name="oSceneLoader"
+				>
+				<File
+					RelativePath="..\..\..\..\dependencies\oSceneLoaderLib\src\OgreOSMScene.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\dependencies\oSceneLoaderLib\TinyXML\tinystr.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\dependencies\oSceneLoaderLib\TinyXML\tinyxml.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\dependencies\oSceneLoaderLib\TinyXML\tinyxmlerror.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\..\dependencies\oSceneLoaderLib\TinyXML\tinyxmlparser.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="inc"
@@ -338,6 +442,18 @@
 				RelativePath="..\..\..\..\yake\plugins\graphicsOgre\yakePCH.h"
 				>
 			</File>
+			<Filter
+				Name="oSceneLoader"
+				>
+				<File
+					RelativePath="..\..\..\..\dependencies\oSceneLoaderLib\include\IOSMSceneCallbacks.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\dependencies\oSceneLoaderLib\include\OgreOSMScene.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
