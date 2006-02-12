@@ -50,6 +50,13 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
+	OgreCamera::OgreCamera( Ogre::Camera* cam, Ogre::SceneManager * sceneMgr ) : mSceneMgr( sceneMgr ), mCam( cam )
+	{
+		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
+		YAKE_ASSERT( mCam ).warning("Couldn't create a camera!");
+	}
+
+	//------------------------------------------------------
 	OgreCamera::~OgreCamera()
 	{
 	    if ( mCam )

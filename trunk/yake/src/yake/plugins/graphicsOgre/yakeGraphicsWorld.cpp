@@ -41,6 +41,10 @@
 #include <yake/plugins/graphicsOgre/graphicsOgreCore.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreParticleSystem.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreGeometryAccess.h>
+#define YAKE_USE_OSM
+#ifdef YAKE_USE_OSM
+#include "OgreOSMScene.h"
+#endif
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -100,6 +104,12 @@ namespace ogre3d {
 		params["far_distance"] = "75";
 		params["directional_light_extrusion_distance"] = "500";
 		selectShadowTechnique("texture_modulative", params);
+
+		if (!mRootNode)
+		{
+			mRootNode = new OgreNode( *this, msCore->getSceneMgr(), uniqueName::create("rootSn") );
+			YAKE_ASSERT( mRootNode );
+		}
 	}
 
 	GraphicalWorld::~GraphicalWorld()
@@ -129,11 +139,7 @@ namespace ogre3d {
 	//-----------------------------------------------------
 	ISceneNode* GraphicalWorld::createSceneNode( const String& name )
 	{
-		if (!mRootNode)
-		{
-			mRootNode = new OgreNode( *this, msCore->getSceneMgr(), uniqueName::create("rootSn") );
-			YAKE_ASSERT( mRootNode );
-		}
+		YAKE_ASSERT( mRootNode );
 		YAKE_ASSERT( msCore ).debug("need a core!");
 		return mRootNode->createChildNode(name);
 	}
@@ -381,7 +387,109 @@ namespace ogre3d {
 		}
 		return 0;
 	}
+	//-----------------------------------------------------
+#ifdef YAKE_USE_OSM
+	// Callback handler to post-process created objects loaded by the OSM loader.
+	// We create our graphicsOGRE wrapper objects here.
+	class oSceneCallback : public OSMSceneCallbacks {
+	public:
+		GraphicalWorld&		world_;
+		Ogre::SceneManager*	sceneMgr_;
+		OgreNode*				currNode_;
+		typedef std::map<Ogre::Node*,OgreNode*> NodeMap;
+		NodeMap					nodeMap_;
+		oSceneCallback(GraphicalWorld& world, Ogre::SceneManager* sceneMgr, OgreNode* root) : 
+			world_(world), sceneMgr_(sceneMgr), currNode_(0)
+		{
+			nodeMap_[ root->getSceneNode_() ] = root;
+		}
+		// Called when a node has been created
+		virtual void OnNodeCreate(Ogre::SceneNode *pNode, TiXmlElement* pNodeDesc)
+		{
+			std::cout << "osm node '" << pNode->getName().c_str() << "'\n";
+			currNode_= new OgreNode( pNode, world_, sceneMgr_ );
+			YAKE_ASSERT( 0 == pNode->numAttachedObjects() );
 
+			nodeMap_[ pNode ] = currNode_;
+
+			nodeMap_[ pNode->getParent() ]->addChildNode(currNode_);
+		}
+
+		// Called when an entity has been created
+		virtual void OnEntityCreate(Ogre::Entity *pEntity, TiXmlElement* pEntityDesc)
+		{
+			std::cout << "osm entity '" << pEntity->getName().c_str() << "'\n";
+			YAKE_ASSERT( currNode_ );
+			if (!currNode_)
+				return;
+			OgreEntity* ent = new OgreEntity( pEntity, sceneMgr_ );
+			currNode_->attachEntity( ent ); //<= this is safe even though pEntity is already
+												// attached to the underlying Ogre::SceneNode of
+												// currNode_.
+		}
+
+		// Called when a camera has been created
+		virtual void OnCameraCreate(Ogre::Camera *pCamera, TiXmlElement* pCameraDesc)
+		{
+			std::cout << "osm camera '" << pCamera->getName().c_str() << "'\n";
+			YAKE_ASSERT( pCamera );
+			if (!pCamera)
+				return;
+			OgreCamera* cam = new OgreCamera( pCamera, sceneMgr_ );
+			if (currNode_)
+			{
+				currNode_->attachCamera( cam ); // Is safe even if cam is already attached.
+			}
+			else
+			{
+			}
+		}
+
+		// Called when a light has been created
+		virtual void OnLightCreate(Ogre::Light *pLight, TiXmlElement* pLightDesc)
+		{
+			std::cout << "osm light '" << pLight->getName().c_str() << "'\n";
+			YAKE_ASSERT( pLight );
+			if (!pLight)
+				return;
+			OgreLight* light = new OgreLight( pLight, sceneMgr_ );
+			if (currNode_)
+			{
+				currNode_->attachLight( light ); // Is safe even if light is already attached.
+			}
+			else
+			{
+			}
+		}
+	};
+#endif
+	//-----------------------------------------------------
+	bool GraphicalWorld::load(const String& type, const String& file)
+	{
+		if (type.empty())
+			return false;
+		if (file.empty())
+			return false;
+#ifdef YAKE_USE_OSM
+		if (type == "osm")
+		{
+			YAKE_ASSERT( msCore );
+			if (!msCore)
+				return false;
+			// create oscene parser
+			OgreNode* root = mRootNode;
+			OSMScene oScene(msCore->getSceneMgr(), msCore->getRenderWindow());
+			oSceneCallback oe_Callback(*this, msCore->getSceneMgr(), root); // creates wrappers
+			if (!oScene.initialise(file.c_str(), &oe_Callback))
+				return false;
+			YAKE_ASSERT( mRootNode );
+			if (!oScene.createScene(root->getSceneNode_()))
+				return false;
+			return true;
+		}
+#endif
+		return false;
+	}
 
 } // ogre3d
 } // graphics

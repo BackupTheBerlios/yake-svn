@@ -54,6 +54,22 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
+	OgreNode::OgreNode( Ogre::SceneNode * node, GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr ) :
+			mWorld( owningWorld ),
+			mSceneNode( 0 ) ,mSceneMgr( sceneMgr ), mParentNode(0)
+	{
+		YAKE_ASSERT( node ).debug("Couldn't use scene node (is null)!");
+		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
+		String ogreid = node->getName();
+		if (ogreid.empty())
+			ogreid = uniqueName::create("sn__");
+		mName = ogreid;
+
+		mSceneNode = node;
+		mWorld.reg( this );
+	}
+
+	//------------------------------------------------------
 	template<class Ctr>
 	void destroyPtrContainer(Ctr& ctr)
 	{
@@ -251,7 +267,13 @@ namespace ogre3d {
 			return;
 		
 		OgreCamera* pCam = static_cast<OgreCamera*>( pCamera );
-		mSceneNode->attachObject( pCam->getCamera_() );
+		try {
+			mSceneNode->getAttachedObject( pCam->getCamera_()->getName() );
+		}
+		catch (...)
+		{
+			mSceneNode->attachObject( pCam->getCamera_() );
+		}
 		mCameras.push_back( pCamera );
 	}
 
@@ -265,7 +287,13 @@ namespace ogre3d {
 			return;
 		
 		OgreLight* pL = static_cast<OgreLight*>( pLight );
-		mSceneNode->attachObject( pL->getLight_() );
+		try {
+			mSceneNode->getAttachedObject( pL->getLight_()->getName() );
+		}
+		catch (...)
+		{
+			mSceneNode->attachObject( pL->getLight_() );
+		}
 		mLights.push_back( pLight );
 	}
 
@@ -279,8 +307,13 @@ namespace ogre3d {
 			return;
 
 		OgreEntity* pE = static_cast<OgreEntity*>( pEntity );
-		//YAKE_LOG(String("gfx node '") << this->getName() << "'): attachEntity '" << pE->getName() << "'");
-		mSceneNode->attachObject( static_cast<OgreEntity*>(pEntity)->getEntity_() );
+		try {
+			mSceneNode->getAttachedObject( pE->getEntity_()->getName() );
+		}
+		catch (...)
+		{
+			mSceneNode->attachObject( pE->getEntity_() );
+		}
 		mEntities.push_back( pEntity );
 	}
 
@@ -326,10 +359,11 @@ namespace ogre3d {
 		YAKE_ASSERT( pChildSN );
 
 		// in case pChildSN is a child of the OGRE scene manager's root node...
-		if (pChildSN->getParent())
-			pChildSN->getParent()->removeChild( pChildSN );
-
-		mSceneNode->addChild( pChildSN );
+		Ogre::SceneNode* parent = static_cast<Ogre::SceneNode*>(pChildSN->getParent());
+		if (parent && parent!=mSceneNode)
+			parent->removeChild( pChildSN );
+		if (parent!=mSceneNode)
+			mSceneNode->addChild( pChildSN );
 		mChildren.push_back( pNode );
 		pN->_setParent( this );
 	}

@@ -43,6 +43,15 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
+	OgreLight::OgreLight( Ogre::Light* lt, Ogre::SceneManager* pSceneMgr ) : 
+		mSceneMgr( pSceneMgr ), mLight( lt )
+	{
+		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
+		YAKE_ASSERT( mLight ).warning("Couldn't create a light!");
+		//YAKE_LOG(String("gfx: new light '") << this->getName() << "'(" << String(mLight->getName().c_str()) << ")");
+	}
+
+	//------------------------------------------------------
 	OgreLight::~OgreLight()
 	{
 		//YAKE_LOG(String("gfx: light d'tor '") << this->getName() << "'");

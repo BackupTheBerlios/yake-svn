@@ -42,7 +42,16 @@ namespace ogre3d {
 		YAKE_CATCH_OGRE_RETHROW
 		//YAKE_LOG(String("gfx: new entity '") << this->getName() << "'(" << String(mEntity->getName().c_str()) << ")");
 	}
-
+	//------------------------------------------------------
+	OgreEntity::OgreEntity( ::Ogre::Entity* ent, ::Ogre::SceneManager* sceneMgr ) : mSceneMgr( sceneMgr ), mEntity( ent )
+	{
+		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
+		YAKE_ASSERT( ent );
+		YAKE_TRY
+			mEntity = ent;
+		YAKE_CATCH_OGRE_RETHROW
+		//YAKE_LOG(String("gfx: new entity '") << this->getName() << "'(" << String(mEntity->getName().c_str()) << ")");
+	}
 	//------------------------------------------------------
 	OgreEntity::~OgreEntity()
 	{
