@@ -411,6 +411,8 @@ namespace graphics {
 	public:
 		virtual ~IWorld();
 
+		virtual bool load(const String& type, const String& file) = 0;
+
 		virtual void setSkyBox( const String& name ) = 0;
 
 		virtual ILight* createLight() = 0;
