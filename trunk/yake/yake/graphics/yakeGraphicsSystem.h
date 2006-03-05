@@ -41,8 +41,8 @@
 namespace yake {
 namespace graphics {
 
-	using namespace yake::base::mpl;
-	using namespace yake::base::templates;
+	using namespace yake::mpl;
+	using namespace yake::templates;
 
 	//struct SceneSerializer
 	//{
