@@ -19,7 +19,10 @@ int main(int argc, char* argv[])
 
 		COUTLN("waiting for key press...");
 		while (!_kbhit())
+		{
+			serverApp.step();
 			net::native::sleep(10);
+		}
 		_getch();
 
 		COUTLN("stopping...");
