@@ -679,18 +679,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="statemachine"
-			>
-			<File
-				RelativePath="..\..\src\yapp\statemachine\yakeFiniteStateMachine.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\yapp\statemachine\yakeFiniteStateMachine.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="trigger"
 			>
 			<File
