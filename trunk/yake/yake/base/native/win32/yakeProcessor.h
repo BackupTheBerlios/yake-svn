@@ -15,8 +15,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 
 // Options:
 ///////////
@@ -159,7 +157,6 @@ public:
 	bool WriteInfoTextFile(const char *strFilename);
 };
 
-} // base
 } // yake
 
 #endif

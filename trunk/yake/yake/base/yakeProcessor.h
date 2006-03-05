@@ -44,8 +44,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 
 class Processor
 {
@@ -153,7 +151,6 @@ private:
   Info   mInfo;
 };
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_PROCESSOR_H

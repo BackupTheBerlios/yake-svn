@@ -43,8 +43,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace native
 {
 
@@ -85,7 +83,6 @@ YAKE_BASE_NATIVE_API float getTime();
 YAKE_BASE_NATIVE_API char* getApplicationDir();
 
 } // native
-} // base
 } // yake
 
 #endif // YAKE_BASE_NATIVE_NATIVE_H

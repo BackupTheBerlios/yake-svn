@@ -57,7 +57,7 @@ public:
 
 // Data
 private:
-	base::native::CriticalSectionHandle mHandle;
+	native::CriticalSectionHandle mHandle;
 };
 
 } // yake
