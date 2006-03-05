@@ -174,15 +174,15 @@ namespace yake
 				[
 				    //def("createTimer", &yake::base::timer::createTimer())
 				    class_< Timer >( "Timer" )
-				    .def( "reset", &yake::base::Timer::reset )
-				    .def( "getMilliseconds", &yake::base::Timer::getMilliseconds )
-				    .def( "getSeconds", &yake::base::Timer::getSeconds )
+					 .def( "reset", &yake::Timer::reset )
+				    .def( "getMilliseconds", &yake::Timer::getMilliseconds )
+				    .def( "getSeconds", &yake::Timer::getSeconds )
 				];
 
 				module( YAKE_BASE_MODULE )
 				[
 				    //def( "createTimer", &yake::base::timer::createTimer )
-				    def( "getTime", &yake::base::native::getTime )
+				    def( "getTime", &yake::native::getTime )
 				];
 
 				// Log
