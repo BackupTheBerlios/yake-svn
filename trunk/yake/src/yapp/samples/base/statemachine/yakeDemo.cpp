@@ -174,7 +174,7 @@ void test_fsm()
 						));
 
 	// transition "dead" -> "afterlife" [ Note: using member functions! ]
-	theHero.getCharacterMachine().addTransition( "dead", "afterlife", new state::Transition(boost::bind(Hero::transToAfterLife,&theHero)) );
+	theHero.getCharacterMachine().addTransition( "dead", "afterlife", new state::Transition(boost::bind(&Hero::transToAfterLife,&theHero)) );
 
 	// transition "alive" -> "alive"
 	theHero.getCharacterMachine().addTransition( "alive", "alive", new state::Transition(boost::bind(&transAliveReset)) );
