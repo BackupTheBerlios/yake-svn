@@ -38,7 +38,6 @@
 #endif
 
 namespace yake {
-	using namespace base;
 namespace scripting {
 	class IVM;
 }
@@ -49,6 +48,7 @@ namespace scripting {
 			To detect whether the scripting VM language is compatible, check the language of its creator
 			system and the description string and the version!
 	*/
+/*
 	class YAKE_SCRIPTING_API ScriptingRegistrationManager
 	{
 	protected:
@@ -57,7 +57,7 @@ namespace scripting {
 		void subscribeToRegisterScriptBindingsSignal( const RegisterScriptBindingsSignal::slot_type & slot );
 		void registerScriptBindings( scripting::IVM* pVM );
 	};
-
+*/
 namespace scripting {
 
 	class IScriptingSystem;
