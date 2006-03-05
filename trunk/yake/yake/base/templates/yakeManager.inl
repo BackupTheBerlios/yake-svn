@@ -30,8 +30,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace templates
 {
 
@@ -137,5 +135,4 @@ void RegisterFunctionsNames::Vector< Identifier_ >::doRegister( const Identifier
 }
 
 } // templates
-} // base
 } // yake

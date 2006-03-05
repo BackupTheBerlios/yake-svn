@@ -41,8 +41,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace mpl
 {
 namespace detail
@@ -91,7 +89,6 @@ struct InheritMultiple
 {};
 
 } // mpl
-} // base
 } // yake
 
 #endif // YAKE_BASE_MPL_INHERITMULTIPLE_H

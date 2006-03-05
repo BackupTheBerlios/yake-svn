@@ -42,8 +42,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace mpl
 {
 
@@ -116,7 +114,6 @@ public:
 };
 
 } // mpl
-} // base
 } // yake
 
 #endif // YAKE_BASE_MPL_ABSTRACTFACTORY_H

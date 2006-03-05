@@ -38,15 +38,12 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace mpl
 {
 
 namespace functions = boost::mpl;
 
 } // mpl
-} // base
 } // yake
 
 #endif // YAKE_BASE_MPL_FUNCTIONS_H

@@ -41,8 +41,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 
 class Timer;
 
@@ -71,7 +69,6 @@ public:
 	virtual real getSeconds() = 0;
 };
 
-} // base
 } // yake
 
 #endif // YAKE_BASE_TIMER_H

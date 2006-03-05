@@ -37,15 +37,12 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace mpl
 {
 
 namespace algorithms = boost::mpl;
 
 } // mpl
-} // base
 } // yake
 
 #endif // YAKE_BASE_MPL_ALGORITHM_H

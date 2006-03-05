@@ -35,15 +35,12 @@
 
 namespace yake
 {
-namespace base
-{
 namespace mpl
 {
 
 typedef boost::mpl::empty_base null_type;
 
 } // mpl
-} // base
 } // yake
 
 

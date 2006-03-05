@@ -38,8 +38,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace mpl
 {
 
@@ -48,7 +46,6 @@ struct InheritLinear : algorithms::fold< Types_, Root_, Unit_ >
 {}; 
 
 } // mpl
-} // base
 } // yake
 
 #endif // YAKE_BASE_MPL_INHERITLINEAR_H

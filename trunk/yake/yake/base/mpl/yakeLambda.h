@@ -37,15 +37,12 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace mpl
 {
 
 namespace lambda = boost::mpl;
 
 } // mpl
-} // base
 } // yake
 
 #endif // YAKE_BASE_MPL_LAMBDA_H

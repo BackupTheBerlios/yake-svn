@@ -40,15 +40,12 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace mpl
 {
 
 namespace sequences = boost::mpl;
 
 } // mpl
-} // base
 } // yake
 
 #endif // _YAKE_BASE_MPL_SEQUENCES_H_

@@ -43,8 +43,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace templates
 {
 
@@ -55,7 +53,7 @@ namespace templates
 template< typename Identifier_, class Value_ >
 struct DefaultManagerError
 {      
-YAKE_DECLARE_CLASS( yake::base::templates::DefaultManagerError<> )
+YAKE_DECLARE_CLASS( yake::templates::DefaultManagerError<> )
     static Value_ OnUnknownType( Identifier_ )
     {
       YAKE_EXCEPT( "Unknown Type." );
@@ -92,7 +90,7 @@ struct DefaultFunctionsNames
 	>
 	struct Map : ManagerErrorPolicy_< Identifier_, Value_ >
 	{
-		YAKE_DECLARE_CLASS( yake::base::templates::DefaultFunctionsNames::Map<> )
+		YAKE_DECLARE_CLASS( yake::templates::DefaultFunctionsNames::Map<> )
 		// Class
 		virtual ~Map() {}
 
@@ -114,7 +112,7 @@ struct DefaultFunctionsNames
 	template< typename Identifier_ >
 	struct Vector
 	{
-	YAKE_DECLARE_CLASS( yake::base::templates::DefaultFunctionsNames::Vector<> )
+	YAKE_DECLARE_CLASS( yake::templates::DefaultFunctionsNames::Vector<> )
 		// Class
 		virtual ~Vector() {}
 
@@ -143,7 +141,7 @@ struct RegisterFunctionsNames
 	>
 	struct Map : ManagerErrorPolicy_< Identifier_, Value_ >
 	{
-		YAKE_DECLARE_CLASS( yake::base::templates::RegisterFunctionsNames::Map<> )
+		YAKE_DECLARE_CLASS( yake::templates::RegisterFunctionsNames::Map<> )
 		// Class
 		virtual ~Map() {}
 
@@ -164,7 +162,7 @@ struct RegisterFunctionsNames
 	template< typename Identifier_ >
 	struct Vector
 	{
-	YAKE_DECLARE_CLASS( yake::base::templates::RegisterFunctionsNames::Vector<> )
+	YAKE_DECLARE_CLASS( yake::templates::RegisterFunctionsNames::Vector<> )
 		// Class
 		virtual ~Vector() {}
 
@@ -218,7 +216,6 @@ public:
 };
 
 } // templates
-} // base
 } // yake
 
 // Include inline implementation.

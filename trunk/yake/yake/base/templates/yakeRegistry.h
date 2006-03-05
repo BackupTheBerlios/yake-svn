@@ -46,8 +46,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace templates
 {
 
@@ -72,7 +70,7 @@ YAKE_IMPLEMENT_FUNCTION(FUNCTION)
 template <class ConfigClass>
 class Registry : public Manager< typename ConfigClass::Id, SharedPtr< typename ConfigClass::ICreator >, RegisterFunctionsNames >
 {
-YAKE_DECLARE_CLASS( yake::base::templates::Registry )
+YAKE_DECLARE_CLASS( yake::templates::Registry )
 public: // types
   typedef ConfigClass Config;
   typedef typename Config::Base Base;
@@ -113,7 +111,7 @@ private: // data
 // Note: this macro has to be used inside the class declaration.
 #define YAKE_DECLARE_REGISTRY() \
   public: \
-    typedef yake::base::templates::Registry< RegistryConfig > RegistryType; \
+    typedef yake::templates::Registry< RegistryConfig > RegistryType; \
     static RegistryType& getRegistry();
 
 // Note: you have to use DECLARE_REGISTRY() before.
@@ -157,7 +155,6 @@ private: // data
 	} // nameless
 
 } // templates
-} // base
 } // yake
 
 // Declares a registry for types with an empty constructor.
