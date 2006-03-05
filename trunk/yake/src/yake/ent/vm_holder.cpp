@@ -6,6 +6,8 @@ namespace object {
 
 	VMHolder::~VMHolder()
 	{
+		YAKE_ASSERT( vms_.empty() );
+		/*
 		ConstVectorIterator<VmMap> it(vms_);
 		while (it.hasMoreElements())
 		{
@@ -13,6 +15,7 @@ namespace object {
 			if (v.second)
 				delete v.second;
 		}
+		*/
 		vms_.clear();
 	}
 	bool VMHolder::attachVM(scripting::IVM* vm,const std::string& tag)
