@@ -42,8 +42,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace native
 {
 
@@ -179,5 +177,4 @@ YAKE_BASE_NATIVE_API void debug_Print( const char * string )
 
 
 } // native
-} // base
 } // yake

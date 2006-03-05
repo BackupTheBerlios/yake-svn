@@ -42,8 +42,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace native
 {
 
@@ -77,5 +75,4 @@ YAKE_BASE_NATIVE_API void library_Free(LibraryHandle library)
 
 
 } // native
-} // base
 } // yake

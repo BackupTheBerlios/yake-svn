@@ -36,8 +36,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace native
 {
 
@@ -69,5 +67,4 @@ YAKE_BASE_NATIVE_API void criticalSection_Delete( CriticalSectionHandle critical
 }
 
 } // native
-} // base
 } // yake

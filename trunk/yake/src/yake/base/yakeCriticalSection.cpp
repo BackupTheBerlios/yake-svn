@@ -42,7 +42,7 @@ namespace yake {
 CriticalSection::CriticalSection()
 {
 	YAKE_DECLARE_FUNCTION( CriticalSection )
-	mHandle = base::native::criticalSection_Create();
+	mHandle = native::criticalSection_Create();
 
 	if( 0 == mHandle )
 		YAKE_EXCEPT( "Couldn't create critical section." );
@@ -51,18 +51,18 @@ CriticalSection::CriticalSection()
 CriticalSection::~CriticalSection()
 {
 	if( 0 != mHandle )
-		base::native::criticalSection_Delete( mHandle );
+		native::criticalSection_Delete( mHandle );
 }
 
 
 void CriticalSection::enter()
 {
-	yake::base::native::criticalSection_Enter( mHandle );
+	native::criticalSection_Enter( mHandle );
 }
 
 void CriticalSection::leave()
 {
-	yake::base::native::criticalSection_Leave( mHandle );
+	native::criticalSection_Leave( mHandle );
 }
 
 } // yake

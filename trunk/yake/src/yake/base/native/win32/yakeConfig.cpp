@@ -38,8 +38,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace native
 {
 namespace win32
@@ -49,14 +47,13 @@ HINSTANCE g_hInstance = 0;
 
 } // win32
 } // native
-} // base
 } // yake
 
 #ifdef DLL_BUILD
 BOOL WINAPI DllMain( HINSTANCE hInstance, DWORD dwReason, LPVOID )
 {
 	if( dwReason == DLL_PROCESS_ATTACH )
-		yake::base::native::win32::g_hInstance = hInstance;
+		yake::native::win32::g_hInstance = hInstance;
 
 	return TRUE;
 }
