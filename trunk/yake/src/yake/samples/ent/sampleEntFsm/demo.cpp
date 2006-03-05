@@ -25,6 +25,12 @@ namespace exapp {
 
 			obj->attachVM(vm,"main");
 		}
+		virtual void onDestroyObject(object::Object* obj)
+		{
+			scripting::IVM* vm = obj->detachVM("main");
+			YAKE_ASSERT( vm );
+			delete vm;
+		}
 		virtual void onObjectInitialized(object::Object* obj)
 		{
 			obj->addFsmState(ksAwakening);
