@@ -48,9 +48,6 @@ extern "C"
 
 namespace yake
 {
-namespace base
-{
-
 namespace native
 {
 
@@ -125,6 +122,4 @@ namespace timer
 	}
 	
 } // timer
-
-} // base
 } // yake

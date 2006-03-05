@@ -45,8 +45,6 @@ namespace Win32
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace native
 {
 
@@ -96,5 +94,4 @@ float YAKE_BASE_NATIVE_API getTime()
 
 
 } // native
-} // base
 } // yake
