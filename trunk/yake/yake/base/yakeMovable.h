@@ -31,9 +31,7 @@
 //    IMPLEMENTATION HEADERS
 //============================================================================
 // Standard headers
-#ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
-#endif
+#include "yakePrerequisites.h"
 // Yake
 
 //============================================================================
@@ -41,7 +39,7 @@
 //============================================================================
 namespace yake {
 
-	using namespace math;
+	using namespace ::yake::math;
 /** Interface for movable objects and basic implementation of
 	methods for convenience (like translate()).
 
