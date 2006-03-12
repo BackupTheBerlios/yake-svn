@@ -30,8 +30,6 @@
 #include <yake/audio/yakeAudioPrerequisites.h>
 
 namespace yake {
-	using namespace base;
-	using namespace base::templates;
 namespace audio {
 	/** High level audio object
 	*/
