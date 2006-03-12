@@ -38,7 +38,6 @@
 #include <yapp/model/yakeModel.h>
 #include <yapp/model/yakeComplexModel.h>
 #include <yapp/base/event/yakeEvent.h>
-#include <yapp/statemachine/yakeFiniteStateMachine.h>
 #include <yapp/base/yakeTask.h>
 #include <yapp/model/yakeModelMovableLink.h>
 /*
