@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="entLua"
-	ProjectGUID="{3EEED188-5D62-476B-9CF3-022EBBAFFD12}"
+	ProjectGUID="{89182311-DB82-446B-AA9B-C70A3A0AF035}"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -46,7 +46,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="yapp/plugins/entLua/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="yapp.lib ent.lib scripting.lib scriptingLua.lib luad.lib luabindd.lib"
+				AdditionalDependencies="ent2.lib scripting.lib scriptingLua.lib luad.lib luabindd.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/luabind/lib;../../../../dependencies/lua/lib;../../../../dependencies/lib"
@@ -128,7 +128,7 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_ENTLUA_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="yapp/plugins/entLua/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -145,7 +145,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="yapp.lib ent.lib scripting.lib scriptingLua.lib lua.lib luabind.lib"
+				AdditionalDependencies="ent2.lib scripting.lib scriptingLua.lib lua.lib luabind.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/luabind/lib;../../../../dependencies/lua/lib;../../../../dependencies/lib"
@@ -189,68 +189,20 @@
 		<Filter
 			Name="src"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{9CB4E8A9-2FDE-4824-AE67-A41A3676A03C}"
+			UniqueIdentifier="{09A10F80-1825-424a-AEA9-250CB4511F6F}"
 			>
 			<File
-				RelativePath="..\..\..\..\src\yapp\plugins\entLua\pch.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yapp\plugins\entLua\yakeEvent_lua.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yapp\plugins\entLua\yakeLuaBinder.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\src\yapp\plugins\entLua\yakeStateCb_lua.cpp"
+				RelativePath="..\..\..\..\src\yake\plugins\entLua\entLua.cpp"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="inc"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{C4684ADB-F16C-49c0-B735-7B03DC9337AA}"
+			UniqueIdentifier="{7D1512F3-3C33-47f9-B6FE-5D846ED21130}"
 			>
 			<File
-				RelativePath="..\..\..\..\yapp\plugins\entLua\pch.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\yapp\plugins\entLua\yakeEntLua.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\yapp\plugins\entLua\yakeEvent_lua.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\yapp\plugins\entLua\yakeLuaBinder.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\yapp\plugins\entLua\yakePrerequisites.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\yapp\plugins\entLua\yakeStateCb_lua.h"
+				RelativePath="..\..\..\..\yake\plugins\entLua\entLua.h"
 				>
 			</File>
 		</Filter>
