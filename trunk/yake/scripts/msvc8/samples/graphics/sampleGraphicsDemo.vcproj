@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="base.lib data.lib input.lib graphics.lib audio.lib physics.lib scripting.lib graphicsOgre.lib OgreMain_d.lib"
+				AdditionalDependencies="base.lib data.lib input.lib graphics.lib audio.lib physics.lib scripting.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../../common/lib/$(ConfigurationName);../../../../dependencies/lib;../../../../dependencies/ogrenew/OgreMain/lib/debug"
