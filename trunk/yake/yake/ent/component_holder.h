@@ -1,10 +1,10 @@
-#ifndef YAKE_OBJECT_COMPONENT_HOLDER_H
-#define YAKE_OBJECT_COMPONENT_HOLDER_H
+#ifndef YAKE_ENT_COMPONENT_HOLDER_H
+#define YAKE_ENT_COMPONENT_HOLDER_H
 
 #include "prerequisites.h"
 
 namespace yake {
-namespace object {
+namespace ent {
 
 	typedef std::string CoTag;
 	struct YAKE_ENT_API CoHolder
@@ -19,7 +19,7 @@ namespace object {
 		TagCoMap	components_;
 	};
 
-} // namespace object
+} // namespace ent
 } // namespace yake
 
 #endif

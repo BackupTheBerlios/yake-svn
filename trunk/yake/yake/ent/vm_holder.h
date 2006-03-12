@@ -9,7 +9,7 @@ namespace scripting {
 	class IVM;
 	class IScriptingSystem;
 }
-namespace object {
+namespace ent {
 
 	struct YAKE_ENT_API VMHolder
 	{
@@ -36,7 +36,7 @@ namespace object {
 	};
 
 
-} // namespace object
+} // namespace ent
 } // namespace yake
 
 #endif

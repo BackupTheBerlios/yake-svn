@@ -1,15 +1,15 @@
-#ifndef YAKE_OBJECT_LISTENER_H
-#define YAKE_OBJECT_LISTENER_H
+#ifndef YAKE_ENT_OBJECTLISTENER_H
+#define YAKE_ENT_OBJECTLISTENER_H
 
 #include "yake/ent/prerequisites.h"
 
 namespace yake {
-namespace object {
+namespace ent {
 
 	struct Object;
-	struct YAKE_ENT_API object_listener
+	struct YAKE_ENT_API ObjectListener
 	{
-		virtual ~object_listener() {}
+		virtual ~ObjectListener() {}
 		virtual void onTick(Object&) {}
 		virtual void onInit(Object&) {}
 		virtual void onFsmEventHandled(Object&, const object_fsm&, const object_fsm::event_type&) {}
@@ -17,7 +17,7 @@ namespace object {
 		virtual void onFsmExitState(Object&,/*const std::string& fsmName, */const object_fsm&, const object_fsm::state_type&) {}
 	};
 
-	struct YAKE_ENT_API object_listener_mgr : public ListenerManager<object_listener>
+	struct YAKE_ENT_API ObjectListenerManager : public ListenerManager<ObjectListener>
 	{
 	protected:
 		void listeners_init(Object& obj)
@@ -52,7 +52,7 @@ namespace object {
 		}
 	};
 
-} // namespace object
+} // namespace ent
 } // namespace yake
 
 #endif

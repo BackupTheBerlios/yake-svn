@@ -5,6 +5,7 @@
 #include "yake/statemachine/fsm_core.h"
 #include "yake/base/yakeTaggedListenerManager.h"
 #include "yake/base/templates/yakeVector.h"
+#include "yake/object/yakeObjects.h"
 
 #if defined(YAKE_ENT_EXPORTS)
 #	define YAKE_ENT_API DLLEXPORT
@@ -13,11 +14,19 @@
 #endif
 
 namespace yake {
-namespace object {
+namespace ent {
 
 	typedef fsm::machine<std::string,std::string> object_fsm;
+	typedef object::ObjectId<object::default_objectid_traits> ObjectId;
+	typedef ObjectId::ClassId ClassId;
 
-} // namespace object
+	struct ClsEntry
+	{
+		RttiClass* cls;
+	};
+	typedef object::ClassAndObjectIdManager<ClsEntry> ClassAndObjectIdManager;
+
+} // namespace ent
 } // namespace yake
 
 #endif

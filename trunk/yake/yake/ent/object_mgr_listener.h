@@ -1,11 +1,11 @@
-#ifndef YAKE_OBJECTMANAGERLISTENER_H
-#define YAKE_OBJECTMANAGERLISTENER_H
+#ifndef YAKE_ENT_OBJECTMANAGERLISTENER_H
+#define YAKE_ENT_OBJECTMANAGERLISTENER_H
 
 #include "yake/ent/prerequisites.h"
 #include "yake/ent/object.h"
 
 namespace yake {
-namespace object {
+namespace ent {
 
 	struct YAKE_ENT_API ObjectManagerListener
 	{
@@ -15,7 +15,7 @@ namespace object {
 		virtual void onDestroyObject(Object*) {}
 	};
 
-} // namespace object
+} // namespace ent
 } // namespace yake
 
 #endif
