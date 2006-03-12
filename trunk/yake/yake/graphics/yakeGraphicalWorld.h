@@ -40,8 +40,6 @@
 
 
 namespace yake {
-	using namespace math;
-	using namespace base::templates;
 namespace graphics {
 
 	/**

@@ -32,7 +32,6 @@
 #endif
 
 namespace yake {
-	using namespace base;
 namespace physics {
 
 	/** A generic body affector. Basically defines the interface, factory and implements

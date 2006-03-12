@@ -72,8 +72,6 @@ namespace yake {
 			}
 		};
 
-	using namespace base;
-	using namespace math;
 namespace physics {
 	typedef ::yake::uint32 TriangleMeshId;
 	const TriangleMeshId kTriangleMeshIdNone = 0xFFFFFFFF;

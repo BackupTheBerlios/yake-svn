@@ -32,8 +32,7 @@
 #endif
 
 namespace yake {
-	using namespace base;
-	using namespace math;
+	using namespace ::yake::math;
 namespace physics {
 
 	class IActorListener

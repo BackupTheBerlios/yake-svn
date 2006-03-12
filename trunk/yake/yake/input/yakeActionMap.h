@@ -32,9 +32,6 @@
 #endif
 
 namespace yake {
-
-using namespace base;
-
 namespace input {
 
 	class ActionIdRegistry;
