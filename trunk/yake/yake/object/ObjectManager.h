@@ -88,6 +88,9 @@ namespace OBJECTS_NAMESPACE {
 		void destroyObject(object_type*);
 		void destroyAllObjects();
 
+	protected:
+		virtual void onObjectCreated(object_type*) {}
+		virtual void onDestroyObject(object_type*) {}
 	private:
 		uint8 determineClassIdBitsForRange(const ClassId min, const ClassId max) const;
 
