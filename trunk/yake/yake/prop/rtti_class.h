@@ -119,6 +119,8 @@ namespace yake {
 #define THROW_RTTI_LOC(MSG,LOC) \
 	throw RttiException(MSG,LOC,__FILE__,__LINE__)
 
+#pragma warning(push)
+#pragma warning(disable: 4290) // C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
 	struct RttiClassMgr
 	{
 		// insert into existing hierarchy
@@ -129,6 +131,7 @@ namespace yake {
 		typedef std::map<std::string,RttiClass*> StringClassPtrMap;
 		StringClassPtrMap	classes_;
 	};
+#pragma warning(pop)
 	inline RttiClass* RttiClassMgr::get(const std::string& clsName) const
 	{
 		StringClassPtrMap::const_iterator it = classes_.find(clsName);
