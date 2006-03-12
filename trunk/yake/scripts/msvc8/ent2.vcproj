@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="ent2"
+	Name="ent"
 	ProjectGUID="{08BC40D8-33D8-4677-993A-32599A93A460}"
 	RootNamespace="yapp"
 	Keyword="Win32Proj"

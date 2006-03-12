@@ -100,11 +100,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "raf", "raf.vcproj", "{6D6DD
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "msg", "msg.vcproj", "{7EB6A55E-D262-4C82-862C-33E831DDF04C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ent", "ent.vcproj", "{B145E9A0-2656-4481-972A-39A6A0568F14}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "entCommon", "plugins\ent\entCommon.vcproj", "{9E975777-551F-45F8-85FD-40BE6B0183A4}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "entLua", "plugins\ent\entLua.vcproj", "{3EEED188-5D62-476B-9CF3-022EBBAFFD12}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ceguiOgreRendererAdapter", "plugins\gui\ceguiOgreRendererAdapter.vcproj", "{526DC299-3C9B-46ED-8C16-0490AE5CAE88}"
 EndProject
@@ -119,15 +115,20 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "object", "object.vcproj", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "net", "net.vcproj", "{90688422-B178-44F3-824A-C8CD6F3BD86F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ent2", "ent2.vcproj", "{08BC40D8-33D8-4677-993A-32599A93A460}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ent", "ent2.vcproj", "{08BC40D8-33D8-4677-993A-32599A93A460}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleEntFsm", "samples\ent\sampleEntFsm.vcproj", "{E7B61D39-73E5-4C0E-97D4-1E6FFA12390C}"
 	ProjectSection(ProjectDependencies) = postProject
+		{08BC40D8-33D8-4677-993A-32599A93A460} = {08BC40D8-33D8-4677-993A-32599A93A460}
 		{89182311-DB82-446B-AA9B-C70A3A0AF035} = {89182311-DB82-446B-AA9B-C70A3A0AF035}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "entLua", "plugins\ent\entLua2.vcproj", "{89182311-DB82-446B-AA9B-C70A3A0AF035}"
+	ProjectSection(ProjectDependencies) = postProject
 		{08BC40D8-33D8-4677-993A-32599A93A460} = {08BC40D8-33D8-4677-993A-32599A93A460}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "entLua2", "plugins\ent\entLua2.vcproj", "{89182311-DB82-446B-AA9B-C70A3A0AF035}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "msg2", "msg2.vcproj", "{9E9DDB4A-CF98-4ED5-AB85-D3F5E71AE912}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -209,18 +210,10 @@ Global
 		{7EB6A55E-D262-4C82-862C-33E831DDF04C}.Debug|Win32.Build.0 = Debug|Win32
 		{7EB6A55E-D262-4C82-862C-33E831DDF04C}.Release|Win32.ActiveCfg = Release|Win32
 		{7EB6A55E-D262-4C82-862C-33E831DDF04C}.Release|Win32.Build.0 = Release|Win32
-		{B145E9A0-2656-4481-972A-39A6A0568F14}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B145E9A0-2656-4481-972A-39A6A0568F14}.Debug|Win32.Build.0 = Debug|Win32
-		{B145E9A0-2656-4481-972A-39A6A0568F14}.Release|Win32.ActiveCfg = Release|Win32
-		{B145E9A0-2656-4481-972A-39A6A0568F14}.Release|Win32.Build.0 = Release|Win32
 		{9E975777-551F-45F8-85FD-40BE6B0183A4}.Debug|Win32.ActiveCfg = Debug|Win32
 		{9E975777-551F-45F8-85FD-40BE6B0183A4}.Debug|Win32.Build.0 = Debug|Win32
 		{9E975777-551F-45F8-85FD-40BE6B0183A4}.Release|Win32.ActiveCfg = Release|Win32
 		{9E975777-551F-45F8-85FD-40BE6B0183A4}.Release|Win32.Build.0 = Release|Win32
-		{3EEED188-5D62-476B-9CF3-022EBBAFFD12}.Debug|Win32.ActiveCfg = Debug|Win32
-		{3EEED188-5D62-476B-9CF3-022EBBAFFD12}.Debug|Win32.Build.0 = Debug|Win32
-		{3EEED188-5D62-476B-9CF3-022EBBAFFD12}.Release|Win32.ActiveCfg = Release|Win32
-		{3EEED188-5D62-476B-9CF3-022EBBAFFD12}.Release|Win32.Build.0 = Release|Win32
 		{526DC299-3C9B-46ED-8C16-0490AE5CAE88}.Debug|Win32.ActiveCfg = Debug|Win32
 		{526DC299-3C9B-46ED-8C16-0490AE5CAE88}.Debug|Win32.Build.0 = Debug|Win32
 		{526DC299-3C9B-46ED-8C16-0490AE5CAE88}.Release|Win32.ActiveCfg = Release|Win32
@@ -253,6 +246,10 @@ Global
 		{89182311-DB82-446B-AA9B-C70A3A0AF035}.Debug|Win32.Build.0 = Debug|Win32
 		{89182311-DB82-446B-AA9B-C70A3A0AF035}.Release|Win32.ActiveCfg = Release|Win32
 		{89182311-DB82-446B-AA9B-C70A3A0AF035}.Release|Win32.Build.0 = Release|Win32
+		{9E9DDB4A-CF98-4ED5-AB85-D3F5E71AE912}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9E9DDB4A-CF98-4ED5-AB85-D3F5E71AE912}.Debug|Win32.Build.0 = Debug|Win32
+		{9E9DDB4A-CF98-4ED5-AB85-D3F5E71AE912}.Release|Win32.ActiveCfg = Release|Win32
+		{9E9DDB4A-CF98-4ED5-AB85-D3F5E71AE912}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
