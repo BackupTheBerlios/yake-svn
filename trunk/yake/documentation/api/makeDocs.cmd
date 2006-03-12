@@ -1,5 +1,7 @@
 @echo off
 echo Building YAKE API Reference...
-echo NOTE: You need to have doxygen.exe in your path!
-cd ..\..
-doxygen documentation\api\api.cfg
+REM echo NOTE: You need to have doxygen.exe in your path!
+echo NOTE: You need to have doxys[.exe] in your path!
+pushd ..\..
+doxys documentation\api\DoxySfile
+popd
