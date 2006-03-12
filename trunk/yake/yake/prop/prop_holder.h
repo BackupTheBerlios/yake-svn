@@ -19,23 +19,23 @@ namespace yake {
 
 		virtual RttiClass* isA() const = 0;
 
-		template<typename T>
-		bool getValue(const std::string& name, T& retValue) const
+		template<typename T_value>
+		bool getValue(const std::string& name, T_value& retValue) const
 		{
 			StringPropPtrMap::const_iterator it = props_.find(name);
 			if (it == props_.end())
 				return false;
 			assert( it->second );
-			return it->second->getValue<T>(retValue);
+			return it->second->getValue<T_value>(retValue);
 		}
-		template<typename T>
-		bool setValue(const std::string& name, const T& value)
+		template<typename T_value>
+		bool setValue(const std::string& name, const T_value& value)
 		{
 			StringPropPtrMap::iterator it = props_.find(name);
 			if (it == props_.end())
 				return false;
 			assert( it->second );
-			return it->second->setValue<T>(value);
+			return it->second->setValue<T_value>(value);
 		}
 
 		std::ostream& dump(std::ostream& out) const
