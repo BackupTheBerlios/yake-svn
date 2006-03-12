@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="entLua"
-	ProjectGUID="{89182311-DB82-446B-AA9B-C70A3A0AF035}"
+	Name="sampleMsg1"
+	ProjectGUID="{452438E8-F03B-47B9-984B-2CF79D2F6734}"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -16,11 +16,11 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../../../../common/bin/$(ConfigurationName)"
-			IntermediateDirectory="../../../../common/obj/$(ConfigurationName)/$(ProjectName)"
-			ConfigurationType="2"
+			OutputDirectory="../../../../common/bin/debug"
+			IntermediateDirectory="../../../../common/obj/debug/$(ProjectName)"
+			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -40,14 +40,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/luabind;../../../../dependencies/lua/include"
-				PreprocessorDefinitions="_STLP_DEBUG;WIN32;_DEBUG;_WINDOWS;_USRDLL;YAKE_ENTLUA_EXPORTS"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="yapp/plugins/entLua/pch.h"
+				PrecompiledHeaderThrough="yapp/samples/base/vehicle/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
@@ -63,15 +63,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ent.lib scripting.lib scriptingLua.lib luad.lib luabindd.lib"
-				OutputFile="$(OutDir)/$(ProjectName).dll"
+				AdditionalDependencies="base.lib"
+				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/luabind/lib;../../../../dependencies/lua/lib;../../../../dependencies/lib"
-				ModuleDefinitionFile=""
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
-				SubSystem="2"
-				ImportLibrary="../../../../common/lib/debug/$(TargetName).lib"
+				SubSystem="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -103,9 +101,9 @@
 			Name="Release|Win32"
 			OutputDirectory="../../../../common/bin/release"
 			IntermediateDirectory="../../../../common/obj/release/$(ProjectName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			CharacterSet="2"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -124,12 +122,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/luabind;../../../../dependencies/lua/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_ENTLUA_EXPORTS"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/boost/;../../../../dependencies/ttl/"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough="yapp/plugins/entLua/pch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
@@ -145,16 +142,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ent.lib scripting.lib scriptingLua.lib lua.lib luabind.lib"
-				OutputFile="$(OutDir)/$(ProjectName).dll"
+				AdditionalDependencies="base.lib"
+				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/luabind/lib;../../../../dependencies/lua/lib;../../../../dependencies/lib"
-				ModuleDefinitionFile=""
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
 				GenerateDebugInformation="false"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="../../../../common/lib/release/$(TargetName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -187,22 +182,14 @@
 	</References>
 	<Files>
 		<Filter
-			Name="src"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{09A10F80-1825-424a-AEA9-250CB4511F6F}"
+			Name="inc"
 			>
-			<File
-				RelativePath="..\..\..\..\src\yake\plugins\entLua\entLua.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
-			Name="inc"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{7D1512F3-3C33-47f9-B6FE-5D846ED21130}"
+			Name="src"
 			>
 			<File
-				RelativePath="..\..\..\..\yake\plugins\entLua\entLua.h"
+				RelativePath="..\..\..\..\src\yake\samples\msg\sampleMsg1\demo.cpp"
 				>
 			</File>
 		</Filter>
