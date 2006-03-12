@@ -44,34 +44,6 @@
 	typedef Deque<CLASS##Ptr> CLASS##PtrList;
 
 namespace yake {
-	/** @todo move out */
-	template<class ListenerType>
-		class ListenerManager
-		{
-		private:
-			typedef Deque<ListenerType*> ListenerPtrList;
-			ListenerPtrList	mListeners;
-		public:
-			virtual ~ListenerManager()
-			{
-				ConstDequeIterator<ListenerPtrList> it(mListeners);
-				while (it.hasMoreElements())
-					delete it.getNext();
-			}
-
-			void pushListener(ListenerType* pListener)
-			{
-				if (pListener)
-					mListeners.push_back( pListener );
-			}
-			void removeListener(ListenerType* pListener)
-			{
-				typename ListenerPtrList::iterator itFind = std::find( mListeners.begin(), mListeners.end(), pListener );
-				if (itFind != mListeners.end())
-					mListeners.erase( itFind );
-			}
-		};
-
 namespace physics {
 	typedef ::yake::uint32 TriangleMeshId;
 	const TriangleMeshId kTriangleMeshIdNone = 0xFFFFFFFF;
