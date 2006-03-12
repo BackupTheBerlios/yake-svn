@@ -30,6 +30,7 @@
 #ifndef YAKE_PHYSICS_PREQREQUISITES_H
 #	include <yake/physics/yakePhysicsPrerequisites.h>
 #endif
+#include <yake/base/yakeTaggedListenerManager.h>
 
 namespace yake {
 	using namespace ::yake::math;
