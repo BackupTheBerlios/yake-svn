@@ -8,7 +8,7 @@ namespace yake {
 	struct Prop;
 	struct PropDef
 	{
-		PropDef() {}
+		PropDef(const bool readOnly = false) : readOnly_(readOnly) {}
 		PropDef(const PropDef& other) :
 		name_(other.name_),
 			description_(other.description_),
@@ -24,11 +24,12 @@ namespace yake {
 			return *this;
 		}
 		template<typename T>
-		PropDef(const std::string& name, const std::string& desc, const T& defaultValue) :
+		PropDef(const std::string& name, const std::string& desc, const T& defaultValue, const bool readOnly = false) :
 		name_(name),
 			description_(desc),
 			defaultValue_(defaultValue),
-			type_(typeid(T).name())
+			type_(typeid(T).name()),
+			readOnly_(readOnly)
 		{
 		}
 		std::string name() const
@@ -44,6 +45,7 @@ namespace yake {
 		std::string		description_;
 		std::string		type_;
 		boost::any		defaultValue_;
+		bool				readOnly_;
 	};
 	inline std::ostream& operator << (std::ostream& out, const PropDef& propdef)
 	{
@@ -55,7 +57,7 @@ namespace yake {
 	#include "prop.h"
 namespace yake {
 	inline Prop* PropDef::create() const
-	{ return new Prop(*this,defaultValue_); }
+	{ return new Prop(*this,defaultValue_,readOnly_); }
 } // namespace yake
 
 #endif

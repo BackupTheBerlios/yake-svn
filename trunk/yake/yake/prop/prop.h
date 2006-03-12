@@ -41,13 +41,13 @@ namespace yake {
 		const PropDef& def() const
 		{ return def_; }
 	private:
-		Prop();
-		Prop(const PropDef& def, const boost::any& defaultValue) :
-		value_(defaultValue), def_(def)
+		Prop(const PropDef& def, const boost::any& defaultValue, const bool readOnly) :
+		value_(defaultValue), def_(def), readOnly_(readOnly)
 		{}
 	private:
 		boost::any				value_;
 		const PropDef&			def_;
+		bool						readOnly_;
 	};
 	typedef std::vector<Prop> PropList;
 
