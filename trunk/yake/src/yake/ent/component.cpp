@@ -2,7 +2,7 @@
 #include "yake/ent/ent.h"
 
 namespace yake {
-namespace object {
+namespace ent {
 
 	IMPL_CLASS_RTTI(Co)
 } // namespace object

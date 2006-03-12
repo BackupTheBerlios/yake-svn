@@ -2,12 +2,19 @@
 #include "yake/ent/ent.h"
 
 namespace yake {
-namespace object {
+namespace ent {
 
-	Object* ObjectManager::makeObject()
+	Object* ObjectManager::makeObject(const std::string strClsId)
 	{
-		Object* obj = new Object();
-		assert( obj );
+		YAKE_ASSERT( !strClsId.empty() )(strClsId);
+		std::pair<object::ResultCode,ClassId> ret = objMgr_.getClassId(strClsId);
+		YAKE_ASSERT( ret.first == object::RC_OK )(ret.first)(ret.second);
+		return makeObject( ret.second );
+	}
+	Object* ObjectManager::makeObject(const ClassId clsId)
+	{
+		Object* obj = objMgr_.createObject(clsId);
+		YAKE_ASSERT( obj )(clsId);
 		objs_.push_back( obj );
 
 		listeners_onObjectCreated(obj);
@@ -20,7 +27,7 @@ namespace object {
 	}
 	void ObjectManager::destroyObject(Object* obj)
 	{
-		assert( obj );
+		YAKE_ASSERT( obj );
 
 		listeners_onDestroyObject( obj );
 		//obj->shutdown();
@@ -29,7 +36,7 @@ namespace object {
 		if (it != objs_.end())
 			objs_.erase( it );
 
-		delete obj;
+		objMgr_.destroyObject( obj );
 	}
 	void ObjectManager::tick()
 	{

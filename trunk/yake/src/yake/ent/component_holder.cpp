@@ -2,7 +2,7 @@
 #include "yake/ent/ent.h"
 
 namespace yake {
-namespace object {
+namespace ent {
 
 	void CoHolder::addCo(const CoTag& tag, Co* co)
 	{
