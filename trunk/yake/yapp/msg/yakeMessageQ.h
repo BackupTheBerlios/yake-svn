@@ -54,7 +54,7 @@ namespace msg {
 		*/
 		Message* pop();
 
-		/** Returns whether the queue still contains messages.
+		/** Returns whether the queue contains any messages.
 		*/
 		bool empty() const;
 	private:
