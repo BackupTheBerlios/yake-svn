@@ -1,6 +1,6 @@
-/** \mainpage "YAKE 0.5.0 API"
+/** \mainpage "YAKE 0.5.0dev API"
 
-!!! YAKE 0.5.0 API Documentation
+!!! YAKE 0.5.0dev API Documentation
 
 
 !! What is this?
