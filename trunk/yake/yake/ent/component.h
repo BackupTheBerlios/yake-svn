@@ -33,12 +33,10 @@
 namespace yake {
 namespace ent {
 
-	struct Co;
-
 #define DECL_CO(CLASS,DESC) \
 	DECL_CLASS_RTTI(CLASS,DESC) \
 public: \
-	static CLASS* cast(::yake::ent::Co*);
+	static CLASS* cast(::yake::ent::Component*);
 
 #define IMPL_CO(CLASS) \
 	IMPL_CLASS_RTTI(CLASS)
@@ -46,11 +44,11 @@ public: \
 #define IMPL_CO_1(CLASS,PARENT1) \
 	IMPL_CLASS_RTTI_1(CLASS,PARENT1)
 
-	struct YAKE_ENT_API Co : public PropHolder<Co>
+	struct YAKE_ENT_API Component : public PropHolder<Component>
 	{
-		virtual ~Co() {}
+		virtual ~Component() {}
 
-		DECL_CO(Co,"Component base")
+		DECL_CO(Component,"Component base")
 	public:
 	};
 

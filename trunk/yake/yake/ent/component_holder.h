@@ -36,12 +36,12 @@ namespace ent {
 	struct YAKE_ENT_API CoHolder
 	{
 		// operations
-		void addCo(const CoTag&, Co*);
-		Co* removeCo(const Co*);
-		Co* removeCo(const CoTag&);
-		Co* getCo(const CoTag&) const;
+		void addComponent(const CoTag&, Component*);
+		Component* removeComponent(const Component*);
+		Component* removeComponent(const CoTag&);
+		Component* getComponent(const CoTag&) const;
 	private:
-		typedef std::map<CoTag,Co*> TagCoMap;
+		typedef std::map<CoTag,Component*> TagCoMap;
 		TagCoMap	components_;
 	};
 

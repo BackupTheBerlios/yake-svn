@@ -83,7 +83,9 @@ public: \
 		ObjectId				id_;
 	};
 
-	struct YAKE_ENT_API Entity : public Object, public CoHolder, public VMHolder
+	/** @todo Do not publicly inherit from CoHolder and VMHolder!?
+	*/
+	struct YAKE_ENT_API Entity : public Object, public CoHolder
 	{
 		DECL_OBJECT(Entity,"Entity")
 		Entity() {}
@@ -93,6 +95,7 @@ public: \
 		typedef object_fsm::event_type fsm_event_type;
 
 		// id operations
+		
 		void setId(const ObjectId& id);
 		const ObjectId& getId() const;
 
@@ -106,6 +109,14 @@ public: \
 		{ return m_.current(); }
 
 		// VM operations
+
+		boost::signals::connection subsribeToVmAttached(const VMHolder::VmAttachedSignal::slot_type&);
+		boost::signals::connection subscribeToVmDetached(const VMHolder::VmDetachedSignal::slot_type&);
+
+		bool attachVM(scripting::IVM*,const std::string& tag);
+		scripting::IVM* detachVM(const std::string& tag);
+		scripting::IVM* getVM(const std::string& tag) const;
+
 		scripting::IVM* getFsmVM() const
 		{
 			 return this->getVM("main");
@@ -120,6 +131,7 @@ public: \
 		void onExit(const object_fsm&, const object_fsm::state_type& state);
 	private:
 		object_fsm			m_;
+		VMHolder				vms_;
 	};
 
 } // namespace ent
