@@ -59,7 +59,7 @@ private:
 	Views						mViews;;
 	SceneNodes					mSceneNodes;
 
-	Deque< SharedPtr<Library> >	mLibs;
+	Deque< SharedPtr<base::Library> >	mLibs;
 
 	SharedPtr<graphics::IGraphicsSystem> mGraphics;
 	SharedPtr<graphics::IWorld>	mGWorld;
@@ -180,8 +180,8 @@ private:
 		pL->setType( graphics::ILight::LT_POINT );
 		pL->setDiffuseColour( Color(1,1,1,1) );
 		pSN->setPosition( Vector3(0,50,0) );
-        pL->setDiffuseColour(Color(0.35, 0.35, 0.38));
-        pL->setSpecularColour(Color(0.9, 0.9, 1));
+		pL->setDiffuseColour(Color(0.35, 0.35, 0.38));
+		pL->setSpecularColour(Color(0.9, 0.9, 1));
 		pL->setAttenuation( 8000, 1, 0.0005, 0 );
 		pL->setCastsShadows( true );
 	}
@@ -228,7 +228,7 @@ void MiniApp::init()
 	SharedPtr<base::Library> pLib = loadLib("physicsOde" );
 	YAKE_ASSERT( pLib ).debug("Cannot load physics plugin 1.");
 
-	mPhysics1 = create< physics::IPhysicsSystem >("ode");
+	mPhysics1 = templates::create< physics::IPhysicsSystem >("ode");
 	YAKE_ASSERT( mPhysics1 ).debug("Cannot create physics system 1.");
 
 	mPWorld1 = mPhysics1->createWorld();
@@ -239,7 +239,7 @@ void MiniApp::init()
 	pLib = loadLib("physicsNX" );
 	YAKE_ASSERT( pLib ).debug("Cannot load physics plugin 2.");
 
-	mPhysics2 = create< physics::IPhysicsSystem >("nx");
+	mPhysics2 = templates::create< physics::IPhysicsSystem >("nx");
 	YAKE_ASSERT( mPhysics2 ).debug("Cannot create physics system 2.");
 
 	mPWorld2 = mPhysics2->createWorld();
@@ -250,7 +250,7 @@ void MiniApp::init()
 	pLib = loadLib("graphicsOgre" );
 	YAKE_ASSERT( pLib ).debug("Cannot load graphics plugin.");
 
-	mGraphics = create_default< graphics::IGraphicsSystem >();
+	mGraphics = templates::create_default< graphics::IGraphicsSystem >();
 	YAKE_ASSERT( mGraphics ).debug("Cannot create graphics system.");
 
 	mGWorld = mGraphics->createWorld();
@@ -400,12 +400,12 @@ void MiniApp::run()
 
 	RandomNumberGeneratorMT randomiser;
 
-	real lastTime = base::native::getTime();
+	real lastTime = native::getTime();
 	while (!mShutdownRequested)
 	{
 		static uint32 siFrame = 0;
 		// timing
-		real time = base::native::getTime();
+		real time = native::getTime();
 		real timeElapsed = time-lastTime;//timer->getSeconds();
 		lastTime = time;
 
