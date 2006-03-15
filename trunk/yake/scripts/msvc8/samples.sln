@@ -45,6 +45,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleStateMachine", "sampl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleFsm1", "samples\statemachine\sampleFsm1.vcproj", "{F270D584-0E4B-4FF0-8EDB-4D098BE49D43}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleEvents", "samples\base\sampleEvents.vcproj", "{CD6F13A0-F399-411A-9766-0F8E02761D90}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleDebug", "samples\base\sampleDebug.vcproj", "{BCA46ED8-E97C-49D0-A521-FA8E7CEB885A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -139,6 +143,14 @@ Global
 		{F270D584-0E4B-4FF0-8EDB-4D098BE49D43}.Debug|Win32.Build.0 = Debug|Win32
 		{F270D584-0E4B-4FF0-8EDB-4D098BE49D43}.Release|Win32.ActiveCfg = Release|Win32
 		{F270D584-0E4B-4FF0-8EDB-4D098BE49D43}.Release|Win32.Build.0 = Release|Win32
+		{CD6F13A0-F399-411A-9766-0F8E02761D90}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CD6F13A0-F399-411A-9766-0F8E02761D90}.Debug|Win32.Build.0 = Debug|Win32
+		{CD6F13A0-F399-411A-9766-0F8E02761D90}.Release|Win32.ActiveCfg = Release|Win32
+		{CD6F13A0-F399-411A-9766-0F8E02761D90}.Release|Win32.Build.0 = Release|Win32
+		{BCA46ED8-E97C-49D0-A521-FA8E7CEB885A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BCA46ED8-E97C-49D0-A521-FA8E7CEB885A}.Debug|Win32.Build.0 = Debug|Win32
+		{BCA46ED8-E97C-49D0-A521-FA8E7CEB885A}.Release|Win32.ActiveCfg = Release|Win32
+		{BCA46ED8-E97C-49D0-A521-FA8E7CEB885A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

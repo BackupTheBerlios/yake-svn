@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="sampleDotLink"
+	Name="sampleModelDotLink"
 	ProjectGUID="{1C76B4C7-8ECE-4C0D-81B4-B65707F96510}"
 	Keyword="Win32Proj"
 	>

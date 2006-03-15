@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="input.lib graphics.lib audio.lib scripting.lib luad.lib luabindd.lib"
+				AdditionalDependencies="base.lib scripting.lib audio.lib graphics.lib physics.lib input.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies\lua\lib;../../../../dependencies\luabind\lib;../../../../dependencies/lib"
@@ -142,7 +142,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="input.lib graphics.lib audio.lib scripting.lib"
+				AdditionalDependencies="base.lib scripting.lib audio.lib graphics.lib physics.lib input.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/lib"
