@@ -70,5 +70,26 @@ namespace ent {
 		//std::cout << "Entity.state.exit '" << state << "'\n";
 		listeners_fsmExitState(*this,fsm,state);
 	}
+	boost::signals::connection Entity::subsribeToVmAttached(const VMHolder::VmAttachedSignal::slot_type& slot)
+	{
+		return vms_.subsribeToVmAttached(slot);
+	}
+	boost::signals::connection Entity::subscribeToVmDetached(const VMHolder::VmDetachedSignal::slot_type& slot)
+	{
+		return vms_.subscribeToVmDetached(slot);
+	}
+	bool Entity::attachVM(scripting::IVM* vm,const std::string& tag)
+	{
+		return vms_.attachVM(vm,tag);
+	}
+	scripting::IVM* Entity::detachVM(const std::string& tag)
+	{
+		return vms_.detachVM(tag);
+	}
+	scripting::IVM* Entity::getVM(const std::string& tag) const
+	{
+		return vms_.getVM(tag);
+	}
+
 }
 }

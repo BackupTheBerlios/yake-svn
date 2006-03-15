@@ -57,6 +57,7 @@ namespace ent {
 		if (vms_.end() != it)
 			return false;
 		vms_.insert( VmMap::value_type(tag,vm) );
+		sigAttached_(tag,vm);
 		return true;
 	}
 	scripting::IVM* VMHolder::detachVM(const std::string &tag)
@@ -70,6 +71,7 @@ namespace ent {
 			return 0;
 		scripting::IVM* vm = it->second;
 		vms_.erase(tag);
+		sigAttached_(tag,vm);
 		return vm;
 	}
 	scripting::IVM* VMHolder::getVM(const std::string &tag) const
@@ -82,6 +84,14 @@ namespace ent {
 		if (vms_.end() == it)
 			return 0;
 		return it->second;
+	}
+	boost::signals::connection VMHolder::subsribeToVmAttached(const VmAttachedSignal::slot_type& slot)
+	{
+		return sigAttached_.connect(slot);
+	}
+	boost::signals::connection VMHolder::subscribeToVmDetached(const VmDetachedSignal::slot_type& slot)
+	{
+		return sigDetached_.connect(slot);
 	}
 
 }

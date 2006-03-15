@@ -30,7 +30,7 @@
 namespace yake {
 namespace ent {
 
-	IMPL_CLASS_RTTI(Co)
+	IMPL_CLASS_RTTI(Component)
 } // namespace object
 } // namespace yake
 

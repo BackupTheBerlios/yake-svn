@@ -30,13 +30,13 @@
 namespace yake {
 namespace ent {
 
-	void CoHolder::addCo(const CoTag& tag, Co* co)
+	void CoHolder::addComponent(const CoTag& tag, Component* co)
 	{
-		if (getCo(tag))
+		if (getComponent(tag))
 			return; //@todo throw instead?
 		components_.insert( std::make_pair(tag, co) );
 	}
-	Co* CoHolder::getCo(const CoTag& tag) const
+	Component* CoHolder::getComponent(const CoTag& tag) const
 	{
 		TagCoMap::const_iterator itFind = components_.find(tag);
 		return ((itFind == components_.end()) ? 0 : itFind->second);
