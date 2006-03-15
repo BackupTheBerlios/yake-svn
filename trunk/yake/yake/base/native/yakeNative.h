@@ -80,7 +80,7 @@ YAKE_BASE_NATIVE_API void processor_RetrieveInfo( std::wstring& name, float& fre
 YAKE_BASE_NATIVE_API float getTime();
 
 // Application Information Interface.
-YAKE_BASE_NATIVE_API char* getApplicationDir();
+YAKE_BASE_NATIVE_API const char* getApplicationDir();
 
 } // native
 } // yake
