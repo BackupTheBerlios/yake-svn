@@ -12,5 +12,3 @@
 // Yapp
 #include <yapp/base/yapp.h>
 #include <yapp/base/event/yakeEvent.h>
-#include <yapp/statemachine/yakeFiniteStateMachine.h>
-#include <yapp/ent/yakeEnt.h>
