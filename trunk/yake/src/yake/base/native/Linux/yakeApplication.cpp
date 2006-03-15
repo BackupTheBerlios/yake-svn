@@ -47,12 +47,10 @@ extern "C"
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace native
 {
 
-char* getApplicationDir()
+const char* getApplicationDir()
 {
 	static char path[ PATH_MAX ] = "";
 
@@ -73,5 +71,4 @@ char* getApplicationDir()
 
 
 } // native
-} // base
 } // yake

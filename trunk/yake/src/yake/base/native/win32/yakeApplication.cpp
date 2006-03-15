@@ -44,12 +44,10 @@ namespace Win32
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace native
 {
 
-char* getApplicationDir()
+const char* getApplicationDir()
 {
 	static char szBuffer[ MAX_PATH ] = "";
 
@@ -64,5 +62,4 @@ char* getApplicationDir()
 
 
 } // native
-} // base
 } // yake
