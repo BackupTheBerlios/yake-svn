@@ -406,11 +406,11 @@ public:
 		setupObject(obj);
 
 		// main loop
-		real lastTime = base::native::getTime();
+		real lastTime = native::getTime();
 		while (!shutdownRequested())
 		{
 			// timing
-			real time = base::native::getTime();
+			real time = native::getTime();
 			real timeElapsed = time - lastTime;
 			if (timeElapsed > real(0.05))
 				timeElapsed = real(0.05);

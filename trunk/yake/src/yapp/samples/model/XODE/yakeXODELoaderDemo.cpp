@@ -93,12 +93,12 @@ public:
 		YAKE_LOG( "Running simulation..." );
 
 		// main loop
-		real lastTime = base::native::getTime();
+		real lastTime = native::getTime();
 		while (!shutdownRequested())
 		{
 			// timing
 			static real totalTimeElapsed = 0;
-			real time = base::native::getTime();
+			real time = native::getTime();
 			real timeElapsed = time - lastTime;
 			lastTime = time;
 			totalTimeElapsed += timeElapsed;
