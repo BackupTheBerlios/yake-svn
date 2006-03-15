@@ -87,6 +87,13 @@ namespace yake
 				    .def( constructor< real, real, real >() )
 				    .def( constructor< const real* const >() )
 				    .def( constructor< Vector3 const& >() )
+					 .def( "length", &yake::math::Vector3::length )
+					 .def( "normalise", &yake::math::Vector3::normalise )
+					 .def( "crossProduct", &yake::math::Vector3::crossProduct )
+					 .def( "dotProduct", &yake::math::Vector3::dotProduct )
+					 .def( "reflect", &yake::math::Vector3::reflect )
+					 .def( "perpendicular", &yake::math::Vector3::perpendicular )
+					 .def( "getRotationTo", &yake::math::Vector3::getRotationTo )
 				];
 
 				// Vector4
@@ -123,8 +130,12 @@ namespace yake
 				// RandomNumberGenerator
 				module( YAKE_MATH_MODULE )
 				[
-				    class_< RandomNumberGeneratorMT >( "RandomNumberGeneratorMT" )
+				    class_< RandomNumberGeneratorMT >( "RandomNumberGenerator" )
 				    .def( constructor<>() )
+					 .def( "setSeed", &RandomNumberGeneratorMT::setSeed )
+					 .def( "getSeed", &RandomNumberGeneratorMT::getSeed )
+					 .def( "randInt", &RandomNumberGeneratorMT::randInt )
+					 .def( "randReal", &RandomNumberGeneratorMT::randReal )
 				];
 
 			}
