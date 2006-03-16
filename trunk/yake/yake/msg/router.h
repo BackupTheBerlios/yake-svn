@@ -41,7 +41,12 @@ MSG_NAMESPACE_BEGIN
 
 			myrouter.post(makeMessage(1)); // int(1) is the message
 			myrouter.postMessage(1); // the same - but using an alternative posting method
+
+			myrouter.postMessage(1,Source(12)); // posting message int(1) from source 12
 		@endcode
+
+		For more elaborate examples see the source distribution.
+
 		@see detail::msg_listener_mgr
 		@todo merge documentation of listener_mgr into router's docs.
 	*/
