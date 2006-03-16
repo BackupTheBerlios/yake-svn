@@ -58,15 +58,54 @@ namespace raf {
 	}
 	void MainState::onEnter()
 	{
-		std::cout << "MainState::onEnter()\n";
+		YAKE_LOG_INFORMATION("MainState::onEnter()");
 	}
 	void MainState::onExit()
 	{
-		std::cout << "MainState::onExit()\n";
+		YAKE_LOG_INFORMATION("MainState::onExit()");
 	}
 	void MainState::onStep()
 	{
-		std::cout << "MainState::onStep()\n";
+		YAKE_LOG_INFORMATION("MainState::onStep()");
+	}
+
+	//-----------------------------------------------------
+	// Class: AppMachine
+	//-----------------------------------------------------
+	AppMachine::AppMachine()
+	{}
+	AppMachine::~AppMachine()
+	{}
+	void AppMachine::addState(const String& stateId, ApplicationState* state)
+	{
+		YAKE_ASSERT( !stateId.empty() );
+		YAKE_ASSERT( state );
+		YAKE_ASSERT( states_.end() == states_.find(stateId) );
+		states_.insert( state_map::value_type(stateId,SharedPtr<ApplicationState>(state)) );
+		machine_.addState( state );
+	}
+	void AppMachine::setState(const String& stateId)
+	{
+		state_map::const_iterator it = states_.find(stateId);
+		YAKE_ASSERT( states_.end() != it );
+		machine_.setState( it->second.get() );
+	}
+	void AppMachine::addTransition(const String& from, const event_type& evt, const String& to)
+	{
+		state_map::const_iterator itFrom = states_.find(from);
+		YAKE_ASSERT( states_.end() != itFrom );
+		state_map::const_iterator itTo = states_.find(to);
+		YAKE_ASSERT( states_.end() != itTo );
+		machine_.addTransition( itFrom->second.get(), evt, itTo->second.get() );
+	}
+	void AppMachine::processEvent(const event_type& evt)
+	{
+		machine_.processEvent( evt );
+	}
+	void AppMachine::step()
+	{
+		YAKE_ASSERT( machine_.current() );
+		machine_.current()->onStep();
 	}
 
 } // namespace raf

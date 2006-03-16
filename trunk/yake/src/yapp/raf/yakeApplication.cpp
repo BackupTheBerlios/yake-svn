@@ -363,7 +363,7 @@ namespace raf {
 #endif
 
 		// application state machine
-		mMachine = new AppMachine( state::TH_RELAXED );
+		mMachine = new AppMachine();
 		YAKE_ASSERT( mMachine );
 		if (!mMachine)
 			return false;
@@ -388,7 +388,6 @@ namespace raf {
 		YAKE_ASSERT( mMachine );
 		if (mMachine)
 		{
-			mMachine->exitAll();
 			YAKE_SAFE_DELETE( mMachine );
 		}
 #if YAKE_RAF_USES_CEGUI == 1
@@ -420,7 +419,7 @@ namespace raf {
 		YAKE_ASSERT( mMachine );
 		if (!mMachine)
 			return false;
-		mMachine->changeTo("main");
+		mMachine->setState("main"); // initial state
 		mMachine->step();
 		return true;
 	}
