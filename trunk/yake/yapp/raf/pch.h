@@ -32,6 +32,8 @@
 #include <yake/audio/yakeAudio.h>
 #include <yake/scripting/yakeScriptingSystem.h>
 #include <yapp/base/yapp.h>
-#include <yapp/ent/yakeEnt.h>
+#include <yake/statemachine/fsm_core.h>
+#include <yake/statemachine/fsm_oo_machine.h>
+#include <yake/ent/ent.h>
 
 #include <yapp/raf/yakePrerequisites.h>
