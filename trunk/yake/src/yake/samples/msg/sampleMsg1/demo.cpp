@@ -46,7 +46,7 @@ struct MsgResizeAllocator
 	}
 	static void destroy(msg::message<MsgResize>* msg)
 	{
-		assert( pool_.is_from(msg) );
+		YAKE_ASSERT( pool_.is_from(msg) );
 		pool_.destroy( msg );
 	}
 private:
@@ -81,10 +81,21 @@ struct ObjectMessage
 	}
 
 	template<typename A1, typename A2>
-	ObjectMessage(const std::string& name1, const A1& a1, const std::string& name2, const A2& a2)
+	ObjectMessage(	const std::string& name1, const A1& a1,
+					const std::string& name2, const A2& a2)
 	{
 		params_[ name1 ] = a1;
 		params_[ name2 ] = a2;
+	}
+
+	template<typename A1, typename A2, typename A3>
+	ObjectMessage(	const std::string& name1, const A1& a1,
+					const std::string& name2, const A2& a2,
+					const std::string& name3, const A3& a3)
+	{
+		params_[ name1 ] = a1;
+		params_[ name2 ] = a2;
+		params_[ name3 ] = a3;
 	}
 
 	size_t size() const
@@ -99,6 +110,7 @@ int main(int argc, char* argv[])
 {
 	// Default/Immediate processing:
 	{
+		YAKE_LOG_INFORMATION("demo: immediate processing");
 		msg::router<msg::ImmediateProcessor> router;
 
 		// The following message will be lost as there's no handler registered yet!
@@ -110,12 +122,18 @@ int main(int argc, char* argv[])
 		router << msg::makeListener<MsgResize>(&app_handle_MsgResize2);
 
 		// post a few message to different handlers (depending on type)
+
+		// The following 2 calls result in the same. makeMessage() can be useful for creating and queuing
+		// message prior to sending them.
+		router.postMessage(1234);
 		router.post(msg::makeMessage(1234));
+
 		router.post(msg::makeMessage(123.12));
 		router.post(msg::makeMessage(MsgResize(20,30)));
 	}
 	//Q'd :
 	{
+		YAKE_LOG_INFORMATION("demo: 1-queued processing");
 		msg::router<msg::SingleQueuedProcessor> router;
 
 		// The following message will *not* be lost even though there's no handler registered yet!
@@ -130,6 +148,7 @@ int main(int argc, char* argv[])
 
 	//Double-Q'd :
 	{
+		YAKE_LOG_INFORMATION("demo: 2-queued processing");
 		msg::router<msg::DoubleQueuedProcessor> router;
 
 		// add a few handlers/listeners
@@ -144,6 +163,19 @@ int main(int argc, char* argv[])
 
 		// @todo
 		router.postMessage(ObjectMessage("entity",0x00a0a0a0,"name",std::string("freak")));
+	}
+	// Default/Immediate processing using source identifiers
+	{
+		YAKE_LOG_INFORMATION("demo: immediate processing with subscription to source identifiers");
+		msg::router<msg::ImmediateProcessor> router;
+
+		// register a few handlers
+		router << std::make_pair(msg::makeListener<MsgResize>(&app_handle_MsgResize1),msg::Source(12));
+
+		// post a few message to different handlers (depending on type)
+		router.post(msg::makeMessage(MsgResize(44,44)));
+		router.post(msg::makeMessage(MsgResize(55,55),msg::Source(11)));
+		router.post(msg::makeMessage(MsgResize(66,66),msg::Source(12)));
 	}
 }
 
