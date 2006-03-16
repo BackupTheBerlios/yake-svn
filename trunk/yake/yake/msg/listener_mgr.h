@@ -32,34 +32,47 @@
 MSG_NAMESPACE_BEGIN
 
 	namespace detail {
-		typedef std::deque<boost::shared_ptr<listener_base> > listener_list;
+		typedef std::deque<boost::shared_ptr<detail::listener_base> > listener_list;
 		typedef std::map<std::string,listener_list> listener_map;
 
+		/** Internal base class providing listener management and
+			a hook for derived routers/processors.
+		*/
 		struct msg_listener_mgr
 		{
-			bool add(listener_base* l)
+			bool add(detail::listener_base* l, source_type source = 0)
 			{
-				assert(l);
+				YAKE_ASSERT(l);
 				if (!l)
 					return false;
-				listeners_[l->msgTypeName()].push_back( boost::shared_ptr<listener_base>(l) );
+				sources_[source][l->msgTypeName()].push_back( boost::shared_ptr<detail::listener_base>(l) );
 				return true;
 			}
-			void process(message_base* msg)
+			void process(detail::message_base* msg)
 			{
-				assert( msg );
-				listener_map::const_iterator itMsgType = listeners_.find(msg->msgTypeName());
-				if (itMsgType == listeners_.end())
+				YAKE_ASSERT( msg );
+				source_map::const_iterator itSource = sources_.find(msg->source());
+				if (itSource == sources_.end())
+					return;
+				const listener_map& listeners = itSource->second;
+				listener_map::const_iterator itMsgType = listeners.find(msg->msgTypeName());
+				if (itMsgType == listeners.end())
 					return;
 				const listener_list& l = itMsgType->second;
 				for (listener_list::const_iterator it = l.begin(); it != l.end(); ++it)
 					(*it)->execute(*msg);
 				MSG_NAMESPACE::destroyMessage(msg);
 			}
+			void clear()
+			{
+				sources_.clear();
+			}
 		private:
 			typedef MSG_NAMESPACE::detail::listener_list listener_list;
 			typedef MSG_NAMESPACE::detail::listener_map listener_map;
-			listener_map	listeners_;
+			typedef AssocVector<source_type,listener_map> source_map;
+			source_map		sources_;
+			//listener_map	listeners_;
 		};
 	}
 

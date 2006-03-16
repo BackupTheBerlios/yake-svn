@@ -31,28 +31,51 @@
 
 MSG_NAMESPACE_BEGIN
 
+	/** Generic customizable message router which represents a central point for listener management, message posting and message processing.
+		
+		Example:
+		@code
+			using namespace msg;
+
+			router< ImmediateProcessor > myrouter;
+
+			myrouter.post(makeMessage(1)); // int(1) is the message
+			myrouter.postMessage(1); // the same - but using an alternative posting method
+		@endcode
+		@see detail::msg_listener_mgr
+		@todo merge documentation of listener_mgr into router's docs.
+	*/
 	template<typename T_processor>
 	struct router : public T_processor
 	{
-		router();
-
-		template<typename T>
-		void postMessage(const T& v)
-		{ this->post( MSG_NAMESPACE::makeMessage(v) ); }
-
-		void post(message_base* msg)
-		{
-			this->onPost(msg);
-		}
-
-
-		router& operator << (listener_base*);
-
 	private:
 		// disallow:
 		router(const router&);
 		router& operator=(const router&);
-		//...
+	public:
+		/** @todo add docs */
+		typedef T_processor processor_type;
+
+		/** Construct a router. */
+		router();
+
+		template<typename T>
+		void postMessage(const T& v, source_type source = 0)
+		{ this->post( MSG_NAMESPACE::makeMessage(v,source) ); }
+
+		/** Post a message. Processing is controlled by T_processor.
+			@see postMessage()
+		*/
+		void post(detail::message_base* msg)
+		{
+			this->onPost(msg);
+		}
+
+		/** Operator for listener registration (with source identifier 0). */
+		router& operator << (detail::listener_base*);
+		/** Operator for listener registration with user supplied source identifier. */
+		router& operator << (const std::pair<detail::listener_base*,source_type>&);
+
 	private:
 		typedef detail::listener_list listener_list;
 		typedef detail::listener_map listener_map;
@@ -61,15 +84,23 @@ MSG_NAMESPACE_BEGIN
 	router<T_processor>::router()
 	{}
 	template<typename T_processor>
-	router<T_processor>& router<T_processor>::operator << (listener_base* l)
+	router<T_processor>& router<T_processor>::operator << (detail::listener_base* l)
 	{
-		assert(l);
+		YAKE_ASSERT(l);
 		if (!l)
 			return *this;
 		this->add(l);
 		return *this;
 	}
-
+	template<typename T_processor>
+	router<T_processor>& router<T_processor>::operator << (const std::pair<detail::listener_base*,source_type>& l)
+	{
+		YAKE_ASSERT(l.first);
+		if (!l.first)
+			return *this;
+		this->add(l.first,l.second);
+		return *this;
+	}
 MSG_NAMESPACE_END
 
 #endif

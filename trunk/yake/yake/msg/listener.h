@@ -31,23 +31,30 @@
 
 MSG_NAMESPACE_BEGIN
 
-	struct listener_base
-	{
-		listener_base(const std::string& msgTypeName) : msgTypeName_(msgTypeName) {}
-		void execute(const message_base& msg)
-		{ doExecute(msg); }
-		const std::string& msgTypeName() const
-		{ return msgTypeName_; }
-		void destroy()
+	namespace detail {
+		/** Internal base class for listeners providing the basic interface and functionality. */
+		struct listener_base
 		{
-			assert( this );
-			delete this;
-		}
-	protected:
-		virtual void doExecute(const message_base&) = 0;
-	private:
-		std::string		msgTypeName_;
-	};
+		private:
+			listener_base(const listener_base&);
+			listener_base& operator = (const listener_base&);
+		public:
+			listener_base(const std::string& msgTypeName) : msgTypeName_(msgTypeName) {}
+			void execute(const message_base& msg)
+			{ doExecute(msg); }
+			const std::string& msgTypeName() const
+			{ return msgTypeName_; }
+			void destroy()
+			{
+				assert( this );
+				delete this;
+			}
+		protected:
+			virtual void doExecute(const message_base&) = 0;
+		private:
+			std::string		msgTypeName_;
+		};
+	} // namespace detail
 	/*
 	enum ListenerResult
 	{
@@ -56,15 +63,25 @@ MSG_NAMESPACE_BEGIN
 		LR_FAILED
 	};
 	*/
+	/** Represents a listener for a specific type; \
+		the listener object encapsulates a user provided message handling function object.
+	*/
 	template<typename MsgType>
-	struct listener : public listener_base
+	struct listener : public detail::listener_base
 	{
+	private:
+		listener(const listener&);
+		listener& operator(const listener&);
+	public:
 		typedef boost::function<void(const MsgType&)> HandlerFn;
 
-		listener(const HandlerFn& fn) : listener_base(typeid(MsgType).name()),fn_(fn)
+		/** Construct a listener object with a handler function. The handler function has to be valid (i.e. non-empty).
+		*/
+		listener(const HandlerFn& fn) : detail::listener_base(typeid(MsgType).name()),fn_(fn)
 		{}
 	protected:
-		virtual void doExecute(const message_base& msgbase)
+		/** Executes the message handler function object and provides the message 'msgbase' as a parameter. */
+		virtual void doExecute(const detail::message_base& msgbase)
 		{
 			try {
 				fn_( static_cast<const MsgType&>(boost::any_cast<MsgType>(msgbase.value())) );
@@ -82,6 +99,7 @@ MSG_NAMESPACE_BEGIN
 		HandlerFn			fn_;
 	};
 
+	/** Helper function to easily create listener objects for a given message type. */
 	template<typename T>
 	listener<T>* makeListener(const boost::function<void(const T&)>& fn)
 	{ return new listener<T>(fn); }

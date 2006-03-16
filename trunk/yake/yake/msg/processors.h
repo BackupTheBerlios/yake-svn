@@ -31,17 +31,23 @@
 
 MSG_NAMESPACE_BEGIN
 
+	/** Processes messages immediately when they are possed. */
 	struct ImmediateProcessor : public detail::msg_listener_mgr
 	{
 		typedef detail::listener_map listener_map;
 		typedef detail::listener_list listener_list;
 
-		void onPost(message_base* msg)
+		void onPost(detail::message_base* msg)
 		{
-			assert(msg);
+			YAKE_ASSERT(msg);
 			this->process(msg);
 		}
 	};
+	/** Queues messages in a single queue and processes them when processMessages() is called.
+		@Remarks It is not possible post messages while processing is in progress! See DoubleQueuedProcessor for a processor which can do that. processMessages() must not be called when processing is already in progress.
+		@see ImmediateProcessor
+		@see DoubleQueuedProcessor
+	*/
 	struct SingleQueuedProcessor : public detail::msg_listener_mgr
 	{
 		typedef detail::listener_map listener_map;
@@ -49,60 +55,65 @@ MSG_NAMESPACE_BEGIN
 
 		SingleQueuedProcessor() : isProcessing_(false)
 		{}
-		void onPost(message_base* msg)
+		void onPost(detail::message_base* msg)
 		{
-			assert(!isProcessing_);
-			assert(msg);
+			YAKE_ASSERT(!isProcessing_);
+			YAKE_ASSERT(msg);
 			q_.push_back(msg); //@todo sort by msg type!?
 		}
 		void processMessages()
 		{
-			assert( !isProcessing_ );
+			YAKE_ASSERT( !isProcessing_ );
 			isProcessing_ = true;
 			for (msg_q::const_iterator it = q_.begin(); it != q_.end(); ++it)
 			{
-				message_base* msg = *it;
-				assert( msg );
+				detail::message_base* msg = *it;
+				YAKE_ASSERT( msg );
 				this->process(msg);
 			}
 			q_.clear();
 			isProcessing_ = false;
 		}
 	private:
-		typedef std::deque<message_base*> msg_q;
+		typedef std::deque<detail::message_base*> msg_q;
 		msg_q		q_;
 		bool		isProcessing_;
 	};
+	/** Queues messages in a single queue and processes them when processMessages() is called.
+		@Remarks It is possible post messages while processing is in progress! processMessages() must not be called when processing is already in progress.
+		@see ImmediateProcessor
+		@see SingleQueuedProcessor
+	*/
 	struct DoubleQueuedProcessor : public detail::msg_listener_mgr
 	{
 		typedef detail::listener_map listener_map;
 		typedef detail::listener_list listener_list;
 
 		DoubleQueuedProcessor() : q_(&q1_), isProcessing_(false) {}
-		void onPost(message_base* msg)
+		void onPost(detail::message_base* msg)
 		{
-			assert(msg);
+			YAKE_ASSERT(msg);
 			q_->push_back(msg); //@todo sort by msg type!?
 		}
 		void processMessages()
 		{
-			assert( !isProcessing_ );
+			YAKE_ASSERT( !isProcessing_ );
 			isProcessing_ = true;
 			msg_q* procQ = q_;
 			q_ = (q_ == &q1_) ? &q2_ : &q1_;
 			for (msg_q::const_iterator it = procQ->begin(); it != procQ->end(); ++it)
 			{
-				message_base* msg = *it;
-				assert( msg );
+				detail::message_base* msg = *it;
+				YAKE_ASSERT( msg );
 				this->process(msg);
 			}
 			procQ->clear();
 			isProcessing_ = false;
 		}
 	private:
-		typedef std::deque<message_base*> msg_q;
+		typedef std::deque<detail::message_base*> msg_q;
 		msg_q		q1_,q2_;
-		msg_q*	q_;
+		msg_q*		q_;
 		bool		isProcessing_;
 	};
 
