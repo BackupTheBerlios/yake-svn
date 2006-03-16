@@ -43,9 +43,9 @@ namespace fsm {
 		{
 		}
 
-		void addState(const state_type);
-		void addTransition(const state_type, const event_type&, const state_type);
-		void setState(const state_type);
+		void addState(state_type);
+		void addTransition(state_type, const event_type&, state_type);
+		void setState(state_type);
 		void processEvent(const event_type& evt);
 		const state_type& current() const
 		{ return machine_.current(); }
@@ -73,17 +73,17 @@ namespace fsm {
 		state->onExit();
 	}
 	template<typename _state_class_type, typename _event_type>
-	void oomachine<_state_class_type,_event_type>::addState(const state_type s)
+	void oomachine<_state_class_type,_event_type>::addState(state_type s)
 	{
 		machine_.addState(s);
 	}
 	template<typename _state_class_type, typename _event_type>
-	void oomachine<_state_class_type,_event_type>::addTransition(const state_type from, const event_type& ev, const state_type to)
+	void oomachine<_state_class_type,_event_type>::addTransition(state_type from, const event_type& ev, state_type to)
 	{
 		machine_.addTransition( from, ev, to );
 	}
 	template<typename _state_class_type, typename _event_type>
-	void oomachine<_state_class_type,_event_type>::setState(const state_type s)
+	void oomachine<_state_class_type,_event_type>::setState(state_type s)
 	{
 		if (machine_.current())
 			fnExit_( machine_, machine_.current() );
