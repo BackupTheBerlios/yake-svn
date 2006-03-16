@@ -3,11 +3,9 @@
 #---------------------------------------------------------------------------
 # General configuration options
 #---------------------------------------------------------------------------
-PROJECT_NAME                        = Yake
+PROJECT_NAME                        = YAKE
 PROJECT_NUMBER                      = 
-#INPUT                               = yake/base/math yake/base/mpl yake/base/native yake/base/templates yake/base
-#INPUT                               = yake/audio yake/data yake/ent yake/file yake/graphics yake/input yake/net yake/object yake/physics yake/prop yake/scripting yake/statemachine
-#INPUT                               = yake/base
+#INPUT                               = yake/msg
 INPUT                               = documentation/api yake/base/math yake/base/mpl yake/base/native yake/base/templates yake/base yake/audio yake/data yake/ent yake/file yake/graphics yake/input yake/net yake/object yake/physics yake/prop yake/scripting yake/statemachine yake/msg
 OUTPUT_DIRECTORY                    = documentation/api/html
 GENERATE_DOXYS_HELP                 = YES
@@ -73,7 +71,7 @@ PAGE_DOCUMENTATION_MODE             = NO
 # Options to control how the input is parsed
 #---------------------------------------------------------------------------
 HIDE_IN_BODY_DOCS                   = YES
-TAB_SIZE                            = 3
+TAB_SIZE                            = 4
 ALIASES                             = 
 ENABLED_SECTIONS                    = 
 IGNORE_CLASS_PREFIX                 = 
