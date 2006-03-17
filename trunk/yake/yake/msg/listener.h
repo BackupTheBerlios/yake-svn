@@ -71,7 +71,7 @@ MSG_NAMESPACE_BEGIN
 	{
 	private:
 		listener(const listener&);
-		listener& operator(const listener&);
+		listener& operator=(const listener&);
 	public:
 		typedef boost::function<void(const MsgType&)> HandlerFn;
 
