@@ -30,6 +30,7 @@
 #include "yake/ent/prerequisites.h"
 #include "yake/ent/object.h"
 #include "yake/ent/object_mgr_listener.h"
+#include "yake/msg/yakeMessage.h"
 
 namespace yake {
 namespace ent {
@@ -49,6 +50,43 @@ namespace ent {
 		inline RegistrationResult registerClass(const std::string& name)
 		{
 			return objMgr_.registerClass(name,&T::create,&T::destroy);
+		}
+
+		/** Post a global message. This message is *not* broadcasted to every object!
+			@see msg::makeMessage
+			@see msg::makeListener
+			@see broadcastMessage
+		*/
+		void postMessage(msg::detail::message_base*, const msg::Source source = msg::kNullSource);
+
+		/** Post a global message which is broadcasted to every object!
+			@see msg::makeMessage
+			@see msg::makeListener
+		*/
+		void broadcastMessage(msg::detail::message_base*, const msg::Source source = msg::kNullSource);
+
+		/** Post message to a specific object.
+			@see msg::makeMessage
+			@see msg::makeListener
+		*/
+		void postMessage(Object*, msg::detail::message_base*, const msg::Source source = msg::kNullSource);
+
+		/** Post message to a specific object.
+			@see msg::makeMessage
+			@see msg::makeListener
+		*/
+		void postMessage(ObjectId, msg::detail::message_base*, const msg::Source source = msg::kNullSource);
+
+		/** Post message to objects in a STL(-like) container with object pointers.
+			@see msg::makeMessage
+			@see msg::makeListener
+		*/
+		template<typename T_container>
+		void postMessage(const T_container& objCtr, msg::detail::message_base* msg, const msg::Source source = msg::kNullSource)
+		{
+			ConstVectorIterator<T_container> it(objCtr);
+			while (it.hasMoreElements())
+				postMessage( it.getNext(), msg, source );
 		}
 	protected:
 		//
