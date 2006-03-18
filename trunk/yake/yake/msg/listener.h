@@ -40,6 +40,7 @@ MSG_NAMESPACE_BEGIN
 			listener_base& operator = (const listener_base&);
 		public:
 			listener_base(const std::string& msgTypeName) : msgTypeName_(msgTypeName) {}
+			virtual ~listener_base() {}
 			void execute(const message_base& msg)
 			{ doExecute(msg); }
 			const std::string& msgTypeName() const
