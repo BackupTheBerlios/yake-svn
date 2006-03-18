@@ -174,6 +174,7 @@ int main(int argc, char* argv[])
 
 		// post a few message to different handlers (depending on type)
 		router.post(msg::makeMessage(MsgResize(44,44)));
+		router.post(msg::makeMessage(MsgResize(44,44),msg::kNullSource));
 		router.post(msg::makeMessage(MsgResize(55,55),msg::Source(11)));
 		router.post(msg::makeMessage(MsgResize(66,66),msg::Source(12)));
 	}
