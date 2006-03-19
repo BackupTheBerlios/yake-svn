@@ -1,4 +1,4 @@
-#include <yapp/samples/base/vehicle/yakePCH.h>
+#include <yake/base/yake.h>
 #include <yake/audio/yakeAudio.h>
 #include <yapp/raf/yakeRaf.h>
 #include <yapp/model/yakeModelMovableLink.h>
@@ -7,8 +7,8 @@
 
 #include <yapp/vehicle/yakeNativeOde.h>
 
+#include "Ogre.h"
 #include <yake/plugins/graphicsOgre/graphicsOgreCore.h>
-#include <yake/plugins/graphicsOgre/yakeGraphicsSystem.h>
 
 #include <yake/plugins/physicsODE/yakePCH.h>
 #include <yake/plugins/physicsODE/PhysicsSystemODE.h>
@@ -19,6 +19,11 @@
 #include <OgrePagingLandScapeData2DManager.h>
 
 using namespace yake;
+
+const input::ActionId ACTIONID_CAM_LEFT( input::ACTIONID_USER+1, "camLeft" );
+const input::ActionId ACTIONID_CAM_RIGHT( input::ACTIONID_USER+2, "camRight" );
+const input::ActionId ACTIONID_CAM_UP( input::ACTIONID_USER+3, "camUp" );
+const input::ActionId ACTIONID_CAM_DOWN( input::ACTIONID_USER+4, "camDown" );
 
 /** Configuration of the application */
 struct TheConfiguration : public raf::ApplicationConfiguration
@@ -59,21 +64,28 @@ class TheMainState : public raf::RtMainState
 		{
 			YAKE_LOG( "INITIALIZING TERRAIN");
 
-			Ogre::PagingLandScapeSceneManager * sceneMgr = (Ogre::PagingLandScapeSceneManager *) getSceneMgr();
-			
-			sceneMgr->setWorldGeometry("paginglandscape2.cfg"); 
-						
-			pG = new model::Graphical();
-			YAKE_ASSERT( pG);
-			
-			pPh = new model::Physical();
-			YAKE_ASSERT( pPh);
+			try {
 
-  			sceneMgr->setOption( "LoadNow", NULL); 
-// 			sceneMgr->InitScene();
-// 			sceneMgr->PagingLandScapeOctreeResize();
-			
-			physics::TerrainPhysicsManager::instance().init( sceneMgr, getPhysicalWorld() );
+				Ogre::PagingLandScapeSceneManager * sceneMgr = (Ogre::PagingLandScapeSceneManager *) getSceneMgr();
+				
+				sceneMgr->setWorldGeometry("paginglandscape2.cfg"); 
+							
+				pG = new model::Graphical();
+				YAKE_ASSERT( pG);
+				
+				pPh = new model::Physical();
+				YAKE_ASSERT( pPh);
+
+  				sceneMgr->setOption( "LoadNow", NULL); 
+	// 			sceneMgr->InitScene();
+	// 			sceneMgr->PagingLandScapeOctreeResize();
+				
+				physics::TerrainPhysicsManager::instance().init( sceneMgr, getPhysicalWorld() );
+			} catch (Ogre::Exception& e)
+			{
+				YAKE_LOG_ERROR( e.getFullDescription() );
+				YAKE_EXCEPT("Caught OGRE exception.");
+			}
 		}
 
 		void onMouseMoved( const math::Vector3& rDelta )
@@ -165,7 +177,7 @@ protected:
 	{
 		graphics::ogre3d::GraphicsSystem* pSys = (graphics::ogre3d::GraphicsSystem *)getApp().getGraphicsSystem();
 			
-		graphics::ogre3d::OgreCore * ogreCore = pSys->getCore();
+		graphics::ogre3d::OgreCore * ogreCore = pSys->_getCore();
 				
 		return ogreCore->getSceneMgr();
 	}
@@ -183,25 +195,25 @@ protected:
 		using namespace input;
 
 		//camera controls
-		mActionMap.reg( ACTIONID_A,
+		mActionMap.reg( ACTIONID_CAM_LEFT,
 				new input::KeyboardActionCondition( getApp().getKeyboard(), KC_A, KAM_CONTINUOUS ) );
-		mActionMap.subscribeToActionId( ACTIONID_A, boost::bind(&TheMainState::onCameraLeft,this) );
+		mActionMap.subscribeToActionId( ACTIONID_CAM_LEFT, boost::bind(&TheMainState::onCameraLeft,this) );
 		
-		mActionMap.reg( ACTIONID_D,
+		mActionMap.reg( ACTIONID_CAM_RIGHT,
 				new input::KeyboardActionCondition( getApp().getKeyboard(), KC_D, KAM_CONTINUOUS ) );
-		mActionMap.subscribeToActionId( ACTIONID_D, boost::bind(&TheMainState::onCameraRight,this) );
+		mActionMap.subscribeToActionId( ACTIONID_CAM_RIGHT, boost::bind(&TheMainState::onCameraRight,this) );
 
-		mActionMap.reg( ACTIONID_W,
+		mActionMap.reg( ACTIONID_CAM_UP,
 				new input::KeyboardActionCondition( getApp().getKeyboard(), KC_W, KAM_CONTINUOUS ) );
-		mActionMap.subscribeToActionId( ACTIONID_W, boost::bind(&TheMainState::onCameraUp,this) );
+		mActionMap.subscribeToActionId( ACTIONID_CAM_UP, boost::bind(&TheMainState::onCameraUp,this) );
 
-		mActionMap.reg( ACTIONID_S,
+		mActionMap.reg( ACTIONID_CAM_DOWN,
 				new input::KeyboardActionCondition( getApp().getKeyboard(), KC_S, KAM_CONTINUOUS ) );
-		mActionMap.subscribeToActionId( ACTIONID_S, boost::bind(&TheMainState::onCameraDown,this) );
+		mActionMap.subscribeToActionId( ACTIONID_CAM_DOWN, boost::bind(&TheMainState::onCameraDown,this) );
 
-		mActionMap.reg( ACTIONID_T,
-				new input::KeyboardActionCondition( getApp().getKeyboard(), KC_T, KAM_CONTINUOUS ) );
-		mActionMap.subscribeToActionId( ACTIONID_T, boost::bind(&TheMainState::cycleCameraDetailWiews,this) );
+		mActionMap.reg( ACTIONID_FIRE1,
+				new input::KeyboardActionCondition( getApp().getKeyboard(), KC_T, KAM_RELEASED ) );
+		mActionMap.subscribeToActionId( ACTIONID_FIRE1, boost::bind(&TheMainState::cycleCameraDetailWiews,this) );
 
 		// front wheel controls
 
@@ -254,22 +266,22 @@ protected:
 		{
  			const input::ActionId activeId = itAction.getNext();
 
-			 if (activeId == input::ACTIONID_A)
+			 if (activeId == ACTIONID_CAM_LEFT)
 			{
 				getDefaultCamera()->translate(  math::Vector3( -2.5, 0,0));
 			}
-			else if (activeId == input::ACTIONID_D)
+			else if (activeId == ACTIONID_CAM_RIGHT)
 			{	
 				getDefaultCamera()->translate(  math::Vector3( 2.5, 0,0));
 			}
-			else if (activeId == input::ACTIONID_S)
+			else if (activeId == ACTIONID_CAM_DOWN)
 			{	
 				math::Vector3 currentDir = getDefaultCamera()->getDirection();
 				currentDir *= -15;
 				
 				getDefaultCamera()->translate(  currentDir);
 			}
-			else if (activeId == input::ACTIONID_W)
+			else if (activeId == ACTIONID_CAM_UP)
 			{	
 				math::Vector3 currentDir = getDefaultCamera()->getDirection();
 				currentDir *= 15;
@@ -317,16 +329,16 @@ protected:
 	{ mActiveActions.insert( input::ACTIONID_RIGHT ); }
 	
 	void onCameraLeft()
-	{ mActiveActions.insert( input::ACTIONID_A); }
+	{ mActiveActions.insert( ACTIONID_CAM_LEFT); }
 	
 	void onCameraRight()
-	{ mActiveActions.insert( input::ACTIONID_D); }
+	{ mActiveActions.insert( ACTIONID_CAM_RIGHT); }
 
 	void onCameraUp()
-	{ mActiveActions.insert( input::ACTIONID_W); }
+	{ mActiveActions.insert( ACTIONID_CAM_UP); }
 
 	void onCameraDown()
-	{ mActiveActions.insert( input::ACTIONID_S); }
+	{ mActiveActions.insert( ACTIONID_CAM_DOWN); }
 
 	void cycleCameraDetailWiews()
 	{
