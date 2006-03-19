@@ -30,6 +30,7 @@
 #include <map>
 #include <vector>
 
+#include <yapp/plugins/terrainPhysMgr/TerrainOdePrerequisites.h>
 #include <yake/plugins/physicsODE/yakePCH.h>
 
 #include <yake/plugins/physicsODE/OdeWorld.h>
@@ -50,7 +51,7 @@ namespace yake
 		class OdeGeom;
 		class Ogre::PagingLandScapeTileInfo;
 		
-		class YAKE_PHYSICSODE_API TerrainCollisionDetectionActor : public OdeActor
+		class YAKE_PHYSICSPLSM_API TerrainCollisionDetectionActor : public OdeActor
 		{
 			public:
 				TerrainCollisionDetectionActor( OdeWorld* pOdeWorld );

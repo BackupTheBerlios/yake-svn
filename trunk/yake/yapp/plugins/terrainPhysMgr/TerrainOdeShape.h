@@ -27,6 +27,7 @@
 #ifndef YAKE_TERRAIN_ODESHAPES_H
 #define YAKE_TERRAIN_ODESHAPES_H
 
+#include <yapp/plugins/terrainPhysMgr/TerrainOdePrerequisites.h>
 #include <yake/plugins/physicsODE/OdeShapes.h>
 
 #include "OgreRenderQueue.h"
@@ -42,7 +43,7 @@
 namespace yake {
 namespace physics {
 
-	class YAKE_PHYSICSODE_API OdeTerrainCollisionBox : public OdeBox
+	class YAKE_PHYSICSPLSM_API OdeTerrainCollisionBox : public OdeBox
 	{
 		public:
 			OdeTerrainCollisionBox( dSpace* pSpace, OdeActor* pOwner, real sizex, real sizey, real sizez, Ogre::PagingLandScapeTileInfo * _tileInfo) : 

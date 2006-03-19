@@ -27,6 +27,8 @@
 #ifndef __TERRAIN_PHYS_MANAGER
 #define  __TERRAIN_PHYS_MANAGER
 
+#include <yapp/plugins/terrainPhysMgr/TerrainOdePrerequisites.h>
+#include <yapp/plugins/terrainPhysMgr/TerrainOdePrerequisites.h>
 #include <yake/base/yakePCH.h>
 
 #include <Ogre.h>
@@ -52,7 +54,7 @@ namespace physics
 	class TerrainCollisionDetectionActor;
 	class TerrainCollisionActor;
 		
-	class PLSMTerrainPhysicsManager
+	class YAKE_PHYSICSPLSM_API PLSMTerrainPhysicsManager
 	{
 		protected:
 			void pageLoaded( Ogre::PagingLandscapeEvent* event);
