@@ -113,23 +113,13 @@ namespace ogre3d {
 	//------------------------------------------------------
 	void OgreCamera::setDetailLevel( SceneDetailLevel sd )
 	{
-// for Ogre 1.1.0 "Dagon" compatibility
-#if OGRE_VERSION_MINOR >= 1 
 		mCam->setPolygonMode( Ogre::PolygonMode( sd ) );
-#else
-		mCam->setDetailLevel( Ogre::SceneDetailLevel( sd ) );
-#endif
 	}
 	
 	//------------------------------------------------------
 	SceneDetailLevel OgreCamera::getDetailLevel() const
 	{
-// for Ogre 1.1.0 "Dagon" compatibility
-#if OGRE_VERSION_MINOR >= 1 
 		return SceneDetailLevel( mCam->getPolygonMode() );
-#else
-		return SceneDetailLevel( mCam->getDetailLevel() );
-#endif
 	}
 	
 	//------------------------------------------------------
