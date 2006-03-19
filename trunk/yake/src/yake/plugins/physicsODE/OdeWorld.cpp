@@ -289,6 +289,12 @@ namespace physics {
 		return pAvatar;
 	}
 	//-----------------------------------------------------
+	void OdeWorld::addActor( IActorPtr actor )
+	{
+		YAKE_ASSERT( actor );
+		mActors.push_back( SharedPtr<OdeActor>( checked_cast<OdeActor*>(actor) ) );
+	}
+	//-----------------------------------------------------
 	IActorPtr OdeWorld::createActor( const IActor::Desc& rActorDesc )
 	{
 		OdeActor* pActor = new OdeActor( this, (rActorDesc.type == ACTOR_DYNAMIC) );
