@@ -39,8 +39,8 @@
 #define COMPILER_GNUC 2
 #define COMPILER_BORL 3
 
-#define ENDIAN_LITTLE 1
-#define ENDIAN_BIG 2
+#define YAKE_ENDIAN_LITTLE 1
+#define YAKE_ENDIAN_BIG 2
 
 // Get compiler and version
 #if defined( _MSC_VER )
