@@ -49,7 +49,10 @@ namespace physics {
 			virtual IJointPtr createJoint( const IJoint::DescBase& rkJointDesc );
 			virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc( ACTOR_MOVABLE ) );
 			virtual IAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc );
-	
+
+			/** Take care using this method. */
+			void addActor( IActorPtr );
+
 			virtual IMaterialPtr getMaterial( const String& id ) const;
 			virtual IMaterialPtr createMaterial( const IMaterial::Desc& rkMatDesc, const String& id = "" );
 			virtual void destroyJoint( IJointPtr pJoint );
