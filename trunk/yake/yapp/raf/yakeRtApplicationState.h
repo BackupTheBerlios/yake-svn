@@ -28,6 +28,9 @@
 #define YAKE_RAF_RTAPPLICATIONSTATE_H
 
 #include "yake/input/yakeInputSystem.h"
+#include "yake/graphics/yakeGraphics.h"
+#include "yake/physics/yakePhysics.h"
+#include "yake/scripting/yakeScriptingSystem.h"
 
 namespace yake {
 namespace raf {
