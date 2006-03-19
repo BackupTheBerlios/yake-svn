@@ -43,7 +43,7 @@ namespace input {
 	//-----------------------------------------------------------------------
 	MouseDeviceOgre::MouseDeviceOgre(Ogre::InputReader * inputReader) :
 				mInputReader(inputReader),
-				mPosition(Vector3::kZero)
+				mPosition(math::Vector3::kZero)
 	{
 		mButtons[0] = mButtons[1] = mButtons[2] = false;
 	}
@@ -68,7 +68,7 @@ namespace input {
 	}
 	
 	//-----------------------------------------------------------------------
-	Vector3 MouseDeviceOgre::getPosition() const
+	math::Vector3 MouseDeviceOgre::getPosition() const
 	{
 		return mPosition;
 	}

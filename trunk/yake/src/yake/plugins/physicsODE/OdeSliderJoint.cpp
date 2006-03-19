@@ -55,7 +55,7 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	void OdeSliderJoint::setAxis( size_t axisIndex, Vector3 const& rAxis )
+	void OdeSliderJoint::setAxis( size_t axisIndex, const math::Vector3& rAxis )
 	{
 		YAKE_ASSERT( axisIndex < 1 ).error( "Slider joint has only one axis! You are trying to set more..." );
 		
@@ -69,7 +69,7 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	void OdeSliderJoint::setAnchor( size_t anchorIndex, Vector3 const& rAnchor )
+	void OdeSliderJoint::setAnchor( size_t anchorIndex, const math::Vector3& rAnchor )
 	{
 		YAKE_ASSERT( false ).error( "Slider joint doesn't have any anchors!" );
 	}

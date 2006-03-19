@@ -29,7 +29,6 @@
 
 using namespace yake::base::mpl;
 using namespace yake::base::templates;
-using namespace yake::math;
 
 namespace yake {
 namespace graphics {
@@ -86,19 +85,19 @@ namespace ogre3d {
 
 		virtual bool lockPositions( uint32 start, uint32 count, bool bRead = false );
 		virtual bool unlockPositions();
-		virtual bool setPosition( uint32 index, const Vector3 & position );
+		virtual bool setPosition( uint32 index, const math::Vector3 & position );
 
 		virtual bool lockNormals( uint32 start, uint32 count, bool bRead = false );
 		virtual bool unlockNormals();
-		virtual bool setNormal( uint32 index, const Vector3 & normal );
+		virtual bool setNormal( uint32 index, const math::Vector3 & normal );
 
 		virtual bool lockTexCoords( uint16 set, uint32 start, uint32 count, bool bRead = false );
 		virtual bool unlockTexCoords( uint16 set );
-		virtual bool setTexCoord( uint16 set, uint16 index, const Vector3 & uv );
+		virtual bool setTexCoord( uint16 set, uint16 index, const math::Vector3 & uv );
 
 		virtual bool lockColours( uint32 start, uint32 count, bool bRead = false );
 		virtual bool unlockColours();
-		virtual bool setColour( uint32 index, const Color & colour );
+		virtual bool setColour( uint32 index, const math::Color& colour );
 
 		virtual bool lockIndices( uint32 start, uint32 count );
 		virtual bool setIndex( uint32 index, uint32 value );
@@ -111,3 +110,4 @@ namespace ogre3d {
 } // yake
 
 #endif
+

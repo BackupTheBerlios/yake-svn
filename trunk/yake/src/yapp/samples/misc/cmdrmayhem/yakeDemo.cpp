@@ -14,7 +14,7 @@ using namespace yake;
 struct TheConfiguration : public raf::ApplicationConfiguration
 {
 	virtual StringVector getLibraries()
-	{ return MakeStringVector() << "graphicsOgre" << "inputOgre" << "physicsOde"; }
+	{ return MakeStringVector() << "graphicsOgre" << "inputOgre" << "physicsODE"; }
 
 	//virtual StringVector getScriptingSystems()
 	//{ return MakeStringVector() << "lua"; }
@@ -103,15 +103,15 @@ protected:
 		// create a light
 		graphics::ILight* pLight = getGraphicalWorld()->createLight();
 		pLight->setType( graphics::ILight::LT_DIRECTIONAL );
-		pLight->setDirection( Vector3(0,-1,1) );
+		pLight->setDirection( math::Vector3(0,-1,1) );
 		getGraphicalWorld()->createSceneNode("lightnode0")->attachLight( pLight );
 
 		getGraphicalWorld()->setShadowsEnabled( true );
 
 		// position camera and look at the ninja
 		getDefaultCamera()->setNearClipDistance( 1 );
-		getDefaultCamera()->setFixedYawAxis(Vector3::kUnitY);
-		getDefaultCamera()->setPosition(Vector3(7,4,-7));
+		getDefaultCamera()->setFixedYawAxis(math::Vector3::kUnitY);
+		getDefaultCamera()->setPosition(math::Vector3(7,4,-7));
 
 		// create ground
 		mGround = new model::complex::Model();
@@ -123,8 +123,8 @@ protected:
 			pGroundE->setMaterial("box");
 			pGroundE->setCastsShadow( false );
 			pGroundSN->attachEntity( pGroundE );
-			pGroundSN->setScale( Vector3(100,1,100) );
-			pGroundSN->setPosition( Vector3(0,groundHeight,0) );
+			pGroundSN->setScale( math::Vector3(100,1,100) );
+			pGroundSN->setPosition( math::Vector3(0,groundHeight,0) );
 
 			model::Graphical* pG = new model::Graphical();
 			pG->addSceneNode( pGroundSN );
@@ -132,7 +132,7 @@ protected:
 
 			// physical
 			physics::IActorPtr pGroundPlane = getPhysicalWorld()->createActor( physics::ACTOR_STATIC );
-			pGroundPlane->createShape( physics::IShape::PlaneDesc( Vector3(0,1,0), groundHeight ) );
+			pGroundPlane->createShape( physics::IShape::PlaneDesc( math::Vector3(0,1,0), groundHeight ) );
 
 			model::Physical* pP = new model::Physical();
 			pP->addActor( pGroundPlane, "groundPlane" );
@@ -152,8 +152,8 @@ protected:
 		// create player/avatar
 		mPlayerRep = getPhysicalWorld()->createAvatar(
 				physics::IAvatar::Desc(
-						Vector3(0.5,2,0), // dimensions
-						Vector3::kZero // initial position
+						math::Vector3(0.5,2,0), // dimensions
+						math::Vector3::kZero // initial position
 					) 
 			);
 		YAKE_ASSERT( mPlayerRep );
@@ -165,7 +165,7 @@ protected:
 			pG->addSceneNode( pSN );
 			graphics::IEntity* pE = getGraphicalWorld()->createEntity("sphere_d1.mesh");
 			pSN->attachEntity( pE );
-			pSN->setScale( 0.5 * Vector3::kUnitScale );
+			pSN->setScale( 0.5 * math::Vector3::kUnitScale );
 
 			model::ModelMovableLink* pLink = new model::ModelMovableLink();
 			mComplex->addGraphicsController( pLink );
@@ -175,7 +175,7 @@ protected:
 		}
 
 		// top-down camera controller
-		mTopDownCtrlr.setOffset( Vector3(10,10,-10) );
+		mTopDownCtrlr.setOffset( math::Vector3(10,10,-10) );
 		mTopDownCtrlr.setCamera( getDefaultCamera() );
 	}
 	virtual void onDestroyScene()
@@ -222,28 +222,28 @@ protected:
 	{
 		mActionMap.update();
 
-		Vector3 projViewDir = mTopDownCtrlr.getOffset();
+		math::Vector3 projViewDir = mTopDownCtrlr.getOffset();
 		projViewDir.y = 0.;
 		if (projViewDir.length() <= 0.01)
-			projViewDir = Vector3::kUnitZ;
+			projViewDir = math::Vector3::kUnitZ;
 		projViewDir.normalise();
-		Quaternion projViewRot;
-		projViewRot.FromAxes( projViewDir.crossProduct( Vector3::kUnitY ), Vector3::kUnitY, -projViewDir );
+		math::Quaternion projViewRot;
+		projViewRot.FromAxes( projViewDir.crossProduct( math::Vector3::kUnitY ), math::Vector3::kUnitY, -projViewDir );
 
 		const real maxVel = real(3.0);
-		Vector3 playerTargetVel;
+		math::Vector3 playerTargetVel;
 		ConstDequeIterator< ActionIdList > itAction( mActiveActions );
 		while (itAction.hasMoreElements())
 		{
 			const input::ActionId activeId = itAction.getNext();
 			if (activeId == input::ACTIONID_FORWARD)
-				playerTargetVel += Vector3(0,0,+1);
+				playerTargetVel += math::Vector3(0,0,+1);
 			else if (activeId == input::ACTIONID_REVERSE)
-				playerTargetVel += Vector3(0,0,-1);
+				playerTargetVel += math::Vector3(0,0,-1);
 			else if (activeId == input::ACTIONID_LEFT)
-				playerTargetVel += Vector3(+1,0,0);
+				playerTargetVel += math::Vector3(+1,0,0);
 			else if (activeId == input::ACTIONID_RIGHT)
-				playerTargetVel += Vector3(-1,0,0);
+				playerTargetVel += math::Vector3(-1,0,0);
 			else if (activeId == input::ACTIONID_UP)
 				mPlayerRep->jump();
 			else if (activeId == input::ACTIONID_DOWN)
@@ -262,15 +262,15 @@ protected:
 
 		{ // top-down controller
 			const real dist = timeElapsed * 4.;
-			Vector3 offset = mTopDownCtrlr.getOffset();
+			math::Vector3 offset = mTopDownCtrlr.getOffset();
 			if (this->getApp().getKeyboard()->isKeyDown(input::KC_I))
-				offset += dist * Vector3::kUnitZ;
+				offset += dist * math::Vector3::kUnitZ;
 			if (this->getApp().getKeyboard()->isKeyDown(input::KC_K))
-				offset += - dist * Vector3::kUnitZ;
+				offset += - dist * math::Vector3::kUnitZ;
 			if (this->getApp().getKeyboard()->isKeyDown(input::KC_J))
-				offset += dist * Vector3::kUnitX;
+				offset += dist * math::Vector3::kUnitX;
 			if (this->getApp().getKeyboard()->isKeyDown(input::KC_L))
-				offset += - dist * Vector3::kUnitX;
+				offset += - dist * math::Vector3::kUnitX;
 			mTopDownCtrlr.setOffset( offset );
 		}
 

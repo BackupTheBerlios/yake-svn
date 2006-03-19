@@ -24,8 +24,8 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef __INC_PCH_H__
-#define __INC_PCH_H__
+#ifndef __INC_OGRE_PCH_H__
+#define __INC_OGRE_PCH_H__
 
 #include <yake/base/yake.h>
 
@@ -72,4 +72,5 @@
 	{ \
 	}
 
-#endif // __INC_PCH_H__
+#endif // __INC_OGRE_PCH_H__
+

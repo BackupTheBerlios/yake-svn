@@ -103,7 +103,7 @@
 	template<typename classentry_type,typename objectid_type>
 	ResultCode ClassAndObjectIdManager<classentry_type,objectid_type>::registerClassId(const ClassId clsId, const classdata_type& data)
 	{
-		ClassMap::const_iterator it = classes_.find( clsId );
+		typename ClassMap::const_iterator it = classes_.find( clsId );
 		if (it != classes_.end())
 		{
 			if (classIds_.find( clsId ) != classIds_.end())
@@ -124,7 +124,7 @@
 	template<typename classentry_type,typename objectid_type>
 	objectid_type ClassAndObjectIdManager<classentry_type,objectid_type>::createObjectId(const typename objectid_type::ClassId clsId)
 	{
-		ClassMap::iterator it = classes_.find( clsId );
+		typename ClassMap::iterator it = classes_.find( clsId );
 		if (it == classes_.end())
 			return ObjectId::kNull;
 		uint16 no = it->second.nextSerialNo();
@@ -137,7 +137,7 @@
 	template<typename classentry_type,typename objectid_type>
 	ResultCode ClassAndObjectIdManager<classentry_type,objectid_type>::addObjectId(const ObjectId& objId)
 	{
-		ClassMap::iterator it = classes_.find( objId.classId() );
+		typename ClassMap::iterator it = classes_.find( objId.classId() );
 		if (it == classes_.end())
 			return RC_UNKNOWN_CLASS;
 		return it->second.addObjectId(objId);
@@ -145,7 +145,7 @@
 	template<typename classentry_type,typename objectid_type>
 	typename objectid_type::ObjectIdSet ClassAndObjectIdManager<classentry_type,objectid_type>::getObjectIds(const ClassId clsId) const
 	{
-		ClassMap::const_iterator it = classes_.find( clsId );
+		typename ClassMap::const_iterator it = classes_.find( clsId );
 		if (it == classes_.end())
 			return ObjectIdSet();
 		return it->second.getObjectIds();
@@ -153,15 +153,15 @@
 	template<typename classentry_type,typename objectid_type>
 	ResultCode ClassAndObjectIdManager<classentry_type,objectid_type>::removeObjectId(const ObjectId& objId)
 	{
-		ClassMap::iterator it = classes_.find( objId.classId() );
+		typename ClassMap::iterator it = classes_.find( objId.classId() );
 		if (it == classes_.end())
 			return RC_UNKNOWN_CLASS;
 		return it->second.removeObjectId( objId );
 	}
 	template<typename classentry_type,typename objectid_type>
-	typename const classentry_type::data_type& ClassAndObjectIdManager<classentry_type,objectid_type>::getClassData(const ClassId clsId) const
+	const typename classentry_type::data_type& ClassAndObjectIdManager<classentry_type,objectid_type>::getClassData(const ClassId clsId) const
 	{
-		ClassMap::const_iterator it = classes_.find( clsId );
+		typename ClassMap::const_iterator it = classes_.find( clsId );
 		if (it == classes_.end())
 			throw "ClassAndObjectIdManager<>::getClassData(): Class entry not found!";
 		return it->second.getData();

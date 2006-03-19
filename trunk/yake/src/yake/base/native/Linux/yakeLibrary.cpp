@@ -34,29 +34,25 @@
 
 extern "C"
 {
-#	include <dlfcn.h>
+#include <dlfcn.h>
+#include <assert.h>
 }
 
 // Yake
 #include <yake/base/yakePCH.h>
-#include <yake/base/templates/yakeSmartAssert.h>
-#include <yake/base/yakeException.h>
+#include <yake/base/native/yakeNative.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace native
 {
 
-YAKE_DECLARE_GLOBAL;
 YAKE_BASE_NATIVE_API LibraryHandle library_Load( const char* pFilename )
 {
-	YAKE_DECLARE_FUNCTION( yake::base::native::library_Load );
-	YAKE_ASSERT( pFilename ).debug( "Invalid filename." );
+	assert( pFilename && "Invalid filename." );
 
 	// Due to Linux libraries naming we decided to add some "brand" prefix
 	String yakeLibPrefix( "libyake" );
@@ -75,32 +71,44 @@ YAKE_BASE_NATIVE_API LibraryHandle library_Load( const char* pFilename )
 	
 	String name = yakeName;
 	
-	YAKE_LOG( "Trying to load " + name );
+#ifdef YAKE_DEBUG
+	debug_Print( String( "Trying to load " + name ).c_str() );
+#endif
+
 	LibraryHandle handle = ( LibraryHandle )dlopen( name.c_str(), RTLD_LAZY );
 	
 	// trying to load library with libyapp prefix
 	if ( handle == NULL )
 	{
-		YAKE_LOG( "dlerror returned:" + String( dlerror() ) );
+#ifdef YAKE_DEBUG
+		debug_Print( String( "dlerror returned:" + String( dlerror() ) ).c_str() );
+#endif
 		
 		name = yappName;
 		
-		YAKE_LOG( "Now trying to load " + name );
+#ifdef YAKE_DEBUG
+		debug_Print( String( "Now trying to load " + name ).c_str() );
+#endif
+
 		handle = ( LibraryHandle )dlopen( name.c_str(), RTLD_LAZY );
 	}
 	
 	if ( handle == NULL )
-		throw Exception( "Failed to load " + String( pFilename ) + String( " with both libyake and libyapp prefixes due to " ) + String( dlerror() ) , "native::Linux::library_Load" );
+		throw "Failed to load " + String( pFilename ) 
+		    + String( " with both libyake and libyapp prefixes due to " ) 
+		    + String( dlerror() );
 
-	YAKE_LOG( "successfully loaded " + name );
+#ifdef YAKE_DEBUG
+	debug_Print( String( "successfully loaded " + name ).c_str() );
+#endif
 	
 	return handle;
 }
 
 YAKE_BASE_NATIVE_API void* library_GetSymbol( LibraryHandle library, const char* pFunction )
 {
-	YAKE_ASSERT( library ).debug( "Invalid library handle." );
-	YAKE_ASSERT( pFunction ).debug( "Invalid library function." );
+	assert( library && "Invalid library handle." );
+	assert( pFunction && "Invalid library function." );
 
 	// Get the Procedure's Address.
 	void* address = dlsym( const_cast< void* >( library ), pFunction );
@@ -110,12 +118,12 @@ YAKE_BASE_NATIVE_API void* library_GetSymbol( LibraryHandle library, const char*
  
 YAKE_BASE_NATIVE_API void library_Free( LibraryHandle library )
 {
-	YAKE_ASSERT( library ).debug( "Invalid library handle" );
+	assert( library && "Invalid library handle" );
 
 	dlclose( const_cast< void* >( library ) );
 }
 
 
 } // native
-} // base
 } // yake
+

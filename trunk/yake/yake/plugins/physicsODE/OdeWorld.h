@@ -31,9 +31,6 @@
 #include "yake/plugins/physicsODE/OdeShapes.h"
 
 namespace yake {
-
-	using namespace math;
-
 namespace physics {
 
 		class OdeBody;
@@ -52,33 +49,36 @@ namespace physics {
 			virtual IJointPtr createJoint( const IJoint::DescBase& rkJointDesc );
 			virtual IActorPtr createActor( const IActor::Desc& rActorDesc = IActor::Desc( ACTOR_MOVABLE ) );
 			virtual IAvatarPtr createAvatar( const IAvatar::Desc& rkAvatarDesc );
+	
 			virtual IMaterialPtr getMaterial( const String& id ) const;
-			virtual IMaterialPtr createMaterial( const IMaterial::Desc & rkMatDesc, const String& id = "" );
+			virtual IMaterialPtr createMaterial( const IMaterial::Desc& rkMatDesc, const String& id = "" );
 			virtual void destroyJoint( IJointPtr pJoint );
 			virtual void destroyActor( IActorPtr pActor );
 			virtual void destroyAvatar( IAvatarPtr pAvatar );
 			virtual void destroyMaterial( IMaterialPtr pMaterial );
 			
-			virtual TriangleMeshId createTriangleMesh( TriangleMeshDesc const& rTrimeshDesc );
+			virtual TriangleMeshId createTriangleMesh( const TriangleMeshDesc& rTrimeshDesc );
 
 			virtual Deque<ShapeType> getSupportedShapes( bool bStatic = true, bool bDynamic = true) const;
 			virtual Deque<JointType> getSupportedJoints() const;
 			virtual Deque<String> getSupportedSolvers() const;
-			virtual bool useSolver( String const& rSolver );
+			virtual bool useSolver( const String& rSolver );
 			virtual String getCurrentSolver() const;
 			virtual const StringVector getCurrentSolverParams() const;
-			virtual void setCurrentSolverParam( String const& rName, boost::any const& rValue );
+			virtual void setCurrentSolverParam( const String& rName, const boost::any& rValue );
 
 			virtual void step( const real timeElapsed );
-			virtual void setGlobalGravity( const Vector3& g );
-			virtual Vector3 getGlobalGravity() const;
+			virtual real getStepSize() const { return _getStepSize(); }
 
-			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PreStep )
-			YAKE_MEMBERSIGNAL_FIRE_FN0( public, PreStep )
-			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PostStep )
-			YAKE_MEMBERSIGNAL_FIRE_FN1( public, PostStep, real t, t )
-			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PreStepInternal )
-			YAKE_MEMBERSIGNAL_FIRE_FN1( public, PreStepInternal, const real dt, dt )
+			virtual void setGlobalGravity( const math::Vector3& g );
+			virtual math::Vector3 getGlobalGravity() const;
+
+			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PreStep );
+			YAKE_MEMBERSIGNAL_FIRE_FN0( public, PreStep );
+			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PostStep );
+			YAKE_MEMBERSIGNAL_FIRE_FN1( public, PostStep, real t, t );
+			YAKE_MEMBERSIGNAL_VIRTUALIMPL( public, void, PreStepInternal );
+			YAKE_MEMBERSIGNAL_FIRE_FN1( public, PreStepInternal, const real dt, dt );
 			YAKE_MEMBERSIGNAL( public, void(const real), PostStepInternal )
 		public:
 

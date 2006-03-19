@@ -32,7 +32,7 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreCamera::OgreCamera( Ogre::SceneManager * sceneMgr ) : mSceneMgr( sceneMgr ), mCam( 0 )
+	OgreCamera::OgreCamera( Ogre::SceneManager* sceneMgr ) : mSceneMgr( sceneMgr ), mCam( 0 )
 	{
 		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
 		mCam = mSceneMgr->createCamera( yake::uniqueName::create("sn_") );
@@ -69,66 +69,90 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreCamera::setPosition( const Vector3 & position )
+	void OgreCamera::setPosition( const math::Vector3& position )
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
 		mCam->setPosition( VEC_YAKE2OGRE( position ) );
 	}
 
 	//------------------------------------------------------
-	Vector3 OgreCamera::getPosition() const
+	math::Vector3 OgreCamera::getPosition() const
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
 		return VEC_OGRE2YAKE( mCam->getPosition() );
 	}
 
 	//------------------------------------------------------
-	void OgreCamera::setOrientation( const Quaternion & orientation )
+	math::Vector3 OgreCamera::getDerivedPosition() const
+	{
+		YAKE_ASSERT( mCam ).debug("need a camera!");
+		return VEC_OGRE2YAKE( mCam->getDerivedPosition() );
+	}
+
+	//------------------------------------------------------
+	void OgreCamera::setOrientation( const math::Quaternion & orientation )
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
 		mCam->setOrientation( QUAT_YAKE2OGRE( orientation ) );
 	}
 
 	//------------------------------------------------------
-	Quaternion OgreCamera::getOrientation() const
+	math::Quaternion OgreCamera::getOrientation() const
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
 		return QUAT_OGRE2YAKE( mCam->getOrientation() );
 	}
 
 	//------------------------------------------------------
+	math::Quaternion OgreCamera::getDerivedOrientation() const
+	{
+		YAKE_ASSERT( mCam ).debug("need a camera!");
+		return QUAT_OGRE2YAKE( mCam->getDerivedOrientation() );
+	}
+
+	//------------------------------------------------------
 	void OgreCamera::setDetailLevel( SceneDetailLevel sd )
 	{
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+		mCam->setPolygonMode( Ogre::PolygonMode( sd ) );
+#else
 		mCam->setDetailLevel( Ogre::SceneDetailLevel( sd ) );
+#endif
 	}
 	
 	//------------------------------------------------------
-	ICamera::SceneDetailLevel OgreCamera::getDetailLevel() const
+	SceneDetailLevel OgreCamera::getDetailLevel() const
 	{
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+		return SceneDetailLevel( mCam->getPolygonMode() );
+#else
 		return SceneDetailLevel( mCam->getDetailLevel() );
+#endif
 	}
 	
 	//------------------------------------------------------
-	void OgreCamera::setDirection( const Vector3& rVec )
+	void OgreCamera::setDirection( const math::Vector3& rVec )
 	{
 		//@todo cleaner implementation
 		mCam->setDirection( VEC_YAKE2OGRE( rVec ) );
 	}
 	
 	//------------------------------------------------------
-	Vector3 OgreCamera::getDirection() const
+	math::Vector3 OgreCamera::getDirection() const
 	{
 		return VEC_OGRE2YAKE( mCam->getDirection() );
 	}
 	
 	//------------------------------------------------------
-	Vector3 OgreCamera::getUp() const
+	math::Vector3 OgreCamera::getUp() const
 	{
 		return VEC_OGRE2YAKE( mCam->getUp() );
 	}
 	
 	//------------------------------------------------------
-	Vector3 OgreCamera::getRight() const
+	math::Vector3 OgreCamera::getRight() const
 	{
 		return VEC_OGRE2YAKE( mCam->getRight() );
 	}
@@ -140,19 +164,19 @@ namespace ogre3d {
 	}
 	
 	//------------------------------------------------------
-	void OgreCamera::setFixedYawAxis( const Vector3& yawAxis )
+	void OgreCamera::setFixedYawAxis( const math::Vector3& yawAxis )
 	{
 		mCam->setFixedYawAxis( true, VEC_YAKE2OGRE( yawAxis ) );
 	}
 	
 	//------------------------------------------------------
-	void OgreCamera::moveRelative( const Vector3& rVec )
+	void OgreCamera::moveRelative( const math::Vector3& rVec )
 	{
 		mCam->moveRelative( VEC_YAKE2OGRE( rVec ) );
 	}
 	
 	//------------------------------------------------------
-	void OgreCamera::lookAt( const Vector3& target )
+	void OgreCamera::lookAt( const math::Vector3& target )
 	{
 		mCam->lookAt( VEC_YAKE2OGRE( target ) );
 	}
@@ -216,7 +240,7 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	Matrix4 OgreCamera::getProjectionMatrix() const
+	math::Matrix4 OgreCamera::getProjectionMatrix() const
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
 // for Ogre 1.1.0 "Dagon" compatibility
@@ -228,7 +252,7 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	Matrix4 OgreCamera::getViewMatrix() const
+	math::Matrix4 OgreCamera::getViewMatrix() const
 	{
 		YAKE_ASSERT( mCam ).debug("need a camera!");
 		return MATRIX4_OGRE2YAKE( mCam->getViewMatrix() );

@@ -349,8 +349,8 @@ public:
 	 */
 	void initGui()
 	{
-		//mGuiRendererAdapter = loadPlugin( "CEGUIOgreAdapter" );
-		mGuiRendererAdapter = loadPlugin( "ceguiOgreRendererAdapter" );
+		mGuiRendererAdapter = loadPlugin( "CEGUIOgreAdapter" );
+		//mGuiRendererAdapter = loadPlugin( "ceguiOgreRendererAdapter" );
 		YAKE_ASSERT( mGuiRendererAdapter );
 
 		YAKE_LOG( "Starting adapter version " + mGuiRendererAdapter->getName() );

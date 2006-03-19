@@ -86,3 +86,4 @@ YAKE_BASE_NATIVE_API const char* getApplicationDir();
 } // yake
 
 #endif // YAKE_BASE_NATIVE_NATIVE_H
+

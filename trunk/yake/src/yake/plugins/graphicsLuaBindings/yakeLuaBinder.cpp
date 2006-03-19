@@ -112,18 +112,13 @@ namespace yake
 				    .def( "setMaterial", &IEntity::setMaterial )
 				    .def( "setSubEntityMaterial", &IEntity::setSubEntityMaterial )
 				    .def( "setCastsShadow", &IEntity::setCastsShadow )
+				    .def( "setRenderDetail", &IEntity::setRenderDetail )
 				];
 				YAKE_LOG( "IEntity bound..." );
 
 				module( YAKE_GRAPHICS_MODULE )
 				[
 				    class_<ICamera, bases<Movable, GraphicsEntity> >( "ICamera" )
-				    .enum_( "SceneDetailLevel" )
-				    [
-				        value( "SDL_POINTS", ICamera::SDL_POINTS ),
-				        value( "SDL_WIREFRAME", ICamera::SDL_WIREFRAME ),
-				        value( "SDL_SOLID", ICamera::SDL_SOLID )
-				    ]
 				    .enum_( "ProjectionType" )
 				    [
 				        value( "PT_ORTHOGRAPHIC", ICamera::PT_ORTHOGRAPHIC ),
@@ -149,10 +144,11 @@ namespace yake
 				    .def( "setFixedYawAxis", &ICamera::setFixedYawAxis )
 				    .def( "moveRelative", &ICamera::moveRelative )
 				    .def( "lookAt", &ICamera::lookAt )
-				    .def( "rotate", (void(ICamera::*)(const Quaternion&))&ICamera::rotate )
-				    .def( "rotateAxisAngle", (void(ICamera::*)(const Vector3&, real))&ICamera::rotate )
+				    .def( "rotate", (void(ICamera::*)(const math::Quaternion&))&ICamera::rotate )
+				    .def( "rotateAxisAngle", (void(ICamera::*)(const math::Vector3&, real))&ICamera::rotate )
 				    .def( "pitch", &ICamera::pitch )
 				    .def( "yaw", &ICamera::yaw )
+				    .def( "roll", &ICamera::roll )
 				    .def( "createCameraToViewportRay", &ICamera::createCameraToViewportRay )
 				    .def( "getProjectionMatrix", &ICamera::getProjectionMatrix )
 				    .def( "getViewMatrix", &ICamera::getViewMatrix )
@@ -191,6 +187,8 @@ namespace yake
 				    .def( "getAttachedCamera", &IViewport::getAttachedCamera )
 				    .def( "setDimensions", &IViewport::setDimensions )
 				    .def( "setZ", &IViewport::setZ )
+				    .def( "setBackgroundColor", &IViewport::setBackgroundColor )
+				    .def( "getBackgroundColor", &IViewport::getBackgroundColor )
 				];
 				YAKE_LOG( "IViewport bound..." );
 

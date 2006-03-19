@@ -40,10 +40,10 @@ namespace model {
 	class YAPP_BASE_API ModelMovableLink : public ModelLinkController< Movable >
 	{
 	protected:
-		typedef Signal1< void(const Vector3 &) > PositionSignal;
+		typedef Signal1< void(const Vector3&) > PositionSignal;
 		PositionSignal		mPositionSignal;
 
-		typedef Signal1< void(const Quaternion &) > OrientationSignal;
+		typedef Signal1< void(const Quaternion&) > OrientationSignal;
 		OrientationSignal	mOrientationSignal;
 
 		Vector3				mLastPosition;
@@ -53,8 +53,35 @@ namespace model {
 		YAKE_DECLARE_CONCRETE( ModelMovableLink, "yake.movable" );
 
 		ModelMovableLink();
-		SignalConnection subscribeToPositionChanged( const PositionSignal::slot_type & slot );
-		SignalConnection subscribeToOrientationChanged( const OrientationSignal::slot_type & slot );
+		SignalConnection subscribeToPositionChanged( const PositionSignal::slot_type& slot );
+		SignalConnection subscribeToOrientationChanged( const OrientationSignal::slot_type& slot );
+		SignalConnection subscribeToPositionChanged( Movable* pMovable );
+		SignalConnection subscribeToOrientationChanged( Movable* pMovable );
+		virtual void update( real timeElapsed );
+	};
+	
+	/** A link controller designed to WORLD forward position and/or orientation to
+		to other clients using signals. Factory item id is "yake.movable_world".
+		@Remarks A controller only fires signals when the values have changed!
+	*/
+	class YAPP_BASE_API ModelMovableWorldLink : public ModelLinkController< Movable >
+	{
+	protected:
+		typedef Signal1< void(const Vector3&) > PositionSignal;
+		PositionSignal		mPositionSignal;
+
+		typedef Signal1< void(const Quaternion&) > OrientationSignal;
+		OrientationSignal	mOrientationSignal;
+
+		Vector3				mLastPosition;
+		Quaternion			mLastOrientation;
+
+	public:
+		YAKE_DECLARE_CONCRETE( ModelMovableWorldLink, "yake.movable_world" );
+
+		ModelMovableWorldLink();
+		SignalConnection subscribeToPositionChanged( const PositionSignal::slot_type& slot );
+		SignalConnection subscribeToOrientationChanged( const OrientationSignal::slot_type& slot );
 		SignalConnection subscribeToPositionChanged( Movable* pMovable );
 		SignalConnection subscribeToOrientationChanged( Movable* pMovable );
 		virtual void update( real timeElapsed );
@@ -64,3 +91,4 @@ namespace model {
 }
 
 #endif
+

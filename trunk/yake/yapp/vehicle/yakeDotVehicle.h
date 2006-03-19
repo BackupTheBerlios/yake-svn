@@ -31,11 +31,12 @@
 #include "yakeTemplates.h"
 
 namespace yake {
-	namespace data {
-		namespace dom {
-			class INode;
-		}
-	}
+namespace data {
+namespace dom {
+    class INode;
+}
+}
+
 namespace vehicle {
 
 	class YAKE_VEH_API DotVehicleParser
@@ -50,24 +51,24 @@ namespace vehicle {
 		YAKE_MEMBERSIGNAL(public,void(DotVehicleParser&,const String&),OnVehicleTpl);
 	private:
 		void parseVehicleTpl( const data::dom::INode& n );
-		 void parseChassis( const data::dom::INode& n );
-		  void parseBody( const data::dom::INode& n );
-		  void parseShapeSet( const data::dom::INode& n );
-		   void parseShape( const data::dom::INode& n );
-		    void parseShapeBox( const data::dom::INode& n, const String& matId );
-		    void parseShapeSphere( const data::dom::INode& n, const String& matId );
-		   void parseMountPoint( const data::dom::INode& n, VehicleTemplate::MountPointTpl* parentMtPt = 0 );
-		 void parseEngine( const data::dom::INode& n );
-		  void parseRPM( vehicle::VehicleTemplate::CarEngineTpl&, const data::dom::INode& n );
-		  void parseGearBox( vehicle::VehicleTemplate::CarEngineTpl&, const data::dom::INode& n );
-		 //void parseAxle( const data::dom::INode& n );
-		 void parseSteeringGroup( const data::dom::INode& n );
-		 void parseWheel( const data::dom::INode& n );
+		void parseChassis( const data::dom::INode& n );
+		void parseBody( const data::dom::INode& n );
+		void parseShapeSet( const data::dom::INode& n );
+		void parseShape( const data::dom::INode& n );
+		void parseShapeBox( const data::dom::INode& n, const String& matId );
+		void parseShapeSphere( const data::dom::INode& n, const String& matId );
+		void parseMountPoint( const data::dom::INode& n, VehicleTemplate::MountPointTpl* parentMtPt = 0 );
+		void parseEngine( const data::dom::INode& n );
+		void parseRPM( vehicle::VehicleTemplate::CarEngineTpl&, const data::dom::INode& n );
+		void parseGearBox( vehicle::VehicleTemplate::CarEngineTpl&, const data::dom::INode& n );
+		//void parseAxle( const data::dom::INode& n );
+		void parseSteeringGroup( const data::dom::INode& n );
+		void parseWheel( const data::dom::INode& n );
 		void parseEngineTpl( const data::dom::INode& n );
 
-		void parsePosition( const data::dom::INode& n, Vector3& ret );
-		void parseOrientation( const data::dom::INode& n, Quaternion& ret );
-		void parseDirection( const data::dom::INode& n, Vector3& ret );
+		void parsePosition( const data::dom::INode& n, math::Vector3& ret );
+		void parseOrientation( const data::dom::INode& n, math::Quaternion& ret );
+		void parseDirection( const data::dom::INode& n, math::Vector3& ret );
 
 		VehicleTemplate*	mpCurrVehTpl;
 	};
@@ -77,3 +78,4 @@ namespace vehicle {
 
 
 #endif
+

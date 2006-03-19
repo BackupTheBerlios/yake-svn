@@ -47,10 +47,12 @@ namespace physics
 
 		virtual IWorld* getCreator() const;
 
-		virtual void setPosition( const Vector3& rPosition );
-		virtual void setOrientation( const Quaternion& rOrientation );
-		virtual Vector3 getPosition() const;
-		virtual Quaternion getOrientation() const;
+		virtual void setPosition( const math::Vector3& rPosition );
+		virtual void setOrientation( const math::Quaternion& rOrientation );
+		virtual math::Vector3 getPosition() const;
+		virtual math::Quaternion getOrientation() const;
+		virtual math::Vector3 getDerivedPosition() const { return getPosition(); }
+		virtual math::Quaternion getDerivedOrientation() const { return getOrientation(); }
 		
 		virtual IShape* createShape( const IShape::Desc& rShapeDesc, real massOrDensity = 0.0f, IBody::quantityType type = IBody::QT_MASS );
 		virtual void destroyShape( IShape* pShape );
@@ -59,11 +61,11 @@ namespace physics
 		virtual void setEnabled(const bool enabled);
 		virtual bool isEnabled() const;
 
-		YAKE_MEMBERSIGNAL_VIRTUALIMPL(public, void(ActorCollisionInfo&), CollisionEntered)
-		YAKE_MEMBERSIGNAL_FIRE_FN1(public, CollisionEntered, ActorCollisionInfo& info, info)
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL(public, void(const ActorCollisionInfo&), CollisionEntered)
+		YAKE_MEMBERSIGNAL_FIRE_FN1(public, CollisionEntered, const ActorCollisionInfo& info, info)
 
-		YAKE_MEMBERSIGNAL_VIRTUALIMPL(public, void(ActorCollisionInfo&), CollisionExited)
-		YAKE_MEMBERSIGNAL_FIRE_FN1(public, CollisionExited, ActorCollisionInfo& info, info)
+		YAKE_MEMBERSIGNAL_VIRTUALIMPL(public, void(const ActorCollisionInfo&), CollisionExited)
+		YAKE_MEMBERSIGNAL_FIRE_FN1(public, CollisionExited, const ActorCollisionInfo& info, info)
 	
 		// Ode helpers
 		void _collide( OdeActor* pOther, dGeomID geomA, dGeomID geomB, dJointGroup* pContactJointGroup );
@@ -74,10 +76,10 @@ namespace physics
 		IBody::MassDesc* createMassDescFromShapeDesc( const IShape::Desc& rShapeDesc, real massOrDensity, IBody::quantityType qType );
 		
 		OdeGeom* createShapeFromDesc( const IShape::Desc& rShapeDesc );
-		OdeGeom* createTransformGeomIfNeeded( OdeGeom* pGeom, const Vector3& rOffset, const Quaternion& rRelOrientation );
+		OdeGeom* createTransformGeom( OdeGeom* pGeom, const math::Vector3& rOffset, const math::Quaternion& rRelOrientation );
 
-		Vector3							mPosition;
-		Quaternion						mOrientation;
+		math::Vector3						mPosition;
+		math::Quaternion					mOrientation;
 		
 		OdeBody*						mBody; 
 		OdeWorld*						mOdeWorld;
@@ -87,10 +89,13 @@ namespace physics
 		
 		typedef real CollisionInfo;
 		typedef std::map< OdeActor*, CollisionInfo > CollisionCache;
-		CollisionCache					mCollisions;
+		CollisionCache						mCollisions;
+
+		SigCollisionEnteredType	    mEnterCollisionSignal;
 	};
 
 } // physics
 } // yake
 
 #endif
+

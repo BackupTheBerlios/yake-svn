@@ -51,7 +51,7 @@ namespace model {
 	class ModelLinkController : public ModelLink
 	{
 	private:
-		SourceType	* mSource;
+		SourceType*	mSource;
 	public:
 		virtual void setSource( SourceType * source )
 		{ mSource = source; }
@@ -63,3 +63,4 @@ namespace model {
 }
 
 #endif
+

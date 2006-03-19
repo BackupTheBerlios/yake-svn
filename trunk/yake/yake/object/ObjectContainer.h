@@ -69,7 +69,7 @@ namespace OBJECTS_NAMESPACE {
 		assert( !exists );
 		if (exists)
 			return false;
-		id2obj_.insert( IdObjMap::value_type(objId,obj) );
+		id2obj_.insert( typename IdObjMap::value_type(objId,obj) );
 		return true;
 	}
 	template<typename object_type,typename objectid_type>
@@ -78,7 +78,7 @@ namespace OBJECTS_NAMESPACE {
 		assert( !objId.isNull() );
 		if (objId.isNull())
 			return 0;
-		IdObjMap::iterator it = id2obj_.find( objId );
+		typename IdObjMap::iterator it = id2obj_.find( objId );
 		assert( it != id2obj_.end() );
 		if (it == id2obj_.end())
 			return 0;
@@ -92,7 +92,7 @@ namespace OBJECTS_NAMESPACE {
 		assert( !objId.isNull() );
 		if (objId.isNull())
 			return 0;
-		IdObjMap::const_iterator it = id2obj_.find( objId );
+		typename IdObjMap::const_iterator it = id2obj_.find( objId );
 		assert( it != id2obj_.end() );
 		if (it == id2obj_.end())
 			return 0;

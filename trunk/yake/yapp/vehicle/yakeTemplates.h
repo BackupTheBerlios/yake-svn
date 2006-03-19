@@ -27,7 +27,7 @@
 #ifndef YAKE_VEHICLE_TEMPLATES_H
 #define YAKE_VEHICLE_TEMPLATES_H
 
-#include "yakePrerequisites.h"
+#include "yapp/vehicle/yakePrerequisites.h"
 
 namespace yake {
 namespace vehicle {
@@ -40,31 +40,31 @@ namespace vehicle {
 		typedef AssocVector< String, MountPointTpl > MountPointTplList;
 		struct MountPointTpl
 		{
-			Vector3				mPosition;
-			Quaternion			mOrientation;
-			Vector3				mDirection;
-			bool				mUseDirection;
+			math::Vector3		mPosition;
+			math::Quaternion	mOrientation;
+			math::Vector3		mDirection;
+			bool			mUseDirection;
 			MountPointTplList	mChildren;
 			MountPointTpl(
-				const Vector3& pos = Vector3::kZero,
-				const Quaternion rot = Quaternion::kIdentity) :
+				const math::Vector3& pos = math::Vector3::kZero,
+				const math::Quaternion& rot = math::Quaternion::kIdentity) :
 				mPosition(pos),
 				mOrientation(rot),
 				mUseDirection(false)
 			{}
 			MountPointTpl(
-				const Vector3& pos,
-				const Vector3& dir) :
+				const math::Vector3& pos,
+				const math::Vector3& dir) :
 				mPosition(pos),
 				mDirection(dir),
 				mUseDirection(true)
 			{}
 			MountPointTpl& addMountPoint(
-				const Vector3& pos = Vector3::kZero,
-				const Quaternion rot = Quaternion::kIdentity);
+				const math::Vector3& pos = math::Vector3::kZero,
+				const math::Quaternion& rot = math::Quaternion::kIdentity);
 			MountPointTpl& addMountPoint(
-				const Vector3& pos,
-				const Vector3& dir);
+				const math::Vector3& pos,
+				const math::Vector3& dir);
 		};
 		enum GearMode
 		{
@@ -87,7 +87,9 @@ namespace vehicle {
 		{
 			real				minForce;
 			real				maxForce;
+			real				gain;
 			String				mountPt;
+			String				type;
 			ThrusterTpl(real minF = 0., real maxF = 1., const String& mtPt = "") : minForce(minF), maxForce(maxF), mountPt(mtPt) {}
 		};
 		struct CarEngineTpl : public EngineTpl
@@ -117,36 +119,38 @@ namespace vehicle {
 		typedef AssocVector<String,EngineTpl*> EngineTplList;
 
 		typedef Deque<physics::IShape::Desc*> ShapeTplList;
-
+		
 		struct ChassisTpl
 		{
-			Vector3			mPosition; // initial position
+			math::Vector3		mPosition; // initial position
 			real			mMass;
-			ShapeTplList	mChassisShapes;
+			ShapeTplList		mChassisShapes;
 			String			mGfxReference; // e.g. dotScene file
+			String			mPhysicsBody; // e.g. physical body loaded from .xode file
+			    
 			ChassisTpl() : 
-				mPosition(Vector3::kZero),
-				mMass(real(1.6))
+				mPosition(math::Vector3::kZero),
+				mMass(real(1.6)) // @todo FIXME magic number
 			{}
 		};
 
 		struct WheelTpl
 		{
 			uint32			mAxle;
-			Vector3			mPosition;
-			Quaternion		mOrientation;
+			math::Vector3		mPosition;
+			math::Quaternion	mOrientation;
 			uint32			mSteeringGroup;
 			real			mRadius;
 			real			mMass;
 			bool			mMassRelativeToChassis;
 			real			mSuspensionSpring;
 			real			mSuspensionDamping;
-			//String			mGfxReference; // e.g. dotScene file
-			//String			mGfxReferenceType; // e.g. "dotscene"
+			//String		mGfxReference; // e.g. dotScene file
+			//String		mGfxReferenceType; // e.g. "dotscene"
 			String			mMaterial;
 			WheelTpl(
-				const Vector3& position = Vector3::kZero,
-				const Quaternion& orientation = Quaternion::kIdentity,
+				const math::Vector3& position = math::Vector3::kZero,
+				const math::Quaternion& orientation = math::Quaternion::kIdentity,
 				const real radius = real(0.2),
 				const real mass = real(0.018),
 				const bool massRelativeToChassis = true,
@@ -175,9 +179,9 @@ namespace vehicle {
 
 		ChassisTpl		mChassis;
 		MountPointTplList	mMountPoints;
-		EngineTplList	mEngines;
+		EngineTplList		mEngines;
 		uint32			mSteeringGroups;
-		WheelTplList	mWheels;
+		WheelTplList		mWheels;
 
 		VehicleTemplate() : mSteeringGroups(0)
 		{}
@@ -200,3 +204,4 @@ namespace vehicle {
 
 
 #endif
+

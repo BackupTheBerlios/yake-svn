@@ -79,10 +79,11 @@ namespace physics {
 		virtual const StringVector getCurrentSolverParams() const = 0;
 		virtual void setCurrentSolverParam( const String& rName, const boost::any& rValue ) = 0;
 
-		virtual void setGlobalGravity( const Vector3& g ) = 0;
-		virtual Vector3 getGlobalGravity() const = 0;
+		virtual void setGlobalGravity( const math::Vector3& g ) = 0;
+		virtual math::Vector3 getGlobalGravity() const = 0;
 
 		virtual void step(const real timeElapsed) = 0;
+		virtual real getStepSize() const = 0;
 
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(void), PreStep )
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PostStep )
@@ -92,3 +93,4 @@ namespace physics {
 }
 }
 #endif
+

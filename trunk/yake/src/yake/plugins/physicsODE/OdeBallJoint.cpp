@@ -55,7 +55,7 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	void OdeBallJoint::setAxis( size_t axisIndex, Vector3 const& rAxis )
+	void OdeBallJoint::setAxis( size_t axisIndex, const math::Vector3& rAxis )
 	{
 		YAKE_ASSERT( false ).error( "Ball joint doesn't have any axes!" );
 	}
@@ -79,7 +79,7 @@ namespace physics {
 	}
 
 	//-----------------------------------------------------
-	void OdeBallJoint::setAnchor( size_t anchorIndex, Vector3 const& rAnchor )
+	void OdeBallJoint::setAnchor( size_t anchorIndex, const math::Vector3& rAnchor )
 	{
 		YAKE_ASSERT( anchorIndex < 1 ).error( "Ball joint has only one anchor! You are trying to set more..." );
 		

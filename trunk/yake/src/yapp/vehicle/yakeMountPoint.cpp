@@ -35,8 +35,8 @@ namespace vehicle {
 	// Class: MountPoint
 	//-----------------------------------------------------
 	MountPoint::MountPoint() :
-		mPosition(Vector3::kZero),
-		mOrientation(Quaternion::kIdentity),
+		mPosition(math::Vector3::kZero),
+		mOrientation(math::Quaternion::kIdentity),
 		mParent(0),
 		mOverrideParent(0)
 	{
@@ -90,44 +90,54 @@ namespace vehicle {
 		mMountables.erase( itFind );
 		mountable->onDetached();
 	}
-	Vector3 MountPoint::getDirection() const
+	math::Vector3 MountPoint::getDirection() const
 	{ 
-		return getDerivedOrientation() * Vector3::kUnitZ; 
+		// direction in local coordinates
+		//
+		return mOrientation * math::Vector3::kUnitZ; 
 	}
-	void MountPoint::setDirection( const Vector3& dir)
+	void MountPoint::setDirection( const math::Vector3& dir)
 	{
-		const Vector3 currDir = getDirection();
-		const Vector3 newDir = dir.normalisedCopy();
-		//@fixme Use tolerance for equality tests!
-		if (newDir == currDir)
+		const real tolerance = real(0.001);
+		const math::Vector3 currDir = getDirection();
+		const math::Vector3 newDir = dir.normalisedCopy();
+
+		if ( newDir == currDir )
 			return;
-		if (newDir == -currDir)
+
+		if ( newDir.dotProduct( currDir ) + 1 <= tolerance ) // tolerance check. TODO tolerance globally? for math
 		{
-			real angle = 0.;
-			Vector3 axis(Vector3::kUnitY);
-			mOrientation.ToAngleAxis(angle,axis);
-			mOrientation.FromAngleAxis(angle+Math::PI,axis);
+		    	real angle = 0.;
+		    	math::Vector3 axis;
+		    	mOrientation.ToAngleAxis( angle, axis );
+
+			// adding another 180 grads
+			angle += math::Math::PI;
+
+			// setting new orientation
+			mOrientation.FromAngleAxis( angle, axis );			
+			
 			return;
 		}
 		mOrientation = currDir.getRotationTo( newDir ) * mOrientation;
 	}
-	void MountPoint::setPosition(const Vector3& rPosition)
+	void MountPoint::setPosition(const math::Vector3& rPosition)
 	{
 		mPosition = rPosition;
 	}
-	Vector3 MountPoint::getPosition() const
+	math::Vector3 MountPoint::getPosition() const
 	{
 		return mPosition;
 	}
-	void MountPoint::setOrientation( const Quaternion& q )
+	void MountPoint::setOrientation( const math::Quaternion& q )
 	{
 		mOrientation = q;
 	}
-	Quaternion MountPoint::getOrientation() const
+	math::Quaternion MountPoint::getOrientation() const
 	{
 		return mOrientation;
 	}
-	Vector3 MountPoint::getDerivedPosition() const
+	math::Vector3 MountPoint::getDerivedPosition() const
 	{
 		if (mOverrideParent)
 			return mOverrideParent->getOrientation() * mPosition + mOverrideParent->getPosition();
@@ -135,7 +145,7 @@ namespace vehicle {
 			return mParent->getDerivedOrientation() * mPosition + mParent->getDerivedPosition();
 		return mPosition;
 	}
-	Quaternion MountPoint::getDerivedOrientation() const
+	math::Quaternion MountPoint::getDerivedOrientation() const
 	{
 		if (mOverrideParent)
 			return mOverrideParent->getOrientation() * mOrientation;
@@ -154,3 +164,4 @@ namespace vehicle {
 
 } // namespace vehicle
 } // namespace yake
+

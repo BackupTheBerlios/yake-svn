@@ -43,14 +43,14 @@ namespace physics {
 
 	struct YAKE_PHYSICS_API Force
 	{
-		Vector3			force;
+		math::Vector3			force;
 		real				duration;
 		ReferenceFrame	frameType;
 
 		Force() :
 			duration(0)
 		{}
-		Force( const Vector3& f, const real t, const ReferenceFrame rf = RF_GLOBAL ) :
+		Force( const math::Vector3& f, const real t, const ReferenceFrame rf = RF_GLOBAL ) :
 			force(f),
 			duration(t),
 			frameType(rf)
@@ -100,20 +100,20 @@ namespace physics {
 			}
 			void reset()
 			{
-				linVelocity = Vector3::kZero;
-				angVelocity = Vector3::kZero;
-				massOffset = Vector3::kZero;
+				linVelocity = math::Vector3::kZero;
+				angVelocity = math::Vector3::kZero;
+				massOffset = math::Vector3::kZero;
 				totalMass = real(1.);
 			}
-			Vector3		linVelocity;
-			Vector3		angVelocity;
+			math::Vector3		linVelocity;
+			math::Vector3		angVelocity;
 			real		totalMass;
-			Vector3		massOffset;
+			math::Vector3		massOffset;
 		};
 
 		struct MassDesc
 		{
-			MassDesc( real massOrDensity, const Vector3& rOffset = Vector3::kZero, quantityType type = QT_MASS ) :
+			MassDesc( real massOrDensity, const math::Vector3& rOffset = math::Vector3::kZero, quantityType type = QT_MASS ) :
 					quantity( massOrDensity ),
 					offset( rOffset ),
 					qType( type )
@@ -121,19 +121,19 @@ namespace physics {
 
 			virtual ~MassDesc() {}
 
-			real 			quantity; /// For all of them. You can set total mass via setMass
-			Vector3		offset; /// Mass can be offseted. TODO Add rotation "offset"?
-			quantityType qType;
+			real 		quantity; /// For all of them. You can set total mass via setMass
+			math::Vector3		offset; /// Mass can be offseted. TODO Add rotation "offset"?
+			quantityType	qType;
 		};
 
 		struct SphereMassDesc : public MassDesc
 		{
 			SphereMassDesc(	real radiusValue,
-								real shapeDensity,
-								const Vector3& rOffset = Vector3::kZero,
-								quantityType type = QT_MASS ) :
-									MassDesc( shapeDensity, rOffset, type ),
-							 		radius( radiusValue )
+					real shapeDensity,
+					const math::Vector3& rOffset = math::Vector3::kZero,
+					quantityType type = QT_MASS ) :
+							MassDesc( shapeDensity, rOffset, type ),
+					 		radius( radiusValue )
 			{}
 
 			real radius;
@@ -142,32 +142,32 @@ namespace physics {
 		struct BoxMassDesc : public MassDesc
 		{
 			BoxMassDesc(	real boxSizeX,
-							real boxSizeY,
-							real boxSizeZ,
-							real shapeDensity,
-							const Vector3& rOffset = Vector3::kZero,
-							quantityType type = QT_MASS ) :
-								MassDesc( shapeDensity, rOffset, type ),
-								sizeX( boxSizeX ),
-								sizeY( boxSizeY ),
-								sizeZ( boxSizeZ )
+					real boxSizeY,
+					real boxSizeZ,
+					real shapeDensity,
+					const math::Vector3& rOffset = math::Vector3::kZero,
+					quantityType type = QT_MASS ) :
+						MassDesc( shapeDensity, rOffset, type ),
+					 	sizeX( boxSizeX ),
+						sizeY( boxSizeY ),
+						sizeZ( boxSizeZ )
 			{}
 
-			real	sizeX;
+			real sizeX;
 			real sizeY;
 			real sizeZ;
 		};
 
 		struct CapsuleMassDesc : public MassDesc /// Corresponds to ODE CappedCylinder
 		{
-			CapsuleMassDesc(	real capRadius,
-								real capLength,
-								real shapeDensity,
-								const Vector3& rOffset = Vector3::kZero,
-								quantityType type = QT_MASS ) :
-									MassDesc( shapeDensity, rOffset, type ),
-									radius( capRadius ),
-									length( capLength )
+			CapsuleMassDesc( real capRadius,
+				         real capLength,
+					 real shapeDensity,
+				         const math::Vector3& rOffset = math::Vector3::kZero,
+					 quantityType type = QT_MASS ) :
+						MassDesc( shapeDensity, rOffset, type ),
+						radius( capRadius ),
+						length( capLength )
 			{}
 
 			real radius;
@@ -176,14 +176,14 @@ namespace physics {
 
 		struct CylinderMassDesc : public MassDesc
 		{
-			CylinderMassDesc(	real cylRadius,
-								real cylLength,
-								real shapeDensity,
-								const Vector3& rOffset = Vector3::kZero,
-								quantityType type = QT_MASS ) :
-									MassDesc( shapeDensity, rOffset, type ),
-									radius( cylRadius ),
-									length( cylLength )
+			CylinderMassDesc( real cylRadius,
+					  real cylLength,
+					  real shapeDensity,
+					  const math::Vector3& rOffset = math::Vector3::kZero,
+					  quantityType type = QT_MASS ) :
+						MassDesc( shapeDensity, rOffset, type ),
+						radius( cylRadius ),
+						length( cylLength )
 			{}
 
 			real radius;
@@ -225,19 +225,19 @@ namespace physics {
 
 		/** Sets the linear velocity of the body/actor directly, i.e. with immediate effect.
 		*/
-		virtual void setLinearVelocity( const Vector3& rVelocity ) = 0;
+		virtual void setLinearVelocity( const math::Vector3& rVelocity ) = 0;
 
 		/** Returns the current velocity of the body.
 		*/
-		virtual Vector3 getLinearVelocity() const = 0;
+		virtual math::Vector3 getLinearVelocity() const = 0;
 
 		/** Sets the angular velocity [rad/s] of the body/actor directly, i.e. with immediate effect.
 		*/
-		virtual void setAngularVelocity( const Vector3& rVelocity ) = 0;
+		virtual void setAngularVelocity( const math::Vector3& rVelocity ) = 0;
 
 		/** Returns the angular velocity of the body in [rad/s].
 		*/
-		virtual Vector3 getAngularVelocity() const = 0;
+		virtual math::Vector3 getAngularVelocity() const = 0;
 
 		/** Adds a force. The specifics are detailed in the Force object.
 		*/
@@ -245,42 +245,44 @@ namespace physics {
 
 		/** Adds a force defined in the global reference frame. 
 		*/
-		virtual void addForce( const Vector3& rForce ) = 0;
+		virtual void addForce( const math::Vector3& rForce ) = 0;
 
 		/** Adds a force defined in the global reference frame, acting at a position defined
 			in the global reference frame.
 		*/
-		virtual void addForceAtPos( const Vector3& rForce, const Vector3& rPos ) = 0;
+		virtual void addForceAtPos( const math::Vector3& rForce, const math::Vector3& rPos ) = 0;
 
 		/** Adds a force defined in the global reference frame, acting at a position defined
 			in the local reference frame.
 		*/
-		virtual void addForceAtLocalPos( const Vector3& rForce, const Vector3& rPos ) = 0;
+		virtual void addForceAtLocalPos( const math::Vector3& rForce, const math::Vector3& rPos ) = 0;
 
 		/** Adds a force defined in the local reference frame.
 		*/
-		virtual void addLocalForce( const Vector3& rForce ) = 0;
+		virtual void addLocalForce( const math::Vector3& rForce ) = 0;
 
 		/** Adds a force defined in the local reference frame, acting at a position defined
 			in the local reference frame (relative to the actor the body object belongs to).
 		*/
-		virtual void addLocalForceAtLocalPos( const Vector3& rForce, const Vector3& rPos ) = 0;
+		virtual void addLocalForceAtLocalPos( const math::Vector3& rForce, const math::Vector3& rPos ) = 0;
 
 		/** Adds a force defined in the local reference frame, acting at a position defined
 			in the global reference frame.
 		*/
-		virtual void addLocalForceAtPos( const Vector3& rForce, const Vector3& rPos ) = 0;
+		virtual void addLocalForceAtPos( const math::Vector3& rForce, const math::Vector3& rPos ) = 0;
 
 		/** Adds a torque defined in the global reference frame.
 		*/
-		virtual void addTorque( const Vector3& rTorque ) = 0;
+		virtual void addTorque( const math::Vector3& rTorque ) = 0;
 
 		/** Adds a torque defined in the local reference frame.
 		*/
-		virtual void addLocalTorque( const Vector3& rTorque ) = 0;
+		virtual void addLocalTorque( const math::Vector3& rTorque ) = 0;
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IBody );
 
 }
 }
+
 #endif
+

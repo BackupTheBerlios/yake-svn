@@ -187,17 +187,23 @@ namespace complex {
 		YAKE_ASSERT( pTarget );
 		if (!pSource || !pTarget)
 			return 0;
-		ModelMovableLink* pLink = 0;
+
+		ModelMovableLink* pLink = NULL;
 		MovableLinkMap::iterator itFind = mMovableLinkMap.find( pSource );
-		if (itFind == mMovableLinkMap.end())
+		
+		if (itFind != mMovableLinkMap.end())
+		{
+			YAKE_LOG_INFORMATION( "It seems that link already exists. Trying to determine..." );
+			pLink = dynamic_cast<ModelMovableLink*>( itFind->second );
+		}
+		
+		if ( pLink == NULL )
 		{
 			pLink = new ModelMovableLink();
 			pLink->setSource( pSource );
 			mMovableLinkMap.insert( std::make_pair(pSource,pLink) );
 			mControllers.push_back( SharedPtr<IObjectController>(pLink) );
 		}
-		else
-			pLink = itFind->second;
 		
 		pLink->subscribeToPositionChanged( pTarget );
 		pLink->subscribeToOrientationChanged( pTarget );
@@ -206,13 +212,61 @@ namespace complex {
 	}
 
 	//-----------------------------------------------------
+	ModelMovableWorldLink* Model::addWorldLink( Movable* pSource, Movable* pTarget )
+	{
+		YAKE_ASSERT( pSource != NULL ).warning( "Source movable doesn't exist" );
+		YAKE_ASSERT( pTarget != NULL ).warning( "Target movable doesn't exist" );
+
+		if (!pSource || !pTarget)
+			return 0;
+
+		ModelMovableWorldLink* pLink = NULL;
+		MovableLinkMap::iterator itFind = mMovableLinkMap.find( pSource );
+		
+		if ( itFind != mMovableLinkMap.end() )
+		{
+			YAKE_LOG_INFORMATION( "It seems that link already exists. Trying to determine..." );
+			pLink = dynamic_cast<ModelMovableWorldLink*>( itFind->second );
+		}
+		
+		if ( pLink == NULL )
+		{
+			YAKE_LOG_INFORMATION( "This is new link. Creating." );
+
+			pLink = new ModelMovableWorldLink();
+			pLink->setSource( pSource );
+			mMovableLinkMap.insert( std::make_pair(pSource,pLink) );
+			mControllers.push_back( SharedPtr<IObjectController>(pLink) );
+
+			YAKE_LOG_INFORMATION( "Controller created." );
+		}
+		
+		YAKE_LOG_INFORMATION( "Subscribing to controller signals..." );
+
+		pLink->subscribeToPositionChanged( pTarget );
+		pLink->subscribeToOrientationChanged( pTarget );
+
+		YAKE_LOG_INFORMATION( "Done. Link setup." );
+		return pLink;
+	}
+
+	//-----------------------------------------------------
 	void Model::updatePhysics( real timeElapsed )
 	{
+	    // updating all body affectors applied to all physicals...
+	    PhysicalMap::iterator ph_end = mPhysicals.end();
+	    for( PhysicalMap::iterator ph = mPhysicals.begin(); ph != ph_end; ++ph )
+	    {
+		ph->second->updateAffectors( timeElapsed );
+	    }
 	}
 	
 	//-----------------------------------------------------
 	void Model::updateGraphics( real timeElapsed )
 	{
+		// FIXME this assumes model does have only graphics controllers!
+		// So should there be some separate updateControllers method?
+		//
 		for (CtrlrList::const_iterator it = mControllers.begin(); it != mControllers.end(); ++it)
 		{
 			(*it)->update( timeElapsed );
@@ -222,3 +276,4 @@ namespace complex {
 } // ns complex
 } // ns model
 } // ns yake
+

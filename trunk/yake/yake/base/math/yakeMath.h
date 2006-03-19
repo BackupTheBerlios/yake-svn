@@ -32,10 +32,10 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include "yake/base/yakePrerequisites.h"
 #endif
 // Yake
-#include "yakeRand.h"
+#include "yake/base/math/yakeRand.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -235,3 +235,4 @@ public:
 } // yake
 
 #endif // YAKE_BASE_MATH_MATH_H
+

@@ -27,7 +27,7 @@
 #ifndef YAKE_VEHICLE_MOUNTPOINT_H
 #define YAKE_VEHICLE_MOUNTPOINT_H
 
-#include "yakePrerequisites.h"
+#include "yapp/vehicle/yakePrerequisites.h"
 
 namespace yake {
 namespace vehicle {
@@ -72,20 +72,20 @@ namespace vehicle {
 		virtual bool isSuitableFor( const Mountable* mountable ) const;
 		void attach( Mountable* mountable );
 		void detach( Mountable* mountable );
-		void setDirection( const Vector3& dir );
-		Vector3 getDirection() const;
-		virtual void setOrientation( const Quaternion& );
-		virtual Quaternion getOrientation() const;
-		virtual void setPosition(const Vector3& rPosition );
-		virtual Vector3 getPosition() const;
-		Vector3 getDerivedPosition() const;
-		Quaternion getDerivedOrientation() const;
-		void lookAt(const Vector3&);
+		void setDirection( const math::Vector3& dir );
+		math::Vector3 getDirection() const;
+		virtual void setOrientation( const math::Quaternion& );
+		virtual math::Quaternion getOrientation() const;
+		virtual void setPosition(const math::Vector3& rPosition );
+		virtual math::Vector3 getPosition() const;
+		math::Vector3 getDerivedPosition() const;
+		math::Quaternion getDerivedOrientation() const;
+		void lookAt(const math::Vector3&);
 	private:
 		typedef Deque< Mountable* > MountablePtrList;
 		MountablePtrList	mMountables;
-		Quaternion			mOrientation;
-		Vector3				mPosition;
+		math::Quaternion			mOrientation;
+		math::Vector3				mPosition;
 		typedef Deque< std::pair<MountPoint*,bool> > MountPointList;
 		MountPointList		mChildren;
 		MountPoint*			mParent;
@@ -97,3 +97,4 @@ namespace vehicle {
 
 
 #endif
+

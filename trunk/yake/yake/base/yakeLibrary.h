@@ -66,7 +66,7 @@ private:
 } // base
 } // yake
 
-// todo plattform independent library extension?
+// todo platform independent library extension?
 // windows : ".dll"
 // linux : ".so"
 #define YAKE_USE_LIB( dllname ) \
@@ -74,3 +74,4 @@ private:
 	YAKE_ASSERT( pDynLib##dllname ).debug( "Out of memory." );
 
 #endif // YAKE_BASE_LIBRARY_H
+

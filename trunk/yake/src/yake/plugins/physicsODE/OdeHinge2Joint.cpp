@@ -55,7 +55,7 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	void OdeHinge2Joint::setAxis( size_t axisIndex, Vector3 const& rAxis )
+	void OdeHinge2Joint::setAxis( size_t axisIndex, const math::Vector3& rAxis )
 	{
 		YAKE_ASSERT( axisIndex < 2 ).error( "Hinge2 joint has only two axes! You are trying to set more..." );
 		
@@ -72,7 +72,7 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	void OdeHinge2Joint::setAnchor( size_t anchorIndex, Vector3 const& rAnchor )
+	void OdeHinge2Joint::setAnchor( size_t anchorIndex, const math::Vector3& rAnchor )
 	{
 		YAKE_ASSERT( anchorIndex < 1 ).error( "Hinge2 joint has only one anchor! You are trying to set more..." );
 		

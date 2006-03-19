@@ -73,7 +73,7 @@ namespace physics {
 
 	/** A directional constant acceleration affector. Actually it could be used for dynamic accelerations, too.
 	*/
-	class ConstantDirectionalAccelerationBodyAffector : public ConstantAccelerationBodyAffector<Vector3>
+	class ConstantDirectionalAccelerationBodyAffector : public ConstantAccelerationBodyAffector<math::Vector3>
 	{
 		YAKE_DECLARE_CONCRETE( ConstantDirectionalAccelerationBodyAffector, "yake.constant_directional_acceleration" )
 	public:
@@ -91,21 +91,20 @@ namespace physics {
 	{
 		YAKE_DECLARE_CONCRETE( BodyConstantSphericalAccelerationAffector, "yake.constant_spherical_acceleration" )
 	protected:
-		Vector3		mPoint;
+		math::Vector3		mPoint;
 	public:
-		BodyConstantSphericalAccelerationAffector( const Vector3 & point = Vector3::kZero, const real acc = 1. ) : 
+		BodyConstantSphericalAccelerationAffector( const math::Vector3 & point = math::Vector3::kZero, const real acc = 1. ) : 
 			mPoint( point ), 
 			ConstantAccelerationBodyAffector<real>( acc )
 		{ }
 
 		virtual void applyTo( IBody & rBody, const real timeElapsed )
 		{
-			Vector3 direction = rBody.getActor().getPosition() - mPoint;
+			math::Vector3 direction = rBody.getActor().getPosition() - mPoint;
 			direction.normalise();
 			rBody.addForce( direction * mAcceleration * rBody.getMass() );
 		}
 	};
-
 
 }
 }

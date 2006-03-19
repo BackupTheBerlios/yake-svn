@@ -109,7 +109,11 @@ namespace yake {
 				out << "  File: " << file << "@" << line << "\n";
 			msg_ = out.str();
 		}
-		const char* what() const
+		virtual ~RttiException() throw()
+		{
+		    // empty implementation. Required to avoid "looser throw specifier error".
+		}
+		const char* what() const throw ()
 		{ return msg_.c_str(); }
 	private:
 		std::string		msg_;
@@ -119,8 +123,10 @@ namespace yake {
 #define THROW_RTTI_LOC(MSG,LOC) \
 	throw RttiException(MSG,LOC,__FILE__,__LINE__)
 
+#if YAKE_COMPILER == COMPILER_MSVC
 #pragma warning(push)
 #pragma warning(disable: 4290) // C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+#endif
 	struct RttiClassMgr
 	{
 		// insert into existing hierarchy
@@ -131,13 +137,19 @@ namespace yake {
 		typedef std::map<std::string,RttiClass*> StringClassPtrMap;
 		StringClassPtrMap	classes_;
 	};
+#if YAKE_COMPILER == COMPILER_MSVC
 #pragma warning(pop)
-	inline RttiClass* RttiClassMgr::get(const std::string& clsName) const
+#endif
+	inline RttiClass* RttiClassMgr::get(const std::string& clsName) const throw ()
 	{
 		StringClassPtrMap::const_iterator it = classes_.find(clsName);
 		return (it == classes_.end()) ? 0 : it->second;
 	}
-	inline void RttiClassMgr::insert(RttiClass* cls)
+#if YAKE_COMPILER == COMPILER_MSVC
+#pragma warning(push)
+#pragma warning(disable: 4290) // C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+#endif
+	inline void RttiClassMgr::insert(RttiClass* cls) throw(yake::RttiException)
 	{
 		assert( cls );
 		if (!cls)
@@ -168,6 +180,9 @@ namespace yake {
 
 		// post-process
 	}
+#if YAKE_COMPILER == COMPILER_MSVC
+#pragma warning(pop)
+#endif
 	inline void RttiClass::add(const PropDef & propdef)
 	{
 		props_[ propdef.name() ] = propdef;

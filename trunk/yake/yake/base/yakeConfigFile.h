@@ -32,7 +32,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include <yake/base/yakePrerequisites.h>
 #endif
 
 //============================================================================
@@ -145,3 +145,4 @@ protected:
 } // yake
 
 #endif // YAKE_BASE_CONFIGFILE_H
+

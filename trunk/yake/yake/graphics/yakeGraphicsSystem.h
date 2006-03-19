@@ -99,3 +99,4 @@ namespace graphics {
 } // yake
 
 #endif // YAKE_GRAPHICSSYSTEM_H
+

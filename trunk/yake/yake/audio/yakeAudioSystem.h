@@ -75,14 +75,19 @@ namespace audio {
 	{
 	public:
 		virtual ~ISource() {}
-		virtual void setVelocity( const Vector3 & velocity ) = 0;
-		virtual Vector3 getVelocity() const = 0;
+		virtual void setVelocity( const math::Vector3 & velocity ) = 0;
+		virtual math::Vector3 getVelocity() const = 0;
 
 		virtual void setSoundData( ISoundData* pSoundData ) = 0;
 		//virtual void setSoundData( const String & resourceName ) = 0;
 		virtual void play() = 0;
 		virtual void stop() = 0;
 		virtual void pause() = 0;
+
+		virtual Vector3 getDerivedPosition() const
+		{ return this->getPosition(); }
+		virtual Quaternion getDerivedOrientation() const
+		{ return this->getOrientation(); }
 	};
 
 	/** A listener in a world.
@@ -91,8 +96,13 @@ namespace audio {
 	{
 	public:
 		virtual ~IListener() {}
-		virtual void setVelocity( const Vector3 & velocity ) = 0;
-		virtual Vector3 getVelocity() const = 0;
+		virtual void setVelocity( const math::Vector3 & velocity ) = 0;
+		virtual math::Vector3 getVelocity() const = 0;
+
+		virtual Vector3 getDerivedPosition() const
+		{ return this->getPosition(); }
+		virtual Quaternion getDerivedOrientation() const
+		{ return this->getOrientation(); }
 	};
 
 	/** Represents an environment in which an audio simulation takes place.

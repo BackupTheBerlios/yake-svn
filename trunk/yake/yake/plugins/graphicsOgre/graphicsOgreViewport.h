@@ -45,6 +45,10 @@ namespace ogre3d {
 
 		virtual void setDimensions( real left, real top, real width, real height );
 		virtual void setZ( int z );
+
+		virtual void setBackgroundColor( const math::Color& col );
+		virtual math::Color getBackgroundColor() const;
+
 	protected:
 		void killViewport();
 	protected:

@@ -39,6 +39,19 @@ import glob
 
 cc_flags = '-DGCC_3_1 -DEXT_HASH -DYAKE_DEBUG -DYAKE_DEBUG_BUILD'
 
+# optimization flags
+optimization_flags = ' -O3 '
+
+# debug flag. -g[Level]
+debug_flags = ' -g '
+
+# if you want to profile with GNU gprof
+profiler_flags = ' -pg '
+
+# if you want to test code coverage with GNU gcov
+code_coverage_flags = ' -fprofile-arcs -ftest-coverage '
+
+
 lib_includes = build.commonIncludes
 build_dir = build.commonPaths['ObjectDir']
 bin_build_dir = build.commonPaths['ProgramInstallDir']

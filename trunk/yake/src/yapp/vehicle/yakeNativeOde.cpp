@@ -59,10 +59,10 @@ namespace vehicle {
 	{
 		mVehicleTemplates.clear();
 	}
-	IVehicle* GenericVehicleSystem::create(const VehicleTemplate& tpl, physics::IWorld& PWorld)
+	IVehicle* GenericVehicleSystem::create(const VehicleTemplate& tpl, physics::IWorld& PWorld, model::Physical& physModel )
 	{
 		GenericVehicle* pV = new GenericVehicle();
-		pV->_create( tpl, PWorld );
+		pV->_create( tpl, PWorld, physModel );
 		return pV;
 	}
 	bool GenericVehicleSystem::loadTemplates(const String& fn)
@@ -96,13 +96,13 @@ namespace vehicle {
 	//		return 0;
 	//	return tpl->clone();
 	//}
-	IVehicle* GenericVehicleSystem::create(const String& tplId, physics::IWorld& PWorld)
+	IVehicle* GenericVehicleSystem::create(const String& tplId, physics::IWorld& PWorld, model::Physical& physModel)
 	{
 		const VehicleTemplate* tpl = getTemplate( tplId );
 		YAKE_ASSERT( tpl );
 		if (!tpl)
 			return 0;
-		return create(*tpl,PWorld);
+		return create(*tpl,PWorld,physModel);
 	}
 	void GenericVehicleSystem::_onVehicleTpl(vehicle::DotVehicleParser& parser, const String& tplId)
 	{
@@ -221,12 +221,12 @@ namespace vehicle {
 			return 0;
 		return itFind->second;
 	}
-	Vector3 GenericVehicle::getChassisPosition() const
+	math::Vector3 GenericVehicle::getChassisPosition() const
 	{
 		YAKE_ASSERT( mpChassis );
 		return mpChassis->getPosition();
 	}
-	Quaternion GenericVehicle::getChassisOrientation() const
+	math::Quaternion GenericVehicle::getChassisOrientation() const
 	{
 		YAKE_ASSERT( mpChassis );
 		return mpChassis->getOrientation();
@@ -236,6 +236,7 @@ namespace vehicle {
 		YAKE_ASSERT( mpChassis );
 		return mpChassis;
 	}
+	
 	void GenericVehicle::_createMountPoint(const String& id, const VehicleTemplate::MountPointTpl& mtPtTpl,MountPoint* parentMtPt)
 	{
 		MountPoint* thisMtPt = new GenericMountPoint();
@@ -266,19 +267,44 @@ namespace vehicle {
 			_createMountPoint( mptTplEntry.first, childMtPtTpl, thisMtPt );
 		}
 	}
-	void GenericVehicle::_create(const VehicleTemplate& tpl, physics::IWorld& PWorld )
+	void GenericVehicle::_create(const VehicleTemplate& tpl, physics::IWorld& PWorld, model::Physical& physModel )
 	{
-		// chassis
-		mpChassis = PWorld.createActor( physics::ACTOR_DYNAMIC );
-		mpChassis->setPosition( tpl.mChassis.mPosition );
-		//mpChassis->setOrientation( tpl.mChassis.mOrientation );
-		ConstDequeIterator< VehicleTemplate::ShapeTplList > itShapeTpl( tpl.mChassis.mChassisShapes );
-		while (itShapeTpl.hasMoreElements())
+		YAKE_LOG( "Creating vehicle from template..." );
+		if ( tpl.mChassis.mPhysicsBody != "" ) // i.e. chassis is defined as reference to physical body
 		{
-			mpChassis->createShape( *itShapeTpl.getNext() );
-		}
-		mpChassis->getBody().setMass( tpl.mChassis.mMass );
+		    YAKE_LOG( "External physical body found. Searching provided model for it..." );
 
+		    // searching for actor in provided model
+		    physics::IActorPtr actor = physModel.getActorByName( tpl.mChassis.mPhysicsBody );
+
+		    YAKE_ASSERT( actor != NULL ).error( "Actor '" + tpl.mChassis.mPhysicsBody 
+			    +  "' was not found in physical model! Are you sure you provided the right model???" );
+
+		    YAKE_LOG( "Found. OK." );
+		    // initial position is determined by body position
+		    mpChassis = actor;
+		}
+		else // chassis is defined in .vehicle itself
+		{
+		    YAKE_LOG( "External physical body not found. Looking for body definition in .vehicle file." );
+		    // chassis
+		    mpChassis = PWorld.createActor( physics::ACTOR_DYNAMIC );
+
+		    // adding chassis to physical model here...
+		    // TODO: naming convention for chassis. 
+		    // No more than one chassis per model now ;)
+		    physModel.addActor( mpChassis, "vehicle_chassis" );
+
+		    mpChassis->setPosition( tpl.mChassis.mPosition );
+		    //mpChassis->setOrientation( tpl.mChassis.mOrientation );
+		    ConstDequeIterator< VehicleTemplate::ShapeTplList > itShapeTpl( tpl.mChassis.mChassisShapes );
+		    while (itShapeTpl.hasMoreElements())
+		    {
+			mpChassis->createShape( *itShapeTpl.getNext() );
+		    }
+		    mpChassis->getBody().setMass( tpl.mChassis.mMass );
+		}
+		
 		// mount points
 		ConstDequeIterator< VehicleTemplate::MountPointTplList > itMP( tpl.mMountPoints );
 		while (itMP.hasMoreElements())
@@ -322,19 +348,33 @@ namespace vehicle {
 				if (thrusterTpl)
 				{
 					// thruster itself
-					GenericThruster* pEngine = new GenericThruster();
-					mEngines[ engineTplEntry.first ] = pEngine;
-					pEngine->setMinimumForce( thrusterTpl->minForce );
-					pEngine->setMaximumForce( thrusterTpl->maxForce );
-					pEngine->setThrottle(0.);
-					subscribeToUpdateEngineSimulation(
-						boost::bind( &GenericThruster::updateSimulation, pEngine, _1 ) );
+					IThruster* pThruster = NULL;
+					if ( thrusterTpl->type == "linear" )
+					{
+					    GenericLinearThruster* pEngine = new GenericLinearThruster();
+					    pThruster = pEngine; 
+					    mEngines[ engineTplEntry.first ] = pEngine;
+					    pEngine->setMinimumForce( thrusterTpl->minForce );
+					    pEngine->setMaximumForce( thrusterTpl->maxForce );
+					    pEngine->setInputSignal(0.);
+					    subscribeToUpdateEngineSimulation(
+						    boost::bind( &GenericLinearThruster::updateSimulation, pEngine, _1 ) );
+					}
+					else if ( thrusterTpl->type == "gain" )
+					{
+					    GenericThruster* pEngine = new GenericThruster();
+					    pThruster = pEngine; 
+					    mEngines[ engineTplEntry.first ] = pEngine;
+					    pEngine->setGain( thrusterTpl->gain );
+					    subscribeToUpdateEngineSimulation(
+						    boost::bind( &GenericThruster::updateSimulation, pEngine, _1 ) );
+					}
 
 					// the thruster is attached to a mount point, create wrapper:
 					if (thrusterTpl->mountPt != MPID_NO_PARENT)
 					{
 						GenericMountedThruster* pMounted = new GenericMountedThruster();
-						pMounted->setThruster( pEngine );
+						pMounted->setThruster( pThruster );
 
 						pMounted->addTarget( mpChassis->getBodyPtr() );
 
@@ -423,7 +463,7 @@ namespace vehicle {
 				{
 					pE = GWorld.createEntity("sphere_1d.mesh");
 					pSN->attachEntity( pE );
-					pSN->setScale( Vector3::kUnitScale * pShape->getPropertyReal("radius") );
+					pSN->setScale( math::Vector3::kUnitScale * pShape->getPropertyReal("radius") );
 				}
 				break;
 			default:
@@ -500,8 +540,8 @@ namespace vehicle {
 		{
 			mpJoint = PWorld.createJoint( physics::IJoint::DescHinge2( 
 				chassisObj, mpWheel, 
-				tpl.mOrientation * Vector3::kUnitY,
-				tpl.mOrientation * Vector3::kUnitX,
+				tpl.mOrientation * math::Vector3::kUnitY,
+				tpl.mOrientation * math::Vector3::kUnitX,
 				tpl.mPosition ) );
 
 			mpJoint->setSpring( tpl.mSuspensionSpring );
@@ -579,8 +619,8 @@ namespace vehicle {
 	{
 		YAKE_ASSERT( mpChassis );
 		YAKE_ASSERT( mpWheel );
-		const Vector3 chassisDir = mpChassis->getOrientation() * Vector3::kUnitZ;
-		const Vector3 wheelMovementDir = mpWheel->getBody().getLinearVelocity().normalisedCopy();
+		const math::Vector3 chassisDir = mpChassis->getOrientation() * math::Vector3::kUnitZ;
+		const math::Vector3 wheelMovementDir = mpWheel->getBody().getLinearVelocity().normalisedCopy();
 		mSkid = 1. - chassisDir.dotProduct( wheelMovementDir );
 		if (mSkid < 0)
 			mSkid = 0.;
@@ -589,35 +629,45 @@ namespace vehicle {
 	{
 		return mRadius;
 	}
-	Vector3 OdeWheel::getPosition() const
+	math::Vector3 OdeWheel::getPosition() const
 	{
 		YAKE_ASSERT( mpWheel );
 		return mpWheel->getPosition();
 	}
-	Quaternion OdeWheel::getOrientation() const
+	math::Vector3 OdeWheel::getDerivedPosition() const
+	{
+		YAKE_ASSERT( mpWheel );
+		return mpWheel->getDerivedPosition();
+	}
+	math::Quaternion OdeWheel::getOrientation() const
 	{
 		YAKE_ASSERT( mpWheel );
 		return mpWheel->getOrientation();
 	}
+	math::Quaternion OdeWheel::getDerivedOrientation() const
+	{
+		YAKE_ASSERT( mpWheel );
+		return mpWheel->getDerivedOrientation();
+	}
 	void OdeWheel::_applyDriveTq( const real tq )
 	{
 		//std::cout << "DTQ=" << tq << "\n";
-		//_applyTq( Vector3::kUnitX * tq );
+		//_applyTq( math::Vector3::kUnitX * tq );
 
 		if (mBrakeRatio > 0.01)
-			_applyBrakeTq( Vector3::kUnitX * mBrakeRatio * 1.5 );
+			_applyBrakeTq( math::Vector3::kUnitX * mBrakeRatio * 1.5 );
 
 		const real targetVel = tq < 0. ? -40 : 40;
 		_applyMotor( targetVel, - tq * 0.0075 );
 	}
-	void OdeWheel::_applyTq( const Vector3& torque )
+	void OdeWheel::_applyTq( const math::Vector3& torque )
 	{
 		mpWheel->getBody().addTorque( mpWheel->getOrientation() * torque );
 	}
-	void OdeWheel::_applyBrakeTq( const Vector3 & torque )
+	void OdeWheel::_applyBrakeTq( const math::Vector3 & torque )
 	{
-		Vector3 linVel = mpWheel->getBody().getLinearVelocity();
-		Vector3 dir = mpWheel->getOrientation() * Vector3::kUnitX;
+		math::Vector3 linVel = mpWheel->getBody().getLinearVelocity();
+		math::Vector3 dir = mpWheel->getOrientation() * math::Vector3::kUnitX;
 		if (dir.dotProduct(linVel) > 0)
 		{
 			std::cout << "BRK+\n";
@@ -650,20 +700,52 @@ namespace vehicle {
 	//-----------------------------------------------------
 	// Class: GenericThruster
 	//-----------------------------------------------------
-	GenericThruster::GenericThruster() : mThrottle(0)
+	GenericThruster::GenericThruster() : mVoltage( 0 ), mGain( 1.0 )
 	{
 	}
-	void GenericThruster::setThrottle( real throttle )
+	void GenericThruster::setInputSignal( real voltage )
 	{
-		mThrottle = (throttle < 0.) ? 0. : ((throttle > 1.) ? 1. : throttle);
+	    mVoltage = voltage;
 	}
-	real GenericThruster::getThrottle() const
+	real GenericThruster::getInputSignal() const
 	{
-		return mThrottle;
+	    return mVoltage;
 	}
 	void GenericThruster::updateSimulation( real timeElapsed )
 	{
-		setForce( getMinimumForce() + mThrottle * ( getMaximumForce() - getMinimumForce() ) );
+	   setForce( mVoltage * mGain ); 
+	}
+	void GenericThruster::setGain( real gain )
+	{
+	    mGain = gain;
+	}
+	real GenericThruster::getGain() const
+	{
+	    return mGain;
+	}
+	
+	//-----------------------------------------------------
+	// Class: GenericLinearThruster
+	//-----------------------------------------------------
+	GenericLinearThruster::GenericLinearThruster() : mVoltage( 0 )
+	{
+	}
+	void GenericLinearThruster::setInputSignal( real voltage )
+	{
+		mVoltage = voltage;
+	}
+	real GenericLinearThruster::getInputSignal() const
+	{
+		return mVoltage;
+	}
+	void GenericLinearThruster::updateSimulation( real timeElapsed )
+	{
+	    real abs_force = getMinimumForce() + math::Math::Abs( mVoltage ) * ( getMaximumForce() - getMinimumForce() );
+	    
+	    if ( abs_force > getMaximumForce() )
+		abs_force = getMaximumForce();
+	    
+	    setForce( math::Math::Sign( mVoltage )*abs_force );
 	}
 
 	//-----------------------------------------------------
@@ -675,19 +757,26 @@ namespace vehicle {
 	void GenericMountedThruster::onApplyToTargets()
 	{
 		YAKE_ASSERT(mThruster);
+
 		if (!mThruster)
 			return;
-		const MountPoint* mp = getMountPoint();
-		const Vector3 pos = mp ? mp->getDerivedPosition() : Vector3::kZero;
-		const Quaternion rot = mp ? mp->getDerivedOrientation() : Quaternion::kIdentity;
-		const Vector3 f = mThruster->getForce() * ( rot * -Vector3::kUnitZ );
 		
+		if ( mThruster->getForce() == 0 )
+		    return;
+
+		const MountPoint* mp = getMountPoint();
+		const math::Vector3 pos = mp ? mp->getDerivedPosition() : math::Vector3::kZero;
+		const math::Quaternion rot = mp ? mp->getDerivedOrientation() : math::Quaternion::kIdentity;
+		const math::Vector3 f = mThruster->getForce() * ( rot * -math::Vector3::kUnitZ );
+
 		ConstDequeIterator< BodyPtrList > itBody( mTargets );
 		while (itBody.hasMoreElements())
 		{
 			physics::IBody* pBody = itBody.getNext();
+			
 			pBody->addForceAtPos( f, pos );
 		}
 	}
 } // namespace vehicle
 } // namespace yake
+

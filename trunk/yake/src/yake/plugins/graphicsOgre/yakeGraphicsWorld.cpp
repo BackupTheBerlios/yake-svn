@@ -41,7 +41,7 @@
 #include <yake/plugins/graphicsOgre/graphicsOgreCore.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreParticleSystem.h>
 #include <yake/plugins/graphicsOgre/graphicsOgreGeometryAccess.h>
-#define YAKE_USE_OSM
+
 #ifdef YAKE_USE_OSM
 #include "OgreOSMScene.h"
 #endif
@@ -171,7 +171,12 @@ namespace ogre3d {
 	IParticleSystem* GraphicalWorld::createParticleSystem( const String& rPSTemplateName )
 	{
 		YAKE_ASSERT( msCore ).debug("need a core!");
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+		return new OgreParticleSystem( *msCore->getSceneMgr(), rPSTemplateName );
+#else
 		return new OgreParticleSystem( *msCore->getParticleSysMgr(), rPSTemplateName );
+#endif
 	}
 
 	//-----------------------------------------------------
@@ -251,7 +256,7 @@ namespace ogre3d {
 			if (contains(params,"tex_count"))
 				texCount = StringUtil::parseInt(params["tex_count"]);
 
-			Color colour(0.6f,0.6f,0.6f,1.0f);
+			math::Color colour(0.6f,0.6f,0.6f,1.0f);
 			if (contains(params,"colour.r"))
 				colour.r = StringUtil::parseReal(params["colour.r"]);
 			if (contains(params,"colour.g"))
@@ -354,7 +359,7 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	IEntity* GraphicalWorld::pickEntity(const Ray& ray)
+	IEntity* GraphicalWorld::pickEntity(const math::Ray& ray)
 	{
 		YAKE_ASSERT( msCore );
 

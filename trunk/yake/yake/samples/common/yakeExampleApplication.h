@@ -12,7 +12,7 @@
 #include <iostream>
 
 namespace yake {
-	using namespace base::templates;
+	using namespace yake::templates;
 namespace exapp {
 
 // todo: kick the plugin approach or combine it with class registry

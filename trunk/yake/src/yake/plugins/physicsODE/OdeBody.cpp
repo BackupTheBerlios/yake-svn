@@ -51,10 +51,12 @@ namespace physics {
 			mOdeBody->setForce( 0, 0, 0 );
 			mOdeBody->setLinearVel( 0, 0, 0 );
 			mOdeBody->setAngularVel( 0, 0, 0 );
+
 			dMassSetSphere( &mMass, 1, 1 );
-			setMass( 1 );
-			setPosition( Vector3(0,0,0) );
-			setOrientation( Quaternion::kIdentity );
+			mOdeBody->setMass( &mMass );
+
+			setPosition( math::Vector3(0,0,0) );
+			setOrientation( math::Quaternion::kIdentity );
 
 			mOdeWorld->_addBody( this );
 		}
@@ -76,7 +78,6 @@ namespace physics {
  		void OdeBody::setMass( real mass )
 		{
  			dMassAdjust( &mMass, mass );
- 			
 			mOdeBody->setMass( &mMass );
 		}
 		
@@ -94,49 +95,60 @@ namespace physics {
 		 */
 		void parseMassDesc( const IBody::MassDesc& desc, dMass* mass )
 		{
-			if ( const IBody::SphereMassDesc* sphereMassDesc = dynamic_cast<const IBody::SphereMassDesc*>( &desc ) )
+			if ( const IBody::SphereMassDesc* sphereMassDesc =
+				checked_cast<const IBody::SphereMassDesc*>( &desc ) )
 			{
 				if ( sphereMassDesc->qType == IBody::QT_DENSITY )
 					dMassSetSphere( mass, sphereMassDesc->quantity, sphereMassDesc->radius );
 				else
 					dMassSetSphereTotal( mass, sphereMassDesc->quantity, sphereMassDesc->radius );
 			}
-			else if ( const IBody::BoxMassDesc* boxMassDesc = dynamic_cast<const IBody::BoxMassDesc*>( &desc ) )
+			else if ( const IBody::BoxMassDesc* boxMassDesc = checked_cast<const IBody::BoxMassDesc*>( &desc ) )
 			{
 				if ( boxMassDesc->qType == IBody::QT_DENSITY )
-					dMassSetBox( mass, boxMassDesc->quantity, boxMassDesc->sizeX, boxMassDesc->sizeY, boxMassDesc->sizeZ );
+					dMassSetBox( mass, boxMassDesc->quantity, 
+						boxMassDesc->sizeX, boxMassDesc->sizeY, boxMassDesc->sizeZ );
 				else
-					dMassSetBoxTotal( mass, boxMassDesc->quantity, boxMassDesc->sizeX, boxMassDesc->sizeY, boxMassDesc->sizeZ );
+					dMassSetBoxTotal( mass, boxMassDesc->quantity, 
+						boxMassDesc->sizeX, boxMassDesc->sizeY, boxMassDesc->sizeZ );
 			}
-			else if ( const IBody::CapsuleMassDesc* capsuleMassDesc = dynamic_cast<const IBody::CapsuleMassDesc*>( &desc ) )
+			else if ( const IBody::CapsuleMassDesc* capsuleMassDesc = 
+				checked_cast<const IBody::CapsuleMassDesc*>( &desc ) )
 			{
 				if ( capsuleMassDesc->qType == IBody::QT_DENSITY )
 					dMassSetCappedCylinder( mass,
-												capsuleMassDesc->quantity,
-												2, 							// along Y axis
-												capsuleMassDesc->radius,
-												capsuleMassDesc->length );
+						capsuleMassDesc->quantity,
+						2, 							// along Y axis
+						capsuleMassDesc->radius,
+						capsuleMassDesc->length );
 				else
-					dMassSetCappedCylinderTotal( mass,
-												capsuleMassDesc->quantity,
-												2, 							// along Y axis
-												capsuleMassDesc->radius,
-												capsuleMassDesc->length );
+				    dMassSetCappedCylinderTotal( mass,
+					    capsuleMassDesc->quantity,
+					    2, 							// along Y axis
+					    capsuleMassDesc->radius,
+					    capsuleMassDesc->length );
 			}
-			else if ( const IBody::CylinderMassDesc* cylMassDesc = dynamic_cast<const IBody::CylinderMassDesc*>( &desc ) )
+			else if ( const IBody::CylinderMassDesc* cylMassDesc = 
+				checked_cast<const IBody::CylinderMassDesc*>( &desc ) )
 			{
 				if ( cylMassDesc->qType == IBody::QT_DENSITY )
 					dMassSetCylinder( mass,
-										cylMassDesc->quantity,
-										2,							// along Y axis
-										cylMassDesc->radius,
-										cylMassDesc->length );
+						cylMassDesc->quantity,
+						2,							// along Y axis
+						cylMassDesc->radius,
+						cylMassDesc->length );
 				else
 					dMassSetCylinderTotal( mass,
-										cylMassDesc->quantity,
-										2,							// along Y axis
-										cylMassDesc->radius,
-										cylMassDesc->length );
+						cylMassDesc->quantity,
+						2,							// along Y axis
+						cylMassDesc->radius,
+						cylMassDesc->length );
+			}
+			else if ( const IBody::MassDesc* massDesc = 
+				checked_cast<const IBody::MassDesc*>( &desc ) )
+			{
+			    // creating unit sphere
+			    dMassSetSphereTotal( mass, massDesc->quantity, 1 );
 			}
 			else
 			{
@@ -151,16 +163,16 @@ namespace physics {
 		{
 			const IShape::Desc* pShapeDesc = &( rShapeDesc );
 			
-			if ( const IShape::SphereDesc* pSphereDesc = dynamic_cast<const IShape::SphereDesc*>( pShapeDesc ) )
+			if ( const IShape::SphereDesc* pSphereDesc = checked_cast<const IShape::SphereDesc*>( pShapeDesc ) )
 			{
 				this->addMass( IBody::SphereMassDesc( pSphereDesc->radius, massOrDensity, pSphereDesc->position, qType ) );
 			}
-			else if ( const IShape::BoxDesc* pBoxDesc = dynamic_cast<const IShape::BoxDesc*>( pShapeDesc ) )
+			else if ( const IShape::BoxDesc* pBoxDesc = checked_cast<const IShape::BoxDesc*>( pShapeDesc ) )
 			{
 				this->addMass( IBody::BoxMassDesc( pBoxDesc->dimensions.x, pBoxDesc->dimensions.y, pBoxDesc->dimensions.z, massOrDensity,
 					pBoxDesc->position, qType ) );
 			}
-			else if ( const IShape::CapsuleDesc* pCapsuleDesc = dynamic_cast<const IShape::CapsuleDesc*>( pShapeDesc ) )
+			else if ( const IShape::CapsuleDesc* pCapsuleDesc = checked_cast<const IShape::CapsuleDesc*>( pShapeDesc ) )
 			{
 				this->addMass( IBody::CapsuleMassDesc( pCapsuleDesc->radius, pCapsuleDesc->height, massOrDensity, pCapsuleDesc->position, qType ) );
 			}
@@ -174,7 +186,6 @@ namespace physics {
 		void OdeBody::setMass( const MassDesc& rDesc )
 		{
 			parseMassDesc( rDesc, &mMass );
-			
 			mOdeBody->setMass( &mMass );
 		}
 		
@@ -195,7 +206,7 @@ namespace physics {
 		void OdeBody::addForce( const Force& force )
 		{
 			//@todo apply force over several time steps according to duration.
-			const Vector3 totalForce = force.force * force.duration;
+			const math::Vector3 totalForce = force.force * force.duration;
 			if (force.frameType == RF_GLOBAL)
 				mOdeBody->addForce( totalForce.x, totalForce.y, totalForce.z );
 			else
@@ -203,162 +214,113 @@ namespace physics {
 		}
 
 		//---------------------------------------------------
-		void OdeBody::addForce( Vector3 const& rForce )
+		void OdeBody::addForce( math::Vector3 const& rForce )
 		{
 			mOdeBody->addForce( rForce.x, rForce.y, rForce.z );
 		}
 		
 		//---------------------------------------------------
-		void OdeBody::addForceAtPos( Vector3 const& rForce, Vector3 const& rPos )
+		void OdeBody::addForceAtPos( math::Vector3 const& rForce, math::Vector3 const& rPos )
 		{
 			mOdeBody->addForceAtPos( rForce.x, rForce.y, rForce.z, rPos.x, rPos.y, rPos.z );
 		}
 		
 		//---------------------------------------------------
-		void OdeBody::addForceAtLocalPos( Vector3 const& rForce, Vector3 const& rPos )
+		void OdeBody::addForceAtLocalPos( math::Vector3 const& rForce, math::Vector3 const& rPos )
 		{
 			mOdeBody->addForceAtRelPos( rForce.x, rForce.y, rForce.z, rPos.x, rPos.y, rPos.z );
 		}
 
 		//---------------------------------------------------
-		void OdeBody::addLocalForce( Vector3 const& rForce )
+		void OdeBody::addLocalForce( math::Vector3 const& rForce )
 		{
 			mOdeBody->addRelForce( rForce.x, rForce.y, rForce.z );
 		}
 		
 		//---------------------------------------------------
-		void OdeBody::addLocalForceAtLocalPos( Vector3 const& rForce, Vector3 const& rPos )
+		void OdeBody::addLocalForceAtLocalPos( math::Vector3 const& rForce, math::Vector3 const& rPos )
 		{
 			mOdeBody->addRelForceAtRelPos( rForce.x, rForce.y, rForce.z, rPos.x, rPos.y, rPos.z );
 		}
 		
 		//---------------------------------------------------
-		void OdeBody::addLocalForceAtPos( Vector3 const& rForce, Vector3 const& rPos )
+		void OdeBody::addLocalForceAtPos( math::Vector3 const& rForce, math::Vector3 const& rPos )
 		{
 			mOdeBody->addRelForceAtPos( rForce.x, rForce.y, rForce.z, rPos.x, rPos.y, rPos.z );
 		}
 		
 		//---------------------------------------------------
-		void OdeBody::addTorque( Vector3 const& rTorque )
+		void OdeBody::addTorque( math::Vector3 const& rTorque )
 		{
 			mOdeBody->addTorque( rTorque.x, rTorque.y, rTorque.z );
 		}
 		
 		//---------------------------------------------------
-		void OdeBody::addLocalTorque( Vector3 const& rTorque )
+		void OdeBody::addLocalTorque( math::Vector3 const& rTorque )
 		{
 			mOdeBody->addRelTorque( rTorque.x, rTorque.y, rTorque.z );
 		}
 		
 		//---------------------------------------------------
-		void OdeBody::setLinearVelocity( Vector3 const& rVelocity )
+		void OdeBody::setLinearVelocity( math::Vector3 const& rVelocity )
 		{
 			mOdeBody->setLinearVel( rVelocity.x, rVelocity.y, rVelocity.z );
 		}
 		
 		//---------------------------------------------------
-		Vector3 OdeBody::getLinearVelocity() const
+		math::Vector3 OdeBody::getLinearVelocity() const
 		{
 			const dReal* v = mOdeBody->getLinearVel();
-			return Vector3( real(v[0]), real(v[1]), real(v[2]) );
+			return math::Vector3( static_cast<real>(v[0]), static_cast<real>(v[1]), static_cast<real>(v[2]) );
 		}
 		
 		//---------------------------------------------------
-		void OdeBody::setAngularVelocity( Vector3 const& rVelocity)
+		void OdeBody::setAngularVelocity( math::Vector3 const& rVelocity)
 		{
 			mOdeBody->setAngularVel( rVelocity.x, rVelocity.y, rVelocity.z );
 		}
 		
 		//---------------------------------------------------
-		Vector3 OdeBody::getAngularVelocity() const
+		math::Vector3 OdeBody::getAngularVelocity() const
 		{
 			const dReal* v = mOdeBody->getAngularVel();
-			return Vector3( real(v[0]), real(v[1]), real(v[2]) );
+			return math::Vector3( static_cast<real>(v[0]), static_cast<real>(v[1]), static_cast<real>(v[2]) );
 		}
 
 		//---------------------------------------------------
-		void OdeBody::setPosition(  Vector3 const& rPosition )
+		void OdeBody::setPosition( const math::Vector3& rPosition )
 		{
 			mOdeBody->setPosition( rPosition.x, rPosition.y, rPosition.z );
 		}
 		
 		//---------------------------------------------------
-		Vector3 OdeBody::getPosition() const
+		math::Vector3 OdeBody::getPosition() const
 		{
 			const dReal* pos = mOdeBody->getPosition();
-			return Vector3( real(pos[0]), real(pos[1]), real(pos[2]) );
+
+			return math::Vector3( static_cast<real>(pos[0]), 
+				static_cast<real>(pos[1]), 
+				static_cast<real>(pos[2]) );
 		}
 		
 		//---------------------------------------------------
-		void OdeBody::setOrientation( Quaternion const& rOrientation )
+		void OdeBody::setOrientation( const math::Quaternion& rOrientation )
 		{
 			dQuaternion q = { rOrientation.w, rOrientation.x, rOrientation.y, rOrientation.z };
 			mOdeBody->setQuaternion( q );
 		}
 		
 		//---------------------------------------------------
-		Quaternion OdeBody::getOrientation() const
+		math::Quaternion OdeBody::getOrientation() const
 		{
 			const dReal* q = mOdeBody->getQuaternion();
-			return Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) );
+
+			return math::Quaternion( static_cast<real>(q[0]), 
+				static_cast<real>(q[1]), 
+				static_cast<real>(q[2]), 
+				static_cast<real>(q[3]) );
 		}
 		
-		
-// 		//---------------------------------------------------
-// 		void OdeBody::translateMass( const Vector3 & d )
-// 		{
-// 			dMassTranslate(&mMass, d.x, d.y, d.z);
-// 		}
-// 
-// 		//-----------------------------------------------------
-// 		IBody::MassType OdeBody::getType() const
-// 		{
-// 			return mMassType;
-// 		}
-// 
-// 		//-----------------------------------------------------
-// 		void OdeBody::setMassBox(real lx, real ly, real lz, real density)
-// 		{
-// 			mMassType = MT_BOX;
-// 			dMassSetBox( &mMass, density, lx, ly, lz );
-// 			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-// 			mOdeBody->setMass( &mMass );
-// 		}
-// 
-// 		//-----------------------------------------------------
-// 		void OdeBody::setMassSphere(real r, real density)
-// 		{
-// 			mMassType = MT_SPHERE;
-// 			dMassSetSphere( &mMass, density, r );
-// 			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-// 			mOdeBody->setMass( &mMass );
-// 		}
-// 
-// 		//-----------------------------------------------------
-// 		Vector3 OdeBody::getTorque() const
-// 		{
-// 			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-// 			const dReal * torque = mOdeBody->getTorque();
-// 			return Vector3(torque[0], torque[1], torque[2]);
-// 		}
-// 
-// 		//-----------------------------------------------------
-// 		void OdeBody::setEnabled( bool enabled )
-// 		{
-// 			YAKE_ASSERT( mOdeBody ).error("Need a body!");
-// 			if (enabled)
-// 				mOdeBody->enable();
-// 			else
-// 				mOdeBody->disable();
-// 		}
-// 
-// 		//-----------------------------------------------------
-// 		OdeWorld* OdeBody::_getWorld() const
-// 		{
-// 			YAKE_ASSERT( mWorld ).error("Need a world!");
-// 			return mWorld;
-// 		}
-// 
 		//-----------------------------------------------------
 		dBody* OdeBody::_getOdeBody() const
 		{
@@ -367,3 +329,4 @@ namespace physics {
 
 } // physics
 } // yake
+

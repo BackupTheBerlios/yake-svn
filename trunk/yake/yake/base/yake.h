@@ -54,3 +54,4 @@ const Version compiletime ( 0, 3, 0 );
 } // yake
 
 #endif // YAKE_BASE_YAKE_H
+

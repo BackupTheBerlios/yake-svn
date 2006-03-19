@@ -39,6 +39,10 @@ namespace model {
 
 		// create actor
 		physics::IActorPtr pDynActor = physicalWorld_->createActor( physics::ACTOR_DYNAMIC );
+
+		// we need to zero out the mass..
+		pDynActor->getBodyPtr()->setMass( 0 );
+
 		YAKE_ASSERT( pDynActor != NULL ).error( "Failed to create actor!" );
 
 		// set transform. TODO what about scale?
@@ -75,6 +79,8 @@ namespace model {
 		}
 		else
 		{
+			YAKE_LOG( "XODE listener: geom parent not found... creating static actor. " );
+		    
 			// create static actor
 			parentActor = physicalWorld_->createActor( physics::ACTOR_STATIC );
 
@@ -175,10 +181,11 @@ namespace model {
 
 			// search for connected actors
 
-			YAKE_LOG( "XODE listener: searching for actors [0]: " + desc.parentName_ + ", [1]: " + desc.otherBody_ );
+			YAKE_LOG( "XODE listener: processing " + desc.name_ + " ... " );
+			YAKE_LOG( "XODE listener: searching for actors [0]: " + desc.body1_ + ", [1]: " + desc.body2_ );
 
-			ActorMap::iterator actor0 = actors_.find( desc.parentName_ );
-			ActorMap::iterator actor1 = actors_.find( desc.otherBody_ );
+			ActorMap::iterator actor0 = actors_.find( desc.body1_ );
+			ActorMap::iterator actor1 = actors_.find( desc.body2_ );
 
 			if ( actor0 == actors_.end() || actor1 == actors_.end() )
 			{
@@ -204,3 +211,4 @@ namespace model {
 
 } // model
 } // yake
+

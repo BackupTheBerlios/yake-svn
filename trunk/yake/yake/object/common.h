@@ -48,10 +48,6 @@ namespace OBJECTS_NAMESPACE {
 
 	/** Common types */
 
-	typedef unsigned __int16 uint16;
-	typedef unsigned __int32 uint32;
-	typedef unsigned __int8 uint8;
-
 	enum ResultCode
 	{
 		RC_OK,
@@ -82,7 +78,7 @@ namespace util {
 		@return true if element was erased, false if element couldn't be found in the container.
 	*/
 	template<typename T>
-		bool safeErase( T& container, typename const T::value_type value)
+		bool safeErase( T& container, const typename T::value_type value)
 	{
 		typename T::iterator it = std::find(container.begin(), container.end(), value);
 		if (it == container.end())
@@ -94,7 +90,7 @@ namespace util {
 		@return true if element was found in the container, false if not.
 	*/
 	template<typename T>
-		bool contains( const T& container, typename const T::value_type& value)
+		bool contains( const T& container, const typename T::value_type& value)
 	{
 		return (container.end() != std::find(container.begin(), container.end(), value));
 	}
@@ -102,7 +98,7 @@ namespace util {
 		@return true if element was found in the container, false if not.
 	*/
 	template<typename T>
-		bool map_contains( const T& container, typename const T::key_type key)
+		bool map_contains( const T& container, const typename T::key_type key)
 	{
 		return (container.end() != container.find(key));
 	}
@@ -111,3 +107,4 @@ namespace util {
 } // namespace yake
 
 #endif
+

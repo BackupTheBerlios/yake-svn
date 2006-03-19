@@ -25,6 +25,7 @@
    ------------------------------------------------------------------------------------
 */
 #include <yapp/raf/pch.h>
+#include <yapp/raf/yakePrerequisites.h>
 #include <yapp/raf/yakeApplicationState.h>
 #include <yapp/raf/yakeApplication.h>
 #if YAKE_RAF_USES_CEGUI == 1
@@ -42,7 +43,6 @@
 namespace yake {
 namespace raf {
 
-	//
 	template<class SystemType>
 		SystemType* findSystem(AssocVector<String,SharedPtr<SystemType> >& systems, const String& name)
 	{
@@ -68,9 +68,9 @@ namespace raf {
 			SharedPtr<SystemType> pSys;
 			try {
 				if (sysName.empty())
-					pSys = create_default<SystemType>();
+					pSys = yake::templates::create_default<SystemType>();
 				else
-					pSys = create<SystemType>( sysName );
+					pSys = yake::templates::create<SystemType>( sysName );
 			}
 			catch (yake::Exception& e)
 			{
@@ -172,7 +172,7 @@ namespace raf {
 #if YAKE_RAF_USES_CEGUI == 1
 	void Application::initCEGUI()
 	{
-		const String file = "ceguiOgreRendererAdapter";
+		const String file = "CEGUIOgreAdapter";
 		yake::base::Library* pDynLib = new yake::base::Library( file ); //@FIXME. MEMORY LEAK.
 		YAKE_ASSERT( pDynLib ).debug( "Out of memory" );
 
@@ -486,3 +486,4 @@ namespace raf {
 
 } // namespace raf
 } // namespace yake
+

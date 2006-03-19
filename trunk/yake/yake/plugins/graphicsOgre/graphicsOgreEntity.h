@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright © 2004 The YAKE Team
+   Copyright  2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -47,6 +47,8 @@ namespace ogre3d {
 		virtual void setMaterial( const String& materialName );
 		virtual void setSubEntityMaterial( const String& subEntity, const String& materialName );
 		virtual void setCastsShadow( bool castsShadow );
+		
+		virtual void setRenderDetail( SceneDetailLevel sdl );
 
 		Ogre::Entity* getEntity_() const
 		{ return mEntity; }
@@ -60,3 +62,4 @@ namespace ogre3d {
 }
 
 #endif
+

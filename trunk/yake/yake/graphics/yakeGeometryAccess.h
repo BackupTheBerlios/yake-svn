@@ -62,15 +62,15 @@ namespace graphics {
 
 		virtual bool lockPositions( uint32 start, uint32 count, bool bRead = false ) = 0;
 		virtual bool unlockPositions() = 0;
-		virtual bool setPosition( uint32 index, const Vector3 & position ) = 0;
+		virtual bool setPosition( uint32 index, const math::Vector3 & position ) = 0;
 
 		virtual bool lockTexCoords( uint16 set, uint32 start, uint32 count, bool bRead = false ) = 0;
 		virtual bool unlockTexCoords( uint16 set ) = 0;
-		virtual bool setTexCoord( uint16 set, uint16 index, const Vector3 & uv ) = 0;
+		virtual bool setTexCoord( uint16 set, uint16 index, const math::Vector3 & uv ) = 0;
 
 		virtual bool lockColours( uint32 start, uint32 count, bool bRead = false ) = 0;
 		virtual bool unlockColours() = 0;
-		virtual bool setColour( uint32 index, const Color & colour ) = 0;
+		virtual bool setColour( uint32 index, const math::Color & colour ) = 0;
 
 		virtual bool lockIndices( uint32 start, uint32 count ) = 0;
 		virtual bool setIndex( uint32 index, uint32 value ) = 0;
@@ -94,19 +94,19 @@ namespace graphics {
 
 		virtual bool lockPositions( uint32 start, uint32 count, bool bRead = false ) = 0;
 		virtual bool unlockPositions() = 0;
-		virtual bool setPosition( uint32 index, const Vector3 & position ) = 0;
+		virtual bool setPosition( uint32 index, const math::Vector3 & position ) = 0;
 
 		virtual bool lockNormals( uint32 start, uint32 count, bool bRead = false ) = 0;
 		virtual bool unlockNormals() = 0;
-		virtual bool setNormal( uint32 index, const Vector3 & normal ) = 0;
+		virtual bool setNormal( uint32 index, const math::Vector3 & normal ) = 0;
 
 		virtual bool lockTexCoords( uint16 set, uint32 start, uint32 count, bool bRead = false ) = 0;
 		virtual bool unlockTexCoords( uint16 set ) = 0;
-		virtual bool setTexCoord( uint16 set, uint16 index, const Vector3 & uv ) = 0;
+		virtual bool setTexCoord( uint16 set, uint16 index, const math::Vector3 & uv ) = 0;
 
 		virtual bool lockColours( uint32 start, uint32 count, bool bRead = false ) = 0;
 		virtual bool unlockColours() = 0;
-		virtual bool setColour( uint32 index, const Color & colour ) = 0;
+		virtual bool setColour( uint32 index, const math::Color& colour ) = 0;
 
 		virtual bool lockIndices( uint32 start, uint32 count ) = 0;
 		virtual bool setIndex( uint32 index, uint32 value ) = 0;

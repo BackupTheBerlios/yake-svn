@@ -45,13 +45,21 @@ namespace physics {
 		virtual void onAddShape(IShape* pShape);
 	};
 
+	/** Structure describes collision event between two actors.
+	 * Respective collided shapes are supplied.
+	 */
 	struct ActorCollisionInfo
 	{
 		IActor*	pThis;
+		IShape* pThisShape_;
+
 		IActor*	pOther;
-		ActorCollisionInfo( IActor* pThisActor = 0, IActor* pOtherActor = 0) :
-			pThis( pThisActor ),
-			pOther( pOtherActor )
+		IShape* pOtherShape_;
+
+		ActorCollisionInfo( IActor* pThisActor = 0, IShape* pThisShape = 0, 
+				    IActor* pOtherActor = 0, IShape* pOtherShape = 0 ) :
+			pThis( pThisActor ), pThisShape_( pThisShape ),
+			pOther( pOtherActor ), pOtherShape_( pOtherShape )
 		{}
 	};
 
@@ -84,20 +92,22 @@ namespace physics {
 		virtual IBody* getBodyPtr() const = 0;
 		virtual IBody& getBody() const = 0;
 
-		virtual void setPosition(const Vector3& position) = 0;
-		virtual Vector3 getPosition() const = 0;
+		// inherited from yake::Movable
+	//	virtual void setPosition(const math::Vector3& position) = 0;
+	//	virtual math::Vector3 getPosition() const = 0;
 
-		virtual void setOrientation( const Quaternion & rkOrientation ) = 0;
-		virtual Quaternion getOrientation() const = 0;
+	//	virtual void setOrientation( const math::Quaternion & rkOrientation ) = 0;
+	//	virtual math::Quaternion getOrientation() const = 0;
 
 		virtual void setEnabled(const bool enabled) = 0;
 		virtual bool isEnabled() const = 0;
 
-		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(ActorCollisionInfo&), CollisionEntered )
-		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(ActorCollisionInfo&), CollisionExited )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(const ActorCollisionInfo&), CollisionEntered )
+		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(const ActorCollisionInfo&), CollisionExited )
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IActor );
 
 }
 }
 #endif
+

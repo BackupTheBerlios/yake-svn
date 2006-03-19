@@ -69,7 +69,7 @@ private:
 		graphics::ISceneNode* pSN = getGraphicalWorld()->createSceneNode();
 		graphics::IEntity* pE = getGraphicalWorld()->createEntity("sphere_d1.mesh");
 		pSN->attachEntity( pE );
-		const Vector3 scale = Vector3::kUnitScale * mVehicle->getWheelInterface(wheelId)->getRadius();
+		const math::Vector3 scale = math::Vector3::kUnitScale * mVehicle->getWheelInterface(wheelId)->getRadius();
 		pSN->setScale( scale );
 		mComplex->addLink( mVehicle->getWheelInterface(wheelId), pSN );
 	}
@@ -82,13 +82,13 @@ protected:
 		// create a light
 		graphics::ILight* pLight = getGraphicalWorld()->createLight();
 		pLight->setType( graphics::ILight::LT_DIRECTIONAL );
-		pLight->setDirection( Vector3(0,-1,1) );
+		pLight->setDirection( math::Vector3(0,-1,1) );
 		getGraphicalWorld()->createSceneNode("lightnode0")->attachLight( pLight );
 
 		// position camera and look at the razor
 		getDefaultCamera()->setNearClipDistance( 1 );
-		getDefaultCamera()->setFixedYawAxis(Vector3::kUnitY);
-		getDefaultCamera()->setPosition(Vector3(0,0,-40));
+		getDefaultCamera()->setFixedYawAxis(math::Vector3::kUnitY);
+		getDefaultCamera()->setPosition(math::Vector3(0,0,-40));
 
 		// create ground
 		mGround = new model::complex::Model();
@@ -98,23 +98,32 @@ protected:
 			graphics::IEntity* pGroundE = getGraphicalWorld()->createEntity("plane_1x1.mesh");
 			pGroundE->setMaterial("box");
 			pGroundSN->attachEntity( pGroundE );
-			pGroundSN->setScale( Vector3(200,1,200) );
-			pGroundSN->setPosition( Vector3(0,-10,0) );
+			pGroundSN->setScale( math::Vector3(200,1,200) );
+			pGroundSN->setPosition( math::Vector3(0,-10,0) );
 
 			model::Graphical* pG = new model::Graphical();
 			pG->addSceneNode( pGroundSN );
 			mGround->addGraphical( pG );
 
-			getPhysicalWorld()->setGlobalGravity( Vector3( 0, -9.81, 0 ) ); 
+			getPhysicalWorld()->setGlobalGravity( math::Vector3( 0, -9.81, 0 ) ); 
 
 			// physical
 			physics::IActorPtr pGroundPlane = getPhysicalWorld()->createActor( physics::ACTOR_STATIC );
-			pGroundPlane->createShape( physics::IShape::PlaneDesc( Vector3(0,1,0), -10 ) );
+			pGroundPlane->createShape( physics::IShape::PlaneDesc( math::Vector3(0,1,0), -10 ) );
 
 			model::Physical* pP = new model::Physical();
 			pP->addActor( pGroundPlane, "groundPlane" );
 			mGround->addPhysical( pP );
 		}
+
+		// create container (e.g. for graphical objects and links)
+		mComplex = new model::complex::Model();
+
+		model::Graphical* pG = new model::Graphical();
+		model::Physical* pPh = new model::Physical;
+
+		mComplex->addGraphical( SharedPtr<model::Graphical>(pG) );
+		mComplex->addPhysical( SharedPtr<model::Physical>(pPh) );
 
 		// vehicle
 		SharedPtr<vehicle::IVehicleSystem> pVS = //create<vehicle::IVehicleSystem>("generic");
@@ -127,20 +136,20 @@ protected:
 
 		vehicle::VehicleTemplate tpl;
 		tpl.mChassis.mChassisShapes.push_back(
-			new physics::IShape::BoxDesc(Vector3(1,1,2)) );
+			new physics::IShape::BoxDesc(math::Vector3(1,1,2)) );
 		// mount points:
 		// mount point for left thruster
 		tpl.mMountPoints["left"] = 
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(7,0,0), Vector3(1,0,0) );
+			vehicle::VehicleTemplate::MountPointTpl( math::Vector3(7,0,0), math::Vector3(1,0,0) );
 		// mount point for right thruster
 		tpl.mMountPoints["right"] = 
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(-7,0,0), Vector3(-1,0,0) );
+			vehicle::VehicleTemplate::MountPointTpl( math::Vector3(-7,0,0), math::Vector3(-1,0,0) );
 		// mount point for rear thruster
 		tpl.mMountPoints["rear"] = 
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(0,0,-8), Vector3(0,0,-1) );
+			vehicle::VehicleTemplate::MountPointTpl( math::Vector3(0,0,-8), math::Vector3(0,0,-1) );
 		// mount point for front thruster
 		tpl.mMountPoints["front"] = 
-			vehicle::VehicleTemplate::MountPointTpl( Vector3(0,0,7), Vector3(0,0,1) );
+			vehicle::VehicleTemplate::MountPointTpl( math::Vector3(0,0,7), math::Vector3(0,0,1) );
 		// thrusters:
 		tpl.mEngines["left"] = new vehicle::VehicleTemplate::ThrusterTpl(0.,10.,"left");
 		tpl.mEngines["right"] = new vehicle::VehicleTemplate::ThrusterTpl(0.,10.,"right");
@@ -153,19 +162,14 @@ protected:
 		// e.g.: vehicle::VehicleTemplate* tpl = pVS->getTemplate("jet");
 
 		// instantiate
-		mVehicle = pVS->create("jet", *getPhysicalWorld() );
+		mVehicle = pVS->create( "jet", *getPhysicalWorld(), *pPh );
 #endif
-
-		// create container (e.g. for graphical objects and links)
-		mComplex = new model::complex::Model();
-		model::Graphical* pG = new model::Graphical();
-		mComplex->addGraphical( SharedPtr<model::Graphical>(pG) );
 
 		// create visuals
 		// - ship body
 		graphics::ISceneNode* pSN = getGraphicalWorld()->createSceneNode( "root" );
 		pSN->attachEntity( getGraphicalWorld()->createEntity("razor.mesh") );
-		pSN->setScale( Vector3::kUnitScale * razorMeshScale );
+		pSN->setScale( math::Vector3::kUnitScale * razorMeshScale );
 		pG->addSceneNode(pSN);
 
 		YAKE_LOG( "Creating thruster visuals" );
@@ -175,6 +179,7 @@ protected:
 		_createThrusterVisual( "front", "backward", *pSN );
 		_createThrusterVisual( "rear", "forward", *pSN );
 		_createThrusterVisual( "bottom", "upward", *pSN );
+		_createThrusterVisual( "top", "downward", *pSN );
 
 		// - wheel visuals
 		if (mVehicle->getWheelInterface("frontWheel"))
@@ -235,6 +240,10 @@ protected:
 		mActionMap.reg( ACTIONID_UP,
 			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_PGUP, KAM_CONTINUOUS ) );
 		mActionMap.subscribeToActionId( ACTIONID_UP, boost::bind(&TheMainState::onUp,this) );
+
+		mActionMap.reg( ACTIONID_DOWN,
+			new input::KeyboardActionCondition( getApp().getKeyboard(), KC_PGDOWN, KAM_CONTINUOUS ) );
+		mActionMap.subscribeToActionId( ACTIONID_DOWN, boost::bind(&TheMainState::onDown,this) );
 	}
 
 	virtual void onExit()
@@ -250,7 +259,7 @@ protected:
 		while (itEngine.hasMoreElements())
 		{
 			vehicle::IEngine* pEngine = itEngine.getNext();
-			pEngine->setThrottle( pEngine->getThrottle() - timeElapsed * 1.7 );
+			pEngine->setInputSignal( pEngine->getInputSignal() - timeElapsed * 1.7 );
 		}
 
 		real steering0 = 0;
@@ -260,15 +269,17 @@ protected:
 		{
 			const input::ActionId activeId = itAction.getNext();
 			if (activeId == input::ACTIONID_STRAFE_LEFT)
-				mVehicle->getEngineInterface("right")->setThrottle(1.);
+				mVehicle->getEngineInterface("right")->setInputSignal(1.);
 			else if (activeId == input::ACTIONID_STRAFE_RIGHT)
-				mVehicle->getEngineInterface("left")->setThrottle(1.);
+				mVehicle->getEngineInterface("left")->setInputSignal(1.);
 			else if (activeId == input::ACTIONID_FORWARD)
-				mVehicle->getEngineInterface("forward")->setThrottle(1.);
+				mVehicle->getEngineInterface("forward")->setInputSignal(1.);
 			else if (activeId == input::ACTIONID_REVERSE)
-				mVehicle->getEngineInterface("backward")->setThrottle(1.);
+				mVehicle->getEngineInterface("backward")->setInputSignal(1.);
 			else if (activeId == input::ACTIONID_UP)
-				mVehicle->getEngineInterface("upward")->setThrottle(1.);
+				mVehicle->getEngineInterface("upward")->setInputSignal(1.);
+			else if (activeId == input::ACTIONID_DOWN)
+				mVehicle->getEngineInterface("downward")->setInputSignal(1.);
 			else if (activeId == input::ACTIONID_LEFT)
 				steering0 -= 0.3;
 			else if (activeId == input::ACTIONID_RIGHT)
@@ -276,12 +287,13 @@ protected:
 		}
 		mVehicle->setSteering( 0, steering0 );
 
-		mVehicle->updateSimulation( timeElapsed );
+		//mVehicle->updateSimulation( timeElapsed );
 		mComplex->updatePhysics( timeElapsed );
 
 		_updateThrusterPs();
 		getDefaultCamera()->lookAt(mVehicle->getChassisPosition());
 		mComplex->updateGraphics( timeElapsed );
+		//YAKE_LOG_INFORMATION( String( "pos: " ) << mVehicle->getChassisPosition() );
 
 		mActiveActions.clear();
 	}
@@ -299,6 +311,8 @@ protected:
 	{ mActiveActions.insert( input::ACTIONID_REVERSE ); }
 	void onUp()
 	{ mActiveActions.insert( input::ACTIONID_UP ); }
+	void onDown()
+	{ mActiveActions.insert( input::ACTIONID_DOWN ); }
 	void onFrontWheelLeft()
 	{ mActiveActions.insert( input::ACTIONID_LEFT ); }
 	void onFrontWheelRight()
@@ -320,7 +334,7 @@ private:
 			std::pair<String,graphics::IParticleSystem*> p = itM.getNext();
 			const String mtPtId = p.first;
 			graphics::IParticleSystem* ps = p.second;
-			const real throttle = mVehicle->getEngineInterface(mtPtId)->getThrottle();
+			const real throttle = mVehicle->getEngineInterface(mtPtId)->getInputSignal();
 
 			real rate = throttle * mEmitterEmissionRate[ mtPtId ];
 			ps->setEmissionRate( 0, rate );

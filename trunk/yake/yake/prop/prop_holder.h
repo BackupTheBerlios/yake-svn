@@ -1,7 +1,8 @@
 #ifndef YAKE_PROP_HOLDER_H
 #define YAKE_PROP_HOLDER_H
 
-#include "prerequisites.h"
+#include "yake/prop/prerequisites.h"
+#include "yake/prop/rtti_class.h"
 #include <iostream> // std::cout for warnings
 
 namespace yake {
@@ -22,7 +23,7 @@ namespace yake {
 		template<typename T_value>
 		bool getValue(const std::string& name, T_value& retValue) const
 		{
-			StringPropPtrMap::const_iterator it = props_.find(name);
+			typename StringPropPtrMap::const_iterator it = props_.find(name);
 			if (it == props_.end())
 				return false;
 			assert( it->second );
@@ -31,7 +32,7 @@ namespace yake {
 		template<typename T_value>
 		bool setValue(const std::string& name, const T_value& value)
 		{
-			StringPropPtrMap::iterator it = props_.find(name);
+			typename StringPropPtrMap::iterator it = props_.find(name);
 			if (it == props_.end())
 				return false;
 			assert( it->second );
@@ -52,14 +53,14 @@ namespace yake {
 	private:
 		void initProps(const RttiClass& cls, StringPropPtrMap& props)
 		{
-			const RttiClass::ParentClassList& parentClsList = cls.getParents();
-			RttiClass::ParentClassList::const_iterator itClsEnd = parentClsList.end();
-			for (RttiClass::ParentClassList::const_iterator itCls = parentClsList.begin(); itCls != itClsEnd; ++itCls)
+			const typename RttiClass::ParentClassList& parentClsList = cls.getParents();
+			typename RttiClass::ParentClassList::const_iterator itClsEnd = parentClsList.end();
+			for ( typename RttiClass::ParentClassList::const_iterator itCls = parentClsList.begin(); itCls != itClsEnd; ++itCls)
 				initProps(**itCls, props);
 
 			const PropDefMap& defs = cls.getPropDefs();
-			PropDefMap::const_iterator itDefEnd = defs.end();
-			for (PropDefMap::const_iterator itDef = defs.begin(); itDef != itDefEnd; ++itDef)
+			typename PropDefMap::const_iterator itDefEnd = defs.end();
+			for ( typename PropDefMap::const_iterator itDef = defs.begin(); itDef != itDefEnd; ++itDef)
 			{
 				const PropDef& def = itDef->second;
 				if (def.name().empty())
@@ -67,7 +68,7 @@ namespace yake {
 					std::cout << "warning: empty property name in class '" << cls.name() << "'. skipping.\n";
 					continue;
 				}
-				StringPropPtrMap::const_iterator itFind = props.find(def.name());
+				typename StringPropPtrMap::const_iterator itFind = props.find(def.name());
 				if (itFind == props.end())
 				{
 					props[ def.name() ] = def.create();
@@ -99,3 +100,4 @@ namespace yake {
 } // namespace yake
 
 #endif
+

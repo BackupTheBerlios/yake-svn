@@ -32,7 +32,7 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASEPREREQUISITES_H
-#	include "../yakePrerequisites.h"
+#	include <yake/base/yakePrerequisites.h>
 #endif
 // Boost
 #include <boost/shared_ptr.hpp>
@@ -91,7 +91,7 @@ namespace yake {
 	};
 
 	template<class T, class U>
-    bool operator==(SharedPtr<T> const & a, SharedPtr<U> const & b)
+	bool operator==(SharedPtr<T> const & a, SharedPtr<U> const & b)
 	{
 		return (::boost::shared_ptr<T>(a) == ::boost::shared_ptr<U>(b) );
 	}

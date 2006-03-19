@@ -56,6 +56,7 @@ namespace yake
 				    class_<Color>("Color")
 				    .def( constructor<>() )
 				    .def( constructor<real,real,real,real>() )
+				    .def( constructor< const Color& >() )
 				    //FIXME some strange members in anonymous union::struct
 				    /*						.def_readwrite( "r", &Color::r )
 				    						.def_readwrite( "g", &Color::g )

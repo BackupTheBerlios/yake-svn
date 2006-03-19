@@ -67,8 +67,8 @@ namespace physics {
 		virtual void setAffectedBody( IBody& rBody ) = 0;
 		virtual void setVelocityTarget( const real velTarget ) = 0;
 		virtual void setMaximumForce( const real maxForce ) = 0;
-		virtual void setAxis0( const Vector3& rAxis ) = 0;
-		virtual void setAxis1( const Vector3& rAxis ) = 0;
+		virtual void setAxis0( const math::Vector3& rAxis ) = 0;
+		virtual void setAxis1( const math::Vector3& rAxis ) = 0;
 		virtual void set( const real velTarget, const real maxForce, bool enabled = true ) = 0;
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IAngularMotor );
@@ -81,7 +81,7 @@ namespace physics {
 		virtual void setAffectedBody( IBody& rBody ) = 0;
 		virtual void setVelocityTarget( const real velTarget ) = 0;
 		virtual void setMaximumForce( const real maxForce ) = 0;
-		virtual void setAxis( const Vector3& rAxis ) = 0;
+		virtual void setAxis( const math::Vector3& rAxis ) = 0;
 		virtual void set( const real velTarget, const real maxForce, bool enabled = true ) = 0;
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( ILinearMotor );

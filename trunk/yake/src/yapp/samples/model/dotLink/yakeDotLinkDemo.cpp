@@ -259,5 +259,5 @@ int main( int argc, char** argv )
 	std::cin.get();
 #endif
 
-	return 0;
+    return 0;
 }

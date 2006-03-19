@@ -36,7 +36,7 @@ namespace physics {
 		mFriction(10),
 		mFriction2(5),
 		mLateralSlip(false),
-		mSlipNormal(Vector3::kZero),
+		mSlipNormal(math::Vector3::kZero),
 		mSlipLinearCoeff(0),
 		mSlipAngularCoeff(0),
 		mRestitution(0), // better value?
@@ -50,7 +50,7 @@ namespace physics {
 		mFriction(desc.mFriction),
 		mFriction2(desc.mFriction),
 		mLateralSlip(false),
-		mSlipNormal(Vector3::kZero),
+		mSlipNormal(math::Vector3::kZero),
 		mSlipLinearCoeff(0),
 		mSlipAngularCoeff(0),
 		mRestitution( desc.mRestitution ),
@@ -96,3 +96,4 @@ namespace physics {
 
 } // physics
 } // yake
+

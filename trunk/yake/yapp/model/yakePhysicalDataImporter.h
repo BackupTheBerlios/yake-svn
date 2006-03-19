@@ -52,14 +52,22 @@ namespace model {
 
 	    virtual ~XODEListener() {}		
 
-	    void processBody( const XODEParser::BodyDesc& desc );
-	    void processGeom( const XODEParser::GeomDesc& desc );
-	    void processMass( const XODEParser::MassDesc& desc );
-	    void processJoint( const XODEParser::JointDesc& desc );
-	    void processMaterial( const XODEParser::MaterialDesc& desc );
-	    void postprocess();
+	    virtual void processBody( const XODEParser::BodyDesc& desc );
+	    virtual void processGeom( const XODEParser::GeomDesc& desc );
+	    virtual void processMass( const XODEParser::MassDesc& desc );
+	    virtual void processJoint( const XODEParser::JointDesc& desc );
+	    virtual void processMaterial( const XODEParser::MaterialDesc& desc );
+	    virtual void postprocess();
 
-	private:
+	    IJoint* getJointByName( const String& name )
+	    {
+		if ( joints_.find( name ) != joints_.end() )
+		    return joints_[ name ].joint_;
+		else
+		    return NULL;
+	    }
+
+	protected:
 
 	    struct ActorInfo
 	    {

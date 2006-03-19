@@ -41,21 +41,23 @@ namespace ogre3d {
 		OgreNode( Ogre::SceneNode * node, GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr );
 		virtual ~OgreNode();
 
-		virtual void setPosition( const Vector3 & position );
-		virtual Vector3 getPosition() const;
-		virtual Vector3 getPosition( TransformSpace ts ) const;
-		virtual void setOrientation( const Quaternion & orientation );
-		virtual Quaternion getOrientation() const;
+		virtual void setPosition( const math::Vector3 & position );
+		virtual math::Vector3 getPosition() const;
+		virtual math::Vector3 getPosition( TransformSpace ts ) const;
+		virtual void setOrientation( const math::Quaternion & orientation );
+		virtual math::Quaternion getOrientation() const;
 
-		virtual void setScale( const Vector3 & scale );
-		virtual Vector3 getScale() const;
+		virtual void setScale( const math::Vector3 & scale );
+		virtual math::Vector3 getScale() const;
 
-		virtual Vector3 getDerivedPosition() const;
-		virtual void getDerivedPosition( Vector3& retPos ) const;
-		virtual Quaternion getDerivedOrientation() const;
-		virtual void getDerivedOrientation( Quaternion& retRot ) const;
-		virtual void translate( const Vector3& rDelta, const TransformSpace relativeTo = TS_PARENT );
-		virtual void rotate( const Quaternion& rDelta, const TransformSpace relativeTo = TS_PARENT );
+		virtual void setInheritScale( bool inherit );
+
+		virtual math::Vector3 getDerivedPosition() const;
+		virtual void getDerivedPosition( math::Vector3& retPos ) const;
+		virtual math::Quaternion getDerivedOrientation() const;
+		virtual void getDerivedOrientation( math::Quaternion& retRot ) const;
+		virtual void translate( const math::Vector3& rDelta, const TransformSpace relativeTo = TS_PARENT );
+		virtual void rotate( const math::Quaternion& rDelta, const TransformSpace relativeTo = TS_PARENT );
 
 		virtual void addChildNode( ISceneNode* pNode );
 		virtual ISceneNode* createChildNode( const String& name = "" );
@@ -84,15 +86,15 @@ namespace ogre3d {
 		OgreNode* _getParent() const;
 	protected:
 		typedef SceneNodePtrList NodeList;
-		NodeList					mChildren;
-		EntityPtrList			mEntities;
-		LightPtrList			mLights;
-		CameraPtrList			mCameras;
+		NodeList		mChildren;
+		EntityPtrList		mEntities;
+		LightPtrList		mLights;
+		CameraPtrList		mCameras;
 		ParticleSystemPtrList	mParticleSystems;
 
 		Ogre::SceneNode* 		mSceneNode;
 		Ogre::SceneManager*	mSceneMgr;
-		OgreNode*				mParentNode;
+		OgreNode*		mParentNode;
 		GraphicalWorld&		mWorld;
 	};
 
@@ -101,3 +103,4 @@ namespace ogre3d {
 }
 
 #endif
+

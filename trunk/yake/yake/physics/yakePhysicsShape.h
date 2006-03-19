@@ -35,110 +35,113 @@ namespace yake {
 namespace physics {
 
 	/**
-		YAKE         ODE               NX
-		Plane        Plane             Plane
-		Box          Box               Box
-		Sphere       Sphere            Sphere
-		Capsule      Capped Cylinder   Capsule
-		Cylinder     ?                 ?           (could be approximated with a shorter capsule...)
-		Tri Mesh     TriMesh           Mesh
-		Voxel Set    ?                 ?
-		Transform    ?                 ?           (could be simulated)
-	*/
+	  YAKE         ODE               NX
+	  Plane        Plane             Plane
+	  Box          Box               Box
+	  Sphere       Sphere            Sphere
+	  Capsule      Capped Cylinder   Capsule
+	  Cylinder     ?                 ?           (could be approximated with a shorter capsule...)
+	  Tri Mesh     TriMesh           Mesh
+	  Voxel Set    ?                 ?
+	  Transform    ?                 ?           (could be simulated)
+	  */
 	enum ShapeType
 	{
-		ST_PLANE,
-		ST_BOX,
-		ST_SPHERE,
-		ST_CAPSULE,
-		ST_CYLINDER,
-		ST_TRIANGLE_MESH,
-		ST_VOXEL_SET,
-		ST_OTHER
+	    ST_PLANE,
+	    ST_BOX,
+	    ST_SPHERE,
+	    ST_CAPSULE,
+	    ST_CYLINDER,
+	    ST_TRIANGLE_MESH,
+	    ST_VOXEL_SET,
+	    ST_OTHER
 	};
 
 	class IMaterial;
-	/** A shape is what we formerly called "collision geom" in yake::physics. */
 	class YAKE_PHYSICS_API IShape : public Movable
 	{
-	public:
+	    public:
 		struct Desc
 		{
-			Desc(	const ShapeType type_,
-					const Vector3& rPosition = Vector3::kZero, 
-					const Quaternion& rOrientation = Quaternion::kIdentity,
-					const String& material_ = "" ) :
-				type( type_ ),
-				position( rPosition ),
-				orientation( rOrientation ),
-				material( material_ )
-			{}
+		    Desc(   const ShapeType type_,
+			    const math::Vector3& rPosition = math::Vector3::kZero, 
+			    const math::Quaternion& rOrientation = math::Quaternion::kIdentity,
+			    const String& material_ = "" ) :
+			type( type_ ),
+			position( rPosition ),
+			orientation( rOrientation ),
+			material( material_ )
+		    {}
 
-			virtual ~Desc() {}
-			//virtual Desc* clone() const = 0;
+		    virtual ~Desc() {}
+		    //virtual Desc* clone() const = 0;
 
-			ShapeType	type; // superfluous as shape type is determined by dynamic_cast on Desc struct...
-			Vector3		position;
-			Quaternion	orientation;
-			String		material;
+		    ShapeType	type; // superfluous as shape type is determined by dynamic_cast on Desc struct...
+		    math::Vector3		position;
+		    math::Quaternion	orientation;
+		    String		material;
 		};
+
 		struct SphereDesc : Desc
 		{
-			SphereDesc(	real radius_ = real(1.),
-						// base class:
-						const String& material_ = "",
-						const Vector3& rPosition = Vector3::kZero, 
-						const Quaternion& rOrientation = Quaternion::kIdentity
-						 ) :
-				Desc( ST_SPHERE, rPosition, rOrientation, material_ ),
-				radius( radius_ )
-			{}
-			real		radius;
+		    SphereDesc(	real radius_ = real(1.),
+			    // base class:
+			    const String& material_ = "",
+			    const math::Vector3& rPosition = math::Vector3::kZero, 
+			    const math::Quaternion& rOrientation = math::Quaternion::kIdentity
+			    ) :
+			Desc( ST_SPHERE, rPosition, rOrientation, material_ ),
+			radius( radius_ )
+		    {}
+		    real		radius;
 		};
+
 		struct BoxDesc : Desc
 		{
-			BoxDesc(	const Vector3& rDimensions = Vector3(1,1,1),
-						// base class:
-						const String& material_ = "",
-						const Vector3& rPosition = Vector3::kZero, 
-						const Quaternion& rOrientation = Quaternion::kIdentity
-						 ) :
-				Desc( ST_BOX, rPosition, rOrientation, material_ ),
-				dimensions( rDimensions )
-			{}
-			Vector3		dimensions;
+		    BoxDesc(	const math::Vector3& rDimensions = math::Vector3(1,1,1),
+			    // base class:
+			    const String& material_ = "",
+			    const math::Vector3& rPosition = math::Vector3::kZero, 
+			    const math::Quaternion& rOrientation = math::Quaternion::kIdentity
+			   ) :
+			Desc( ST_BOX, rPosition, rOrientation, material_ ),
+			dimensions( rDimensions )
+		    {}
+		    math::Vector3		dimensions;
 		};
+
 		struct PlaneDesc : Desc
 		{
-			PlaneDesc(	const Vector3& rNormal = Vector3(0,1,0),
-						const real d_ = real(1.),
-						// base class:
-						const String& material_ = "",
-						const Vector3& rPosition = Vector3::kZero, 
-						const Quaternion& rOrientation = Quaternion::kIdentity
-						 ) :
-				Desc( ST_PLANE, rPosition, rOrientation, material_ ),
-				normal( rNormal ),
-				d( d_ )
-			{}
-			Vector3		normal;
-			real		d;
+		    PlaneDesc(	const math::Vector3& rNormal = math::Vector3(0,1,0),
+			    const real d_ = real(1.),
+			    // base class:
+			    const String& material_ = "",
+			    const math::Vector3& rPosition = math::Vector3::kZero, 
+			    const math::Quaternion& rOrientation = math::Quaternion::kIdentity
+			    ) :
+			Desc( ST_PLANE, rPosition, rOrientation, material_ ),
+			normal( rNormal ),
+			d( d_ )
+		    {}
+		    math::Vector3		normal;
+		    real		d;
 		};
+
 		struct CapsuleDesc : Desc
 		{
-			CapsuleDesc(const real height_ = real(2.),
-						const real radius_ = real(1.),
-						// base class:
-						const String& material_ = "",
-						const Vector3& rPosition = Vector3::kZero, 
-						const Quaternion& rOrientation = Quaternion::kIdentity
-						 ) :
-				Desc( ST_CAPSULE, rPosition, rOrientation, material_ ),
-				height( height_ ),
-				radius( radius_ )
-			{}
-			real		height;
-			real		radius;
+		    CapsuleDesc(const real height_ = real(2.),
+			    const real radius_ = real(1.),
+			    // base class:
+			    const String& material_ = "",
+			    const math::Vector3& rPosition = math::Vector3::kZero, 
+			    const math::Quaternion& rOrientation = math::Quaternion::kIdentity
+			    ) :
+			Desc( ST_CAPSULE, rPosition, rOrientation, material_ ),
+			height( height_ ),
+			radius( radius_ )
+		    {}
+		    real		height;
+		    real		radius;
 		};
 
 		struct TriMeshDesc : Desc
@@ -146,8 +149,8 @@ namespace physics {
 		    TriMeshDesc(	const TriangleMeshDesc trimesh,
 			    // base class:
 			    const String& material_ = "",
-			    const Vector3& rPosition = Vector3::kZero, 
-			    const Quaternion& rOrientation = Quaternion::kIdentity
+			    const math::Vector3& rPosition = math::Vector3::kZero, 
+			    const math::Quaternion& rOrientation = math::Quaternion::kIdentity
 			    ) :
 				Desc( ST_TRIANGLE_MESH, rPosition, rOrientation, material_ ),
 				trimesh_( trimesh ),
@@ -156,8 +159,8 @@ namespace physics {
 		    TriMeshDesc(	const TriangleMeshId trimeshId,
 			    // base class:
 			    const String& material_ = "",
-			    const Vector3& rPosition = Vector3::kZero, 
-			    const Quaternion& rOrientation = Quaternion::kIdentity
+			    const math::Vector3& rPosition = math::Vector3::kZero, 
+			    const math::Quaternion& rOrientation = math::Quaternion::kIdentity
 			    ) :
 				Desc( ST_TRIANGLE_MESH, rPosition, rOrientation, material_ ),
 				trimeshId_( trimeshId )
@@ -165,16 +168,18 @@ namespace physics {
 		    TriangleMeshDesc	trimesh_;
 			TriangleMeshId		trimeshId_;
 		};
-	public:
+
+	    public:
 		virtual ~IShape() {}
 
 		virtual ShapeType getType() const = 0;
 		virtual void setMaterial( IMaterial* pMaterial ) = 0;
+		virtual IMaterial* getMaterial() const = 0;
 
-		//virtual Vector3 getDerivedPosition() const = 0;
-		//virtual Quaternion getDerivedOrientation() const = 0;
+		//virtual math::Vector3 getDerivedPosition() const = 0;
+		//virtual math::Quaternion getDerivedOrientation() const = 0;
 
-		virtual Vector3 getPropertyVector3(const String&) const = 0;
+		virtual math::Vector3 getPropertyVector3(const String&) const = 0;
 		virtual real getPropertyReal(const String&) const = 0;
 	};
 	YAKE_PHYSICS_COMMON_POINTERS( IShape );

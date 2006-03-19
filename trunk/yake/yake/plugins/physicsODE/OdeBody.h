@@ -49,26 +49,28 @@ namespace physics {
 			virtual void setMass( const MassDesc& rDesc );
 			virtual void addMass( const MassDesc& rDesc );
 
-			virtual void setLinearVelocity( Vector3 const& rVelocity );
-			virtual Vector3 getLinearVelocity() const;
-			virtual void setAngularVelocity( Vector3 const& rVelocity);
-			virtual Vector3 getAngularVelocity() const;
+			virtual void setLinearVelocity( math::Vector3 const& rVelocity );
+			virtual math::Vector3 getLinearVelocity() const;
+			virtual void setAngularVelocity( math::Vector3 const& rVelocity);
+			virtual math::Vector3 getAngularVelocity() const;
 			
 			virtual void addForce( const Force& force );
-			virtual void addForce( Vector3 const& rForce );
-			virtual void addForceAtPos( Vector3 const& rForce, Vector3 const& rPos );
-			virtual void addForceAtLocalPos( const Vector3& rForce, const Vector3& rPos );
-			virtual void addLocalForce( Vector3 const& rForce );
-			virtual void addLocalForceAtLocalPos( Vector3 const& rForce, Vector3 const& rPos );
-			virtual void addLocalForceAtPos( Vector3 const& rForce, Vector3 const& rPos );
-			virtual void addTorque( Vector3 const& rTorque );
-			virtual void addLocalTorque( Vector3 const& rTorque );
+			virtual void addForce( math::Vector3 const& rForce );
+			virtual void addForceAtPos( math::Vector3 const& rForce, math::Vector3 const& rPos );
+			virtual void addForceAtLocalPos( const math::Vector3& rForce, const math::Vector3& rPos );
+			virtual void addLocalForce( math::Vector3 const& rForce );
+			virtual void addLocalForceAtLocalPos( math::Vector3 const& rForce, math::Vector3 const& rPos );
+			virtual void addLocalForceAtPos( math::Vector3 const& rForce, math::Vector3 const& rPos );
+			virtual void addTorque( math::Vector3 const& rTorque );
+			virtual void addLocalTorque( math::Vector3 const& rTorque );
 			
 			// helpers for OdeActor
-			virtual void setPosition( const Vector3 & position );
-			virtual Vector3 getPosition() const;
-			virtual void setOrientation( const Quaternion & orientation );
-			virtual Quaternion getOrientation() const;
+			virtual void setPosition( const math::Vector3 & position );
+			virtual void setOrientation( const math::Quaternion & orientation );
+			virtual math::Vector3 getPosition() const;
+			virtual math::Quaternion getOrientation() const;
+			virtual math::Vector3 getDerivedPosition() const { return this->getPosition(); }
+			virtual math::Quaternion getDerivedOrientation() const { return this->getOrientation(); }
 
 			
 // 			virtual void setMassBox(real lx, real ly, real lz, real density = 1.);
@@ -77,9 +79,9 @@ namespace physics {
 // 			/// void dMassAdd (dMass *a, const dMass *b);
 // 			virtual real getMass() const;
 // //			virtual MassType getType() const;
-// 			virtual void translateMass( const Vector3 & d );
+// 			virtual void translateMass( const math::Vector3 & d );
 // 
-// 			virtual Vector3 getTorque() const;
+// 			virtual math::Vector3 getTorque() const;
 // 
 // 			virtual void setEnabled( bool enabled );
 
@@ -102,3 +104,4 @@ namespace physics {
 } // yake
 
 #endif
+

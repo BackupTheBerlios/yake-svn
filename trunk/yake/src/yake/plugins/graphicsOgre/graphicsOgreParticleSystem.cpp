@@ -32,19 +32,34 @@ namespace yake {
 namespace graphics {
 
 	//------------------------------------------------------
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+	OgreParticleSystem::OgreParticleSystem( Ogre::SceneManager& rSMgr, const String& rPSTempl ) : 
+		mSceneMgr( rSMgr ), mParticleSys( NULL )
+	{
+		mParticleSys = mSceneMgr.createParticleSystem( uniqueName::create( "ps_" ), rPSTempl );
+
+		YAKE_ASSERT( mParticleSys ).debug( "Failed to create particle system!" );
+	}
+#else
 	OgreParticleSystem::OgreParticleSystem( Ogre::ParticleSystemManager& rPSMgr, const String& rPSTempl ) : 
-																mParticleSysMgr( rPSMgr ), mParticleSys( NULL )
+		mParticleSysMgr( rPSMgr ), mParticleSys( NULL )
 	{
 		mParticleSys = mParticleSysMgr.createSystem( uniqueName::create( "ps_" ), rPSTempl );
 
 		YAKE_ASSERT( mParticleSys ).debug( "Failed to create particle system!" );
 	}
-
+#endif
 	//------------------------------------------------------
 	OgreParticleSystem::~OgreParticleSystem()
 	{
 		YAKE_ASSERT( mParticleSys );
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+		mSceneMgr.destroyParticleSystem( mParticleSys );
+#else
 		mParticleSysMgr.destroySystem( mParticleSys->getName() );
+#endif
 	}
 
 	//------------------------------------------------------
@@ -123,3 +138,4 @@ namespace graphics {
 
 } // graphics
 } // yake
+

@@ -32,7 +32,6 @@ namespace Ogre {
 };
 
 namespace yake {
-	using namespace math;
 namespace input {
 
 	//-----------------------------------------------------------------------
@@ -53,11 +52,11 @@ namespace input {
 		virtual void poll();
 
 	protected:
-		Ogre::InputReader	* mInputReader;
+		Ogre::InputReader*		mInputReader;
 		bool				mButtons[3];
-		Vector3				mPosition;
-		Vector3				mScale;
-		Rectangle			mClip;
+		math::Vector3			mPosition;
+		math::Vector3			mScale;
+		math::Rectangle			mClip;
 	};
 
 	//-----------------------------------------------------------------------
@@ -106,3 +105,4 @@ namespace input {
 }
 }
 #endif
+

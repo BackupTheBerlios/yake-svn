@@ -55,7 +55,7 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	void OdeUniversalJoint::setAxis( size_t axisIndex, Vector3 const& rAxis )
+	void OdeUniversalJoint::setAxis( size_t axisIndex, math::Vector3 const& rAxis )
 	{
 		YAKE_ASSERT( axisIndex < 2 ).error( "Universal joint has only two axes! You are trying to set more..." );
 		
@@ -72,7 +72,7 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	void OdeUniversalJoint::setAnchor( size_t anchorIndex, Vector3 const& rAnchor )
+	void OdeUniversalJoint::setAnchor( size_t anchorIndex, math::Vector3 const& rAnchor )
 	{
 		YAKE_ASSERT( anchorIndex < 1 ).error( "Universal joint has only one anchor! You are trying to set more..." );
 		
@@ -141,3 +141,4 @@ namespace physics {
 
 } // physics
 } // yake
+

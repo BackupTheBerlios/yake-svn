@@ -27,7 +27,7 @@
 #ifndef YAKE_VEHICLE_NATIVEODE_H
 #define YAKE_VEHICLE_NATIVEODE_H
 
-#include "yakePrerequisites.h"
+#include <yapp/vehicle/yakePrerequisites.h>
 
 namespace yake {
 namespace vehicle {
@@ -68,11 +68,11 @@ namespace vehicle {
 	public:
 		GenericVehicleSystem();
 		~GenericVehicleSystem();
-		virtual IVehicle* create(const VehicleTemplate&, physics::IWorld& PWorld);
+		virtual IVehicle* create(const VehicleTemplate&, physics::IWorld& PWorld, model::Physical& physModel);
 		virtual bool loadTemplates(const String& fn);
 		virtual VehicleTemplate* getTemplate(const String& tpl) const;
 		//virtual VehicleTemplate* cloneTemplate(const String& tpl);
-		virtual IVehicle* create(const String& tpl, physics::IWorld& PWorld);
+		virtual IVehicle* create(const String& tpl, physics::IWorld& PWorld, model::Physical& physModel);
 	private:
 		void _onVehicleTpl(DotVehicleParser& parser, const String& tplId);
 	private:
@@ -98,8 +98,8 @@ namespace vehicle {
 		virtual IEnginePtrList getEngineInterfaces() const;
 		virtual IWheel* getWheelInterface(const String& id) const;
 
-		virtual Vector3 getChassisPosition() const;
-		virtual Quaternion getChassisOrientation() const;
+		virtual math::Vector3 getChassisPosition() const;
+		virtual math::Quaternion getChassisOrientation() const;
 		virtual Movable* getChassisMovable() const;
 
 		virtual void setSteering( const uint32 sg, const real );
@@ -108,7 +108,7 @@ namespace vehicle {
 		virtual void enableDebugGeometry(graphics::IWorld&);
 		virtual void disableDebugGeometry();
 
-		void _create(const VehicleTemplate&, physics::IWorld& PWorld);
+		void _create(const VehicleTemplate&, physics::IWorld& PWorld, model::Physical& physModel );
 
 		YAKE_MEMBERSIGNAL(private,void(real),UpdateEngineSimulation);
 		YAKE_MEMBERSIGNAL(private,void(void),ApplyThrusterToTargets);
@@ -205,10 +205,12 @@ namespace vehicle {
 					const VehicleTemplate::WheelTpl& tpl,
 					physics::IWorld& PWorld );
 
-		virtual void setPosition(const Vector3&) {}
-		virtual Vector3 getPosition() const;
-		virtual void setOrientation(const Quaternion&) {}
-		virtual Quaternion getOrientation() const;
+		virtual void setPosition(const math::Vector3&) {}
+		virtual math::Vector3 getPosition() const;
+		virtual math::Vector3 getDerivedPosition() const;
+		virtual void setOrientation(const math::Quaternion&) {}
+		virtual math::Quaternion getOrientation() const;
+		virtual math::Quaternion getDerivedOrientation() const;
 
 		virtual real getRadius() const;
 
@@ -220,8 +222,8 @@ namespace vehicle {
 
 		void _applyDriveTq( const real tq );
 	private:
-		void _applyTq( const Vector3 & torque );
-		void _applyBrakeTq( const Vector3 & torque );
+		void _applyTq( const math::Vector3 & torque );
+		void _applyBrakeTq( const math::Vector3 & torque );
 		void _applyMotor( real velocity, real fmax );
 
 		void _onPreStepInternal( const real dt );
@@ -230,12 +232,12 @@ namespace vehicle {
 		physics::IActorPtr		mpChassis;
 		physics::IJointPtr		mpJoint;
 		physics::IActorPtr		mpWheel;
-		real					mRadius;
-		real					mTargetSteer;
-		real					mCurrSteer;
+		real				mRadius;
+		real				mTargetSteer;
+		real				mCurrSteer;
 		SignalConnection		mPreStepSigConn, mPostStepSigConn;
-		real					mBrakeRatio;
-		real					mSkid;
+		real				mBrakeRatio;
+		real				mSkid;
 	};
 #endif // YAKE_VEHICLE_USE_ODE
 	class GenericMountPoint : public MountPoint
@@ -248,17 +250,40 @@ namespace vehicle {
 		//ThrusterPtrList		mThrusters; // references thruster engines (does NOT own them!)
 	};
 
+	/** In terms of control systems it is just a gain.
+	 * Output = input*K_gain; force = voltage*k.
+	 */
 	class GenericThruster : public IThruster
 	{
 	public:
-		GenericThruster();
+	    GenericThruster();
 
-		virtual void setThrottle( real throttle );
-		virtual real getThrottle() const;
+	    virtual void setInputSignal( real voltage );
+	    virtual real getInputSignal() const;
+
+	    virtual void updateSimulation( real timeElapsed );
+
+	    virtual void setGain( real gain );
+	    virtual real getGain() const;
+
+	private:
+	    real    mVoltage; // cached gain value
+
+	    /// gain coefficient is the only *real* characteristic of such device.
+	    real    mGain;
+	};
+
+	class GenericLinearThruster : public ILinearThruster
+	{
+	public:
+		GenericLinearThruster();
+
+		virtual void setInputSignal( real voltage );
+		virtual real getInputSignal() const;
 		virtual void updateSimulation( real timeElapsed );
 
 	private:
-		real	mThrottle;
+		real	mVoltage;
 	};
 	class GenericMountedThruster : public IMountedThruster
 	{
@@ -274,3 +299,4 @@ namespace vehicle {
 
 
 #endif
+

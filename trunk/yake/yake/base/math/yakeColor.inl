@@ -250,3 +250,4 @@ inline base::IOutputStream& Color::operator << (base::IOutputStream& rStream) co
 
 } // math
 } // yake
+

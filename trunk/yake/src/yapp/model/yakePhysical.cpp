@@ -93,5 +93,34 @@ namespace model {
 			return itFind->second;
 	}
 
+	//-----------------------------------------------------
+	void Physical::addAffector( SharedPtr<physics::IBodyAffector> pAffector, const String& rName )
+	{
+	    mAffectors.push_back( std::make_pair( rName, pAffector ) );
+	}
+
+	//-----------------------------------------------------
+	void Physical::updateAffectors( real timeElapsed )
+	{
+		AffectorList::iterator aff_end = mAffectors.end();
+		for( AffectorList::iterator af = mAffectors.begin(); af != aff_end; ++af )
+		{
+			physics::IActorPtr actor = getActorByName( (*af).first );
+
+			YAKE_ASSERT( actor != NULL ).warning( "affector refers to non-existent actor" );
+			if ( actor == NULL )
+				continue;
+
+			physics::IBody* body = actor->getBodyPtr();
+
+			YAKE_ASSERT( body != NULL ).warning( "trying to apply affector to actor without a body" );
+			if ( body != NULL )
+			{
+				(*af).second->applyTo( *body, timeElapsed );
+			}
+		}
+	}
+
 }
 }
+

@@ -39,6 +39,14 @@
 #	define YAKE_GRAPHICS_CONCRETE_API DLLIMPORT
 #endif
 
+#if YAKE_PLATFORM == PLATFORM_WIN32
+#	define YAKE_USE_OSM
+#	pragma message("Compiling graphicsOGRE with OSM support.")
+#else
+#	pragma message("Compiling graphicsOGRE without OSM support.")
+#endif
+
+
 #include <yake/plugins/graphicsOgre/yakeGraphicsWorld.h>
 
 //============================================================================
@@ -82,8 +90,10 @@ namespace ogre3d {
 		virtual const std::type_info & get_type_info()
 		{ return typeid(GraphicsSystem); }
 
+		OgreCore* _getCore() { return mCore; }
+
 	private: // data
-		OgreCore * mCore;
+		OgreCore* mCore;
 	};
 
 } // ogre3d

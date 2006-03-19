@@ -54,6 +54,15 @@ namespace yake {
 		lhs += ss.str();
 		return lhs;
 	}
+
+	template<typename T>
+	String operator << ( const String& lhs, const T& rhs)
+	{
+		StrStream ss;
+		ss << rhs;
+		return lhs + ss.str();
+	}
+
 	typedef Vector<String> StringVector;
 
 	class YAKE_BASE_API StringUtil

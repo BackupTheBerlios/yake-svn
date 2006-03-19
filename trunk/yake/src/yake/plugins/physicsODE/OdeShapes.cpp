@@ -98,11 +98,12 @@ namespace physics {
 	//-----------------------------------------------------
 	void OdeGeom::setMaterial( IMaterial* pMaterial )
 	{
-		mMaterial = static_cast<OdeMaterial*>( pMaterial );
+		mMaterial = checked_cast<OdeMaterial*>( pMaterial );
+		YAKE_ASSERT( mMaterial != NULL ).warning( "assigned empty material" );
 	}
 
 	//-----------------------------------------------------
-	void OdeGeom::setPosition( Vector3 const& rPosition )
+	void OdeGeom::setPosition( math::Vector3 const& rPosition )
 	{
 		if (getType() == ST_PLANE)
 			return;
@@ -111,49 +112,51 @@ namespace physics {
 	}
 
 	//-----------------------------------------------------
-	Vector3 OdeGeom::getPosition() const
+	math::Vector3 OdeGeom::getPosition() const
 	{
 		if (getType() == ST_PLANE)
-			return Vector3::kZero;
+			return math::Vector3::kZero;
+
 		const dReal* pos = dGeomGetPosition( mOdeGeomID );
-		return Vector3( real(pos[0]), real(pos[1]), real(pos[2]) );
+		return math::Vector3( real(pos[0]), real(pos[1]), real(pos[2]) );
 	}
 
 	//-----------------------------------------------------
-	void OdeGeom::setOrientation( Quaternion const& rOrientation )
+	void OdeGeom::setOrientation( math::Quaternion const& rOrientation )
 	{
 		if (getType() == ST_PLANE)
 			return;
+
 		const dQuaternion q = { rOrientation.w, rOrientation.x, rOrientation.y, rOrientation.z };
 		dGeomSetQuaternion( mOdeGeomID, q );
 	}
 
 	//-----------------------------------------------------
-	Quaternion OdeGeom::getOrientation() const
+	math::Quaternion OdeGeom::getOrientation() const
 	{
 		if (getType() == ST_PLANE)
-			return Quaternion::kIdentity;
+			return math::Quaternion::kIdentity;
 
 		dQuaternion q;
 		dGeomGetQuaternion( mOdeGeomID, q );
 
-		return Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) );
+		return math::Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) );
 	}
 
 	//-----------------------------------------------------
-	Vector3 OdeGeom::getDerivedPosition() const
+	math::Vector3 OdeGeom::getDerivedPosition() const
 	{
-		dBodyID bodyId = dGeomGetBody( mOdeGeomID );
-		const dReal* pos = dBodyGetPosition( bodyId );
-		return Vector3( real(pos[0]), real(pos[1]), real(pos[2]) );
+		// return just usual geom position. 
+		// It is equal to body position if geom was attached to one
+		return getPosition();
 	}
 
 	//-----------------------------------------------------
-	Quaternion OdeGeom::getDerivedOrientation() const
+	math::Quaternion OdeGeom::getDerivedOrientation() const
 	{
-		dBodyID bodyId = dGeomGetBody( mOdeGeomID );
-		const dReal* q = dBodyGetQuaternion( bodyId );
-		return Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) );
+		// return just usual geom orientation. 
+		// It is equal to body orientation if geom was attached to one
+		return getOrientation();
 	}
 
 	//-----------------------------------------------------
@@ -163,13 +166,13 @@ namespace physics {
 	}
 
 	//-----------------------------------------------------
-	Vector3 OdeGeom::getPropertyVector3(const String& id) const
+	math::Vector3 OdeGeom::getPropertyVector3(const String& id) const
 	{
 		PropMap::const_iterator itFind = mProps.find( id );
 		YAKE_ASSERT(itFind != mProps.end());
 		if (itFind == mProps.end())
-			return Vector3();
-		return boost::any_cast<Vector3>(itFind->second);
+			return math::Vector3();
+		return boost::any_cast<math::Vector3>(itFind->second);
 	}
 
 	//-----------------------------------------------------
@@ -238,7 +241,7 @@ namespace physics {
 		dReal* pCurrOrd = pVertices;
 		while (itV.hasMoreElements())
 		{
-			const Vector3& v = *itV.peekNextPtr();
+			const math::Vector3& v = *itV.peekNextPtr();
 			*pCurrOrd++ = v.x;
 			*pCurrOrd++ = v.y;
 			*pCurrOrd++ = v.z;
@@ -257,7 +260,7 @@ namespace physics {
 			pCurrOrd = pNormals;
 			while (itN.hasMoreElements())
 			{
-				const Vector3& n = *itN.peekNextPtr();
+				const math::Vector3& n = *itN.peekNextPtr();
 				*pCurrOrd++ = n.x;
 				*pCurrOrd++ = n.y;
 				*pCurrOrd++ = n.z;
@@ -268,11 +271,33 @@ namespace physics {
 		// serving up
 		dTriMeshDataID dataId = dGeomTriMeshDataCreate();
 
-		YAKE_ASSERT( sizeof(dReal) == sizeof(double) );
-
+#ifdef dDOUBLE
 		if ( !rNormals.empty() )
 		{
 			dGeomTriMeshDataBuildDouble1( dataId,
+				                            pVertices,
+				                            sizeof( dReal )*3,
+				                            int(rVertices.size()),
+				                            pIndices,
+				                            int(rIndices.size()),
+				                            sizeof( uint32 )*3,
+				                            pNormals );
+		}
+		else
+		{
+			dGeomTriMeshDataBuildDouble(  dataId,
+				                            pVertices,
+				                            sizeof( dReal )*3,
+				                            int(rVertices.size()),
+				                            pIndices,
+				                            int(rIndices.size()),
+				                            sizeof( uint32 )*3 );
+		}
+#endif
+#ifdef dSINGLE
+		if ( !rNormals.empty() )
+		{
+			dGeomTriMeshDataBuildSingle1( dataId,
 				                            pVertices,
 				                            sizeof( dReal )*3,
 				                            rVertices.size(),
@@ -283,7 +308,7 @@ namespace physics {
 		}
 		else
 		{
-			dGeomTriMeshDataBuildDouble(  dataId,
+			dGeomTriMeshDataBuildSingle(  dataId,
 				                            pVertices,
 				                            sizeof( dReal )*3,
 				                            rVertices.size(),
@@ -291,6 +316,7 @@ namespace physics {
 				                            rIndices.size(),
 				                            sizeof( uint32 )*3 );
 		}
+#endif
 
 		dataToFill.normals = pNormals;
 		dataToFill.vertices = pVertices;
@@ -375,7 +401,7 @@ namespace physics {
 
 		_setData( this );
 
-		mProps["dimensions"] = Vector3(sizex,sizey,sizez);
+		mProps["dimensions"] = math::Vector3(sizex,sizey,sizez);
 	}
 
 	//-----------------------------------------------------
@@ -398,10 +424,10 @@ namespace physics {
 
 		YAKE_ASSERT( a != 0. || b != 0. || c != 0. ).error( "Invalid plane equation!" );
 
-		Vector3 normal = Vector3( a, b, c );
+		math::Vector3 normal = math::Vector3( a, b, c );
 
 		if ( normal.squaredLength() < 0.02 )
-			normal = Vector3( 0, 1, 0 );
+			normal = math::Vector3( 0, 1, 0 );
 		else
 			normal.normalise();
 
@@ -411,7 +437,7 @@ namespace physics {
 
 		_setData( this );
 
-		mProps["normal"] = Vector3(a,b,c);
+		mProps["normal"] = math::Vector3(a,b,c);
 		mProps["d"] = d;
 	}
 
@@ -475,136 +501,75 @@ namespace physics {
 	}
 
 	//-----------------------------------------------------
-	Vector3 OdeTransformGeom::getDerivedPosition() const
+	math::Vector3 OdeTransformGeom::getPosition() const
 	{
-		return (mAttachedGeom ?
-			(getPosition() + getDerivedOrientation() * mAttachedGeom->getPosition()) :
-			getPosition() );
+		return	mAttachedGeom ?	mAttachedGeom->getPosition() : OdeGeom::getPosition();
+	}
+
+	//-----------------------------------------------------
+	math::Quaternion OdeTransformGeom::getOrientation() const
+	{
+		return mAttachedGeom ? mAttachedGeom->getOrientation() : OdeGeom::getOrientation();
+	}
+
+	//-----------------------------------------------------
+	void OdeTransformGeom::setPosition( const math::Vector3& rPosition )
+	{
+		if (getType() == ST_PLANE)
+		{
+			YAKE_ASSERT( false ).warning( "You are trying to set position for non-placeable geom!!" );
+			return;
+		}
+		
+		YAKE_ASSERT( mAttachedGeom );
+		
+		mAttachedGeom->setPosition( rPosition );
+	}
+
+	//-----------------------------------------------------
+	math::Vector3 OdeTransformGeom::getDerivedPosition() const
+	{
+		if (getType() == ST_PLANE)
+			return math::Vector3::kZero;
+
+		YAKE_ASSERT( mAttachedGeom );
+
+		math::Vector3 this_pos = OdeGeom::getPosition();
+		math::Quaternion this_orientation = OdeGeom::getOrientation();
+
+		return this_pos + this_orientation * mAttachedGeom->getPosition();
+	}
+
+	//-----------------------------------------------------
+	void OdeTransformGeom::setOrientation( const math::Quaternion& rOrientation )
+	{
+		if (getType() == ST_PLANE)
+		{
+			YAKE_ASSERT( false ).warning( "You are trying to set orientation for non-placeable geom!!" );
+			return;
+		}
+
+		if ( mAttachedGeom != NULL )
+		    mAttachedGeom->setOrientation( rOrientation );
+		else
+		    OdeGeom::setOrientation( rOrientation );
 	}
 
 	//-----------------------------------------------------
 	Quaternion OdeTransformGeom::getDerivedOrientation() const
 	{
-		return (mAttachedGeom ?
-			mAttachedGeom->getDerivedOrientation() :
-			getOrientation() );
-	}
-
-	//-----------------------------------------------------
-	void OdeTransformGeom::setPosition( Vector3 const& rPosition )
-	{
-		if (getType() == ST_PLANE)
-			return;
-		YAKE_ASSERT( mAttachedGeom );
-		const dReal* pos = dGeomGetPosition( mOdeGeomID );
-		mAttachedGeom->setPosition( rPosition - Vector3(real(pos[0]), real(pos[1]), real(pos[2])) );
-		//dGeomSetPosition( mOdeGeomID, rPosition.x, rPosition.y, rPosition.z );
-	}
-
-	//-----------------------------------------------------
-	Vector3 OdeTransformGeom::getPosition() const
-	{
-		if (getType() == ST_PLANE)
-			return Vector3::kZero;
-		YAKE_ASSERT( mAttachedGeom );
-
-		const dReal* pos = dGeomGetPosition( mOdeGeomID );
-		dQuaternion q;
-		dGeomGetQuaternion( mOdeGeomID, q );
-		return Vector3( real(pos[0]), real(pos[1]), real(pos[2]) ) + 
-			Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) ) * mAttachedGeom->getPosition();
-	}
-
-	//-----------------------------------------------------
-	void OdeTransformGeom::setOrientation( Quaternion const& rOrientation )
-	{
-		if (getType() == ST_PLANE)
-			return;
-		YAKE_ASSERT( mAttachedGeom );
-		const dQuaternion q = { rOrientation.w, rOrientation.x, rOrientation.y, rOrientation.z };
-		dGeomSetQuaternion( mOdeGeomID, q );
-	}
-
-	//-----------------------------------------------------
-	Quaternion OdeTransformGeom::getOrientation() const
-	{
 		if (getType() == ST_PLANE)
 			return Quaternion::kIdentity;
-		YAKE_ASSERT( mAttachedGeom );
-		dQuaternion q;
-		dGeomGetQuaternion( mOdeGeomID, q );
 
 		YAKE_ASSERT( mAttachedGeom );
 
-		return mAttachedGeom->getOrientation() * Quaternion( real(q[0]), real(q[1]), real(q[2]), real(q[3]) );
+		math::Quaternion this_orientation = OdeGeom::getOrientation();
+
+		Quaternion childOrientation = mAttachedGeom->getOrientation();
+		Quaternion result = this_orientation * childOrientation;
+		return  result;
 	}
-
-	// /*		//-----------------------------------------------------
-	// 		void OdeCollisionGeomBase::tfAttachGeom( ICollisionGeometry* pGeom )
-	// 		{ YAKE_ASSERT(1==0).error("not implemented"); }
-	// 		//-----------------------------------------------------
-	// 		ICollisionGeometry* OdeCollisionGeomBase::tfGetAttachedGeom() const
-	// 		{ return 0; }
-	// 		//-----------------------------------------------------
-	// 		Vector3 OdeCollisionGeomBase::planeGetNormal() const
-	// 		{ return Vector3::kZero; }
-	// 		//-----------------------------------------------------
-	// 		String OdeCollisionGeomBase::meshGetName() const
-	// 		{ return ""; }
-	// 		//-----------------------------------------------------
-	// 		real OdeCollisionGeomBase::planeGetDistance() const
-	// 		{ return 0; }
-	// 		//-----------------------------------------------------
-	// 		real OdeCollisionGeomBase::sphereGetRadius() const
-	// 		{ return 0; }
-	// 		//-----------------------------------------------------
-	// 		void OdeCollisionGeomBase::sphereSetRadius(const real radius)
-	// 		{}
-	// 		//-----------------------------------------------------
-	// 		Vector3 OdeCollisionGeomBase::boxGetDimensions() const
-	// 		{ return Vector3::kZero; }
-	// 		//-----------------------------------------------------
-	// 		Vector3 OdeCollisionGeomBase::rayGetOrigin() const
-	// 		{ return Vector3::kZero; }
-	// 		//-----------------------------------------------------
-	// 		Quaternion OdeCollisionGeomBase::rayGetOrientation() const
-	// 		{ return Quaternion::kIdentity; }
-	//
-	// 		//-----------------------------------------------------
-	// 		real OdeCollisionGeomSphere::sphereGetRadius() const
-	// 		{
-	// 			return static_cast<dSphere*>(mOdeGeom)->getRadius();
-	// 		}
-	//
-	// 		//-----------------------------------------------------
-	// 		void OdeCollisionGeomSphere::sphereSetRadius(const real radius)
-	// 		{
-	// 			static_cast<dSphere*>(mOdeGeom)->setRadius(radius);
-	// 		}
-	//
-	// 		//-----------------------------------------------------
-	// 		Vector3 OdeCollisionGeomBox::boxGetDimensions() const
-	// 		{
-	// 			dVector3 lengths;
-	// 			static_cast<dBox*>(mOdeGeom)->getLengths(lengths);
-	// 			return Vector3( lengths[0], lengths[1], lengths[2] );
-	// 		}
-	//
-	//
-	// 		//-----------------------------------------------------
-	// 		Vector3 OdeCollisionGeomPlane::planeGetNormal() const
-	// 		{
-	// 			dVector4 params;
-	// 			static_cast<dPlane*>(mOdeGeom)->getParams(params);
-	// 			return Vector3( params[0], params[1], params[2] );
-	// 		}
-	// 		//-----------------------------------------------------
-	// 		real OdeCollisionGeomPlane::planeGetDistance() const
-	// 		{
-	// 			dVector4 params;
-	// 			static_cast<dPlane*>(mOdeGeom)->getParams(params);
-	// 			return params[3];
-	// 		}
 
 } // physics
 } // yake
+

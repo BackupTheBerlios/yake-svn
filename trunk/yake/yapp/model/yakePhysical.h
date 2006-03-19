@@ -27,6 +27,8 @@
 #ifndef YAPP_MODEL_PHYSICAL_H
 #define YAPP_MODEL_PHYSICAL_H
 
+#include <map>
+
 #include <yapp/base/yappPrerequisites.h>
 #include <yake/physics/yakePhysics.h>
 #include <yapp/model/yakeModel.h>
@@ -46,21 +48,21 @@ namespace model {
 
 		/** Adds a physical actor and registers it with a name for easy lookup.
 		*/
-		void addActor( physics::IActorPtr pActor, const String & rName );
+		void addActor( physics::IActorPtr pActor, const String& rName );
 
 		/** Retrieve a physical actor by the name it was registered within this model::Physical object.
 		*/
 		physics::IActorPtr getActorByName( const String& rName ) const;
 
 		/** Adds a body affector. */
-		void addAffector( SharedPtr<physics::IBodyAffector>& pAffector );
+		void addAffector( SharedPtr<physics::IBodyAffector> pAffector, const String& rName );
 
 		/** Adds a joint. */
 		void addJoint( physics::IJointPtr pJoint );
-		//void addJointGroup( SharedPtr<physics::IJointGroup> & pJointGroup );
+		//void addJointGroup( SharedPtr<physics::IJointGroup>& pJointGroup );
 
 		/** Adds a body. */
-		void addBody( SharedPtr<physics::IBody>& pBody, const String & rName );
+		void addBody( SharedPtr<physics::IBody>& pBody, const String& rName );
 
 		/** Translates this model::Physical object by translating all contained actors. */
 		void translate( const Vector3& d );
@@ -68,6 +70,8 @@ namespace model {
 		typedef Vector< physics::IActorPtr > ActorVector;
 		/** @todo optimize! */
 		ActorVector getActors() const;
+
+		void updateAffectors( real timeElapsed );
 	private:
 		typedef AssocVector< String, physics::IActorPtr > ActorMap;
 		ActorMap		mActors;
@@ -75,9 +79,13 @@ namespace model {
 		typedef Vector< physics::IJointPtr > JointList;
 		JointList		mJoints;
 
+		typedef std::pair< String, SharedPtr<physics::IBodyAffector> > AffectorRecord;
+		typedef Vector< AffectorRecord > AffectorList;
+		AffectorList		mAffectors;
 	};
 
 } // model
 } // yake
 
 #endif
+

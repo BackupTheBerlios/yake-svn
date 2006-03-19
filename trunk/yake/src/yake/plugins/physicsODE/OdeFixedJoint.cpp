@@ -44,9 +44,9 @@ namespace physics {
 	}
 
 	//-----------------------------------------------------
-	void OdeFixedJoint::attach( IBody& rBody1, IBody& rBody2 )
+	void OdeFixedJoint::attach( IBody* pBody1, IBody* pBody2 )
 	{
-		OdeJoint::attach( rBody1, rBody2 );
+		OdeJoint::attach( pBody1, pBody2 );
 		
 		dJointSetFixed( mOdeJoint->id() );
 	}
@@ -64,7 +64,7 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	void OdeFixedJoint::setAxis( size_t axisIndex, Vector3 const& rAxis )
+	void OdeFixedJoint::setAxis( size_t axisIndex, const math::Vector3& rAxis )
 	{
 		YAKE_ASSERT( false ).error( "Fixed joint doesn't have any axes!" );
 	}
@@ -76,7 +76,7 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	void OdeFixedJoint::setAnchor( size_t anchorIndex, Vector3 const& rAnchor )
+	void OdeFixedJoint::setAnchor( size_t anchorIndex, const math::Vector3& rAnchor )
 	{
 		YAKE_ASSERT( false ).error( "Fixed joint doesn't have any anchors!" );
 	}

@@ -51,7 +51,6 @@ namespace yake {
 */
 class YAKE_BASE_API Movable
 {
-	YAKE_DECLARE_CLASS( yake::Movable );
 protected:
 	Movable();
 // Class
@@ -60,12 +59,15 @@ public:
 
 // Methods
 public:
-	virtual void setPosition( const Vector3& rPosition ) = 0;
-	virtual void setOrientation( const Quaternion& rOrientation ) = 0;
-	virtual Vector3 getPosition() const = 0;
-	virtual Quaternion getOrientation() const = 0;
+	virtual void setPosition( const math::Vector3& rPosition ) = 0;
+	virtual void setOrientation( const math::Quaternion& rOrientation ) = 0;
+	virtual math::Vector3 getPosition() const = 0;
+	virtual math::Quaternion getOrientation() const = 0;
+	virtual math::Vector3 getDerivedPosition() const = 0;
+	virtual math::Quaternion getDerivedOrientation() const = 0;
+	
 
-	inline virtual void translate( const Vector3& rDelta )
+	inline virtual void translate( const math::Vector3& rDelta )
 	{
 		setPosition( getPosition() + rDelta );
 	}

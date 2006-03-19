@@ -27,7 +27,7 @@
 #ifndef YAKE_VEHICLE_SYSTEM_H
 #define YAKE_VEHICLE_SYSTEM_H
 
-#include "yakePrerequisites.h"
+#include <yapp/vehicle/yakePrerequisites.h>
 
 namespace yake {
 namespace vehicle {
@@ -38,15 +38,15 @@ namespace vehicle {
 		YAKE_DECLARE_REGISTRY_0(IVehicleSystem,String);
 	public:
 		virtual ~IVehicleSystem() {}
-		virtual IVehicle* create(const VehicleTemplate&, physics::IWorld& PWorld) = 0;
+		virtual IVehicle* create(const VehicleTemplate&, physics::IWorld& PWorld, model::Physical& physModel ) = 0;
 		virtual bool loadTemplates(const String& fn) = 0;
 		//virtual VehicleTemplate* cloneTemplate(const String& tpl) = 0;
 		virtual VehicleTemplate* getTemplate(const String& tpl) const = 0;
-		virtual IVehicle* create(const String& tpl, physics::IWorld& PWorld) = 0;
+		virtual IVehicle* create(const String& tpl, physics::IWorld& PWorld, model::Physical& physModel) = 0;
 	};
 
 } // namespace vehicle
 } // namespace yake
 
-
 #endif
+

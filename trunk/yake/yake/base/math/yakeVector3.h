@@ -32,11 +32,11 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include "yake/base/yakePrerequisites.h"
 #endif
 // Yake
-#include "yakeMath.h"
-#include "yakeQuaternion.h"
+#include "yake/base/math/yakeMath.h"
+#include "yake/base/math/yakeQuaternion.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -415,14 +415,15 @@ namespace math {
         static const Vector3 kUnitX;
         static const Vector3 kUnitY;
         static const Vector3 kUnitZ;
-        static const Vector3 kUnitScale;
+	static const Vector3 kUnitScale;
 
     };
-	inline ::std::ostream& operator << ( ::std::ostream& lhs, const Vector3 & rhs )
-	{
-		lhs << rhs.x << " " << rhs.y << " " << rhs.z;
-		return lhs;
-	}
+
+    inline std::ostream& operator << ( std::ostream& lhs, const Vector3& rhs )
+    {
+	lhs << rhs.x << " " << rhs.y << " " << rhs.z;
+	return lhs;
+    }
 
 } // math
 } // yake

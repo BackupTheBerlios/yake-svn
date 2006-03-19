@@ -10,36 +10,36 @@ namespace yake {
 
 		void setCamera(graphics::ICamera*);
 
-		void setTarget( const Point3& );
-		void setOffset( const Vector3& );
-		Vector3 getOffset() const;
+		void setTarget( const math::Point3& );
+		void setOffset( const math::Vector3& );
+		math::Vector3 getOffset() const;
 
 		void update(const real dt);
 	private:
-		Point3				mTargetPos;
+		math::Point3		mTargetPos;
 		graphics::ICamera*	mCam;
-		Vector3				mCamOffset;
+		math::Vector3		mCamOffset;
 	};
 	/** @todo move into .inl file! */
 	TopDownCameraController::TopDownCameraController() :
 		mCam(0),
-		mTargetPos(Point3::kZero),
-		mCamOffset(Vector3(2,0,2))
+		mTargetPos(math::Point3::kZero),
+		mCamOffset(math::Vector3(2,0,2))
 	{
 	}
 	void TopDownCameraController::setCamera(graphics::ICamera* cam)
 	{
 		mCam = cam;
 	}
-	void TopDownCameraController::setTarget( const Point3& pt )
+	void TopDownCameraController::setTarget( const math::Point3& pt )
 	{
 		mTargetPos = pt;
 	}
-	void TopDownCameraController::setOffset( const Vector3& offset )
+	void TopDownCameraController::setOffset( const math::Vector3& offset )
 	{
 		mCamOffset = offset;
 	}
-	Vector3 TopDownCameraController::getOffset() const
+	math::Vector3 TopDownCameraController::getOffset() const
 	{
 		return mCamOffset;
 	}
@@ -47,7 +47,7 @@ namespace yake {
 	{
 		if (!mCam)
 			return;
-		const Point3 targetCamPos = mTargetPos + mCamOffset;
+		const math::Point3 targetCamPos = mTargetPos + mCamOffset;
 		mCam->translate( 0.5 * (targetCamPos - mCam->getPosition()) );
 		mCam->lookAt( mTargetPos );
 	}
@@ -55,3 +55,4 @@ namespace yake {
 } // namespace yake
 
 #endif
+

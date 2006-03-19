@@ -314,7 +314,7 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	bool OgreSubmeshAccess::setPosition( uint32 index, const Vector3 & position )
+	bool OgreSubmeshAccess::setPosition( uint32 index, const math::Vector3 & position )
 	{
 		YAKE_ASSERT( mpLockedPositions != 0 ).warning("should be locked!");
 		YAKE_ASSERT( mhwvbPositions.isNull() == false ).warning("need a hwvb!");
@@ -371,7 +371,7 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	bool OgreSubmeshAccess::setTexCoord( uint16 set, uint16 index, const Vector3 & uv )
+	bool OgreSubmeshAccess::setTexCoord( uint16 set, uint16 index, const math::Vector3 & uv )
 	{
 		YAKE_ASSERT( mpLockedTexCoords[set] != 0 ).warning("should be locked!");
 		YAKE_ASSERT( mhwvbTexCoords[set].isNull() == false ).warning("need a hwvb!");
@@ -431,7 +431,7 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	bool OgreSubmeshAccess::setColour( uint32 index, const Color & colour )
+	bool OgreSubmeshAccess::setColour( uint32 index, const math::Color& colour )
 	{
 		YAKE_ASSERT( mpLockedColours != 0 ).warning("should be locked!");
 		YAKE_ASSERT( mhwvbColours.isNull() == false ).warning("need a hwvb!");
@@ -540,7 +540,7 @@ namespace ogre3d {
 	}
 
 	//-----------------------------------------------------
-	bool OgreSubmeshAccess::setNormal( uint32 index, const Vector3 & normal )
+	bool OgreSubmeshAccess::setNormal( uint32 index, const math::Vector3 & normal )
 	{
 		YAKE_ASSERT( mpLockedNormals != 0 ).warning("should be locked!");
 		YAKE_ASSERT( mhwvbNormals.isNull() == false ).warning("need a hwvb!");
@@ -556,3 +556,4 @@ namespace ogre3d {
 }
 }
 }
+

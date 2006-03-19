@@ -56,7 +56,7 @@
 		assert( !id.empty() );
 		if (id.empty())
 			return std::make_pair(RC_INVALID_INPUT,0);
-		StringToClassIdMap::const_iterator it = strIdAliases_.find( id );
+		typename StringToClassIdMap::const_iterator it = strIdAliases_.find( id );
 		if (it == strIdAliases_.end())
 			return std::make_pair(RC_NOT_FOUND,0);
 		return std::make_pair(RC_OK,it->second);
@@ -94,7 +94,7 @@
 		if (rc != RC_OK)
 			return rc;
 
-		strIdAliases_.insert( StringToClassIdMap::value_type(name,clsId) );
+		strIdAliases_.insert( typename StringToClassIdMap::value_type(name,clsId) );
 
 		return RC_OK;
 	}
@@ -199,7 +199,7 @@
 	void ObjectManager<obj_type,objectid_type>::destroyAllObjects()
 	{
 		IdObjMap objs = objs_; // copy!
-		for (IdObjMap::const_iterator it = objs.begin(); it != objs.end(); ++it)
+		for (typename IdObjMap::const_iterator it = objs.begin(); it != objs.end(); ++it)
 		{
 			destroyObject( it->second );
 		}
@@ -215,7 +215,7 @@
 		assert( !obj->id().isNull() );
 		if (!obj->id().isNull())
 		{
-			IdObjMap::iterator it = objs_.find( obj->id() );
+			typename IdObjMap::iterator it = objs_.find( obj->id() );
 			if (it != objs_.end())
 				objs_.erase( obj->id() );
 		}
@@ -225,7 +225,7 @@
 		if (!idMgr_.hasClass( clsId ))
 		{
 			// try alias
-			ClassIdMap::const_iterator it = idAliases_.find( clsId );
+			typename ClassIdMap::const_iterator it = idAliases_.find( clsId );
 			assert( it != idAliases_.end() );
 			if (it == idAliases_.end())
 				return; //@FIXME or throw ?
@@ -245,7 +245,7 @@
 		data.destroy_( obj );
 	}
 	template<typename obj_type, typename objectid_type>
-	typename ObjectManager<obj_type,objectid_type>::object_type* ObjectManager<obj_type,objectid_type>::createObject(const std::string& id, const objectid_type& userObjId = objectid_type::kNull)
+	typename ObjectManager<obj_type,objectid_type>::object_type* ObjectManager<obj_type,objectid_type>::createObject(const std::string& id, const objectid_type& userObjId )
 	{
 		// check params
 		assert( !id.empty() );
@@ -259,7 +259,7 @@
 		return this->createObject( ret.second, userObjId );
 	}
 	template<typename obj_type, typename objectid_type>
-	typename ObjectManager<obj_type,objectid_type>::object_type* ObjectManager<obj_type,objectid_type>::createObject(const ClassId clsId, const objectid_type& userObjId = objectid_type::kNull)
+	typename ObjectManager<obj_type,objectid_type>::object_type* ObjectManager<obj_type,objectid_type>::createObject(const ClassId clsId, const objectid_type& userObjId)
 	{
 		if (!userObjId.isNull())
 		{
@@ -272,7 +272,7 @@
 		if (!idMgr_.hasClass( theClsId ))
 		{
 			// try alias
-			ClassIdMap::const_iterator it = idAliases_.find( theClsId );
+			typename ClassIdMap::const_iterator it = idAliases_.find( theClsId );
 			assert( it != idAliases_.end() );
 			if (it == idAliases_.end())
 				return 0;

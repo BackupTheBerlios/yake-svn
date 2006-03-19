@@ -154,3 +154,4 @@ private:
 } // yake
 
 #endif // YAKE_BASE_PROCESSOR_H
+

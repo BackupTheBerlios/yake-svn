@@ -37,4 +37,4 @@
 #include <yake/samples/common/yakeExampleApplication.h>
 #include <yake/data/yakeData.h>
 
-#include <Ogre.h>
+#include "Ogre.h"

@@ -46,17 +46,19 @@ namespace physics
 		real length() const;
 		bool intersects() const;
 		real intersectionDepth() const;
-		Vector3 intersectionPoint() const;
-		Vector3 intersectionNormal() const;
+		math::Vector3 intersectionPoint() const;
+		math::Vector3 intersectionNormal() const;
 
-		virtual void setPosition( Vector3 const& rPosition);
-		virtual Vector3 getPosition() const;
+		virtual void setPosition( math::Vector3 const& rPosition);
+		virtual math::Vector3 getPosition() const;
+		virtual math::Vector3 getDerivedPosition() const { return getPosition(); }//FIXME is this enough? 
 
-		virtual void setOrientation( Quaternion const& rOrientation );
-		virtual Quaternion getOrientation() const;
+		virtual void setOrientation( math::Quaternion const& rOrientation );
+		virtual math::Quaternion getOrientation() const;
+		virtual math::Quaternion getDerivedOrientation() const { return getOrientation(); }//FIXME is this enough?
 
-		void setDirection(const Vector3&);
-		Vector3 getDirection() const;
+		void setDirection(const math::Vector3&);
+		math::Vector3 getDirection() const;
 
 		void ignore(dGeomID);
 
@@ -74,13 +76,13 @@ namespace physics
 		dRay*		mRay;
 		OdeWorld*	mWorld;
 		real		mLength;
-		mutable Vector3	mPosition;
-		mutable Vector3	mDirection;
+		mutable math::Vector3	mPosition;
+		mutable math::Vector3	mDirection;
 
 		bool		mIntersects;
 		real		mIntersectionDepth;
-		Vector3		mIntersectionPoint;
-		Vector3		mIntersectionNormal;
+		math::Vector3	mIntersectionPoint;
+		math::Vector3	mIntersectionNormal;
 
 		typedef std::deque<dGeomID> GeomIdList;
 		GeomIdList	mIgnoreGeoms;
@@ -90,3 +92,4 @@ namespace physics
 } // yake
 
 #endif
+

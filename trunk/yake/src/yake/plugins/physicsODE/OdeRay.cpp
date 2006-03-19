@@ -30,6 +30,7 @@
 
 namespace yake {
 namespace physics {
+	using namespace yake::math;
 
 	//-----------------------------------------------------
 	OdeRay::OdeRay(OdeWorld* world, const real length) :
@@ -66,10 +67,10 @@ namespace physics {
 		{
 			mIntersects = true;
 			mIntersectionDepth = real(contact.geom.depth);
-			mIntersectionPoint = Vector3( contact.geom.pos[0], contact.geom.pos[1], contact.geom.pos[2] );
+			mIntersectionPoint = Vector3( real(contact.geom.pos[0]), real(contact.geom.pos[1]), real(contact.geom.pos[2]) );
 			// As we have passed dCollide the ray as the first parameter, the normal
 			// is oriented correctly for ray deflection from the surface.
-			mIntersectionNormal = Vector3( contact.geom.normal[0], contact.geom.normal[1], contact.geom.normal[2] );
+			mIntersectionNormal = Vector3( real(contact.geom.normal[0]), real(contact.geom.normal[1]), real(contact.geom.normal[2]) );
 		}
 	}
 	real OdeRay::length() const
@@ -117,7 +118,7 @@ namespace physics {
 		if (mRay)
 		{
 			const dReal* pos = mRay->getPosition();
-			mPosition = Vector3(pos[0],pos[1],pos[2]);
+			mPosition = Vector3(real(pos[0]),real(pos[1]),real(pos[2]));
 		}
 		return mPosition;
     }

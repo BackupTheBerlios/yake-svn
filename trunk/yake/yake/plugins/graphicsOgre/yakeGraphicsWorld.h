@@ -87,7 +87,7 @@ namespace ogre3d {
 		virtual real getRenderWindowWidth() const;
 		virtual real getRenderWindowHeight() const;
 
-		virtual IEntity* pickEntity(const Ray& ray);
+		virtual IEntity* pickEntity(const math::Ray& ray);
 
 		static void setCore( OgreCore* core );
 

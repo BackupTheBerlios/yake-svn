@@ -44,15 +44,18 @@ namespace physics {
 		public:
 			virtual ~OdeJoint();
 
-			virtual void attach( IBody& rBody1, IBody& rBody2 );
+			/** Attach joint to bodies. If one of the bodies is 0, then attach
+			 * to static environment.
+			 */
+			virtual void attach( IBody* pBody1, IBody* pBody2 );
 
 			//virtual JointType getType() const;
 			
 			//virtual size_t getNumAxis() const;
-			//virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			//virtual void setAxis( size_t axisIndex, math::Vector3 const& rAxis );
 			
 			//virtual size_t getNumAnchors() const;
-			//virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			//virtual void setAnchor( size_t anchorIndex, math::Vector3 const& rAnchor );
 			
 			//virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
 			
@@ -95,10 +98,10 @@ namespace physics {
 			virtual JointType getType() const;
 			
 			virtual size_t getNumAxis() const;
-			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			virtual void setAxis( size_t axisIndex, math::Vector3 const& rAxis );
 			
 			virtual size_t getNumAnchors() const;
-			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			virtual void setAnchor( size_t anchorIndex, math::Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
 			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
@@ -117,10 +120,10 @@ namespace physics {
 			virtual JointType getType() const;
 			
 			virtual size_t getNumAxis() const;
-			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			virtual void setAxis( size_t axisIndex, math::Vector3 const& rAxis );
 			
 			virtual size_t getNumAnchors() const;
-			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			virtual void setAnchor( size_t anchorIndex, math::Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
 			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
@@ -140,10 +143,10 @@ namespace physics {
 			virtual JointType getType() const;
 			
 			virtual size_t getNumAxis() const;
-			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			virtual void setAxis( size_t axisIndex, math::Vector3 const& rAxis );
 			
 			virtual size_t getNumAnchors() const;
-			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			virtual void setAnchor( size_t anchorIndex, math::Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
 			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
@@ -156,15 +159,15 @@ namespace physics {
 		public:
 			OdeFixedJoint( OdeWorld* pWorld );
 
-			virtual void attach( IBody& rBody1, IBody& rBody2 );
+			virtual void attach( IBody* pBody1, IBody* pBody2 );
 			
 			virtual JointType getType() const;
 			
 			virtual size_t getNumAxis() const;
-			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			virtual void setAxis( size_t axisIndex, math::Vector3 const& rAxis );
 			
 			virtual size_t getNumAnchors() const;
-			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			virtual void setAnchor( size_t anchorIndex, math::Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
 			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
@@ -180,10 +183,10 @@ namespace physics {
 			virtual JointType getType() const;
 			
 			virtual size_t getNumAxis() const;
-			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			virtual void setAxis( size_t axisIndex, math::Vector3 const& rAxis );
 			
 			virtual size_t getNumAnchors() const;
-			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			virtual void setAnchor( size_t anchorIndex, math::Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
 			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
@@ -203,10 +206,10 @@ namespace physics {
 			virtual JointType getType() const;
 			
 			virtual size_t getNumAxis() const;
-			virtual void setAxis( size_t axisIndex, Vector3 const& rAxis );
+			virtual void setAxis( size_t axisIndex, math::Vector3 const& rAxis );
 			
 			virtual size_t getNumAnchors() const;
-			virtual void setAnchor( size_t anchorIndex, Vector3 const& rAnchor );
+			virtual void setAnchor( size_t anchorIndex, math::Vector3 const& rAnchor );
 			
 			virtual void setMotor( size_t axisIndex, real velocityTarget, real maximumForce );
 			virtual void setMotorEnabled( size_t axisIndex, bool enabled );
@@ -221,3 +224,4 @@ namespace physics {
 } // yake
 
 #endif
+

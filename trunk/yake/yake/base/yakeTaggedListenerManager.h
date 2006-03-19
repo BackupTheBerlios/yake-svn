@@ -40,7 +40,7 @@ namespace yake {
 		listeners_.push_back( listener_list::value_type(listener,mode) );
 		if (!tag.empty())
 		{
-			tag_listener_map::const_iterator it = listenerMap_.find(tag);
+			typename tag_listener_map::const_iterator it = listenerMap_.find(tag);
 			YAKE_ASSERT( it == listenerMap_.end() );
 			if (it != listenerMap_.end())
 				listenerMap_.insert( tag_listener_map::value_type( tag, listener ) );
@@ -49,7 +49,7 @@ namespace yake {
 	template<typename T_listener>
 	typename ListenerManager<T_listener>::listener_type* ListenerManager<T_listener>::getListener(const std::string& tag) const
 	{
-			tag_listener_map::const_iterator it = listenerMap_.find(tag);
+			typename tag_listener_map::const_iterator it = listenerMap_.find(tag);
 			YAKE_ASSERT( it != listenerMap_.end() );
 			if (it == listenerMap_.end())
 				return 0;

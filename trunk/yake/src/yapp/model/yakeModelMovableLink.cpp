@@ -37,16 +37,24 @@ namespace model {
 	{
 	}
 	SignalConnection ModelMovableLink::subscribeToPositionChanged( Movable* pMovable )
-	{
+	{	
+		const Vector3 srcPos = getSource()->getPosition();
+		pMovable->setPosition( srcPos );
+
 		return mPositionSignal.connect( Bind1( &Movable::setPosition, pMovable ) );
 	}
+
 	SignalConnection ModelMovableLink::subscribeToOrientationChanged( Movable* pMovable )
 	{
+		const Quaternion srcOrientation = getSource()->getOrientation();
+		pMovable->setOrientation( srcOrientation );
+
 		return mOrientationSignal.connect( Bind1( &Movable::setOrientation, pMovable ) );
 	}
+
 	void ModelMovableLink::update( real timeElapsed )
 	{
-		Movable * pSource = getSource();
+		const Movable* pSource = getSource();
 		YAKE_ASSERT( pSource ).debug("no update source -> no updates");
 		if (!pSource)
 			return;
@@ -64,5 +72,48 @@ namespace model {
 		}
 	}
 
+	YAKE_REGISTER_CONCRETE( ModelMovableWorldLink );
+	ModelMovableWorldLink::ModelMovableWorldLink()
+	{
+	}
+	SignalConnection ModelMovableWorldLink::subscribeToPositionChanged( Movable* pMovable )
+	{	
+		const Vector3 srcPos = getSource()->getDerivedPosition();
+		pMovable->setPosition( srcPos );
+
+		return mPositionSignal.connect( Bind1( &Movable::setPosition, pMovable ) );
+	}
+
+	SignalConnection ModelMovableWorldLink::subscribeToOrientationChanged( Movable* pMovable )
+	{
+		const Quaternion srcOrientation = getSource()->getDerivedOrientation();
+		pMovable->setOrientation( srcOrientation );
+
+		return mOrientationSignal.connect( Bind1( &Movable::setOrientation, pMovable ) );
+	}
+
+	void ModelMovableWorldLink::update( real timeElapsed )
+	{
+		const Movable* pSource = getSource();
+
+		YAKE_ASSERT( pSource ).error("no update source -> no updates");
+
+		if ( pSource == NULL )
+			return;
+
+		Vector3 position = pSource->getDerivedPosition();
+		if (mLastPosition != position)
+		{
+			mPositionSignal( position );
+			mLastPosition = position;
+		}
+		Quaternion orientation = pSource->getDerivedOrientation();
+		if (mLastOrientation != orientation)
+		{
+			mOrientationSignal( orientation );
+			mLastOrientation = orientation;
+		}
+	}
 }
 }
+

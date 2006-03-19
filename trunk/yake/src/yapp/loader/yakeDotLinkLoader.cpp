@@ -85,7 +85,7 @@ namespace model {
 			return;
 
 		using namespace data::dom;
-		using namespace base::templates;
+		using namespace yake::templates;
 
 		const String linkType = StringUtil::toLowerCase( rLinkNode.getAttributeValueAs<String>("type") );
 		//const String linkName = varGet<String>( rLinkNode.getId("id") );

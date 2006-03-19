@@ -72,3 +72,4 @@ const char* getApplicationDir()
 
 } // native
 } // yake
+

@@ -51,23 +51,23 @@ namespace physics {
 	public:
 		struct Desc
 		{
-			Desc(	const Vector3 & rkDimensions = Vector3(0,2,0),
-					const Vector3 & rkPosition = Vector3::kZero,
-					const Quaternion & rkOrientation = Quaternion::kIdentity) :
+			Desc(	const math::Vector3 & rkDimensions = math::Vector3(0,2,0),
+					const math::Vector3 & rkPosition = math::Vector3::kZero,
+					const math::Quaternion & rkOrientation = math::Quaternion::kIdentity) :
 				position( rkPosition ),
 				orientation( rkOrientation ),
 				dimensions( rkDimensions )
 			{}
-			Vector3		position;
-			Quaternion	orientation;
-			Vector3		dimensions;
+			math::Vector3		position;
+			math::Quaternion	orientation;
+			math::Vector3		dimensions;
 		};
 	public:
 
-		virtual void setDimensions( const Vector3 & rkDimensions ) = 0;
+		virtual void setDimensions( const math::Vector3 & rkDimensions ) = 0;
 		virtual void setInfluenceByDynamics( const real ratio ) = 0;
 
-		virtual void setTargetVelocity( const Vector3 & rkTargetVelocity ) = 0;
+		virtual void setTargetVelocity( const math::Vector3 & rkTargetVelocity ) = 0;
 		virtual void jump() = 0;
 		virtual bool isJumping() const = 0;
 		virtual void duck(const bool yes) = 0;
@@ -82,3 +82,4 @@ namespace physics {
 }
 
 #endif
+

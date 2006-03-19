@@ -34,7 +34,7 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreEntity::OgreEntity( ::Ogre::SceneManager * sceneMgr, const String & mesh ) : mSceneMgr( sceneMgr ), mEntity( 0 )
+	OgreEntity::OgreEntity( Ogre::SceneManager* sceneMgr, const String& mesh ) : mSceneMgr( sceneMgr ), mEntity( 0 )
 	{
 		YAKE_ASSERT( mSceneMgr ).debug("need a scene manager!");
 		YAKE_TRY
@@ -78,14 +78,14 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreEntity::setMaterial( const String & materialName )
+	void OgreEntity::setMaterial( const String& materialName )
 	{
 		if (mEntity)
 			mEntity->setMaterialName( materialName );
 	}
 
 	//------------------------------------------------------
-	void OgreEntity::setSubEntityMaterial( const String & subEntity, const String & materialName )
+	void OgreEntity::setSubEntityMaterial( const String& subEntity, const String& materialName )
 	{
 		if (mEntity)
 		{
@@ -115,6 +115,26 @@ namespace ogre3d {
 			mEntity->setCastShadows( castsShadow );
 	}
 
+	//------------------------------------------------------
+	void OgreEntity::setRenderDetail( SceneDetailLevel sdl )
+	{
+	    YAKE_ASSERT( mEntity ).error( "need an entity" );
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+	    // in Dagon material system becomes more consistent. So
+	    // polygon mode is considered to be a part of the render state,
+	    // i.e. material. If you want to change polygon mode you're 
+	    // encouraged to change entity ( subentity ) material.
+	    // This implementation just sets polygon mode override flag so 
+	    // entity's polygon mode can be overrided by camera's setting.
+	    YAKE_ASSERT( false ).warning( "Deprecated method. Read comments in the code." );
+	    mEntity->setPolygonModeOverrideable( true );
+#else
+	    mEntity->setRenderDetail( Ogre::SceneDetailLevel( sdl ) );
+#endif
+	}
+
 }
 }
 }
+

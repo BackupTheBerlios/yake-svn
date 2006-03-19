@@ -64,38 +64,37 @@ namespace vehicle {
 	}
 
 	//-----------------------------------------------------
-	// Class: IThruster
+	// Class: ILinearThruster
 	//-----------------------------------------------------
-	IThruster::IThruster() :
+	ILinearThruster::ILinearThruster() :
 		mMinForce(0.),
-		mMaxForce(1.),
-		mForce(0.)
+		mMaxForce(1.)
 	{
 	}
-	IThruster::~IThruster()
+	ILinearThruster::~ILinearThruster()
 	{
 	}
-	void IThruster::setForce( real force )
+	void ILinearThruster::setForce( real force )
 	{
 		mForce = force;
 	}
-	void IThruster::setMinimumForce( real force )
+	void ILinearThruster::setMinimumForce( real force )
 	{
 		mMinForce = force;
 	}
-	real IThruster::getMinimumForce() const
+	real ILinearThruster::getMinimumForce() const
 	{
 		return mMinForce;
 	}
-	void IThruster::setMaximumForce( real force )
+	void ILinearThruster::setMaximumForce( real force )
 	{
 		mMaxForce = force;
 	}
-	real IThruster::getMaximumForce() const
+	real ILinearThruster::getMaximumForce() const
 	{
 		return mMaxForce;
 	}
-	real IThruster::getForce() const
+	real ILinearThruster::getForce() const
 	{
 		return mForce;
 	}
@@ -133,3 +132,4 @@ namespace vehicle {
 
 } // namespace vehicle
 } // namespace yake
+

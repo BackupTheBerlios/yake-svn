@@ -117,14 +117,14 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreLight::setDiffuseColour( const Color& colour )
+	void OgreLight::setDiffuseColour( const math::Color& colour )
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
 		mLight->setDiffuseColour( COL_YAKE2OGRE( colour ) );
 	}
 
 	//------------------------------------------------------
-	void OgreLight::setSpecularColour( const Color& colour )
+	void OgreLight::setSpecularColour( const math::Color& colour )
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
 		mLight->setSpecularColour( COL_YAKE2OGRE( colour ) );
@@ -208,42 +208,42 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreLight::setPosition( const Vector3& rPosition )
+	void OgreLight::setPosition( const math::Vector3& rPosition )
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
 		mLight->setPosition( VEC_YAKE2OGRE( rPosition ) );
 	}
 
 	//------------------------------------------------------
-	Vector3 OgreLight::getPosition() const
+	math::Vector3 OgreLight::getPosition() const
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
 		return VEC_OGRE2YAKE( mLight->getPosition() );
 	}
 
 	//------------------------------------------------------
-	void OgreLight::setOrientation( const Quaternion & orientation )
+	void OgreLight::setOrientation( const math::Quaternion & orientation )
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
-		setDirection( orientation * Vector3(0,0,1) );
+		setDirection( orientation * math::Vector3(0,0,1) );
 	}
 
 	//------------------------------------------------------
-	Quaternion OgreLight::getOrientation() const
+	math::Quaternion OgreLight::getOrientation() const
 	{
 		YAKE_ASSERT( mLight ).debug( "not implemented..." );
-		return Quaternion::kIdentity;
+		return math::Quaternion::kIdentity;
 	}
 
 	//------------------------------------------------------
-	void OgreLight::setDirection( const Vector3& direction )
+	void OgreLight::setDirection( const math::Vector3& direction )
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
 		mLight->setDirection( VEC_YAKE2OGRE( direction ) );
 	}
 
 	//------------------------------------------------------
-	Vector3 OgreLight::getDirection() const
+	math::Vector3 OgreLight::getDirection() const
 	{
 		YAKE_ASSERT( mLight ).debug( "need actual light!" );
 		return VEC_OGRE2YAKE( mLight->getDirection() );
@@ -252,3 +252,4 @@ namespace ogre3d {
 } // ogre3d
 } // graphics
 } // yake
+

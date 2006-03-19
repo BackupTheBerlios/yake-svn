@@ -50,8 +50,7 @@ namespace physics
 		real					mRestitution;
 		real					mFriction2;
 		bool					mLateralSlip;
-//		ISlipNormalSource*		mSlipNormalSource;
-		Vector3					mSlipNormal;
+		math::Vector3				mSlipNormal;
 		real					mSlipLinearCoeff;
 		real					mSlipAngularCoeff;
 
@@ -62,3 +61,4 @@ namespace physics
 } // yake
 
 #endif
+

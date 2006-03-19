@@ -108,7 +108,6 @@ namespace ogre3d {
 				{
 					mRSys = (*it);
 					String str = mRSys->getName().c_str();
-					//if (str.find("3D9"))
 					if ( str.find("GL") )
 						found = true;
 					++it;
@@ -127,6 +126,14 @@ namespace ogre3d {
 				mRSys->setConfigOption("VSync", "No");
 				mRSys->setConfigOption("Video Mode", "800 x 600 @ 32-bit colour");
 #else
+				if ( mConfig[ "show_config_dialog" ] == "no" )
+				{
+				    if ( !mRoot->restoreConfig() )
+				    {
+					return;
+				    }
+				}
+				else				
 				if (!mRoot->showConfigDialog())
 				{
 					return;
@@ -175,7 +182,14 @@ namespace ogre3d {
 	{
 		StringMap::const_iterator itFind = mConfig.find("scenemanager");
 		if (itFind == mConfig.end())
+		{
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+			mSceneMgr = mRoot->createSceneManager( ST_GENERIC, "YakeSM" );
+#else
 			mSceneMgr = mRoot->getSceneManager( ST_GENERIC );
+#endif
+		}
 		else
 		{
 			String val = itFind->second;
@@ -190,7 +204,12 @@ namespace ogre3d {
 				YAKE_ASSERT( 1==0 ).warning("unknown scene manager config option. Using fallback: generic.");
 				mSceneType = ST_GENERIC;
 			}
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+			mSceneMgr = mRoot->createSceneManager( mSceneType, "YakeSM" );
+#else
 			mSceneMgr = mRoot->getSceneManager( mSceneType );
+#endif
 		}
 		YAKE_ASSERT( mSceneMgr );
 	}
@@ -206,7 +225,7 @@ namespace ogre3d {
 				Ogre::SceneNode::ObjectIterator itObj = pSN->getAttachedObjectIterator();
 				while (itObj.hasMoreElements())
 				{
-					YAKE_LOG_WARNING(String("gfx rootnode.obj '") << String(itObj.getNext()->getName().c_str()) << "'");
+					YAKE_LOG_WARNING( "gfx rootnode.obj '" + itObj.getNext()->getName() + "'" );
 				}
 			}
 			if (pSN->numChildren() > 0)
@@ -214,7 +233,7 @@ namespace ogre3d {
 				Ogre::SceneNode::ChildNodeIterator itN = pSN->getChildIterator();
 				while (itN.hasMoreElements())
 				{
-					YAKE_LOG_WARNING(String("gfx rootnode.node '") << String(itN.getNext()->getName().c_str()) << "'");
+					YAKE_LOG_WARNING( "gfx rootnode.node '" + itN.getNext()->getName() + "'" );
 				}
 			}
 			pSN->detachAllObjects();
@@ -251,13 +270,13 @@ namespace ogre3d {
 		while (seci.hasMoreElements())
 		{
 			secName = seci.peekNextKey();
-            ConfigFile::SettingsMultiMap *settings = seci.getNext();
-            ConfigFile::SettingsMultiMap::iterator i;
-            for (i = settings->begin(); i != settings->end(); ++i)
-            {
-                typeName = i->first;
-                archName = i->second;
-				Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
+			ConfigFile::SettingsMultiMap *settings = seci.getNext();
+			ConfigFile::SettingsMultiMap::iterator i;
+			for (i = settings->begin(); i != settings->end(); ++i)
+			{
+			    typeName = i->first;
+			    archName = i->second;
+			    Ogre::ResourceGroupManager::getSingleton().addResourceLocation(archName, typeName, secName);
 			}
 		}
 	}
@@ -343,3 +362,4 @@ namespace ogre3d {
 }
 }
 }
+

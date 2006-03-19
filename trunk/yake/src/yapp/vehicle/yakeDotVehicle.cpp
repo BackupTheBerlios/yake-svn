@@ -125,28 +125,37 @@ namespace vehicle {
 				}
 			}
 		}
+		pN = n.getNodeByName( "ref" ); // reference to xode
+		if ( pN.get() )
+		{
+		    // reading physical body name from "xode" attribute
+		    mpCurrVehTpl->mChassis.mPhysicsBody = pN->getAttributeValueAs<String>( "xode" );
+		}
 	}
+
 	void DotVehicleParser::parseShapeBox( const data::dom::INode& n, const String& matId )
 	{
-		Vector3 dim;
+		math::Vector3 dim;
 		dim.x = StringUtil::parseReal( n.getAttributeValueAs<String>("x") );
 		dim.y = StringUtil::parseReal( n.getAttributeValueAs<String>("y") );
 		dim.z = StringUtil::parseReal( n.getAttributeValueAs<String>("z") );
-		Vector3 pos;
+		math::Vector3 pos;
 		if (n.getNodeByName("position"))
 			parsePosition( *n.getNodeByName("position"), pos );
 		mpCurrVehTpl->mChassis.mChassisShapes.push_back(
 			new physics::IShape::BoxDesc( dim, matId, pos ) );
 	}
+
 	void DotVehicleParser::parseShapeSphere( const data::dom::INode& n, const String& matId )
 	{
 		real radius = StringUtil::parseReal( n.getAttributeValueAs<String>("radius") );
-		Vector3 pos;
+		math::Vector3 pos;
 		if (n.getNodeByName("position"))
 			parsePosition( *n.getNodeByName("position"), pos );
 		mpCurrVehTpl->mChassis.mChassisShapes.push_back(
 			new physics::IShape::SphereDesc( radius, matId, pos ) );
 	}
+
 	void DotVehicleParser::parseEngine( const data::dom::INode& n )
 	{
 		String id = n.getAttributeValueAs<String>("name");
@@ -157,16 +166,44 @@ namespace vehicle {
 
 		if (type == "MountedThruster")
 		{
+			String thrusterType = n.getAttributeValueAs<String>("thrusterType");
+			if ( thrusterType.empty() )
+			    thrusterType = "linear"; // FIXME compatibility with old data files
+			
 			String mtPt = n.getAttributeValueAs<String>("mountPoint");
 			YAKE_ASSERT( !mtPt.empty() );
 
-			SharedPtr<data::dom::INode> pForcesN = n.getNodeByName("forces");
-			YAKE_ASSERT( pForcesN.get() );
+			// TODO basic implementation. Make it pretty :D
 
-			mpCurrVehTpl->mEngines[ id ] = new VehicleTemplate::ThrusterTpl(
-				StringUtil::parseReal( pForcesN->getAttributeValueAs<String>("min") ),
-				StringUtil::parseReal( pForcesN->getAttributeValueAs<String>("max") ),
-				mtPt );
+			if ( thrusterType == "linear" )
+			{
+			    SharedPtr<data::dom::INode> pForcesN = n.getNodeByName("forces");
+			    YAKE_ASSERT( pForcesN.get() );
+
+			    VehicleTemplate::ThrusterTpl* pTemplate = new VehicleTemplate::ThrusterTpl;
+
+			    pTemplate->minForce = StringUtil::parseReal( pForcesN->getAttributeValueAs<String>("min") );
+			    pTemplate->maxForce = StringUtil::parseReal( pForcesN->getAttributeValueAs<String>("max") );
+			    pTemplate->gain = 0; // not needed
+			    pTemplate->mountPt = mtPt;
+			    pTemplate->type = "linear";
+
+			    mpCurrVehTpl->mEngines[ id ] = pTemplate;
+			}
+			else if ( thrusterType == "gain" )
+			{
+			    SharedPtr<data::dom::INode> pParams = n.getNodeByName("params");
+			    YAKE_ASSERT( pParams.get() );
+			    
+			    VehicleTemplate::ThrusterTpl* pTemplate = new VehicleTemplate::ThrusterTpl;
+			    pTemplate->minForce = 0; // not needed
+			    pTemplate->maxForce = 0; // not needed
+			    pTemplate->gain = StringUtil::parseReal( pParams->getAttributeValueAs<String>("gain") );
+			    pTemplate->mountPt = mtPt;
+			    pTemplate->type = "gain";
+
+			    mpCurrVehTpl->mEngines[ id ] = pTemplate;
+			}
 		}
 		else if (type == "CarEngine")
 		{
@@ -222,17 +259,17 @@ namespace vehicle {
 		const String thisId = n.getAttributeValueAs<String>("name");
 		YAKE_ASSERT( !thisId.empty() );
 
-		Vector3 position;
+		math::Vector3 position;
 		SharedPtr<INode> pNode = n.getNodeByName("position");
 		if (pNode.get())
 			parsePosition( *pNode, position );
 
-		Quaternion orientation;
+		math::Quaternion orientation;
 		pNode = n.getNodeByName("orientation");
 		if (pNode.get())
 			parseOrientation( *pNode, orientation );
 
-		Vector3 direction;
+		math::Vector3 direction;
 		pNode = n.getNodeByName("direction");
 		if (pNode.get())
 			parseDirection( *pNode, direction );
@@ -283,12 +320,12 @@ namespace vehicle {
 			return;
 		YAKE_ASSERT( mpCurrVehTpl->mWheels.find( name ) == mpCurrVehTpl->mWheels.end() )( name ).debug("duplicate wheel name. overriding values.");
 
-		Vector3 position;
+		math::Vector3 position;
 		SharedPtr<data::dom::INode> pN = n.getNodeByName("position");
 		if (pN.get())
 			parsePosition( *pN, position );
 
-		Quaternion rotation( Quaternion::kIdentity );
+		math::Quaternion rotation( math::Quaternion::kIdentity );
 		pN = n.getNodeByName("orientation");
 		if (pN.get())
 			parseOrientation( *pN, rotation );
@@ -318,19 +355,19 @@ namespace vehicle {
 
 
 	}
-	void DotVehicleParser::parsePosition( const data::dom::INode& n, Vector3& ret )
+	void DotVehicleParser::parsePosition( const data::dom::INode& n, math::Vector3& ret )
 	{
 		ret.x = StringUtil::parseReal( n.getAttributeValueAs<String>("x") );
 		ret.y = StringUtil::parseReal( n.getAttributeValueAs<String>("y") );
 		ret.z = StringUtil::parseReal( n.getAttributeValueAs<String>("z") );
 	}
-	void DotVehicleParser::parseDirection( const data::dom::INode& n, Vector3& ret )
+	void DotVehicleParser::parseDirection( const data::dom::INode& n, math::Vector3& ret )
 	{
 		ret.x = StringUtil::parseReal( n.getAttributeValueAs<String>("x") );
 		ret.y = StringUtil::parseReal( n.getAttributeValueAs<String>("y") );
 		ret.z = StringUtil::parseReal( n.getAttributeValueAs<String>("z") );
 	}
-	void DotVehicleParser::parseOrientation( const data::dom::INode& n, Quaternion& ret )
+	void DotVehicleParser::parseOrientation( const data::dom::INode& n, math::Quaternion& ret )
 	{
 		if ( n.getAttributeValueAs<String>("qx") != "" )
 		{
@@ -341,7 +378,7 @@ namespace vehicle {
 		}
 		else if ( n.getAttributeValueAs<String>("axisX") != "" )
 		{
-			Vector3 axis;
+			math::Vector3 axis;
 			axis.x = StringUtil::parseReal( n.getAttributeValueAs<String>("axisX") );
 			axis.y = StringUtil::parseReal( n.getAttributeValueAs<String>("axisY") );
 			axis.z = StringUtil::parseReal( n.getAttributeValueAs<String>("axisZ") );
@@ -349,7 +386,7 @@ namespace vehicle {
 		}
 		else if ( n.getAttributeValueAs<String>("angleX") != "" )
 		{
-			Vector3 axis;
+			math::Vector3 axis;
 			axis.x = StringUtil::parseReal( n.getAttributeValueAs<String>("angleX") );
 			axis.y = StringUtil::parseReal( n.getAttributeValueAs<String>("angleY") );
 			axis.z = StringUtil::parseReal( n.getAttributeValueAs<String>("angleZ") );
@@ -360,3 +397,4 @@ namespace vehicle {
 
 } // namespace vehicle
 } // namespace yake
+

@@ -32,11 +32,11 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include "yake/base/yakePrerequisites.h"
 #endif
 // Yake
-#include "yakeMath.h"
-#include "yakeVector3.h"
+#include "yake/base/math/yakeMath.h"
+#include "yake/base/math/yakeVector3.h"
 
 // NB All code adapted from Wild Magic 0.2 Matrix math (free source code)
 // http://www.magic-software.com
@@ -228,3 +228,4 @@ namespace math {
 } // yake
 
 #endif // YAKE_BASE_MATH_MATRIX3_H
+

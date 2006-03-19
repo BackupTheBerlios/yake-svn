@@ -36,4 +36,3 @@
 #include <yake/statemachine/fsm_oo_machine.h>
 #include <yake/ent/ent.h>
 
-#include <yapp/raf/yakePrerequisites.h>

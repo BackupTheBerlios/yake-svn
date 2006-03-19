@@ -41,8 +41,6 @@
 //============================================================================
 namespace yake
 {
-namespace base
-{
 namespace native
 {
 
@@ -92,5 +90,5 @@ YAKE_BASE_NATIVE_API bool debug_AssertFailed( 	const char* pszMessage,
 }
 
 } // native
-} // base
 } // yake
+

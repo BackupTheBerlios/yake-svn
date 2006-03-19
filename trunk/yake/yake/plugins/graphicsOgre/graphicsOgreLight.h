@@ -52,18 +52,18 @@ namespace ogre3d {
 		virtual real getSpotlightOuterAngle() const;
 		virtual real getSpotlightFalloff() const;
 
-		virtual void setDiffuseColour( const Color& colour );
-		virtual void setSpecularColour( const Color& colour );
+		virtual void setDiffuseColour( const math::Color& colour );
+		virtual void setSpecularColour( const math::Color& colour );
 
 		virtual void setEnabled( bool enabled );
 		virtual void setCastsShadows( bool enabled );
 
-		virtual void setPosition( const Vector3 & position );
-		virtual Vector3 getPosition() const;
-		virtual void setOrientation( const Quaternion & orientation );
-		virtual Quaternion getOrientation() const;
-		virtual void setDirection( const Vector3& direction );
-		virtual Vector3 getDirection() const;
+		virtual void setPosition( const math::Vector3 & position );
+		virtual math::Vector3 getPosition() const;
+		virtual void setOrientation( const math::Quaternion & orientation );
+		virtual math::Quaternion getOrientation() const;
+		virtual void setDirection( const math::Vector3& direction );
+		virtual math::Vector3 getDirection() const;
 
 		virtual const String& getName() { return mLight->getName(); }
 
@@ -79,3 +79,4 @@ namespace ogre3d {
 }
 
 #endif
+

@@ -30,14 +30,14 @@
 #include <yapp/base/yappPrerequisites.h>
 #include <yapp/model/yakeGraphical.h>
 #include <yapp/model/yakePhysical.h>
-
+#include <yapp/model/yakeModelLink.h>
 
 namespace yake {
 	using namespace base::templates;
 namespace model {
-
 	class ModelLink;
 	class ModelMovableLink;
+	class ModelMovableWorldLink;
 
 namespace complex {
 
@@ -57,20 +57,20 @@ namespace complex {
 		/** @todo Exchange "Model" with "Entity" (which has dynamic properties etc) ?
 		*/
 		Model* getParentModel() const;
-		void addChildModel( SharedPtr<Model> & rModel );
-		SharedPtr<Model> getChildModelByName( const String & rName ) const;
-		SharedPtr<Model> removeChildModel( const String & rName );
+		void addChildModel( SharedPtr<Model>& rModel );
+		SharedPtr<Model> getChildModelByName( const String& rName ) const;
+		SharedPtr<Model> removeChildModel( const String& rName );
 		SharedPtr<Model> removeChildModel( const SharedPtr<Model>& rModel );
 
 		/**
 			"graphical://model.model...model/graphicalname"
 			"physical://model.model...model/physicalname"
 		*/
-		Physical* queryPhysical( const String & rQuery ) const;
-		Graphical* queryGraphical( const String & rQuery ) const;
+		Physical* queryPhysical( const String& rQuery ) const;
+		Graphical* queryGraphical( const String& rQuery ) const;
 
-		Physical* getPhysicalByName( const String & rName ) const;
-		Graphical* getGraphicalByName( const String & rName ) const;
+		Physical* getPhysicalByName( const String& rName ) const;
+		Graphical* getGraphicalByName( const String& rName ) const;
 
 		/** Adds a "Physical" object to this model.
 			The model references it using a shared pointer.
@@ -79,10 +79,10 @@ namespace complex {
 			A name can optionally be supplied. It can then be used for retrieving
 			objects by name.
 		*/
-		void addPhysical( const SharedPtr<Physical> & pPhysical, const String & rName = ""/*, bool bManaged*/ );
+		void addPhysical( const SharedPtr<Physical>& pPhysical, const String& rName = ""/*, bool bManaged*/ );
 
 		/** @copydoc addPhysical */
-		void addPhysical( Physical* pPhysical, const String & rName = ""/*, bool bManaged*/ );
+		void addPhysical( Physical* pPhysical, const String& rName = ""/*, bool bManaged*/ );
 
 		/** Adds a "Graphical" object to this model.
 			The model references it using a shared pointer.
@@ -91,15 +91,15 @@ namespace complex {
 			A name can optionally be supplied. It can then be used for retrieving
 			objects by name.
 		*/
-		void addGraphical( const SharedPtr<Graphical> & pGraphical, const String & rName = "" );
+		void addGraphical( const SharedPtr<Graphical>& pGraphical, const String& rName = "" );
 
 		/** @copydoc addGraphical
 		*/
-		void addGraphical( Graphical* pGraphical, const String & rName = "" );
+		void addGraphical( Graphical* pGraphical, const String& rName = "" );
 
-		void addGraphicsController( const SharedPtr<IObjectController> & pController, const String & rName = "" );
-		void addGraphicsController( IObjectController* pController, const String & rName = "" );
-		void addLink( const SharedPtr<ModelLink> & pModelLink, const String & rName = "" );
+		void addGraphicsController( const SharedPtr<IObjectController>& pController, const String& rName = "" );
+		void addGraphicsController( IObjectController* pController, const String& rName = "" );
+		void addLink( const SharedPtr<ModelLink>& pModelLink, const String& rName = "" );
 
 		void updatePhysics( real timeElapsed );
 		void updateGraphics( real timeElapsed );
@@ -113,6 +113,7 @@ namespace complex {
 				pair of source/target objects).
 		*/
 		ModelMovableLink* addLink( Movable* pSource, Movable* pTarget );
+		ModelMovableWorldLink* addWorldLink( Movable* pSource, Movable* pTarget );
 	private:
 		typedef AssocVector< String, SharedPtr<Physical> > PhysicalMap;
 		PhysicalMap			mPhysicals;
@@ -122,8 +123,8 @@ namespace complex {
 
 		typedef Vector< SharedPtr<Model> > ModelList;
 		ModelList			mChildren;
-
-		typedef AssocVector< Movable*, ModelMovableLink* > MovableLinkMap;
+		
+		typedef AssocVector< Movable*, ModelLinkController< Movable >* > MovableLinkMap;
 		MovableLinkMap		mMovableLinkMap;
 
 		Model*				mParent;
@@ -137,3 +138,4 @@ namespace complex {
 } // yake
 
 #endif
+

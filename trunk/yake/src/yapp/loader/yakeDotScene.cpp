@@ -200,7 +200,7 @@ namespace dotscene {
 	}
 	
 	//------------------------------------------------------
-	void DotSceneParser::readVector( const SharedPtr<dom::INode>& pNode, Vector3& rVec )
+	void DotSceneParser::readVector( const SharedPtr<dom::INode>& pNode, math::Vector3& rVec )
 	{
 		YAKE_ASSERT( pNode );
 		rVec.x = StringUtil::parseReal( pNode->getAttributeValueAs<String>("x") );
@@ -209,19 +209,19 @@ namespace dotscene {
 	}
 
 	//------------------------------------------------------
-	void DotSceneParser::readPosition( const SharedPtr<dom::INode> & pNode, Vector3 & position )
+	void DotSceneParser::readPosition( const SharedPtr<dom::INode> & pNode, math::Vector3 & position )
 	{
 		readVector( pNode, position );
 	}
 
 	//------------------------------------------------------
-	void DotSceneParser::readScale( const SharedPtr<dom::INode>& pNode, Vector3& rScale )
+	void DotSceneParser::readScale( const SharedPtr<dom::INode>& pNode, math::Vector3& rScale )
 	{
 		readVector( pNode, rScale );
 	}
 	
 	//------------------------------------------------------
-	void DotSceneParser::readRotation( const SharedPtr<dom::INode>& pNode, Quaternion& rotation )
+	void DotSceneParser::readRotation( const SharedPtr<dom::INode>& pNode, math::Quaternion& rotation )
 	{
 		YAKE_ASSERT( pNode );
 		if ( pNode->getAttributeValueAs<String>("qx") != "" )
@@ -233,7 +233,7 @@ namespace dotscene {
 		}
 		else if ( pNode->getAttributeValueAs<String>("axisX") != "" )
 		{
-			Vector3 axis;
+			math::Vector3 axis;
 			axis.x = StringUtil::parseReal( pNode->getAttributeValueAs<String>("axisX") );
 			axis.y = StringUtil::parseReal( pNode->getAttributeValueAs<String>("axisY") );
 			axis.z = StringUtil::parseReal( pNode->getAttributeValueAs<String>("axisZ") );
@@ -241,7 +241,7 @@ namespace dotscene {
 		}
 		else if ( pNode->getAttributeValueAs<String>("angleX") != "" )
 		{
-			Vector3 axis;
+			math::Vector3 axis;
 			axis.x = StringUtil::parseReal( pNode->getAttributeValueAs<String>("angleX") );
 			axis.y = StringUtil::parseReal( pNode->getAttributeValueAs<String>("angleY") );
 			axis.z = StringUtil::parseReal( pNode->getAttributeValueAs<String>("angleZ") );
@@ -250,7 +250,7 @@ namespace dotscene {
 		}
 	}
 	//------------------------------------------------------
-	void DotSceneParser::readColour( const SharedPtr<dom::INode>& pNode, Color& colour )
+	void DotSceneParser::readColour( const SharedPtr<dom::INode>& pNode, math::Color& colour )
 	{
 		YAKE_ASSERT( pNode );
 		

@@ -53,9 +53,9 @@ namespace dotscene {
 		
 		struct Transform
 		{
-			Vector3		position;
-			Quaternion	rotation;
-			Vector3		scale; 
+			math::Vector3		position;
+			math::Quaternion	rotation;
+			math::Vector3		scale; 
 		};
 		
 		struct NodeDesc : public Desc
@@ -73,34 +73,34 @@ namespace dotscene {
 		
 		struct CameraDesc : public Desc
 		{
-			real								fov;
-			real								aspectRatio;
+			real					fov;
+			real					aspectRatio;
 			graphics::ICamera::ProjectionType	projectionType;
-			String								trackTargetName;
-			Vector3								normal;
+			String					trackTargetName;
+			math::Vector3				normal;
 			
 			struct Clipping
 			{
 				real nearClip;
 				real farClip;
-			}									clipping;
+			} clipping;
 		};
 		
 		struct LightDesc : public Desc
 		{
 			graphics::ILight::LightType	type;
-			bool						visible;
-			bool						castsShadows;
-			Color						diffuseColor;
-			Color						specularColor;
-			Vector3					normal;
+			bool				visible;
+			bool				castsShadows;
+			math::Color			diffuseColor;
+			math::Color			specularColor;
+			math::Vector3			normal;
 			
 			struct Range
 			{
 				real inner;
 				real outer;
 				real falloff;
-			} 							range;
+			} range;
 			
 			struct Attenuation
 			{
@@ -177,14 +177,14 @@ namespace dotscene {
 		virtual void readNode( const SharedPtr<dom::INode>& pNode, String parentNodeName );
 		virtual void readEntity( const SharedPtr<dom::INode>& pNode, String parentNodeName );
 		
-		virtual void readRotation( const SharedPtr<dom::INode>& pNode, Quaternion& rotation );
-		virtual void readPosition( const SharedPtr<dom::INode>& pNode, Vector3& position );
-		virtual void readScale( const SharedPtr<dom::INode>& pNode, Vector3& rScale );
-		virtual void readVector( const SharedPtr<dom::INode>& pNode, Vector3& rVec );
+		virtual void readRotation( const SharedPtr<dom::INode>& pNode, math::Quaternion& rotation );
+		virtual void readPosition( const SharedPtr<dom::INode>& pNode, math::Vector3& position );
+		virtual void readScale( const SharedPtr<dom::INode>& pNode, math::Vector3& rScale );
+		virtual void readVector( const SharedPtr<dom::INode>& pNode, math::Vector3& rVec );
 		
 		virtual void readLight( const SharedPtr<dom::INode>& pNode, String parentNodeName );
 		
-		virtual void readColour( const SharedPtr<dom::INode>& pNode, Color& colour );
+		virtual void readColour( const SharedPtr<dom::INode>& pNode, math::Color& colour );
 		virtual void readLightRange( const SharedPtr<dom::INode>& pNode, LightDesc& );
 		virtual void readLightAttenuation( const SharedPtr<dom::INode>& pNode, LightDesc& );
 		

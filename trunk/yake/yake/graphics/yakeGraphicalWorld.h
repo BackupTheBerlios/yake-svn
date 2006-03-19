@@ -42,6 +42,16 @@
 namespace yake {
 namespace graphics {
 
+	enum SceneDetailLevel
+	{
+	    /// Only points are rendered.
+	    SDL_POINTS = 1,
+	    /// Wireframe models are rendered.
+	    SDL_WIREFRAME = 2,
+	    /// Solid polygons are rendered.
+	    SDL_SOLID = 3
+	};
+
 	/**
 	*/
 	class YAKE_GRAPHICS_INTERFACE_API IParticleSystem : public GraphicsEntity
@@ -92,8 +102,8 @@ namespace graphics {
 		virtual void setEnabled( bool enabled ) = 0;
  		virtual void setCastsShadows( bool enabled ) = 0;
 
-		virtual void setDiffuseColour( const Color & colour ) = 0;
-		virtual void setSpecularColour( const Color & colour ) = 0;
+		virtual void setDiffuseColour( const math::Color& colour ) = 0;
+		virtual void setSpecularColour( const math::Color& colour ) = 0;
 
 		virtual void setAttenuation( real range, real constant, real linear, real quadratic ) = 0;
 		virtual real getAttenuationRange() const = 0;
@@ -110,8 +120,8 @@ namespace graphics {
 
 		/** Synonims for set/getOrientation.  Meaningful only for directional and spot lights
 		*/
-		virtual void setDirection( const Vector3& rDirection ) = 0;
-		virtual Vector3 getDirection() const = 0;
+		virtual void setDirection( const math::Vector3& rDirection ) = 0;
+		virtual math::Vector3 getDirection() const = 0;
 	};
 
 	/** A concrete instance of a mesh in a graphical world.
@@ -123,8 +133,9 @@ namespace graphics {
 		
 		virtual ISkeleton* getSkeleton() const = 0;
 		virtual void setVisible( bool visible ) = 0;
-		virtual void setMaterial( const String & materialName ) = 0;
-		virtual void setSubEntityMaterial( const String & subEntity, const String & materialName ) = 0;
+		virtual void setMaterial( const String& materialName ) = 0;
+		virtual void setSubEntityMaterial( const String& subEntity, const String& materialName ) = 0;
+		virtual void setRenderDetail( SceneDetailLevel sdl ) = 0;
 		//virtual void setReceivesShadows( bool receivesShadows ) = 0;
 		virtual void setCastsShadow( bool castsShadow ) = 0;
 	};
@@ -134,16 +145,6 @@ namespace graphics {
 	class YAKE_GRAPHICS_INTERFACE_API ICamera : public GraphicsEntity, public Movable
 	{
 	public:
-		enum SceneDetailLevel
-		{
-		/// Only points are rendered.
-			SDL_POINTS = 1,
-		/// Wireframe models are rendered.
-			SDL_WIREFRAME = 2,
-		/// Solid polygons are rendered.
-			SDL_SOLID = 3
-		};
-
 		enum ProjectionType
 		{
 			PT_ORTHOGRAPHIC,
@@ -183,30 +184,30 @@ namespace graphics {
 		Note that the 'up' vector for the camera will automatically be recalculated based on the
 		current 'up' vector (i.e. the roll will remain the same).
 		 */
-		virtual void setDirection( const Vector3& rVec ) = 0;
+		virtual void setDirection( const math::Vector3& rVec ) = 0;
 
         /** Gets the camera's direction.
 		*/
-		virtual Vector3 getDirection() const = 0;
+		virtual math::Vector3 getDirection() const = 0;
 
         /** Gets the camera's up vector.
 		 */
-		virtual Vector3 getUp() const = 0;
+		virtual math::Vector3 getUp() const = 0;
 
         /** Gets the camera's right vector.
 		 */
-		virtual Vector3 getRight() const = 0;
+		virtual math::Vector3 getRight() const = 0;
 		
 		virtual void setFixedYawEnabled( bool enabled ) = 0;
-		virtual void setFixedYawAxis( const Vector3& yawAxis ) = 0;
+		virtual void setFixedYawAxis( const math::Vector3& yawAxis ) = 0;
 	
 		/** Moves movable's position by the vector offset provided along it's own axes (relative to orientation).
 	 	*/
-		virtual void moveRelative( const Vector3& rVec ) = 0;
-		virtual void lookAt( const Vector3& target ) = 0;
+		virtual void moveRelative( const math::Vector3& rVec ) = 0;
+		virtual void lookAt( const math::Vector3& target ) = 0;
 
-		inline void rotate( const Quaternion& q );
-		inline void rotate( const Vector3& axis, real degrees );
+		inline void rotate( const math::Quaternion& q );
+		inline void rotate( const math::Vector3& axis, real degrees );
 		inline void pitch( const real degrees );
 		virtual void yaw( const real degrees ) = 0;
 		virtual void roll( const  real degrees ) = 0;
@@ -215,27 +216,27 @@ namespace graphics {
 			position.
 			@param screenX, screenY position where the ray intersects the viewport, in normalised screen coords [0,1]
 		*/
-		virtual Ray createCameraToViewportRay(const real screenX, const real screenY) const;
+		virtual math::Ray createCameraToViewportRay(const real screenX, const real screenY) const;
 
 		/** Retrieve the projection matrix. The matrix conforms to the right-handed rules.
 		*/
-		virtual Matrix4 getProjectionMatrix() const = 0;
-		virtual Matrix4 getViewMatrix() const = 0;
+		virtual math::Matrix4 getProjectionMatrix() const = 0;
+		virtual math::Matrix4 getViewMatrix() const = 0;
 	};
 
-	void ICamera::rotate(const Vector3 & axis, real degrees)
+	void ICamera::rotate(const math::Vector3& axis, real degrees)
 	{
-		Quaternion q;
-		q.FromAngleAxis(Math::AngleUnitsToRadians(degrees),axis);
-		rotate(q);
+	    math::Quaternion q;
+	    q.FromAngleAxis( math::Math::AngleUnitsToRadians(degrees), axis );
+	    rotate(q);
 	}
-	void ICamera::rotate(const Quaternion & q)
+	void ICamera::rotate(const math::Quaternion & q)
 	{
 		setOrientation( q * getOrientation() );
 	}
 	void ICamera::pitch( const real degrees )
 	{
-		const Vector3 xAxis = getOrientation() * Vector3::kUnitX;
+		const math::Vector3 xAxis = getOrientation() * math::Vector3::kUnitX;
 		rotate(xAxis, degrees);
 	}
 
@@ -261,10 +262,10 @@ namespace graphics {
 		};
 
 		/** Returns the position in parent's transform space. */
-		virtual Vector3 getPosition() const = 0;
+		virtual math::Vector3 getPosition() const = 0;
 		
 		/** Returns scene node position in transform space specified by ts parameter. */
-		virtual Vector3 getPosition( TransformSpace ts ) const = 0;
+		virtual math::Vector3 getPosition( TransformSpace ts ) const = 0;
 		
 		/** Adds a node as a child to this node.
 		*/
@@ -302,9 +303,11 @@ namespace graphics {
 
 		/** Set the scale for this node relative to the local coordinate system.
 		*/
-		virtual void setScale( const Vector3 & scale ) = 0;
+		virtual void setScale( const math::Vector3 & scale ) = 0;
 
-		virtual Vector3 getScale() const = 0;
+		virtual math::Vector3 getScale() const = 0;
+
+		virtual void setInheritScale( bool inherit ) = 0;
 
 		/** Returns a list of all child scene nodes of this scene node.
 		*/
@@ -357,31 +360,31 @@ namespace graphics {
 
 		/** Return the position as transformed through the hierarchy of nodes.
 		*/
-		virtual Vector3 getDerivedPosition() const = 0;
+		virtual math::Vector3 getDerivedPosition() const = 0;
 
 		/** Return the position as transformed through the hierarchy of nodes.
 		*/
-		virtual void getDerivedPosition( Vector3& retPos ) const = 0;
+		virtual void getDerivedPosition( math::Vector3& retPos ) const = 0;
 
 		/** Return the orientation as transformed through the hierarchy of nodes.
 		*/
-		virtual Quaternion getDerivedOrientation() const = 0;
+		virtual math::Quaternion getDerivedOrientation() const = 0;
 
 		/** Return the orientation as transformed through the hierarchy of nodes.
 		*/
-		virtual void getDerivedOrientation( Quaternion& retRot ) const = 0;
+		virtual void getDerivedOrientation( math::Quaternion& retRot ) const = 0;
 
 		/** Translate this scene node by a given amount.
 			@param rDelta amount of translation.
 			@param relativeTo TransformSpace to use for the translation.
 		*/
-		virtual void translate( const Vector3& rDelta, const TransformSpace relativeTo = TS_PARENT ) = 0;
+		virtual void translate( const math::Vector3& rDelta, const TransformSpace relativeTo = TS_PARENT ) = 0;
 
 		/** Rotate this scene node by a given amount.
 			@param rDelta amount of rotation.
 			@param relativeTo TransformSpace to use for the rotation.
 		*/
-		virtual void rotate( const Quaternion& rDelta, const TransformSpace relativeTo = TS_PARENT ) = 0;
+		virtual void rotate( const math::Quaternion& rDelta, const TransformSpace relativeTo = TS_PARENT ) = 0;
 	};
 
 	/** Viewport abstract interface.
@@ -394,6 +397,8 @@ namespace graphics {
 		virtual ICamera* getAttachedCamera() const = 0;
 		virtual void setDimensions( real left, real top, real width, real height ) = 0;
 		virtual void setZ( int z ) = 0;
+		virtual void setBackgroundColor( const math::Color& col ) = 0;
+		virtual math::Color getBackgroundColor() const = 0;
 	};
 
 	class IMeshGeometryAccess;
@@ -445,7 +450,7 @@ namespace graphics {
 		virtual real getRenderWindowWidth() const = 0;
 		virtual real getRenderWindowHeight() const = 0;
 
-		virtual IEntity* pickEntity(const Ray& ray) = 0;
+		virtual IEntity* pickEntity(const math::Ray& ray) = 0;
 
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PreRender );
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(real), PostRender );
@@ -462,3 +467,4 @@ namespace graphics {
 } // yake
 
 #endif // YAKE_GRAPHICALWORLD_H
+

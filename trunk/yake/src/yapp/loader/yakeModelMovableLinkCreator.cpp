@@ -34,7 +34,7 @@ namespace model {
 
 	YAKE_REGISTER_CONCRETE( ModelMovableLinkCreator );
 
-	Movable* getMovableFromModel(	complex::Model & rModel, const data::dom::INode& rNode )
+	Movable* getMovableFromModel( complex::Model& rModel, const data::dom::INode& rNode )
 	{
 		// parse
 		String sourceType = StringUtil::toLowerCase(rNode.getAttributeValueAs<String>("type"));
@@ -42,45 +42,49 @@ namespace model {
 		String sourceMovableType = StringUtil::toLowerCase(rNode.getAttributeValueAs<String>("elementtype"));
 		String sourceMovableName = (rNode.getAttributeValueAs<String>("element"));
 		
-		std::cout << "Searching movable: " << std::endl; 
-		std::cout << "    type: " << sourceType << std::endl; 
-		std::cout << "    submodel: " << sourceModelName << std::endl; 
-		std::cout << "    movable type: " << sourceMovableType << std::endl; 
-		std::cout << "    movable name: " << sourceMovableName << std::endl; 
+		YAKE_LOG( "Searching movable: " ); 
+		YAKE_LOG( "    type: " + sourceType );
+		YAKE_LOG( "    submodel: " + sourceModelName );
+		YAKE_LOG( "    movable type: " + sourceMovableType );
+		YAKE_LOG( "    movable name: " + sourceMovableName );
 		
 		// retrieve source movable
 		Movable* pMovable = 0;
-		if (sourceType == "graphical")
+		if ( sourceType == "graphical" )
 		{
 			YAKE_ASSERT( sourceMovableType == "graphics.scenenode" );
-			std::cout << "Searching for graphical named '" << sourceModelName << "'" << std::endl;
+			YAKE_LOG( "Searching for graphical named '" + sourceModelName + "'" );
+
 			Graphical* pG = rModel.getGraphicalByName( sourceModelName );
 			YAKE_ASSERT( pG );
+
 			pMovable = pG->getSceneNode( sourceMovableName, true );
 		}
-		else if (sourceType == "physical")
+		else if ( sourceType == "physical" )
 		{
-			std::cout << "Searching for physical named '" << sourceModelName << "'" << std::endl;
+			YAKE_LOG( "Searching for physical named '" + sourceModelName + "'" );
+
 			Physical* pP = rModel.getPhysicalByName( sourceModelName );
 			YAKE_ASSERT( pP );
+
 			if (sourceMovableType == "physics.actor" || sourceMovableType == "physics.complex")
 				pMovable = pP->getActorByName( sourceMovableName );
-			//else if (sourceMovableType == "physics.complex")
-			//	pMovable = pP->getActorByName( sourceMovableName ).get();
 		}
-		YAKE_ASSERT( pMovable );
+
+		YAKE_ASSERT( pMovable != NULL ).error( "Couldn't find movable '" + sourceMovableName + "'. Bailing out." );
 		return pMovable;
 	}
 
-	ModelLink* ModelMovableLinkCreator::createLink(	complex::Model & rModel, 
+	ModelLink* ModelMovableLinkCreator::createLink(	complex::Model& rModel, 
 							const data::dom::INode& rSourceNode,
 							const data::dom::INode& rTargetNode )
 	{
-		using namespace ::yake::data::dom;
+		using namespace yake::data::dom;
 
 		// retrieve source movable
 		Movable* pSourceMovable = getMovableFromModel( rModel, rSourceNode );
 		YAKE_ASSERT( pSourceMovable );
+
 		if (!pSourceMovable)
 			return 0;
 
@@ -93,10 +97,13 @@ namespace model {
 		// link them up
 		ModelMovableLink* pLink = new ModelMovableLink();
 		YAKE_ASSERT( pLink );
+
 		pLink->setSource( pSourceMovable );
 		pLink->subscribeToPositionChanged( pTargetMovable );
 		pLink->subscribeToOrientationChanged( pTargetMovable );
+
 		return pLink;
 	}
 }
 }
+

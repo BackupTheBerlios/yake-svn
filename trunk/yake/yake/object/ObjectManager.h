@@ -153,7 +153,7 @@ namespace OBJECTS_NAMESPACE {
 		ClassIdSet ids = objMgr.getRegisteredClasses();
 		idMap.clear();
 		ClassId lastId = minId;
-		for (ClassIdSet::const_iterator itId = ids.begin(); itId != ids.end(); ++itId)
+		for (typename ClassIdSet::const_iterator itId = ids.begin(); itId != ids.end(); ++itId)
 		{
 			idMap.insert( std::make_pair(lastId++,*itId) );
 		}

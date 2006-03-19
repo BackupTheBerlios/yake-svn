@@ -47,15 +47,17 @@ namespace physics
 
 		bool init(const IAvatar::Desc&);
 
-		virtual void setPosition( const Vector3& rPosition );
-		virtual void setOrientation( const Quaternion& rOrientation );
-		virtual Vector3 getPosition() const;
-		virtual Quaternion getOrientation() const;
+		virtual void setPosition( const math::Vector3& rPosition );
+		virtual void setOrientation( const math::Quaternion& rOrientation );
+		virtual math::Vector3 getPosition() const;
+		virtual math::Vector3 getDerivedPosition() const { return getPosition(); }//FIXME is this enough? 
+		virtual math::Quaternion getOrientation() const;
+		virtual math::Quaternion getDerivedOrientation() const { return getOrientation(); }//FIXME is this enough?
 
-		virtual void setDimensions( const Vector3 & rkDimensions );
+		virtual void setDimensions( const math::Vector3& rkDimensions );
 		virtual void setInfluenceByDynamics( const real ratio );
 
-		virtual void setTargetVelocity( const Vector3 & rkTargetVelocity );
+		virtual void setTargetVelocity( const math::Vector3& rkTargetVelocity );
 		virtual void jump();
 		virtual bool isJumping() const;
 		virtual void duck(const bool yes);
@@ -73,12 +75,12 @@ namespace physics
 		void onPostStepInternal(const real dt);
 		void _updateRayData();
 	private:
-		mutable Vector3					mPosition;
-		mutable Quaternion				mOrientation;
+		mutable math::Vector3					mPosition;
+		mutable math::Quaternion				mOrientation;
 
-		Vector3							mDimensions;
+		math::Vector3						mDimensions;
 		real							mDynamicsInfluence;
-		Vector3							mTargetVelocity;
+		math::Vector3						mTargetVelocity;
 
 		bool							mJumping;
 		bool							mJumpStartInProgress;
@@ -93,7 +95,7 @@ namespace physics
 		double							mRayLength;
 
 		double							mSphereRadius;
-		Vector3							mSphereOffset;
+		math::Vector3						mSphereOffset;
 
 		real							mHeightAboveGround;
 		real							mHeightAboveGroundDuck;
@@ -107,3 +109,4 @@ namespace physics
 } // yake
 
 #endif
+

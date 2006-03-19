@@ -185,7 +185,7 @@ namespace fsm {
 			{
 				out << "  state '" << it->first << "'\n";
 				const event_state_map& evt2state = it->second.offgoing_transitions;
-				for (event_state_map::const_iterator itT = evt2state.begin(); itT != evt2state.end(); ++itT)
+				for ( typename event_state_map::const_iterator itT = evt2state.begin(); itT != evt2state.end(); ++itT)
 				{
 					out << "    event '" << itT->first << "' -> state '" << itT->second << "'\n";
 				}
@@ -214,14 +214,14 @@ namespace fsm {
 		template<typename enter_state_op_t, typename exit_state_op_t>
 		void processEventCb(const event_type& evt, enter_state_op_t& enterOp, exit_state_op_t& exitOp)
 		{
-			const state_map::const_iterator it = states_.find( curr_ );
+			const typename state_map::const_iterator it = states_.find( curr_ );
 			if (it == states_.end())
 			{
 				std::cerr << "error: machine<>::processEventCb():\n   invalid current state.\n\n";
 				return;
 			}
 			const event_state_map& evt2state = it->second.offgoing_transitions;
-			const event_state_map::const_iterator itFindTransition = evt2state.find(evt);
+			const typename event_state_map::const_iterator itFindTransition = evt2state.find(evt);
 			if (itFindTransition == evt2state.end())
 			{
 				std::cerr << "error: machine<>::processEventCb():\n   transition not found! (evt=" << evt << ", src=" << it->first << ")\n\n";
@@ -247,7 +247,7 @@ namespace fsm {
 	template<typename _state_type, typename _event_type>
 	void machine<_state_type,_event_type>::setState(const state_type& dest)
 	{
-		const state_map::const_iterator it = states_.find( dest );
+		const typename state_map::const_iterator it = states_.find( dest );
 		if (it == states_.end())
 		{
 			std::cerr << "error: machine<>::setState():\n   unregistered state.\n\n";
@@ -293,10 +293,10 @@ namespace fsm {
 	template<typename _state_type, typename _event_type>
 	void machine<_state_type,_event_type>::addState(const state_type& state)
 	{
-		state_map::iterator it = states_.find( state );
+		typename state_map::iterator it = states_.find( state );
 		if (it == states_.end())
 		{
-			states_.insert( state_map::value_type(state,state_e()) );
+			states_.insert( typename state_map::value_type(state,state_e()) );
 			return;
 		}
 #ifdef _DEBUG
@@ -311,14 +311,14 @@ namespace fsm {
 			std::cerr << "error: machine<>::addTransition():\n   source and destination are identical!\n\n";
 			return;
 		}
-		state_map::iterator it = states_.find( src );
+		typename state_map::iterator it = states_.find( src );
 		if (it == states_.end())
 		{
 			std::cerr << "error: machine<>::addTransition():\n   unregistered source state!\n\n";
 			return;
 		}
 		{
-			const state_map::const_iterator itDest = states_.find( dest );
+			const typename state_map::const_iterator itDest = states_.find( dest );
 			if (itDest == states_.end())
 			{
 				std::cerr << "error: machine<>::addTransition():\n   unregistered destination state!\n\n";
@@ -333,7 +333,7 @@ namespace fsm {
 			return;
 		}
 #endif
-		evt2state.insert( event_state_map::value_type( evt, dest) );
+		evt2state.insert( typename event_state_map::value_type( evt, dest) );
 #ifdef _DEBUG
 		std::cout << "machine<>::addTransition(): from=" << src << " evt=" << evt << " dest=" << dest << "\n";
 #endif
@@ -346,9 +346,10 @@ namespace fsm {
 	template<typename _state_type, typename _event_type>
 	size_t machine<_state_type,_event_type>::numOffgoingTransitions(const state_type& src) const
 	{
-		const state_map::const_iterator it = states_.find( src );
+		const typename state_map::const_iterator it = states_.find( src );
 		return ( (it == states_.end()) ? 0 : it->second.offgoing_transitions.size() );
 	}
 } // namespace fsm
 
 #endif
+

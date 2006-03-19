@@ -51,11 +51,14 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
-	void OdeJoint::attach( IBody& rBody1, IBody& rBody2 )
+	void OdeJoint::attach( IBody* pBody1, IBody* pBody2 )
 	{
-		mOdeJoint->attach( 
-					( static_cast<OdeBody&>( rBody1 ) )._getOdeBody()->id(),
-					( static_cast<OdeBody&>( rBody2 ) )._getOdeBody()->id() );
+		YAKE_ASSERT( pBody1 != 0 || pBody2 != 0 ).error( "both bodies are ZERO in joint attach function!" );
+
+		dBodyID id0 = pBody1 != 0 ? static_cast<OdeBody*>( pBody1 )->_getOdeBody()->id() : 0; 
+		dBodyID id1 = pBody2 != 0 ? static_cast<OdeBody*>( pBody2 )->_getOdeBody()->id() : 0; 
+
+		mOdeJoint->attach( id0, id1 );
 	}
 
 	//-----------------------------------------------------
@@ -78,32 +81,6 @@ namespace physics {
 	{
 	}
 	
-// 		//-----------------------------------------------------
-// 		void OdeJoint::setSpring(real spring)
-// 		{
-// 			mSpringConstant = spring;
-// 			_applySpring();
-// 		}
-// 
-// 		//-----------------------------------------------------
-// 		void OdeJoint::setDamping(real damping)
-// 		{
-// 			mDampingConstant = damping;
-// 			_applySpring();
-// 		}
-// 
-// 		//-----------------------------------------------------
-// 		real OdeJoint::getSpring() const
-// 		{
-// 			return mSpringConstant;
-// 		}
-// 
-// 		//-----------------------------------------------------
-// 		real OdeJoint::getDamping() const
-// 		{
-// 			return mDampingConstant;
-// 		}
-// 
 	//-----------------------------------------------------
 	real OdeJoint::_getCFMFromSpring() const
 	{
@@ -145,20 +122,28 @@ namespace physics {
 			break;
 		}
 	}
+
+	//-----------------------------------------------------
 	void OdeJoint::setSpring(real spring)
 	{
 		mSpringConstant = spring;
 		_applySpring();
 	}
+
+	//-----------------------------------------------------
 	real OdeJoint::getSpring() const
 	{
 		return mSpringConstant;
 	}
+
+	//-----------------------------------------------------
 	void OdeJoint::setDamping(real damping)
 	{
 		mDampingConstant = damping;
 		_applySpring();
 	}
+
+	//-----------------------------------------------------
 	real OdeJoint::getDamping() const
 	{
 		return mDampingConstant;
@@ -166,3 +151,4 @@ namespace physics {
 
 } // physics
 } // yake
+

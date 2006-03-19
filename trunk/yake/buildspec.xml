@@ -10,6 +10,7 @@
 			<include>.</include>
 			<include>dependencies/ttl</include>
 			<include>dependencies/OGRE</include>
+			<include>dependencies/PLSM</include>
 			<include>dependencies/ode/include</include>
 			<include>dependencies/luabind</include>
 			<include>/usr/local/include/CEGUI</include>
@@ -33,6 +34,7 @@
 		name="yakeTemplates"
 		src="src/yake/base/templates"
 	>
+		<libadd>yakeNative</libadd>
 	</BuildSharedLibrary>
 
 	<BuildSharedLibrary
@@ -109,6 +111,12 @@
 		<libadd>ZThread</libadd>
         </BuildSharedLibrary>
 
+        <BuildSharedLibrary
+                name="yakeObject"
+                src="src/yake/object"
+        >
+                <libadd>yakeBase</libadd>
+        </BuildSharedLibrary>
 
 <!--
 	<BuildSharedLibrary
@@ -226,27 +234,19 @@
 	</BuildSharedLibrary>
 
 	<BuildSharedLibrary
-		name="yappStatemachine"	
-		src="src/yapp/statemachine"
-	>
-		<libadd>yappBase</libadd>
-	</BuildSharedLibrary>
-
-	<BuildSharedLibrary
 		name="yappMsg"	
 		src="src/yapp/msg"
 	>
 		<libadd>yappBase</libadd>
 	</BuildSharedLibrary>
 
-	<BuildSharedLibrary
+	<!--<BuildSharedLibrary
 		name="yappEnt"	
 		src="src/yapp/ent"
 	>
 		<libadd>yappBase</libadd>
-		<libadd>yappStatemachine</libadd>
 		<libadd>yappMsg</libadd>
-	</BuildSharedLibrary>
+	</BuildSharedLibrary>-->
 
 	<BuildSharedLibrary
 		name="yappVehicle"	
@@ -261,8 +261,11 @@
 		src="src/yapp/raf"
 	>
 		<libadd>yappBase</libadd>
+		<libadd>yakeCEGUIOgreAdapter</libadd>
+		<libadd>CEGUIOgreRenderer</libadd>
 	</BuildSharedLibrary>
 
+	
 	<BuildSharedLibrary
 		name="yakeCEGUIOgreAdapter"
 		src="src/yapp/plugins/ceguiOgreRendererAdapter"
@@ -271,20 +274,27 @@
 		<libadd>OgreMain</libadd>
 	</BuildSharedLibrary>
 
-	<BuildSharedLibrary
+	<!--<BuildSharedLibrary
 		name="yappEntLua"
 		src="src/yapp/plugins/entLua"
 	>
 		<libadd>yappEnt</libadd>
-	</BuildSharedLibrary>
+	</BuildSharedLibrary>-->
 
 	<BuildSharedLibrary
 		name="yappmodelLuaBindings"
 		src="src/yapp/plugins/modelLuaBindings"
 	>
-		<libadd>yappEnt</libadd>
+		<!--libadd>yappEnt</libadd-->
 		<libadd>luabind</libadd>
 	</BuildSharedLibrary>
+
+	<BuildSharedLibrary
+		name="yappTerrainPhysicsManager"
+		src="src/yapp/plugins/terrainPhysMgr"
+	>
+		<libadd>PagingLandscape</libadd>
+	</BuildSharedLibrary>	
 
 <!-- SAMPLES -->
 
@@ -344,10 +354,25 @@
 	>
 		<libadd>common_libs</libadd>	
 		<libadd>yappModel</libadd>	
+		<libadd>yappVehicle</libadd>	
+		<libadd>yappraf</libadd>
+	</BuildProgram>
+
+	<!--
+	<BuildProgram
+		name="TerrainDemo"
+		src="src/yapp/samples/ode_terrain_demo"
+	>
+		<libadd>common_libs</libadd>	
+		<libadd>yappModel</libadd>	
 		<libadd>yappStatemachine</libadd>	
 		<libadd>yappVehicle</libadd>	
 		<libadd>yappraf</libadd>
+		<libadd>PagingLandscape</libadd>
+		<libadd>yappTerrainPhysicsManager</libadd>
+		<libadd>dl</libadd>
 	</BuildProgram>	
+	-->
 
 	<BuildProgram
 		name="consoleDemo"
@@ -360,7 +385,16 @@
 		<libadd>luabind</libadd>
 		<libadd>CEGUIOgreRenderer</libadd>
 	</BuildProgram>
-		
+	<!--<BuildProgram 
+		name="cmdrmayhem"
+		src="src/yapp/samples/misc/cmdrmayhem"
+	>
+		<libadd>common_libs</libadd>
+		<libadd>yappModel</libadd>	
+		<libadd>yappVehicle</libadd>
+		<libadd>yappraf</libadd>
+	</BuildProgram>
+	-->
 
 </BuildSpec>
 

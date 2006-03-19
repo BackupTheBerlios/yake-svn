@@ -32,10 +32,10 @@
 //============================================================================
 // Standard headers
 #ifndef YAKE_BASE_PREREQUISITES_H
-#	include "yakePrerequisites.h"
+#	include "yake/base/math/yakePrerequisites.h"
 #endif
 // Yake
-#include "yakeMath.h"
+#include "yake/base/math/yakeMath.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -52,19 +52,19 @@ namespace math {
         inline Quaternion (
             real fW = 1.0,
             real fX = 0.0, real fY = 0.0, real fZ = 0.0)
-		{
+	{
 			w = fW;
 			x = fX;
 			y = fY;
 			z = fZ;
-		}
+	}
         inline Quaternion (const Quaternion& rkQ)
-		{
+	{
 			w = rkQ.w;
 			x = rkQ.x;
 			y = rkQ.y;
 			z = rkQ.z;
-		}
+	}
 	inline Quaternion ( real angle, const Vector3 & axis )
 	{
 		this->FromAngleAxis( angle, axis );
@@ -81,13 +81,13 @@ namespace math {
         void ToAxes (Vector3& xAxis, Vector3& yAxis, Vector3& zAxis) const;
 
         inline Quaternion& operator= (const Quaternion& rkQ)
-		{
-			w = rkQ.w;
-			x = rkQ.x;
-			y = rkQ.y;
-			z = rkQ.z;
-			return *this;
-		}
+	{
+		w = rkQ.w;
+		x = rkQ.x;
+		y = rkQ.y;
+		z = rkQ.z;
+		return *this;
+	}
         Quaternion operator+ (const Quaternion& rkQ) const;
         Quaternion operator- (const Quaternion& rkQ) const;
         Quaternion operator* (const Quaternion& rkQ) const;
@@ -136,11 +136,16 @@ namespace math {
         static const Quaternion kIdentity;
 
         real w, x, y, z;
-	};
+    };
+
+    inline std::ostream& operator << ( std::ostream& lhs, const Quaternion& rhs )
+    {
+	lhs << rhs.x << " " << rhs.y << " " << rhs.z << " " << rhs.w;
+	return lhs;
+    }
 
 } // math
 } // yake
 
-#endif // YAKE_BASE_MATH_QUATERNION_H
-
+#endif // YAKE_MATH_QUATERNION_H
 

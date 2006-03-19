@@ -54,15 +54,15 @@ namespace physics {
 			OdeActor* getOwner() const
 			{ return mOwner; }
 
-			virtual void setPosition( Vector3 const& rPosition);
-			virtual Vector3 getPosition() const;
-			virtual void setOrientation( Quaternion const& rOrientation );
-			virtual Quaternion getOrientation() const;
+			virtual void setPosition( math::Vector3 const& rPosition);
+			virtual math::Vector3 getPosition() const;
+			virtual void setOrientation( math::Quaternion const& rOrientation );
+			virtual math::Quaternion getOrientation() const;
 
-			virtual Vector3 getDerivedPosition() const;
-			virtual Quaternion getDerivedOrientation() const;
+			virtual math::Vector3 getDerivedPosition() const;
+			virtual math::Quaternion getDerivedOrientation() const;
 
-			virtual Vector3 getPropertyVector3(const String&) const;
+			virtual math::Vector3 getPropertyVector3(const String&) const;
 			virtual real getPropertyReal(const String&) const;
 
 		protected:
@@ -86,16 +86,16 @@ namespace physics {
 			
 			virtual ShapeType getType() const;
 			
-			virtual void setPosition( Vector3 const& rPosition);
-			virtual Vector3 getPosition() const;
-			virtual void setOrientation( Quaternion const& rOrientation );
-			virtual Quaternion getOrientation() const;
+			virtual void setPosition( math::Vector3 const& rPosition);
+			virtual math::Vector3 getPosition() const;
+			virtual void setOrientation( math::Quaternion const& rOrientation );
+			virtual math::Quaternion getOrientation() const;
 
 			void attachGeom( OdeGeom* pGeom );
 			OdeGeom* getAttachedGeom() const;
 		
-			virtual Vector3 getDerivedPosition() const;
-			virtual Quaternion getDerivedOrientation() const;
+			virtual math::Vector3 getDerivedPosition() const;
+			virtual math::Quaternion getDerivedOrientation() const;
 		private:
 			OdeGeom*	mAttachedGeom;
 		};
@@ -164,3 +164,4 @@ namespace physics {
 } // yake
 
 #endif
+

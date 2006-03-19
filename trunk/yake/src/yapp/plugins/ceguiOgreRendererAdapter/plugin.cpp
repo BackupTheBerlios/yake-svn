@@ -72,13 +72,24 @@ bool ThePlugin::initialise()
 		//HACK FIXME getAutoCreatedWindow assumes window was autocreated!
 		Ogre::RenderWindow* pWin = Ogre::Root::getSingleton().getAutoCreatedWindow();
 		YAKE_ASSERT( pWin ).error("Need a valid render window!");
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+
+		mGUIRenderer = new CEGUI::OgreCEGUIRenderer(
+			pWin, 
+			Ogre::RENDER_QUEUE_OVERLAY, 
+			true, 
+			3000,
+			Ogre::Root::getSingleton().getSceneManager( "YakeSM" ) );
+#else
 		mGUIRenderer = new CEGUI::OgreCEGUIRenderer(
 			pWin, 
 			Ogre::RENDER_QUEUE_OVERLAY, 
 			true, 
 			3000,
 			Ogre::ST_GENERIC );
-			//Ogre::Root::getSingleton()._getCurrentSceneManager());
+#endif
+		
 	} catch (Ogre::Exception& e)
 	{
 		YAKE_EXCEPT("Failed to initialise CEGUI adapter!\n" + yake::String(e.getFullDescription().c_str()));
@@ -99,3 +110,4 @@ CEGUI::Renderer* ThePlugin::getRenderer()
 {
 	return mGUIRenderer;
 }
+

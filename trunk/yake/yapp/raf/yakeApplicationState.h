@@ -27,6 +27,9 @@
 #ifndef YAKE_RAF_APPLICATIONSTATE_H
 #define YAKE_RAF_APPLICATIONSTATE_H
 
+#include "yapp/raf/yakePrerequisites.h"
+#include "yake/statemachine/fsm_core.h"
+
 namespace yake {
 namespace raf {
 	class Application;

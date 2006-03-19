@@ -41,43 +41,45 @@ namespace ogre3d {
 		virtual ~OgreCamera();
 
 		// Movable
-		virtual void setPosition( const Vector3 & position );
-		virtual Vector3 getPosition() const;
-		virtual void setOrientation( const Quaternion & orientation );
-		virtual Quaternion getOrientation() const;
-		
+		virtual void setPosition( const math::Vector3& position );
+		virtual void setOrientation( const math::Quaternion& orientation );
+		virtual math::Vector3 getPosition() const;
+		virtual math::Quaternion getOrientation() const;
+		virtual math::Vector3 getDerivedPosition() const;
+		virtual math::Quaternion getDerivedOrientation() const;
+
 		void setDetailLevel(SceneDetailLevel sd);
 
-        /** Retrieves the level of detail that the camera will render.
+		/** Retrieves the level of detail that the camera will render.
 		 */
 		SceneDetailLevel getDetailLevel(void) const;
 
-        /** Sets the camera's direction vector.
+		/** Sets the camera's direction vector.
 		@remarks
 		Note that the 'up' vector for the camera will automatically be recalculated based on the
 		current 'up' vector (i.e. the roll will remain the same).
 				 */
-		virtual void setDirection( const Vector3& rVec );
+		virtual void setDirection( const math::Vector3& rVec );
 
-        /** Gets the camera's direction.
+		/** Gets the camera's direction.
 		 */
-		virtual Vector3 getDirection() const;
+		virtual math::Vector3 getDirection() const;
 
         /** Gets the camera's up vector.
 		 */
-		virtual Vector3 getUp() const;
+		virtual math::Vector3 getUp() const;
 
         /** Gets the camera's right vector.
 		 */
-		virtual Vector3 getRight() const;
+		virtual math::Vector3 getRight() const;
 		
 		virtual void setFixedYawEnabled( bool enabled );
-		virtual void setFixedYawAxis( const Vector3& yawAxis );
+		virtual void setFixedYawAxis( const math::Vector3& yawAxis );
 	
 		/** Moves movable's position by the vector offset provided along it's own axes (relative to orientation).
 		 */
-		virtual void moveRelative( const Vector3& rVec );
-		virtual void lookAt( const Vector3& target );
+		virtual void moveRelative( const math::Vector3& rVec );
+		virtual void lookAt( const math::Vector3& target );
 		virtual void yaw( const real degrees );
 		virtual void roll( const  real degrees );
 
@@ -85,8 +87,8 @@ namespace ogre3d {
 		// ICamera
 		virtual void setProjectionType( const ProjectionType type );
 		virtual ProjectionType getProjectionType() const;
-		virtual Matrix4 getProjectionMatrix() const;
-		virtual Matrix4 getViewMatrix() const;
+		virtual math::Matrix4 getProjectionMatrix() const;
+		virtual math::Matrix4 getViewMatrix() const;
 		virtual void setNearClipDistance( real clipDistance );
 		virtual real getNearClipDistance() const;
 		virtual void setFarClipDistance( real clipDistance );
@@ -102,9 +104,9 @@ namespace ogre3d {
 		Ogre::SceneManager*	mSceneMgr;
 		Ogre::Camera*		mCam;
 	};
-
 }
 }
 }
 
 #endif
+

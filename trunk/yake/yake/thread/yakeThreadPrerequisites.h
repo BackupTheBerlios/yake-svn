@@ -41,3 +41,4 @@
 #define YAKE_THREAD_EXCEPT(m,s) throw( yake::Exception(m,s,__FILE__,__LINE__) )
 
 #endif
+

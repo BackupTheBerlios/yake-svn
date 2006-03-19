@@ -86,8 +86,8 @@ public:
 		mPWorld = getPhysicsSystem().createWorld();
 		YAKE_ASSERT( mPWorld );
 
-		// objects
-		setupWorld();
+	    // objects
+	    setupWorld();
 
 		YAKE_LOG( "World was all set up!" );
 		YAKE_LOG( "Running simulation..." );
@@ -114,9 +114,9 @@ public:
 
 		YAKE_LOG( "Simulation complete. Cleaning up..." );
 
-		YAKE_SAFE_DELETE( mPhysical );
+	    YAKE_SAFE_DELETE( mPhysical );
 
-		mPWorld.reset();
+	    mPWorld.reset();
 	}
 };
 
@@ -149,6 +149,6 @@ int main( int argc, char** argv )
 	std::cin.get();
 #endif
 
-	return 0;
+    return 0;
 }
 

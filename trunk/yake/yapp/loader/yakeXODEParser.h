@@ -68,19 +68,19 @@ namespace xode {
 		/// XODE "transform" node representation
 		struct Transform
 		{
-			Vector3 	position_;
-			Quaternion	rotation_;
-			Vector3		scale_;
+			math::Vector3		position_;
+			math::Quaternion	rotation_;
+			math::Vector3		scale_;
 			
-			Transform() : scale_( Vector3::kUnitScale )
+			Transform() : scale_( math::Vector3::kUnitScale )
 			{
 			}
 			
 			bool isIdentity() const
 			{
-				bool result = scale_ == Vector3::kUnitScale;
-				result &= position_ == Vector3::kZero;
-				result &= rotation_ == Quaternion::kZero;
+				bool result = scale_ == math::Vector3::kUnitScale;
+				result &= position_ == math::Vector3::kZero;
+				result &= rotation_ == math::Quaternion::kZero;
 				
 				return result;
 			}
@@ -89,9 +89,9 @@ namespace xode {
 			{
 				Transform result;
 				
-				Quaternion const& rParRot = parentTransform.rotation_;
-				Vector3 const& rParPos = parentTransform.position_;
-				Vector3 const& rParScale = parentTransform.scale_;
+				const math::Quaternion& rParRot = parentTransform.rotation_;
+				const math::Vector3& rParPos = parentTransform.position_;
+				const math::Vector3& rParScale = parentTransform.scale_;
 				
 				result.position_ = parentTransform.position_ 
 					+ rParRot*( position_*rParScale );
@@ -107,9 +107,9 @@ namespace xode {
 		// Event-spawning parser makes heavy use of these
 		struct Desc
 		{
-		  String	name_;
-		  String	parentName_;
-		  Transform	transform_;
+		    String	name_;
+		    String	parentName_;
+		    Transform	transform_;
 		};
 
 		struct BodyDesc : public Desc
@@ -121,21 +121,22 @@ namespace xode {
 		    SharedPtr<physics::IShape::Desc> shape_;
 		};
 
-		struct MassDesc : public Desc // ??? is this needed??
+		struct MassDesc : public Desc
 		{
-		  SharedPtr<physics::IBody::MassDesc> mass_;
+		    SharedPtr<physics::IBody::MassDesc> mass_;
 		};
 
 		struct JointDesc : public Desc
 		{
-		  String otherBody_;
+		    String body1_;
+		    String body2_;
 
-		  SharedPtr<physics::IJoint::DescBase> joint_;
+		    SharedPtr<physics::IJoint::DescBase> joint_;
 		};
 
-		struct MaterialDesc : public Desc // ?? no... not needed
+		struct MaterialDesc : public Desc
 		{
-		  physics::IMaterial::Desc material_;
+		    physics::IMaterial::Desc material_;
 		};
 		
 		typedef SignalX< void( const BodyDesc& ) > BodySignal;
@@ -190,7 +191,8 @@ namespace xode {
 		virtual void readWorld( const NodeSharedPtr pWorldNode );
 		virtual void readSpace( const NodeSharedPtr pSpaceNode, const String& parent );
 		virtual void readBody( const NodeSharedPtr pBodyNode, const String& parent );
-		virtual void readGeom( const NodeSharedPtr pGeomNode, const String& parent , const Transform& rParentTransform = Transform() );
+		virtual void readGeom( const NodeSharedPtr pGeomNode, const String& parent , 
+			const Transform& rParentTransform = Transform(), bool absoluteTransform = false );
 		virtual void readBox( const NodeSharedPtr pNode, real& sX, real& sY, real& sZ );
 		virtual void readCappedCylinder( const NodeSharedPtr pNode, real& radius, real& length );
 		virtual void readCone( const NodeSharedPtr pNode, real& radius, real& length );
@@ -204,27 +206,32 @@ namespace xode {
 		
 		virtual void readTransform( const NodeSharedPtr pTransformNode, Transform& rTrans );
 
-		virtual void readVector3( const NodeSharedPtr pVecNode, Vector3& rVec );  
-		virtual void readPosition( const NodeSharedPtr pPosNode, Vector3& rPos );  
-		virtual void readQuaternion( const NodeSharedPtr pQuatNode, Quaternion& rQuat );
-		virtual void readRotation( const NodeSharedPtr pRotNode, Quaternion& rRot );
-		virtual void readScale( const NodeSharedPtr pScaleNode, Vector3& rScale );  
-		virtual void readAxisAngleRot( const NodeSharedPtr pRotNode, Quaternion& rRot );
+		virtual void readVector3( const NodeSharedPtr pVecNode, math::Vector3& rVec );  
+		virtual void readPosition( const NodeSharedPtr pPosNode, math::Vector3& rPos );  
+		virtual void readQuaternion( const NodeSharedPtr pQuatNode, math::Quaternion& rQuat );
+		virtual void readRotation( const NodeSharedPtr pRotNode, math::Quaternion& rRot );
+		virtual void readScale( const NodeSharedPtr pScaleNode, math::Vector3& rScale );  
+		virtual void readAxisAngleRot( const NodeSharedPtr pRotNode, math::Quaternion& rRot );
 		virtual void readMass( const NodeSharedPtr pMassNode, const String& parent , const Transform& rParentTransform ); 
 		virtual void readMassShape( const NodeSharedPtr pMShapeNode, const String& parent, const Transform& rParentTransform ); 
 		virtual void readMassAdjust( const NodeSharedPtr pMAdjustNode, const String& parent ); 
-		virtual void readJoint( const NodeSharedPtr pJointNode, const String& parent , Transform& rParentTransform );
+		virtual void readJoint( const NodeSharedPtr pJointNode, const String& parent , const Transform& rParentTransform = Transform() );
 		
-		virtual physics::IJoint::DescBase* readBall( const NodeSharedPtr pJointNode, Transform& rJointTransform );
-		virtual physics::IJoint::DescBase* readFixed( const NodeSharedPtr pJointNode, Transform& rJointTransform );
-		virtual physics::IJoint::DescBase* readHinge( const NodeSharedPtr pJointNode, Transform& rJointTransform );
-		virtual physics::IJoint::DescBase* readHinge2( const NodeSharedPtr pJointNode, Transform& rJointTransform );
-		virtual physics::IJoint::DescBase* readSlider( const NodeSharedPtr pJointNode, Transform& rJointTransform );
-		virtual physics::IJoint::DescBase* readUniversal( const NodeSharedPtr pJointNode, Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readBall( const NodeSharedPtr pJointNode, const Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readFixed( const NodeSharedPtr pJointNode, const Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readHinge( const NodeSharedPtr pJointNode, const Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readHinge2( const NodeSharedPtr pJointNode, const Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readSlider( const NodeSharedPtr pJointNode, const Transform& rJointTransform );
+		virtual physics::IJoint::DescBase* readUniversal( const NodeSharedPtr pJointNode, const Transform& rJointTransform );
 		
-		virtual void readAnchor( const NodeSharedPtr pAnchorNode, Vector3& rAnchor, Transform& rJointTransform );
-		virtual void readAxis( const NodeSharedPtr pAxisNode, Vector3& rAxis, Transform& rJointTransform );
+		virtual void readAnchor( const NodeSharedPtr pAnchorNode, math::Vector3& rAnchor, const Transform& rJointTransform );
+		virtual void readAxis( const NodeSharedPtr pAxisNode, math::Vector3& rAxis, const Transform& rJointTransform );
 		virtual void readMaterialExt( const NodeSharedPtr pNode, const String& parent  );
+		
+		// override to read xode extensions unknown to original parser
+		virtual void readExtension( const NodeSharedPtr, 
+			const String& parent, 
+			const Transform& parentTransformIfAny );
 
 	private:
 		NodeSharedPtr		mDocNode;
@@ -237,7 +244,7 @@ namespace xode {
 		
 		virtual Version getVersion() const
 		{ 
-			return Version( 0, 5, 0 );
+			return Version( 0, 5, 2 );
 		}
 	};
 
@@ -247,3 +254,4 @@ namespace xode {
 } // yake
 
 #endif
+

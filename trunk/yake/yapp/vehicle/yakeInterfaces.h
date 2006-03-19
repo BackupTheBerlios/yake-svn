@@ -28,7 +28,7 @@
 #define YAKE_VEHICLE_INTERFACES_H
 
 #include <yapp/vehicle/yakePrerequisites.h>
-#include "yakeTemplates.h"
+#include <yapp/vehicle/yakeTemplates.h>
 
 namespace yake {
 namespace vehicle {
@@ -66,8 +66,8 @@ namespace vehicle {
 		virtual void setSteering( const uint32 sg, const real ) = 0;
 		virtual real getSteering( const uint32 sg ) const = 0;
 
-		virtual Vector3 getChassisPosition() const = 0;
-		virtual Quaternion getChassisOrientation() const = 0;
+		virtual math::Vector3 getChassisPosition() const = 0;
+		virtual math::Quaternion getChassisOrientation() const = 0;
 		virtual Movable* getChassisMovable() const = 0;
 
 		virtual void enableDebugGeometry(graphics::IWorld&) = 0;
@@ -85,8 +85,11 @@ namespace vehicle {
 
 		virtual void updateSimulation( real timeElapsed ) = 0;
 
-		virtual void setThrottle( real throttle ) = 0;
-		virtual real getThrottle() const = 0;
+		/** set input signal for an engine. That is throttle for a car
+		 * and voltage for electric motor.
+		 */
+		virtual void setInputSignal( real value ) = 0;
+		virtual real getInputSignal() const = 0;
 	};
 
 	/** Interface to a vehicle engine.
@@ -97,6 +100,15 @@ namespace vehicle {
 	public:
 		virtual ~ICarEngine() 
 		{}
+
+		virtual void setThrottle( real throttle ) = 0;
+		virtual real getThrottle() const = 0;
+
+		/** Inherited general engine interface. 
+		 * Implemented in terms of car engine.
+		 */
+		virtual void setInputSignal( real value ) { setThrottle( value ); }
+		virtual real getInputSignal() const { return getThrottle(); }
 
 		//virtual void setParameter( const String & name, const String & value );
 		virtual void setParamMinRPM( const real rpm ) = 0;
@@ -113,16 +125,31 @@ namespace vehicle {
 		virtual real getDriveTorque() const = 0;
 	};
 
-	/** A thruster is a special kind of engine. It applies force to the vehicle
-		it's attached to at a specified offset, direction etc.
+	/** A thruster is a special kind of IEngine which applies force to the vehicle it's attached to at a specified offset, direction etc.
+		Thruster force is applied lineary Fmin + k_throttle*( Fmax - Fmin ).
 		@see MountedThruster
 		@see vehicle::IEngine
 	*/
 	class YAKE_VEH_API IThruster : public IEngine
 	{
+	public:
+	    virtual real getForce() const { return mForce; }
+
 	protected:
-		virtual ~IThruster();
-		IThruster();
+	    virtual void setForce( real force ) { mForce = force; }
+
+	protected:
+	    real	mForce; // cached force value
+	};
+
+	/** Simplest class of linear thruster. If mounted it just applies force and does no
+	 * additional calculations.
+	*/
+	class YAKE_VEH_API ILinearThruster : public IThruster
+	{
+	protected:
+		virtual ~ILinearThruster();
+		ILinearThruster();
 	public:
 		/** At least the following methods are inherited from vehicle::IEngine:
 
@@ -134,13 +161,12 @@ namespace vehicle {
 		real getMinimumForce() const;
 		void setMaximumForce( real force );
 		real getMaximumForce() const;
-		real getForce() const;
+		virtual real getForce() const;
 	protected:
-		void setForce( real force );
+		virtual void setForce( real force );
 	private:
 		real	mMaxForce;
 		real	mMinForce;
-		real	mForce;
 	};
 
 	/** A thruster that can be attached to a mount point.
@@ -181,3 +207,4 @@ namespace vehicle {
 
 
 #endif
+

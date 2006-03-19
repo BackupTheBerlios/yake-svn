@@ -168,7 +168,7 @@ namespace raf {
 		void onKeyUp( const yake::input::KeyboardEvent& rEvent );
 		void onMBDown( uint8 btn );
 		void onMBUp( uint8 btn );
-		void onMouseMoved( const Vector3& rDelta );
+		void onMouseMoved( const math::Vector3& rDelta );
 #endif
 	private:
 		typedef Deque<SharedPtr<base::Library> > LibList;
@@ -225,3 +225,4 @@ namespace raf {
 } // namespace yake
 
 #endif
+

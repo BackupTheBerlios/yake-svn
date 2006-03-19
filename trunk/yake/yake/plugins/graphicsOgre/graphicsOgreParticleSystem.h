@@ -33,7 +33,12 @@ namespace graphics {
 	class OgreParticleSystem : public graphics::IParticleSystem
 	{
 	public:
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+		OgreParticleSystem( Ogre::SceneManager& rSMgr, const String& rPSTemplateName);
+#else
 		OgreParticleSystem( Ogre::ParticleSystemManager& rPSMgr, const String& rPSTemplateName);
+#endif
 		virtual ~OgreParticleSystem();
 
 		virtual void setVisible( bool visible );
@@ -51,7 +56,12 @@ namespace graphics {
 		}
 
 	protected:
+// for Ogre 1.1.0 "Dagon" compatibility
+#if OGRE_VERSION_MINOR >= 1 
+		Ogre::SceneManager&	mSceneMgr;
+#else
 		Ogre::ParticleSystemManager&	mParticleSysMgr;
+#endif
 		Ogre::ParticleSystem*			mParticleSys;
 	};
 
@@ -59,3 +69,4 @@ namespace graphics {
 } // yake
 
 #endif
+

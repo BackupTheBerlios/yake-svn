@@ -57,7 +57,9 @@ namespace physics {
 		mOdeWorld->setAutoDisableSteps( 30 ); // ODE default: 10
 		mOdeWorld->setAutoDisableTime( 0 ); // ODE default: 0. (= ignore time)
 
-		mOdeWorld->setGravity( 0., -9.81, 0. );
+		// We do not set any default gravity setting
+		// as we don't want to enforce a specific coordinate system.
+		//	mOdeWorld->setGravity( 0., -9.81, 0. );
 		mOdeWorld->setCFM( 0.0005 );
 		mOdeWorld->setERP( 0.99 );
 
@@ -97,19 +99,19 @@ namespace physics {
  	}
 		
 	//-----------------------------------------------------
-	void OdeWorld::setGlobalGravity( const Vector3& g )
+	void OdeWorld::setGlobalGravity( const math::Vector3& g )
 	{
 		YAKE_ASSERT( mOdeWorld );
 		mOdeWorld->setGravity( g.x, g.y, g.z );
 	}
 
 	//-----------------------------------------------------
-	Vector3 OdeWorld::getGlobalGravity() const
+	math::Vector3 OdeWorld::getGlobalGravity() const
 	{
 		YAKE_ASSERT( mOdeWorld );
 		dVector3 g;
 		mOdeWorld->getGravity( g );
-		return Vector3(real(g[0]), real(g[1]), real(g[2]));
+		return math::Vector3(real(g[0]), real(g[1]), real(g[2]));
 	}
 
 	//-----------------------------------------------------
@@ -126,7 +128,7 @@ namespace physics {
 	void OdeWorld::destroyMaterial( IMaterialPtr pMaterial )
 	{
 		YAKE_ASSERT( pMaterial );
-		mMaterials.erase( mMaterials.find( dynamic_cast<OdeMaterial*>(pMaterial)->mName ) );
+		mMaterials.erase( mMaterials.find( checked_cast<OdeMaterial*>(pMaterial)->mName ) );
 	}
 
 	//-----------------------------------------------------
@@ -196,16 +198,14 @@ namespace physics {
 	}
 
 	//-----------------------------------------------------
-	IJointPtr OdeWorld::createJoint( IJoint::DescBase const& rJointDesc )
+	IJointPtr OdeWorld::createJoint( const IJoint::DescBase& rJointDesc )
 	{
-		//@todo add joints "actor vs static env"
-		YAKE_ASSERT( rJointDesc.actor0 && rJointDesc.actor1 );
-		if (!rJointDesc.actor0 || !rJointDesc.actor1)
-			return 0;
+		YAKE_ASSERT( rJointDesc.actor0 != NULL || rJointDesc.actor1 != NULL ).error( "both actors are 0!" );
 
 		/// Bodies to attach
-		IBody& rBody1 = rJointDesc.actor0->getBody();
-		IBody& rBody2 = rJointDesc.actor1->getBody();
+		// if 0, then it is attachment to static environment
+		IBody* pBody1 = rJointDesc.actor0 ? rJointDesc.actor0->getBodyPtr() : 0;
+		IBody* pBody2 = rJointDesc.actor1 ? rJointDesc.actor1->getBodyPtr() : 0;
 		
 		/// Joint to return
 		OdeJoint* pJoint = 0;
@@ -215,14 +215,14 @@ namespace physics {
 		case JT_FIXED:
 			{
 			pJoint = new OdeFixedJoint( this );
-			pJoint->attach( rBody1, rBody2 );
+			pJoint->attach( pBody1, pBody2 );
 			}
 			break;
 		case JT_HINGE:
 			{
 			pJoint = new OdeHingeJoint( this );
 			const IJoint::DescHinge& desc = static_cast<const IJoint::DescHinge&>( rJointDesc );
-			pJoint->attach( rBody1, rBody2 );
+			pJoint->attach( pBody1, pBody2 );
 			pJoint->setAnchor( 0, desc.anchor );
 			pJoint->setAxis( 0, desc.axis );
 			}
@@ -231,7 +231,7 @@ namespace physics {
 			{
 			pJoint = new OdeHinge2Joint( this );
 			const IJoint::DescHinge2& desc = static_cast<const IJoint::DescHinge2&>( rJointDesc );
-			pJoint->attach( rBody1, rBody2 );
+			pJoint->attach( pBody1, pBody2 );
 			pJoint->setAnchor( 0, desc.anchor );
 			pJoint->setAxis( 0, desc.axis0 );
 			pJoint->setAxis( 1, desc.axis1 );
@@ -241,7 +241,7 @@ namespace physics {
 			{
 			pJoint = new OdeUniversalJoint( this );
 			const IJoint::DescUniversal& desc = static_cast<const IJoint::DescUniversal&>( rJointDesc );
-			pJoint->attach( rBody1, rBody2 );
+			pJoint->attach( pBody1, pBody2 );
 			pJoint->setAnchor( 0, desc.anchor );
 			pJoint->setAxis( 0, desc.axis0 );
 			pJoint->setAxis( 1, desc.axis1 );
@@ -251,7 +251,7 @@ namespace physics {
 			{
 			pJoint = new OdeBallJoint( this );
 			const IJoint::DescBall& desc = static_cast<const IJoint::DescBall&>( rJointDesc );
-			pJoint->attach( rBody1, rBody2 );
+			pJoint->attach( pBody1, pBody2 );
 			pJoint->setAnchor( 0, desc.anchor );
 			}
 			break;
@@ -259,7 +259,7 @@ namespace physics {
 			{
 			pJoint = new OdeSliderJoint( this );
 			const IJoint::DescSlider& desc = static_cast<const IJoint::DescSlider&>( rJointDesc );
-			pJoint->attach( rBody1, rBody2 );
+			pJoint->attach( pBody1, pBody2 );
 			pJoint->setAxis( 0, desc.axis );
 			}
 			break;
@@ -305,7 +305,7 @@ namespace physics {
 		mActors.push_back( SharedPtr<OdeActor>( pActor ) );
 		return pActor;
 	}
-	//-----------------------------------------------------
+	//----------------------------------------------------
 	bool operator==(const SharedPtr<OdeJoint>& lhs, const OdeJoint* rhs)
 	{
 		return (lhs.get() == rhs);
@@ -314,7 +314,7 @@ namespace physics {
 	void OdeWorld::destroyJoint( IJointPtr pJoint )
 	{
 		YAKE_ASSERT( pJoint );
-		mJoints.erase( std::find(mJoints.begin(), mJoints.end(), dynamic_cast<OdeJoint*>(pJoint) ) );
+		mJoints.erase( std::find(mJoints.begin(), mJoints.end(), checked_cast<OdeJoint*>(pJoint) ) );
 	}
 	//-----------------------------------------------------
 	bool operator==(const SharedPtr<OdeActor>& lhs, const OdeActor* rhs)
@@ -325,14 +325,12 @@ namespace physics {
 	void OdeWorld::destroyActor( IActorPtr pActor )
 	{
 		YAKE_ASSERT( pActor );
-		mActors.erase( std::find(mActors.begin(), mActors.end(), dynamic_cast<OdeActor*>(pActor) ) );
+		mActors.erase( std::find(mActors.begin(), mActors.end(), checked_cast<OdeActor*>(pActor) ) );
 	}
 	//-----------------------------------------------------
 	void OdeWorld::destroyAvatar( IAvatarPtr pAvatar )
 	{
 		YAKE_ASSERT( 0 && "NOT IMPLEMENTED" );
-		//YAKE_ASSERT( !pAvatar.expired() );
-		//mAvatars.erase( std::find(mAvatars.begin(), mAvatars.end(), dynamic_cast<OdeAvatar*>(pAvatar .lock().get()) ) );
 	}
 
 	//-----------------------------------------------------

@@ -79,12 +79,12 @@ namespace physics {
 
 	struct TriangleMeshDesc
 	{
-		/** Important Notice: Vector3Vector, VertexVector, NormalVector and IndexVector HAVE to
+		/** Important Notice: math::Vector3Vector, VertexVector, NormalVector and IndexVector HAVE to
 			be vectors because they may be accessed like C arrays ( e.g. &arr[0] ).
 			Is this OK? Today, it's practically OK and tomorrow it'll be even more as it's part
 			of the first Technical Corrigendum.
 		*/
-		typedef std::vector<Vector3> Vector3Vector;
+		typedef std::vector<math::Vector3> Vector3Vector;
 		typedef Vector3Vector VertexVector;
 		typedef Vector3Vector NormalVector;
 		typedef uint32 IndexType;
@@ -109,7 +109,7 @@ namespace physics {
 		}
 		
 		VertexVector	vertices;
-		IndexVector		indices;
+		IndexVector	indices;
 		NormalVector	normals;
 	};
 }

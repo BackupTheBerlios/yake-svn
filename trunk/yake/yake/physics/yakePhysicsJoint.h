@@ -108,7 +108,7 @@ namespace physics {
 		struct DescFixed : DescBase
 		{
 			DescFixed(	IActor* pFirst,
-						IActor* pSecond ) :
+				IActor* pSecond ) :
 				DescBase( JT_FIXED,pFirst,pSecond )
 			{}
 		};
@@ -117,70 +117,70 @@ namespace physics {
 		{
 			DescHinge(	IActor* pFirst,
 						IActor* pSecond,
-						const Vector3& rAxis,
-						const Vector3& rAnchor ) :
+						const math::Vector3& rAxis,
+						const math::Vector3& rAnchor ) :
 				DescBase( JT_HINGE,pFirst,pSecond ),
 				axis( rAxis ),
 				anchor( rAnchor )
 			{}
-			Vector3		axis;
-			Vector3		anchor;
+			math::Vector3		axis;
+			math::Vector3		anchor;
 		};
 
 		struct DescHinge2 : DescBase
 		{
 			DescHinge2(	IActor* pFirst,
 						IActor* pSecond,
-						const Vector3& rAxis0, 
-						const Vector3& rAxis1,
-						const Vector3& rAnchor ) :
+						const math::Vector3& rAxis0, 
+						const math::Vector3& rAxis1,
+						const math::Vector3& rAnchor ) :
 				DescBase( JT_HINGE2,pFirst,pSecond ),
 				axis0( rAxis0 ),
 				axis1( rAxis1 ),
 				anchor( rAnchor )
 			{}
-			Vector3		axis0;
-			Vector3		axis1;
-			Vector3		anchor;
+			math::Vector3		axis0;
+			math::Vector3		axis1;
+			math::Vector3		anchor;
 		};
 
 		struct DescBall : DescBase
 		{
 			DescBall(	IActor* pFirst,
-						IActor* pSecond,
-						const Vector3& rAnchor ) :
-				DescBase( JT_BALL, pFirst, pSecond ),
-				anchor( rAnchor )
+				IActor* pSecond,
+				const math::Vector3& rAnchor ) :
+			    DescBase( JT_BALL, pFirst, pSecond ),
+			    anchor( rAnchor )
 			{}
-			Vector3		anchor;
+			math::Vector3		anchor;
 		};
 	
 		struct DescSlider : DescBase
 		{
 			DescSlider(	IActor* pFirst,
 						IActor* pSecond,
-						const Vector3& rAxis ) :
+						const math::Vector3& rAxis ) :
 				DescBase( JT_SLIDER, pFirst, pSecond ),
 				axis( rAxis )
 			{}
-			Vector3		axis;
+			math::Vector3		axis;
 		};
 	
 		struct DescUniversal : DescBase
 		{
 			DescUniversal(	IActor* pFirst,
 							IActor* pSecond,
-							const Vector3& rAxis0, 
-							const Vector3& rAxis1,
-							const Vector3& rAnchor ) :
+							const math::Vector3& rAxis0, 
+							const math::Vector3& rAxis1,
+							const math::Vector3& rAnchor ) :
 				DescBase( JT_UNIVERSAL, pFirst, pSecond ),
 				axis0( rAxis0 ),
 				axis1( rAxis1 ),
 				anchor( rAnchor )
  			{}
- 			Vector3		axis0;
- 			Vector3		axis1;
-			Vector3		anchor;
+ 			math::Vector3		axis0;
+ 			math::Vector3		axis1;
+			math::Vector3		anchor;
  		};
 	public:
 		virtual ~IJoint() {}
@@ -190,9 +190,9 @@ namespace physics {
 
 		virtual JointType getType() const = 0;
 		virtual size_t getNumAxis() const = 0;
-		virtual void setAxis(size_t axisIndex, const Vector3& rAxis) = 0;
+		virtual void setAxis(size_t axisIndex, const math::Vector3& rAxis) = 0;
 		virtual size_t getNumAnchors() const = 0;
-		virtual void setAnchor(size_t anchorIndex, const Vector3& rAnchor) = 0;
+		virtual void setAnchor(size_t anchorIndex, const math::Vector3& rAnchor) = 0;
 		virtual void setMotor(size_t axisIndex, real velocityTarget, real maximumForce) = 0;
 		virtual void setMotorEnabled(size_t axisIndex, bool enabled) = 0;
 		virtual void setLimits(size_t axisIndex, real low, real high) = 0;
@@ -214,3 +214,4 @@ namespace physics {
 }
 }
 #endif
+

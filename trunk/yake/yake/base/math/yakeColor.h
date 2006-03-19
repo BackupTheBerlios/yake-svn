@@ -35,7 +35,7 @@
 #	include "yakePrerequisites.h"
 #endif
 // Yake
-#include "yakeMath.h"
+#include "yake/base/math/yakeMath.h"
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -142,3 +142,4 @@ Color operator*( real fScalar, const Color& rColor );
 #include <yake/base/math/yakeColor.inl>
 
 #endif // YAKE_BASE_MATH_COLOR_H
+

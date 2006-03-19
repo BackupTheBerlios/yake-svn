@@ -49,7 +49,8 @@ namespace ogre3d {
 		mViewport = pWnd->addViewport( mCamera->getCamera_(), 100, 0., 0., 1., 1. );
 		YAKE_ASSERT( mViewport ).error("viewport creation failed!");
 
-		mViewport->setBackgroundColour( Ogre::ColourValue(0.2,0.2,0.3) );
+		// default - is a black background
+		mViewport->setBackgroundColour( Ogre::ColourValue( 0, 0, 0 ) );
 	}
 
 	//------------------------------------------------------
@@ -93,6 +94,19 @@ namespace ogre3d {
 				//FIXME: decide what to do. throw exception? just fail, log error & return?
 				YAKE_GRAPHICS_EXCEPT(exc.getFullDescription().c_str());
 		}
+	}
+
+	//------------------------------------------------------
+	void OgreViewport::setBackgroundColor( const math::Color& col )
+	{
+	    mViewport->setBackgroundColour( COL_YAKE2OGRE( col ) );
+
+	}
+
+	//------------------------------------------------------
+	math::Color OgreViewport::getBackgroundColor() const
+	{
+	    return COL_OGRE2YAKE( mViewport->getBackgroundColour() );
 	}
 
 	//------------------------------------------------------

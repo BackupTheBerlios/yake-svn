@@ -37,20 +37,22 @@ namespace graphics {
 namespace ogre3d {
 
 	//------------------------------------------------------
-	OgreNode::OgreNode( GraphicalWorld& owningWorld, Ogre::SceneManager * sceneMgr, const String& name /*= ""*/ ) : 
+	OgreNode::OgreNode( GraphicalWorld& owningWorld, Ogre::SceneManager* sceneMgr, const String& name /*= ""*/ ) : 
 			mWorld( owningWorld ),
 			mSceneNode( 0 ) ,mSceneMgr( sceneMgr ), mParentNode(0)
 	{
 		YAKE_ASSERT( sceneMgr ).debug("need a scene manager!");
+
 		String ogreid = name;
 		if (ogreid.empty())
-			ogreid = uniqueName::create("sn_"+name+"_");
+			ogreid = uniqueName::create( "sn_" );
 		mName = ogreid;
 		mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( ogreid ) );
 		YAKE_ASSERT( mSceneNode ).warning("Couldn't create a scene node!");
+
 		mSceneNode->setPosition( 0, 0, 0 );
+		
 		mWorld.reg( this );
-		//YAKE_LOG(String("gfx: new node '") << name << "' ogreid='" << String(mSceneNode->getName().c_str()) << "'");
 	}
 
 	//------------------------------------------------------
@@ -149,26 +151,26 @@ namespace ogre3d {
 	}
 
 	//------------------------------------------------------
-	void OgreNode::setPosition( const Vector3 & position )
+	void OgreNode::setPosition( const math::Vector3 & position )
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		mSceneNode->setPosition( VEC_YAKE2OGRE( position ) );
 	}
 
 	//------------------------------------------------------
-	Vector3 OgreNode::getPosition() const
+	math::Vector3 OgreNode::getPosition() const
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		return VEC_OGRE2YAKE( mSceneNode->getPosition() );
 	}
 
 	//------------------------------------------------------
-	Vector3 OgreNode::getPosition( ISceneNode::TransformSpace ts ) const
+	math::Vector3 OgreNode::getPosition( ISceneNode::TransformSpace ts ) const
 	{
 		switch( ts )
 		{
 			case TS_LOCAL:
-				return Vector3();
+				return math::Vector3();
 				
 			case TS_PARENT:
 				return getPosition();
@@ -178,74 +180,82 @@ namespace ogre3d {
 			
 			default:
 				YAKE_ASSERT( 0 ).error( "Unknown transform space" );
-				return Vector3();
+				return math::Vector3();
 		}
 	}
 
 	//------------------------------------------------------
-	void OgreNode::setOrientation( const Quaternion & orientation )
+	void OgreNode::setOrientation( const math::Quaternion & orientation )
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		mSceneNode->setOrientation( QUAT_YAKE2OGRE( orientation ) );
 	}
 
 	//------------------------------------------------------
-	Quaternion OgreNode::getOrientation() const
+	math::Quaternion OgreNode::getOrientation() const
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		return QUAT_OGRE2YAKE( mSceneNode->getOrientation() );
 	}
 
 	//------------------------------------------------------
-	void OgreNode::setScale( const Vector3 & scale )
+	void OgreNode::setScale( const math::Vector3 & scale )
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		mSceneNode->setScale( VEC_YAKE2OGRE( scale ) );
 	}
 
 	//------------------------------------------------------
-	Vector3 OgreNode::getScale() const
+	math::Vector3 OgreNode::getScale() const
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		return VEC_OGRE2YAKE( mSceneNode->getScale() );
 	}
 
 	//------------------------------------------------------
-	Vector3 OgreNode::getDerivedPosition() const
+	void OgreNode::setInheritScale( bool inherit )
+	{
+		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+
+		mSceneNode->setInheritScale( inherit );
+	}
+
+	//------------------------------------------------------
+	math::Vector3 OgreNode::getDerivedPosition() const
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		return VEC_OGRE2YAKE( mSceneNode->_getDerivedPosition() );
 	}
 
 	//------------------------------------------------------
-	void OgreNode::getDerivedPosition( Vector3& retPos ) const
+	void OgreNode::getDerivedPosition( math::Vector3& retPos ) const
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		retPos = VEC_OGRE2YAKE( mSceneNode->_getDerivedPosition() );
 	}
 
 	//------------------------------------------------------
-	Quaternion OgreNode::getDerivedOrientation() const
+	math::Quaternion OgreNode::getDerivedOrientation() const
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		return QUAT_OGRE2YAKE( mSceneNode->_getDerivedOrientation() );
 	}
 
 	//------------------------------------------------------
-	void OgreNode::getDerivedOrientation( Quaternion& retRot ) const
+	void OgreNode::getDerivedOrientation( math::Quaternion& retRot ) const
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
 		retRot = QUAT_OGRE2YAKE( mSceneNode->_getDerivedOrientation() );
 	}
 
 	//------------------------------------------------------
-	void OgreNode::translate( const Vector3& rDelta, const TransformSpace relativeTo /*= TS_PARENT*/ )
+	void OgreNode::translate( const math::Vector3& rDelta, const TransformSpace relativeTo /*= TS_PARENT*/ )
 	{
 		mSceneNode->translate( VEC_YAKE2OGRE(rDelta), TS_YAKE2OGRE(relativeTo) );
 	}
 
 	//------------------------------------------------------
-	void OgreNode::rotate( const Quaternion& rDelta, const TransformSpace relativeTo /*= TS_PARENT*/ )
+	void OgreNode::rotate( const math::Quaternion& rDelta, const TransformSpace relativeTo /*= TS_PARENT*/ )
 	{
 		mSceneNode->rotate( QUAT_YAKE2OGRE(rDelta), TS_YAKE2OGRE(relativeTo) );
 	}
@@ -372,8 +382,14 @@ namespace ogre3d {
 	ISceneNode* OgreNode::createChildNode( const String& name /*= ""*/ )
 	{
 		YAKE_ASSERT( mSceneNode ).debug("need a scene node!");
+
 		OgreNode* pChild = new OgreNode( mWorld, mSceneMgr, name );
+
 		this->addChildNode( pChild );
+
+		pChild->setPosition( math::Vector3() );
+		pChild->setOrientation( math::Quaternion() );
+
 		return pChild;
 	}
 
