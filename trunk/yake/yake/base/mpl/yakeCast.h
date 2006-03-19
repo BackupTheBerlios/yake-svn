@@ -42,6 +42,24 @@
 //============================================================================
 namespace yake
 {
+	/** Use this instead of dynamic_cast in performance critical code.
+		@Remarks See "C++ Coding Standards, Ch93".
+	*/
+	template<typename To, typename From>
+	To checked_cast(From* from)
+	{
+		YAKE_ASSERT( dynamic_cast<To>(from) == static_cast<To>(from) && "checked_cast failed" );
+		return static_cast<To>(from);
+	}
+	/** Use this instead of dynamic_cast in performance critical code.
+		@Remarks See "C++ Coding Standards, Ch93".
+	*/
+	template<typename To, typename From>
+	To checked_cast(From& from)
+	{
+		YAKE_ASSERT( dynamic_cast<To>(&from) == static_cast<To>(&from) && "checked_cast failed" );
+		return static_cast<To>(from);
+	}
 namespace base
 {
 namespace mpl
