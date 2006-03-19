@@ -27,6 +27,12 @@
 #ifndef YAKE_GRAPHICSSYSTEMOGRE_CORE_H
 #define YAKE_GRAPHICSSYSTEMOGRE_CORE_H
 
+#if defined( YAKE_GRAPHICSCONCRETEAPI_EXPORTS )
+#	define YAKE_GRAPHICS_CONCRETE_API DLLEXPORT
+#else
+#	define YAKE_GRAPHICS_CONCRETE_API DLLIMPORT
+#endif
+
 namespace Ogre {
 	class SceneManager;
 	class Root;
@@ -42,7 +48,7 @@ namespace graphics {
 namespace ogre3d {
 
 	class SystemFrameListener;
-	class OgreCore
+	class YAKE_GRAPHICS_CONCRETE_API OgreCore
 	{
 		YAKE_DECLARE_CLASS( OgreCore );
 	public:
