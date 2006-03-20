@@ -65,8 +65,8 @@ MSG_NAMESPACE_BEGIN
 		router();
 
 		template<typename T>
-		void postMessage(const T& v, source_type source = kNullSource)
-		{ this->post( MSG_NAMESPACE::makeMessage(v,source) ); }
+		void postMessage(const T& v, source_type source = kNoSource, target_type target = kNoTarget)
+		{ this->post( MSG_NAMESPACE::makeMessage(v,source,target) ); }
 
 		/** Post a message. Processing is controlled by T_processor.
 			@see postMessage()

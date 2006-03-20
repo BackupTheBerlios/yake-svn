@@ -34,4 +34,10 @@
 #include "yake/msg/router.h"
 #include "yake/msg/processors.h"
 
+MSG_NAMESPACE_BEGIN
+
+	typedef msg::router<msg::DoubleQueuedProcessor> default_router;
+
+MSG_NAMESPACE_END
+
 #endif

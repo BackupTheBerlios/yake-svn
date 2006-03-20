@@ -40,7 +40,10 @@ MSG_NAMESPACE_BEGIN
 		void onPost(detail::message_base* msg)
 		{
 			YAKE_ASSERT(msg);
+			YAKE_ASSERT( !isProcessing() );
+			setProcessing(true);
 			this->process(msg);
+			setProcessing(false);
 		}
 	};
 	/** Queues messages in a single queue and processes them when processMessages() is called.
@@ -53,18 +56,32 @@ MSG_NAMESPACE_BEGIN
 		typedef detail::listener_map listener_map;
 		typedef detail::listener_list listener_list;
 
-		SingleQueuedProcessor() : isProcessing_(false)
+		SingleQueuedProcessor()
 		{}
 		void onPost(detail::message_base* msg)
 		{
-			YAKE_ASSERT(!isProcessing_);
+			YAKE_ASSERT(!isProcessing());
 			YAKE_ASSERT(msg);
 			q_.push_back(msg); //@todo sort by msg type!?
 		}
 		void processMessages()
 		{
-			YAKE_ASSERT( !isProcessing_ );
-			isProcessing_ = true;
+#ifdef METHOD2
+			while (!q_.empty())
+			{
+				YAKE_ASSERT( !isProcessing() );
+				setProcessing(true);
+
+				detail::message_base* msg = q_.front();
+				q_.pop_front();
+				YAKE_ASSERT( msg );
+				this->process(msg);
+
+				setProcessing(false);
+			}
+#else
+			YAKE_ASSERT( !isProcessing() );
+			setProcessing(true);
 			for (msg_q::const_iterator it = q_.begin(); it != q_.end(); ++it)
 			{
 				detail::message_base* msg = *it;
@@ -72,7 +89,8 @@ MSG_NAMESPACE_BEGIN
 				this->process(msg);
 			}
 			q_.clear();
-			isProcessing_ = false;
+			setProcessing(false);
+#endif
 		}
 	private:
 		typedef std::deque<detail::message_base*> msg_q;
@@ -89,7 +107,7 @@ MSG_NAMESPACE_BEGIN
 		typedef detail::listener_map listener_map;
 		typedef detail::listener_list listener_list;
 
-		DoubleQueuedProcessor() : q_(&q1_), isProcessing_(false) {}
+		DoubleQueuedProcessor() : q_(&q1_) {}
 		void onPost(detail::message_base* msg)
 		{
 			YAKE_ASSERT(msg);
@@ -97,18 +115,18 @@ MSG_NAMESPACE_BEGIN
 		}
 		void processMessages()
 		{
-			YAKE_ASSERT( !isProcessing_ );
-			isProcessing_ = true;
+			YAKE_ASSERT( !isProcessing() );
 			msg_q* procQ = q_;
 			q_ = (q_ == &q1_) ? &q2_ : &q1_;
-			for (msg_q::const_iterator it = procQ->begin(); it != procQ->end(); ++it)
+			while (!procQ->empty())
 			{
-				detail::message_base* msg = *it;
+				setProcessing(true);
+				detail::message_base* msg = procQ->front();
+				procQ->pop_front();
 				YAKE_ASSERT( msg );
 				this->process(msg);
+				setProcessing(false); // this may trigger some listener disconnections!
 			}
-			procQ->clear();
-			isProcessing_ = false;
 		}
 	private:
 		typedef std::deque<detail::message_base*> msg_q;

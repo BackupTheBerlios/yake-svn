@@ -31,7 +31,9 @@
 
 MSG_NAMESPACE_BEGIN
 
-	/** Represents the (optionally to be used) source of a message. */
+	/** Represents the (optionally to be used) source of a message.
+		@todo Make this a trait.
+	*/
 	typedef const void* source_type;
 
 	/** @copydoc source_type
@@ -39,7 +41,14 @@ MSG_NAMESPACE_BEGIN
 	*/
 	typedef source_type Source;
 
-	const Source kNullSource = Source(0);
+	const Source kNoSource = Source(0);
+	const Source kAnySource = Source(-2);
+
+	typedef const void* target_type;
+	typedef target_type Target;
+	const Target kNoTarget = Target(0);
+	const Target kBroadcastTarget = Target(-1);
+	const Target kAnyTarget = Target(-2);
 
 	namespace detail {
 		/** Internal base class for messages providing the very basic interface.
@@ -51,7 +60,8 @@ MSG_NAMESPACE_BEGIN
 			message_base& operator=(const message_base&);
 		public:
 			template<typename T>
-			message_base(const T& value, source_type src = kNullSource) : value_(value), msgTypeName_(typeid(T).name()), src_(src)
+			message_base(const T& value, source_type src = kNoSource, target_type tgt = kNoTarget) : 
+				value_(value), msgTypeName_(typeid(T).name()), src_(src), tgt_(tgt)
 			{}
 			const boost::any& value() const
 			{ return value_; }
@@ -59,11 +69,14 @@ MSG_NAMESPACE_BEGIN
 			{ return msgTypeName_; }
 			source_type source() const
 			{ return src_; }
+			target_type target() const
+			{ return tgt_; }
 		protected:
 			boost::any		value_;
 		private:
 			std::string		msgTypeName_;
 			source_type		src_;
+			target_type		tgt_;
 		};
 	} // namespace detail
 	/** Represents a concrete message for the type T.
@@ -75,7 +88,8 @@ MSG_NAMESPACE_BEGIN
 		/** Construct a message with value and optional source (0 by default).
 			
 		*/
-		message(const T& v, source_type src = kNullSource) : detail::message_base(v,src)
+		message(const T& v, source_type src = kNoSource, target_type tgt = kNoTarget) : 
+			detail::message_base(v,src,tgt)
 		{}
 		/** Construct a message with default value for type T and source 0. */
 		message() : detail::message_base(T())
@@ -90,9 +104,9 @@ MSG_NAMESPACE_BEGIN
 	{
 		DefaultMessageAllocator& instance();
 		template<typename T>
-		static message<T>* create(const T& v, source_type src = kNullSource)
+		static message<T>* create(const T& v, source_type src = kNoSource, target_type tgt = kNoTarget)
 		{
-			return new message<T>(v,src);
+			return new message<T>(v,src,tgt);
 		}
 		template<typename MsgType>
 		static void destroy(const MsgType* msg)
@@ -105,9 +119,9 @@ MSG_NAMESPACE_BEGIN
 	/** Helper function to easily create messages.
 	*/
 	template<typename T>
-	message<T>* makeMessage(const T& v, source_type src = kNullSource)
+	message<T>* makeMessage(const T& v, source_type src = kNoSource, target_type tgt = kNoTarget)
 	{ 
-		return DefaultMessageAllocator::create<T>(v,src); 
+		return DefaultMessageAllocator::create<T>(v,src,tgt); 
 	}
 
 	/** Destroys the message. */
