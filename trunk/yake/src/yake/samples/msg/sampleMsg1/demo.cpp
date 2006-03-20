@@ -108,7 +108,7 @@ private:
 
 int main(int argc, char* argv[])
 {
-	// Default/Immediate processing:
+	// Immediate processing:
 	{
 		YAKE_LOG_INFORMATION("demo: immediate processing");
 		msg::router<msg::ImmediateProcessor> router;
@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
 		// @todo
 		router.postMessage(ObjectMessage("entity",0x00a0a0a0,"name",std::string("freak")));
 	}
-	// Default/Immediate processing using source identifiers
+	// Immediate processing using source identifiers
 	{
 		YAKE_LOG_INFORMATION("demo: immediate processing with subscription to source identifiers");
 		msg::router<msg::ImmediateProcessor> router;
@@ -174,9 +174,47 @@ int main(int argc, char* argv[])
 
 		// post a few message to different handlers (depending on type)
 		router.post(msg::makeMessage(MsgResize(44,44)));
-		router.post(msg::makeMessage(MsgResize(44,44),msg::kNullSource));
+		router.post(msg::makeMessage(MsgResize(44,44),msg::kNoSource));
 		router.post(msg::makeMessage(MsgResize(55,55),msg::Source(11)));
 		router.post(msg::makeMessage(MsgResize(66,66),msg::Source(12)));
+	}
+	// EXPERIMENTAL:
+	// Immediate processing using source and target identifiers
+	{
+		YAKE_LOG_INFORMATION("demo: immediate processing with subscription to source and target identifiers");
+		msg::router<msg::ImmediateProcessor> router;
+
+		// register handler(s)
+		msg::ListenerConnection conn1 = router.add( msg::makeListener<MsgResize>(&app_handle_MsgResize1), msg::Source(12), msg::Target(1) );
+		//router.add( msg::makeListener<MsgResize>(&app_handle_MsgResize2), msg::Source(13), msg::kAnyTarget );
+		msg::ListenerConnection conn2 = router.add( msg::makeListener<MsgResize>(&app_handle_MsgResize2), msg::kAnySource, msg::kAnyTarget );
+
+		// post a few message to different handlers (depending on type)
+		router.post(msg::makeMessage(MsgResize(22,22)));
+		router.post(msg::makeMessage(MsgResize(33,33),msg::kNoSource));
+		router.post(msg::makeMessage(MsgResize(55,55),msg::Source(12),msg::Target(2)));
+		router.post(msg::makeMessage(MsgResize(44,44),msg::Source(12),msg::kBroadcastTarget)); // should be handled
+		router.post(msg::makeMessage(MsgResize(66,66),msg::Source(12),msg::Target(1))); // should be handled
+
+		// the following messages are all process by the catch-call handler registered above with kAnyTarget.
+		YAKE_LOG_INFORMATION("  removing all listeners except catch-all listener");
+		conn1.disconnect();
+		router.post(msg::makeMessage(MsgResize(11,11),msg::Source(13),msg::Target(2)));
+		router.post(msg::makeMessage(MsgResize(12,12),msg::Source(13),msg::kBroadcastTarget));
+		router.post(msg::makeMessage(MsgResize(13,13),msg::Source(13),msg::Target(1)));
+
+		// testing scoped listener
+		YAKE_LOG_INFORMATION("  removing all listeners and demo'ing a scoped listener");
+		conn2.disconnect();
+		{
+			msg::ScopedListenerConnection conn3 = router.add( msg::makeListener<MsgResize>(&app_handle_MsgResize2), msg::kAnySource, msg::kAnyTarget );
+			router.post(msg::makeMessage(MsgResize(1,1),msg::Source(13),msg::Target(2))); // will be handled
+		}
+		router.post(msg::makeMessage(MsgResize(2,2),msg::Source(13),msg::Target(2))); // will *not* be handled
+	}
+	// Processing polymorphic message system
+	{
+		YAKE_LOG_INFORMATION("demo: polymorphism");
 	}
 }
 
