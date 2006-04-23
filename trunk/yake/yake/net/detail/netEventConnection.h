@@ -51,14 +51,14 @@ namespace impl {
 		EventIdVector				allowedEventIds_;
 		mutable boost::mutex		allowedEventIdsMtx_;
 
-		event_direction			dir_;
 		IPacketConnection*		conn_;
+		event_direction			dir_;
 
 		struct EvtQItem
 		{
 			PeerId					peerId_;
-			ChannelId				channel_;
 			NetEvent*				evt_;
+			ChannelId				channel_;
 			DestroyEventFn			fnDestroy_;
 			EvtQItem(const PeerId peerId, NetEvent* evt, const ChannelId channel, const DestroyEventFn fnDestroy) :
 				peerId_(peerId), evt_(evt), channel_(channel), fnDestroy_(fnDestroy)
@@ -82,7 +82,7 @@ namespace impl {
 
 		struct statistics_t
 		{
-			statistics_t() : 
+			statistics_t() :
 				numInvalidPackets(0),
 				numInvalidEvents(0),
 				numInvalidEventIds(0),

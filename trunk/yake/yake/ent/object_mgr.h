@@ -57,32 +57,32 @@ namespace ent {
 			@see msg::makeListener
 			@see broadcastMessage
 		*/
-		void postMessage(msg::detail::message_base*, const msg::Source source = msg::kNullSource);
+		void postMessage(msg::detail::message_base*, const msg::Source source = msg::kNoSource);
 
 		/** Post a global message which is broadcasted to every object!
 			@see msg::makeMessage
 			@see msg::makeListener
 		*/
-		void broadcastMessage(msg::detail::message_base*, const msg::Source source = msg::kNullSource);
+		void broadcastMessage(msg::detail::message_base*, const msg::Source source = msg::kNoSource);
 
 		/** Post message to a specific object.
 			@see msg::makeMessage
 			@see msg::makeListener
 		*/
-		void postMessage(Object*, msg::detail::message_base*, const msg::Source source = msg::kNullSource);
+		void postMessage(Object*, msg::detail::message_base*, const msg::Source source = msg::kNoSource);
 
 		/** Post message to a specific object.
 			@see msg::makeMessage
 			@see msg::makeListener
 		*/
-		void postMessage(ObjectId, msg::detail::message_base*, const msg::Source source = msg::kNullSource);
+		void postMessage(ObjectId, msg::detail::message_base*, const msg::Source source = msg::kNoSource);
 
 		/** Post message to objects in a STL(-like) container with object pointers.
 			@see msg::makeMessage
 			@see msg::makeListener
 		*/
 		template<typename T_container>
-		void postMessage(const T_container& objCtr, msg::detail::message_base* msg, const msg::Source source = msg::kNullSource)
+		void postMessage(const T_container& objCtr, msg::detail::message_base* msg, const msg::Source source = msg::kNoSource)
 		{
 			ConstVectorIterator<T_container> it(objCtr);
 			while (it.hasMoreElements())

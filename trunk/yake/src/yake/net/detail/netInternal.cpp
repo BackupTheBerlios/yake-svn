@@ -9,12 +9,14 @@ namespace impl {
 	UpdateThread* UpdateThread::instance_ = 0;
 	bool UpdateThread::create()
 	{
+		NET_ASSERT( !instance_ );
 		if (!instance_)
 			instance_ = new UpdateThread();
 		return (instance_ != 0);
 	}
 	void UpdateThread::destroy()
 	{
+		NET_ASSERT( instance_ );
 		if (instance_)
 		{
 			instance_->requestQuit();

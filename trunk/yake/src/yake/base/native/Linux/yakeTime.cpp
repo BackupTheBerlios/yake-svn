@@ -70,7 +70,7 @@ namespace native
 		
 		gettimeofday( &t_now, 0 );
 		
-		return static_cast< float >( 
+		return static_cast< real >( 
 			( t_now.tv_sec - TimerInit_g.mStart.tv_sec ) * 1000 + 
 			( t_now.tv_usec - TimerInit_g.mStart.tv_usec ) / 1000 ) / 1000;
 	}

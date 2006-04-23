@@ -27,7 +27,7 @@ namespace net {
 		bitstream_source_stlcontainer();
 	public:
 		typedef ctr_type container_type;
-		bitstream_source_stlcontainer(const container_type& ctr) : ctr_(ctr), currPos(ctr.begin()), itEnd(ctr.end())
+		bitstream_source_stlcontainer(const container_type& ctr) : currPos(ctr.begin()), itEnd(ctr.end()), ctr_(ctr)
 		{}
 		bool hasMoreData() const
 		{
@@ -53,8 +53,8 @@ namespace net {
 	private:
 		bitstream_source_voidptr();
 	public:
-		bitstream_source_voidptr(const void* data, const size_t len) : 
-			data_(0), curr_(0), end_(0)
+		bitstream_source_voidptr(const void* data, const size_t len) :
+			data_(0), end_(0), curr_(0)
 		{
 			data_ = reinterpret_cast<const uint8*>(data);
 			end_ = data_ + len;

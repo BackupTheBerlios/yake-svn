@@ -28,7 +28,7 @@ namespace net {
 		mDestroyDataStream = other.mDestroyDataStream;
 	}
 	template<class DataStreamType>
-	ibstream_base<DataStreamType>::ibstream_base( DataStreamType* pds = 0 ) : mSource(pds), mBitPos(8), mTotalBits(0), mTotalBytes(0), mDestroyDataStream(false)
+	ibstream_base<DataStreamType>::ibstream_base( DataStreamType* pds /*= 0*/ ) : mSource(pds), mBitPos(8), mTotalBits(0), mTotalBytes(0), mDestroyDataStream(false)
 	{
 		mBuf.set(0);
 	}
@@ -71,8 +71,8 @@ namespace net {
 			numBits = 8;
 
 		std::bitset<8> d(0);
-		//for (uint8 i = numBits-1; i != 0xff; i--) 
-		for (uint8 i = 0; i < numBits; ++i) 
+		//for (uint8 i = numBits-1; i != 0xff; i--)
+		for (uint8 i = 0; i < numBits; ++i)
 		{
 			bool b;
 			read(b);
@@ -202,7 +202,7 @@ namespace net {
 		return *this;
 	}
 	template<class DataStreamType>
-	obstream_base<DataStreamType>::obstream_base( DataStreamType* pds = 0 ) : mStream(pds), mBitPos(0), mTotalBits(0), mTotalBytes(0), mNumBitsForNextStreamOperations(8), mDestroyDataStream(false)
+	obstream_base<DataStreamType>::obstream_base( DataStreamType* pds /*= 0*/ ) : mStream(pds), mBitPos(0), mTotalBits(0), mTotalBytes(0), mNumBitsForNextStreamOperations(8), mDestroyDataStream(false)
 	{
 		mBuf.set(0);
 	}

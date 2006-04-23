@@ -93,7 +93,7 @@ namespace net {
 			ResourceManager<T>*	owner_;
 		};
 		handle create()
-		{ 
+		{
 			return handle(this,onCreate());
 		}
 		void destroy(const handle& h)

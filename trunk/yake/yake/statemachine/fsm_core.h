@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright (c) The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -135,8 +135,8 @@ namespace fsm {
 		// construction
 #if defined(FSM_USE_NULL_STATE)
 		/** Constructs a machine. Sets the current state to the state type's null state. */
-		machine() : 
-			curr_(get_null_state<state_type>()) 
+		machine() :
+			curr_(get_null_state<state_type>())
 #else
 		/** Constructs a machine. */
 		machine()
@@ -181,7 +181,7 @@ namespace fsm {
 		{
 			out << "machine<>::dump()\n";
 			out << "  current = '" << curr_ << "'\n";
-			for (state_map::const_iterator it = states_.begin(); it != states_.end(); ++it)
+			for (typename state_map::const_iterator it = states_.begin(); it != states_.end(); ++it)
 			{
 				out << "  state '" << it->first << "'\n";
 				const event_state_map& evt2state = it->second.offgoing_transitions;

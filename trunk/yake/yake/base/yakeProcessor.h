@@ -32,9 +32,7 @@
 //    IMPLEMENTATION HEADERS
 //============================================================================
 // Standard headers
-#ifndef YAKE_BASE_PREREQUISITES_H
-#	include <yake/base/yakePrerequisites.h>
-#endif
+#include <yake/base/yakePrerequisites.h>
 // Yake
 #include <yake/base/yakeString.h>
 #include <yake/base/templates/yakeSingleton.h>

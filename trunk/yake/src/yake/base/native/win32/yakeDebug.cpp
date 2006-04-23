@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -82,7 +82,7 @@ static int g_nLine								= 0;
 		SetWindowPos( hDlg,
 			0,
 			( GetDeviceCaps( GetDC( 0 ), HORZRES ) - ( rc.right - rc.left ) ) / 2,
-			( GetDeviceCaps( GetDC( 0 ), VERTRES ) - ( rc.bottom - rc.top ) ) / 2, 
+			( GetDeviceCaps( GetDC( 0 ), VERTRES ) - ( rc.bottom - rc.top ) ) / 2,
 			0,
 			0,
 			SWP_NOSIZE | SWP_NOZORDER );
@@ -107,7 +107,7 @@ static int g_nLine								= 0;
 	return FALSE;
 }
 
-YAKE_BASE_NATIVE_API bool debug_AssertFailed( const char* pszMessage, const char* pszCondition, const char* pszFile, int nLine, bool& rbIgnoreAlways )
+bool debug_AssertFailed( const char* pszMessage, const char* pszCondition, const char* pszFile, int nLine, bool& rbIgnoreAlways )
 {
 	g_pszMessage		= pszMessage;
 	g_pszCondition	= pszCondition;
@@ -153,7 +153,7 @@ private:
     static bool consoleApp_;
 } logConsole_g;
 
-YAKE_BASE_NATIVE_API void debug_Log( const char * what, DebugLog::Severity eSeverity, const char * source )
+void debug_Log( const char * what, DebugLog::Severity eSeverity, const char * source )
 {
 	static char szBuffer[ 1024 ];
 
@@ -161,7 +161,7 @@ YAKE_BASE_NATIVE_API void debug_Log( const char * what, DebugLog::Severity eSeve
     ( eSeverity == DebugLog::WARNINGS ? FOREGROUND_GREEN | FOREGROUND_RED : FOREGROUND_RED ) );
 	wColor |= FOREGROUND_INTENSITY;
 
-	if( *source != NULL )
+	if( *source )
 		sprintf( szBuffer, "%s: %s", source, what );
 	else
 		sprintf( szBuffer, "%s", what );
@@ -170,7 +170,7 @@ YAKE_BASE_NATIVE_API void debug_Log( const char * what, DebugLog::Severity eSeve
 	logConsole_g.Print( "\n", FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED );
 }
 
-YAKE_BASE_NATIVE_API void debug_Print( const char * string )
+void debug_Print( const char * string )
 {
   logConsole_g.Print( string, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED );
 }

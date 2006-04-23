@@ -3,6 +3,8 @@
 #include <yake/net/net.h>
 #include <yake/net/detail/netInternal.h>
 
+#if YAKE_PLATFORM == PLATFORM_WIN32
+
 #ifdef _MANAGED
 #pragma managed(push, off)
 #endif
@@ -26,6 +28,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 #ifdef _MANAGED
 #pragma managed(pop)
 #endif
+
+#endif // PLATFORM_WIN32
 
 namespace net {
 

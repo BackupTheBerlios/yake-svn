@@ -2,7 +2,7 @@
 #include <yake/graphics/yakeGraphicsSystem.h>
 #include <yake/physics/yakePhysics.h>
 
-#define USE_SECOND_PHYSICS_PLUGIN
+//#define USE_SECOND_PHYSICS_PLUGIN
 
 using namespace yake;
 using namespace yake::math;

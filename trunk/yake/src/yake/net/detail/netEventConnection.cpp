@@ -27,7 +27,7 @@ namespace net {
 	}
 namespace impl {
 
-	EventConnection::EventConnection() : conn_(0), dir_(NetEvent::DIR_ANY), maxErrors_(0), manualPolling_(false), started_(false)
+	EventConnection::EventConnection() : conn_(0), dir_(NetEvent::DIR_ANY), manualPolling_(false), started_(false), maxErrors_(0)
 	{
 	}
 	EventConnection::~EventConnection()

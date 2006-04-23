@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -52,7 +52,7 @@ namespace OBJECTS_NAMESPACE {
 		typedef std::map<ClassId,ClassId> ClassIdMap;
 
 		ObjectManager();
-		~ObjectManager();
+		virtual ~ObjectManager();
 
 		// class registration
 		void setClassIdGenerationRange(const ClassId min, const ClassId max);

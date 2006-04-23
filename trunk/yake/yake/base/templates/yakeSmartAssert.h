@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -41,11 +41,11 @@
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
-namespace yake 
+namespace yake
 {
 namespace base
 {
-namespace assert 
+namespace assert
 {
 
 /** NOT USED. Has to be redone for proper assertion handler registration.
@@ -104,7 +104,7 @@ typedef templates::function1< void, const SmartAssertContext& > SMARTASSERT_HAND
 	Acknowledgement: After following a different approach for a similar thing
 	I went for an implementation based on this article:
 	http://www.cuj.com/documents/s=8464/cujcexp0308alexandr/cujcexp0308alexandr.html
-		
+
 	Usage:
 
 	The assertion macro can be used like this:
@@ -128,7 +128,7 @@ typedef templates::function1< void, const SmartAssertContext& > SMARTASSERT_HAND
 		\code YAKE_ASSERT( a==b )(a)(b).msg("hola").msg("compadres");\endcode
 
 	The following assertion levels exist:
-		
+
 		warning -> warning()
 		debug -> debug()
 		error -> error()
@@ -136,6 +136,9 @@ typedef templates::function1< void, const SmartAssertContext& > SMARTASSERT_HAND
 */
 struct YAKE_BASE_API SmartAssert
 {
+public:
+	SmartAssert& YAKE_ASSERT_A;
+	SmartAssert& YAKE_ASSERT_B;
 private:
 	SmartAssertContext	mCtx;
 
@@ -144,9 +147,6 @@ private:
 public:
 	SmartAssert( const char * strExpr ) : YAKE_ASSERT_A(*this), YAKE_ASSERT_B(*this), mCtx(strExpr) {}
 	~SmartAssert();
-
-	SmartAssert& YAKE_ASSERT_A;
-	SmartAssert& YAKE_ASSERT_B;
 
 	template< class type >
 	SmartAssert & printValue( const type & value, const char * msg )

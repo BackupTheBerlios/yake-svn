@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright (c) The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -45,7 +45,16 @@ namespace ent {
 
 	void Entity::processFsmEvent(const fsm_event_type& evt)
 	{
-		m_.processEventCb(evt,boost::bind(&Entity::onEnter,this,_1,_2),boost::bind(&Entity::onExit,this,_1,_2));
+	    // On MSVC8 the following line of code works but fails miserable with GCC 3.4.2 (MinGW).
+	    // That's why we use the approach below.
+		//m_.processEventCb(evt,boost::bind(&Entity::onEnter,this,_1,_2),boost::bind(&Entity::onExit,this,_1,_2));
+
+		typedef boost::function<void(const object_fsm&, const object_fsm::state_type& state)> fn_t;
+		const fn_t fnEnter = boost::bind(&Entity::onEnter,boost::ref(this),_1,_2);
+		const fn_t fnExit = boost::bind(&Entity::onExit,boost::ref(this),_1,_2);
+
+		m_.processEventCb(std::string(evt), fnEnter, fnExit);
+
 		listeners_fsmEventHandled(*this,m_,evt);
 	}
 	void Entity::addFsmState(const fsm_state_type& state)

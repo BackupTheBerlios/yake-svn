@@ -45,7 +45,7 @@ namespace native
 {
 /*
 // todo
-YAKE_BASE_NATIVE_API void Processor_RetrieveInfo( std::wstring& name, float& frequency, Processor::Info& info )
+void Processor_RetrieveInfo( std::wstring& name, float& frequency, Processor::Info& info )
 {
 #define CACHE_COPY( Dest, Src ) Dest.isPresent = Src.bPresent; Dest.size = Widen( Src.strSize ); Dest.numAssociativeWays = Src.uiAssociativeWays; Dest.lineSize = Src.uiLineSize; Dest.isSectored = Src.bSectored;
 #define TLB_COPY( Dest, Src )   Dest.isPresent = Src.bPresent; Dest.pageSize = Widen( Src.strPageSize ); Dest.numAssociativeWays = Src.uiAssociativeWays; Dest.numEntries = Src.uiEntries;

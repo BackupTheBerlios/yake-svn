@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -37,28 +37,28 @@ namespace xml {
 	{
 		parse( pElem );
 	}
-	
+
 	XmlNode::~XmlNode()
 	{
 		mNodes.clear();
 	}
-	
+
 	const NodeList& XmlNode::getNodes() const
 	{
 		return mNodes;
 	}
-	
+
 	const INode::AttributeMap& XmlNode::getAttributes() const
 	{
 		return mAttributes;
 	}
-	
+
 	void XmlNode::addNode( SharedPtr<INode> pNode )
 	{
 		if (pNode)
 			mNodes.push_back( pNode );
 	}
-	
+
 	String XmlNode::getName() const
 	{
 		YAKE_ASSERT( mElem );
@@ -96,52 +96,53 @@ namespace xml {
 		const char* val = mElem->Attribute( rName.c_str() );
 		return val ? String( val ) : String("");
 	}
-	
+
 	SharedPtr<INode> XmlNode::getNodeByName( String const& rName ) const
 	{
 		for ( NodeList::const_iterator it = mNodes.begin(); it != mNodes.end(); ++it )
 		{
 			data::dom::INode::ValueType value = (*it)->getName();
-			
+
 			if ( varGet<String>( value ) == rName )
 				return ( *it );
 		}
-		
+
 		return SharedPtr<INode>();
 	}
-	
+
 	SharedPtr<INode> XmlNode::getNodeById( String const& rId ) const
 	{
 		// still NYI?
+		YAKE_ASSERT( 0==1 );
 		return SharedPtr<INode>();
 	}
-	
+
 	void XmlNode::parse( TiXmlElement* pElem )
 	{
 		YAKE_ASSERT( pElem );
-		
-		for ( TiXmlAttribute* pAttr = mElem->FirstAttribute(); 
-			pAttr != 0; 
+
+		for ( TiXmlAttribute* pAttr = pElem->FirstAttribute();
+			pAttr != 0;
 			pAttr = pAttr->Next() )
 		{
 			mAttributes.insert( std::make_pair( pAttr->Name(), String( pAttr->Value() ) ) );
 		}
 	}
 
-	XmlSerializer::XmlSerializer() : mXmlDoc(0), mRootNode(), mRootElem(0)
+	XmlSerializer::XmlSerializer() : mRootNode(), mRootElem(0), mXmlDoc(0)
 	{
 	}
-	
+
 	XmlSerializer::~XmlSerializer()
 	{
 		reset();
 	}
-	
+
 	SharedPtr<INode> XmlSerializer::getDocumentNode() const
 	{
 		return mRootNode;
 	}
-	
+
 	void XmlSerializer::parse( String const& rFile, bool fireSignals )
 	{
 		if ( mXmlDoc )
@@ -163,15 +164,15 @@ namespace xml {
 		// recursively traverse xml tree and fire events as needed
 		parseNode( mRootNode );
 	}
-	
+
 	void XmlSerializer::reset()
 	{
 		YAKE_SAFE_DELETE( mXmlDoc );
-		
+
 		mRootElem = 0;
 		mRootNode.reset();
 	}
-	
+
 	void XmlSerializer::parseNode( SharedPtr<XmlNode> pNode )
 	{
 		YAKE_ASSERT( pNode );
@@ -188,8 +189,8 @@ namespace xml {
 			mNewNodeSignal( pNode );
 
 			// iterate over node's attributes & fire signals
-			for ( TiXmlAttribute* pAttr = pNodeElem->FirstAttribute(); 
-				pAttr != 0; 
+			for ( TiXmlAttribute* pAttr = pNodeElem->FirstAttribute();
+				pAttr != 0;
 				pAttr = pAttr->Next() )
 			{
 				// fire "new attribute"
@@ -200,7 +201,7 @@ namespace xml {
 		// iterate over child xml elements, creating new nodes as we go
 		// and recursively parsing them.
 		for ( TiXmlElement* pElem = pNodeElem->FirstChildElement();
-			pElem != 0; 
+			pElem != 0;
 			pElem = pElem->NextSiblingElement() )
 		{
 			SharedPtr<XmlNode> pNewNode( new XmlNode( pElem ) );

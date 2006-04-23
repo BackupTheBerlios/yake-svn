@@ -10,11 +10,11 @@
 // local
 #include "initialization.h"
 
-namespace yake 
+namespace yake
 {
-namespace samples 
+namespace samples
 {
-namespace common 
+namespace common
 {
 
 // todo: del
@@ -22,7 +22,7 @@ template <>
 struct create_help <yake::graphics::IGraphicsSystem>
 {
 	static boost::shared_ptr<yake::graphics::IGraphicsSystem> create()
-	{ return yake::base::templates::create_default<yake::graphics::IGraphicsSystem>(); }
+	{ return yake::templates::create_default<yake::graphics::IGraphicsSystem>(); }
 };
 
 using namespace yake::base;
@@ -44,9 +44,9 @@ using namespace yake::base;
 	//struct graphics_system : return_type_info<graphics_system> {};
 	struct gui_system : return_type_info<gui_system>	{};
 
-	struct gui_renderer_adapter 
-	{ 
-		typedef std::pair<base::type_info, base::type_info> identifier; 
+	struct gui_renderer_adapter
+	{
+		typedef std::pair<base::type_info, base::type_info> identifier;
 	};
 
 	template <class System>

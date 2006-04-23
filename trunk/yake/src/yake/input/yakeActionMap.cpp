@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -278,7 +278,6 @@ namespace input {
 		if (!in.is_open())
 			return false;
 
-		int e = 0;
 		do {
 			String line;
 			std::getline(in,line);
@@ -313,7 +312,7 @@ namespace input {
 			if (StringUtil::startsWith(inputSpec, "key_", true ))
 			{
 				const KeyboardActionMode kam = (mode == "pressed") ? KAM_PRESSED :
-				((mode == "continuous") ? KAM_CONTINUOUS : 
+				((mode == "continuous") ? KAM_CONTINUOUS :
 				((mode == "released") ? KAM_RELEASED :
 				((mode == "pressed_released") ? KAM_PRESSED_AND_RELEASED :
 					KAM_PRESSED
@@ -399,13 +398,13 @@ namespace input {
 
 	//-----------------------------------------------------
 	void KeyboardActionCondition::setKey( const KeyCode key )
-	{ 
+	{
 		mKey = key;
 	}
 
 	//-----------------------------------------------------
 	void KeyboardActionCondition::setMode( KeyboardActionMode mode )
-	{ 
+	{
 		mMode = mode;
 	}
 

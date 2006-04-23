@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright (c) The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -77,15 +77,15 @@ MSG_NAMESPACE_BEGIN
 		void disconnect();
 
 		bool empty() const
-		{ 
-			return (listener_ != 0); 
+		{
+			return (listener_ != 0);
 		}
 		detail::listener_base* listener() const
 		{
 			return listener_;
 		}
 		source_type source() const
-		{ 
+		{
 			return source_;
 		}
 		target_type target() const
@@ -238,8 +238,8 @@ MSG_NAMESPACE_BEGIN
 				return isProcessing_;
 			}
 		private:
-			typedef MSG_NAMESPACE::detail::listener_list listener_list;
-			typedef MSG_NAMESPACE::detail::listener_map listener_map;
+			//typedef MSG_NAMESPACE::detail::listener_list listener_list;
+			//typedef MSG_NAMESPACE::detail::listener_map listener_map;
 			typedef AssocVector<target_type,listener_map> target_map;
 			typedef AssocVector<source_type,target_map> source_map;
 			source_map		sources_;

@@ -76,17 +76,17 @@ namespace impl {
 	/** @todo move this into general purpose lib/header
 	*/
 	template<typename ctr_type>
-		bool contains(const ctr_type& ctr, typename const ctr_type::value_type& value)
+		bool contains(const ctr_type& ctr, const typename ctr_type::value_type& value)
 	{
 		return (ctr.end() != std::find(ctr.begin(), ctr.end(), value));
 	}
 	template<typename kt, typename vt, typename at>
-		bool contains(const std::map<kt,vt,at>& ctr, typename const std::map<kt,vt,at>::key_type& key)
+		bool contains(const std::map<kt,vt,at>& ctr, const typename std::map<kt,vt,at>::key_type& key)
 	{
 		return (ctr.end() != ctr.find(key));
 	}
 	template<typename map_type>
-		bool map_contains(const map_type& ctr, typename const map_type::key_type& key)
+		bool map_contains(const map_type& ctr, const typename map_type::key_type& key)
 	{
 		return (ctr.end() != ctr.find(key));
 	}

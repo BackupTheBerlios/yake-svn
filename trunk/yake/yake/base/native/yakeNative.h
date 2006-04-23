@@ -28,59 +28,50 @@
 #define YAKE_BASE_NATIVE_NATIVE_H
 
 //============================================================================
-//    IMPLEMENTATION HEADERS
-//============================================================================
+#include <yake/base/yakePrerequisites.h>
 #include <yake/base/yakeProcessor.h>
 
-#if defined( YAKE_BASE_EXPORTS )
-#	define YAKE_BASE_NATIVE_API DLLEXPORT
-#else
-#	define YAKE_BASE_NATIVE_API DLLIMPORT
-#endif
-
-//============================================================================
-//    INTERFACE STRUCTURES / UTILITY CLASSES
 //============================================================================
 namespace yake
 {
 namespace native
 {
 
-// Library Interface.
-typedef const void * LibraryHandle;
-YAKE_BASE_NATIVE_API LibraryHandle library_Load(const char * filemame);
-YAKE_BASE_NATIVE_API void * library_GetSymbol(LibraryHandle, const char * function);
-YAKE_BASE_NATIVE_API void library_Free(LibraryHandle);
+	// Library Interface.
+	typedef const void * LibraryHandle;
+	YAKE_BASE_API LibraryHandle library_Load(const char * filemame);
+	YAKE_BASE_API void * library_GetSymbol(LibraryHandle, const char * function);
+	YAKE_BASE_API void library_Free(LibraryHandle);
 
-// Debugging Interface.
-struct DebugLog
-{
-	enum Severity
+	// Debugging Interface.
+	struct DebugLog
 	{
-		INFORMATIONS,
-		WARNINGS,
-		ERRORS
+		enum Severity
+		{
+			INFORMATIONS,
+			WARNINGS,
+			ERRORS
+		};
 	};
-};
-YAKE_BASE_NATIVE_API bool debug_AssertFailed( const char* pszMessage, const char* pszCondition, const char* pszFile, int nLine, bool& rbIgnoreAlways );
-YAKE_BASE_NATIVE_API void debug_Log( const char* what, DebugLog::Severity, const char* source );
-YAKE_BASE_NATIVE_API void debug_Print( const char* string );
+	YAKE_BASE_API bool debug_AssertFailed( const char* pszMessage, const char* pszCondition, const char* pszFile, int nLine, bool& rbIgnoreAlways );
+	YAKE_BASE_API void debug_Log( const char* what, DebugLog::Severity, const char* source );
+	YAKE_BASE_API void debug_Print( const char* string );
 
-// Critical Section Interface.
-typedef const void* CriticalSectionHandle;
-YAKE_BASE_NATIVE_API CriticalSectionHandle criticalSection_Create();
-YAKE_BASE_NATIVE_API void criticalSection_Enter( CriticalSectionHandle );
-YAKE_BASE_NATIVE_API void criticalSection_Leave( CriticalSectionHandle );
-YAKE_BASE_NATIVE_API void criticalSection_Delete( CriticalSectionHandle );
+	// Critical Section Interface.
+	typedef const void* CriticalSectionHandle;
+	YAKE_BASE_API CriticalSectionHandle criticalSection_Create();
+	YAKE_BASE_API void criticalSection_Enter( CriticalSectionHandle );
+	YAKE_BASE_API void criticalSection_Leave( CriticalSectionHandle );
+	YAKE_BASE_API void criticalSection_Delete( CriticalSectionHandle );
 
-// Processor Information Interface.
-YAKE_BASE_NATIVE_API void processor_RetrieveInfo( std::wstring& name, float& frequency, Processor::Info& );
+	// Processor Information Interface.
+	YAKE_BASE_API void processor_RetrieveInfo( std::wstring& name, float& frequency, Processor::Info& );
 
-// Timing Interface.
-YAKE_BASE_NATIVE_API float getTime();
+	// Timing Interface.
+	YAKE_BASE_API real getTime();
 
-// Application Information Interface.
-YAKE_BASE_NATIVE_API const char* getApplicationDir();
+	// Application Information Interface.
+	YAKE_BASE_API const char* getApplicationDir();
 
 } // native
 } // yake

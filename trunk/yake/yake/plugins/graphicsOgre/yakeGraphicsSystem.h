@@ -40,7 +40,7 @@
 #endif
 
 #if YAKE_PLATFORM == PLATFORM_WIN32
-#	define YAKE_USE_OSM
+//#	define YAKE_USE_OSM
 #	pragma message("Compiling graphicsOGRE with OSM support.")
 #else
 #	pragma message("Compiling graphicsOGRE without OSM support.")

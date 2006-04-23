@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -53,7 +53,7 @@ static class TimerInit
 public:
 	// Public member for a gain of speed.
 	Win32::LARGE_INTEGER mTimerFrequency;
-	float mStart;
+	real mStart;
 
 	// Constructor.
 	TimerInit()
@@ -61,35 +61,35 @@ public:
 		if( !Win32::QueryPerformanceFrequency( &mTimerFrequency ) )
 		{
 			mTimerFrequency.QuadPart = 0;
-			mStart = float( Win32::timeGetTime() ) / 1000.0f;
+			mStart = real( Win32::timeGetTime() ) / 1000.0f;
 		}
 		else
 		{
 			Win32::LARGE_INTEGER largeCount;
 			Win32::QueryPerformanceCounter( &largeCount );
 
-			long double count = long double( largeCount.QuadPart );
-			long double frequency = long double( mTimerFrequency.QuadPart );
+			double count = double( largeCount.QuadPart );
+			double frequency = double( mTimerFrequency.QuadPart );
 
-			mStart = float( count / frequency );
+			mStart = real( count / frequency );
 		}
 	}
 } TimerInit_g;
 
 
-float YAKE_BASE_NATIVE_API getTime()
+real getTime()
 {
 	// No performance timer available.
 	if( TimerInit_g.mTimerFrequency.QuadPart == 0 )
-		return float( Win32::timeGetTime() ) / 1000.0f - TimerInit_g.mStart;
+		return real( Win32::timeGetTime() ) / 1000.0f - TimerInit_g.mStart;
 
 	Win32::LARGE_INTEGER largeCount;
 	Win32::QueryPerformanceCounter( &largeCount );
 
-	long double count = long double( largeCount.QuadPart );
-	long double frequency = long double( TimerInit_g.mTimerFrequency.QuadPart );
+	double count = double( largeCount.QuadPart );
+	double frequency = double( TimerInit_g.mTimerFrequency.QuadPart );
 
-	return float( count / frequency ) - TimerInit_g.mStart;
+	return real( count / frequency ) - TimerInit_g.mStart;
 }
 
 

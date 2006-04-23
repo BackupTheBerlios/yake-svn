@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -75,11 +75,11 @@ namespace math {
         // change where this is not the case
         // TODO: base on arclength?
 
-        
+
         // Work out which segment this is in
         real fSeg = t * mPoints.size();
         unsigned int segIdx = (unsigned int)fSeg;
-        // Apportion t 
+        // Apportion t
         t = fSeg - segIdx;
 
         return interpolate(segIdx, t);
@@ -89,8 +89,7 @@ namespace math {
     Vector3 SimpleSpline::interpolate(unsigned int fromIndex, real t)
     {
         // Bounds check
-        assert (fromIndex >= 0 && fromIndex < mPoints.size() &&
-            "fromIndex out of bounds");
+        assert ( fromIndex < mPoints.size() && "fromIndex out of bounds");
 
         if ((fromIndex + 1) == mPoints.size())
         {
@@ -151,7 +150,7 @@ namespace math {
     void SimpleSpline::recalcTangents(void)
     {
         // Catmull-Rom approach
-        // 
+        //
         // tangent[i] = 0.5 * (point[i+1] - point[i-1])
         //
         // Assume endpoint tangents are parallel with line with neighbour
@@ -212,7 +211,7 @@ namespace math {
             {
                 mTangents[i] = 0.5 * (mPoints[i+1] - mPoints[i-1]);
             }
-            
+
         }
 
 

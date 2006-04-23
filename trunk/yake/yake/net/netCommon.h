@@ -61,14 +61,12 @@ namespace net {
 	struct NET_API Exception : public std::exception
 	{
 		Exception(const std::string& msg, const char* file = 0, const int line = 0);
-		virtual const char* what() const;
+		virtual ~Exception() throw() {}
+		virtual const char* what() const throw();
 	private:
 		std::string	msg_;
 	};
 
-	namespace detail {
-		class NativeTimer;
-	}
 	class NET_API Timer
 	{
 	public:
@@ -81,7 +79,6 @@ namespace net {
 		void reset();
 		double getTime() const;
 	private:
-		detail::NativeTimer*	timer_;
 		double					start_;
 		mutable double			time_;
 		bool					paused_;

@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -52,7 +52,11 @@ namespace yake {
 		}
 		mSize = size;
 		if (mSize > 0)
+		{
 			mData = new uint8[ mSize ];
+			if (pData)
+                memcpy(mData,pData,size);
+		}
 		return mSize;
 	}
 
@@ -100,7 +104,7 @@ namespace yake {
 		}
 		else
 		{
-			if (mSize-pos < 0)
+			if (pos > mSize)
 				mPos = 0;
 			else
 				mPos = mSize-pos;

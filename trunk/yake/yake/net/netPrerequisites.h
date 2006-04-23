@@ -5,20 +5,20 @@
 
 #ifdef YAKE_NET_EXPORTS
 #	ifdef NET_DLL
-#		define NET_API __declspec(dllexport)
+#		define NET_API DLLEXPORT
 #	else
 #		define NET_API
 #	endif
 #else
 #	ifdef NET_DLL
-#		define NET_API __declspec(dllimport)
+#		define NET_API DLLIMPORT
 #	else
 #		define NET_API
 #	endif
 #	if defined( _DEBUG )
-#		pragma comment(lib,"net_d.lib")
+#		pragma comment(lib,"yake_net-vc80-d.lib")
 #	else
-#		pragma comment(lib,"net.lib")
+#		pragma comment(lib,"yake_net-vc80.lib")
 #	endif
 #endif
 
@@ -30,7 +30,7 @@
 #include "netTypes.h"
 
 #define NET_ASSERT(X) \
-	assert(X)
+	YAKE_ASSERT(X)
 
 
 #endif

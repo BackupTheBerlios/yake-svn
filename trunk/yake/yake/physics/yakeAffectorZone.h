@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -105,6 +105,7 @@ namespace physics {
 		BodyGroup				mAffectedBodies;
 	public:
 		AffectorZone();
+		virtual ~AffectorZone() {}
 		void addAffector( SharedPtr<IBodyAffector>& pAffector );
 
 		void setEnabled( bool enabled );
@@ -123,7 +124,7 @@ namespace physics {
 	{
 	public:
 		AffectorZoneManager( SharedPtr<physics::IWorld>& pWorld );
-		~AffectorZoneManager();
+		virtual ~AffectorZoneManager();
 
 		void addAffectorZone( SharedPtr<AffectorZone> & pSpace );
 

@@ -2,7 +2,7 @@
    ------------------------------------------------------------------------------------
    This file is part of YAKE
    Copyright © 2004 The YAKE Team
-   For the latest information visit http://www.yake.org 
+   For the latest information visit http://www.yake.org
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
    the terms of the GNU Lesser General Public License as published by the Free Software
@@ -45,28 +45,28 @@ namespace yake
 namespace native
 {
 
-YAKE_BASE_NATIVE_API LibraryHandle library_Load(const char * filename)
+LibraryHandle library_Load(const char * filename)
 {
 	YAKE_ASSERT(filename).debug("Invalid filename.");
 	// load library
 	LibraryHandle handle = (LibraryHandle)::LoadLibraryA(filename);
 
 	// todo: http://yake.org/forum/viewtopic.php?t=340
-	if (!handle) 
+	if (!handle)
 		YAKE_EXCEPT("Couldn't load library " + String(filename) + ".");
 	return handle;
 }
 
-YAKE_BASE_NATIVE_API void * library_GetSymbol(LibraryHandle library, const char * function)
+void * library_GetSymbol(LibraryHandle library, const char * function)
 {
 	YAKE_ASSERT(library).debug("Invalid library handle.");
 	YAKE_ASSERT(function).debug("Invalid library function.");
 	// get the procedure's address
-	void * address = ::GetProcAddress((HMODULE) library, function);
+	void * address = (void *)(::GetProcAddress((HMODULE) library, function));
 	return address;
 }
 
-YAKE_BASE_NATIVE_API void library_Free(LibraryHandle library)
+void library_Free(LibraryHandle library)
 {
 	YAKE_ASSERT(library).debug("Invalid library handle.");
 	// free library

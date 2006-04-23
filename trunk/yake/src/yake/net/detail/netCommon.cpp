@@ -1,6 +1,7 @@
 #include <yake/net/pch.h>
 #include <sstream>
 #include <yake/net/net.h>
+#include <yake/base/native/yakeNative.h>
 
 // Modify the following defines if you have to target a platform prior to the ones specified below.
 // Refer to MSDN for the latest info on corresponding values for different platforms.
@@ -8,9 +9,9 @@
 #define WINVER 0x0501		// Change this to the appropriate value to target other versions of Windows.
 #endif
 
-#ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.                   
+#ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.
 #define _WIN32_WINNT 0x0501	// Change this to the appropriate value to target other versions of Windows.
-#endif						
+#endif
 
 #ifndef _WIN32_WINDOWS		// Allow use of features specific to Windows 98 or later.
 #define _WIN32_WINDOWS 0x0410 // Change this to the appropriate value to target Windows Me or later.
@@ -31,11 +32,11 @@ namespace net {
 	//-------------------------------------------------------------------------
 
 	CallbackConnection::CallbackConnection(const CallbackHandle h, const DisconnectFn& fn) :
-		handle_(h), disconnectFn_(fn)
+		disconnectFn_(fn), handle_(h)
 	{
 	}
-		CallbackConnection::CallbackConnection(const CallbackConnection& other) :
-		handle_(other.handle_), disconnectFn_(other.disconnectFn_)
+	CallbackConnection::CallbackConnection(const CallbackConnection& other) :
+		disconnectFn_(other.disconnectFn_), handle_(other.handle_)
 	{
 	}
 	CallbackConnection& CallbackConnection::operator=(const CallbackConnection& rhs)
@@ -124,7 +125,7 @@ namespace net {
 			ss << "location: " << file << ":" << line << "\n";
 		msg_ = ss.str();
 	}
-	const char* Exception::what() const
+	const char* Exception::what() const throw()
 	{
 		return msg_.c_str();
 	}
@@ -132,7 +133,7 @@ namespace net {
 	//-------------------------------------------------------------------------
 	// SendOptions
 	//-------------------------------------------------------------------------
-	SendOptions::SendOptions() : 
+	SendOptions::SendOptions() :
 		peerId(0xffffffff),
 		reliability(R_RELIABLE),
 		ordering(O_ORDERED),
@@ -180,53 +181,16 @@ namespace net {
 	//-------------------------------------------------------------------------
 	// NativeTimer & Timer
 	//-------------------------------------------------------------------------
-	namespace detail {
-		class NativeTimer
-		{
-		public:
-			NativeTimer()
-			{
-				mCurrent = getTime();
-				mLast = mCurrent;
-			}
-			~NativeTimer()  {}
-
-			void tick()
-			{
-				mLast = mCurrent;
-				mCurrent = getTime();
-			}
-
-			double getDiff()
-			{
-				return mCurrent - mLast;
-			}
-
-			double getTime()
-			{
-				QueryPerformanceFrequency( (LARGE_INTEGER*)&freq );
-				QueryPerformanceCounter( (LARGE_INTEGER*)&time );
-				return (double)(time) / (double)freq;
-			}
-
-		private:
-			__int64  time;
-			__int64  freq;
-			double	mLast;
-			double	mCurrent;
-		};
-	} // namespace detail
-	Timer::Timer() : timer_( new detail::NativeTimer() ), start_(0.), paused_(false), time_(0.)
+	Timer::Timer() : start_(0.), time_(0.), paused_(false)
 	{
+		start_ = ::yake::native::getTime();
 	}
 	Timer::~Timer()
 	{
-		if (timer_)
-			delete timer_;
 	}
 	void Timer::start()
 	{
-		start_ = timer_->getTime();
+		start_ = ::yake::native::getTime();
 		time_ = 0.;
 		paused_ = false;
 	}
@@ -240,7 +204,7 @@ namespace net {
 	}
 	void Timer::resume()
 	{
-		const double dt = timer_->getTime() - time_;
+		const double dt = ::yake::native::getTime() - time_;
 		start_ += dt;
 		paused_ = false;
 	}
@@ -252,7 +216,7 @@ namespace net {
 	double Timer::getTime() const
 	{
 		if (!paused_)
-			time_ = (timer_->getTime() - start_);
+			time_ = (::yake::native::getTime() - start_);
 		return time_;
 	}
 

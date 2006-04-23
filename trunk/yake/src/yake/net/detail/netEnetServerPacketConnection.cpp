@@ -272,8 +272,6 @@ namespace impl {
 						peerId = (reinterpret_cast<Client*>(event.peer->data))->id;
 					}
 
-					//Note: The callbacks can take over ownership/destruction of the packet!
-					bool bPacketDeleted = false;
 					fireCallback_PacketReceived(peerId,event.packet->data,event.packet->dataLength,event.channelID);
 				}
 				{
@@ -337,7 +335,7 @@ namespace impl {
 		}
 		{
 			boost::mutex::scoped_lock enetLock(getEnetMtx());
-			ENetPacket* packet = enet_packet_create( 
+			ENetPacket* packet = enet_packet_create(
 														dataPtr, dataSize,
 														(rel == R_RELIABLE) ? ENET_PACKET_FLAG_RELIABLE : 0 );
 			// send
@@ -358,7 +356,7 @@ namespace impl {
 		}
 		{
 			boost::mutex::scoped_lock enetLock(getEnetMtx());
-			ENetPacket* packet = enet_packet_create( 
+			ENetPacket* packet = enet_packet_create(
 														dataPtr, dataSize,
 														(rel == R_RELIABLE) ? ENET_PACKET_FLAG_RELIABLE : 0 );
 			enet_host_broadcast( m_host, channel, packet );
