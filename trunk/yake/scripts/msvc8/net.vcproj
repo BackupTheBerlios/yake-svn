@@ -65,13 +65,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib winmm.lib base.lib"
-				OutputFile="$(OutDir)/$(ProjectName).dll"
+				OutputFile="$(OutDir)/yake_$(ProjectName)-vc80-d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../common/lib/debug;../../dependencies/lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
 				SubSystem="2"
-				ImportLibrary="../../common/lib/debug/$(TargetName)_d.lib"
+				ImportLibrary="../../common/lib/$(TargetName).lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -146,7 +146,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ws2_32.lib winmm.lib base.lib"
-				OutputFile="$(OutDir)/$(ProjectName).dll"
+				OutputFile="$(OutDir)/yake_$(ProjectName)-vc80.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../../common/lib/release;../../dependencies/lib"
 				GenerateDebugInformation="false"
