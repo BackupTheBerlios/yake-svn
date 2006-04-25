@@ -35,6 +35,7 @@
 #	include <yake/base/yakePrerequisites.h>
 #endif
 #include <yake/base/templates/yakeVector.h>
+#include <yake/base/templates/yakeFastMap.h>
 
 //============================================================================
 //    INTERFACE STRUCTURES / UTILITY CLASSES
@@ -125,6 +126,22 @@ namespace yake {
 		}
 	private:
 		StringPairVector m_stringPairs;
+	};
+
+	typedef AssocVector<String,String> StringMap;
+	struct YAKE_BASE_API MakeStringMap
+	{
+		MakeStringMap & operator<<(const StringPair& stringPair)
+		{
+			m_map.insert( stringPair ); 
+			return *this; 
+		}
+		operator StringMap()
+		{ 
+			return m_map; 
+		}
+	private:
+		StringMap m_map;
 	};
 
 #undef YAKE_BASE_STRING
