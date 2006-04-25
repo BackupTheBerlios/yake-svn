@@ -4,7 +4,7 @@
 #include <yake/samples/net/roserver/ROServer.h>
 
 #include <yake/object/yakeObjects.h>
-#include <yapp/ent/yakeEnt.h>
+#include <yake/ent/ent.h>
 
 int main(int argc, char* argv[])
 {

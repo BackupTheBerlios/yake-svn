@@ -7,7 +7,7 @@ int main(int argc,char* argv[])
 	// loading & starting plugin
 	using namespace yake;
 	SharedPtr<base::Library> pLib( new base::Library( "audioOpenAL" ) );
-	SharedPtr<audio::IAudioSystem> pAudio = create_default<audio::IAudioSystem>();
+	SharedPtr<audio::IAudioSystem> pAudio = templates::create_default<audio::IAudioSystem>();
 
 	// create world
 	SharedPtr<audio::IWorld> pWorld;

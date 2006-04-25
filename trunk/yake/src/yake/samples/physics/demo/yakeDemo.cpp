@@ -233,6 +233,7 @@ void MiniApp::init()
 
 	mPWorld1 = mPhysics1->createWorld();
 	YAKE_ASSERT( mPWorld1 ).debug("Cannot create world 1.");
+	mPWorld1->setGlobalGravity( Vector3(0,-9.81,0) );
 
 	// physics 2
 #ifdef USE_SECOND_PHYSICS_PLUGIN
@@ -244,6 +245,7 @@ void MiniApp::init()
 
 	mPWorld2 = mPhysics2->createWorld();
 	YAKE_ASSERT( mPWorld2 ).debug("Cannot create world 2.");
+	mPWorld2->setGlobalGravity( Vector3(0,-9.81,0) );
 #endif
 	// graphics
 
@@ -361,6 +363,10 @@ void MiniApp::run()
 	// create a simple static environment - world 1
 	IActorPtr pStaticWorldActor1 = mPWorld1->createActor(ACTOR_STATIC);
 	YAKE_ASSERT( pStaticWorldActor1 );
+
+#if 1
+	pStaticWorldActor1->createShape( IShape::PlaneDesc( Vector3(0,1,0), 0 ) );
+#else
 	/*
 	  3-2
 	  |/|
@@ -381,6 +387,8 @@ void MiniApp::run()
 	YAKE_ASSERT( kTriangleMeshIdNone != groundMeshId );
 
 	IShape* pStaticWorldShape1 = pStaticWorldActor1->createShape( IShape::TriMeshDesc( groundMeshId ) );
+
+#endif
 	YAKE_ASSERT( pStaticWorldActor1->getShapes().size() == 1 )(pStaticWorldActor1->getShapes().size()).warning("no world shape!");
 
 #ifdef USE_SECOND_PHYSICS_PLUGIN
