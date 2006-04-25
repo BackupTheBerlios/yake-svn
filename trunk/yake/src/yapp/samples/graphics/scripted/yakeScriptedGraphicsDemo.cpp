@@ -229,11 +229,11 @@ class TheApp : public yake::exapp::ExampleApplication
 			doScripting();
 			
 		// main loop
-			real lastTime = base::native::getTime();
+			real lastTime = native::getTime();
 			while (!shutdownRequested())
 			{
 			// timing
-				real time = base::native::getTime();
+				real time = native::getTime();
 				real timeElapsed = time - lastTime;
 				lastTime = time;
 

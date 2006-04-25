@@ -1,9 +1,9 @@
 #include <yapp/samples/misc/scripted/yakePCH.h>
 #include <yapp/model/yakeGraphical.h>
-#include <yapp/plugins/entLua/yakeEntLua.h>
+#include <yake/plugins/entLua/entLua.h>
 
 using namespace yake;
-using namespace yake::base::templates;
+using namespace yake::templates;
 using namespace yake::math;
 using namespace yake::graphics;
 using namespace yake::data;
@@ -63,7 +63,7 @@ public:
 		mScene->fromDotScene( mSceneFilename, mGWorld.get() );
 	}
 
-	void initSim(ent::Simulation& theSim)
+	void initSim(ent::ObjectManager& theSim)
 	{
 		//@fixme: static initialization !?
 		ent::Entity::init();
@@ -131,11 +131,11 @@ public:
 		initSim(theSim);
 
 		// main loop
-		real lastTime = base::native::getTime();
+		real lastTime = native::getTime();
 		while (!shutdownRequested())
 		{
 			// timing
-			real time = base::native::getTime();
+			real time = native::getTime();
 			real timeElapsed = time - lastTime;//timer->getSeconds();
 			lastTime = time;
 

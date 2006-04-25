@@ -117,6 +117,13 @@ protected:
 			mGround->addPhysical( pP );
 		}
 
+		// create vehicle container (e.g. for graphical objects and links)
+		mComplex = new model::complex::Model();
+		model::Graphical* pG = new model::Graphical();
+		mComplex->addGraphical( SharedPtr<model::Graphical>(pG) );
+		model::Physical* pP = new model::Physical();
+		mComplex->addPhysical( SharedPtr<model::Physical>(pP) );
+
 		// materials @todo read from .physics:
 		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.01f, 0.01f, 0.01f ), "chassis" );
 		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.01f, 0.2f, 0.01f ), "chassisTop" );
@@ -133,14 +140,9 @@ protected:
 		// e.g.: vehicle::VehicleTemplate* tpl = pVS->getTemplate("delorean");
 
 		// instantiate
-		mVehicle = pVS->create("delorean", *getPhysicalWorld() );
+		mVehicle = pVS->create("delorean", *getPhysicalWorld(), *pP );
 
 		//mVehicle->enableDebugGeometry( *getGraphicalWorld() );
-
-		// create container (e.g. for graphical objects and links)
-		mComplex = new model::complex::Model();
-		model::Graphical* pG = new model::Graphical();
-		mComplex->addGraphical( SharedPtr<model::Graphical>(pG) );
 
 		// create visuals
 		// - ship body
@@ -212,7 +214,7 @@ protected:
 		while (itEngine.hasMoreElements())
 		{
 			vehicle::IEngine* pEngine = itEngine.getNext();
-			pEngine->setThrottle( pEngine->getThrottle() - timeElapsed * 1.7 );
+			pEngine->setInputSignal( pEngine->getInputSignal() - timeElapsed * 1.7 );
 		}
 
 		real steering0 = 0;
@@ -223,7 +225,7 @@ protected:
 		{
 			const input::ActionId activeId = itAction.getNext();
 			if (activeId == input::ACTIONID_FORWARD)
-				mVehicle->getEngineInterface("main")->setThrottle(1.);
+				mVehicle->getEngineInterface("main")->setInputSignal(1.);
 			else if (activeId == ACTIONID_BRAKE)
 				braking0 = 1.;
 			else if (activeId == input::ACTIONID_LEFT)
