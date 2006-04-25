@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<!DOCTYPE CodeBlocks_project_file>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="1"/>
+	<Project>
+		<Option title="yake::base"/>
+		<Option makefile="Makefile"/>
+		<Option makefile_is_custom="0"/>
+		<Option compiler="0"/>
+		<Build>
+			<Target title="debug">
+				<Option output="..\..\common\lib\yake_base-mgw342-d.dll"/>
+				<Option working_dir="..\..\common\bin\debug"/>
+				<Option object_output="..\..\common\obj\mgw\debug"/>
+				<Option deps_output="..\..\common\dep\mgw\debug"/>
+				<Option type="3"/>
+				<Option compiler="0"/>
+				<Option createStaticLib="1"/>
+				<Compiler>
+					<Add option="-W"/>
+					<Add option="-Wall"/>
+					<Add option="-g"/>
+					<Add option="-D_DEBUG"/>
+				</Compiler>
+				<Linker>
+					<Add library="..\..\dependencies\lib\libboost_signals-mgw34-mt-d.lib"/>
+				</Linker>
+			</Target>
+			<Target title="release">
+				<Option output="..\..\common\lib\yake_base-mgw342.dll"/>
+				<Option working_dir="..\..\common\bin\release"/>
+				<Option object_output="..\..\common\obj\mgw\release"/>
+				<Option deps_output="..\..\common\dep\mgw\release"/>
+				<Option type="3"/>
+				<Option compiler="0"/>
+				<Option createStaticLib="1"/>
+				<Linker>
+					<Add library="..\..\dependencies\lib\libboost_signals-mgw34-mt.lib"/>
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-DBUILD_DLL,DLL,WIN32,_CONSOLE,YAKE_BASE_EXPORTS"/>
+			<Add directory="D:\dev\yake.trunk\yake\dependencies\boost"/>
+			<Add directory="D:\dev\yake.trunk\yake\dependencies\ttl"/>
+			<Add directory="D:\dev\yake.trunk\yake"/>
+		</Compiler>
+		<Linker>
+			<Add library="libgdi32.a"/>
+			<Add library="libwinmm.a"/>
+			<Add directory="D:\dev\yake.trunk\yake\dependencies\lib"/>
+		</Linker>
+		<Unit filename="..\..\src\yake\base\math\yakeMath.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\math\yakeMatrix3.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\math\yakeMatrix4.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\math\yakeQuaternion.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\math\yakeRand.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\math\yakeRay.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\math\yakeSimpleSpline.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\math\yakeVector3.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\Linux\yakeApplication.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\Linux\yakeCriticalSection.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\Linux\yakeDebug.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\Linux\yakeLibrary.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\Linux\yakeTime.cpp">
+			<Option compilerVar="CPP"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\win32\yakeApplication.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\win32\yakeConfig.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\win32\yakeCriticalSection.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\win32\yakeDebug.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\win32\yakeLibrary.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\win32\yakeProcessor.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\native\win32\yakeTime.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\templates\yakeSingleton.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\templates\yakeSmartAssert.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeCriticalSection.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeDataChunk.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeDebugLogAppender.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeException.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeInputStream.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeLibrary.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeLock.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeLog.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeMimeTypeManager.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeMovable.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeOutputStream.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakePCH.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeParamHolder.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeString.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeUniqueId.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\base\yakeUniqueName.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+			<Option target="release"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

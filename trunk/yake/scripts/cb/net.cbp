@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!DOCTYPE CodeBlocks_project_file>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="1"/>
+	<Project>
+		<Option title="yake::net"/>
+		<Option makefile="Makefile"/>
+		<Option makefile_is_custom="0"/>
+		<Option compiler="0"/>
+		<Build>
+			<Target title="debug">
+				<Option output="..\..\common\lib\yake_net-mgw342-d.dll"/>
+				<Option working_dir="..\..\common\bin\mgw\debug"/>
+				<Option object_output="..\..\common\obj\mgw\debug"/>
+				<Option deps_output="..\..\common\dep\debug"/>
+				<Option type="3"/>
+				<Option compiler="0"/>
+				<Option createStaticLib="1"/>
+				<Compiler>
+					<Add option="-W"/>
+					<Add option="-Wall"/>
+					<Add option="-g"/>
+					<Add option="-D_DEBUG"/>
+					<Add directory="..\.."/>
+					<Add directory="..\..\dependencies\boost"/>
+					<Add directory="..\..\dependencies\ttl"/>
+				</Compiler>
+				<Linker>
+					<Add library="..\..\common\lib\libyake_base-mgw342-d.a"/>
+					<Add library="..\..\dependencies\lib\libboost_thread-mgw34-mt-d.lib"/>
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-W"/>
+			<Add option="-Wall"/>
+			<Add option="-DBUILD_DLL,YAKE_NET_EXPORTS"/>
+			<Add directory="..\..\dependencies\enet\include"/>
+		</Compiler>
+		<Linker>
+			<Add library="libwsock32.a"/>
+			<Add library="libws2_32.a"/>
+			<Add library="libwinmm.a"/>
+			<Add directory="..\..\dependencies\lib"/>
+		</Linker>
+		<Unit filename="..\..\dependencies\enet\callbacks.c">
+			<Option compilerVar="CC"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\host.c">
+			<Option compilerVar="CC"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\include\enet\callbacks.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\include\enet\enet.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\include\enet\list.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\include\enet\protocol.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\include\enet\time.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\include\enet\types.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\include\enet\unix.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\include\enet\utility.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\include\enet\win32.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\list.c">
+			<Option compilerVar="CC"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\packet.c">
+			<Option compilerVar="CC"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\peer.c">
+			<Option compilerVar="CC"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\protocol.c">
+			<Option compilerVar="CC"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\unix.c">
+			<Option compilerVar="CC"/>
+		</Unit>
+		<Unit filename="..\..\dependencies\enet\win32.c">
+			<Option compilerVar="CC"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\net\detail\netCommon.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\net\detail\netEnetClientPacketConnection.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\net\detail\netEnetServerPacketConnection.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\net\detail\netEventConnection.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\net\detail\netInternal.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+		</Unit>
+		<Unit filename="..\..\src\yake\net\net.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="debug"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
