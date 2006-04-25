@@ -27,6 +27,10 @@
 #ifndef YAKE_MSG_PREREQUISITES_H
 #define YAKE_MSG_PREREQUISITES_H
 
+#include <yake/base/yakePrerequisites.h>
+#include <yake/base/templates/yakeFastMap.h>
+#include <yake/base/templates/yakeSmartAssert.h>
+
 #define MSG_NAMESPACE ::yake::msg
 #define MSG_NAMESPACE_BEGIN namespace yake { namespace msg {
 #define MSG_NAMESPACE_END }}

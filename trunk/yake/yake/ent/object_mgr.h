@@ -47,9 +47,14 @@ namespace ent {
 		void tick();
 
 		template<typename T>
-		inline RegistrationResult registerClass(const std::string& name)
+		inline RegistrationResult registerClass(const std::string& name, const StringMap& options = MakeStringMap() )
 		{
-			return objMgr_.registerClass(name,&T::create,&T::destroy);
+			RegistrationResult ret = objMgr_.registerClass(name,&T::create,&T::destroy);
+			if (ret.first == object::RC_OK)
+			{
+				objClsOptions_[ name ] = options;
+			}
+			return ret;
 		}
 
 		/** Post a global message. This message is *not* broadcasted to every object!
@@ -100,6 +105,9 @@ namespace ent {
 
 		typedef object::ObjectManager<Object> obj_mgr_type;
 		obj_mgr_type							objMgr_;
+
+		typedef AssocVector<std::string,StringMap> class_option_map;
+		class_option_map						objClsOptions_;
 	};
 
 } // namespace ent
