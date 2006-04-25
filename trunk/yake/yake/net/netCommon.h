@@ -1,6 +1,8 @@
 #ifndef NET_COMMON_H
 #define NET_COMMON_H
 
+#include <yake/net/netPrerequisites.h>
+
 namespace net {
 
 	typedef uint8 ChannelId;

@@ -7,5 +7,6 @@
 #include <vector>
 #include <deque>
 #include <boost/thread/mutex.hpp>
+#include <yake/base/yake.h>
 
 #endif

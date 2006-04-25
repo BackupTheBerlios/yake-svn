@@ -1,6 +1,8 @@
 #ifndef NET_PREREQUISITES_H
 #define NET_PREREQUISITES_H
 
+#include <yake/base/yakePrerequisites.h>
+
 #define NET_DLL
 
 #ifdef YAKE_NET_EXPORTS
