@@ -96,14 +96,14 @@ namespace physics {
 		void parseMassDesc( const IBody::MassDesc& desc, dMass* mass )
 		{
 			if ( const IBody::SphereMassDesc* sphereMassDesc =
-				checked_cast<const IBody::SphereMassDesc*>( &desc ) )
+				dynamic_cast<const IBody::SphereMassDesc*>( &desc ) )
 			{
 				if ( sphereMassDesc->qType == IBody::QT_DENSITY )
 					dMassSetSphere( mass, sphereMassDesc->quantity, sphereMassDesc->radius );
 				else
 					dMassSetSphereTotal( mass, sphereMassDesc->quantity, sphereMassDesc->radius );
 			}
-			else if ( const IBody::BoxMassDesc* boxMassDesc = checked_cast<const IBody::BoxMassDesc*>( &desc ) )
+			else if ( const IBody::BoxMassDesc* boxMassDesc = dynamic_cast<const IBody::BoxMassDesc*>( &desc ) )
 			{
 				if ( boxMassDesc->qType == IBody::QT_DENSITY )
 					dMassSetBox( mass, boxMassDesc->quantity, 
@@ -113,7 +113,7 @@ namespace physics {
 						boxMassDesc->sizeX, boxMassDesc->sizeY, boxMassDesc->sizeZ );
 			}
 			else if ( const IBody::CapsuleMassDesc* capsuleMassDesc = 
-				checked_cast<const IBody::CapsuleMassDesc*>( &desc ) )
+				dynamic_cast<const IBody::CapsuleMassDesc*>( &desc ) )
 			{
 				if ( capsuleMassDesc->qType == IBody::QT_DENSITY )
 					dMassSetCappedCylinder( mass,
@@ -129,7 +129,7 @@ namespace physics {
 					    capsuleMassDesc->length );
 			}
 			else if ( const IBody::CylinderMassDesc* cylMassDesc = 
-				checked_cast<const IBody::CylinderMassDesc*>( &desc ) )
+				dynamic_cast<const IBody::CylinderMassDesc*>( &desc ) )
 			{
 				if ( cylMassDesc->qType == IBody::QT_DENSITY )
 					dMassSetCylinder( mass,
@@ -145,7 +145,7 @@ namespace physics {
 						cylMassDesc->length );
 			}
 			else if ( const IBody::MassDesc* massDesc = 
-				checked_cast<const IBody::MassDesc*>( &desc ) )
+				dynamic_cast<const IBody::MassDesc*>( &desc ) )
 			{
 			    // creating unit sphere
 			    dMassSetSphereTotal( mass, massDesc->quantity, 1 );
@@ -163,16 +163,16 @@ namespace physics {
 		{
 			const IShape::Desc* pShapeDesc = &( rShapeDesc );
 			
-			if ( const IShape::SphereDesc* pSphereDesc = checked_cast<const IShape::SphereDesc*>( pShapeDesc ) )
+			if ( const IShape::SphereDesc* pSphereDesc = dynamic_cast<const IShape::SphereDesc*>( pShapeDesc ) )
 			{
 				this->addMass( IBody::SphereMassDesc( pSphereDesc->radius, massOrDensity, pSphereDesc->position, qType ) );
 			}
-			else if ( const IShape::BoxDesc* pBoxDesc = checked_cast<const IShape::BoxDesc*>( pShapeDesc ) )
+			else if ( const IShape::BoxDesc* pBoxDesc = dynamic_cast<const IShape::BoxDesc*>( pShapeDesc ) )
 			{
 				this->addMass( IBody::BoxMassDesc( pBoxDesc->dimensions.x, pBoxDesc->dimensions.y, pBoxDesc->dimensions.z, massOrDensity,
 					pBoxDesc->position, qType ) );
 			}
-			else if ( const IShape::CapsuleDesc* pCapsuleDesc = checked_cast<const IShape::CapsuleDesc*>( pShapeDesc ) )
+			else if ( const IShape::CapsuleDesc* pCapsuleDesc = dynamic_cast<const IShape::CapsuleDesc*>( pShapeDesc ) )
 			{
 				this->addMass( IBody::CapsuleMassDesc( pCapsuleDesc->radius, pCapsuleDesc->height, massOrDensity, pCapsuleDesc->position, qType ) );
 			}

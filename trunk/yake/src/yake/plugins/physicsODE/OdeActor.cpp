@@ -105,18 +105,18 @@ namespace yake {
 		if ( !pMaterial )
 			pMaterial = this->getCreator()->getMaterial( "default" );
 
-		OdeMaterial* pOdeMaterial = pMaterial ? checked_cast<OdeMaterial*>( pMaterial ) : 0;
+		OdeMaterial* pOdeMaterial = pMaterial ? dynamic_cast<OdeMaterial*>( pMaterial ) : 0;
 		YAKE_ASSERT( pOdeMaterial );
 
 		OdeGeom* result = 0;
 
-		if ( const IShape::SphereDesc* pSphereDesc = checked_cast<const IShape::SphereDesc*>( pShapeDesc ) )
+		if ( const IShape::SphereDesc* pSphereDesc = dynamic_cast<const IShape::SphereDesc*>( pShapeDesc ) )
 		{
 			OdeSphere* pSphere = new OdeSphere( mOdeWorld->_getOdeSpace(), this, pSphereDesc->radius );
 
 			result = createTransformGeom( pSphere, rShapeDesc.position, rShapeDesc.orientation );
 		}
-		else if ( const IShape::BoxDesc* pBoxDesc = checked_cast<const IShape::BoxDesc*>( pShapeDesc ) )
+		else if ( const IShape::BoxDesc* pBoxDesc = dynamic_cast<const IShape::BoxDesc*>( pShapeDesc ) )
 		{
 			OdeBox* pBox = new OdeBox( mOdeWorld->_getOdeSpace(), 
 				this,
@@ -125,7 +125,7 @@ namespace yake {
 				pBoxDesc->dimensions.z  );
 			result = createTransformGeom( pBox, rShapeDesc.position, rShapeDesc.orientation );
 		}
-		else if ( const IShape::PlaneDesc* pPlaneDesc = checked_cast<const IShape::PlaneDesc*>( pShapeDesc ) )
+		else if ( const IShape::PlaneDesc* pPlaneDesc = dynamic_cast<const IShape::PlaneDesc*>( pShapeDesc ) )
 		{
 			/// We are not making transform geom here.
 			/// Calculating absolute coordinates instead...
@@ -142,7 +142,7 @@ namespace yake {
 				d );
 			result = pPlane;
 		}
-		else if ( const IShape::CapsuleDesc* pCapsuleDesc = checked_cast<const IShape::CapsuleDesc*>( pShapeDesc ) )
+		else if ( const IShape::CapsuleDesc* pCapsuleDesc = dynamic_cast<const IShape::CapsuleDesc*>( pShapeDesc ) )
 		{
 			OdeCCylinder* pCapsule = new OdeCCylinder( mOdeWorld->_getOdeSpace(), 
 				this,
@@ -150,7 +150,7 @@ namespace yake {
 				pCapsuleDesc->height  );
 			result = createTransformGeom( pCapsule, rShapeDesc.position, rShapeDesc.orientation );
 		}
-		else if ( const IShape::TriMeshDesc* pTriMeshDesc = checked_cast<const IShape::TriMeshDesc*>( pShapeDesc ) )
+		else if ( const IShape::TriMeshDesc* pTriMeshDesc = dynamic_cast<const IShape::TriMeshDesc*>( pShapeDesc ) )
 		{
 			TriangleMeshId id = pTriMeshDesc->trimeshId_;
 			if (id == kTriangleMeshIdNone)
@@ -197,7 +197,7 @@ namespace yake {
 	//-----------------------------------------------------
 	void OdeActor::destroyShape( IShape* pShape )
 	{
-		OdeGeom* pGeom = checked_cast<OdeGeom*>( pShape );
+		OdeGeom* pGeom = dynamic_cast<OdeGeom*>( pShape );
 		ShapeList::iterator victim = std::find( mShapes.begin(), mShapes.end(), pGeom );
 		mShapes.erase( victim );
 	}
@@ -378,7 +378,7 @@ namespace yake {
 	//-----------------------------------------------------
 	IShape* OdeActor::createShape( const IShape::Desc& rShapeDesc, real massOrDensity, IBody::quantityType type )
 	{
-		if ( mBody && checked_cast<const IShape::PlaneDesc*>( &rShapeDesc ) )
+		if ( mBody && dynamic_cast<const IShape::PlaneDesc*>( &rShapeDesc ) )
 			YAKE_ASSERT( false ).error( "Attempted to attach immovable plane shape to movable actor!" );
 
 		OdeGeom* pShape = createShapeFromDesc( rShapeDesc );
