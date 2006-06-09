@@ -280,9 +280,12 @@ namespace ogre3d {
 		try {
 			mSceneNode->getAttachedObject( pCam->getCamera_()->getName() );
 		}
-		catch (...)
+		catch (Ogre::Exception& e)
 		{
-			mSceneNode->attachObject( pCam->getCamera_() );
+			if (e.getNumber() == Ogre::Exception::ERR_ITEM_NOT_FOUND)
+				mSceneNode->attachObject( pCam->getCamera_() );
+			else
+				YAKE_LOG(String("Ogre Exception: ") + e.getFullDescription());
 		}
 		mCameras.push_back( pCamera );
 	}
@@ -300,8 +303,12 @@ namespace ogre3d {
 		try {
 			mSceneNode->getAttachedObject( pL->getLight_()->getName() );
 		}
-		catch (...)
+		catch (Ogre::Exception& e)
 		{
+			if (e.getNumber() != Ogre::Exception::ERR_ITEM_NOT_FOUND)
+			{
+				YAKE_EXCEPT(String("Caught OGRE exception: ") + e.getFullDescription().c_str());
+			}
 			mSceneNode->attachObject( pL->getLight_() );
 		}
 		mLights.push_back( pLight );
@@ -320,9 +327,12 @@ namespace ogre3d {
 		try {
 			mSceneNode->getAttachedObject( pE->getEntity_()->getName() );
 		}
-		catch (...)
+		catch (Ogre::Exception& e)
 		{
-			mSceneNode->attachObject( pE->getEntity_() );
+			if (e.getNumber() == Ogre::Exception::ERR_ITEM_NOT_FOUND)
+				mSceneNode->attachObject( pE->getEntity_() );
+			else
+				YAKE_LOG(String("Ogre Exception: ") + e.getFullDescription());
 		}
 		mEntities.push_back( pEntity );
 	}
@@ -520,6 +530,13 @@ namespace ogre3d {
 
 		mParticleSystems.erase( victim );
 	}
+
+	//------------------------------------------------------
+	ISceneNode* OgreNode::getParent() const
+	{ 
+		return (mWorld.isRoot(mParentNode) ? 0 : mParentNode); 
+	}
+
 }
 }
 }

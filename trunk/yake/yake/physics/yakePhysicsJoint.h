@@ -69,6 +69,7 @@ namespace physics {
 	};
 	typedef Deque<Limit> LimitList;
 
+	class IWorld;
 	class IActor;
 	class IAngularMotor;
 	class YAKE_PHYSICS_API IJoint
@@ -184,6 +185,8 @@ namespace physics {
  		};
 	public:
 		virtual ~IJoint() {}
+
+		virtual IWorld* getCreator() const = 0;
 
 		YAKE_MEMBERSIGNAL_PUREINTERFACE( public, void(void), OnBreaking )
 	public:

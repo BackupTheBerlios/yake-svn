@@ -80,6 +80,8 @@ namespace ogre3d {
 		virtual void detach( IParticleSystem* pPS );
 		virtual void detach( ISceneNode* pNode );
 
+		virtual ISceneNode* getParent() const;
+
 		Ogre::SceneNode* getSceneNode_() const
 		{ return mSceneNode; }
 		void _setParent( OgreNode* );

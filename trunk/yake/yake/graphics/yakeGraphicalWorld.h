@@ -309,6 +309,8 @@ namespace graphics {
 
 		virtual void setInheritScale( bool inherit ) = 0;
 
+		virtual ISceneNode* getParent() const = 0;
+
 		/** Returns a list of all child scene nodes of this scene node.
 		*/
 		virtual void getChildren( SceneNodePtrList& ret, bool bRecursive = false ) const = 0;
@@ -385,6 +387,9 @@ namespace graphics {
 			@param relativeTo TransformSpace to use for the rotation.
 		*/
 		virtual void rotate( const math::Quaternion& rDelta, const TransformSpace relativeTo = TS_PARENT ) = 0;
+
+		//virtual ISceneNode* shallowClone() const = 0;
+		//virtual ISceneNode* deepClone() const = 0;
 	};
 
 	/** Viewport abstract interface.

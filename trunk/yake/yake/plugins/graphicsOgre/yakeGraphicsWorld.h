@@ -102,6 +102,11 @@ namespace ogre3d {
 		Ogre::SceneManager* getSceneMgr() const;
 		OgreCore* getCore() const
 		{ return msCore; }
+
+		inline bool isRoot(OgreNode* node) const
+		{
+			return (node == mRootNode);
+		}
 	private:
 		static OgreCore*		msCore;
 		typedef AssocVector< String, Ogre::MeshPtr > ProcMeshMap;

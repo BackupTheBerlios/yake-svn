@@ -61,10 +61,8 @@ namespace model {
 
 	    IJoint* getJointByName( const String& name )
 	    {
-		if ( joints_.find( name ) != joints_.end() )
-		    return joints_[ name ].joint_;
-		else
-		    return NULL;
+			JointMap::const_iterator it = joints_.find( name );
+			return (it == joints_.end()) ? 0 : it->second.joint_;
 	    }
 
 	protected:

@@ -260,6 +260,11 @@ public:
 		{
 			return *mCurrent++;
 		}
+		/** Returns the next element in the collection, and advances to the next. */
+		const typename T::value_type& getNextRef(void)
+		{
+			return *mCurrent++;
+		}
 		/** Returns the next element in the collection, without advancing to the next. */
 		typename T::value_type peekNext(void)
 		{

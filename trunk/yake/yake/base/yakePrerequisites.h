@@ -85,6 +85,7 @@
 #	define YAKE_BASE_API DLLIMPORT
 #endif
 
+#define _T(X) X
 
 #if defined(_DEBUG) || defined(DEBUG)
 #	define YAKE_DEBUG

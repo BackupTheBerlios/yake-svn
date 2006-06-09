@@ -143,6 +143,17 @@ namespace yake {
 	private:
 		StringMap m_map;
 	};
+	inline std::ostream& operator << (std::ostream& out, const StringMap& rhs)
+	{
+		out << "StringMap(";
+		for (StringMap::const_iterator it = rhs.begin(); it != rhs.end(); ++it)
+		{
+			out << ((it == rhs.begin()) ? "" : ";") 
+				<< it->first << "=" << it->second;
+		}
+		out << ")";
+		return out;
+	}
 
 #undef YAKE_BASE_STRING
 
