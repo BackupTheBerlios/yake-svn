@@ -44,8 +44,7 @@ namespace physics {
 		public:
 			virtual ~OdeJoint();
 
-			virtual IWorld* getCreator() const
-			{ return mWorld; }
+			virtual IWorld* getCreator() const;
 
 			/** Attach joint to bodies. If one of the bodies is 0, then attach
 			 * to static environment.

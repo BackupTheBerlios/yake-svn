@@ -51,6 +51,12 @@ namespace physics {
 	}
 	
 	//-----------------------------------------------------
+	IWorld* OdeJoint::getCreator() const
+	{
+		return mWorld; 
+	}
+
+	//-----------------------------------------------------
 	void OdeJoint::attach( IBody* pBody1, IBody* pBody2 )
 	{
 		YAKE_ASSERT( pBody1 != 0 || pBody2 != 0 ).error( "both bodies are ZERO in joint attach function!" );
