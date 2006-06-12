@@ -41,6 +41,10 @@ namespace model {
 	{
 		return name_; 
 	}
+	void Model::addComponent(ModelComponent* c)
+	{
+		components_.addComponent(c);
+	}
 	void Model::addComponent(ModelComponent* c, const ComponentTag& tag)
 	{
 		components_.addComponent(c,tag);
@@ -55,6 +59,16 @@ namespace model {
 		ModelMovableLink* link = new ModelMovableDirectLink();
 		link->setSource( from );
 		link->subscribeToPositionChanged(to);
+		link->subscribeToOrientationChanged(to);
+		this->addLink( link );
+		return link;
+	}
+	ModelMovableLink* Model::createDirectLink(yake::Movable* from, yake::Movable* to)
+	{
+		ModelMovableLink* link = new ModelMovableDirectLink();
+		link->setSource( from );
+		link->subscribeToPositionChanged(to);
+		link->subscribeToOrientationChanged(to);
 		this->addLink( link );
 		return link;
 	}
