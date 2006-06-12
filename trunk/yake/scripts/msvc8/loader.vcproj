@@ -215,6 +215,10 @@
 				RelativePath="..\..\src\yake\loader\yakeDotScene.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\src\yake\loader\yakeXODEParser.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="inc"
@@ -235,6 +239,10 @@
 			</File>
 			<File
 				RelativePath="..\..\yake\loader\yakeDotScene.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\yake\loader\yakeXODEParser.h"
 				>
 			</File>
 		</Filter>

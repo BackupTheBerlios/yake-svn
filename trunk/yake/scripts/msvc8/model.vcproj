@@ -216,6 +216,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\yake\model\yakeDotLinkLoader.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\yake\model\yakeGraphical.cpp"
 				>
 			</File>
@@ -228,11 +232,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\yake\model\yakeLinkCreator.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\yake\model\yakeModel.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\src\yake\model\yakeModelComponentContainer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\yake\model\yakeModelLink.cpp"
 				>
 			</File>
 			<File
@@ -244,7 +256,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\yake\model\yakeModelMovableLink.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\yake\model\yakePhysical.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\yake\model\yakePhysicalCreator.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\yake\model\yakeXODEListener.cpp"
 				>
 			</File>
 		</Filter>
@@ -267,6 +291,14 @@
 			</File>
 			<File
 				RelativePath="..\..\yake\model\model_link.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\yake\model\model_link_dotlink_loader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\yake\model\model_physical_xode_loader.h"
 				>
 			</File>
 			<File
