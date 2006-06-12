@@ -28,6 +28,7 @@
 #define YAKE_VEHICLE_TEMPLATES_H
 
 #include "yapp/vehicle/yakePrerequisites.h"
+#include "yake/physics/yakePhysics.h"
 
 namespace yake {
 namespace vehicle {

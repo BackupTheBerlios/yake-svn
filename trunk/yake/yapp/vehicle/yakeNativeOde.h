@@ -135,7 +135,7 @@ namespace vehicle {
 		typedef AssocVector<String,MountPoint*> MountPointList;
 		MountPointList		mMountPoints;
 
-		model::complex::Model*	mDebugModel;
+		model::Model*		mDebugModel;
 	};
 
 	class GearBox;

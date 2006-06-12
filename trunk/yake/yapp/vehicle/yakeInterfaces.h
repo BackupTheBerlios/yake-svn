@@ -29,6 +29,7 @@
 
 #include <yapp/vehicle/yakePrerequisites.h>
 #include <yapp/vehicle/yakeTemplates.h>
+#include <yake/graphics/yakeGraphics.h>
 
 namespace yake {
 namespace vehicle {

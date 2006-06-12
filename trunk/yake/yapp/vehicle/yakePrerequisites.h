@@ -33,5 +33,6 @@
 #	define YAKE_VEH_API DLLIMPORT
 #endif
 
+#include <yake/model/model.h>
 
 #endif
