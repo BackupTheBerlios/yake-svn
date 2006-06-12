@@ -35,11 +35,8 @@
 
 #include <yapp/base/yappPrerequisites.h>
 #include <yake/base/yake.h>
-#include <yapp/model/yakeModel.h>
-#include <yapp/model/yakeComplexModel.h>
 #include <yapp/base/event/yakeEvent.h>
 #include <yapp/base/yakeTask.h>
-#include <yapp/model/yakeModelMovableLink.h>
 /*
 #include <yapp/gui/yappGUIVisual.h>
 #include <yapp/gui/yappButton.h>
