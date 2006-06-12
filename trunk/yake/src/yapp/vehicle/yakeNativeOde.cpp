@@ -38,7 +38,7 @@
 #	include <yake/plugins/physicsODE/OdeWorld.h>
 #	pragma comment(lib, "physicsODE.lib")
 #	ifdef YAKE_DEBUG
-#		pragma comment(lib, "oded.lib")
+#		pragma comment(lib, "ode.lib")
 #	else
 #		pragma comment(lib, "ode.lib")
 #	endif
@@ -155,12 +155,6 @@ namespace vehicle {
 		mSigUpdateEngineSimulation( timeElapsed );
 		mSigApplyThrusterToTargets();
 		_applyDriveTorqueToAxles( timeElapsed );
-
-		if (mDebugModel)
-		{
-			mDebugModel->updatePhysics(timeElapsed);
-			mDebugModel->updateGraphics(timeElapsed);
-		}
 	}
 	void GenericVehicle::_applyDriveTorqueToAxles( real timeElapsed )
 	{
@@ -275,7 +269,7 @@ namespace vehicle {
 		    YAKE_LOG( "External physical body found. Searching provided model for it..." );
 
 		    // searching for actor in provided model
-		    physics::IActorPtr actor = physModel.getActorByName( tpl.mChassis.mPhysicsBody );
+		    physics::IActorPtr actor = physModel.getActor( tpl.mChassis.mPhysicsBody );
 
 		    YAKE_ASSERT( actor != NULL ).error( "Actor '" + tpl.mChassis.mPhysicsBody 
 			    +  "' was not found in physical model! Are you sure you provided the right model???" );
@@ -440,7 +434,7 @@ namespace vehicle {
 	void createDebugGeometry(	const physics::IActor& actor, 
 								graphics::IWorld& GWorld, 
 								model::Graphical& graphical,
-								model::complex::Model& theModel)
+								model::Model& theModel)
 	{
 		physics::IShapePtrList shapes = actor.getShapes();
 		ConstDequeIterator<physics::IShapePtrList> itShape( shapes );
@@ -472,13 +466,13 @@ namespace vehicle {
 			}
 			if (pE)
 			{
-				graphical.addSceneNode( pSN );
+				graphical.addSceneNode( pSN, uniqueName::create("yake::vehicle_dbg_geom_") );
 
-				model::ModelMovableLink* pLink = new model::ModelMovableLink();
+				model::ModelMovableLink* pLink = new model::ModelMovableDirectLink();
 				pLink->setSource( pShape );
 				pLink->subscribeToPositionChanged( pSN );
 				pLink->subscribeToOrientationChanged( pSN );
-				theModel.addGraphicsController( pLink );
+				theModel.addLink( pLink );
 			}
 			else
 				delete pSN;
@@ -488,10 +482,11 @@ namespace vehicle {
 	{
 		if (mDebugModel)
 			delete mDebugModel;
-		mDebugModel = new model::complex::Model();
+		mDebugModel = new model::Model();
+		mDebugModel->setName( uniqueName::create("yake::vehicle_dbg_") );
 		model::Graphical* pGraphical = new model::Graphical();
 		createDebugGeometry( *mpChassis, GWorld, *pGraphical, *mDebugModel );
-		mDebugModel->addGraphical( pGraphical );
+		mDebugModel->addComponent( pGraphical, "gfx" );
 	}
 	void GenericVehicle::disableDebugGeometry()
 	{

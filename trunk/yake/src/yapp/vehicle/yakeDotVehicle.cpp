@@ -27,6 +27,7 @@
 #include <yapp/vehicle/yakePCH.h>
 #include <yapp/vehicle/yakeVehicle.h>
 #include <yapp/vehicle/yakeDotVehicle.h>
+#include <yake/data/yakeData.h>
 
 namespace yake {
 namespace vehicle {
