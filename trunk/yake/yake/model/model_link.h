@@ -93,7 +93,7 @@ namespace model {
 		to other clients using signals. Factory item id is "yake.movable".
 		@Remarks A controller only fires signals when the values have changed!
 	*/
-	struct ModelMovableDirectLink : public ModelMovableLink
+	struct YAKE_MODEL_API ModelMovableDirectLink : public ModelMovableLink
 	{
 	public:
 		YAKE_DECLARE_CONCRETE( ModelMovableDirectLink, "yake.movable" );
@@ -105,7 +105,7 @@ namespace model {
 		to other clients using signals. Factory item id is "yake.movable".
 		@Remarks A controller only fires signals when the values have changed!
 	*/
-	struct ModelMovableWorldLink : public ModelMovableLink
+	struct YAKE_MODEL_API ModelMovableWorldLink : public ModelMovableLink
 	{
 	public:
 		YAKE_DECLARE_CONCRETE( ModelMovableWorldLink, "yake.movable_world" ); // world coordinate system
