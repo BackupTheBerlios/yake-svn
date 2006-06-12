@@ -16,17 +16,18 @@
 
 using namespace yake;
 
-class TheApp : public yake::exapp::ExampleApplication
+class TheApp : public yake::exapp::ExampleApplication, public yake::model::CentralControllerBase
 {
 private:
 	typedef std::pair<graphics::IViewport*,graphics::ICamera*> ViewportCameraPair;
 	Vector<ViewportCameraPair >			mVPs;
 	SharedPtr< graphics::IWorld >		mGWorld;
+	SharedPtr< physics::IWorld >		mPWorld;
 
 public:
 	TheApp() : ExampleApplication(
 					true /*graphics*/,
-					false /*physics*/,
+					true /*physics*/,
 					false /*scripting*/,
 					true /*input*/,
 					false /*script bindings*/,
@@ -78,6 +79,11 @@ public:
 		mKeyboardEventGenerator.subscribeToKeyDown( Bind1( &TheApp::onKey, this ) );
 		mMouseEventGenerator.subscribeToMouseButtonDown( Bind1( &TheApp::onMB, this ) );
 
+		// physics
+		mPWorld = getPhysicsSystem().createWorld();
+		YAKE_ASSERT( mPWorld );
+		mPWorld->setGlobalGravity( Vector3(0,-1,0) );
+
 		// graphics
 		mGWorld = getGraphicsSystem().createWorld();
 		YAKE_ASSERT( mGWorld );
@@ -117,13 +123,19 @@ public:
 		//mGWorld->setShadowsEnabled( true );
 		model::ModelManager modelMgr;
 		modelMgr.setCreationContext_GraphicalWorld( mGWorld.get() );
+		modelMgr.setCreationContext_PhysicalWorld( mPWorld.get() );
+		modelMgr.setCreationContext_CentralController( this );
 
-		model::Model* m = modelMgr.createModel("graphics/dotScene:name=gfx1;file=../../media/samples/dotScene/DotScene1.scene");
+		model::Model* m = modelMgr.createModel("m1","graphics/dotScene:name=gfx;file=../../media/samples/dotScene/DotScene1.scene");
 		YAKE_ASSERT( m );
+		((model::Graphical*)m->getComponentByTag("gfx"))->translate(Vector3(40,20,0));
 
-		m = modelMgr.createModel("graphics/dotScene:name=gfx2;file=../../media/samples/dotScene/DotScene1.scene");
+		m = modelMgr.createModel("m2",
+			"graphics/dotScene:name=baseGraphical;file=../../media/samples/dotLink/DynTest/DotScene1.scene"
+			"|physics/dotXODE:name=basePhysical;file=../../media/samples/dotLink/DynTest/DotScene1.xode"
+			"|model/dotLink:file=../../media/samples/dotLink/DynTest/DotScene1.link"
+			);
 		YAKE_ASSERT( m );
-		((model::Graphical*)m->getComponentByTag("gfx2"))->translate(Vector3(40,20,0));
 
 		// main loop
 		real lastTime = native::getTime();
@@ -155,12 +167,21 @@ public:
 					mVPs[iCam].second->translate( Vector3(0, 0, -distance) );
 			}
 
-			// render the scene
+			// run sim & render the scene
 			if (!shutdownRequested())
+			{
+				mPWorld->step( timeElapsed );
+				triggerPhysicsUpdateSignal(0,timeElapsed);
+				triggerGraphicsUpdateSignal(0,timeElapsed);
+
 				mGWorld->render( timeElapsed );
+			}
 		}
 
+		modelMgr.clear();
+
 		mGWorld.reset();
+		mPWorld.reset();
 	}
 };
 
