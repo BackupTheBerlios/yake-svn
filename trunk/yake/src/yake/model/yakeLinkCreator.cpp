@@ -27,51 +27,36 @@
 #include "yake/model/pch.h"
 #include "yake/model/prerequisites.h"
 #include "yake/model/model.h"
+#include "yake/model/model_link_dotlink_loader.h"
 
 namespace yake {
 namespace model {
 
-	YAKE_IMPLEMENT_REGISTRY(ComponentCreator)
+	YAKE_REGISTER_CONCRETE(LinkFromDotLinkCreator)
 
-	ComponentCreatorManager::ComponentCreatorManager()
+	void LinkFromDotLinkCreator::create(const ComponentCreationContext& ctx, const StringMap& params)
 	{
-	}
-	ComponentCreatorManager::~ComponentCreatorManager()
-	{
-	}
-	void ComponentCreatorManager::create(const String& type, const ComponentCreationContext& ctx, const StringMap& params)
-	{
-		YAKE_ASSERT( !type.empty() )(type)(params).debug("Invalid type!");
-		if (type.empty())
+		// Extract parameters
+
+		StringMap::const_iterator itParam = params.find("file");
+		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'file'.");
+		if (itParam == params.end())
 			return;
+		const String fn = itParam->second;
 
-		ComponentCreator* theCreator = 0;
+		// Read XML file into DOM
+
+		yake::data::dom::xml::XmlSerializer ser;
+		ser.parse( fn, false );
+		YAKE_ASSERT( ser.getDocumentNode() )( fn ).error("Could not parse XML document!");
+
+		// Parse DOM and create graphical objects
+
+		DotLinkLoader dotLinkLoader;
+		if (!dotLinkLoader.load( *ser.getDocumentNode(), *ctx.model_, *ctx.centralController_ ))
 		{
-			TypeCreatorMap::const_iterator it = creators_.find( type );
-			if (it == creators_.end())
-			{
-				SharedPtr<ComponentCreator> creator;
-				try {
-					creator = templates::create<ComponentCreator>( type );
-				}
-				catch (...)
-				{
-					YAKE_LOG_ERROR("Unregistered ComponentCreator type!");
-				}
-				YAKE_ASSERT( creator.get() )(type)(params).debug("Failed to create component creator! Probably it has not been registered/loaded.");
-				if (!creator.get())
-					return;
-				creators_.insert( std::make_pair(type,creator) );
-				theCreator = creator.get();
-			}
-			else
-				theCreator = it->second.get();
+			//@todo Report error!
 		}
-		YAKE_ASSERT( theCreator );
-		theCreator->create(ctx,params);
-		//YAKE_ASSERT( c )(type)(params).debug("Failed to create component!");
-
-		//return c;
 	}
 
 } // namespace model

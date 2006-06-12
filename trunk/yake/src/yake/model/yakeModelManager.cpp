@@ -50,15 +50,28 @@ namespace model {
 			}
 		}
 	} // namespace detail
-	/// graphics/dotScene:name=gfx;file=bla.scene|physics/dotXODE...
-	Model* ModelManager::createModel(const String& def)
+	void ModelManager::clear()
 	{
+		models_.clear();
+	}
+	/// graphics/dotScene:name=gfx;file=bla.scene|physics/dotXODE...
+	Model* ModelManager::createModel(const String& modelName, const String& def)
+	{
+		YAKE_ASSERT( !modelName.empty() );
+		YAKE_ASSERT( models_.find(modelName) == models_.end() )(modelName).debug("Model with that name already exists.");
+		if (models_.find(modelName) != models_.end())
+			return 0;
+
 		Vector<String> defComponents = split<String>(def, "|");
-		YAKE_ASSERT(!defComponents.empty());
+		YAKE_ASSERT(!defComponents.empty())(modelName)(def);
 		if (defComponents.empty())
 			return 0;
+
 		Model* m = new Model();
-		models_.push_back( SharedPtr<Model>(m) );
+		m->setName( modelName );
+		models_.insert( std::make_pair(modelName,SharedPtr<Model>(m)) );
+		ctx_.model_ = m;
+
 		ConstVectorIterator<Vector<String> > itDef( defComponents );
 		while (itDef.hasMoreElements())
 		{
@@ -66,23 +79,37 @@ namespace model {
 
 			// Split e.g. "gfx=graphics/dotScene:file=blah.scene" into "gfx" and "file=graphics/dotScene:blah.scene"
 			Vector<String> defTypeRest = split<String>( defC, ":" );
-			YAKE_ASSERT( defTypeRest.size() == 2 );
+			YAKE_ASSERT( defTypeRest.size() == 2 )(modelName)(def);
 
-			const String type = defTypeRest.front(); // e.g. "graphics/dotScene"
+			const String type = defTypeRest.front(); // e.g. "graphics/dotScene" or "physics/XODE" etc
 
+			// Extract parameters.
 			StringMap params;
 			detail::extractParams( defTypeRest.back(), params );
 
+			// Extract parameter 'name'.
 			StringMap::const_iterator itParam = params.find("name");
-			YAKE_ASSERT( itParam != params.end() ).debug("No property 'name' for component!");
-			if (itParam == params.end())
-				continue;
-			const String name = itParam->second;
+			const String name = (itParam == params.end()) ? _T("") : itParam->second;
 
-			YAKE_ASSERT( m->getComponentByTag(name) == 0 ).debug("Components with duplicate tags are not allowed within the same model!");
+			// Create component.
 
-			m->addComponent( creatorMgr_.create( type, ctx_, params ), name );
+#ifdef YAKE_DEBUG
+			if (!name.empty())
+			{
+				YAKE_ASSERT( m->getComponentByTag(name) == 0 )(name)(type).debug("Components with duplicate tags are not allowed within the same model!");
+			}
+#endif
+
+			creatorMgr_.create( type, ctx_, params );
+
+#ifdef YAKE_DEBUG
+			if (!name.empty())
+			{
+				YAKE_ASSERT( m->getComponentByTag(name) != 0 )(name)(type).debug("Failed to create component!");
+			}
+#endif
 		}
+		ctx_.model_ = 0;
 		return m;
 	}
 	void ModelManager::setCreationContext_GraphicalWorld(graphics::IWorld* w)
@@ -92,6 +119,10 @@ namespace model {
 	void ModelManager::setCreationContext_PhysicalWorld(physics::IWorld* w)
 	{
 		ctx_.pworld_ = w;
+	}
+	void ModelManager::setCreationContext_CentralController(CentralControllerBase* c)
+	{
+		ctx_.centralController_ = c;
 	}
 
 } // namespace model

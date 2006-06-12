@@ -34,6 +34,11 @@ namespace model {
 	Graphical::Graphical()
 	{
 	}
+	/*
+	Graphical::Graphical(Model& owner) : ModelComponent(owner)
+	{
+	}
+	*/
 	Graphical::~Graphical()
 	{
 		/*

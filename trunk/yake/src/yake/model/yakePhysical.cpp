@@ -34,6 +34,11 @@ namespace model {
 	Physical::Physical()
 	{
 	}
+	/*
+	Physical::Physical(Model& owner) : ModelComponent(owner)
+	{
+	}
+	*/
 	Physical::~Physical()
 	{
 		for (TagActorMap::iterator itA = actors_.begin(); itA != actors_.end(); ++itA)

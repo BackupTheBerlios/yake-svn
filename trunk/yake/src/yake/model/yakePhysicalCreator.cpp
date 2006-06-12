@@ -27,51 +27,60 @@
 #include "yake/model/pch.h"
 #include "yake/model/prerequisites.h"
 #include "yake/model/model.h"
+#include "yake/model/model_physical_xode_loader.h"
 
 namespace yake {
 namespace model {
 
-	YAKE_IMPLEMENT_REGISTRY(ComponentCreator)
+	YAKE_REGISTER_CONCRETE(PhysicalFromXODECreator)
 
-	ComponentCreatorManager::ComponentCreatorManager()
+	void PhysicalFromXODECreator::create(const ComponentCreationContext& ctx, const StringMap& params)
 	{
-	}
-	ComponentCreatorManager::~ComponentCreatorManager()
-	{
-	}
-	void ComponentCreatorManager::create(const String& type, const ComponentCreationContext& ctx, const StringMap& params)
-	{
-		YAKE_ASSERT( !type.empty() )(type)(params).debug("Invalid type!");
-		if (type.empty())
+		// Verify validity of creation context
+		physics::IWorld* pPWorld = ctx.pworld_;
+		YAKE_ASSERT( pPWorld );
+		if (!pPWorld)
 			return;
 
-		ComponentCreator* theCreator = 0;
-		{
-			TypeCreatorMap::const_iterator it = creators_.find( type );
-			if (it == creators_.end())
-			{
-				SharedPtr<ComponentCreator> creator;
-				try {
-					creator = templates::create<ComponentCreator>( type );
-				}
-				catch (...)
-				{
-					YAKE_LOG_ERROR("Unregistered ComponentCreator type!");
-				}
-				YAKE_ASSERT( creator.get() )(type)(params).debug("Failed to create component creator! Probably it has not been registered/loaded.");
-				if (!creator.get())
-					return;
-				creators_.insert( std::make_pair(type,creator) );
-				theCreator = creator.get();
-			}
-			else
-				theCreator = it->second.get();
-		}
-		YAKE_ASSERT( theCreator );
-		theCreator->create(ctx,params);
-		//YAKE_ASSERT( c )(type)(params).debug("Failed to create component!");
+		// Extract parameters
 
-		//return c;
+		StringMap::const_iterator itParam = params.find("file");
+		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'file'.");
+		if (itParam == params.end())
+			return;
+		const String fn = itParam->second;
+
+		itParam = params.find("name");
+		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'name'.");
+		if (itParam == params.end())
+			return;
+		const String name = itParam->second;
+
+		// Read XML file into DOM
+
+		yake::data::dom::xml::XmlSerializer ser;
+		ser.parse( fn, false );
+		YAKE_ASSERT( ser.getDocumentNode() )( fn ).error("Could not parse dotScene document!");
+
+		// Parse DOM and create graphical objects
+
+		yake::data::parser::xode::XODEParserV1 xodeparser;
+
+		Physical* pPhysical = new Physical(/**ctx.model_*/);
+
+		const String namePrefix = _T("model:") + ctx.model_->getName() + _T("/")  // model
+									+ (name.empty() ? _T("") : (name + _T("/"))); // component
+		XODEListener xodeListener( *pPhysical, pPWorld, namePrefix );
+
+		xodeparser.subscribeToBodySignal( Bind1( &XODEListener::processBody, &xodeListener ) );
+		xodeparser.subscribeToGeomSignal( Bind1( &XODEListener::processGeom, &xodeListener ) );
+
+		if (!xodeparser.load( ser.getDocumentNode() ))
+		{
+			YAKE_SAFE_DELETE( pPhysical );
+		}
+
+		ctx.model_->addComponent( pPhysical, name );
 	}
 
 } // namespace model

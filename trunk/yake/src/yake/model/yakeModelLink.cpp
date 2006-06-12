@@ -30,49 +30,6 @@
 
 namespace yake {
 namespace model {
-
-	YAKE_IMPLEMENT_REGISTRY(ComponentCreator)
-
-	ComponentCreatorManager::ComponentCreatorManager()
-	{
-	}
-	ComponentCreatorManager::~ComponentCreatorManager()
-	{
-	}
-	void ComponentCreatorManager::create(const String& type, const ComponentCreationContext& ctx, const StringMap& params)
-	{
-		YAKE_ASSERT( !type.empty() )(type)(params).debug("Invalid type!");
-		if (type.empty())
-			return;
-
-		ComponentCreator* theCreator = 0;
-		{
-			TypeCreatorMap::const_iterator it = creators_.find( type );
-			if (it == creators_.end())
-			{
-				SharedPtr<ComponentCreator> creator;
-				try {
-					creator = templates::create<ComponentCreator>( type );
-				}
-				catch (...)
-				{
-					YAKE_LOG_ERROR("Unregistered ComponentCreator type!");
-				}
-				YAKE_ASSERT( creator.get() )(type)(params).debug("Failed to create component creator! Probably it has not been registered/loaded.");
-				if (!creator.get())
-					return;
-				creators_.insert( std::make_pair(type,creator) );
-				theCreator = creator.get();
-			}
-			else
-				theCreator = it->second.get();
-		}
-		YAKE_ASSERT( theCreator );
-		theCreator->create(ctx,params);
-		//YAKE_ASSERT( c )(type)(params).debug("Failed to create component!");
-
-		//return c;
-	}
-
+	YAKE_IMPLEMENT_REGISTRY(ModelLink)
 } // namespace model
 } // namespace yake

@@ -34,26 +34,26 @@ namespace model {
 
 	YAKE_REGISTER_CONCRETE(GraphicalFromDotSceneCreator)
 
-	ModelComponent* GraphicalFromDotSceneCreator::create(const ComponentCreationContext& ctx, const StringMap& params)
+	void GraphicalFromDotSceneCreator::create(const ComponentCreationContext& ctx, const StringMap& params)
 	{
 		// Verify validity of creation context
 		graphics::IWorld* pGWorld = ctx.gworld_;
 		YAKE_ASSERT( pGWorld );
 		if (!pGWorld)
-			return 0;
+			return;
 
 		// Extract parameters
 
 		StringMap::const_iterator itParam = params.find("file");
 		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'file'.");
 		if (itParam == params.end())
-			return 0;
+			return;
 		const String fn = itParam->second;
 
 		itParam = params.find("name");
 		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'name'.");
 		if (itParam == params.end())
-			return 0;
+			return;
 		const String name = itParam->second;
 
 		// Read dotscene file into DOM
@@ -66,9 +66,11 @@ namespace model {
 
 		yake::data::parser::dotscene::DotSceneParserV1 dsp;
 
-		Graphical* pGraphical = new Graphical();
+		Graphical* pGraphical = new Graphical(/**ctx.model_*/);
 
-		DotSceneListener dotSceneListener( *pGraphical, name.empty() ? _T("") : (name + _T("/")) );
+		const String namePrefix = _T("model:") + ctx.model_->getName() + _T("/")  // model
+									+ (name.empty() ? _T("") : (name + _T("/"))); // component
+		DotSceneListener dotSceneListener( *pGraphical, namePrefix );
 		dotSceneListener.reset( pGWorld );
 
 		dsp.subscribeToNodeSignal( Bind1( &DotSceneListener::processSceneNode, &dotSceneListener ) );
@@ -81,7 +83,7 @@ namespace model {
 			YAKE_SAFE_DELETE( pGraphical );
 		}
 
-		return pGraphical;
+		ctx.model_->addComponent( pGraphical, name );
 	}
 
 } // namespace model

@@ -49,6 +49,20 @@ namespace model {
 	{
 		return components_.getComponentByTag(tag);
 	}
+	ModelMovableLink* Model::createLink(yake::Movable* from, yake::Movable* to, const yake::String &linkType)
+	{
+		//SharedPtr<ModelMovableLink> link = create<ModelMovableLink>(linkType); //@todo USE FACTORY!
+		ModelMovableLink* link = new ModelMovableDirectLink();
+		link->setSource( from );
+		link->subscribeToPositionChanged(to);
+		this->addLink( link );
+		return link;
+	}
+	void Model::addLink(yake::model::ModelLink* link)
+	{
+		YAKE_ASSERT( link );
+		links_.addModelLink( link );
+	}
 	/*
 	Model* Model::clone() const
 	{
