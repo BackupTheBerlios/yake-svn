@@ -367,7 +367,7 @@ namespace physics {
 		YAKE_ASSERT( radius > 0 ).error( "Radius should be invalid!" );
 		YAKE_ASSERT( length > 0 ).error( "Length should be positive!" );
 
-		mOdeGeom = new dCCylinder( mOdeSpace->id(), static_cast<dReal>( radius ), static_cast<dReal>( length ) );
+		mOdeGeom = new dCapsule( mOdeSpace->id(), static_cast<dReal>( radius ), static_cast<dReal>( length ) );
 
 		mOdeGeomID = mOdeGeom->id();
 
