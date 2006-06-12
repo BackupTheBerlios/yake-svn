@@ -1,7 +1,8 @@
 #include <yapp/samples/misc/car/yakePCH.h>
 #include <yake/audio/yakeAudio.h>
 #include <yapp/raf/yakeRaf.h>
-#include <yapp/model/yakeModelMovableLink.h>
+#include <yake/model/model.h>
+#include <yake/model/model_link.h>
 #include <yapp/vehicle/yakeVehicle.h>
 #include <yake/input/yakeInput.h>
 
@@ -53,6 +54,16 @@ public:
 	{
 	}
 private:
+	typedef Signal2<void(const uint32,const real)> GraphicsUpdateSignal;
+	GraphicsUpdateSignal	graphicsUpdateSig_;
+	void subscribeToGraphicsUpdate(const GraphicsUpdateSignal::slot_type& slot)
+	{
+		graphicsUpdateSig_.connect(slot);
+	}
+	void _triggerGraphicsUpdate(const uint32 si, const real dt)
+	{
+		graphicsUpdateSig_(si,dt);
+	}
 	void _createWheelVisual(const String& wheelId, graphics::ISceneNode& parentSN)
 	{
 		// scene node + wheel mesh
@@ -60,7 +71,8 @@ private:
 		graphics::IEntity* pE = getGraphicalWorld()->createEntity("wheel1.mesh");
 		pE->setCastsShadow( true );
 		pSN->attachEntity( pE );
-		mComplex->addLink( mVehicle->getWheelInterface(wheelId), pSN );
+		model::ModelMovableLink* pLink = mComplex->createLink( mVehicle->getWheelInterface(wheelId), pSN );
+		this->subscribeToGraphicsUpdate( Bind2(&model::ModelMovableLink::update,pLink) );
 
 		// scene node + particle system for smoke...
 		pSN = getGraphicalWorld()->createSceneNode();
@@ -68,10 +80,11 @@ private:
 		mWheelPs[wheelId] = pPS;
 		mEmitterEmissionRate[wheelId] = pPS->getEmissionRate(0);
 		pSN->attachParticleSystem( pPS );
-		model::ModelMovableLink* pLink = new model::ModelMovableLink();
+		pLink = new model::ModelMovableDirectLink();
 		pLink->setSource( mVehicle->getWheelInterface(wheelId) );
 		pLink->subscribeToPositionChanged( pSN ); //position only!
-		mComplex->addGraphicsController( pLink );
+		mComplex->addLink( pLink );
+		this->subscribeToGraphicsUpdate( Bind2(&model::ModelMovableLink::update,pLink) );
 	}
 protected:
 	virtual void onCreateScene()
@@ -91,8 +104,11 @@ protected:
 		getDefaultCamera()->setFixedYawAxis(Vector3::kUnitY);
 		getDefaultCamera()->setPosition(Vector3(7,4,-7));
 
+		//
+		getPhysicalWorld()->setGlobalGravity(Vector3(0,-9.81,0));
+
 		// create ground
-		mGround = new model::complex::Model();
+		mGround = new model::Model();
 		{
 			const real groundHeight = -2;
 			// visual
@@ -105,8 +121,8 @@ protected:
 			pGroundSN->setPosition( Vector3(0,groundHeight,0) );
 
 			model::Graphical* pG = new model::Graphical();
-			pG->addSceneNode( pGroundSN );
-			mGround->addGraphical( pG );
+			pG->addSceneNode( pGroundSN, "groundSN" );
+			mGround->addComponent( pG );
 
 			// physical
 			physics::IActorPtr pGroundPlane = getPhysicalWorld()->createActor( physics::ACTOR_STATIC );
@@ -114,15 +130,15 @@ protected:
 
 			model::Physical* pP = new model::Physical();
 			pP->addActor( pGroundPlane, "groundPlane" );
-			mGround->addPhysical( pP );
+			mGround->addComponent( pP );
 		}
 
 		// create vehicle container (e.g. for graphical objects and links)
-		mComplex = new model::complex::Model();
+		mComplex = new model::Model();
 		model::Graphical* pG = new model::Graphical();
-		mComplex->addGraphical( SharedPtr<model::Graphical>(pG) );
+		mComplex->addComponent( pG, "g" );
 		model::Physical* pP = new model::Physical();
-		mComplex->addPhysical( SharedPtr<model::Physical>(pP) );
+		mComplex->addComponent( pP, "p" );
 
 		// materials @todo read from .physics:
 		getPhysicalWorld()->createMaterial( physics::IMaterial::Desc( 0.01f, 0.01f, 0.01f ), "chassis" );
@@ -151,7 +167,7 @@ protected:
 		pE->setCastsShadow( true );
 		pSN->attachEntity( pE );
 		//pSN->setScale( Vector3::kUnitScale * razorMeshScale );
-		pG->addSceneNode(pSN);
+		pG->addSceneNode(pSN, "delorean_root");
 
 		// - wheel visuals
 		if (mVehicle->getWheelInterface("leftFrontWheel"))
@@ -163,7 +179,8 @@ protected:
 		}
 
 		// create visual <-> physics links
-		mComplex->addLink( mVehicle->getChassisMovable(), pSN );
+		model::ModelMovableLink* pLink = mComplex->createLink( mVehicle->getChassisMovable(), pSN );
+		this->subscribeToGraphicsUpdate( Bind2(&model::ModelMovableLink::update,pLink) );
 
 		// sky box
 		getGraphicalWorld()->setSkyBox("Examples/SpaceSkyBox");
@@ -238,7 +255,7 @@ protected:
 		mVehicle->getWheelInterface("rightFrontWheel")->brake(braking0);
 
 		mVehicle->updateSimulation( timeElapsed );
-		mComplex->updatePhysics( timeElapsed );
+		//mComplex->updatePhysics( timeElapsed );
 
 		ConstDequeIterator< WheelPsMap > itWheel( mWheelPs );
 		while (itWheel.hasMoreElements())
@@ -248,7 +265,9 @@ protected:
 		}
 
 		getDefaultCamera()->lookAt(mVehicle->getChassisPosition());
-		mComplex->updateGraphics( timeElapsed );
+		//mComplex->updateGraphics( timeElapsed );
+
+		this->_triggerGraphicsUpdate(0,timeElapsed);
 
 		mActiveActions.clear();
 	}
@@ -265,9 +284,9 @@ protected:
 	{ mActiveActions.insert( input::ACTIONID_RIGHT ); }
 private:
 private:
-	model::complex::Model*	mGround;
+	model::Model*			mGround;
 	vehicle::IVehicle*		mVehicle;
-	model::complex::Model*	mComplex;
+	model::Model*			mComplex;
 	typedef AssocVector<String,real> EmitterRealMap;
 	EmitterRealMap			mEmitterMinVel;
 	EmitterRealMap			mEmitterMaxVel;
