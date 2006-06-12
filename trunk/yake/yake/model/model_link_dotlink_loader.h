@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright (c) The YAKE Team
+   Copyright © 2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -24,11 +24,33 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_LOADER_H
-#define YAKE_LOADER_H
+#ifndef YAKE_MODEL_DOTLINKLOADER_H
+#define YAKE_MODEL_DOTLINKLOADER_H
 
-#include "yake/loader/prerequisites.h"
-#include "yake/loader/yakeDotScene.h"
-#include "yake/loader/yakeXODEParser.h"
+#include <yake/model/prerequisites.h>
+#include <yake/data/yakeData.h>
 
+namespace yake {
+namespace model {
+
+	struct CentralControllerBase;
+	class YAKE_MODEL_API DotLinkLoader
+	{
+	public:
+		DotLinkLoader();
+		~DotLinkLoader();
+
+		bool load( const String & rDotLinkFilename, Model & rModel, CentralControllerBase& centralController );
+		bool load( const yake::data::dom::INode & rLinksNode, Model & rModel, CentralControllerBase& centralController );
+
+		typedef SharedPtr<ModelLink> SharedModelLinkPtr;
+		typedef Deque< SharedModelLinkPtr > SharedModelLinkList;
+	private:
+		void parseLink( const data::dom::INode & rLinkNode );
+		Model*					mpModel;
+		CentralControllerBase*	mpCentralController;
+	};
+
+}
+}
 #endif

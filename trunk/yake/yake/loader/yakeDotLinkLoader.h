@@ -1,7 +1,7 @@
 /*
    ------------------------------------------------------------------------------------
    This file is part of YAKE
-   Copyright (c) The YAKE Team
+   Copyright © 2004 The YAKE Team
    For the latest information visit http://www.yake.org 
    ------------------------------------------------------------------------------------
    This program is free software; you can redistribute it and/or modify it under
@@ -24,11 +24,30 @@
    source code distribution.
    ------------------------------------------------------------------------------------
 */
-#ifndef YAKE_LOADER_H
-#define YAKE_LOADER_H
+#ifndef YAPP_DOTLINKLOADER_H
+#define YAPP_DOTLINKLOADER_H
 
-#include "yake/loader/prerequisites.h"
-#include "yake/loader/yakeDotScene.h"
-#include "yake/loader/yakeXODEParser.h"
+#include <yapp/base/yappPrerequisites.h>
 
+namespace yake {
+namespace model {
+
+	class YAPP_BASE_API DotLinkLoader
+	{
+	public:
+		DotLinkLoader();
+		~DotLinkLoader();
+
+		bool load( const String & rDotLinkFilename, complex::Model & rModel );
+		bool load( const data::dom::INode & rLinksNode, complex::Model & rModel );
+
+		typedef SharedPtr<ModelLink> SharedModelLinkPtr;
+		typedef Deque< SharedModelLinkPtr > SharedModelLinkList;
+	private:
+		void parseLink( const data::dom::INode & rLinkNode );
+		complex::Model*		mpModel;
+	};
+
+}
+}
 #endif

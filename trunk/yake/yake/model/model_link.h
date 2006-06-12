@@ -59,7 +59,13 @@ namespace model {
 		virtual ~Updatable() {}
 		virtual void update(const Arg0Type) = 0;
 	};
-	struct YAKE_MODEL_API ModelMovableLink : public ModelLink, public Updatable<real>
+	template<typename Arg0Type,typename Arg1Type>
+	struct Updatable2
+	{
+		virtual ~Updatable2() {}
+		virtual void update(const Arg0Type, const Arg1Type) = 0;
+	};
+	struct YAKE_MODEL_API ModelMovableLink : public ModelLink, public Updatable2<uint32,real>
 	{
 	public:
 		typedef Signal1< void(const Vector3&) > PositionSignal;
@@ -70,6 +76,8 @@ namespace model {
 		SignalConnection subscribeToPositionChanged( Movable* pMovable );
 		SignalConnection subscribeToOrientationChanged( Movable* pMovable );
 
+		void setSource(Movable* );
+		Movable* getSource() const;
 	protected:
 		ModelMovableLink();
 	protected:
@@ -78,6 +86,8 @@ namespace model {
 
 		Vector3				mLastPosition;
 		Quaternion			mLastOrientation;
+
+		Movable*			mSource;
 	};
 	/** A link controller designed to forward position and/or orientation to
 		to other clients using signals. Factory item id is "yake.movable".
@@ -89,7 +99,7 @@ namespace model {
 		YAKE_DECLARE_CONCRETE( ModelMovableDirectLink, "yake.movable" );
 
 		ModelMovableDirectLink();
-		virtual void update( const real timeElapsed );
+		virtual void update( const uint32, const real timeElapsed );
 	};
 	/** A link controller designed to forward absolute (world space) position and/or orientation to
 		to other clients using signals. Factory item id is "yake.movable".
@@ -101,7 +111,7 @@ namespace model {
 		YAKE_DECLARE_CONCRETE( ModelMovableWorldLink, "yake.movable_world" ); // world coordinate system
 
 		ModelMovableWorldLink();
-		virtual void update( const real timeElapsed );
+		virtual void update( const uint32, const real timeElapsed );
 	};
 	struct ModelMovableLink_decoupled : public ModelMovableLink
 	{
@@ -109,7 +119,7 @@ namespace model {
 		YAKE_DECLARE_CONCRETE( ModelMovableWorldLink, "yake.movable.decoupled" );
 
 		ModelMovableLink_decoupled();
-		virtual void update( const real timeElapsed );
+		virtual void update( const uint32, const real timeElapsed );
 		//@todo add history/interpolation specific code
 	};
 

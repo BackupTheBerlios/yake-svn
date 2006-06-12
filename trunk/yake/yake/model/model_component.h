@@ -36,9 +36,15 @@ namespace model {
 	{
 		ModelComponent() {}
 		virtual ~ModelComponent() {}
+		//Model* getOwner() const;
 	private:
+		//ModelComponent();
 		ModelComponent(const ModelComponent&);
 		ModelComponent& operator=(const ModelComponent&);
+	protected:
+		//ModelComponent(Model& owner) : owner_(&owner) {}
+	private:
+		//Model*	owner_;
 	};
 	typedef SharedPtr<ModelComponent> ModelComponentSharedPtr;
 	typedef std::deque<ModelComponentSharedPtr> ModelComponentList;
@@ -72,6 +78,7 @@ namespace model {
 		Physical& operator=(const Physical&);
 	public:
 		//@todo register factory?
+		//Physical(Model& owner);
 		Physical();
 		virtual ~Physical();
 
@@ -124,6 +131,7 @@ namespace model {
 	};
 	struct YAKE_MODEL_API Graphical : public ModelComponent
 	{
+		//Graphical(Model& owner);
 		Graphical();
 		virtual ~Graphical();
 		//@todo register factory?
@@ -146,6 +154,7 @@ namespace model {
 		void translate(const Vector3&);
 		//void rotate(const Quaternion&);
 	private:
+		//Graphical();
 		Graphical(const Graphical&);
 		Graphical& operator=(const Graphical&);
 	private:
@@ -181,12 +190,17 @@ namespace model {
 			return ((it != ctr.end()) ? it->second.p_ : 0);
 		}
 	};
-	//@todo move into private header
+
+	//@todo move into private header:
+
+	struct CentralControllerBase;
 	struct ComponentCreationContext
 	{
-		graphics::IWorld*	gworld_;
-		physics::IWorld*	pworld_;
-		ComponentCreationContext() : gworld_(0), pworld_(0)
+		Model*					model_;
+		graphics::IWorld*		gworld_;
+		physics::IWorld*		pworld_;
+		CentralControllerBase*	centralController_;
+		ComponentCreationContext() : model_(0), gworld_(0), pworld_(0), centralController_(0)
 		{}
 	};
 	struct YAKE_MODEL_API ComponentCreator
@@ -194,20 +208,32 @@ namespace model {
 		YAKE_DECLARE_REGISTRY_0(ComponentCreator, String);
 		virtual ~ComponentCreator() {}
 
-		virtual ModelComponent* create(const ComponentCreationContext& ctx, const StringMap& params) = 0;
+		virtual void create(const ComponentCreationContext& ctx, const StringMap& params) = 0;
 	};
 	struct GraphicalFromDotSceneCreator : public ComponentCreator
 	{
 		YAKE_DECLARE_CONCRETE(GraphicalFromDotSceneCreator,"graphics/dotScene");
 
-		virtual ModelComponent* create(const ComponentCreationContext& ctx, const StringMap& params);
+		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
+	};
+	struct PhysicalFromXODECreator : public ComponentCreator
+	{
+		YAKE_DECLARE_CONCRETE(PhysicalFromXODECreator,"physics/dotXODE");
+
+		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
+	};
+	struct LinkFromDotLinkCreator : public ComponentCreator
+	{
+		YAKE_DECLARE_CONCRETE(LinkFromDotLinkCreator,"model/dotLink");
+
+		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
 	};
 	struct YAKE_MODEL_API ComponentCreatorManager
 	{
 		ComponentCreatorManager();
 		~ComponentCreatorManager();
 
-		ModelComponent* create(const String& type, const ComponentCreationContext& ctx, const StringMap& params);
+		void create(const String& type, const ComponentCreationContext& ctx, const StringMap& params);
 	private:
 		ComponentCreatorManager(const ComponentCreatorManager&);
 		ComponentCreatorManager& operator=(const ComponentCreatorManager);

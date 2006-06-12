@@ -42,13 +42,24 @@
 namespace yake {
 namespace model {
 	///@todo move out!!!
-	struct CentralController
+	struct CentralControllerBase
 	{
+		virtual ~CentralControllerBase() {}
+
 		// parameters: frame (int32), timeElapsed/dt (real)
 		typedef Signal2<void(const uint32, const real)> PhysicsUpdateSignal;
 		typedef Signal2<void(const uint32, const real)> GraphicsUpdateSignal;
-		SignalConnection subscribeToPhysicsUpdate(const PhysicsUpdateSignal::slot_type&); 
-		SignalConnection subscribeToGraphicsUpdate(const PhysicsUpdateSignal::slot_type&);
+		SignalConnection subscribeToPhysicsUpdate(const PhysicsUpdateSignal::slot_type& slot)
+		{ return physicsUpdateSignal_.connect(slot); }
+		SignalConnection subscribeToGraphicsUpdate(const GraphicsUpdateSignal::slot_type& slot)
+		{ return graphicsUpdateSignal_.connect(slot); }
+		void triggerPhysicsUpdateSignal(const uint32 si, const real dt)
+		{ physicsUpdateSignal_(si,dt); }
+		void triggerGraphicsUpdateSignal(const uint32 si, const real dt)
+		{ graphicsUpdateSignal_(si,dt); }
+	protected:
+		PhysicsUpdateSignal		physicsUpdateSignal_;
+		GraphicsUpdateSignal	graphicsUpdateSignal_;
 	};
 
 	template<typename T>
@@ -91,7 +102,7 @@ namespace model {
 				only ever a single link (instead of having one for each
 				pair of source/target objects).
 		*/
-		ModelMovableLink* createLink(Movable*,Movable*,const String& linkType = "yake.movable");
+		ModelMovableLink* createLink(Movable*,Movable*,const String& linkType = _T("yake.movable"));
 		ModelMovableLink* createDirectLink(Movable*,Movable*); // uses "yake.movable"
 		ModelMovableLink* createWorldSpaceLink(Movable*,Movable*); // uses "yake.movable_world"
 
@@ -115,10 +126,12 @@ namespace model {
 		ModelManager();
 		~ModelManager();
 
-		Model* createModel(const String&);
+		Model* createModel(const String& modelName, const String& def);
+		void clear();
 
 		void setCreationContext_GraphicalWorld(graphics::IWorld*);
 		void setCreationContext_PhysicalWorld(physics::IWorld*);
+		void setCreationContext_CentralController(CentralControllerBase*);
 	private:
 		ModelManager(const ModelManager&);
 		ModelManager& operator=(const ModelManager&);
@@ -126,7 +139,7 @@ namespace model {
 		ComponentCreatorManager		creatorMgr_;
 		ComponentCreationContext	ctx_;
 
-		typedef Vector<SharedPtr<Model> > ModelList;
+		typedef AssocVector<String,SharedPtr<Model> > ModelList;
 		ModelList					models_;
 	};
 	/**@todo Move into private impl file. */

@@ -25,8 +25,8 @@
    ------------------------------------------------------------------------------------
 */
 
-#ifndef YAPP_MODEL_GRAPHICAL_DOTSCENE_LOADER_H
-#define YAPP_MODEL_GRAPHICAL_DOTSCENE_LOADER_H
+#ifndef YAKE_MODEL_GRAPHICAL_DOTSCENE_LOADER_H
+#define YAKE_MODEL_GRAPHICAL_DOTSCENE_LOADER_H
 
 #include <yake/model/prerequisites.h>
 #include <yake/graphics/yakeGraphicsSystem.h>
