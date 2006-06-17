@@ -30,7 +30,39 @@
 #include "yake/model/prerequisites.h"
 
 namespace yake {
+	namespace data {
+	namespace parser {
+	namespace dotscene {
+		class DotSceneParser;
+	}
+	namespace xode {
+		class XODEParser;
+	}
+	}
+	}
 namespace model {
+	//@todo move into private header:
+	struct CentralControllerBase;
+	struct ComponentCreationContext
+	{
+		Model*					model_;
+		graphics::IWorld*		gworld_;
+		physics::IWorld*		pworld_;
+
+		CentralControllerBase*	centralController_;
+
+		data::parser::dotscene::DotSceneParser*		dotSceneParser_;
+		data::parser::xode::XODEParser*				xodeParser_;
+
+		ComponentCreationContext() : 
+			model_(0),
+			gworld_(0),
+			pworld_(0),
+			centralController_(0),
+			dotSceneParser_(0),
+			xodeParser_(0)
+		{}
+	};
 
 	struct YAKE_MODEL_API ModelComponent //: public Clonable<ModelComponent>
 	{
@@ -191,18 +223,6 @@ namespace model {
 		}
 	};
 
-	//@todo move into private header:
-
-	struct CentralControllerBase;
-	struct ComponentCreationContext
-	{
-		Model*					model_;
-		graphics::IWorld*		gworld_;
-		physics::IWorld*		pworld_;
-		CentralControllerBase*	centralController_;
-		ComponentCreationContext() : model_(0), gworld_(0), pworld_(0), centralController_(0)
-		{}
-	};
 	struct YAKE_MODEL_API ComponentCreator
 	{
 		YAKE_DECLARE_REGISTRY_0(ComponentCreator, String);

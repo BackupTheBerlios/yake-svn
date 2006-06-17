@@ -124,6 +124,14 @@ namespace model {
 	{
 		ctx_.centralController_ = c;
 	}
+	void ModelManager::setCreationContext_DotSceneParser(data::parser::dotscene::DotSceneParser* parser)
+	{
+		ctx_.dotSceneParser_ = parser;
+	}
+	void ModelManager::setCreationContext_XODEParser(data::parser::xode::XODEParser* parser)
+	{
+		ctx_.xodeParser_ = parser;
+	}
 
 } // namespace model
 } // namespace yake

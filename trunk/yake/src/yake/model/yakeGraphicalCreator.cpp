@@ -64,23 +64,32 @@ namespace model {
 
 		// Parse DOM and create graphical objects
 
-		yake::data::parser::dotscene::DotSceneParserV1 dsp;
+		data::parser::dotscene::DotSceneParser* parser = ctx.dotSceneParser_;
+		if (!parser)
+			parser = new yake::data::parser::dotscene::DotSceneParserV1();
+		YAKE_ASSERT( parser );
 
 		Graphical* pGraphical = new Graphical(/**ctx.model_*/);
 
 		const String namePrefix = _T("model:") + ctx.model_->getName() + _T("/")  // model
 									+ (name.empty() ? _T("") : (name + _T("/"))); // component
+
 		DotSceneListener dotSceneListener( *pGraphical, namePrefix );
 		dotSceneListener.reset( pGWorld );
 
-		dsp.subscribeToNodeSignal( Bind1( &DotSceneListener::processSceneNode, &dotSceneListener ) );
-		dsp.subscribeToEntitySignal( Bind1( &DotSceneListener::processEntity, &dotSceneListener ) );
-		dsp.subscribeToCameraSignal( Bind1( &DotSceneListener::processCamera, &dotSceneListener ) );
-		dsp.subscribeToLightSignal( Bind1( &DotSceneListener::processLight, &dotSceneListener ) );
+		parser->subscribeToNodeSignal( Bind1( &DotSceneListener::processSceneNode, &dotSceneListener ) );
+		parser->subscribeToEntitySignal( Bind1( &DotSceneListener::processEntity, &dotSceneListener ) );
+		parser->subscribeToCameraSignal( Bind1( &DotSceneListener::processCamera, &dotSceneListener ) );
+		parser->subscribeToLightSignal( Bind1( &DotSceneListener::processLight, &dotSceneListener ) );
 
-		if (!dsp.load( ser.getDocumentNode() ))
+		if (!parser->load( ser.getDocumentNode() ))
 		{
 			YAKE_SAFE_DELETE( pGraphical );
+		}
+
+		if (!ctx.dotSceneParser_)
+		{
+			YAKE_SAFE_DELETE( parser );
 		}
 
 		ctx.model_->addComponent( pGraphical, name );

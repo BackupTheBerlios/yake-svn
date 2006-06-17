@@ -64,7 +64,10 @@ namespace model {
 
 		// Parse DOM and create graphical objects
 
-		yake::data::parser::xode::XODEParserV1 xodeparser;
+		data::parser::xode::XODEParser* xodeparser = ctx.xodeParser_;
+		if (!xodeparser)
+			xodeparser = new data::parser::xode::XODEParserV1();
+		YAKE_ASSERT( xodeparser );
 
 		Physical* pPhysical = new Physical(/**ctx.model_*/);
 
@@ -72,12 +75,17 @@ namespace model {
 									+ (name.empty() ? _T("") : (name + _T("/"))); // component
 		XODEListener xodeListener( *pPhysical, pPWorld, namePrefix );
 
-		xodeparser.subscribeToBodySignal( Bind1( &XODEListener::processBody, &xodeListener ) );
-		xodeparser.subscribeToGeomSignal( Bind1( &XODEListener::processGeom, &xodeListener ) );
+		xodeparser->subscribeToBodySignal( Bind1( &XODEListener::processBody, &xodeListener ) );
+		xodeparser->subscribeToGeomSignal( Bind1( &XODEListener::processGeom, &xodeListener ) );
 
-		if (!xodeparser.load( ser.getDocumentNode() ))
+		if (!xodeparser->load( ser.getDocumentNode() ))
 		{
 			YAKE_SAFE_DELETE( pPhysical );
+		}
+
+		if (!ctx.xodeParser_)
+		{
+			YAKE_SAFE_DELETE( xodeparser );
 		}
 
 		ctx.model_->addComponent( pPhysical, name );

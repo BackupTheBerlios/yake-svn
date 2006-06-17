@@ -132,6 +132,8 @@ namespace model {
 		void setCreationContext_GraphicalWorld(graphics::IWorld*);
 		void setCreationContext_PhysicalWorld(physics::IWorld*);
 		void setCreationContext_CentralController(CentralControllerBase*);
+		void setCreationContext_DotSceneParser(data::parser::dotscene::DotSceneParser*);
+		void setCreationContext_XODEParser(data::parser::xode::XODEParser*);
 	private:
 		ModelManager(const ModelManager&);
 		ModelManager& operator=(const ModelManager&);
