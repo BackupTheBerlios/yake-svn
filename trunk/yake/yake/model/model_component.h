@@ -234,13 +234,21 @@ namespace model {
 	{
 		YAKE_DECLARE_CONCRETE(GraphicalFromDotSceneCreator,"graphics/dotScene");
 
+		GraphicalFromDotSceneCreator();
 		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
+
+	private:
+		SharedPtr<data::parser::dotscene::DotSceneParser>	defaultParser_;
 	};
 	struct PhysicalFromXODECreator : public ComponentCreator
 	{
 		YAKE_DECLARE_CONCRETE(PhysicalFromXODECreator,"physics/dotXODE");
 
+		PhysicalFromXODECreator();
 		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
+
+	private:
+		SharedPtr<data::parser::xode::XODEParser>	defaultParser_;
 	};
 	struct LinkFromDotLinkCreator : public ComponentCreator
 	{

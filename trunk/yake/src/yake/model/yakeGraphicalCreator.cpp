@@ -34,6 +34,10 @@ namespace model {
 
 	YAKE_REGISTER_CONCRETE(GraphicalFromDotSceneCreator)
 
+	GraphicalFromDotSceneCreator::GraphicalFromDotSceneCreator() :
+		defaultParser_( new data::parser::dotscene::DotSceneParserV1() )
+	{
+	}
 	void GraphicalFromDotSceneCreator::create(const ComponentCreationContext& ctx, const StringMap& params)
 	{
 		// Verify validity of creation context
@@ -66,7 +70,7 @@ namespace model {
 
 		data::parser::dotscene::DotSceneParser* parser = ctx.dotSceneParser_;
 		if (!parser)
-			parser = new yake::data::parser::dotscene::DotSceneParserV1();
+			parser = defaultParser_.get();
 		YAKE_ASSERT( parser );
 
 		Graphical* pGraphical = new Graphical(/**ctx.model_*/);
@@ -77,22 +81,22 @@ namespace model {
 		DotSceneListener dotSceneListener( *pGraphical, namePrefix );
 		dotSceneListener.reset( pGWorld );
 
-		parser->subscribeToNodeSignal( Bind1( &DotSceneListener::processSceneNode, &dotSceneListener ) );
-		parser->subscribeToEntitySignal( Bind1( &DotSceneListener::processEntity, &dotSceneListener ) );
-		parser->subscribeToCameraSignal( Bind1( &DotSceneListener::processCamera, &dotSceneListener ) );
-		parser->subscribeToLightSignal( Bind1( &DotSceneListener::processLight, &dotSceneListener ) );
+		SignalConnection conn1 = parser->subscribeToNodeSignal( Bind1( &DotSceneListener::processSceneNode, &dotSceneListener ) );
+		SignalConnection conn2 = parser->subscribeToEntitySignal( Bind1( &DotSceneListener::processEntity, &dotSceneListener ) );
+		SignalConnection conn3 = parser->subscribeToCameraSignal( Bind1( &DotSceneListener::processCamera, &dotSceneListener ) );
+		SignalConnection conn4 = parser->subscribeToLightSignal( Bind1( &DotSceneListener::processLight, &dotSceneListener ) );
 
 		if (!parser->load( ser.getDocumentNode() ))
 		{
 			YAKE_SAFE_DELETE( pGraphical );
 		}
 
-		if (!ctx.dotSceneParser_)
-		{
-			YAKE_SAFE_DELETE( parser );
-		}
-
 		ctx.model_->addComponent( pGraphical, name );
+
+		conn1.disconnect();
+		conn2.disconnect();
+		conn3.disconnect();
+		conn4.disconnect();
 	}
 
 } // namespace model

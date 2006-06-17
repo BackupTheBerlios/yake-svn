@@ -34,6 +34,10 @@ namespace model {
 
 	YAKE_REGISTER_CONCRETE(PhysicalFromXODECreator)
 
+	PhysicalFromXODECreator::PhysicalFromXODECreator() :
+		defaultParser_( new data::parser::xode::XODEParserV1() )
+	{
+	}
 	void PhysicalFromXODECreator::create(const ComponentCreationContext& ctx, const StringMap& params)
 	{
 		// Verify validity of creation context
@@ -66,7 +70,7 @@ namespace model {
 
 		data::parser::xode::XODEParser* xodeparser = ctx.xodeParser_;
 		if (!xodeparser)
-			xodeparser = new data::parser::xode::XODEParserV1();
+			xodeparser = defaultParser_.get();
 		YAKE_ASSERT( xodeparser );
 
 		Physical* pPhysical = new Physical(/**ctx.model_*/);
@@ -75,20 +79,18 @@ namespace model {
 									+ (name.empty() ? _T("") : (name + _T("/"))); // component
 		XODEListener xodeListener( *pPhysical, pPWorld, namePrefix );
 
-		xodeparser->subscribeToBodySignal( Bind1( &XODEListener::processBody, &xodeListener ) );
-		xodeparser->subscribeToGeomSignal( Bind1( &XODEListener::processGeom, &xodeListener ) );
+		SignalConnection conn1 = xodeparser->subscribeToBodySignal( Bind1( &XODEListener::processBody, &xodeListener ) );
+		SignalConnection conn2 = xodeparser->subscribeToGeomSignal( Bind1( &XODEListener::processGeom, &xodeListener ) );
 
 		if (!xodeparser->load( ser.getDocumentNode() ))
 		{
 			YAKE_SAFE_DELETE( pPhysical );
 		}
 
-		if (!ctx.xodeParser_)
-		{
-			YAKE_SAFE_DELETE( xodeparser );
-		}
-
 		ctx.model_->addComponent( pPhysical, name );
+
+		conn2.disconnect();
+		conn1.disconnect();
 	}
 
 } // namespace model
