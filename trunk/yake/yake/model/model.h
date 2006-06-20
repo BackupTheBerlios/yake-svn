@@ -74,26 +74,35 @@ namespace model {
 		Model();
 		//virtual ~Model() {} //@todo virtual?
 
-		// basic properties
+		/** @name basic properties */
+		//@{
 		void setName(const String&);
 		const String& getName() const;
+		//@}
 
-		// component management
+		/** @name component management */
+		//@{
 		void addComponent(ModelComponent*);
 		void addComponent(ModelComponent*, const ComponentTag&);
 		ModelComponent* removeComponent(ModelComponent*);
 		ModelComponent* getComponentByTag(const ComponentTag&) const;
 		ModelComponent* getComponentByIndex(const size_t) const;
 		size_t numComponents() const;
+		//@}
 
-		// link management
+		/** @name link management */
+		//@{
 		void addLink(ModelLink*);
 		void removeLink(ModelLink*);
 		void destroyAllLinks();
+		//@}
 
-		// signal
+		/** @name signals */
+		//@{
+		//@}
 
-		// helpers (for convencience only)
+		/** @name helpers (for convencience only) */
+		//@{
 		/** For convenience! This function creates a ModelMovableLink between
 			source and target movable objects. Both position and rotation
 			are marked for updates.
@@ -105,6 +114,7 @@ namespace model {
 		ModelMovableLink* createLink(Movable*,Movable*,const String& linkType = _T("yake.movable"));
 		ModelMovableLink* createDirectLink(Movable*,Movable*); // uses "yake.movable"
 		ModelMovableLink* createWorldSpaceLink(Movable*,Movable*); // uses "yake.movable_world"
+		//@}
 
 		//Model* clone() const;
 	private:
@@ -120,31 +130,45 @@ namespace model {
 		ModelLinkContainer		links_;
 		ModelComponentContainer	components_;
 	};
+	struct ModelTemplate;
 	struct YAKE_MODEL_API ModelManager
 	{
 	public:
 		ModelManager();
 		~ModelManager();
 
+		Model* createFromTemplate(const ModelTemplate&);
+		Model* createFromDotModel(const String& modelName, const String& fn, const String& tplName);
+		Model* createModel(const String& modelName, const ModelComponentDescList&);
 		Model* createModel(const String& modelName, const String& def);
 		void clear();
 
+		/** @name Model/Component creation context manipulation */
+		//@{
 		void setCreationContext_GraphicalWorld(graphics::IWorld*);
 		void setCreationContext_PhysicalWorld(physics::IWorld*);
 		void setCreationContext_CentralController(CentralControllerBase*);
 		void setCreationContext_DotSceneParser(data::parser::dotscene::DotSceneParser*);
 		void setCreationContext_XODEParser(data::parser::xode::XODEParser*);
+		//@}
 
-		/** Signals (in order that they are called in):
-		*/
+		/** @name Signals (in order that they are called in) */
+		//@{
 		typedef Signal2<void(Model&,const ComponentCreationContext&)> ModelCreatedSignal;
 		typedef Signal3<void(Model&,const ComponentCreationContext&,const String&)> PreCreateModelComponent;
 		typedef Signal3<void(Model&,const ComponentCreationContext&,const String&)> PostCreateModelComponent;
 		typedef Signal2<void(Model&,const ComponentCreationContext&)> ModelInitializedSignal;
-		void subscribeToModelCreatedSignal(const ModelCreatedSignal::slot_type&);
-		void subscribeToPreCreateModelComponent(const PreCreateModelComponent::slot_type&);
-		void subscribeToPostCreateModelComponent(const PostCreateModelComponent::slot_type&);
-		void subscribeToModelInitializedSignal(const ModelInitializedSignal::slot_type&);
+		SignalConnection subscribeToModelCreatedSignal(const ModelCreatedSignal::slot_type&);
+		SignalConnection subscribeToPreCreateModelComponent(const PreCreateModelComponent::slot_type&);
+		SignalConnection subscribeToPostCreateModelComponent(const PostCreateModelComponent::slot_type&);
+		SignalConnection subscribeToModelInitializedSignal(const ModelInitializedSignal::slot_type&);
+
+		typedef ComponentCreationContext::ComponentPreInitializeSignal ComponentPreInitializeSignal;
+		typedef ComponentCreationContext::ComponentPostInitializeSignal ComponentPostInitializeSignal;
+		SignalConnection subscribeToComponentPreInitializeSignal(const ComponentPreInitializeSignal::slot_type&);
+		SignalConnection subscribeToComponentPostInitializeSignal(const ComponentPostInitializeSignal::slot_type&);
+		//@}
+
 	private:
 		ModelManager(const ModelManager&);
 		ModelManager& operator=(const ModelManager&);
@@ -160,40 +184,34 @@ namespace model {
 		PostCreateModelComponent	sigPostCreateModelComponent_;
 		ModelInitializedSignal		sigModelInitializedSignal_;
 	};
+	struct ModelTemplateManager
+	{
+		ModelTemplateManager();
+		~ModelTemplateManager();
+
+		bool loadTemplatesFromDotLink(const String& fn);
+		ModelTemplate* getTemplate(const String&) const;
+		void destroyTemplate(const String&);
+	private:
+		ModelTemplateManager(const ModelTemplateManager&);
+		ModelTemplateManager& operator=(const ModelTemplateManager&);
+	private:
+		typedef AssocVector<String,SharedPtr<ModelTemplate> > ModelTemplateList;
+		ModelTemplateList	tplMap_;
+	};
 	/**@todo Move into private impl file. */
-	struct ModelTemplate : public ModelComponentContainer
+	struct ModelTemplate
 	{
 		ModelTemplate();
 		~ModelTemplate();
 
-		/// Example 1: from=physical:"p_mine":actor:"mineActor" to=graphical:"g_mine":scenenode:"mine_root"
-		/// Example 2: from=physical:"p_mine":shape:"mineActor/sphere1" to=graphical:"g_mine":scenenode:"mine_root"
-		/// Example params for ModelMovableLink: "position,orientation"
-		void addLink(const String& from, const String& to, const String& params);
-
-		/// Clones model (including components) and recreates links for the cloned model.
-		Model* createInstance(const String& name) const;
+		void addComponentDesc(const ModelComponent::Desc&);
+		const ModelComponentDescList& getComponentDescriptions() const;
 	private:
 		ModelTemplate(const ModelTemplate&);
 		ModelTemplate& operator=(const ModelTemplate&);
 	private:
-		struct link_t
-		{
-			String	fromComponentType_;
-			String	fromComponentName_;
-			String	fromElementType_;
-			String	fromElementName_;
-			String	toComponentType_;
-			String	toComponentName_;
-			String	toElementType_;
-			String	toElementName_;
-		};
-		typedef std::deque<link_t> LinkList;
-		LinkList	links_;
-
-		Model*		modelWithoutLinks_;
-	private:
-		void _createLinks(Model&);
+		ModelComponentDescList	compDescList_;
 	};
 
 } // namespace model

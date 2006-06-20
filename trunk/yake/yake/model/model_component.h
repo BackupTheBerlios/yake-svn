@@ -43,6 +43,9 @@ namespace yake {
 namespace model {
 	//@todo move into private header:
 	struct CentralControllerBase;
+	/** @remarks Do *NOT* rely on the existence of the members of this structure!
+				Always access them through ModelManager!
+	*/
 	struct ComponentCreationContext
 	{
 		Model*					model_;
@@ -53,6 +56,11 @@ namespace model {
 
 		data::parser::dotscene::DotSceneParser*		dotSceneParser_;
 		data::parser::xode::XODEParser*				xodeParser_;
+
+		typedef Signal2<void(const ComponentCreationContext&,ModelComponent&)> ComponentPreInitializeSignal;
+		typedef ComponentPreInitializeSignal ComponentPostInitializeSignal;
+		ComponentPreInitializeSignal	sigPreInit_;
+		ComponentPostInitializeSignal	sigPostInit_;
 
 		ComponentCreationContext() : 
 			model_(0),
@@ -69,6 +77,20 @@ namespace model {
 		ModelComponent() {}
 		virtual ~ModelComponent() {}
 		//Model* getOwner() const;
+
+		/** @name Types */
+		//@{
+		struct Desc {
+			String		name;
+			String		type;
+			StringMap	params;
+			Desc() {}
+			Desc(const String& n, const String& t, const StringMap& p = StringMap()) :
+				name(n), type(t), params(p)
+			{}
+		};
+		typedef std::deque<Desc> DescList;
+		//@}
 	private:
 		//ModelComponent();
 		ModelComponent(const ModelComponent&);
@@ -78,18 +100,22 @@ namespace model {
 	private:
 		//Model*	owner_;
 	};
+	typedef ModelComponent::DescList ModelComponentDescList;
 	typedef SharedPtr<ModelComponent> ModelComponentSharedPtr;
 	typedef std::deque<ModelComponentSharedPtr> ModelComponentList;
 	typedef std::string ComponentTag;
 	struct YAKE_MODEL_API ModelComponentContainer
 	{
 		ModelComponentContainer();
+		/** @name Component container interface */
+		//@{
 		void addComponent(ModelComponent*);
 		void addComponent(ModelComponent*, const ComponentTag&);
 		ModelComponent* getComponentByTag(const ComponentTag&) const;
 		ModelComponent* getComponentByIndex(const size_t) const;
 		size_t numComponents() const;
 		bool empty() const;
+		//@}
 	private:
 		ModelComponentContainer(const ModelComponentContainer&);
 		ModelComponentContainer& operator=(const ModelComponentContainer&);
@@ -117,10 +143,17 @@ namespace model {
 		void addActor(physics::IActor*, const String&);
 		void addBody(physics::IBody*, const String&);
 		void addJoint(physics::IJoint*, const String&);
+		void addAffector(physics::IBodyAffector*, const String&);
+		void addAffectorTargetBody(physics::IBodyAffector*,physics::IBody*);
+		void addAffectorTargetBody(physics::IBodyAffector*,const String& bodyXPath);
+		void addAffectorTargetActor(physics::IBodyAffector*,const String& actorXPath);
 
 		physics::IActor* getActor(const String&) const;
 		physics::IBody* getBody(const String&) const;
 		physics::IJoint* getJoint(const String&) const;
+		physics::IBodyAffector* getAffector(const String&) const;
+
+		void updateAffectors(const real dt);
 
 		//getShape(const String&,const String&)
 
@@ -140,9 +173,14 @@ namespace model {
 		typedef AssocVector<String,EntryT<physics::IActor> > TagActorMap;
 		typedef AssocVector<String,EntryT<physics::IBody> > TagBodyMap;
 		typedef AssocVector<String,EntryT<physics::IJoint> > TagJointMap;
+		typedef AssocVector<String,EntryT<physics::IBodyAffector> > TagAffectorMap;
 		TagActorMap		actors_;
 		TagBodyMap		bodies_;
 		TagJointMap		joints_;
+		TagAffectorMap	affectors_;
+
+		typedef AssocVector<physics::IBodyAffector*, physics::BodyGroup> AffectorTargetMap;
+		AffectorTargetMap	affectorTargetMap_;
 
 		template<typename T>
 		void _add(T* obj,AssocVector<String,EntryT<T> >& ctr, const String& xpath)
