@@ -1,0 +1,7 @@
+<models>
+	<model name="DotScene1">
+		<component name="gfx" type="graphics/dotScene">
+			<parameter name="file" value="../../media/samples/dotLink/DynTest/DotScene1.scene" />
+		</component>
+	</model>
+</models>
