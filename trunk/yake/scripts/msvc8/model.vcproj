@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\yake\model\yakeDotModelParser.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\yake\model\yakeGraphical.cpp"
 				>
 			</File>
@@ -260,6 +264,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\yake\model\yakeModelTemplate.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\yake\model\yakeModelTemplateManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\yake\model\yakePhysical.cpp"
 				>
 			</File>
@@ -283,6 +295,10 @@
 			</File>
 			<File
 				RelativePath="..\..\yake\model\model_component.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\yake\model\model_dotmodel_parser.h"
 				>
 			</File>
 			<File
