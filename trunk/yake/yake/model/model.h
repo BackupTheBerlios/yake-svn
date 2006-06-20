@@ -137,10 +137,13 @@ namespace model {
 		ModelManager();
 		~ModelManager();
 
-		Model* createFromTemplate(const ModelTemplate&);
-		Model* createFromDotModel(const String& modelName, const String& fn, const String& tplName);
+		bool loadTemplatesFromDotModel(const String& fn);
+
+		Model* createModelFromTemplate(const String& modelName, const String& tplName);
+
 		Model* createModel(const String& modelName, const ModelComponentDescList&);
 		Model* createModel(const String& modelName, const String& def);
+
 		void clear();
 
 		/** @name Model/Component creation context manipulation */
@@ -183,13 +186,17 @@ namespace model {
 		PreCreateModelComponent		sigPreCreateModelComponent_;
 		PostCreateModelComponent	sigPostCreateModelComponent_;
 		ModelInitializedSignal		sigModelInitializedSignal_;
+
+		typedef AssocVector<String,SharedPtr<ModelTemplate> > ModelTemplateList;
+		ModelTemplateList			modelTemplates_;
 	};
+	/*
 	struct ModelTemplateManager
 	{
 		ModelTemplateManager();
 		~ModelTemplateManager();
 
-		bool loadTemplatesFromDotLink(const String& fn);
+		bool loadTemplatesFromDotModel(const String& fn);
 		ModelTemplate* getTemplate(const String&) const;
 		void destroyTemplate(const String&);
 	private:
@@ -199,6 +206,7 @@ namespace model {
 		typedef AssocVector<String,SharedPtr<ModelTemplate> > ModelTemplateList;
 		ModelTemplateList	tplMap_;
 	};
+	*/
 	/**@todo Move into private impl file. */
 	struct ModelTemplate
 	{
