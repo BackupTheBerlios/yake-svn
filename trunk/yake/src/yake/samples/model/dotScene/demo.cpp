@@ -45,6 +45,14 @@ public:
 	{
 		std::cout << "MB: " << static_cast<int>(btn) << std::endl;
 	}
+	void onModelComponent_preInit(const model::ComponentCreationContext& ctx, model::ModelComponent&)
+	{
+		YAKE_LOG("demo: onModelComponent_preInit()");
+	}
+	void onModelComponent_postInit(const model::ComponentCreationContext& ctx, model::ModelComponent&)
+	{
+		YAKE_LOG("demo: onModelComponent_postInit()");
+	}
 	int createCameraViewportPair( real sx, real sy, real w, real h, int z )
 	{
 		graphics::ICamera* pC = mGWorld->createCamera();
@@ -121,10 +129,18 @@ public:
 		setupScene();
 
 		//mGWorld->setShadowsEnabled( true );
+
+		// create a model manager and set up the model creation context.
 		model::ModelManager modelMgr;
 		modelMgr.setCreationContext_GraphicalWorld( mGWorld.get() );
 		modelMgr.setCreationContext_PhysicalWorld( mPWorld.get() );
 		modelMgr.setCreationContext_CentralController( this );
+
+		// just for demo purposes:
+		modelMgr.subscribeToComponentPreInitializeSignal( Bind2(&TheApp::onModelComponent_preInit,this) );
+		modelMgr.subscribeToComponentPostInitializeSignal( Bind2(&TheApp::onModelComponent_postInit,this) );
+
+		// create models :)
 
 		model::Model* m = modelMgr.createModel("m1","graphics/dotScene:name=gfx;file=../../media/samples/dotScene/DotScene1.scene");
 		YAKE_ASSERT( m );

@@ -74,6 +74,7 @@ namespace model {
 		YAKE_ASSERT( xodeparser );
 
 		Physical* pPhysical = new Physical(/**ctx.model_*/);
+		ctx.sigPreInit_(ctx,*pPhysical);
 
 		const String namePrefix = _T("model:") + ctx.model_->getName() + _T("/")  // model
 									+ (name.empty() ? _T("") : (name + _T("/"))); // component
@@ -87,10 +88,11 @@ namespace model {
 			YAKE_SAFE_DELETE( pPhysical );
 		}
 
-		ctx.model_->addComponent( pPhysical, name );
-
 		conn2.disconnect();
 		conn1.disconnect();
+
+		ctx.sigPostInit_(ctx,*pPhysical);
+		ctx.model_->addComponent( pPhysical, name );
 	}
 
 } // namespace model

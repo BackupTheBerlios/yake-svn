@@ -74,6 +74,7 @@ namespace model {
 		YAKE_ASSERT( parser );
 
 		Graphical* pGraphical = new Graphical(/**ctx.model_*/);
+		ctx.sigPreInit_(ctx,*pGraphical);
 
 		const String namePrefix = _T("model:") + ctx.model_->getName() + _T("/")  // model
 									+ (name.empty() ? _T("") : (name + _T("/"))); // component
@@ -91,12 +92,13 @@ namespace model {
 			YAKE_SAFE_DELETE( pGraphical );
 		}
 
-		ctx.model_->addComponent( pGraphical, name );
-
 		conn1.disconnect();
 		conn2.disconnect();
 		conn3.disconnect();
 		conn4.disconnect();
+
+		ctx.sigPostInit_(ctx,*pGraphical);
+		ctx.model_->addComponent( pGraphical, name );
 	}
 
 } // namespace model

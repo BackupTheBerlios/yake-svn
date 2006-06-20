@@ -67,6 +67,11 @@ namespace model {
 		YAKE_LOG(String("Physical::addBody(") + xpath + _T(")"));
 		this->_add<physics::IBody>(body,bodies_,xpath);
 	}
+	void Physical::addAffector(physics::IBodyAffector* affector, const String& xpath)
+	{
+		YAKE_LOG(String("Physical::addAffector(") + xpath + _T(")"));
+		this->_add<physics::IBodyAffector>(affector,affectors_,xpath);
+	}
 	physics::IActor* Physical::getActor(const yake::String& xpath) const
 	{
 		return this->_get(actors_,xpath);
@@ -78,6 +83,45 @@ namespace model {
 	physics::IBody* Physical::getBody(const yake::String& xpath) const
 	{
 		return this->_get(bodies_,xpath);
+	}
+	physics::IBodyAffector* Physical::getAffector(const String& xpath) const
+	{
+		return this->_get(affectors_,xpath);
+	}
+	void Physical::addAffectorTargetBody(physics::IBodyAffector* affector,physics::IBody* target)
+	{
+		//@todo test for existence of affector in affectorTargetMap_.
+		YAKE_ASSERT( affector );
+		YAKE_ASSERT( target );
+		affectorTargetMap_[affector] += target;
+	}
+	void Physical::addAffectorTargetBody(physics::IBodyAffector* affector,const String& bodyXPath)
+	{
+		//@todo test for existence of affector in affectorTargetMap_.
+		YAKE_ASSERT( affector );
+		YAKE_ASSERT( !bodyXPath.empty() );
+		physics::IBodyPtr body = this->getBody( bodyXPath );
+		YAKE_ASSERT( body );
+		this->addAffectorTargetBody(affector,body);
+	}
+	void Physical::addAffectorTargetActor(physics::IBodyAffector* affector,const String& actorXPath)
+	{
+		//@todo test for existence of affector in affectorTargetMap_.
+		YAKE_ASSERT( affector );
+		YAKE_ASSERT( !actorXPath.empty() );
+		physics::IActorPtr actor = this->getActor(actorXPath);
+		YAKE_ASSERT( actor );
+		physics::IBodyPtr body = actor->getBodyPtr();
+		YAKE_ASSERT( body );
+		this->addAffectorTargetBody(affector,body);
+	}
+	void Physical::updateAffectors(const real dt)
+	{
+		AffectorTargetMap::iterator itEnd = affectorTargetMap_.end();
+		for (AffectorTargetMap::iterator it = affectorTargetMap_.begin(); it != itEnd; ++it)
+		{
+			it->first->applyTo(it->second,dt);
+		}
 	}
 
 } // namespace model
