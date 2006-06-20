@@ -134,6 +134,17 @@ namespace model {
 		void setCreationContext_CentralController(CentralControllerBase*);
 		void setCreationContext_DotSceneParser(data::parser::dotscene::DotSceneParser*);
 		void setCreationContext_XODEParser(data::parser::xode::XODEParser*);
+
+		/** Signals (in order that they are called in):
+		*/
+		typedef Signal2<void(Model&,const ComponentCreationContext&)> ModelCreatedSignal;
+		typedef Signal3<void(Model&,const ComponentCreationContext&,const String&)> PreCreateModelComponent;
+		typedef Signal3<void(Model&,const ComponentCreationContext&,const String&)> PostCreateModelComponent;
+		typedef Signal2<void(Model&,const ComponentCreationContext&)> ModelInitializedSignal;
+		void subscribeToModelCreatedSignal(const ModelCreatedSignal::slot_type&);
+		void subscribeToPreCreateModelComponent(const PreCreateModelComponent::slot_type&);
+		void subscribeToPostCreateModelComponent(const PostCreateModelComponent::slot_type&);
+		void subscribeToModelInitializedSignal(const ModelInitializedSignal::slot_type&);
 	private:
 		ModelManager(const ModelManager&);
 		ModelManager& operator=(const ModelManager&);
@@ -143,6 +154,11 @@ namespace model {
 
 		typedef AssocVector<String,SharedPtr<Model> > ModelList;
 		ModelList					models_;
+
+		ModelCreatedSignal			sigModelCreatedSignal_;
+		PreCreateModelComponent		sigPreCreateModelComponent_;
+		PostCreateModelComponent	sigPostCreateModelComponent_;
+		ModelInitializedSignal		sigModelInitializedSignal_;
 	};
 	/**@todo Move into private impl file. */
 	struct ModelTemplate : public ModelComponentContainer

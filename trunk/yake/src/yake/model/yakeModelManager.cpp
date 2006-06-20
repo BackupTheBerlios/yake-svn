@@ -72,6 +72,8 @@ namespace model {
 		models_.insert( std::make_pair(modelName,SharedPtr<Model>(m)) );
 		ctx_.model_ = m;
 
+		sigModelCreatedSignal_(*m,ctx_);
+
 		ConstVectorIterator<Vector<String> > itDef( defComponents );
 		while (itDef.hasMoreElements())
 		{
@@ -100,7 +102,9 @@ namespace model {
 			}
 #endif
 
+			sigPreCreateModelComponent_(*m,ctx_,type);
 			creatorMgr_.create( type, ctx_, params );
+			sigPostCreateModelComponent_(*m,ctx_,type);
 
 #ifdef YAKE_DEBUG
 			if (!name.empty())
@@ -110,6 +114,7 @@ namespace model {
 #endif
 		}
 		ctx_.model_ = 0;
+		sigModelInitializedSignal_(*m,ctx_);
 		return m;
 	}
 	void ModelManager::setCreationContext_GraphicalWorld(graphics::IWorld* w)
