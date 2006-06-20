@@ -152,13 +152,21 @@ namespace xml {
 
 		mXmlDoc = new TiXmlDocument( rFile.c_str() );
 		bool ret = mXmlDoc->LoadFile();
-		YAKE_ASSERT( ret && "Could not load xml file.")( rFile ).warning("Could not load xml file.");
+		YAKE_ASSERT( ret && "Could not load xml file.")( rFile )( mXmlDoc->ErrorDesc() ).debug("Could not load xml file.");
+		if (!ret)
+		{
+			reset();
+			return;
+		}
 
 		// read contents
 		mRootElem = mXmlDoc->RootElement();
-		YAKE_ASSERT( mRootElem ).warning("No root element found in document!");
+		YAKE_ASSERT( mRootElem ).debug("No root element found in document!");
 		if (!mRootElem)
+		{
+			reset();
 			return;
+		}
 		mRootNode.reset( new XmlNode( mRootElem ) );
 
 		// recursively traverse xml tree and fire events as needed
