@@ -170,10 +170,18 @@ namespace model {
 			EntryT(pointer p) : p_(p)
 			{}
 		};
+		template<typename T>
+		struct EntrySharedT
+		{
+			typedef SharedPtr<T> pointer;
+			pointer	p_;
+			EntrySharedT(pointer p) : p_(p)
+			{}
+		};
 		typedef AssocVector<String,EntryT<physics::IActor> > TagActorMap;
 		typedef AssocVector<String,EntryT<physics::IBody> > TagBodyMap;
 		typedef AssocVector<String,EntryT<physics::IJoint> > TagJointMap;
-		typedef AssocVector<String,EntryT<physics::IBodyAffector> > TagAffectorMap;
+		typedef AssocVector<String,EntrySharedT<physics::IBodyAffector> > TagAffectorMap;
 		TagActorMap		actors_;
 		TagBodyMap		bodies_;
 		TagJointMap		joints_;
@@ -193,10 +201,26 @@ namespace model {
 			ctr.insert( std::make_pair( xpath, EntryT<T>(obj) ) );
 		}
 		template<typename T>
+		void _add(T* obj,AssocVector<String,EntrySharedT<T> >& ctr, const String& xpath)
+		{
+			YAKE_ASSERT( obj );
+			YAKE_ASSERT( !xpath.empty() );
+#ifdef YAKE_DEBUG_BUILD
+			YAKE_ASSERT( ctr.end() == ctr.find(xpath) )(xpath).debug(_T("Item with this xpath already exists!"));
+#endif
+			ctr.insert( std::make_pair( xpath, typename EntrySharedT<T>::pointer(obj) ) );
+		}
+		template<typename T>
 		T* _get(const AssocVector<String,EntryT<T> >& ctr, const String& xpath) const
 		{
 			typename AssocVector<String,EntryT<T> >::const_iterator it = ctr.find( xpath );
 			return ((it != ctr.end()) ? it->second.p_ : 0);
+		}
+		template<typename T>
+		T* _get(const AssocVector<String,EntrySharedT<T> >& ctr, const String& xpath) const
+		{
+			typename AssocVector<String,EntrySharedT<T> >::const_iterator it = ctr.find( xpath );
+			return ((it != ctr.end()) ? it->second.p_.get() : 0);
 		}
 	};
 	struct YAKE_MODEL_API Graphical : public ModelComponent
