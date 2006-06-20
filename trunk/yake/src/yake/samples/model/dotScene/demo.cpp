@@ -142,10 +142,19 @@ public:
 
 		// create models :)
 
+		// method #1
 		model::Model* m = modelMgr.createModel("m1","graphics/dotScene:name=gfx;file=../../media/samples/dotScene/DotScene1.scene");
 		YAKE_ASSERT( m );
 		((model::Graphical*)m->getComponentByTag("gfx"))->translate(Vector3(40,20,0));
 
+		// method #2 - using dotModel templates
+		bool success = modelMgr.loadTemplatesFromDotModel("E:/dev/yake.trunk/yake/common/media/samples/dotLink/DynTest/DotScene1.model");
+		YAKE_ASSERT( success );
+		m = modelMgr.createModelFromTemplate("m3", "dotscene1");
+		YAKE_ASSERT( m );
+		((model::Graphical*)m->getComponentByTag("gfx"))->translate(Vector3(-100,100,-200));
+
+		// method #1 - but more complex
 		m = modelMgr.createModel("m2",
 			"graphics/dotScene:name=baseGraphical;file=../../media/samples/dotLink/DynTest/DotScene1.scene"
 			"|physics/dotXODE:name=basePhysical;file=../../media/samples/dotLink/DynTest/DotScene1.xode"
