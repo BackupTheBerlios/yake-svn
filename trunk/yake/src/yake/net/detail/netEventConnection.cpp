@@ -105,8 +105,6 @@ namespace impl {
 	void EventConnection::stop()
 	{
 		boost::mutex::scoped_lock lck(startedMtx_);
-		NET_ASSERT( started_ );
-		NET_ASSERT( conn_ );
 		if (conn_)
 		{
 			//@todo fixme unsubscribe from packet connection 'conn_'

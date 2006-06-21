@@ -32,7 +32,7 @@ namespace impl {
 	}
 	CallbackConnection EnetClientPacketConnection::addPacketReceivedCallback(const OnPacketReceivedFn& fn)
 	{
-		boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
+		//boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
 		packetReceivedFnList_.insert( std::make_pair(++lastPacketReceivedCbHandle_, fn) );
 		return CallbackConnection(lastPacketReceivedCbHandle_,boost::bind(&EnetClientPacketConnection::disconnectPacketReceivedCallback,this,_1));
 	}
@@ -56,7 +56,7 @@ namespace impl {
 		}
 
 		{
-			boost::mutex::scoped_lock enetLock(getEnetMtx());
+			//boost::mutex::scoped_lock enetLock(getEnetMtx());
 			m_host = enet_host_create (			0 /* create a client host */,
 												1 /* only allow 1 outgoing connection */,
 										57600 / 8 /* 56K modem with 56 Kbps downstream bandwidth */,
@@ -94,7 +94,10 @@ namespace impl {
 		{
 			//@todo timeout
 			while (m_waitingForConnect && !m_ready)
+			{
 				net::native::sleep(10);
+				net::update();
+			}
 		}
 	}
 	void EnetClientPacketConnection::disconnect()
@@ -111,18 +114,18 @@ namespace impl {
 		{
 			if (m_serverPeer)
 			{
-				boost::mutex::scoped_lock enetLock(getEnetMtx());
+				//boost::mutex::scoped_lock enetLock(getEnetMtx());
 				enet_peer_disconnect( m_serverPeer, 0 /*@todo data*/ );
 			}
 			Timer timer;
 			timer.start();
 			while (timer.getTime() < 1)
 			{
-				this->update();
-				::Sleep(10);
+				net::update();
+				net::native::sleep(10);
 			}
 			{
-				boost::mutex::scoped_lock enetLock(getEnetMtx());
+				//boost::mutex::scoped_lock enetLock(getEnetMtx());
 				enet_peer_reset( m_peer );
 				enet_host_destroy( m_host );
 				m_host = 0;
@@ -141,7 +144,7 @@ namespace impl {
 		ENetEvent event;
 		int ret = 0;
 		{
-			boost::mutex::scoped_lock enetLock(getEnetMtx());
+			//boost::mutex::scoped_lock enetLock(getEnetMtx());
 			ret = enet_host_service(m_host, &event, 5);
 		}
 		if (ret == 0) // no events
@@ -190,7 +193,7 @@ namespace impl {
 					this->fireCallback_PacketReceived(0,event.packet->data,event.packet->dataLength,ChannelId(event.channelID));
 				}
 				{
-					boost::mutex::scoped_lock enetLock(getEnetMtx());
+					//boost::mutex::scoped_lock enetLock(getEnetMtx());
 					enet_packet_destroy( event.packet );
 				}
 				break;
@@ -226,7 +229,7 @@ namespace impl {
 		NET_ASSERT( dataPtr );
 		NET_ASSERT( m_serverPeer );
 		{
-			boost::mutex::scoped_lock enetLock(getEnetMtx());
+			//boost::mutex::scoped_lock enetLock(getEnetMtx());
 			ENetPacket* packet = enet_packet_create( 
 									dataPtr, dataSize,
 									//rPacket.m_data, 

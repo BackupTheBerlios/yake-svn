@@ -19,6 +19,7 @@ int main(int argc, char* argv[])
 		while (!_kbhit())
 		{
 			net::native::sleep(10);
+			net::update();
 			clientApp.step();
 		}
 		if (_kbhit())

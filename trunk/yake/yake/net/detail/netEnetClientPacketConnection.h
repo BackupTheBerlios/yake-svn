@@ -23,7 +23,7 @@ namespace impl {
 
 		void disconnectPacketReceivedCallback(const CallbackHandle h)
 		{
-			boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
+			//boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
 			OnPacketReceivedFnList::iterator it = packetReceivedFnList_.find(h);
 			if (it == packetReceivedFnList_.end())
 				return;
@@ -42,7 +42,7 @@ namespace impl {
 		}
 		void fireCallback_PacketReceived(const PeerId peerId, const void* data, const size_t dataLen, const ChannelId channel)
 		{
-			boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
+			//boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
 			for (OnPacketReceivedFnList::const_iterator it = packetReceivedFnList_.begin(); it != packetReceivedFnList_.end(); ++it)
 				(it->second)(peerId,data,dataLen,channel);
 		}
@@ -57,7 +57,7 @@ namespace impl {
 		typedef std::deque<OnTimeOutFn> OnTimeOutFnList;
 		OnStartedFnList					startedFnList_;
 		OnPacketReceivedFnList			packetReceivedFnList_;
-		boost::mutex						packetReceivedFnListMtx_;
+		//boost::mutex						packetReceivedFnListMtx_;
 		OnTimeOutFnList					timeOutFnList_;
 		CallbackHandle						lastPacketReceivedCbHandle_;
 

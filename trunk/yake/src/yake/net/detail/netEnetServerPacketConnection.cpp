@@ -34,18 +34,18 @@ namespace impl {
 	}
 	CallbackConnection EnetServerPacketConnection::addPacketReceivedCallback( const OnPacketReceivedFn& fn)
 	{
-		boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
+		//boost::mutex::scoped_lock lck(packetReceivedFnListMtx_);
 		packetReceivedFnList_.insert( std::make_pair(++lastPacketReceivedCbHandle_,fn) );
 		return CallbackConnection(lastPacketReceivedCbHandle_,boost::bind(&EnetServerPacketConnection::disconnectPacketReceivedCallback,this,_1));
 	}
 	void EnetServerPacketConnection::setAllowedClientIps(const std::vector<std::string> &ips)
 	{
-		boost::mutex::scoped_lock ipsLock(m_ipListMtx);
+		//boost::mutex::scoped_lock ipsLock(m_ipListMtx);
 		m_ipWhiteList = ips;
 	}
 	bool EnetServerPacketConnection::isIpAllowed( const std::string& ip )
 	{
-		boost::mutex::scoped_lock ipsLock(m_ipListMtx);
+		//boost::mutex::scoped_lock ipsLock(m_ipListMtx);
 		if (m_ipWhiteList.empty() && m_ipBlackList.empty())
 			return true;
 		if (contains(m_ipBlackList,ip))
@@ -85,7 +85,7 @@ namespace impl {
 		}
 
 		{
-			boost::mutex::scoped_lock enetLock(getEnetMtx());
+			//boost::mutex::scoped_lock enetLock(getEnetMtx());
 			m_address.port = addr.port();
 			m_host = enet_host_create( &m_address,
 										maxClients, // up to 'maxClients' clients
@@ -100,6 +100,8 @@ namespace impl {
 		}
 
 		m_state.set(S_RUNNING);
+		m_timer.start();
+		m_timeOfLastUpdate = m_timer.getTime();
 		this->fireCallback_Started();
 		m_id = UpdateThread::instance().add( boost::bind(&EnetServerPacketConnection::update,this) );
 	}
@@ -123,7 +125,7 @@ namespace impl {
 				if (m_host->peerCount > 0)
 				{
 					{
-						boost::mutex::scoped_lock enetLock(getEnetMtx());
+						//boost::mutex::scoped_lock enetLock(getEnetMtx());
 						// try to gracefully disconnect clients
 						for (size_t i=0; i<m_host->peerCount; ++i)
 							enet_peer_disconnect( &m_host->peers[i], 0 /*@todo data*/ );
@@ -132,19 +134,19 @@ namespace impl {
 					timer.start();
 					while (timer.getTime() < 2) // wait 2 seconds for acknowledgement
 					{
-						::Sleep(10);
-						this->update();
+						net::update();
+						net::native::sleep(10);
 					}
 					// forcefully disconnect remaining clients
 					if (m_host->peerCount > 0)
 					{
-						boost::mutex::scoped_lock enetLock(getEnetMtx());
+						//boost::mutex::scoped_lock enetLock(getEnetMtx());
 						for (size_t i=0; i<m_host->peerCount; ++i)
 							enet_peer_reset( &m_host->peers[i] );
 					}
 				}
 				{
-					boost::mutex::scoped_lock enetLock(getEnetMtx());
+					//boost::mutex::scoped_lock enetLock(getEnetMtx());
 					enet_host_destroy( m_host );
 					m_host = 0;
 				}
@@ -153,7 +155,7 @@ namespace impl {
 		m_ip2string.clear();
 		m_ipWhiteList.clear();
 		{
-			boost::mutex::scoped_lock lockClients(m_clientsMtx);
+			//boost::mutex::scoped_lock lockClients(m_clientsMtx);
 			for (PeerToClientMap::iterator it = m_clients.begin(); it != m_clients.end(); ++it)
 				delete it->second;
 			m_clients.clear();
@@ -161,10 +163,12 @@ namespace impl {
 		}
 		//m_events.clear();
 		m_state.set(S_DEAD);
+		m_timer.stop();
+		m_timer.reset();
 	}
 	void EnetServerPacketConnection::disconnect( const PeerId client )
 	{
-		boost::mutex::scoped_lock lockClients(m_clientsMtx);
+		//boost::mutex::scoped_lock lockClients(m_clientsMtx);
 		IdToClientMap::iterator itFindClient = m_id2client.find( client );
 		NET_ASSERT( itFindClient != m_id2client.end() );
 		if (itFindClient == m_id2client.end())
@@ -173,7 +177,7 @@ namespace impl {
 		itFindClient->second->state = CS_DISCONNECTING;
 		// disconnect enet client
 		{
-			boost::mutex::scoped_lock enetLock(getEnetMtx());
+			//boost::mutex::scoped_lock enetLock(getEnetMtx());
 			enet_peer_disconnect( itFindClient->second->peer, 0 /*@todo data*/ );
 		}
 	}
@@ -182,7 +186,7 @@ namespace impl {
 		if (peer == 0)
 			return CS_DEAD;
 
-		boost::mutex::scoped_lock lockClients(m_clientsMtx);
+		//boost::mutex::scoped_lock lockClients(m_clientsMtx);
 		PeerToClientMap::const_iterator it = m_clients.find( peer );
 		if (it == m_clients.end())
 			return CS_DEAD;
@@ -204,11 +208,34 @@ namespace impl {
 		if (state != S_RUNNING && state != S_STOPPING)
 			return;
 
+		// timeouts
+		{
+			const double currT = m_timer.getTime();
+			const double deltaT = max(currT - m_timeOfLastUpdate, 0.0001);
+			NET_ASSERT( deltaT > 0. )(deltaT);
+			PeerToClientMap::iterator itEnd = m_clients.end();
+			for (PeerToClientMap::iterator it = m_clients.begin(); it != itEnd; ++it)
+			{
+				Client* c = it->second;
+				NET_ASSERT(c);
+				if (c->state == CS_CONNECTING) // connection attempts
+				{
+					c->timeLeft_ -= deltaT;
+					if (c->timeLeft_ < 0.)
+					{
+						NET_LOG("net_packet_server: client connection attempt timed out.");
+						this->disconnect( c->id );
+					}
+				}
+			}
+			m_timeOfLastUpdate = currT;
+		}
+
 		// packet handling
 		ENetEvent event;
 		int ret = 0;
 		{
-			boost::mutex::scoped_lock enetLock(getEnetMtx());
+			//boost::mutex::scoped_lock enetLock(getEnetMtx());
 			ret = enet_host_service(m_host, &event, 5);
 		}
 		if (ret == 0) // no events
@@ -230,16 +257,17 @@ namespace impl {
 					if (!isIpAllowed(host))
 					{
 						NET_LOG("net_packet_server: new client '" << host << "' is NOT ALLOWED to connect. disconnecting.");
-						boost::mutex::scoped_lock enetLock(getEnetMtx());
+						//boost::mutex::scoped_lock enetLock(getEnetMtx());
 						//enet_disconnect_peer( event.peer ); // gracefully
 						enet_peer_reset( event.peer ); // hard!
 					}
 
 					PeerId peerId = PEERID_BROADCAST;
 					{
-						boost::mutex::scoped_lock lockClients(m_clientsMtx);
+						//boost::mutex::scoped_lock lockClients(m_clientsMtx);
 
 						Client* c = new Client();
+						c->timeLeft_ = 5.; // 5 seconds to complete connection.
 						c->state = CS_CONNECTING;
 						c->peer = event.peer;
 						c->id = m_nextPeerId++;
@@ -265,7 +293,7 @@ namespace impl {
 					{
 						const std::string host = ipToStringCached( event.peer->address.host );
 						NET_LOG("net_packet_server: client finished connecting: '" << host << ":" << event.peer->address.port << "'.");
-						boost::mutex::scoped_lock lockClients(m_clientsMtx);
+						//boost::mutex::scoped_lock lockClients(m_clientsMtx);
 						PeerToClientMap::iterator it = m_clients.find(event.peer);
 						NET_ASSERT( it != m_clients.end() );
 						NET_ASSERT( it->second );
@@ -283,7 +311,7 @@ namespace impl {
 						// get "id"
 						PeerId peerId = PEERID_BROADCAST;
 						{
-							boost::mutex::scoped_lock lockClients(m_clientsMtx);
+							//boost::mutex::scoped_lock lockClients(m_clientsMtx);
 							peerId = (reinterpret_cast<Client*>(event.peer->data))->id;
 						}
 
@@ -291,7 +319,7 @@ namespace impl {
 					}
 					{
 						// destroy enet packet
-						boost::mutex::scoped_lock enetLock(getEnetMtx());
+						//boost::mutex::scoped_lock enetLock(getEnetMtx());
 						enet_packet_destroy( event.packet );
 					}
 				}
@@ -303,7 +331,7 @@ namespace impl {
 					PeerId peerId = PEERID_BROADCAST;
 					if (event.peer)
 					{
-						boost::mutex::scoped_lock lockClients(m_clientsMtx);
+						//boost::mutex::scoped_lock lockClients(m_clientsMtx);
 						Client* c = reinterpret_cast<Client*>(event.peer->data);
 						if (c)
 							peerId = c->id;
@@ -351,12 +379,12 @@ namespace impl {
 				return;
 		}
 		{
-			boost::mutex::scoped_lock enetLock(getEnetMtx());
+			//boost::mutex::scoped_lock enetLock(getEnetMtx());
 			ENetPacket* packet = enet_packet_create(
 														dataPtr, dataSize,
 														(rel == R_RELIABLE) ? ENET_PACKET_FLAG_RELIABLE : 0 );
 			// send
-			boost::mutex::scoped_lock clientsLock(m_clientsMtx);
+			//boost::mutex::scoped_lock clientsLock(m_clientsMtx);
 			IdToClientMap::const_iterator it = m_id2client.find( clientId );
 			NET_ASSERT( it != m_id2client.end() );
 			enet_peer_send( it->second->peer, channel, packet );
@@ -372,7 +400,7 @@ namespace impl {
 				return;
 		}
 		{
-			boost::mutex::scoped_lock enetLock(getEnetMtx());
+			//boost::mutex::scoped_lock enetLock(getEnetMtx());
 			ENetPacket* packet = enet_packet_create(
 														dataPtr, dataSize,
 														(rel == R_RELIABLE) ? ENET_PACKET_FLAG_RELIABLE : 0 );

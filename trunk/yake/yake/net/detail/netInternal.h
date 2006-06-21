@@ -35,8 +35,6 @@
 namespace net {
 namespace impl {
 
-	boost::mutex& getEnetMtx();
-
 	typedef boost::function<void(void)> UpdateFn;
 	class UpdateThread
 	{
@@ -64,11 +62,8 @@ namespace impl {
 		UpdateFnMap		fns_;
 		uint32			nextId_;
 		boost::thread*	thread_;
-		mutable boost::mutex	mtx_;
 		bool			quitRequested_;
-
 		bool			dead_;
-		mutable boost::mutex	deadMtx_;
 
 		static UpdateThread* instance_;
 	};

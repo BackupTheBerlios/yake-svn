@@ -3,6 +3,10 @@
 #include <yake/net/detail/netInternal.h>
 
 namespace net {
+	void update()
+	{
+		impl::UpdateThread::instance().__update__();
+	}
 namespace impl {
 
 	//--------------------------------------------------------------------------
@@ -21,7 +25,10 @@ namespace impl {
 		{
 			instance_->requestQuit();
 			while (!instance_->dead())
+			{
 				native::sleep(10);
+				net::update();
+			}
 			delete instance_;
 			instance_ = 0;
 		}
@@ -33,7 +40,7 @@ namespace impl {
 	}
 	UpdateThread::UpdateThread() : nextId_(1), thread_(0), quitRequested_(false), dead_(false)
 	{
-		thread_ = new boost::thread( boost::bind(&UpdateThread::callFns,this) );
+		//thread_ = new boost::thread( boost::bind(&UpdateThread::callFns,this) );
 	}
 	UpdateThread::~UpdateThread()
 	{
@@ -47,24 +54,22 @@ namespace impl {
 	}
 	void UpdateThread::requestQuit()
 	{
-		boost::mutex::scoped_lock lock(mtx_);
 		quitRequested_ = true;
 	}
 	bool UpdateThread::dead() const
 	{
-		boost::mutex::scoped_lock lock(deadMtx_);
 		return dead_;
 	}
 	void UpdateThread::callFns()
 	{
-		while (true)
+		//while (true)
 		{
 			{
-				boost::mutex::scoped_lock lock(mtx_);
+				//boost::mutex::scoped_lock lock(mtx_);
 
 				if (quitRequested_)
 				{
-					boost::mutex::scoped_lock lock(deadMtx_);
+					//boost::mutex::scoped_lock lock(deadMtx_);
 					fns_.clear();
 					dead_ = true;
 					return;
@@ -80,14 +85,14 @@ namespace impl {
 	}
 	uint32 UpdateThread::add( const UpdateFn& fn )
 	{
-		boost::mutex::scoped_lock lock(mtx_);
+		//boost::mutex::scoped_lock lock(mtx_);
 		std::cout << "UpdateThread::add()\n";
 		fns_[ nextId_++ ] = fn;
 		return nextId_-1;
 	}
 	void UpdateThread::remove( const uint32 id )
 	{
-		boost::mutex::scoped_lock lock(mtx_);
+		//boost::mutex::scoped_lock lock(mtx_);
 		std::cout << "UpdateThread::remove()\n";
 		UpdateFnMap::iterator it = fns_.find( id );
 		if (it != fns_.end())
@@ -106,11 +111,13 @@ namespace impl {
 	//	}
 	//}
 
+	/*
 	boost::mutex& getEnetMtx()
 	{
 		static boost::mutex mtx;
 		return mtx;
 	}
+	*/
 
 } // namespace impl
 } // namespace net

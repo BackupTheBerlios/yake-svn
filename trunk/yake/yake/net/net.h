@@ -9,6 +9,7 @@
 namespace net {
 
 	NET_API bool initialize();
+	NET_API void update();
 	NET_API void shutdown();
 
 } // namespace net
