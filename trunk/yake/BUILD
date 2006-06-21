@@ -22,21 +22,36 @@ You can find it here: http://www.yake.org/wiki .
 1. BUILD INSTRUCTIONS FOR YAKE ON PC/WINDOWS
 --------------------------------------------
 
-Last modified: 02/11/2005 by Stephan Kaiser (psy)
+Last modified: 21/06/2006 by Stephan Kaiser (psy)
 
 Please refer to the manual for detailed instructions.
+
+1.1 Building with Microsoft Visual C++ 2003/2005 (7.1/8.0)
+----------------------------------------------------------
+
 In essence, opening the workspace for Yake and starting
 a complete 'Build' is what you want to do.
 
-You can find the workspace here:
+You can find the workspaces for MSVC 2003 (7.1) and MSVC 2005 (8.0)
+respectively here:
 
-(yake_root_dir)/scripts/msvc71/yake.sln
+/yake/scripts/msvc71/yake.sln
+/yake/scripts/msvc8/yake.sln
+
+For stable releases of Yake for both compilers prebuilt
+dependencies packages are available.
 
 If you don't have or don't want to use the dependencies package
-containing prebuilt libraries then you have to compile these yourself
-as needed.
+then you have to compile these yourself as needed, of course.
 
-See the file <yakeroot>/dependencies/DEPENDENCIES for more information.
+See the file /yake/dependencies/DEPENDENCIES for more information.
+
+1.2 Building with Code::Blocks
+------------------------------
+
+The Code Blocks project files can be found in this directory:
+
+/yake/scripts/cb/
 
 
 2. BUILD INSTRUCTIONS FOR YAKE ON PC/LINUX
