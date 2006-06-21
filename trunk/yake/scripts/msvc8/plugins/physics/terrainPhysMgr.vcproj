@@ -63,10 +63,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="yapp.lib oded.lib physics.lib ogremain_d.lib Plugin_PagingLandScapeSceneManager2_d.lib"
+				AdditionalDependencies="yapp.lib ode.lib physics.lib ogremain_d.lib Plugin_PagingLandScapeSceneManager2_d.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib;../../../../dependencies/lib;&quot;../../../../dependencies/ogrenew/ogremain/lib/$(ConfigurationName)&quot;;&quot;../../../../dependencies/ogreaddons/paginglandscape/plugins/paginglandscape2/bin/$(ConfigurationName)&quot;"
+				AdditionalLibraryDirectories="../../../../common/lib/debug;../../../../dependencies/ode/lib/debugdll;../../../../dependencies/lib;&quot;../../../../dependencies/ogrenew/ogremain/lib/$(ConfigurationName)&quot;;&quot;../../../../dependencies/ogreaddons/paginglandscape/plugins/paginglandscape2/bin/$(ConfigurationName)&quot;"
 				ModuleDefinitionFile=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/$(ProjectName).pdb"
@@ -148,7 +148,7 @@
 				AdditionalDependencies="ode.lib physics.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ode/lib;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ode/lib/releasedll;../../../../dependencies/lib"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
