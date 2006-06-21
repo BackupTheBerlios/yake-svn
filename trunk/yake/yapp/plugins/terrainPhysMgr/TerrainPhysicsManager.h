@@ -42,7 +42,7 @@
 #include <yapp/plugins/terrainPhysMgr/TerrainOdeActor.h>
 
 #include <yake/plugins/graphicsOgre/yakeGraphicsSystem.h>
-#include <yapp/model/yakeGraphical.h>
+#include <yake/model/model.h>
 
 namespace yake
 {

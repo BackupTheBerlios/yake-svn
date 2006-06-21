@@ -22,7 +22,7 @@
 #include <yapp/plugins/modelLua/yakeLuaBinder.h>
 #include <luabind/luabind.hpp>
 
-#include <yapp/model/yakeGraphical.h>
+#include <yake/model/model.h>
 
 namespace yake
 {
@@ -45,14 +45,40 @@ namespace yake
 
 				module( YAKE_MODEL_MODULE )
 				[
-				    class_<Graphical>( "Graphical" )
-					.def( constructor<>() )
-					.def( "addSceneNode", &Graphical::addSceneNode )
-					.def( "getSceneNodes", &Graphical::getSceneNodes )
-					.def( "getSceneNode", &Graphical::getSceneNode )
-					.def( "fromDotScene", &Graphical::fromDotScene )
+				    class_<ModelComponent>( "ModelComponent" )
+					//.def( constructor<>() )
 				];
 
+				module( YAKE_MODEL_MODULE )
+				[
+				    class_<Graphical,ModelComponent>( "Graphical" )
+					.def( constructor<>() )
+					.def( "addSceneNode", &Graphical::addSceneNode )
+					//.def( "getSceneNodes", &Graphical::getSceneNodes )
+					.def( "getSceneNode", &Graphical::getSceneNode )
+					.def( "getEntity", &Graphical::getEntity )
+					.def( "getLight", &Graphical::getLight )
+					.def( "translate", &Graphical::translate )
+				];
+
+				module( YAKE_MODEL_MODULE )
+				[
+				    class_<Physical,ModelComponent>( "Physical" )
+					.def( constructor<>() )
+					.def( "addActor", &Physical::addActor )
+					.def( "addBody", &Physical::addBody )
+					.def( "addJoint", &Physical::addBody )
+					.def( "addAffector", &Physical::addAffector )
+					.def( "addAffectorTargetActor", &Physical::addAffectorTargetActor )
+					//void addAffectorTargetBody(physics::IBodyAffector*,physics::IBody*);
+					//void addAffectorTargetBody(physics::IBodyAffector*,const String& bodyXPath);
+					.def( "getActor", &Physical::getActor )
+					.def( "getBody", &Physical::getBody )
+					.def( "getJoint", &Physical::getJoint )
+					.def( "getAffector", &Physical::getAffector )
+					//.def( "translate", &Physical::translate )
+					.def( "updateAffectors", &Physical::updateAffectors )
+				];
 			}
 
 

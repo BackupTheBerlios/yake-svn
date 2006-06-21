@@ -155,7 +155,7 @@ namespace yake
 	
 				model::Graphical* pG = new model::Graphical();
 				
-				pG->addSceneNode( pTerrainSN );
+				pG->addSceneNode( pTerrainSN, uniqueName::create() );
 			}
 		}
 		//---------------------------------------------------------------------------------------------
