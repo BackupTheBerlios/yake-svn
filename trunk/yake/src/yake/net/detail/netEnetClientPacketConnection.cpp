@@ -11,8 +11,14 @@ namespace net {
 	}
 namespace impl {
 
-	EnetClientPacketConnection::EnetClientPacketConnection() : m_host(0), m_ready(false), m_id(0), m_waitingForConnect(false),
-			m_peer(0), m_serverPeer(0), lastPacketReceivedCbHandle_(0)
+	EnetClientPacketConnection::EnetClientPacketConnection() : 
+		m_host(0), 
+		m_ready(false), 
+		m_id(0), 
+		m_waitingForConnect(false),
+		m_peer(0), 
+		m_serverPeer(0), 
+		lastPacketReceivedCbHandle_(0)
 	{
 	}
 	EnetClientPacketConnection::~EnetClientPacketConnection()
@@ -34,7 +40,7 @@ namespace impl {
 	{
 		timeOutFnList_.push_back( fn );
 	}
-	void EnetClientPacketConnection::connect(const Address& addr)
+	void EnetClientPacketConnection::connect(const Address& addr, const bool doBlock, const uint32 timeOut)
 	{
 		NET_ASSERT( !m_ready );
 		if (m_ready)
@@ -83,6 +89,13 @@ namespace impl {
 
 		m_connTimer.reset();
 		m_id = UpdateThread::instance().add( boost::bind(&EnetClientPacketConnection::update,this) );
+
+		if (doBlock)
+		{
+			//@todo timeout
+			while (m_waitingForConnect && !m_ready)
+				net::native::sleep(10);
+		}
 	}
 	void EnetClientPacketConnection::disconnect()
 	{
@@ -99,7 +112,7 @@ namespace impl {
 			if (m_serverPeer)
 			{
 				boost::mutex::scoped_lock enetLock(getEnetMtx());
-				enet_peer_disconnect( m_serverPeer );
+				enet_peer_disconnect( m_serverPeer, 0 /*@todo data*/ );
 			}
 			Timer timer;
 			timer.start();
@@ -149,16 +162,16 @@ namespace impl {
 			{
 			case ENET_EVENT_TYPE_CONNECT:
 				NET_ASSERT( event.peer );
-				NET_LOG("net_packet_client: connected to " << ipToString(event.peer->address.host) << ":" << event.peer->address.port << ".");
+				NET_LOG("net_packet_client: (stage1) connected to " << ipToString(event.peer->address.host) << ":" << event.peer->address.port << ".");
 				{
 					m_serverPeer = event.peer;
-					m_waitingForConnect = false;
-					m_ready = true;
+					m_ready = true; // we can now start sending packets
 
 					const uint32 host = event.peer->address.host;
 					m_serverIp = ipToString( host );
 
-					this->fireCallback_Started();
+					const uint8 tmp = 0x7F;
+					this->send(&tmp,1,SendOptions().reliability(R_RELIABLE));
 				}
 				break;
 			case ENET_EVENT_TYPE_RECEIVE:
@@ -166,7 +179,13 @@ namespace impl {
 				NET_ASSERT( m_serverPeer );
 				NET_ASSERT( event.packet->dataLength > 0 );
 				NET_ASSERT( event.packet->data );
-				if (event.packet)
+				if (m_waitingForConnect)
+				{
+					NET_LOG("net_packet_client: (stage2) connected to " << ipToString(event.peer->address.host) << ":" << event.peer->address.port << ".");
+					m_waitingForConnect = false;
+					this->fireCallback_Started();
+				}
+				else if (event.packet)
 				{
 					this->fireCallback_PacketReceived(0,event.packet->data,event.packet->dataLength,ChannelId(event.channelID));
 				}
@@ -188,11 +207,11 @@ namespace impl {
 	}
 	void EnetClientPacketConnection::send( const void* dataPtr, const size_t dataSize, const net::SendOptions& opt )
 	{
-		this->sendBroadcast( dataPtr, dataSize, opt.reliability, opt.ordering, opt.channelId );
+		this->sendBroadcast( dataPtr, dataSize, opt.getReliability(), opt.getOrdering(), opt.getChannel() );
 	}
 	void EnetClientPacketConnection::send(const PeerId, const void* dataPtr, const size_t dataSize, const SendOptions& opt )
 	{
-		this->sendBroadcast( dataPtr, dataSize, opt.reliability, opt.ordering, opt.channelId );
+		this->sendBroadcast( dataPtr, dataSize, opt.getReliability(), opt.getOrdering(), opt.getChannel() );
 	}
 	void EnetClientPacketConnection::sendTo(const PeerId clientId, const void* dataPtr, const size_t dataSize, const Reliability rel, const Ordering ord, const ChannelId channel)
 	{

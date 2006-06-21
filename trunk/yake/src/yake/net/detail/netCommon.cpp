@@ -134,16 +134,16 @@ namespace net {
 	// SendOptions
 	//-------------------------------------------------------------------------
 	SendOptions::SendOptions() :
-		peerId(0xffffffff),
-		reliability(R_RELIABLE),
-		ordering(O_ORDERED),
-		channelId(0)
+		peerId_(PEERID_BROADCAST),
+		reliability_(R_RELIABLE),
+		ordering_(O_ORDERED),
+		channelId_(0)
 	{}
 	SendOptions::SendOptions(const SendOptions& other) :
-		peerId(other.peerId),
-		reliability(other.reliability),
-		ordering(other.ordering),
-		channelId(other.channelId)
+		peerId_(other.peerId_),
+		reliability_(other.reliability_),
+		ordering_(other.ordering_),
+		channelId_(other.channelId_)
 	{}
 	SendOptions::~SendOptions()
 	{}
@@ -151,31 +151,47 @@ namespace net {
 	{
 		if (this == &rhs)
 			return *this;
-		peerId = rhs.peerId;
-		reliability = rhs.reliability;
-		ordering = rhs.ordering;
-		channelId = rhs.channelId;
+		peerId_ = rhs.peerId_;
+		reliability_ = rhs.reliability_;
+		ordering_ = rhs.ordering_;
+		channelId_ = rhs.channelId_;
 		return *this;
 	}
-	SendOptions& SendOptions::setPeerId(const PeerId id)
+	SendOptions& SendOptions::peerId(const PeerId id)
 	{
-		peerId = id;
+		peerId_ = id;
 		return *this;
 	}
-	SendOptions& SendOptions::setReliability(const Reliability rel)
+	SendOptions& SendOptions::reliability(const Reliability rel)
 	{
-		reliability = rel;
+		reliability_ = rel;
 		return *this;
 	}
-	SendOptions& SendOptions::setOrdering(const Ordering ord)
+	SendOptions& SendOptions::ordering(const Ordering ord)
 	{
-		ordering = ord;
+		ordering_ = ord;
 		return *this;
 	}
-	SendOptions& SendOptions::setChannel(const ChannelId id)
+	SendOptions& SendOptions::channel(const ChannelId id)
 	{
-		channelId = id;
+		channelId_ = id;
 		return *this;
+	}
+	PeerId SendOptions::getPeerId() const
+	{
+		return peerId_;
+	}
+	Reliability SendOptions::getReliability() const
+	{
+		return reliability_;
+	}
+	Ordering SendOptions::getOrdering() const
+	{
+		return ordering_;
+	}
+	ChannelId SendOptions::getChannel() const
+	{
+		return channelId_;
 	}
 
 	//-------------------------------------------------------------------------

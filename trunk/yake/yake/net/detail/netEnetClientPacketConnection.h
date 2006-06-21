@@ -11,7 +11,7 @@ namespace impl {
 		EnetClientPacketConnection();
 		virtual ~EnetClientPacketConnection();
 
-		virtual void connect( const Address& );
+		virtual void connect( const Address&, const bool doBlock, const uint32 timeOut );
 		virtual void disconnect();
 
 		virtual void send(const void*, const size_t, const SendOptions& opt = SendOptions());

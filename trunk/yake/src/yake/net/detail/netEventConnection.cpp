@@ -133,9 +133,7 @@ namespace impl {
 	}
 	void EventConnection::sendEvent(const PeerId peerId, const NetEvent& evt, const SendOptions& opt)
 	{
-		SendOptions options = opt;
-		options.setPeerId(peerId);
-		this->sendEvent( evt, options );
+		this->sendEvent( evt, SendOptions(opt).peerId(peerId) );
 	}
 	void EventConnection::sendEvent(const NetEvent& evt, const SendOptions& opt)
 	{

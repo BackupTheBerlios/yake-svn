@@ -126,7 +126,7 @@ namespace impl {
 						boost::mutex::scoped_lock enetLock(getEnetMtx());
 						// try to gracefully disconnect clients
 						for (size_t i=0; i<m_host->peerCount; ++i)
-							enet_peer_disconnect( &m_host->peers[i] );
+							enet_peer_disconnect( &m_host->peers[i], 0 /*@todo data*/ );
 					}
 					Timer timer;
 					timer.start();
@@ -174,7 +174,7 @@ namespace impl {
 		// disconnect enet client
 		{
 			boost::mutex::scoped_lock enetLock(getEnetMtx());
-			enet_peer_disconnect( itFindClient->second->peer );
+			enet_peer_disconnect( itFindClient->second->peer, 0 /*@todo data*/ );
 		}
 	}
 	EnetServerPacketConnection::ClientState EnetServerPacketConnection::getClientState(ENetPeer* peer) const
@@ -218,7 +218,7 @@ namespace impl {
 			switch(event.type)
 			{
 			case ENET_EVENT_TYPE_CONNECT:
-				NET_LOG("net_packet_server: new client connected.");
+				NET_LOG("net_packet_server: new client attempts to connect.");
 				NET_ASSERT( event.peer );
 				if (event.peer && state != S_STOPPING)
 				{
@@ -235,12 +235,12 @@ namespace impl {
 						enet_peer_reset( event.peer ); // hard!
 					}
 
-					PeerId peerId = 0xffffffff;
+					PeerId peerId = PEERID_BROADCAST;
 					{
 						boost::mutex::scoped_lock lockClients(m_clientsMtx);
 
 						Client* c = new Client();
-						c->state = CS_CONNECTED;
+						c->state = CS_CONNECTING;
 						c->peer = event.peer;
 						c->id = m_nextPeerId++;
 						peerId = c->id;
@@ -251,40 +251,56 @@ namespace impl {
 						m_id2client.insert( std::make_pair( c->id, c ) );
 					}
 
-					fireCallback_ClientConnected( peerId, Address(host,event.peer->address.port) );
+					const uint8 tmp = 0x7F;
+					this->send(peerId,&tmp,1,SendOptions().reliability(R_RELIABLE));
 				}
 				break;
 			case ENET_EVENT_TYPE_RECEIVE:
 				NET_ASSERT( event.packet );
 				NET_ASSERT( event.peer );
 				NET_ASSERT( event.peer->data );
-				if (getClientState( event.peer ) == CS_CONNECTED
-					&& state != S_STOPPING)
 				{
-					// create packet object
-					NET_ASSERT( event.packet->dataLength > 0 );
-					NET_ASSERT( event.packet->data );
-
-					// get "id"
-					PeerId peerId = 0xffffffff;
+					const ClientState cs = getClientState( event.peer );
+					if (cs == CS_CONNECTING)
 					{
+						const std::string host = ipToStringCached( event.peer->address.host );
+						NET_LOG("net_packet_server: client finished connecting: '" << host << ":" << event.peer->address.port << "'.");
 						boost::mutex::scoped_lock lockClients(m_clientsMtx);
-						peerId = (reinterpret_cast<Client*>(event.peer->data))->id;
+						PeerToClientMap::iterator it = m_clients.find(event.peer);
+						NET_ASSERT( it != m_clients.end() );
+						NET_ASSERT( it->second );
+						Client* c = it->second;
+						c->state = CS_CONNECTED;
+						fireCallback_ClientConnected( c->id, Address(host,event.peer->address.port) );
+						// throw away the packet. => don't inform callbacks.
 					}
+					else if (cs == CS_CONNECTED && state != S_STOPPING)
+					{
+						// create packet object
+						NET_ASSERT( event.packet->dataLength > 0 );
+						NET_ASSERT( event.packet->data );
 
-					fireCallback_PacketReceived(peerId,event.packet->data,event.packet->dataLength,event.channelID);
-				}
-				{
-					// destroy enet packet
-					boost::mutex::scoped_lock enetLock(getEnetMtx());
-					enet_packet_destroy( event.packet );
+						// get "id"
+						PeerId peerId = PEERID_BROADCAST;
+						{
+							boost::mutex::scoped_lock lockClients(m_clientsMtx);
+							peerId = (reinterpret_cast<Client*>(event.peer->data))->id;
+						}
+
+						fireCallback_PacketReceived(peerId,event.packet->data,event.packet->dataLength,event.channelID);
+					}
+					{
+						// destroy enet packet
+						boost::mutex::scoped_lock enetLock(getEnetMtx());
+						enet_packet_destroy( event.packet );
+					}
 				}
 				break;
 			case ENET_EVENT_TYPE_DISCONNECT:
 				{
 					NET_ASSERT( event.peer );
 					uint32 host = event.peer ? event.peer->address.host : 0;
-					PeerId peerId = 0xffffffff;
+					PeerId peerId = PEERID_BROADCAST;
 					if (event.peer)
 					{
 						boost::mutex::scoped_lock lockClients(m_clientsMtx);
@@ -313,15 +329,16 @@ namespace impl {
 	}
 	void EnetServerPacketConnection::send( const void* dataPtr, const size_t dataSize, const net::SendOptions& opt )
 	{
-		if (opt.peerId != 0xffffffff)
-			this->sendTo( opt.peerId, dataPtr, dataSize, opt.reliability, opt.ordering, opt.channelId );
+		const PeerId peerId = opt.getPeerId();
+		if (peerId != PEERID_BROADCAST)
+			this->sendTo( peerId, dataPtr, dataSize, opt.getReliability(), opt.getOrdering(), opt.getChannel() );
 		else
-			this->sendBroadcast( dataPtr, dataSize, opt.reliability, opt.ordering, opt.channelId );
+			this->sendBroadcast( dataPtr, dataSize, opt.getReliability(), opt.getOrdering(), opt.getChannel() );
 	}
 	void EnetServerPacketConnection::send(const PeerId peerId, const void* dataPtr, const size_t dataSize, const SendOptions& opt )
 	{
 		SendOptions options = opt;
-		options.setPeerId( peerId );
+		options.peerId( peerId );
 		send( dataPtr, dataSize, options );
 	}
 	void EnetServerPacketConnection::sendTo(const PeerId clientId, const void* dataPtr, const size_t dataSize, const Reliability rel, const Ordering, const ChannelId channel)

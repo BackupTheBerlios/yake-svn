@@ -16,6 +16,19 @@ namespace impl {
 
 		virtual void setAllowedClientIps(const std::vector<std::string>&);
 
+		virtual size_t getNumConnectedClients() const
+		{
+			boost::mutex::scoped_lock lockClients(m_clientsMtx);
+			PeerToClientMap::const_iterator itEnd = m_clients.end();
+			size_t count = 0;
+			for (PeerToClientMap::const_iterator it = m_clients.begin(); it != itEnd; ++it)
+			{
+				if (it->second->state == CS_CONNECTED)
+					++count;
+			}
+			return count;
+		}
+
 		virtual void disconnect( const PeerId client );
 
 		virtual void send(const void*, const size_t, const SendOptions& opt = SendOptions());
@@ -112,6 +125,7 @@ namespace impl {
 
 		enum ClientState
 		{
+			CS_CONNECTING,
 			CS_CONNECTED,
 			CS_DISCONNECTING,
 			CS_DEAD
@@ -123,6 +137,13 @@ namespace impl {
 			PeerId		id;
 			uint32		host;
 			//Address		addr;
+
+			/*
+			void onConnectStage1(...);
+			void onConnectStage2(...);
+			void onConnected(...);
+			void onDisconnected();
+			*/
 		};
 		typedef std::map<ENetPeer*,Client*> PeerToClientMap;
 		PeerToClientMap			m_clients; // access only via update()
