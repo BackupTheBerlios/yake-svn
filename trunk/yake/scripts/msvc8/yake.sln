@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "base.vcproj", "{D29771DD-715F-452B-B71C-911BACF5956D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphics", "graphics.vcproj", "{ECC8FA24-93AC-4659-8EBD-26B6F418AC64}"
@@ -134,6 +134,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleModelDotScene", "samp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loader", "loader.vcproj", "{2E5A589E-41FE-4BE9-80A0-1F8570944486}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplePhysicsDemo", "samples\physics\samplePhysicsDemo.vcproj", "{3DA99679-404B-44C7-9267-C97D066F3D96}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleCar", "samples\misc\sampleCar.vcproj", "{EE77E955-42BD-47A4-BDC6-D92759F45D01}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleRoServer", "samples\net\sampleRoServer.vcproj", "{547611C2-43E2-4678-B8E9-92CF69770C40}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleRoClient", "samples\net\sampleRoClient.vcproj", "{4F5EEBEB-7594-4934-8DF5-FB4604E84CCB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleNetPacket", "samples\net\sampleNetPacket.vcproj", "{5473599B-AB7B-4259-B052-4DDC68CBEA54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -262,6 +272,26 @@ Global
 		{2E5A589E-41FE-4BE9-80A0-1F8570944486}.Debug|Win32.Build.0 = Debug|Win32
 		{2E5A589E-41FE-4BE9-80A0-1F8570944486}.Release|Win32.ActiveCfg = Release|Win32
 		{2E5A589E-41FE-4BE9-80A0-1F8570944486}.Release|Win32.Build.0 = Release|Win32
+		{3DA99679-404B-44C7-9267-C97D066F3D96}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3DA99679-404B-44C7-9267-C97D066F3D96}.Debug|Win32.Build.0 = Debug|Win32
+		{3DA99679-404B-44C7-9267-C97D066F3D96}.Release|Win32.ActiveCfg = Release|Win32
+		{3DA99679-404B-44C7-9267-C97D066F3D96}.Release|Win32.Build.0 = Release|Win32
+		{EE77E955-42BD-47A4-BDC6-D92759F45D01}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE77E955-42BD-47A4-BDC6-D92759F45D01}.Debug|Win32.Build.0 = Debug|Win32
+		{EE77E955-42BD-47A4-BDC6-D92759F45D01}.Release|Win32.ActiveCfg = Release|Win32
+		{EE77E955-42BD-47A4-BDC6-D92759F45D01}.Release|Win32.Build.0 = Release|Win32
+		{547611C2-43E2-4678-B8E9-92CF69770C40}.Debug|Win32.ActiveCfg = Debug|Win32
+		{547611C2-43E2-4678-B8E9-92CF69770C40}.Debug|Win32.Build.0 = Debug|Win32
+		{547611C2-43E2-4678-B8E9-92CF69770C40}.Release|Win32.ActiveCfg = Release|Win32
+		{547611C2-43E2-4678-B8E9-92CF69770C40}.Release|Win32.Build.0 = Release|Win32
+		{4F5EEBEB-7594-4934-8DF5-FB4604E84CCB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4F5EEBEB-7594-4934-8DF5-FB4604E84CCB}.Debug|Win32.Build.0 = Debug|Win32
+		{4F5EEBEB-7594-4934-8DF5-FB4604E84CCB}.Release|Win32.ActiveCfg = Release|Win32
+		{4F5EEBEB-7594-4934-8DF5-FB4604E84CCB}.Release|Win32.Build.0 = Release|Win32
+		{5473599B-AB7B-4259-B052-4DDC68CBEA54}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5473599B-AB7B-4259-B052-4DDC68CBEA54}.Debug|Win32.Build.0 = Debug|Win32
+		{5473599B-AB7B-4259-B052-4DDC68CBEA54}.Release|Win32.ActiveCfg = Release|Win32
+		{5473599B-AB7B-4259-B052-4DDC68CBEA54}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

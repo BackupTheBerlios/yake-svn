@@ -125,8 +125,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="-Zm120"
 				AdditionalIncludeDirectories="../../../../dependencies/oSceneLoaderLib/TinyXML;../../../../dependencies/oSceneLoaderLib/include;../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/OgreMain/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_GRAPHICSCONCRETEAPI_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_GRAPHICSCONCRETEAPI_EXPORTS;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"

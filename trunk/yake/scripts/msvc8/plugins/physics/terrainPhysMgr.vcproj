@@ -124,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ode/include;../../../../dependencies/ogrenew/ogremain/include"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ode/include;../../../../dependencies/ogrenew/ogremain/include;../../../..\dependencies\ogreaddons\paginglandscape\PlugIns\PagingLandScape2\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKEPHYSICSODE_PLSM_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
@@ -145,10 +145,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ode.lib physics.lib"
+				AdditionalDependencies="yapp.lib ode.lib physics.lib ogremain.lib Plugin_PagingLandScapeSceneManager2.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ode/lib/releasedll;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ode/lib/releasedll;../../../../dependencies/lib;&quot;../../../../dependencies/ogrenew/ogremain/lib/$(ConfigurationName)&quot;;&quot;../../../../dependencies/ogreaddons/paginglandscape/plugins/paginglandscape2/bin/$(ConfigurationName)&quot;"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"

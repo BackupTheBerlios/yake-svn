@@ -124,7 +124,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/;../../../../dependencies/ogrenew/OgreMain/include;../../../../dependencies/cegui_mk2/CEGUI;../../../../dependencies/ogrenew/CEGUIRenderer/include"
+				AdditionalOptions="-Zm135"
+				AdditionalIncludeDirectories="../../../../;../../../../dependencies/ttl/;../../../../dependencies/boost/;../../../../dependencies/ogrenew/;../../../../dependencies/ogrenew/OgreMain/include;../../../../dependencies/cegui_mk2;../../../../dependencies/ogrenew/CEGUIRenderer/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YAKE_CEGUIRENDERERADAPTER_OGRE_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -147,7 +148,7 @@
 				AdditionalDependencies="OgreMain.lib yapp.lib CEGUIBase.lib OgreGUIRenderer.lib"
 				OutputFile="$(OutDir)/$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ogrenew/OgreMain/lib/Release;../../../../dependencies/cegui_mk2/lib/;../../../../dependencies/ogrenew/CEGUIRenderer/lib/release;../../../../dependencies/lib"
+				AdditionalLibraryDirectories="../../../../common/lib/release;../../../../dependencies/ogrenew/OgreMain/lib/release;../../../../dependencies/cegui_mk2/lib/;../../../../dependencies/ogrenew/CEGUIRenderer/lib;../../../../dependencies/lib"
 				ModuleDefinitionFile="../../../../src/yapp/plugins/ceguiOgreRendererAdapter/plugin.def"
 				GenerateDebugInformation="false"
 				SubSystem="2"
