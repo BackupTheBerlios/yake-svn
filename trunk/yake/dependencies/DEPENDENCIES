@@ -1,16 +1,18 @@
 
-boost/      <= 1.33.0 (1.32.x should work, too)
+boost/      <= 1.33.1 (1.33.0 and 1.32.x *should* work, too)
 cegui_mk2/
+enet/       <= enet 1.0
 libogg-1.1/
 libvorbis-1.0/
 loki/
-lua/
-luabind/    <= beta7-devel2 branch
-ode/
-ogrenew/
+lua/        <= Lua 5.1.1
+luabind/    <= Luabind 0.7 patched for lua 5.1.1 compatibility
+ode/        <= ode 0.6 (0.5 should work)
+ogrenew/    <= OGRE 1.2 (aka Dagon)
 OpenAL/
 openalpp/
 OpenThreads/
+oSceneLoaderLib/ <= pseudo-.scene loader :P (for OGRE 1.2 Dagon)
 tinyxml/
 ttl/
-zThread
+zThread/
