@@ -2,6 +2,7 @@
 #define NET_PREREQUISITES_H
 
 #include <yake/base/yakePrerequisites.h>
+#include <yake/base/yake.h>
 
 #define NET_DLL
 

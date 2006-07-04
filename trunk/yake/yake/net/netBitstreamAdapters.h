@@ -1,52 +1,57 @@
 #ifndef NET_BITSTREAMADAPTERS_H
 #define NET_BITSTREAMADAPTERS_H
 
+#include "netPrerequisites.h"
+#include "netBitstream.h"
+
 namespace net {
 
-	template<class ctr_type>
-	struct bitstream_sink_stlcontainer
+	template<class ContainerType>
+	struct stlsequence_data_sink
 	{
-	private:
-		bitstream_sink_stlcontainer();
-	public:
-		typedef ctr_type container_type;
-		bitstream_sink_stlcontainer(ctr_type& ctr) : ctr_(ctr) {}
-		void write(const net::uint8 c)
-		{
-			ctr_.push_back( c );
-		}
-		ctr_type&	ctr_;
-	};
-	typedef bitstream_sink_stlcontainer<std::vector<net::uint8> > bitstream_stlvector_sink;
-	typedef net::obstream_base<bitstream_stlvector_sink> obitstream_vector;
+		typedef ContainerType container_type;
 
-	template<class ctr_type>
-	struct bitstream_source_stlcontainer
-	{
-	private:
-		bitstream_source_stlcontainer();
-	public:
-		typedef ctr_type container_type;
-		bitstream_source_stlcontainer(const container_type& ctr) : currPos(ctr.begin()), itEnd(ctr.end()), ctr_(ctr)
+		stlsequence_data_sink(container_type* data = 0) : data_(data)
 		{}
-		bool hasMoreData() const
+		stlsequence_data_sink& operator << (const uint8 rhs)
 		{
-			return currPos != itEnd;
-		}
-		bool read(net::uint8& c) const
-		{
-			if (!hasMoreData())
-				return false;
-			c = *currPos++;
-			return true;
+			assert(data_);
+			for (size_t i=0; i<tmp_.size(); ++i)
+			{
+				assert(tmp_[i] == data_->at(i));
+			}
+			data_->push_back(rhs);
+			tmp_.push_back(rhs);
+			return *this;
 		}
 	private:
-		mutable typename container_type::const_iterator currPos;
-		mutable typename container_type::const_iterator itEnd;
-		const container_type&	ctr_;
+		container_type*	data_;
+		container_type	tmp_;
 	};
-	typedef bitstream_source_stlcontainer<std::vector<net::uint8> > bitstream_stlvector_source;
-	typedef net::ibstream_base<bitstream_stlvector_source> ibitstream_vector;
+	typedef stlsequence_data_sink<std::vector<uint8> > ByteVectorSink;
+	typedef obitstream_base<ByteVectorSink> obitstream_vector;
+
+	template<class ContainerType>
+	struct stlsequence_data_source
+	{
+		typedef ContainerType container_type;
+
+		stlsequence_data_source(container_type* data = 0) : data_(data), pos_(0)
+		{}
+		stlsequence_data_source& operator >> (uint8& rhs)
+		{
+			assert(data_);
+			assert(pos_ < data_->size());
+			rhs = data_->at(pos_);
+			++pos_;
+			return *this;
+		}
+	private:
+		container_type*	data_;
+		size_t			pos_;
+	};
+	typedef stlsequence_data_source<std::vector<uint8> > ByteVectorSource;
+	typedef ibitstream_base<ByteVectorSource> ibitstream_vector;
 
 	struct bitstream_source_voidptr
 	{
@@ -77,7 +82,7 @@ namespace net {
 		const uint8*			end_;
 		mutable uint8*			curr_;
 	};
-	typedef net::ibstream_base<bitstream_source_voidptr> ibitstream_voidptr;
+	typedef net::ibitstream_base<bitstream_source_voidptr> ibitstream_voidptr;
 } // namespace net
 
 #endif

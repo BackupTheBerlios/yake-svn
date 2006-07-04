@@ -283,7 +283,7 @@ namespace yake {
 		// if materials are not supposed to produce any contact forces
 		// This is the case if we just want some collision detection and without
 		// any contact joints...
-		if ( pMatA == NULL || pMatB == NULL )
+		if ( !pMatA || !pMatB )
 		{
 #ifdef DEBUG_COLLISIONS
 			YAKE_LOG( "collision detection without materials..." );

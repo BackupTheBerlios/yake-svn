@@ -9,9 +9,9 @@ namespace net {
 	typedef obitstream_vector obitstream;
 	typedef ibitstream_vector ibitstream;
 
-	typedef bitstream_stlvector_sink::container_type bitstream_data;
-	typedef bitstream_stlvector_sink bitstream_sink;
-	typedef bitstream_stlvector_source bitstream_source;
+	typedef ByteVectorSink::container_type bitstream_data;
+	typedef ByteVectorSink bitstream_sink;
+	typedef ByteVectorSource bitstream_source;
 
 	class NET_API NetEvent
 	{

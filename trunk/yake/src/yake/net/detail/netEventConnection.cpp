@@ -140,7 +140,7 @@ namespace impl {
 			return;
 
 		bitstream_data data; // data container
-		bitstream_sink dataSink(data); // sink adapter
+		bitstream_sink dataSink(&data); // sink adapter
 		obitstream out(&dataSink); // stream interface
 
 		out.write( evt.id(), sizeof(NetEvent::id_type)*8 ) ;
@@ -167,7 +167,7 @@ namespace impl {
 			data[i] = ((const uint8*)(dataPtr))[i];
 
 		// attach stream
-		bitstream_source dataSource(data);
+		bitstream_source dataSource(&data);
 		ibitstream in(&dataSource);
 
 		// extract event id
