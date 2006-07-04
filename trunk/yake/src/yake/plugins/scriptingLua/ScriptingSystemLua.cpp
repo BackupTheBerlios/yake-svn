@@ -56,7 +56,14 @@ namespace scripting {
 		if (IS_MASK_SET(libs, LUALIB_TABLE))
 			luaopen_table( mLuaState );
 		if (IS_MASK_SET(libs, LUALIB_IO))
-			luaopen_io( mLuaState );
+		{
+			// See linit.c and the Lua mailing list for more information why
+			// we have to load the IO lib this way instead of via luaopen_io().
+			//luaopen_io( mLuaState ); <= do *not* use.
+			lua_pushcfunction(mLuaState, luaopen_io);
+			lua_pushstring(mLuaState, "io");
+			lua_call(mLuaState, 1, 0);
+		}
 		if (IS_MASK_SET(libs, LUALIB_STRING))
 			luaopen_string( mLuaState );
 		if (IS_MASK_SET(libs, LUALIB_MATH))
@@ -81,7 +88,7 @@ namespace scripting {
 	void LuaVM::execute( const String & rData )
 	{
 		if (mLuaState)
-			lua_dostring( mLuaState, rData.c_str() );
+			luaL_dostring( mLuaState, rData.c_str() );
 	}
 
 	//------------------------------------------------------
@@ -95,7 +102,7 @@ namespace scripting {
 
 		const String& rFileName = pLuaScript->getData();
 
-		lua_dofile( mLuaState, rFileName.c_str() ); 
+		luaL_dofile( mLuaState, rFileName.c_str() ); 
 	}
 
 	//------------------------------------------------------
