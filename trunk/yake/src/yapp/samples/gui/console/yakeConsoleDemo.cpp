@@ -52,7 +52,7 @@
 #include <yake/data/yakeData.h>
 #include <yapp/common/yakeCEGUIRendererAdapter.h>
 #include <yapp/common/yakeCEGUIHelpers.h>
-#include <yapp/model/yakeGraphical.h>
+#include <yake/model/yakeGraphical.h>
 
 // console 
 #include <yapp/gui_addons/console/yakeGenericConsole.h>
@@ -349,8 +349,8 @@ public:
 	 */
 	void initGui()
 	{
-		mGuiRendererAdapter = loadPlugin( "CEGUIOgreAdapter" );
-		//mGuiRendererAdapter = loadPlugin( "ceguiOgreRendererAdapter" );
+		//mGuiRendererAdapter = loadPlugin( "CEGUIOgreAdapter" );
+		mGuiRendererAdapter = loadPlugin( "ceguiOgreRendererAdapter" );
 		YAKE_ASSERT( mGuiRendererAdapter );
 
 		YAKE_LOG( "Starting adapter version " + mGuiRendererAdapter->getName() );

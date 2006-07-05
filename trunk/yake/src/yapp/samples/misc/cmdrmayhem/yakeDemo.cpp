@@ -1,11 +1,8 @@
 #include <yapp/samples/misc/cmdrmayhem/yakePCH.h>
 #include <yake/audio/yakeAudio.h>
 #include <yapp/raf/yakeRaf.h>
-#include <yapp/model/yakeModelMovableLink.h>
+#include <yake/model/model.h>
 #include <yake/input/yakeInput.h>
-#include <yapp/loader/yakeXODEParser.h>
-#include <yapp/model/yakePhysicalDataImporter.h>
-#include <yapp/loader/yakeDotLinkLoader.h>
 #include <yapp/common/yakeCameraControllers.h>
 
 using namespace yake;
@@ -40,46 +37,18 @@ class CharacterController
 
 struct Env
 {
-	SharedPtr<model::complex::Model> model_;
+	SharedPtr<model::Model> model_;
 };
 void loadEnvironment(Env& env, graphics::IWorld* pGWorld, physics::IWorld* pPWorld, const String& dotSceneFn, const String& dotXodeFn, const String& dotLinkFn)
 {
 	YAKE_ASSERT( pGWorld );
 	YAKE_ASSERT( pPWorld );
 
-	// Loading graphical part
-	model::Graphical* pG = new model::Graphical();
-	pG->fromDotScene( dotSceneFn, pGWorld );
-
-	// Loading physical part
-	model::Physical* pP = new model::Physical();
-
-	yake::data::dom::xml::XmlSerializer ser;
-	ser.parse( dotXodeFn, false );
-	YAKE_ASSERT( ser.getDocumentNode() )( dotXodeFn ).error("Could not load XODE document!");
-
-	data::parser::xode::XODEParserV1 parser;
-
-	using namespace yake::model;
-	model::XODEListener listener( *pP, pPWorld );
-
-	parser.subscribeToBodySignal( Bind1( &XODEListener::processBody, &listener ) );
-	parser.subscribeToGeomSignal( Bind1( &XODEListener::processGeom, &listener ) );
-
-	parser.load( ser.getDocumentNode() );
-
-	// Bringing it all together!
-	env.model_.reset( new model::complex::Model() );
-
-	env.model_->addGraphical( pG, "baseGraphical" );
-	env.model_->addPhysical( pP, "basePhysical" );
-
-	model::DotLinkLoader dotLinkLoader;
-	dotLinkLoader.load( dotLinkFn, *env.model_.get() );
+	YAKE_ASSERT( 0 );
 }
 
 /** Main application state */
-class TheMainState : public raf::RtMainState
+class TheMainState : public raf::RtMainState, public yake::model::CentralControllerBase
 {
 public:
 	TheMainState(raf::Application& owner) :
@@ -100,6 +69,8 @@ protected:
 	{
 		YAKE_LOG_INFORMATION("Creating scene");
 
+		getPhysicalWorld()->setGlobalGravity(Vector3(0,-2,0));
+
 		// create a light
 		graphics::ILight* pLight = getGraphicalWorld()->createLight();
 		pLight->setType( graphics::ILight::LT_DIRECTIONAL );
@@ -114,7 +85,7 @@ protected:
 		getDefaultCamera()->setPosition(math::Vector3(7,4,-7));
 
 		// create ground
-		mGround = new model::complex::Model();
+		mGround = new model::Model();
 		{
 			const real groundHeight = -2;
 			// visual
@@ -127,8 +98,8 @@ protected:
 			pGroundSN->setPosition( math::Vector3(0,groundHeight,0) );
 
 			model::Graphical* pG = new model::Graphical();
-			pG->addSceneNode( pGroundSN );
-			mGround->addGraphical( pG );
+			pG->addSceneNode( pGroundSN, "ground", true );
+			mGround->addComponent( pG, "p" );
 
 			// physical
 			physics::IActorPtr pGroundPlane = getPhysicalWorld()->createActor( physics::ACTOR_STATIC );
@@ -136,7 +107,7 @@ protected:
 
 			model::Physical* pP = new model::Physical();
 			pP->addActor( pGroundPlane, "groundPlane" );
-			mGround->addPhysical( pP );
+			mGround->addComponent( pP, "g" );
 		}
 
 		// sky box
@@ -158,20 +129,21 @@ protected:
 			);
 		YAKE_ASSERT( mPlayerRep );
 		{
-			mComplex = new model::complex::Model();
+			mComplex = new model::Model();
 			model::Graphical* pG = new model::Graphical();
-			mComplex->addGraphical( pG );
+			mComplex->addComponent( pG );
 			graphics::ISceneNode* pSN = getGraphicalWorld()->createSceneNode();
-			pG->addSceneNode( pSN );
+			pG->addSceneNode( pSN, "playerSN" );
 			graphics::IEntity* pE = getGraphicalWorld()->createEntity("sphere_d1.mesh");
 			pSN->attachEntity( pE );
 			pSN->setScale( 0.5 * math::Vector3::kUnitScale );
 
-			model::ModelMovableLink* pLink = new model::ModelMovableLink();
-			mComplex->addGraphicsController( pLink );
+			model::ModelMovableDirectLink* pLink = new model::ModelMovableDirectLink();
+			mComplex->addLink( pLink );
 			pLink->setSource( mPlayerRep );
 			pLink->subscribeToPositionChanged( pSN );
 			pLink->subscribeToOrientationChanged( pSN );
+			this->subscribeToGraphicsUpdate( Bind2(&model::ModelMovableDirectLink::update,pLink) );
 		}
 
 		// top-down camera controller
@@ -256,8 +228,8 @@ protected:
 
 		if (mComplex)
 		{
-			mComplex->updatePhysics( timeElapsed );
-			mComplex->updateGraphics( timeElapsed );
+			this->triggerGraphicsUpdateSignal(0,timeElapsed);
+			this->triggerPhysicsUpdateSignal(0,timeElapsed);
 		}
 
 		{ // top-down controller
@@ -295,8 +267,8 @@ protected:
 	{ mActiveActions.insert( input::ACTIONID_DOWN ); }
 private:
 	physics::IAvatarPtr		mPlayerRep;
-	model::complex::Model*	mGround;
-	model::complex::Model*	mComplex;
+	model::Model*	mGround;
+	model::Model*	mComplex;
 	input::ActionMap		mActionMap;
 
 	typedef std::set<input::ActionId> ActionIdList;
