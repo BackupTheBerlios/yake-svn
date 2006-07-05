@@ -31,10 +31,7 @@
 //============================================================================
 #include <yapp/samples/model/yakePCH.h>
 #include <yake/samples/graphics/pch.h>
-#include <yapp/model/yakeGraphical.h>
-#include <yapp/base/yapp.h>
-#include <yapp/model/yakePhysical.h>
-#include <yapp/model/yakeModelMovableLink.h>
+#include <yake/model/model.h>
 
 using namespace yake;
 using namespace yake::graphics;
@@ -194,15 +191,14 @@ namespace model {
 		}
 	}
 
-
-	class ModelLink_DynActorToMovable : public model::ModelLinkController< physics::IActor >
+	class ModelLink_DynActorToMovable: public ModelLink, public Updatable2<uint32,real>
 	{
 	public:
 		YAKE_DECLARE_CONCRETE( ModelLink_DynActorToMovable, "yake.DynamicsActorToMovable" );
 
 		ModelLink_DynActorToMovable(const real startTime = real(0.), const real interpTimeOffset = real(0.));
 
-		virtual void update(real timeElapsed);
+		virtual void update( const uint32, const real timeElapsed );
 		void updateHistoryFromSource(real theTime);
 
 		typedef Signal1< void(const Vector3 &) > PositionSignal;
@@ -213,9 +209,14 @@ namespace model {
 		SignalConnection subscribeToPositionChanged( Movable* pMovable );
 		SignalConnection subscribeToOrientationChanged( Movable* pMovable );
 
+		void setSource(physics::IActor* );
+		physics::IActor* getSource() const;
+
 		typedef model::DynamicsMoveHistory MoveHistory;
 		//void addMove( const MoveHistory::Move& move );
 	private:
+		physics::IActor*		mpSource;
+
 		MoveHistory				mMoveHistory;
 		real					mTime;
 		real					mInterpTimeOffset;
@@ -228,15 +229,24 @@ namespace model {
 	};
 	ModelLink_DynActorToMovable::ModelLink_DynActorToMovable(const real startTime /*= real(0.)*/, const real interpTimeOffset /*= real(0.)*/) :
 		mTime(startTime),
-		mInterpTimeOffset(interpTimeOffset)
+		mInterpTimeOffset(interpTimeOffset),
+		mpSource(0)
 	{
 	}
-	void ModelLink_DynActorToMovable::update(real timeElapsed)
+	void ModelLink_DynActorToMovable::setSource(physics::IActor* source)
+	{
+		mpSource = source;
+	}
+	physics::IActor* ModelLink_DynActorToMovable::getSource() const
+	{
+		return mpSource;
+	}
+	void ModelLink_DynActorToMovable::update( const uint32, const real timeElapsed )
 	{
 		mTime += timeElapsed;
-		const physics::IActor* pSource = getSource();
-		Vector3 position = pSource ? pSource->getPosition() : Vector3::kZero;
-		Quaternion orientation = pSource ? pSource->getOrientation() : Quaternion::kIdentity;
+		YAKE_ASSERT( mpSource );
+		Vector3 position = mpSource ? mpSource->getPosition() : Vector3::kZero;
+		Quaternion orientation = mpSource ? mpSource->getOrientation() : Quaternion::kIdentity;
 		mMoveHistory.interpolateTo( mTime + mInterpTimeOffset, position, orientation );
 
 		// fire signals if necessary
@@ -275,7 +285,7 @@ namespace model {
 } // ns model
 } // ns yake
 
-class TheApp : public yake::exapp::ExampleApplication
+class TheApp : public yake::exapp::ExampleApplication, public yake::model::CentralControllerBase
 {
 private:
 	Vector< std::pair<IViewport*,ICamera*> >	mVPs;
@@ -285,8 +295,8 @@ private:
 
 	struct Object
 	{
-		SharedPtr<model::complex::Model>	mComplex;
-		SharedPtr<model::Graphical>		mGraphical;
+		SharedPtr<model::Model>					mComplex;
+		SharedPtr<model::Graphical>				mGraphical;
 
 		physics::IActor*						mPhysical;
 		graphics::ISceneNode*					mpSN;
@@ -338,7 +348,7 @@ public:
 	}
 	void setupObject(Object& obj)
 	{
-		obj.mComplex.reset( new model::complex::Model() );
+		obj.mComplex.reset( new model::Model() );
 		using namespace model;
 
 		// Loading physical part
@@ -347,14 +357,14 @@ public:
 		obj.mPhysical->createShape( physics::IShape::BoxDesc(Vector3(1,1,1)) );
 		Physical* pP = new Physical();
 		pP->addActor( obj.mPhysical, "root" );
-		obj.mComplex->addPhysical( SharedPtr<Physical>(pP), "p_box" );
+		obj.mComplex->addComponent( pP, "p_box" );
 
 		// Loading graphical part
 		obj.mGraphical.reset( new model::Graphical() );
 		YAKE_ASSERT( obj.mGraphical );
 
 		obj.mpSN = mGWorld->createSceneNode();
-		obj.mGraphical->addSceneNode( obj.mpSN, false );
+		obj.mGraphical->addSceneNode( obj.mpSN, "rootsn", false );
 		obj.mpSN->attachEntity( mGWorld->createEntity("box_1x1x1.mesh") );
 
 		// linking
@@ -364,7 +374,9 @@ public:
 			obj.mpLink->subscribeToPositionChanged( obj.mpSN );
 			obj.mpLink->subscribeToOrientationChanged( obj.mpSN );
 
-			obj.mComplex->addLink( SharedPtr<model::ModelLink>( obj.mpLink ), "body2scenenode" );
+			obj.mComplex->addLink( obj.mpLink/*, "body2scenenode" */);
+
+			this->subscribeToGraphicsUpdate( Bind2(&Object::Link::update,obj.mpLink) );
 		}
 
 		obj.mPostStepConn = mPWorld->subscribeToPostStep(
@@ -467,10 +479,11 @@ public:
 				{
 					mPWorld->step( physicsStepTime );
 					ptimeElapsed -= physicsStepTime;
+					triggerPhysicsUpdateSignal(0,physicsStepTime);
 				}
 
 				//// graphics: variable time step: as fast as possible
-				obj.mComplex->updateGraphics( timeElapsed );
+				triggerGraphicsUpdateSignal(0,timeElapsed);
 				
 				mGWorld->render( timeElapsed );
 			}
