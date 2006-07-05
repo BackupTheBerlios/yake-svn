@@ -1,4 +1,5 @@
 #include <yake/samples/net/roclient/pch.h>
+#include <yake/base/yake.h>
 #include <yake/net/net.h>
 #include <yake/samples/net/common/common.h>
 #include <yake/samples/net/common/commonEvents.h>
