@@ -107,11 +107,20 @@ struct s2cEvtJoinReqReply : public net::NetEvent
 	virtual bool pack(net::obitstream& out) const
 	{
 		out.write( accepted );
+		std::string msg("blah burp!");
+		out.write( msg.c_str(), msg.size()+1 );
 		return true;
 	}
 	virtual bool unpack(net::ibitstream& in)
 	{
 		in.read( accepted );
+		std::string msg;
+		net::uint8 c = 0;
+		while (in.read(c,8))
+		{
+			msg += c;
+		}
+		COUTLN("MSG " << msg.c_str());
 		return true;
 	}
 	bool accepted;
