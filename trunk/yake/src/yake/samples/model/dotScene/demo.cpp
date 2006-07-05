@@ -148,7 +148,7 @@ public:
 		((model::Graphical*)m->getComponentByTag("gfx"))->translate(Vector3(40,20,0));
 
 		// method #2 - using dotModel templates
-		bool success = modelMgr.loadTemplatesFromDotModel("E:/dev/yake.trunk/yake/common/media/samples/dotLink/DynTest/DotScene1.model");
+		bool success = modelMgr.loadTemplatesFromDotModel("../../media/samples/dotLink/DynTest/DotScene1.model");
 		YAKE_ASSERT( success );
 		m = modelMgr.createModelFromTemplate("m3", "dotscene1");
 		YAKE_ASSERT( m );
