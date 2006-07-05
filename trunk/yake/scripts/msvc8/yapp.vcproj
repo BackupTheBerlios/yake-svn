@@ -550,14 +550,6 @@
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="trigger"
-			>
-			<File
-				RelativePath="..\..\yapp\trigger\yakeTrigger.h"
-				>
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
