@@ -172,7 +172,8 @@ namespace raf {
 #if YAKE_RAF_USES_CEGUI == 1
 	void Application::initCEGUI()
 	{
-		const String file = "CEGUIOgreAdapter";
+		//const String file = "CEGUIOgreAdapter";
+		const String file = "CEGUIOgreRendererAdapter";
 		yake::base::Library* pDynLib = new yake::base::Library( file ); //@FIXME. MEMORY LEAK.
 		YAKE_ASSERT( pDynLib ).debug( "Out of memory" );
 
