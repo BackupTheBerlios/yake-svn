@@ -130,8 +130,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "terrainPhysMgr", "plugins\p
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "model", "model.vcproj", "{6BB1D3EF-8836-4D23-BE24-340D310D9913}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sampleModelDotScene", "samples\model\sampleDotScene.vcproj", "{920E5CA3-620C-43C3-986C-5A6F9397F6DA}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loader", "loader.vcproj", "{2E5A589E-41FE-4BE9-80A0-1F8570944486}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "samplePhysicsDemo", "samples\physics\samplePhysicsDemo.vcproj", "{3DA99679-404B-44C7-9267-C97D066F3D96}"
@@ -264,10 +262,6 @@ Global
 		{6BB1D3EF-8836-4D23-BE24-340D310D9913}.Debug|Win32.Build.0 = Debug|Win32
 		{6BB1D3EF-8836-4D23-BE24-340D310D9913}.Release|Win32.ActiveCfg = Release|Win32
 		{6BB1D3EF-8836-4D23-BE24-340D310D9913}.Release|Win32.Build.0 = Release|Win32
-		{920E5CA3-620C-43C3-986C-5A6F9397F6DA}.Debug|Win32.ActiveCfg = Debug|Win32
-		{920E5CA3-620C-43C3-986C-5A6F9397F6DA}.Debug|Win32.Build.0 = Debug|Win32
-		{920E5CA3-620C-43C3-986C-5A6F9397F6DA}.Release|Win32.ActiveCfg = Release|Win32
-		{920E5CA3-620C-43C3-986C-5A6F9397F6DA}.Release|Win32.Build.0 = Release|Win32
 		{2E5A589E-41FE-4BE9-80A0-1F8570944486}.Debug|Win32.ActiveCfg = Debug|Win32
 		{2E5A589E-41FE-4BE9-80A0-1F8570944486}.Debug|Win32.Build.0 = Debug|Win32
 		{2E5A589E-41FE-4BE9-80A0-1F8570944486}.Release|Win32.ActiveCfg = Release|Win32
