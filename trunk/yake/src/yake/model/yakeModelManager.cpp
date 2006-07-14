@@ -130,13 +130,6 @@ namespace model {
 			sigPreCreateModelComponent_(*m,ctx_,type);
 			creatorMgr_.create( type, ctx_, params );
 			sigPostCreateModelComponent_(*m,ctx_,type);
-
-#ifdef YAKE_DEBUG
-			if (!name.empty())
-			{
-				YAKE_ASSERT( m->getComponentByTag(name) != 0 )(name)(type).debug("Failed to create component!");
-			}
-#endif
 		}
 		ctx_.model_ = 0;
 		sigModelInitializedSignal_(*m,ctx_);
