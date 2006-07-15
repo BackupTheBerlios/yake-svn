@@ -223,6 +223,14 @@
 				RelativePath="..\..\src\yapp\vehicle\yakeVehicle.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\src\yapp\vehicle\yakeVehicleModelComponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\yapp\vehicle\yakeVehicleModelComponentCreator.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="inc"
@@ -255,6 +263,10 @@
 			</File>
 			<File
 				RelativePath="..\..\yapp\vehicle\yakeVehicle.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\yapp\vehicle\yakeVehicleModelComponent.h"
 				>
 			</File>
 			<File
