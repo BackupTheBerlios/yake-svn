@@ -140,7 +140,9 @@ namespace vehicle {
 			delete itMP.getNext().second;
 		mMountPoints.clear();
 
-		mpChassis->getCreator()->destroyActor( mpChassis );
+		// NB Do not destroy the mpChassis actor!
+		//    This object is owned by model::Physical and will be destroyed by it, too!
+		//    [mpChassis->getCreator()->destroyActor( mpChassis );]
 		mpChassis = 0;
 	}
 	void GenericVehicle::updateSimulation(real timeElapsed)
@@ -294,7 +296,7 @@ namespace vehicle {
 		    ConstDequeIterator< VehicleTemplate::ShapeTplList > itShapeTpl( tpl.mChassis.mChassisShapes );
 		    while (itShapeTpl.hasMoreElements())
 		    {
-			mpChassis->createShape( *itShapeTpl.getNext() );
+				mpChassis->createShape( *itShapeTpl.getNext() );
 		    }
 		    mpChassis->getBody().setMass( tpl.mChassis.mMass );
 		}
@@ -492,6 +494,19 @@ namespace vehicle {
 	{
 		YAKE_SAFE_DELETE( mDebugModel );
 	}
+	void GenericVehicle::setPosition(const Vector3& position)
+	{
+		YAKE_ASSERT( mpChassis );
+		const Vector3 delta = position - this->getChassisPosition();
+		this->translate(delta);
+	}
+	void GenericVehicle::translate(const Vector3& delta)
+	{
+		YAKE_ASSERT( mpChassis );
+		mpChassis->translate( delta );
+		for (WheelList::const_iterator it = mWheels.begin(); it != mWheels.end(); ++it)
+			it->second->translate(delta);
+	}
 
 #if defined(YAKE_VEHICLE_USE_ODE)
 	//-----------------------------------------------------
@@ -623,6 +638,16 @@ namespace vehicle {
 	real OdeWheel::getRadius() const
 	{
 		return mRadius;
+	}
+	void OdeWheel::setPosition(const math::Vector3& pos)
+	{
+		YAKE_ASSERT( mpWheel );
+		mpWheel->setPosition( pos );
+	}
+	void OdeWheel::setOrientation(const math::Quaternion& o)
+	{
+		YAKE_ASSERT( mpWheel );
+		mpWheel->setOrientation( o );
 	}
 	math::Vector3 OdeWheel::getPosition() const
 	{

@@ -153,6 +153,7 @@ namespace model {
 		void setCreationContext_CentralController(CentralControllerBase*);
 		void setCreationContext_DotSceneParser(data::parser::dotscene::DotSceneParser*);
 		void setCreationContext_XODEParser(data::parser::xode::XODEParser*);
+		void setCreationContext_NamedParameter(const String& name, const boost::any& value);
 		//@}
 
 		/** @name Signals (in order that they are called in) */

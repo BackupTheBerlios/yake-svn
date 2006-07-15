@@ -57,6 +57,9 @@ namespace model {
 		data::parser::dotscene::DotSceneParser*		dotSceneParser_;
 		data::parser::xode::XODEParser*				xodeParser_;
 
+		typedef AssocVector<String,boost::any> ParamMap;
+		ParamMap				params_;
+
 		typedef Signal2<void(const ComponentCreationContext&,ModelComponent&)> ComponentPreInitializeSignal;
 		typedef ComponentPreInitializeSignal ComponentPostInitializeSignal;
 		ComponentPreInitializeSignal	sigPreInit_;
@@ -107,6 +110,7 @@ namespace model {
 	struct YAKE_MODEL_API ModelComponentContainer
 	{
 		ModelComponentContainer();
+		~ModelComponentContainer();
 		/** @name Component container interface */
 		//@{
 		void addComponent(ModelComponent*);
@@ -123,7 +127,7 @@ namespace model {
 		//void _cloneComponents(Model& cloned) const;
 	protected:
 		ModelComponentList		components_;
-		typedef std::map<ComponentTag,ModelComponentSharedPtr> TagModelComponentMap;
+		typedef std::map<ComponentTag,ModelComponent*> TagModelComponentMap;
 		TagModelComponentMap	tag2components_;
 	};
 
@@ -291,32 +295,6 @@ namespace model {
 		virtual ~ComponentCreator() {}
 
 		virtual void create(const ComponentCreationContext& ctx, const StringMap& params) = 0;
-	};
-	struct GraphicalFromDotSceneCreator : public ComponentCreator
-	{
-		YAKE_DECLARE_CONCRETE(GraphicalFromDotSceneCreator,"graphics/dotScene");
-
-		GraphicalFromDotSceneCreator();
-		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
-
-	private:
-		SharedPtr<data::parser::dotscene::DotSceneParser>	defaultParser_;
-	};
-	struct PhysicalFromXODECreator : public ComponentCreator
-	{
-		YAKE_DECLARE_CONCRETE(PhysicalFromXODECreator,"physics/dotXODE");
-
-		PhysicalFromXODECreator();
-		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
-
-	private:
-		SharedPtr<data::parser::xode::XODEParser>	defaultParser_;
-	};
-	struct LinkFromDotLinkCreator : public ComponentCreator
-	{
-		YAKE_DECLARE_CONCRETE(LinkFromDotLinkCreator,"model/dotLink");
-
-		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
 	};
 	struct YAKE_MODEL_API ComponentCreatorManager
 	{

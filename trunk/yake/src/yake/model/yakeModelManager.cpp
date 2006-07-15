@@ -193,6 +193,13 @@ namespace model {
 	{
 		ctx_.xodeParser_ = parser;
 	}
+	void ModelManager::setCreationContext_NamedParameter(const String& name, const boost::any& value)
+	{
+		YAKE_ASSERT( !name.empty() );
+		if (name.empty())
+			return;
+		ctx_.params_[ name ] = value;
+	}
 
 } // namespace model
 } // namespace yake

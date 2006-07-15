@@ -32,6 +32,20 @@
 namespace yake {
 namespace model {
 
+	//-----------------------------------------------------
+	// class PhysicalFromXODECreator
+	//-----------------------------------------------------
+	struct PhysicalFromXODECreator : public ComponentCreator
+	{
+		YAKE_DECLARE_CONCRETE(PhysicalFromXODECreator,"physics/dotXODE");
+
+		PhysicalFromXODECreator();
+		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
+
+	private:
+		SharedPtr<data::parser::xode::XODEParser>	defaultParser_;
+	};
+
 	YAKE_REGISTER_CONCRETE(PhysicalFromXODECreator)
 
 	PhysicalFromXODECreator::PhysicalFromXODECreator() :
@@ -95,5 +109,34 @@ namespace model {
 		ctx.model_->addComponent( pPhysical, name );
 	}
 
+	//-----------------------------------------------------
+	// class PhysicalEmptyCreator
+	//-----------------------------------------------------
+	struct PhysicalEmptyCreator : public ComponentCreator
+	{
+		YAKE_DECLARE_CONCRETE(PhysicalEmptyCreator,"physics/empty");
+
+		PhysicalEmptyCreator();
+		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
+	};
+
+	YAKE_REGISTER_CONCRETE(PhysicalEmptyCreator)
+
+	PhysicalEmptyCreator::PhysicalEmptyCreator()
+	{
+	}
+	void PhysicalEmptyCreator::create(const ComponentCreationContext& ctx, const StringMap& params)
+	{
+		// Extract parameters
+
+		StringMap::const_iterator itParam = params.find("name");
+		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'name'.");
+		if (itParam == params.end())
+			return;
+		const String name = itParam->second;
+
+		YAKE_ASSERT( ctx.model_ );
+		ctx.model_->addComponent( new Physical(), name );
+	}
 } // namespace model
 } // namespace yake

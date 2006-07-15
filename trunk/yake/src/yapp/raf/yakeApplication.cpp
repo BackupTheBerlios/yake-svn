@@ -373,6 +373,7 @@ namespace raf {
 		if (!mMainState)
 			return false;
 		mMachine->addState( "main", mMainState );
+		mMachine->addState( "dead", new ApplicationState(*this) );
 
 		// user application init
 		if (!onInitialise())
@@ -389,6 +390,7 @@ namespace raf {
 		YAKE_ASSERT( mMachine );
 		if (mMachine)
 		{
+			mMachine->setState("dead"); // This trigger's onExit etc
 			YAKE_SAFE_DELETE( mMachine );
 		}
 #if YAKE_RAF_USES_CEGUI == 1
@@ -422,6 +424,7 @@ namespace raf {
 			return false;
 		mMachine->setState("main"); // initial state
 		mMachine->step();
+		mMachine->setState("dead");
 		return true;
 	}
 	AppMachine* Application::getMachine()

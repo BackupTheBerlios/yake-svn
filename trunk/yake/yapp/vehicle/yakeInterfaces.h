@@ -73,6 +73,9 @@ namespace vehicle {
 
 		virtual void enableDebugGeometry(graphics::IWorld&) = 0;
 		virtual void disableDebugGeometry() = 0;
+
+		virtual void setPosition(const Vector3&) = 0;
+		virtual void translate(const Vector3&) = 0;
 	};
 
 	/** Interface to a vehicle engine.

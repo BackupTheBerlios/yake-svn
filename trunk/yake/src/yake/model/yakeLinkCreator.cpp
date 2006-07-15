@@ -32,6 +32,17 @@
 namespace yake {
 namespace model {
 
+	//-----------------------------------------------------
+	// class LinkFromDotLinkCreator
+	//-----------------------------------------------------
+
+	struct LinkFromDotLinkCreator : public ComponentCreator
+	{
+		YAKE_DECLARE_CONCRETE(LinkFromDotLinkCreator,"model/dotLink");
+
+		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
+	};
+
 	YAKE_REGISTER_CONCRETE(LinkFromDotLinkCreator)
 
 	void LinkFromDotLinkCreator::create(const ComponentCreationContext& ctx, const StringMap& params)

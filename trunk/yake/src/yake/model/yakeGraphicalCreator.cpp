@@ -32,6 +32,21 @@
 namespace yake {
 namespace model {
 
+	//-----------------------------------------------------
+	// class GraphicalFromDotSceneCreator
+	//-----------------------------------------------------
+
+	struct GraphicalFromDotSceneCreator : public ComponentCreator
+	{
+		YAKE_DECLARE_CONCRETE(GraphicalFromDotSceneCreator,"graphics/dotScene");
+
+		GraphicalFromDotSceneCreator();
+		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
+
+	private:
+		SharedPtr<data::parser::dotscene::DotSceneParser>	defaultParser_;
+	};
+
 	YAKE_REGISTER_CONCRETE(GraphicalFromDotSceneCreator)
 
 	GraphicalFromDotSceneCreator::GraphicalFromDotSceneCreator() :
@@ -101,5 +116,35 @@ namespace model {
 		ctx.model_->addComponent( pGraphical, name );
 	}
 
+	//-----------------------------------------------------
+	// class GraphicalEmptyCreator
+	//-----------------------------------------------------
+
+	struct GraphicalEmptyCreator : public ComponentCreator
+	{
+		YAKE_DECLARE_CONCRETE(GraphicalEmptyCreator,"graphics/empty");
+
+		GraphicalEmptyCreator();
+		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
+	};
+
+	YAKE_REGISTER_CONCRETE(GraphicalEmptyCreator)
+
+	GraphicalEmptyCreator::GraphicalEmptyCreator()
+	{
+	}
+	void GraphicalEmptyCreator::create(const ComponentCreationContext& ctx, const StringMap& params)
+	{
+		// Extract parameters
+
+		StringMap::const_iterator itParam = params.find("name");
+		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'name'.");
+		if (itParam == params.end())
+			return;
+		const String name = itParam->second;
+
+		YAKE_ASSERT( ctx.model_ );
+		ctx.model_->addComponent( new Graphical(), name );
+	}
 } // namespace model
 } // namespace yake

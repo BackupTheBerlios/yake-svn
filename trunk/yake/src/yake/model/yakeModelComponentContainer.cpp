@@ -37,6 +37,9 @@ namespace model {
 	ModelComponentContainer::ModelComponentContainer()
 	{
 	}
+	ModelComponentContainer::~ModelComponentContainer()
+	{
+	}
 	/*
 	void ModelComponentContainer::_cloneComponents(Model& cloned) const
 	{
@@ -77,17 +80,16 @@ namespace model {
 		YAKE_ASSERT( c );
 		YAKE_ASSERT( !tag.empty() )(tag);
 
-		SharedPtr<ModelComponent> ptr(c);
-		components_.push_back( ptr );
+		components_.push_back( SharedPtr<ModelComponent>(c) );
 #ifdef YAKE_DEBUG_BUILD
 		YAKE_ASSERT( tag2components_.end() == tag2components_.find(tag) );
 #endif
-		tag2components_[ tag ] = ptr;
+		tag2components_[ tag ] = c;
 	}
 	ModelComponent* ModelComponentContainer::getComponentByTag(const ComponentTag& tag) const
 	{
 		TagModelComponentMap::const_iterator it = tag2components_.find(tag);
-		return ((it == tag2components_.end()) ? 0 : it->second.get());
+		return ((it == tag2components_.end()) ? 0 : it->second);
 	}
 	ModelComponent* ModelComponentContainer::getComponentByIndex(const size_t idx) const
 	{

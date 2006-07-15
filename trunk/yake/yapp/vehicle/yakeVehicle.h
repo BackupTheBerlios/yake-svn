@@ -42,6 +42,7 @@
 #include <yapp/vehicle/yakeMountPoint.h>
 #include <yapp/vehicle/yakeInterfaces.h>
 #include <yapp/vehicle/yakeVehicleSystem.h>
+#include <yapp/vehicle/yakeVehicleModelComponent.h>
 
 #endif
 

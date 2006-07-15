@@ -108,6 +108,9 @@ namespace vehicle {
 		virtual void enableDebugGeometry(graphics::IWorld&);
 		virtual void disableDebugGeometry();
 
+		virtual void setPosition(const Vector3&);
+		virtual void translate(const Vector3&);
+
 		void _create(const VehicleTemplate&, physics::IWorld& PWorld, model::Physical& physModel );
 
 		YAKE_MEMBERSIGNAL(private,void(real),UpdateEngineSimulation);
@@ -205,10 +208,10 @@ namespace vehicle {
 					const VehicleTemplate::WheelTpl& tpl,
 					physics::IWorld& PWorld );
 
-		virtual void setPosition(const math::Vector3&) {}
+		virtual void setPosition(const math::Vector3&);
 		virtual math::Vector3 getPosition() const;
 		virtual math::Vector3 getDerivedPosition() const;
-		virtual void setOrientation(const math::Quaternion&) {}
+		virtual void setOrientation(const math::Quaternion&);
 		virtual math::Quaternion getOrientation() const;
 		virtual math::Quaternion getDerivedOrientation() const;
 
