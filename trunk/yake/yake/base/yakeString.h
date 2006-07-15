@@ -90,6 +90,7 @@ namespace yake {
 		static real toReal( const String& rString );
 		static size_t toSizeT( const String& rString );
 		static int32 toInt32( const String& rString );
+		static uint32 toUInt32( const String& rString );
 		// Thanks to OGRE!
 	    static bool StringUtil::startsWith(const String& str, const String& pattern, bool lowerCase);
 		// Thanks to OGRE!

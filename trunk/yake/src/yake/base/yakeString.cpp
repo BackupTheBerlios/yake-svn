@@ -180,7 +180,14 @@ namespace yake {
 	{
 		return static_cast<int32>(atoi( rString.c_str() ));
 	}
-    //-----------------------------------------------------------------------
+
+	//-----------------------------------------------------------------------
+	uint32 StringUtil::toUInt32( const String& rString )
+	{
+		return static_cast<uint32>(atoi( rString.c_str() ));
+	}
+
+	//-----------------------------------------------------------------------
     bool StringUtil::startsWith(const String& str, const String& pattern, bool lowerCase)
     {
         size_t thisLen = str.length();
