@@ -1,4 +1,4 @@
-#include <yapp/samples/misc/car/yakePCH.h>
+#include <yapp/samples/misc/vehicle/yakePCH.h>
 #include <yake/audio/yakeAudio.h>
 #include <yapp/raf/yakeRaf.h>
 #include <yake/model/model.h>
