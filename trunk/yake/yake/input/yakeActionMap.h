@@ -174,6 +174,22 @@ namespace input {
 		uint8	mButton;
 	};
 
+	class ActionMap;
+	struct YAKE_INPUT_API ConditionConnection
+	{
+		~ConditionConnection();
+		ConditionConnection(const ConditionConnection&);
+		ConditionConnection& operator=(const ConditionConnection&);
+		void disconnect();
+	private:
+		ConditionConnection(ActionMap*,const ActionId&,void*);
+		friend class ActionMap;
+	private:
+		ActionMap*			map_;
+		ActionId			id_;
+		void*				data_;
+	};
+
 	/** An ActionMap object can handly any number of ActionCondition/ActionId pairs.
 		The update() method has to be regularly called.
 		If an action should be run an ActionSignal is fired which will inform all
@@ -186,23 +202,28 @@ namespace input {
 		~ActionMap();
 
 		typedef Signal1< void(void) > ActionSignal;
-		void reg( const ActionId & actionId, ActionCondition* condition );
-		void subscribeToActionId( const ActionId & actionId, const ActionSignal::slot_type & slot );
+		ConditionConnection reg( const ActionId & actionId, ActionCondition* condition );
+		SignalConnection subscribeToActionId( const ActionId & actionId, const ActionSignal::slot_type & slot );
 		void update();
 
 		static bool loadFromFile(ActionMap& amap, const String& fname, KeyboardDevice* pKeyboard);
 		static bool saveToFile(ActionMap& amap, const String& fname);
+
+	private:
+		friend struct ConditionConnection;
+		void unreg( const ActionId&, void * );
 	private:
 		typedef Vector< ActionId > ActionIdList;
+		typedef std::deque<SharedPtr<ActionCondition> > ConditionList;
 		struct ActionMapEntry {
-			ActionMapEntry() : condition(0), actionId(ACTIONID_USER)
+			ActionMapEntry() : alive(true)
 			{
 			}
-			ActionCondition*	condition;
-			ActionId			actionId;
-			ActionSignal		signal;
+			ConditionList				conditions;
+			ActionSignal				signal;
+			bool						alive;
 		};
-		typedef Vector< ActionMapEntry* > ActionList;
+		typedef AssocVector< ActionId, SharedPtr<ActionMapEntry> > ActionList;
 		ActionList	mEntries;
 	};
 

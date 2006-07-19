@@ -451,53 +451,134 @@ namespace input {
 	//-----------------------------------------------------
 	ActionMap::~ActionMap()
 	{
-		for (ActionList::const_iterator it = mEntries.begin(); it != mEntries.end(); ++it)
-		{
-			ActionMapEntry* pEntry = (*it);
-			YAKE_ASSERT( pEntry );
-			YAKE_SAFE_DELETE( pEntry->condition );
-			delete pEntry;
-		}
 		mEntries.clear();
 	}
 
 	//-----------------------------------------------------
-	void ActionMap::reg( const ActionId & actionId, ActionCondition* condition )
+	ConditionConnection ActionMap::reg( const ActionId & actionId, ActionCondition* condition )
 	{
 		YAKE_ASSERT( condition );
-		ActionMapEntry* entry = new ActionMapEntry;
-		entry->condition = condition;
-		entry->actionId  = actionId;
-		mEntries.push_back( entry );
+
+		ActionList::iterator it = mEntries.find( actionId );
+		if (it == mEntries.end())
+		{
+			std::pair<ActionList::iterator,bool> vt = mEntries.insert( std::make_pair( actionId, new ActionMapEntry() ) );
+			YAKE_ASSERT( vt.second );
+			vt.first->second->conditions.push_back( SharedPtr<ActionCondition>(condition));
+		}
+		else
+			it->second->conditions.push_back( SharedPtr<ActionCondition>(condition));
+
+		return ConditionConnection(this,actionId,condition);
 	}
 
 	//-----------------------------------------------------
-	void ActionMap::subscribeToActionId( const ActionId & actionId, const ActionSignal::slot_type & slot )
+	bool operator == (const SharedPtr<ActionCondition>& lhs, const ActionCondition* rhs)
 	{
-		for (ActionList::const_iterator it = mEntries.begin(); it != mEntries.end(); ++it)
-		{
-			ActionMapEntry* pEntry = (*it);
-			YAKE_ASSERT( pEntry );
-			if (pEntry->actionId == actionId)
-			{
-				pEntry->signal.connect( slot );
-				return;
-			}
-		}
+		return lhs.get() == rhs;
+	}
+	//-----------------------------------------------------
+	void ActionMap::unreg( const ActionId& actionId, void* p )
+	{
+		ActionList::const_iterator it = mEntries.find( actionId );
+		YAKE_ASSERT( it != mEntries.end() );
+		if (it == mEntries.end())
+			return;
+
+		ActionCondition* cond = reinterpret_cast<ActionCondition*>(p);
+		YAKE_ASSERT( cond );
+
+		ConditionList& condList = it->second->conditions;
+		ConditionList::iterator itC = std::find(condList.begin(), condList.end(), cond);
+		YAKE_ASSERT( itC != condList.end() );
+		condList.erase( itC );
+	}
+
+	//-----------------------------------------------------
+	SignalConnection ActionMap::subscribeToActionId( const ActionId & actionId, const ActionSignal::slot_type & slot )
+	{
+		ActionList::const_iterator it = mEntries.find( actionId );
+		YAKE_ASSERT( it != mEntries.end() );
+		if (it == mEntries.end())
+			return SignalConnection();
+		ActionMapEntry* pEntry = it->second.get();
+		YAKE_ASSERT( pEntry );
+		return pEntry->signal.connect( slot );
 	}
 
 	//-----------------------------------------------------
 	void ActionMap::update()
 	{
+		// the update loop
+		ActionList dead;
+		std::deque<ActionMapEntry*> triggered;
 		for (ActionList::const_iterator it = mEntries.begin(); it != mEntries.end(); ++it)
 		{
-			ActionMapEntry* pEntry = (*it);
+			ActionMapEntry* pEntry = it->second.get();
 			YAKE_ASSERT( pEntry );
-			YAKE_ASSERT( pEntry->condition );
-
-			if ( (*pEntry->condition)() )
-				pEntry->signal();
+			if (!pEntry->alive)
+			{
+				dead.insert( std::make_pair(it->first, it->second) );
+				continue;
+			}
+			const ConditionList& condList = pEntry->conditions;
+			for (ConditionList::const_iterator itC = condList.begin(); itC != condList.end(); ++itC)
+			{
+				if ( (**itC)() )
+				{
+					triggered.push_back( pEntry );
+					break; // ! important. @todo make it possible to subscribe to specific conditions.
+				}
+			}
 		}
+
+
+		// remove dead ones
+		ConstVectorIterator<ActionList> itDead( dead );
+		while (itDead.hasMoreElements())
+		{
+			ActionList::iterator itFind = std::find( mEntries.begin(), mEntries.end(), itDead.getNext() );
+			if (itFind != mEntries.end())
+			{
+				mEntries.erase( itFind );
+			}
+		}
+
+		// trigger signals
+		ConstVectorIterator<std::deque<ActionMapEntry*> > itTriggered( triggered );
+		while (itTriggered.hasMoreElements())
+		{
+			itTriggered.getNext()->signal();
+		}
+		triggered.clear();
+	}
+
+	//-----------------------------------------------------
+	// class: ConditionConnection
+	//-----------------------------------------------------
+	ConditionConnection::ConditionConnection(ActionMap* m,const ActionId& id,void* p) : map_(m), data_(p), id_(id)
+	{}
+	ConditionConnection::ConditionConnection(const ConditionConnection& other) : map_(other.map_), data_(other.data_), id_(other.id_)
+	{
+	}
+	ConditionConnection::~ConditionConnection()
+	{
+	}
+	ConditionConnection& ConditionConnection::operator=(const ConditionConnection& rhs)
+	{
+		if (this == &rhs)
+			return *this;
+		map_ = rhs.map_;
+		data_ = rhs.data_;
+		id_ = rhs.id_;
+		return *this;
+	}
+	void ConditionConnection::disconnect()
+	{
+		if (map_ && data_)
+			map_->unreg( id_, data_ );
+		map_ = 0;
+		data_ = 0;
 	}
 }
 }
