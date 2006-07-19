@@ -31,7 +31,7 @@
 			<direction x="0" y="0" z="1" />
 		</mountPoint>
 		<engine name="backward" type="MountedThruster" mountPoint="front">
-			<forces min="0." max="10." dieOff="4" rise="8" />
+			<forces min="0." max="20." dieOff="4" rise="8" />
 		</engine>
 		<!-- rear thruster -->
 		<mountPoint name="rear">
@@ -47,7 +47,7 @@
 			<direction x="0" y="-1" z="0" />
 		</mountPoint>
 		<engine name="upward" type="MountedThruster" mountPoint="bottom">
-			<forces min="0." max="250." dieOff="10" rise="20" />
+			<forces min="0." max="500." dieOff="10" rise="20" />
 		</engine>
 		<!-- bottom (downward) thruster -->
 		<mountPoint name="top">
@@ -62,13 +62,13 @@
 		<axle name="rear" />
 		<!-- wheels - one in front for steering, two at the rear end -->
 		<steeringGroup index="0" />
-		<wheel name="frontWheel" axle="front" steeringGroup="0" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="100" suspensionDamping="20">
+		<wheel name="frontWheel" axle="front" steeringGroup="0" radius="1.0" mass="0.05" massIsRelativeToChassis="yes" suspensionSpring="100" suspensionDamping="20">
 			<position x="0" y="-3" z="5.5" />
 		</wheel>
-		<wheel name="leftRearWheel" axle="rear" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="150" suspensionDamping="20">
+		<wheel name="leftRearWheel" axle="rear" radius="1.0" mass="0.05" massIsRelativeToChassis="yes" suspensionSpring="150" suspensionDamping="20">
 			<position x="-3" y="-3" z="-3" />
 		</wheel>
-		<wheel name="rightRearWheel" axle="rear" radius="2.0" mass="0.1" massIsRelativeToChassis="yes" suspensionSpring="150" suspensionDamping="20">
+		<wheel name="rightRearWheel" axle="rear" radius="1.0" mass="0.05" massIsRelativeToChassis="yes" suspensionSpring="150" suspensionDamping="20">
 			<position x="3" y="-3" z="-3" />
 		</wheel>
 	</vehicleTemplate>
