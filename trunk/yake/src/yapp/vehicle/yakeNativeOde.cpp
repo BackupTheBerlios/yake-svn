@@ -630,10 +630,18 @@ namespace vehicle {
 		YAKE_ASSERT( mpChassis );
 		YAKE_ASSERT( mpWheel );
 		const math::Vector3 chassisDir = mpChassis->getOrientation() * math::Vector3::kUnitZ;
-		const math::Vector3 wheelMovementDir = mpWheel->getBody().getLinearVelocity().normalisedCopy();
-		mSkid = 1. - chassisDir.dotProduct( wheelMovementDir );
-		if (mSkid < 0)
+		const math::Vector3 linVel = mpWheel->getBody().getLinearVelocity();
+		const real linVelf = linVel.length();
+		const math::Vector3 wheelMovementDir = linVel.normalisedCopy();
+		if (linVelf < 0.1) //@todo FIXME should be dependent size...
 			mSkid = 0.;
+		else
+		{
+			mSkid = 1. - fabs( chassisDir.dotProduct( wheelMovementDir ) );
+			if (mSkid < 0)
+				mSkid = 0.;
+		}
+		//std::cout << "skid = " << mSkid << "\n";
 	}
 	real OdeWheel::getRadius() const
 	{
@@ -678,7 +686,7 @@ namespace vehicle {
 			_applyBrakeTq( math::Vector3::kUnitX * mBrakeRatio * 1.5 );
 
 		const real targetVel = tq < 0. ? -40 : 40;
-		_applyMotor( targetVel, - tq * 0.0075 );
+		_applyMotor( targetVel, - tq * 0.1/*@todo this is "dt" dependent*/ );
 	}
 	void OdeWheel::_applyTq( const math::Vector3& torque )
 	{
@@ -691,12 +699,14 @@ namespace vehicle {
 		if (dir.dotProduct(linVel) > 0)
 		{
 			std::cout << "BRK+\n";
-			mpWheel->getBody().addLocalTorque( torque );
+			//mpWheel->getBody().addLocalTorque( torque );
+			mpWheel->getBody().setAngularVelocity( 0.05 * mpWheel->getBody().getAngularVelocity() );
 		}
 		else
 		{
 			std::cout << "BRK-\n";
-			mpWheel->getBody().addLocalTorque( -torque );
+			//mpWheel->getBody().addLocalTorque( torque );
+			mpWheel->getBody().setAngularVelocity( 0.05 * mpWheel->getBody().getAngularVelocity() );
 		}
 	}
 	void OdeWheel::_applyMotor( real velocity, real fmax )

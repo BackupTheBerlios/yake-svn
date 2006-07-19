@@ -43,10 +43,11 @@ namespace vehicle {
 	}
 	MountPoint::~MountPoint()
 	{
-		ConstVectorIterator< MountablePtrList > it( mMountables );
+		MountablePtrList mountables = mMountables;
+		ConstVectorIterator< MountablePtrList > it( mountables );
 		while (it.hasMoreElements())
 			detach( it.getNext() );
-		mMountables.clear();
+		YAKE_ASSERT( mMountables.empty() );
 
 		ConstVectorIterator< MountPointList > itMP( mChildren );
 		while (itMP.hasMoreElements())
