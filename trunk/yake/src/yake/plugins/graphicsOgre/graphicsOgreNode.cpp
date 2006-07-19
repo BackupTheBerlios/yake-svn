@@ -47,7 +47,13 @@ namespace ogre3d {
 		if (ogreid.empty())
 			ogreid = uniqueName::create( "sn_" );
 		mName = ogreid;
-		mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( ogreid ) );
+		try {
+			mSceneNode = static_cast< Ogre::SceneNode* >( mSceneMgr->getRootSceneNode()->createChild( ogreid ) );
+		}
+		catch (Ogre::Exception& e)
+		{
+			YAKE_EXCEPT(String("Ogre Exception: ") + e.getFullDescription());
+		}
 		YAKE_ASSERT( mSceneNode ).warning("Couldn't create a scene node!");
 
 		mSceneNode->setPosition( 0, 0, 0 );
