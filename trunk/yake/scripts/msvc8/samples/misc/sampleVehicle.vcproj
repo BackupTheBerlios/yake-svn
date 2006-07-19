@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="sampleVehicle"
-	ProjectGUID="{B9A9E534-6EB6-4667-B91B-74B930636F5E}"
+	ProjectGUID="{EE77E955-42BD-47A4-BDC6-D92759F45D01}"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -47,7 +47,7 @@
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="yapp/samples/base/vehicle/yakePCH.h"
+				PrecompiledHeaderThrough="yapp/samples/misc/vehicle/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
@@ -126,7 +126,8 @@
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="yapp/samples/misc/vehicle/yakePCH.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
@@ -189,7 +190,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\yapp\samples\base\vehicle\yakePCH.h"
+				RelativePath="..\..\..\..\yapp\samples\misc\vehicle\yakePCH.h"
 				>
 			</File>
 		</Filter>
@@ -197,14 +198,22 @@
 			Name="src"
 			>
 			<File
-				RelativePath="..\..\..\..\src\yapp\samples\base\vehicle\yakeDemo.cpp"
+				RelativePath="..\..\..\..\src\yapp\samples\misc\vehicle\yakeDemo.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\src\yapp\samples\base\vehicle\yakePCH.cpp"
+				RelativePath="..\..\..\..\src\yapp\samples\misc\vehicle\yakePCH.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
