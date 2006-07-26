@@ -244,6 +244,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\yake\model\yakeModelComponent.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\yake\model\yakeModelComponentContainer.cpp"
 				>
 			</File>
