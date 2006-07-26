@@ -43,10 +43,13 @@ namespace yake {
 namespace model {
 	//@todo move into private header:
 	struct CentralControllerBase;
+
+	struct ComponentCreationContext;
 	/** @remarks Do *NOT* rely on the existence of the members of this structure!
 				Always access them through ModelManager!
+		@todo Clear this up. Hide it!
 	*/
-	struct ComponentCreationContext
+	struct ModelCreationContext
 	{
 		Model*					model_;
 		graphics::IWorld*		gworld_;
@@ -62,10 +65,10 @@ namespace model {
 
 		typedef Signal2<void(const ComponentCreationContext&,ModelComponent&)> ComponentPreInitializeSignal;
 		typedef ComponentPreInitializeSignal ComponentPostInitializeSignal;
-		ComponentPreInitializeSignal	sigPreInit_;
-		ComponentPostInitializeSignal	sigPostInit_;
+		ComponentPreInitializeSignal	sigPreInitComponent_;
+		ComponentPostInitializeSignal	sigPostInitComponent_;
 
-		ComponentCreationContext() : 
+		ModelCreationContext() : 
 			model_(0),
 			gworld_(0),
 			pworld_(0),
@@ -73,6 +76,47 @@ namespace model {
 			dotSceneParser_(0),
 			xodeParser_(0)
 		{}
+	};
+
+	/** Contextual information on component creation time.
+	*/
+	struct ComponentCreationContext
+	{
+		ComponentCreationContext(ModelCreationContext& modelCtx, const String& name = "");
+
+		const String& getName() const;
+
+		Model& getModel() const;
+		graphics::IWorld* getGraphicalWorld() const;
+		physics::IWorld* getPhysicalWorld() const;
+		CentralControllerBase* getCentralController() const;
+
+		data::parser::dotscene::DotSceneParser* getDotSceneParser() const;
+		data::parser::xode::XODEParser* getXODEParser() const;
+
+		bool getParamValue(const String&,boost::any&) const;
+
+		template<typename OutT>
+		bool getParamValueAs(const String&,OutT&) const
+		{
+			ModelCreationContext::ParamMap::const_iterator it = modelCtx_.params_.find(key);
+			if (it == modelCtx_.params_.end())
+				return false;
+			try {
+				out = boost::any_cast<OutT>(it->second);
+			}
+			catch (boost::bad_any_cast&)
+			{
+				return false;
+			}
+			return true;
+		}
+
+		void sigPreInit(const ComponentCreationContext&,ModelComponent&) const;
+		void sigPostInit(const ComponentCreationContext&,ModelComponent&) const;
+	private:
+		ModelCreationContext&			modelCtx_;
+		String							name_;
 	};
 
 	struct YAKE_MODEL_API ModelComponent //: public Clonable<ModelComponent>

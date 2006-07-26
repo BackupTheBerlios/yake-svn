@@ -158,19 +158,19 @@ namespace model {
 
 		/** @name Signals (in order that they are called in) */
 		//@{
-		typedef Signal2<void(Model&,const ComponentCreationContext&)> ModelCreatedSignal;
+		typedef Signal2<void(Model&,const ModelCreationContext&)> ModelCreatedSignal;
 		typedef Signal3<void(Model&,const ComponentCreationContext&,const String&)> PreCreateModelComponent;
+		typedef ModelCreationContext::ComponentPreInitializeSignal PreInitializeComponentSignal;
+		typedef ModelCreationContext::ComponentPostInitializeSignal PostInitializeComponentSignal;
 		typedef Signal3<void(Model&,const ComponentCreationContext&,const String&)> PostCreateModelComponent;
-		typedef Signal2<void(Model&,const ComponentCreationContext&)> ModelInitializedSignal;
-		SignalConnection subscribeToModelCreatedSignal(const ModelCreatedSignal::slot_type&);
-		SignalConnection subscribeToPreCreateModelComponent(const PreCreateModelComponent::slot_type&);
-		SignalConnection subscribeToPostCreateModelComponent(const PostCreateModelComponent::slot_type&);
-		SignalConnection subscribeToModelInitializedSignal(const ModelInitializedSignal::slot_type&);
+		typedef Signal2<void(Model&,const ModelCreationContext&)> ModelInitializedSignal;
 
-		typedef ComponentCreationContext::ComponentPreInitializeSignal ComponentPreInitializeSignal;
-		typedef ComponentCreationContext::ComponentPostInitializeSignal ComponentPostInitializeSignal;
-		SignalConnection subscribeToComponentPreInitializeSignal(const ComponentPreInitializeSignal::slot_type&);
-		SignalConnection subscribeToComponentPostInitializeSignal(const ComponentPostInitializeSignal::slot_type&);
+		SignalConnection subscribeToModelCreatedSignal(const ModelCreatedSignal::slot_type&);
+		 SignalConnection subscribeToPreCreateComponent(const PreCreateModelComponent::slot_type&);
+		  SignalConnection subscribeToPreInitializeComponentSignal(const PreInitializeComponentSignal::slot_type&);
+		  SignalConnection subscribeToPostInitializeComponentSignal(const PostInitializeComponentSignal::slot_type&);
+		 SignalConnection subscribeToPostCreateComponent(const PostCreateModelComponent::slot_type&);
+		SignalConnection subscribeToModelInitializedSignal(const ModelInitializedSignal::slot_type&);
 		//@}
 
 	private:
@@ -178,7 +178,7 @@ namespace model {
 		ModelManager& operator=(const ModelManager&);
 	private:
 		ComponentCreatorManager		creatorMgr_;
-		ComponentCreationContext	ctx_;
+		ModelCreationContext		modelCtx_;
 
 		typedef AssocVector<String,SharedPtr<Model> > ModelList;
 		ModelList					models_;
