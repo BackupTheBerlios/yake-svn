@@ -78,8 +78,8 @@ protected:
 		mModelMgr.setCreationContext_NamedParameter("vehicleSystem",static_cast<vehicle::IVehicleSystem*>(mVehicleSystem.get()));
 
 		// set up model component creation hooks.
-		mModelMgr.subscribeToComponentPreInitializeSignal( Bind2(&TheMainState::onModelComponent_preInit,this) );
-		mModelMgr.subscribeToComponentPostInitializeSignal( Bind2(&TheMainState::onModelComponent_postInit,this) );
+		mModelMgr.subscribeToPreInitializeComponentSignal( Bind2(&TheMainState::onModelComponent_preInit,this) );
+		mModelMgr.subscribeToPostInitializeComponentSignal( Bind2(&TheMainState::onModelComponent_postInit,this) );
 
 
 

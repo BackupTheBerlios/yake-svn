@@ -80,7 +80,7 @@ namespace model {
 
 	/** Contextual information on component creation time.
 	*/
-	struct ComponentCreationContext
+	struct YAKE_MODEL_API ComponentCreationContext
 	{
 		ComponentCreationContext(ModelCreationContext& modelCtx, const String& name = "");
 
@@ -97,7 +97,7 @@ namespace model {
 		bool getParamValue(const String&,boost::any&) const;
 
 		template<typename OutT>
-		bool getParamValueAs(const String&,OutT&) const
+		bool getParamValueAs(const String& key,OutT& out) const
 		{
 			ModelCreationContext::ParamMap::const_iterator it = modelCtx_.params_.find(key);
 			if (it == modelCtx_.params_.end())

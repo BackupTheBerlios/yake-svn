@@ -137,8 +137,8 @@ public:
 		modelMgr.setCreationContext_CentralController( this );
 
 		// just for demo purposes:
-		modelMgr.subscribeToComponentPreInitializeSignal( Bind2(&TheApp::onModelComponent_preInit,this) );
-		modelMgr.subscribeToComponentPostInitializeSignal( Bind2(&TheApp::onModelComponent_postInit,this) );
+		modelMgr.subscribeToPreInitializeComponentSignal( Bind2(&TheApp::onModelComponent_preInit,this) );
+		modelMgr.subscribeToPostInitializeComponentSignal( Bind2(&TheApp::onModelComponent_postInit,this) );
 
 		// create models :)
 

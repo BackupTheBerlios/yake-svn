@@ -54,21 +54,17 @@ namespace vehicle {
 	void VehicleModelComponentCreator::create(const model::ComponentCreationContext& ctx, const StringMap& params)
 	{
 		// Verify validity of creation context
-		physics::IWorld* pPWorld = ctx.pworld_;
+		physics::IWorld* pPWorld = ctx.getPhysicalWorld();
 		YAKE_ASSERT( pPWorld );
 		if (!pPWorld)
 			return;
 
 		// Extract parameters
 
+		const String name = ctx.getName();
+
 		StringMap::const_iterator itParam = params.find("file");
 		const String fn = (itParam == params.end()) ? "" : itParam->second;
-
-		itParam = params.find("name");
-		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'name'.");
-		if (itParam == params.end())
-			return;
-		const String name = itParam->second;
 
 		itParam = params.find("physical");
 		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'physical'.");
@@ -86,17 +82,9 @@ namespace vehicle {
 
 		IVehicleSystem* vehSys = 0;
 		{
-			model::ComponentCreationContext::ParamMap::const_iterator it = ctx.params_.find("vehicleSystem");
-			YAKE_ASSERT(it != ctx.params_.end()).debug("Missing context parameter 'vehicleSystem'.");
-			if (it == ctx.params_.end())
+			const bool success = ctx.getParamValueAs<vehicle::IVehicleSystem*>("vehicleSystem",vehSys);
+			YAKE_ASSERT( success )(name).debug("Failed to retrieve IVehicleSystem interface from context parameter!");
 				return;
-			try {
-				vehSys = boost::any_cast<vehicle::IVehicleSystem*>(it->second);
-			} catch (boost::bad_any_cast& e)
-			{
-				YAKE_ASSERT( 0 )(name).debug(String("Failed to retrieve IVehicleSystem interface from context parameter! (") + e.what() + ")");
-				return;
-			}
 			YAKE_ASSERT( vehSys )(name).debug("IVehicleSystem interface not set.");
 			if (!vehSys)
 				return;
@@ -113,9 +101,7 @@ namespace vehicle {
 
 		// Retrieve 'Physical'
 
-		YAKE_ASSERT( ctx.model_ );
-
-		model::Physical* pPhysical = dynamic_cast<model::Physical*>(ctx.model_->getComponentByTag(physicalTag));
+		model::Physical* pPhysical = dynamic_cast<model::Physical*>(ctx.getModel().getComponentByTag(physicalTag));
 		YAKE_ASSERT( pPhysical )(physicalTag)(name).debug("Failed to retrieve Physical.");
 
 		// Instantiate template vehicle
@@ -129,7 +115,7 @@ namespace vehicle {
 		VehicleModelComponent* c = new VehicleModelComponent(pVehicle);
 		YAKE_ASSERT( c );
 
-		ctx.model_->addComponent( c, name );
+		ctx.getModel().addComponent( c, name );
 
 		return;
 	}
