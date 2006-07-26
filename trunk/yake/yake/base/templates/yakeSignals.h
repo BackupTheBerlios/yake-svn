@@ -63,7 +63,8 @@
 
 #if defined( YAKE_SIGNALS_USE_BOOST )
 #	pragma message("Yake signal config: yake.base.templates.signals.boost")
-#	if YAKE_COMPILER == COMPILER_MSVC && YAKE_COMP_VER > 1300
+#	define BindX boost::bind
+#	if YAKE_COMPILER == COMPILER_MSVC && YAKE_COMP_VER == 1300
 #		define Bind0( METHOD, OBJECT ) boost::bind( METHOD, OBJECT, _1 )
 #	else
 #		define Bind0( METHOD, OBJECT ) boost::bind( METHOD, OBJECT )
