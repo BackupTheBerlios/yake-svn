@@ -28,6 +28,8 @@
 //============================================================================
 //    IMPLEMENTATION HEADERS
 //============================================================================
+#define STRICT
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <yake/base/yakePCH.h>
 #include <yake/base/native/win32/yakeConfig.h>

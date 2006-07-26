@@ -26,6 +26,9 @@
 */
 #include <yake/data/yakePCH.h>
 #include <yake/data/yakeXMLSerializer.h>
+
+#define STRICT
+#define WIN32_LEAN_AND_MEAN
 #include <dependencies/tinyxml/tinyxml.h>
 
 namespace yake {
