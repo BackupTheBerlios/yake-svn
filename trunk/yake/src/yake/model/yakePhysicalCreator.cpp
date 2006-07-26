@@ -55,7 +55,7 @@ namespace model {
 	void PhysicalFromXODECreator::create(const ComponentCreationContext& ctx, const StringMap& params)
 	{
 		// Verify validity of creation context
-		physics::IWorld* pPWorld = ctx.pworld_;
+		physics::IWorld* pPWorld = ctx.getPhysicalWorld();
 		YAKE_ASSERT( pPWorld );
 		if (!pPWorld)
 			return;
@@ -68,11 +68,7 @@ namespace model {
 			return;
 		const String fn = itParam->second;
 
-		itParam = params.find("name");
-		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'name'.");
-		if (itParam == params.end())
-			return;
-		const String name = itParam->second;
+		const String name = ctx.getName().empty() ? uniqueName::create("physical_") : ctx.getName();
 
 		// Read XML file into DOM
 
@@ -82,31 +78,39 @@ namespace model {
 
 		// Parse DOM and create graphical objects
 
-		data::parser::xode::XODEParser* xodeparser = ctx.xodeParser_;
+		data::parser::xode::XODEParser* xodeparser = ctx.getXODEParser();
 		if (!xodeparser)
 			xodeparser = defaultParser_.get();
 		YAKE_ASSERT( xodeparser );
 
 		Physical* pPhysical = new Physical(/**ctx.model_*/);
-		ctx.sigPreInit_(ctx,*pPhysical);
+		ctx.sigPreInit(ctx,*pPhysical);
 
-		const String namePrefix = _T("model:") + ctx.model_->getName() + _T("/")  // model
+		const String namePrefix = _T("model:") + ctx.getModel().getName() + _T("/")  // model
 									+ (name.empty() ? _T("") : (name + _T("/"))); // component
 		XODEListener xodeListener( *pPhysical, pPWorld, namePrefix );
 
 		SignalConnection conn1 = xodeparser->subscribeToBodySignal( Bind1( &XODEListener::processBody, &xodeListener ) );
 		SignalConnection conn2 = xodeparser->subscribeToGeomSignal( Bind1( &XODEListener::processGeom, &xodeListener ) );
+		SignalConnection conn3 = xodeparser->subscribeToMassSignal( Bind1( &XODEListener::processMass, &xodeListener ) );
+		SignalConnection conn4 = xodeparser->subscribeToJointSignal( Bind1( &XODEListener::processJoint, &xodeListener ) );
+		SignalConnection conn5 = xodeparser->subscribeToMaterialSignal( Bind1( &XODEListener::processMaterial, &xodeListener ) );
+		SignalConnection conn6 = xodeparser->subscribeToParseEndedSignal( Bind0( &XODEListener::postprocess, &xodeListener ) );
 
 		if (!xodeparser->load( ser.getDocumentNode() ))
 		{
 			YAKE_SAFE_DELETE( pPhysical );
 		}
 
+		conn6.disconnect();
+		conn5.disconnect();
+		conn4.disconnect();
+		conn3.disconnect();
 		conn2.disconnect();
 		conn1.disconnect();
 
-		ctx.sigPostInit_(ctx,*pPhysical);
-		ctx.model_->addComponent( pPhysical, name );
+		ctx.sigPostInit(ctx,*pPhysical);
+		ctx.getModel().addComponent( pPhysical, name );
 	}
 
 	//-----------------------------------------------------
@@ -129,14 +133,9 @@ namespace model {
 	{
 		// Extract parameters
 
-		StringMap::const_iterator itParam = params.find("name");
-		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'name'.");
-		if (itParam == params.end())
-			return;
-		const String name = itParam->second;
+		const String name = ctx.getName().empty() ? uniqueName::create("physical_") : ctx.getName();
 
-		YAKE_ASSERT( ctx.model_ );
-		ctx.model_->addComponent( new Physical(), name );
+		ctx.getModel().addComponent( new Physical(), name );
 	}
 } // namespace model
 } // namespace yake

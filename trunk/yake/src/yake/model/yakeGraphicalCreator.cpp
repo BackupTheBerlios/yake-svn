@@ -56,7 +56,7 @@ namespace model {
 	void GraphicalFromDotSceneCreator::create(const ComponentCreationContext& ctx, const StringMap& params)
 	{
 		// Verify validity of creation context
-		graphics::IWorld* pGWorld = ctx.gworld_;
+		graphics::IWorld* pGWorld = ctx.getGraphicalWorld();
 		YAKE_ASSERT( pGWorld );
 		if (!pGWorld)
 			return;
@@ -69,11 +69,7 @@ namespace model {
 			return;
 		const String fn = itParam->second;
 
-		itParam = params.find("name");
-		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'name'.");
-		if (itParam == params.end())
-			return;
-		const String name = itParam->second;
+		const String name = ctx.getName().empty() ? uniqueName::create("graphical_") : ctx.getName();
 
 		// Read dotscene file into DOM
 
@@ -83,15 +79,15 @@ namespace model {
 
 		// Parse DOM and create graphical objects
 
-		data::parser::dotscene::DotSceneParser* parser = ctx.dotSceneParser_;
+		data::parser::dotscene::DotSceneParser* parser = ctx.getDotSceneParser();
 		if (!parser)
 			parser = defaultParser_.get();
 		YAKE_ASSERT( parser );
 
 		Graphical* pGraphical = new Graphical(/**ctx.model_*/);
-		ctx.sigPreInit_(ctx,*pGraphical);
+		ctx.sigPreInit(ctx,*pGraphical);
 
-		const String namePrefix = _T("model:") + ctx.model_->getName() + _T("/")  // model
+		const String namePrefix = _T("model:") + ctx.getModel().getName() + _T("/")  // model
 									+ (name.empty() ? _T("") : (name + _T("/"))); // component
 
 		DotSceneListener dotSceneListener( *pGraphical, namePrefix );
@@ -112,8 +108,8 @@ namespace model {
 		conn3.disconnect();
 		conn4.disconnect();
 
-		ctx.sigPostInit_(ctx,*pGraphical);
-		ctx.model_->addComponent( pGraphical, name );
+		ctx.sigPostInit(ctx,*pGraphical);
+		ctx.getModel().addComponent( pGraphical, name );
 	}
 
 	//-----------------------------------------------------
@@ -137,14 +133,9 @@ namespace model {
 	{
 		// Extract parameters
 
-		StringMap::const_iterator itParam = params.find("name");
-		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'name'.");
-		if (itParam == params.end())
-			return;
-		const String name = itParam->second;
+		const String name = ctx.getName().empty() ? uniqueName::create("graphical_") : ctx.getName();
 
-		YAKE_ASSERT( ctx.model_ );
-		ctx.model_->addComponent( new Graphical(), name );
+		ctx.getModel().addComponent( new Graphical(), name );
 	}
 } // namespace model
 } // namespace yake

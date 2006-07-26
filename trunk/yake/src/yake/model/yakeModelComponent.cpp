@@ -27,49 +27,58 @@
 #include "yake/model/pch.h"
 #include "yake/model/prerequisites.h"
 #include "yake/model/model.h"
-#include "yake/model/model_link_dotlink_loader.h"
 
 namespace yake {
 namespace model {
 
-	//-----------------------------------------------------
-	// class LinkFromDotLinkCreator
-	//-----------------------------------------------------
-
-	struct LinkFromDotLinkCreator : public ComponentCreator
+	ComponentCreationContext::ComponentCreationContext(ModelCreationContext& modelCtx, const String& name) : 
+		modelCtx_(modelCtx),
+		name_(name)
+	{}
+	const String& ComponentCreationContext::getName() const
 	{
-		YAKE_DECLARE_CONCRETE(LinkFromDotLinkCreator,"model/dotLink");
-
-		virtual void create(const ComponentCreationContext& ctx, const StringMap& params);
-	};
-
-	YAKE_REGISTER_CONCRETE(LinkFromDotLinkCreator)
-
-	void LinkFromDotLinkCreator::create(const ComponentCreationContext& ctx, const StringMap& params)
-	{
-		// Extract parameters
-
-		StringMap::const_iterator itParam = params.find("file");
-		YAKE_ASSERT(itParam != params.end()).debug("Missing parameter 'file'.");
-		if (itParam == params.end())
-			return;
-		const String fn = itParam->second;
-
-		// Read XML file into DOM
-
-		yake::data::dom::xml::XmlSerializer ser;
-		ser.parse( fn, false );
-		YAKE_ASSERT( ser.getDocumentNode() )( fn ).error("Could not parse XML document!");
-
-		// Parse DOM and create graphical objects
-
-		DotLinkLoader dotLinkLoader;
-		YAKE_ASSERT(ctx.getCentralController());
-		if (!dotLinkLoader.load( *ser.getDocumentNode(), ctx.getModel(), *ctx.getCentralController() ))
-		{
-			//@todo Report error!
-		}
+		return name_;
 	}
-
+	Model& ComponentCreationContext::getModel() const
+	{
+		YAKE_ASSERT( modelCtx_.model_ )(name_).fatal("Cannot dereference 0 model.");
+		return *modelCtx_.model_;
+	}
+	graphics::IWorld* ComponentCreationContext::getGraphicalWorld() const
+	{
+		return modelCtx_.gworld_;
+	}
+	physics::IWorld* ComponentCreationContext::getPhysicalWorld() const
+	{
+		return modelCtx_.pworld_;
+	}
+	CentralControllerBase* ComponentCreationContext::getCentralController() const
+	{
+		return modelCtx_.centralController_;
+	}
+	data::parser::dotscene::DotSceneParser* ComponentCreationContext::getDotSceneParser() const
+	{
+		return modelCtx_.dotSceneParser_;
+	}
+	data::parser::xode::XODEParser* ComponentCreationContext::getXODEParser() const
+	{
+		return modelCtx_.xodeParser_;
+	}
+	bool ComponentCreationContext::getParamValue(const String& key, boost::any& out) const
+	{
+		ModelCreationContext::ParamMap::const_iterator it = modelCtx_.params_.find(key);
+		if (it == modelCtx_.params_.end())
+			return false;
+		out = it->second;
+		return true;
+	}
+	void ComponentCreationContext::sigPreInit(const ComponentCreationContext& compCtx,ModelComponent& comp) const
+	{
+		modelCtx_.sigPreInitComponent_(compCtx,comp);
+	}
+	void ComponentCreationContext::sigPostInit(const ComponentCreationContext& compCtx,ModelComponent& comp) const
+	{
+		modelCtx_.sigPostInitComponent_(compCtx,comp);
+	}
 } // namespace model
 } // namespace yake

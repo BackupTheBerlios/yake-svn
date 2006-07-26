@@ -41,11 +41,11 @@ namespace model {
 	{
 		return sigModelCreatedSignal_.connect(slot);
 	}
-	SignalConnection ModelManager::subscribeToPreCreateModelComponent(const PreCreateModelComponent::slot_type& slot)
+	SignalConnection ModelManager::subscribeToPreCreateComponent(const PreCreateModelComponent::slot_type& slot)
 	{
 		return sigPreCreateModelComponent_.connect(slot);
 	}
-	SignalConnection ModelManager::subscribeToPostCreateModelComponent(const PostCreateModelComponent::slot_type& slot)
+	SignalConnection ModelManager::subscribeToPostCreateComponent(const PostCreateModelComponent::slot_type& slot)
 	{
 		return sigPostCreateModelComponent_.connect(slot);
 	}
@@ -53,13 +53,13 @@ namespace model {
 	{
 		return sigModelInitializedSignal_.connect(slot);
 	}
-	SignalConnection ModelManager::subscribeToComponentPreInitializeSignal(const ComponentPreInitializeSignal::slot_type& slot)
+	SignalConnection ModelManager::subscribeToPreInitializeComponentSignal(const PreInitializeComponentSignal::slot_type& slot)
 	{
-		return ctx_.sigPreInit_.connect( slot );
+		return modelCtx_.sigPreInitComponent_.connect( slot );
 	}
-	SignalConnection ModelManager::subscribeToComponentPostInitializeSignal(const ComponentPostInitializeSignal::slot_type& slot)
+	SignalConnection ModelManager::subscribeToPostInitializeComponentSignal(const PostInitializeComponentSignal::slot_type& slot)
 	{
-		return ctx_.sigPostInit_.connect( slot );
+		return modelCtx_.sigPostInitComponent_.connect( slot );
 	}
 	namespace detail {
 		void extractParams(const String& params, StringMap& out)
@@ -102,9 +102,9 @@ namespace model {
 		Model* m = new Model();
 		m->setName( modelName );
 		models_.insert( std::make_pair(modelName,SharedPtr<Model>(m)) );
-		ctx_.model_ = m;
+		modelCtx_.model_ = m;
 
-		sigModelCreatedSignal_(*m,ctx_);
+		sigModelCreatedSignal_(*m,modelCtx_);
 
 		// Create components (if any)
 		ConstVectorIterator<ModelComponentDescList> itCompDesc(compDescList);
@@ -127,12 +127,14 @@ namespace model {
 			}
 #endif
 
-			sigPreCreateModelComponent_(*m,ctx_,type);
-			creatorMgr_.create( type, ctx_, params );
-			sigPostCreateModelComponent_(*m,ctx_,type);
+			ComponentCreationContext compCtx( modelCtx_, name );
+
+			sigPreCreateModelComponent_(*m,compCtx,type);
+			creatorMgr_.create( type, compCtx, params );
+			sigPostCreateModelComponent_(*m,compCtx,type);
 		}
-		ctx_.model_ = 0;
-		sigModelInitializedSignal_(*m,ctx_);
+		modelCtx_.model_ = 0;
+		sigModelInitializedSignal_(*m,modelCtx_);
 		return m;
 	}
 	/// graphics/dotScene:name=gfx;file=bla.scene|physics/dotXODE...
@@ -175,30 +177,30 @@ namespace model {
 	}
 	void ModelManager::setCreationContext_GraphicalWorld(graphics::IWorld* w)
 	{
-		ctx_.gworld_ = w;
+		modelCtx_.gworld_ = w;
 	}
 	void ModelManager::setCreationContext_PhysicalWorld(physics::IWorld* w)
 	{
-		ctx_.pworld_ = w;
+		modelCtx_.pworld_ = w;
 	}
 	void ModelManager::setCreationContext_CentralController(CentralControllerBase* c)
 	{
-		ctx_.centralController_ = c;
+		modelCtx_.centralController_ = c;
 	}
 	void ModelManager::setCreationContext_DotSceneParser(data::parser::dotscene::DotSceneParser* parser)
 	{
-		ctx_.dotSceneParser_ = parser;
+		modelCtx_.dotSceneParser_ = parser;
 	}
 	void ModelManager::setCreationContext_XODEParser(data::parser::xode::XODEParser* parser)
 	{
-		ctx_.xodeParser_ = parser;
+		modelCtx_.xodeParser_ = parser;
 	}
 	void ModelManager::setCreationContext_NamedParameter(const String& name, const boost::any& value)
 	{
 		YAKE_ASSERT( !name.empty() );
 		if (name.empty())
 			return;
-		ctx_.params_[ name ] = value;
+		modelCtx_.params_[ name ] = value;
 	}
 
 } // namespace model
