@@ -1,5 +1,0 @@
-<?xml version="1.0" ?>
-<Imageset Name="editor_point" Imagefile="editor_point.tga" NativeHorzRes="1" NativeVertRes="1" AutoScaled="true">
-	<Image Name="point" XPos="0" YPos="0" Width="1" Height="1" />
-</Imageset>
-

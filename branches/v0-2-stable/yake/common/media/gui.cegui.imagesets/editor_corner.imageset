@@ -1,5 +1,0 @@
-<?xml version="1.0" ?>
-<Imageset Name="editor_corner" Imagefile="editor_corner.tga" NativeHorzRes="64" NativeVertRes="64" AutoScaled="true">
-	<Image Name="corner" XPos="0" YPos="0" Width="64" Height="64" />
-</Imageset>
-
