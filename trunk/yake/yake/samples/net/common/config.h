@@ -1,8 +1,0 @@
-#ifndef YAKE_NET_SAMPLES_CONFIG_H
-#define YAKE_NET_SAMPLES_CONFIG_H
-
-
-#define NET_STRESS_TEST_LEVEL 1
-
-
-#endif

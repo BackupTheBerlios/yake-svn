@@ -1,3 +1,0 @@
-INCLUDES = 
-METASOURCES = AUTO
-modelHdr_SOURCES = yakePCH.h
