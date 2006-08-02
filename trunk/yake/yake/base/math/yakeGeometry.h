@@ -110,9 +110,9 @@ namespace math {
 			max = rhs.max;
 			return *this;
 		}
-		real getWidth()
+		real getWidth() const
 		{ return (max.x - min.x); }
-		real getHeight()
+		real getHeight() const
 		{ return (max.y - min.y); }
 	};
 
